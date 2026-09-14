@@ -18899,6 +18899,42 @@ target_sources(walk_window PRIVATE ${SLICE_DTORS_A_SOURCES})
 
 
 # ===========================================================================
+# THE WAVE-9c DESTRUCTOR FORWARDERS (run link100 wave 9c, lane DTORS2)
+# ===========================================================================
+#
+# Seventeen more flat Itanium destructor rows off walk_window's own wall, in one
+# generated file beside lane DTORS-A's two.  Same generator (tools/dtorfwd.py),
+# same guard (tools/dtor_store_guard.py), same PORT_HOST_ABI ruling; the file is
+# separate so DTORS-A's two stay byte-identical through a rebase.
+#
+# Seven of the rows are DTORS-A's own premise and were simply out of reach when
+# it ran: the class header spells the destructor inline and the owning src TU
+# was not compiled at 8dc06444f.  Lanes SEATS2 and HOSTGEN4 have seated
+# d_a_wanwan.cpp, daPkn_c.cpp and the three ov029 water TUs since.
+#
+# The other ten stand on the OUT-OF-LINE premise: the header only declares the
+# destructor, the class's own per-function structor TU defines it, that TU is on
+# a live slice row, so ??1<Cls>@@UAE@XZ is already in this link and the forwarder
+# only CALLS it instead of making MSVC emit one.  out/SEATS2/seat_table.md is why
+# compiling such a TU is not itself the answer: under MSVC it does not define its
+# own flat ROM name, so seating one never closed the row it was seated for.
+#
+# WALK_WINDOW ONLY, on the slice_dtors_a.txt rule: the wall these rows were
+# measured against is walk_window's own unresolved block.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_dtors2.txt"
+                SLICE_DTORS2_LINES)
+set(SLICE_DTORS2_SOURCES "")
+foreach(line IN LISTS SLICE_DTORS2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_DTORS2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+target_sources(walk_window PRIVATE ${SLICE_DTORS2_SOURCES})
+
+
+# ===========================================================================
 # SEATS, BOTTOM-UP: GATE 3 (run link100 wave 9b, lane SEATS2, staged by INT3)
 # ===========================================================================
 #

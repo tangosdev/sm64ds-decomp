@@ -424,7 +424,14 @@ def check_name(rom, name):
 
 
 # A DEFINITION, not a declaration: the line must not end in a semicolon.
-DEF_RE = re.compile(r'^extern "C" void (_ZN\w+D[01]Ev)\([^;\n]*\)[ \t]*$',
+# D2 as well as D0/D1 since run link100 wave 9c, lane DTORS2: a class whose
+# destructor is defined OUT OF LINE by its own per-function structor TU can have
+# its base-object destructor asked for by name too (ModelFamily_Dtors_HostCopy.c
+# calls _ZN9ModelAnimD2Ev from _ZN10ModelAnim2D0Ev), and MSVC folds D1 and D2
+# into one symbol for a class with no virtual base.  check_name has always
+# accepted D2; only this reader did not, so a D2 forwarder would have gone
+# UNGUARDED.
+DEF_RE = re.compile(r'^extern "C" void (_ZN\w+D[012]Ev)\([^;\n]*\)[ \t]*$',
                     re.M)
 
 
@@ -627,11 +634,56 @@ def selftest():
     if got != ["_ZN10daCamTag_cD1Ev", "_ZN10daCamTag_cD0Ev"]:
         fails.append("names_in: got %r" % (got,))
 
+    # 12. wave 9c: the reader takes a D2 definition too, so an out-of-line
+    # premise row cannot be emitted past this guard unread.
+    fd, p = tempfile.mkstemp(suffix=".cpp")
+    os.close(fd)
+    open(p, "w", encoding="utf-8").write(
+        'extern "C" void _ZN9ModelAnimD2Ev(void *self)\n{ }\n'
+        'extern "C" void _ZN9ModelAnimD3Ev(void *self)\n{ }\n')
+    got = names_in(p)
+    os.unlink(p)
+    if got != ["_ZN9ModelAnimD2Ev"]:
+        fails.append("names_in D2: got %r" % (got,))
+
+    # 13. wave 9c: the ROM rule itself is asked of a D2 body exactly as it is of
+    # a D1, and it is the SAME rule -- there is no second, weaker path for the
+    # new premise.  ModelAnim's cartridge D2 stores _ZTV9ModelAnim, tears down a
+    # member subobject at a displacement and closes on a base destructor.
+    case("out-of-line premise, a D2 body", """
+        push {r4, lr}
+        ldr r2, =_ZTV9ModelAnim
+        mov r4, r0
+        str r2, [r4]
+        add r0, r4, #0x50
+        bl _ZN9AnimationD2Ev
+        mov r0, r4
+        bl _ZN5ModelD2Ev
+        pop {r4, lr}
+        bx lr
+    """, "ModelAnim", "ok", "base restore")
+
+    # 14. and a D2 body that dispatches through word 0 after the store is
+    # refused on the same evidence as a D1 that does.
+    case("out-of-line premise, a D2 that dispatches", """
+        push {r4, lr}
+        ldr r2, =_ZTV9ModelAnim
+        mov r4, r0
+        str r2, [r4]
+        ldr r3, [r4]
+        ldr r3, [r3, #0x18]
+        blx r3
+        mov r0, r4
+        bl _ZN5ModelD2Ev
+        pop {r4, lr}
+        bx lr
+    """, "ModelAnim", "refuse", "virtual dispatch inside the window")
+
     if fails:
         for f in fails:
             print("dtor_store_guard SELFTEST FAIL: %s" % f)
         return 1
-    print("dtor_store_guard selftest OK -- 11 cases")
+    print("dtor_store_guard selftest OK -- 14 cases")
     return 0
 
 

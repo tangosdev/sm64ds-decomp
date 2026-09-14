@@ -155,6 +155,33 @@ Particle::SysTracker::~SysTracker()
 TextureSequence::~TextureSequence()
 { _ZN15TextureSequenceD1Ev(this); }
 
+/* KEPT, and MEASURED before it was kept (run link100 wave 9c, lane DTORS2).
+   Lane HALROWS settled which of this link's two MSVC ModelAnim destructors is
+   right, and it is not this one: _ZTV9ModelAnim at arm9 0x0208e980 puts the
+   destructor in slots 0 and 1 and VTable_Animation_ModelAnimThunk at 0x0208e9a4
+   carries the two _ZThn80_ adjustor thunks, and a NON-virtual destructor gets
+   neither.  So ??1ModelAnim@@UAE@XZ (src/_ZN9ModelAnimD1Ev.cpp, on a live slice
+   row) is the ROM's spelling and the shadow struct above is the wrong one.
+
+   HALROWS's own note says this face should go "once the src side stops asking
+   for ??1ModelAnim@@QAE@XZ".  It has not.  Two COMPILED src TUs declare the
+   same non-virtual shadow and call it on an embedded member:
+
+       src/func_ov006_020ca604.cpp:3   (live on port/slice_tte.txt)
+       src/func_ov006_020ccfc8.cpp:3   (live on port/slice_tti.txt)
+
+   Read back out of their objects with dumpbin at 319f0f191, both carry
+   ??1ModelAnim@@QAE@XZ as an UNDEF, and this definition is the only one in the
+   link.  Commenting it out today therefore ADDS a row to walk_window's wall
+   instead of removing one, so it stays until main stops spelling the shadow;
+   that is the needs_main item in out/DTORS2/needs_main.md.
+
+   WHAT DID CHANGE.  Until this wave the face was DEAD: _ZN9ModelAnimD1Ev was
+   itself undefined, so a caller that reached ??1ModelAnim@@QAE@XZ reached an
+   unresolved symbol.  hal/dtor_forwarders_gen_w9c.cpp now defines that flat
+   name as a forwarder onto ??1ModelAnim@@UAE@XZ, the virtual spelling the
+   cartridge's own vtable proves, so the chain shadow -> flat -> real destructor
+   resolves and runs the right body for the first time. */
 ModelAnim::~ModelAnim()
 { _ZN9ModelAnimD1Ev(this); }
 

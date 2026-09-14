@@ -1,0 +1,37 @@
+# run link100 wave 9c, lane DTORS2 -- THE WAVE-9c DESTRUCTOR FORWARDERS.
+#
+# Same shape as port/slice_dtors_a.txt and for the same reason: the rows below
+# are the GENERATED FILE itself, not src translation units.  Every owning src TU
+# is already compiled into walk_window; what the link is missing is a
+# DEFINITION of the flat ROM destructor name, and no slice row can add one.
+#
+# TWO PREMISES, and port/tools/dtorfwd.py says which each row stands on.
+#
+#   BATCH 4, seven rows, DTORS-A's own premise.  The class header spells the
+#   destructor inline; the forwarder's qualified call odr-uses it so MSVC emits
+#   it.  Lane DTORS-A could not take these seven at 8dc06444f because their
+#   owning TUs were not compiled then; lanes SEATS2 and HOSTGEN4 have seated
+#   d_a_wanwan.cpp, daPkn_c.cpp and the three ov029 water TUs since, so they are
+#   now ordinary inline-in-header rows.
+#
+#   BATCH 5, ten rows, the OUT-OF-LINE premise this lane adds.  The header only
+#   DECLARES the destructor and the class's own per-function structor TU
+#   (src/_ZN<n><Cls>D1Ev.cpp, on a live slice row) defines it, so
+#   ??1<Cls>@@UAE@XZ is already in this link and the forwarder only CALLS it.
+#   Read with dumpbin at 319f0f191, one object per class: ModelAnim,
+#   TextureSequence, TextureTransformer, dCapEnemy_c, dScMgSnowball_c.
+#   out/SEATS2/seat_table.md settles why compiling such a TU is not itself the
+#   answer: a per-function structor TU does not define its own flat ROM name
+#   under MSVC, so seating one never closed the row it was seated for.
+#
+# THE ROM-SIDE QUESTION IS THE SAME ONE either way, and it is asked the same
+# way: port/tools/dtor_store_guard.py re-disassembles each cartridge body out of
+# extracted/ in the pre-configure guard wave and refuses any class whose body
+# dispatches through word 0 between the vtable store and the base restore.  The
+# guard now reads D2 definitions as well as D0/D1, so a base-object destructor
+# forwarder cannot slip past it unread.
+#
+# WALK_WINDOW ONLY, on port/slice_dtors_a.txt's rule: the wall these rows were
+# measured against is walk_window's own unresolved block, and a definition that
+# has not been measured on a target does not belong on it.
+port/hal/dtor_forwarders_gen_w9c.cpp

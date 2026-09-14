@@ -288,10 +288,93 @@ _ZN9daSCoin_cD1Ev
 _ZN9daSetSE_cD0Ev
 """
 
+# ---------------------------------------------------------------------------
+# RUN link100 WAVE 9c, LANE DTORS2.  Two more batches, and a SECOND PREMISE.
+#
+# Batch 4 is the same premise as batches 1 to 3 and needs no argument of its own:
+# these seven rows are classes whose header spells the destructor inline and
+# whose owning src TU was NOT compiled at 8dc06444f, so lane DTORS-A could not
+# take them.  Lanes SEATS2 and HOSTGEN4 have since seated every one of those TUs
+# (d_a_wanwan.cpp, daPkn_c.cpp and the three ov029 water TUs are all on a live
+# slice row at 319f0f191, and their objects define the classes' decorated
+# virtuals), so the rows are now ordinary inline-in-header rows.
+#
+# Batch 5 is the SECOND PREMISE, and it is the narrower one.  These classes do
+# NOT spell the destructor inline: the header declares it and the owning
+# per-function structor TU (src/_ZN<n><Cls>D1Ev.cpp) defines it, and that TU is
+# on a live slice row, so `??1<Cls>@@UAE@XZ` is ALREADY IN THE LINK.  Read with
+# dumpbin at 319f0f191, one object per class:
+#
+#   src/_ZN9ModelAnimD1Ev.cpp.obj           ??1ModelAnim@@UAE@XZ
+#   src/_ZN15TextureSequenceD1Ev.cpp.obj    ??1TextureSequence@@UAE@XZ
+#   src/_ZN18TextureTransformerD1Ev.cpp.obj ??1TextureTransformer@@UAE@XZ
+#   src/_ZN11dCapEnemy_cD1Ev.cpp.obj        ??1dCapEnemy_c@@UAE@XZ
+#   src/_ZN15dScMgSnowball_cD1Ev.cpp.obj    ??1dScMgSnowball_c@@UAE@XZ
+#
+# So the forwarder here does not make MSVC EMIT a destructor, it only CALLS one
+# that the ROM's own recovered body already provides.  The ROM-side question is
+# identical and is asked identically: dtor_store_guard.check_name re-disassembles
+# the cartridge body and applies the same ruling, because the port's callers now
+# reach MSVC's destructor body and that body still stores its own ??_7Cls@@6B@.
+# The host-side premise is what differs, and it is checked by defining_tu()
+# below rather than by the header's inline spelling.
+#
+# WHY THESE FIVE CLASSES AND NOT A SEAT.  out/SEATS2/seat_table.md settles it:
+# a per-function structor TU does not define its own flat ROM name under MSVC,
+# so compiling one never closed the row it was seated for and 209 of them
+# collided.  The TU is already compiled; what is missing is the flat name, which
+# is this file's business.
+#
+# THE D1/D2 ROWS.  MSVC has no D2: for a class with no virtual base its single
+# destructor is both the complete-object and the base-object destructor.  That
+# is a claim about the cartridge, so it was measured rather than assumed, with
+# out/DTORS2/bodydiff.py (out/FACES3/d0diff.py's resolved streams):
+#
+#   _ZN9ModelAnimD1Ev   0x0201691c  vs _ZN9ModelAnimD2Ev   0x0201689c
+#       IDENTICAL, 15 instructions
+#   _ZN11dCapEnemy_cD1Ev 0x0200651c vs _ZN11dCapEnemy_cD2Ev 0x020aedbc
+#       IDENTICAL, 14 instructions   (the D1 is in arm9, the D2 in ov002)
+#
+# Only ModelAnim's D2 is on the wall; dCapEnemy_c's D2 is measured because its
+# D1 and D2 live in different modules and that is worth proving before its D1 is
+# bound to one MSVC symbol.
+BATCHES[4] = """
+_ZN10daWanwan_cD0Ev
+_ZN10daWanwan_cD1Ev
+_ZN14daObjWc_Mizu_cD0Ev
+_ZN15daObjWc_Obj03_cD0Ev
+_ZN15daObjWc_Obj04_cD0Ev
+_ZN7daPkn_cD0Ev
+_ZN7daPkn_cD1Ev
+"""
+
+BATCHES[5] = """
+_ZN11dCapEnemy_cD0Ev
+_ZN11dCapEnemy_cD1Ev
+_ZN15TextureSequenceD0Ev
+_ZN15TextureSequenceD1Ev
+_ZN15dScMgSnowball_cD0Ev
+_ZN18TextureTransformerD0Ev
+_ZN18TextureTransformerD1Ev
+_ZN9ModelAnimD0Ev
+_ZN9ModelAnimD1Ev
+_ZN9ModelAnimD2Ev
+"""
+
+# Which premise each batch stands on.  "inline" is DTORS-A's: the header spells
+# the destructor inline and the forwarder's odr-use makes MSVC emit it.
+# "outofline" is DTORS2's: the header declares it, a compiled per-function
+# structor TU defines it, and the forwarder only calls it.
+PREMISE = {1: "inline", 2: "inline", 3: "inline", 4: "inline", 5: "outofline"}
+
+# Which generated file a batch's rows go into.  DTORS-A's two files are left
+# exactly as they are, so a rebase carries this lane as an additive file.
+GROUP = {1: None, 2: None, 3: None, 4: "w9c", 5: "w9c"}
+
 # Batches that are ACTUALLY EMITTED.  A batch is added here only after its own
 # build gate; a class the link refuses is struck from its batch above with the
 # reason, never left in and skipped here.
-LIVE = [1, 2, 3]
+LIVE = [1, 2, 3, 4, 5]
 
 # The deallocations a D0 body may add, in the spelling the port resolves.  Same
 # table as facegen.DEALLOCATORS and for the same reason: Memory::Deallocate
@@ -394,6 +477,60 @@ def d0_shape(guard, rom, name):
                   "into r1 before the call" % dealloc)
 
 
+def slice_files(root):
+    """Every port/slice_*.txt in the tree."""
+    import glob
+    return sorted(glob.glob(os.path.join(root, "port", "slice_*.txt")))
+
+
+_LIVE_SLICE = {}
+
+
+def live_slice_rows(root):
+    """The set of src paths any port/slice_*.txt lists UNCOMMENTED.
+
+    A commented row is a retirement with a reason written beside it, so it must
+    not read as compiled; that is what the leading `#` means in every slice file
+    in this tree.
+    """
+    if root in _LIVE_SLICE:
+        return _LIVE_SLICE[root]
+    out = set()
+    for f in slice_files(root):
+        for ln in open(f, encoding="utf-8", errors="replace"):
+            ln = ln.strip()
+            if ln and not ln.startswith("#"):
+                out.add(ln.replace("\\", "/"))
+    _LIVE_SLICE[root] = out
+    return out
+
+
+def defining_tu(root, cls, name):
+    """(path, None) for the compiled per-function structor TU, or (None, why).
+
+    THE OUT-OF-LINE PREMISE.  A batch-5 class does not spell its destructor
+    inline, so the forwarder cannot make MSVC emit one; it can only call one
+    that is already in the link.  What puts it there is the class's own
+    per-function structor TU, src/_ZN<n><Cls>D1Ev.cpp (or D2), compiled because
+    a slice row names it.  Both halves are checked here: the file must exist in
+    src/ and a slice file must list it uncommented.
+    """
+    live = live_slice_rows(root)
+    tried = []
+    for k in ("1", "2"):
+        rel = "src/_ZN%d%sD%sEv.cpp" % (len(cls), cls, k)
+        tried.append(rel)
+        if not os.path.exists(os.path.join(root, rel.replace("/", os.sep))):
+            continue
+        if rel in live:
+            return rel, None
+        return None, ("%s exists but no port/slice_*.txt lists it uncommented, "
+                      "so nothing defines ~%s in this link" % (rel, cls))
+    return None, ("no per-function structor TU for %s under src/ (tried %s), "
+                  "so the out-of-line premise has nothing to stand on"
+                  % (cls, ", ".join(tried)))
+
+
 def derive(root, which=None):
     """(emitted rows, refusals). Every check is stated in the module header."""
     sys.path.insert(0, os.path.join(root, "port", "tools"))
@@ -418,15 +555,29 @@ def derive(root, which=None):
                                ", ".join(h for h, _i in hs) or "none")))
             continue
         hdr, inline = hs[0]
-        if not inline:
-            refused.append((name, "include/%s does not spell ~%s inline, so "
-                            "this row is not an inline-in-header row and needs "
-                            "a different answer" % (hdr, cls)))
-            continue
+        premise = PREMISE.get(batch, "inline")
+        tu = None
+        if premise == "inline":
+            if not inline:
+                refused.append((name, "include/%s does not spell ~%s inline, "
+                                "so this row is not an inline-in-header row "
+                                "and needs a different answer" % (hdr, cls)))
+                continue
+        else:
+            if inline:
+                refused.append((name, "include/%s DOES spell ~%s inline, so "
+                                "this row belongs to the inline premise and "
+                                "not to the out-of-line one" % (hdr, cls)))
+                continue
+            tu, why = defining_tu(root, cls, name)
+            if tu is None:
+                refused.append((name, why))
+                continue
         span, _why = rom.facegen._span_of(rom.root, name)
         addr = span[0]
         row = {"batch": batch, "name": name, "cls": cls, "kind": kind,
-               "hdr": hdr, "addr": addr, "dealloc": None, "heap": None}
+               "hdr": hdr, "addr": addr, "dealloc": None, "heap": None,
+               "premise": premise, "tu": tu}
         if kind == "0":
             got, why = d0_shape(guard, rom, name)
             if got is None:
@@ -543,32 +694,51 @@ def _closure(root, hdr, memo):
     return seen
 
 
+def _suffix(group, split):
+    """The file suffix for one (GROUP, SPLITS) pair. None is DTORS-A's file."""
+    parts = [x for x in (group, split) if x]
+    return "_".join(parts) or None
+
+
 def split_rows(root, rowlist):
-    """([(path suffix, rows)], refusals). The main file first."""
+    """([(path suffix, rows)], refusals). The main file first.
+
+    TWO axes, and they are independent.  GROUP keeps lane DTORS2's wave-9c rows
+    in their own file so DTORS-A's two files stay byte-identical through a
+    rebase; SPLITS is the measured header conflict, and it is applied inside
+    each group because the conflicting header is reachable from either lane's
+    rows.
+    """
     memo = {}
-    groups = {None: []}
+    groups = {}
     refused = []
     for r in rowlist:
         c = _closure(root, r["hdr"], memo)
-        where = None
-        for s in SPLITS:
-            if s["header"] in c and s["against"] in c:
+        split, bad = None, False
+        for sp in SPLITS:
+            if sp["header"] in c and sp["against"] in c:
                 refused.append((r["name"], "include/%s pulls in BOTH %s and "
                                 "%s, which cannot share a translation unit: %s"
-                                % (r["hdr"], s["header"], s["against"],
-                                   s["why"])))
-                where = "refused"
+                                % (r["hdr"], sp["header"], sp["against"],
+                                   sp["why"])))
+                bad = True
                 break
-            if s["header"] in c:
-                where = s["suffix"]
+            if sp["header"] in c:
+                split = sp["suffix"]
                 break
-        if where == "refused":
+        if bad:
             continue
-        groups.setdefault(where, []).append(r)
-    out = [(None, groups[None])]
-    for s in SPLITS:
-        if groups.get(s["suffix"]):
-            out.append((s["suffix"], groups[s["suffix"]]))
+        groups.setdefault(_suffix(GROUP.get(r["batch"]), split), []).append(r)
+    order = [None] + [_suffix(None, sp["suffix"]) for sp in SPLITS]
+    for g in sorted(x for x in set(GROUP.values()) if x):
+        order.append(_suffix(g, None))
+        order += [_suffix(g, sp["suffix"]) for sp in SPLITS]
+    out = []
+    for sfx in order:
+        if sfx is None:
+            out.append((None, groups.get(None, [])))
+        elif groups.get(sfx):
+            out.append((sfx, groups[sfx]))
     return out, refused
 
 
@@ -580,6 +750,20 @@ def genpath(root, suffix):
 
 def emit(root, rowlist, path, suffix=None):
     lines = [BANNER]
+    if suffix is not None and suffix.startswith("w9c"):
+        lines.append("//")
+        lines.append("// THIS FILE IS RUN link100 WAVE 9c, LANE DTORS2's half")
+        lines.append("// of the same mechanism.  Its batch-4 rows stand on the")
+        lines.append("// SAME premise as the file above (the header spells the")
+        lines.append("// destructor inline); their owning TUs were simply not")
+        lines.append("// compiled when DTORS-A ran, and lanes SEATS2 and")
+        lines.append("// HOSTGEN4 have seated them since.  Its batch-5 rows")
+        lines.append("// stand on the OUT-OF-LINE premise: the header only")
+        lines.append("// declares the destructor and the class's own")
+        lines.append("// per-function structor TU defines it, so the forwarder")
+        lines.append("// CALLS a body that is already in the link instead of")
+        lines.append("// making MSVC emit one.  Each row below says which.")
+        suffix = suffix[3:].lstrip("_") or None
     if suffix is not None:
         s = [x for x in SPLITS if x["suffix"] == suffix][0]
         lines.append("//")
@@ -614,18 +798,19 @@ def emit(root, rowlist, path, suffix=None):
         lines.append("")
     for r in sorted(rowlist, key=lambda x: (x["batch"], x["name"])):
         call = "((%s *)self)->%s::~%s();" % (r["cls"], r["cls"], r["cls"])
+        how = "the inline ~%s()" % r["cls"]             if r.get("premise", "inline") == "inline"             else "~%s(), defined out of line by %s" % (r["cls"], r.get("tu"))
         if r["kind"] == "0":
             if r["heap"]:
                 free = " %s(self, %s);" % (r["dealloc"], r["heap"])
             else:
                 free = " %s(self);" % r["dealloc"]
-            lines.append("/* ROM 0x%08x %s -- batch %d, the inline ~%s() plus "
-                         "%s */" % (r["addr"], r["name"], r["batch"], r["cls"],
-                                    r["dealloc"]))
+            lines.append("/* ROM 0x%08x %s -- batch %d, %s plus %s */"
+                         % (r["addr"], r["name"], r["batch"], how,
+                            r["dealloc"]))
         else:
             free = ""
-            lines.append("/* ROM 0x%08x %s -- batch %d, the inline ~%s() */"
-                         % (r["addr"], r["name"], r["batch"], r["cls"]))
+            lines.append("/* ROM 0x%08x %s -- batch %d, %s */"
+                         % (r["addr"], r["name"], r["batch"], how))
         lines.append('extern "C" void %s(void *self)' % r["name"])
         lines.append("{ %s%s }" % (call, free))
         lines.append("")
@@ -720,15 +905,22 @@ def conflict_scan(root, rowlist):
     return {t: sorted(v) for t, v in owner.items() if len(v) > 1}, len(union)
 
 
-SLICE = "port/slice_dtors_a.txt"
+# The slice lists that carry the GENERATED FILES themselves (not src rows).
+# DTORS-A's is left alone; wave 9c's file is listed in lane DTORS2's own list
+# with its own CMake block, so a rebase carries each lane's step separately.
+SLICES = ["port/slice_dtors_a.txt", "port/slice_dtors2.txt"]
+SLICE = SLICES[0]
 
 
 def slice_rows(root):
-    p = os.path.join(root, SLICE)
-    if not os.path.exists(p):
-        return []
-    return [ln.strip() for ln in open(p, encoding="utf-8")
-            if ln.strip() and not ln.strip().startswith("#")]
+    out = []
+    for rel in SLICES:
+        p = os.path.join(root, rel)
+        if not os.path.exists(p):
+            continue
+        out += [ln.strip() for ln in open(p, encoding="utf-8")
+                if ln.strip() and not ln.strip().startswith("#")]
+    return out
 
 
 def main():
@@ -775,9 +967,9 @@ def main():
         extra = [f for f in have if f.startswith("port/hal/dtor_forwarders_")
                  and f not in want_files]
         if missing or extra:
-            print("dtorfwd --verify: %s does not list exactly the generated "
+            print("dtorfwd --verify: %s do not list exactly the generated "
                   "files. missing %s; stale %s"
-                  % (SLICE, missing or "none", extra or "none"))
+                  % (" + ".join(SLICES), missing or "none", extra or "none"))
             bad += 1
         if bad:
             return 1
