@@ -481,7 +481,42 @@ set(PORT_HOSTGEN_TU
     # than counted by eye. Compiled raw they would latch in the mapped I/O
     # window and never reach the PPU, which is what the substitution exists to
     # prevent and the same reason dScMgD3DBase_c is on this list.
-    src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp)
+    src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
+    # HOST_COPY_PARK, run link100 lane DUPES: the last three of walk_window's
+    # five duplicate symbols. Each of these translation units defines a body
+    # port/unmatched/ also defines under a standing PORT_HOST_ABI ruling, and
+    # every one of those rulings says the HOST COPY is the body that runs
+    # (runs/link100/out/ALIAS2/host_abi_conflicts.txt and
+    # out/HOSTGEN4/needs_main.md section 3). The substitution brackets the src
+    # definition out of the GENERATED copy and does nothing else: the host copy
+    # is untouched, the flat name stays defined by the same object that defines
+    # it today, and the rest of each class TU goes on compiling. The other two
+    # duplicate rows need no entry here, because src/actors/dScMgCup_c.cpp and
+    # src/minigames/d_s_mg_trampoline2.cpp are already substituted; their parks
+    # are rows in tools/hostgen.py's HOST_COPY_PARK table alone.
+    #
+    # WHAT ELSE EACH SUBSTITUTION CARRIES. Moving a compile off the raw path
+    # brings hostgen's other rewrites with it, so each was measured on the
+    # generated object rather than assumed:
+    #   src/actors/dScMgSound_c.cpp        SIX MMIO rewrites, which compiled
+    #       raw latch in the mapped I/O window and never reach the PPU, and ONE
+    #       vtable address-point bias dropped on dScMgSound_c_classInit's store
+    #       of _ZTV12dScMgSound_c.
+    #   src/actors/daBombking_c.cpp        ONE vtable address-point bias
+    #       dropped, on the factory's store of &_ZTV12daBombking_c[2].
+    #   src/game/actors/d_a_obj_b_swdoor.cpp   nothing else. main's rewrite of
+    #       that TU spells its factory `return new daObjBSwdoor_c();`, so the
+    #       object carries no _ZTV14daObjBSwdoor_c relocation at all and the
+    #       baseline row for it was already stale before this change.
+    # The two live bias drops retire two rows of tools/vptr_addend_baseline.txt,
+    # which is what that file's own header asks for: "A row leaves it when its
+    # TU joins port/CMakeLists.txt's PORT_HOSTGEN_TU list, where
+    # tools/hostgen.py's VPTR_ADDRESS_POINT rewrite drops the bias." Nothing is
+    # added to the baseline and vptr_addend_guard goes on refusing any new
+    # nonzero addend.
+    src/actors/dScMgSound_c.cpp
+    src/actors/daBombking_c.cpp
+    src/game/actors/d_a_obj_b_swdoor.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4191,6 +4226,10 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov080_021250c8.cpp"  # Bbh tick,        ov080 +0x36c
     # --- inert today: no host copy, no reference, /OPT:REF strips them ---
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daBombking_c.cpp"   # KingBobOmb, ov078 +0x420
+    # and the generated copy, lane DUPES: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the property on a source
+    # nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daBombking_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10MrBlizzard8BehaviorEv.cpp"   # MrBlizzard, ov081 +0x3f8
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11ChiefChilly8BehaviorEv.cpp"  # ChiefChilly, ov073 +0x37c
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_pg_mthr.cpp"  # ov018 +0x370
@@ -7446,6 +7485,10 @@ endforeach()
 # g_020beb68, and the -D is scoped to it rather than made repo-global.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/dScMgSound_c.cpp"
+    # and the generated copy, lane DUPES: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the property on a source
+    # nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/dScMgSound_c.cpp"
     PROPERTIES COMPILE_DEFINITIONS "g_020beb68=data_ov004_020beb68")
 
 # run mg9 lane S371: dScMgAmida_c, actor id 0x173 (scene 371) -- THE ONE TRUE
@@ -10637,6 +10680,11 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daBombking_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daBombking_c.cpp"
+    # and the generated copy, lane DUPES: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the property on a source
+    # nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daBombking_c.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daBombking_c.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZN13MontyMoleRockD0Ev=func_ov078_02123804")
 
@@ -17145,6 +17193,10 @@ endforeach()
 # the option, and adding it would be a claim nothing measured.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/dScMgSound_c.cpp"
+    # and the generated copy, lane DUPES: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the property on a source
+    # nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/dScMgSound_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4")
 # dScMgSound_c.cpp also carries a fall-off-the-end body (dScMgSound_c::Virtual50),
@@ -17153,6 +17205,10 @@ set_source_files_properties(
 # The block at the end of this file explains the option.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/dScMgSound_c.cpp"
+    # and the generated copy, lane DUPES: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the property on a source
+    # nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/dScMgSound_c.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4;/wd4716")
 # src/func_ov002_020aea30.cpp is a //cpp-marked .c: its own text spells
 # `typedef void (C::*PMF)(int, int);`, which is not C. The tree's standing

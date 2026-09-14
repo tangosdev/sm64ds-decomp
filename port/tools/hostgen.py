@@ -2470,6 +2470,164 @@ def ledger_park(text, sym):
     return apply_patches(text, sym, LEDGER_PARK, "LEDGER_PARK")
 
 
+# ---- A BODY A PORT_HOST_ABI HOST COPY ALREADY DEFINES ----------------------
+#
+# Run link100, lane DUPES. The sibling of LEDGER_PARK above, for the other
+# reason a seated translation unit arrives with a body the link already has.
+# LEDGER_PARK's reason is port/faces_sync.txt: a REVERSE face defines the
+# decorated member and the flat ROM name is its forward target, so that park is
+# waiting on a ledger row to flip. These five wait on nothing in the ledger.
+# Each is a body port/unmatched/ host-copies under a standing PORT_HOST_ABI
+# ruling BECAUSE THE MATCHED BODY IS WRONG ON THE HOST, and main's 2026-09
+# consolidation folded that body into a class translation unit the port already
+# compiles for its other members, so the two collide at the link. They are the
+# five LNK2005 rows walk_window carried at port/l7-int4 52c4b9a3b.
+#
+# The rulings are one per row, in runs/link100/out/ALIAS2/host_abi_conflicts.txt
+# and runs/link100/out/HOSTGEN4/needs_main.md section 3, and every one of them
+# says THE HOST COPY IS THE BODY THAT RUNS. So the park keeps the host copy and
+# its ruling exactly where they are and removes the second definition, which is
+# the only end of this that leaves dispatch untouched: the flat name stays
+# defined, by the same object that defines it today, and a caller inside the
+# generated copy still binds to it under the same name through the declaration
+# the translation unit already carries.
+#
+# NOT a retirement of a host copy and not an edit to src/. If the decomp side
+# fixes the source the host copy retires and the row here goes with it, in a
+# change gated by a captured scene-to-level transition, because THAT change
+# moves what runs. Three of these five defects are already absent from main's
+# text in the tree this was written against; that is written up in
+# runs/link100/out/DUPES/bugs.md as the decomp side's finding, and it is not a
+# reason for a port lane to swap the bodies tonight.
+#
+# ANCHORED ON THIS TREE'S TEXT, which is the fold rule lane INT3 wrote after
+# four defects of exactly one shape. Every anchor below was taken out of the
+# file it patches at 52c4b9a3b and checked to occur exactly once. Each bracket
+# opens on the body's own definition line and closes on its own last brace,
+# never banner to banner, so an `extern "C" {` block's closing brace or a
+# file-scope declaration sitting between a banner and a body can never fall
+# inside the #if 0.
+HOST_COPY_PARK = {
+    # func_ov006_0211ba88, ov006 0x0211ba88, host-copied by
+    # port/unmatched/MgSound_ShadowSlot35.cpp, whose header lists four measured
+    # defects in the matched translation unit (the dropped receiver at the
+    # vtable slot-35 call, the modulo approximated by one subtraction, an int
+    # store where the ROM stores a byte, and the n == 0 test nested inside the
+    # idx >= limit arm).
+    "dScMgSound_c": [
+        ("void func_ov006_0211ba88(char *base, int idx)\n{\n",
+         "/* hostgen HOST_COPY_PARK: port/unmatched/MgSound_ShadowSlot35.cpp\n"
+         "   defines this ROM name under a standing PORT_HOST_ABI ruling, so a\n"
+         "   second definition here is a duplicate symbol. Parked, not deleted;\n"
+         "   the host copy goes on defining the name and nothing dispatches\n"
+         "   differently. See the HOST_COPY_PARK table in tools/hostgen.py. */\n"
+         "#if 0  /* hostgen HOST_COPY_PARK: func_ov006_0211ba88 */\n"
+         "void func_ov006_0211ba88(char *base, int idx)\n{\n"),
+        ("    ctx->ent[idx].b0d = 0;\n    ctx->ent[idx].b0e = 0;\n}\n",
+         "    ctx->ent[idx].b0d = 0;\n    ctx->ent[idx].b0e = 0;\n}\n"
+         "#endif  /* hostgen HOST_COPY_PARK: func_ov006_0211ba88 */\n"),
+    ],
+    # func_ov078_02123f1c, ov078 0x02123f1c, host-copied by
+    # port/unmatched/KingBobOmb_HeldHealthCheck.cpp. The ruling is an implicit
+    # register argument: Player::GetHealth's receiver is c->field_494 and rode
+    # r0 on ARM, which is why the matched body calls it with no argument at all.
+    # That spelling is still here in main's text, three lines below the anchor.
+    "daBombking_c": [
+        ('extern "C" int func_ov078_02123f1c(CView* c)\n{\n',
+         "/* hostgen HOST_COPY_PARK: port/unmatched/KingBobOmb_HeldHealthCheck.cpp\n"
+         "   defines this ROM name under a standing PORT_HOST_ABI ruling (the\n"
+         "   GetHealth receiver rides r0), so a second definition here is a\n"
+         "   duplicate symbol. Parked, not deleted. See the HOST_COPY_PARK\n"
+         "   table in tools/hostgen.py. */\n"
+         "#if 0  /* hostgen HOST_COPY_PARK: func_ov078_02123f1c */\n"
+         'extern "C" int func_ov078_02123f1c(CView* c)\n{\n'),
+        ("        KingBobOmb_SetState(c, data_ov078_0212709c);\n"
+         "    }\n    return 1;\n}\n",
+         "        KingBobOmb_SetState(c, data_ov078_0212709c);\n"
+         "    }\n    return 1;\n}\n"
+         "#endif  /* hostgen HOST_COPY_PARK: func_ov078_02123f1c */\n"),
+    ],
+    # daObjBSwdoor_c_classInit, ov014, host-copied by
+    # port/unmatched/ShutterBob_Spawn_hostcopy.cpp, which carries a measured
+    # fault: the matched factory emitted its two pooled vtable constants in
+    # POOL address order rather than STORE order, the base table won, slot 0
+    # came up null and the object faulted before its InitResources ran. Four
+    # lines, so the bracket is one pair around the whole body.
+    "d_a_obj_b_swdoor": [
+        ('extern "C" daObjBSwdoor_c *daObjBSwdoor_c_classInit()\n'
+         "{\n    return new daObjBSwdoor_c();\n}\n",
+         "/* hostgen HOST_COPY_PARK: port/unmatched/ShutterBob_Spawn_hostcopy.cpp\n"
+         "   defines this factory under a standing ruling with a measured fault\n"
+         "   behind it, so a second definition here is a duplicate symbol.\n"
+         "   Parked, not deleted. See the HOST_COPY_PARK table in\n"
+         "   tools/hostgen.py. */\n"
+         "#if 0  /* hostgen HOST_COPY_PARK: daObjBSwdoor_c_classInit */\n"
+         'extern "C" daObjBSwdoor_c *daObjBSwdoor_c_classInit()\n'
+         "{\n    return new daObjBSwdoor_c();\n}\n"
+         "#endif  /* hostgen HOST_COPY_PARK: daObjBSwdoor_c_classInit */\n"),
+    ],
+    # dScMgTrampoline2_c_classInit, ov006 0x0212471c, host-copied by
+    # port/unmatched/MgTrampolineTerror_Factory.cpp, which is the bluntest of
+    # the set: that file is this translation unit with SIX ARGUMENT PAIRS put
+    # back in the ROM's order and nothing else changed, and it pastes the fault
+    # the wrong order shipped, a call through a null pointer in
+    # ModelBase::SetFile before frame 0 of scene 385. The profile table at the
+    # top of this file still names the factory, and that reference binds to the
+    # host copy's definition through the declaration above it.
+    "d_s_mg_trampoline2": [
+        ('extern "C" void *dScMgTrampoline2_c_classInit(void)\n{\n',
+         "/* hostgen HOST_COPY_PARK: port/unmatched/MgTrampolineTerror_Factory.cpp\n"
+         "   defines this factory with six argument pairs put back in the ROM's\n"
+         "   order, so a second definition here is both a duplicate symbol and\n"
+         "   the wrong body. Parked, not deleted. See the HOST_COPY_PARK table\n"
+         "   in tools/hostgen.py. */\n"
+         "#if 0  /* hostgen HOST_COPY_PARK: dScMgTrampoline2_c_classInit */\n"
+         'extern "C" void *dScMgTrampoline2_c_classInit(void)\n{\n'),
+        ("        __cxa_vec_ctor(scene + 0x7ad0, 5, 0x24,\n"
+         "                      (void *)func_ov006_021225a8,\n"
+         "                      (void *)func_ov006_02120938);\n"
+         "    }\n    return scene;\n}\n",
+         "        __cxa_vec_ctor(scene + 0x7ad0, 5, 0x24,\n"
+         "                      (void *)func_ov006_021225a8,\n"
+         "                      (void *)func_ov006_02120938);\n"
+         "    }\n    return scene;\n}\n"
+         "#endif  /* hostgen HOST_COPY_PARK: dScMgTrampoline2_c_classInit */\n"),
+    ],
+    # dScMgCup_c_classInit, ov006 0x020e0574, host-copied by
+    # port/unmatched/MgCup_Factory.cpp. The ruling is the base constructor call
+    # spelled _ZN11dScMgBase_cC2Ev() with no argument, one of exactly two such
+    # calls in the ROM, relying on r0 already holding the object; the host copy
+    # passes the object explicitly so the callee does not store three vtable
+    # words through an uninitialised stack slot. This translation unit is
+    # already substituted for its UNINIT_LOCAL row, so the park is the only
+    # thing added for it here.
+    "dScMgCup_c": [
+        ('extern "C" void *dScMgCup_c_classInit()\n{\n',
+         "/* hostgen HOST_COPY_PARK: port/unmatched/MgCup_Factory.cpp defines\n"
+         "   this factory under a standing PORT_HOST_ABI ruling (the base\n"
+         "   constructor call with no argument), so a second definition here is\n"
+         "   a duplicate symbol. Parked, not deleted. See the HOST_COPY_PARK\n"
+         "   table in tools/hostgen.py. */\n"
+         "#if 0  /* hostgen HOST_COPY_PARK: dScMgCup_c_classInit */\n"
+         'extern "C" void *dScMgCup_c_classInit()\n{\n'),
+        ("        __cxa_vec_ctor(scene + 0x53e8, 3, 8,\n"
+         "                      (void *)func_0203d738,\n"
+         "                      (void *)NullDestructor_0203d47c);\n"
+         "    }\n    return scene;\n}\n",
+         "        __cxa_vec_ctor(scene + 0x53e8, 3, 8,\n"
+         "                      (void *)func_0203d738,\n"
+         "                      (void *)NullDestructor_0203d47c);\n"
+         "    }\n    return scene;\n}\n"
+         "#endif  /* hostgen HOST_COPY_PARK: dScMgCup_c_classInit */\n"),
+    ],
+}
+
+
+def host_copy_park(text, sym):
+    """Bracket a body port/unmatched/ host-copies under a standing ruling."""
+    return apply_patches(text, sym, HOST_COPY_PARK, "HOST_COPY_PARK")
+
+
 # ---- A DECORATED ROM DATUM A FILE-SCOPE DECLARATION CANNOT REACH -----------
 #
 # Run link100, lane HOSTGEN4. DATA_C_LINKAGE below is the right fix whenever one
@@ -2859,6 +3017,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = member_redecl_patch(text, sym)
     text, _ = redecl_conflict_patch(text, sym)
     text, _ = ledger_park(text, sym)
+    text, _ = host_copy_park(text, sym)
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)
