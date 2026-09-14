@@ -119,6 +119,51 @@ src/minigames/d_s_mg_roulette.cpp
 # right-hand sides are defined in this link.
 src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
 
+# ---- GATE 2: two dActor_c members a fresh sweep found on the 234-row wall --
+#
+# Found by re-running the SOURCE-SIDE sweep (out/SEATS2/sweep.py) against the
+# wall as it stands AFTER gate 1 rather than against the wall this lane
+# started on. Three translation units qualified that did not qualify at
+# 319f0f191, because the rows they answer only became visible when lane
+# FACES3's and lane INT3's face work moved the wall underneath them. Two of
+# the three are seats and the third is the same name under a different
+# overload, explained below.
+#
+# Both are ordinary uncompiled .cpp members, on no slice list and in no CMake
+# block. Neither needs hostgen: no MMIO write, no vptr store, no local-type
+# conflict. They are here rather than on a raw slice row only because this
+# lane's block is the one that carries them.
+#
+# MEASURED, each compiled standalone with the build's own flags: closes one,
+# duplicates nothing, references nothing outside the wall at all. The
+# referrers are real class TUs whose own bodies call the member --
+# daOts_c.cpp's func_ov064_021166f0 and d_a_propeller_heyho.cpp's
+# func_ov070_0211fa80 -- so these are genuinely missing definitions and not a
+# spelling question.
+#
+# dActor_c::IsPlayerInRange(const Vector3 &, s32), ROM 0x0201045c, 0x3c bytes.
+# Closes ?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z.
+#
+# ITS SIBLING OVERLOAD IS DELIBERATELY NOT HERE.
+# src/_ZN8dActor_c15IsPlayerInRangeEi.cpp is dActor_c::IsPlayerInRange(s32) at
+# 0x020104dc, which mangles to ?IsPlayerInRange@dActor_c@@QAE_NH@Z and is on
+# no wall. The sweep reports both files against the one wall row because its
+# index is keyed on class and method name and cannot see the parameter list;
+# the row belongs to the two-argument overload and seating the other one would
+# close nothing.
+#
+# NOT A closestplayer_guard ROW. Both bodies call ClosestPlayer() as a C++
+# member with its receiver, not through the flat C spelling with no argument,
+# which is the text the guard refuses and the PORT_HOST_ABI ruling
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp exists for.
+src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp
+
+# dActor_c::HorzAngleToCPlayerOrAng(), ROM 0x0201097c, 0x3c bytes. Closes
+# ?HorzAngleToCPlayerOrAng@dActor_c@@QAEFXZ. The F in the mangle is s16, and
+# the decomp's note on the body proves that width off the ROM's own
+# `ldrsheq r0, [r4, #0x8e]`, a signed halfword load of mAngleY.
+src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp
+
 # ---- the name bridges the seats need, and two flat rows of their own -------
 # Thirty-three decorated ROM data names across the daGmch_c and daMip_c seats,
 # each one a C++ declaration of a hosted symbol that MSVC decorates because the
