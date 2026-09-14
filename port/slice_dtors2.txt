@@ -35,3 +35,15 @@
 # measured against is walk_window's own unresolved block, and a definition that
 # has not been measured on a target does not belong on it.
 port/hal/dtor_forwarders_gen_w9c.cpp
+
+# THE WRAPPER STRUCTORS, a different row shape in the same lane's file set.
+# Four src TUs declare a small SharedFilePtr wrapper inside themselves with a
+# constructor and a destructor DECLARED and neither DEFINED, and instantiate one
+# at file scope, so walk_window asks for ??0<Cls>@@QAE@I@Z and ??1<Cls>@@QAE@XZ
+# in MSVC's own spelling.  config/tu_manifest.d records which ROM address the
+# cartridge resolved each of those imports to, with the relocation that proves
+# it, and every one of those destinations is already defined in this link
+# (hal/cxx_aliases.cpp's veneers and src/SharedFilePtr_Destruct_Clsn.c), so this
+# file needs no seat and can add none.  No vtable question arises: neither
+# SharedFilePtr nor any of the four wrappers declares a virtual.
+port/hal/dtor_forwarders_gen_w9c_structors.cpp

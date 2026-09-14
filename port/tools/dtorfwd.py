@@ -338,6 +338,30 @@ _ZN9daSetSE_cD0Ev
 # Only ModelAnim's D2 is on the wall; dCapEnemy_c's D2 is measured because its
 # D1 and D2 live in different modules and that is worth proving before its D1 is
 # bound to one MSVC symbol.
+# STRUCK OFF BATCH 4 after this lane's gate 2 measured it, and it is the same
+# failure mode DTORS-A's note above describes, on a third class.  Emitting
+# Tornado's inline destructor makes MSVC emit ??_7Tornado@@6B@, which references
+# every virtual slot, and two of Tornado's slots have a body in this link only
+# under the ROM's FLAT name:
+#
+#   _ZN7Tornado8BehaviorEv        ov096 0x02137448, 0x11c bytes
+#   _ZN7Tornado13InitResourcesEv  ov096 0x02137564, 0x158 bytes
+#
+# both defined in port/unmatched/Tornado_HostSites.cpp and reached from
+# port/hal/actor_classes_ov096.cpp's ROM vtable array through a __fastcall face.
+# Gate 2's own lines, from tmp/build_dtors2_2.log:
+#
+#   dtor_forwarders_gen_w9c.cpp.obj : error LNK2001: unresolved external symbol
+#   "public: virtual int __thiscall Tornado::InitResources(void)" (?InitResources@Tornado@@UAEHXZ)
+#   dtor_forwarders_gen_w9c.cpp.obj : error LNK2001: unresolved external symbol
+#   "public: virtual int __thiscall Tornado::Behavior(void)" (?Behavior@Tornado@@UAEHXZ)
+#
+# So the emission adds two rows and closes one, and the row comes out.  Like
+# Toad and daTree_c it is one facegen REVERSE FACE per slot from coming back:
+# the flat name is defined and the decorated one is wanted, which is the shape
+# of every row already in faces_sync.txt.  That file is lane FACES4's this wave.
+# ??1Tornado@@UAE@XZ therefore stays on the wall, and it is the only row this
+# lane hands back.
 BATCHES[4] = """
 _ZN10daWanwan_cD0Ev
 _ZN10daWanwan_cD1Ev
@@ -375,6 +399,130 @@ GROUP = {1: None, 2: None, 3: None, 4: "w9c", 5: "w9c"}
 # build gate; a class the link refuses is struck from its batch above with the
 # reason, never left in and skipped here.
 LIVE = [1, 2, 3, 4, 5]
+
+
+# ---------------------------------------------------------------------------
+# THE WRAPPER STRUCTORS (run link100 wave 9c, lane DTORS2).
+#
+# A DIFFERENT ROW SHAPE, and the wall asks for it in the MSVC spelling rather
+# than the ROM's: `??0BattanModelFilePtr@@QAE@I@Z` and
+# `??1BattanModelFilePtr@@QAE@XZ`, not a flat _ZN...Ev name.
+#
+# WHAT THESE CLASSES ARE.  Four src TUs declare a small SharedFilePtr wrapper
+# INSIDE THE .cpp, with a constructor and a destructor DECLARED and neither
+# DEFINED, and then define a file-scope object of that type:
+#
+#     struct BattanModelFilePtr : SharedFilePtr { u32 words[2];
+#         BattanModelFilePtr(u32 fileID); ~BattanModelFilePtr(); };
+#     BattanModelFilePtr data_ov023_02112088(1558);
+#
+# mwccarm resolved those two undefined imports to ROM addresses, and
+# config/tu_manifest.d records which, with the evidence, per class:
+#
+#   ov023/daObjFm_Battan_c.json      _ZN18BattanModelFilePtrC1Ej -> func_02017acc
+#                                    _ZN18BattanModelFilePtrD1Ev -> func_02017ab4
+#                                    _ZN22BattanCollisionFilePtrC1Ej -> func_02017b4c
+#                                    _ZN22BattanCollisionFilePtrD1Ev ->
+#                                        SharedFilePtr_Destruct_Clsn (0x02017b34)
+#   ov044/daObjKb1Billboard_c.json   C1 -> func_02017acc, D1 -> func_02017ab4
+#   ov100/daStarGate_c.json          C1 -> func_02017acc, D1 -> func_02017ab4
+#
+# So the port is not missing a body, it is missing the MEMBER DEFINITION that
+# carries MSVC's own name onto it.  This file writes that definition, declaring
+# the class EXACTLY as the owning TU declares it -- an MSVC mangle depends on
+# the name, the class, the calling convention and the signature and on nothing
+# else -- and forwarding to the canonical destination.  The calling convention
+# conversion (__thiscall member to __cdecl C body) is the compiler's, not a
+# hand-written thunk, so the __fastcall dead-edx face trap does not arise.
+#
+# NO ROM-SIDE VTABLE QUESTION ARISES.  include/SharedFilePtr.h declares no data
+# members and no virtuals, and none of the four wrappers declares one either, so
+# there is no vftable to store and the PORT_HOST_ABI ruling in
+# tools/dtor_store_guard.py has nothing to say about these rows.  What it does
+# say about them is nothing: they carry no flat _ZN...D[012]Ev name, so the
+# guard reads none out of this file, which is correct rather than a gap.
+#
+# EVERY CANONICAL DESTINATION IS ALREADY IN THIS LINK, checked before a row was
+# written: func_02017acc, func_02017ab4 and func_02017b4c are host veneers in
+# hal/cxx_aliases.cpp (lines 384, 437, 439, each with its own PORT_HOST_ABI note
+# about the r1 fileID ride-through), and SharedFilePtr_Destruct_Clsn is
+# src/SharedFilePtr_Destruct_Clsn.c, on a live slice row.  So no row here needs
+# a seat and none can add one.
+STRUCTORS = [
+    {
+        "cls": "BattanModelFilePtr",
+        "base": "SharedFilePtr",
+        "body": "u32 words[2];",
+        "src": "src/game/actors/d_a_obj_fm_battan.cpp:90",
+        "manifest": "config/tu_manifest.d/ov023/daObjFm_Battan_c.json",
+        "ctor": ("func_02017acc", "0x02017acc"),
+        "dtor": ("func_02017ab4", "0x02017ab4"),
+    },
+    {
+        "cls": "BattanCollisionFilePtr",
+        "base": "SharedFilePtr",
+        "body": "u32 words[2];",
+        "src": "src/game/actors/d_a_obj_fm_battan.cpp:97",
+        "manifest": "config/tu_manifest.d/ov023/daObjFm_Battan_c.json",
+        "ctor": ("func_02017b4c", "0x02017b4c"),
+        "dtor": ("SharedFilePtr_Destruct_Clsn", "0x02017b34"),
+    },
+    {
+        "cls": "Kb1BillboardModelFilePtr",
+        "base": "SharedFilePtr",
+        "body": "u32 words[2];",
+        "src": "src/game/actors/d_a_obj_kb1_billboard.cpp:46",
+        "manifest": "config/tu_manifest.d/ov044/daObjKb1Billboard_c.json",
+        "ctor": ("func_02017acc", "0x02017acc"),
+        "dtor": ("func_02017ab4", "0x02017ab4"),
+    },
+    {
+        "cls": "StarGateModelFilePtr",
+        "base": "SharedFilePtr",
+        "body": "u32 words[2];",
+        "src": "src/game/actors/d_a_star_gate.cpp:72",
+        "manifest": "config/tu_manifest.d/ov100/daStarGate_c.json",
+        "ctor": ("func_02017acc", "0x02017acc"),
+        "dtor": ("func_02017ab4", "0x02017ab4"),
+    },
+]
+
+STRUCTOR_SUFFIX = "w9c_structors"
+
+
+# ---------------------------------------------------------------------------
+# ODR-USE ONLY (run link100 wave 9c, lane DTORS2).
+#
+# A class here is on the wall under MSVC's OWN destructor name,
+# ??1<Cls>@@UAE@XZ, because a host __fastcall face calls it
+# (hal/dtor_faces_cpp.cpp's hal_cppd1_<Cls>) off a ROM vtable slot.  Its header
+# spells the destructor inline, so the answer is the same as every other row in
+# this file -- make MSVC emit it -- but its flat ROM names are ALREADY DEFINED
+# somewhere else in this link, so a forwarder under the flat name is a duplicate
+# symbol rather than a row.  Measured, not guessed: this lane's gate 2 wrote the
+# flat pair for daSanbo_c and the link answered
+#
+#   dtor_forwarders_gen_w9c.cpp.obj : error LNK2005: __ZN9daSanbo_cD0Ev
+#       already defined in faces_sync_gen.cpp.obj
+#   dtor_forwarders_gen_w9c.cpp.obj : error LNK2005: __ZN9daSanbo_cD1Ev
+#       already defined in Pokey_HostSites.cpp.obj
+#
+# So the row becomes an odr-use and nothing else: one extern "C" function whose
+# body makes the qualified call, which is what forces MSVC to emit the inline
+# destructor and the class's vftable.  It is deliberately NOT under a ROM name:
+# nothing calls it, it raises no count by itself, and the row that leaves the
+# wall is the decorated destructor a ROM vtable slot genuinely reaches.
+ODRUSE = [
+    {
+        "cls": "daSanbo_c",
+        "hdr": "daSanbo_c.h",
+        "wants": "??1daSanbo_c@@UAE@XZ",
+        "caller": "hal/dtor_faces_cpp.cpp's hal_cppd1_daSanbo_c",
+        "why": ("_ZN9daSanbo_cD0Ev is already defined in faces_sync_gen.cpp "
+                "and _ZN9daSanbo_cD1Ev in port/unmatched/Pokey_HostSites.cpp, "
+                "so a flat forwarder is an LNK2005 rather than a row"),
+    },
+]
 
 # The deallocations a D0 body may add, in the spelling the port resolves.  Same
 # table as facegen.DEALLOCATORS and for the same reason: Memory::Deallocate
@@ -742,6 +890,83 @@ def split_rows(root, rowlist):
     return out, refused
 
 
+STRUCTOR_BANNER = """// GENERATED by port/tools/dtorfwd.py -- do not edit by hand.  Run link100 wave
+// 9c, lane DTORS2.
+//
+// THE ROWS.  Each pair below is a small SharedFilePtr wrapper class that a src
+// translation unit DECLARES inside itself, with a constructor and a destructor
+// declared and neither defined, and then instantiates at file scope:
+//
+//     struct BattanModelFilePtr : SharedFilePtr { u32 words[2];
+//         BattanModelFilePtr(u32 fileID); ~BattanModelFilePtr(); };
+//     BattanModelFilePtr data_ov023_02112088(1558);
+//
+// So walk_window asks for ??0BattanModelFilePtr@@QAE@I@Z and
+// ??1BattanModelFilePtr@@QAE@XZ and nothing defines them.  What the cartridge
+// did with those same two undefined imports is recorded per class in
+// config/tu_manifest.d, with the relocation that proves it, and this file
+// writes the member definition that carries MSVC's name onto that destination.
+//
+// THE CLASS IS DECLARED EXACTLY AS THE OWNING TU DECLARES IT, which is what
+// makes the mangles meet: an MSVC mangle depends on the name, the class, the
+// calling convention and the signature and on nothing else.  The source line
+// each declaration was copied from is quoted above it.
+//
+// THE CALLING CONVENTION IS THE COMPILER'S.  These are real member definitions,
+// so MSVC emits __thiscall and converts to the __cdecl C body itself.  Nothing
+// here is a hand-written thunk and no dead-edx __fastcall face is involved.
+//
+// NO VTABLE QUESTION ARISES.  include/SharedFilePtr.h declares no data members
+// and no virtuals and neither does any of these four wrappers, so nothing
+// stores a vftable and tools/dtor_store_guard.py's PORT_HOST_ABI ruling has
+// nothing to say about these rows.  It reads no name out of this file because
+// there is no flat _ZN...D[012]Ev name in it, which is right rather than a gap.
+"""
+
+
+def emit_structors(root, path):
+    lines = [STRUCTOR_BANNER, "", '#include "types.h"',
+             '#include "SharedFilePtr.h"', ""]
+    fns = {}
+    for r in STRUCTORS:
+        fns[r["ctor"][0]] = ("ctor", r["ctor"][1])
+        fns[r["dtor"][0]] = ("dtor", r["dtor"][1])
+    lines.append("/* The canonical destinations, every one already defined in")
+    lines.append("   this link: the three veneers are hal/cxx_aliases.cpp and")
+    lines.append("   SharedFilePtr_Destruct_Clsn is its own src TU. */")
+    lines.append('extern "C" {')
+    for n in sorted(fns):
+        kind, addr = fns[n]
+        if kind == "ctor":
+            lines.append("int %s(void *self, unsigned int fileID);  /* ROM %s */"
+                         % (n, addr))
+        else:
+            lines.append("int %s(int self);                          /* ROM %s */"
+                         % (n, addr))
+    lines.append("}")
+    lines.append("")
+    for r in STRUCTORS:
+        lines.append("/* %s, declared as %s declares it." % (r["cls"], r["src"]))
+        lines.append("   %s names both destinations. */" % r["manifest"])
+        lines.append("struct %s : %s {" % (r["cls"], r["base"]))
+        lines.append("    %s" % r["body"])
+        lines.append("")
+        lines.append("    %s(u32 fileID);" % r["cls"])
+        lines.append("    ~%s();" % r["cls"])
+        lines.append("};")
+        lines.append("")
+        lines.append("%s::%s(u32 fileID) { %s(this, fileID); }"
+                     % (r["cls"], r["cls"], r["ctor"][0]))
+        lines.append("%s::~%s() { %s((int)this); }"
+                     % (r["cls"], r["cls"], r["dtor"][0]))
+        lines.append("")
+    text = "\n".join(lines).rstrip() + "\n"
+    old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
+    if old != text:
+        open(path, "w", encoding="utf-8", newline="\n").write(text)
+    return text, old
+
+
 def genpath(root, suffix):
     name = "dtor_forwarders_gen.cpp" if suffix is None \
         else "dtor_forwarders_gen_%s.cpp" % suffix
@@ -764,6 +989,9 @@ def emit(root, rowlist, path, suffix=None):
         lines.append("// CALLS a body that is already in the link instead of")
         lines.append("// making MSVC emit one.  Each row below says which.")
         suffix = suffix[3:].lstrip("_") or None
+        odruse = ODRUSE if suffix is None else []
+    else:
+        odruse = []
     if suffix is not None:
         s = [x for x in SPLITS if x["suffix"] == suffix][0]
         lines.append("//")
@@ -773,7 +1001,8 @@ def emit(root, rowlist, path, suffix=None):
         lines.append("// Every row here is a class whose header closure pulls")
         lines.append("// in include/%s. See tools/dtorfwd.py's SPLITS block."
                      % s["header"])
-    hdrs = sorted(set(r["hdr"] for r in rowlist))
+    hdrs = sorted(set([r["hdr"] for r in rowlist]
+                      + [o["hdr"] for o in odruse]))
     lines.append("")
     lines.append('#include "types.h"')
     for h in hdrs:
@@ -813,6 +1042,23 @@ def emit(root, rowlist, path, suffix=None):
                          % (r["addr"], r["name"], r["batch"], how))
         lines.append('extern "C" void %s(void *self)' % r["name"])
         lines.append("{ %s%s }" % (call, free))
+        lines.append("")
+    for o in odruse:
+        lines.append("/* ODR-USE ONLY, no ROM name. The wall wants %s,"
+                     % o["wants"])
+        lines.append("   which %s calls off a ROM vtable slot. %s's"
+                     % (o["caller"], o["cls"]))
+        lines.append("   header spells the destructor inline, so MSVC"
+                     )
+        lines.append("   emits it as soon as something odr-uses it, and"
+                     )
+        lines.append("   this call is that and nothing else. It is NOT"
+                     )
+        lines.append("   under the flat ROM name, because %s. */" % o["why"])
+        lines.append('extern "C" void *dtorfwd_odruse_%s(void *self)'
+                     % o["cls"])
+        lines.append("{ ((%s *)self)->%s::~%s(); return self; }"
+                     % (o["cls"], o["cls"], o["cls"]))
         lines.append("")
     text = "\n".join(lines).rstrip() + "\n"
     old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
@@ -941,6 +1187,10 @@ def main():
         return 0
     want_files = [os.path.relpath(genpath(root, s), root).replace("\\", "/")
                   for s, _rs in groups]
+    structor_path = genpath(root, STRUCTOR_SUFFIX)
+    if STRUCTORS:
+        want_files.append(os.path.relpath(structor_path, root)
+                          .replace("\\", "/"))
     bad = 0
     if "--verify" in sys.argv:
         import tempfile
@@ -961,6 +1211,20 @@ def main():
                       "before committing."
                       % os.path.relpath(path, root).replace("\\", "/"))
                 bad += 1
+        if STRUCTORS:
+            probe = os.path.join(scratch,
+                                 os.path.basename(structor_path))
+            text, _old = emit_structors(root, probe)
+            cur = open(structor_path, encoding="utf-8").read() \
+                if os.path.exists(structor_path) else None
+            os.unlink(probe)
+            if cur != text:
+                print("dtorfwd --verify: %s is NOT what this tool "
+                      "generates from the tree. Re-run with --emit "
+                      "and read the diff before committing."
+                      % os.path.relpath(structor_path, root)
+                      .replace("\\", "/"))
+                bad += 1
         os.rmdir(scratch)
         have = slice_rows(root)
         missing = [f for f in want_files if f not in have]
@@ -978,6 +1242,8 @@ def main():
         return 0
     for suffix, rs in groups:
         emit(root, rs, genpath(root, suffix), suffix)
+    if STRUCTORS:
+        emit_structors(root, structor_path)
     print("dtorfwd --emit OK -- %d forwarder(s) over %d class(es) in %d "
           "file(s), %d refused"
           % (sum(len(rs) for _s, rs in groups),
@@ -987,6 +1253,10 @@ def main():
         print("    %-44s %d row(s)"
               % (os.path.relpath(genpath(root, suffix), root)
                  .replace("\\", "/"), len(rs)))
+    if STRUCTORS:
+        print("    %-44s %d wrapper structor pair(s)"
+              % (os.path.relpath(structor_path, root).replace("\\", "/"),
+                 len(STRUCTORS)))
     return 0
 
 

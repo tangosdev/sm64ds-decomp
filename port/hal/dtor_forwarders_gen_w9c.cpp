@@ -55,6 +55,7 @@
 #include "daObjWc_Obj03_c.h"
 #include "daObjWc_Obj04_c.h"
 #include "daPkn_c.h"
+#include "daSanbo_c.h"
 #include "daWanwan_c.h"
 
 // The deallocation each D0 body makes, and the heap
@@ -134,3 +135,12 @@ extern "C" void _ZN9ModelAnimD1Ev(void *self)
 /* ROM 0x0201689c _ZN9ModelAnimD2Ev -- batch 5, ~ModelAnim(), defined out of line by src/_ZN9ModelAnimD1Ev.cpp */
 extern "C" void _ZN9ModelAnimD2Ev(void *self)
 { ((ModelAnim *)self)->ModelAnim::~ModelAnim(); }
+
+/* ODR-USE ONLY, no ROM name. The wall wants ??1daSanbo_c@@UAE@XZ,
+   which hal/dtor_faces_cpp.cpp's hal_cppd1_daSanbo_c calls off a ROM vtable slot. daSanbo_c's
+   header spells the destructor inline, so MSVC
+   emits it as soon as something odr-uses it, and
+   this call is that and nothing else. It is NOT
+   under the flat ROM name, because _ZN9daSanbo_cD0Ev is already defined in faces_sync_gen.cpp and _ZN9daSanbo_cD1Ev in port/unmatched/Pokey_HostSites.cpp, so a flat forwarder is an LNK2005 rather than a row. */
+extern "C" void *dtorfwd_odruse_daSanbo_c(void *self)
+{ ((daSanbo_c *)self)->daSanbo_c::~daSanbo_c(); return self; }
