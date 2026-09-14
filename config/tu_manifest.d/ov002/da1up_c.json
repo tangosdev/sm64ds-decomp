@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x020aee40",
-      "end": "0x020b0530"
+      "end": "0x020b05d0"
     }
   ],
   "functions": [
@@ -269,6 +269,20 @@
       "size": "0x00000370",
       "legacy_source": "src/_ZN13OneUpMushroom13InitResourcesEv.cpp",
       "ordinal": 35
+    },
+    {
+      "symbol": "da1up_c_classInit_SCALEUP_KINOKO",
+      "address": "0x020b0530",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_1up_scaleup_kinoko.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "da1up_c_classInit_ONEUPKINOKO",
+      "address": "0x020b0580",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_1up_oneupkinoko.c",
+      "ordinal": 37
     }
   ],
   "data": [],
@@ -349,7 +363,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x021083c8",
-      "reason": "The vtable this TU is the key function for. ROM home ov002:0x021083c8, and verify's EXTRA line independently reports size=0x84 -- 33 words of storage, i.e. the two-word RTTI prologue plus 31 dispatch slots, matching the scout's extent. The two enrolled factory shards src/d_a_1up_oneupkinoko.c and src/d_a_1up_scaleup_kinoko.c still reference the ROM copy by name, so the reference is live and this object's copy is the duplicate."
+      "reason": "The vtable this TU is the key function for. ROM home ov002:0x021083c8, and verify's EXTRA line independently reports size=0x84 -- 33 words of storage, i.e. the two-word RTTI prologue plus 31 dispatch slots, matching the scout's extent. The two folded factories (`return new da1up_c()`) odr-use this copy; production isolation rebinds their vptr stores to the ROM home and deadstrips the duplicate."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -406,6 +420,7 @@
     "PROMOTION: the generated preamble from tubuild create was discarded and this TU was written by hand from the 36 shard sources, per notes/agents/roles/writer.md ('past roughly 30 members the generated preamble is unusable'). No /* TUBUILD CONFLICT */ marker therefore survives in the source; the CONFLICT notes above are marked RESOLVED with the disposition each key actually received.",
     "PROMOTION: source order is ROM-ascending under #pragma defer_codegen off with an out-of-line destructor declared first, which is what reproduces the cartridge's D1-at-0x020aee40-then-D0-at-0x020aee88 with no D2. Only 3 of the intra-TU calls run upward, so the file carries just 3 forward declarations and every other member keeps its own independently recovered spelling.",
     "PROMOTION: include/decl_common.h is deliberately NOT included. It declares 11 of these 36 symbols and 4 of those declarations disagree with the byte-matched shard: func_ov002_020af4ec and func_ov002_020afc68 on a pointer type, func_ov002_020af684 on two parameters, func_ov002_020afa6c on the return type.",
+    "LEFTOVER CLEANUP: folded da1up_c_classInit_SCALEUP_KINOKO / _ONEUPKINOKO as `return new da1up_c()` with leaf operator new(unsigned long). Named-field substitution on C++ members; Behavior 0x100 stays the unsigned-short launder (named ++mStateTimer size-DIFF). dBgCh_Actr::Init / dCcAc_c::Init stay mangled (6az). 38/38 MATCH TEXT-VERIFIED.",
     "PROMOTION: two deliberate signature changes are recorded in the source. func_ov002_020af218 gains a declared but unused second parameter (five callers pass 0xbb8), and func_ov002_020af684 changed from void to int without gaining a return statement. Reverting either change was recorded to move bytes; that measurement does not establish a valid C++ return contract for func_ov002_020af684 or a typed forwarding contract for func_ov002_020af218. Both remain source-reconstruction work requiring fresh caller/callee evidence and byte/relocation proof.",
     "PRE-PROMOTION LINK EVIDENCE, recorded verbatim because it is the only usable kind: `python tools/tubuild.py linkcheck ov002/da1up_c` run against the pre-substitution tree returned SCRATCH-LINK-VERIFIED. The whole .text range 0x020aee40..0x020b0530 reproduces from one object; source-built functions 11,190 reproducing / 0 mismatching; module fidelity 106/106 exact, 100.000000% of compared bytes; `dsd check modules --fail` PASS; the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the source-independent strict stock control. `dsd check symbols --fail` FAILS with 9 error lines (overlay_100, overlay_102, data_020ad524, data_020ad560 and five ITCM symbols) -- the baseline control has the same 9, so 0 NEW and 0 resolved, but the check is NOT green and must not be reported as such. Once the source is enrolled in delinks.txt a re-run routes down the intact path and fails at [4/8] regardless; that is pre-existing behaviour and not evidence about this TU."
   ],
@@ -415,8 +430,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-da1up_c/da1up_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 36,
-    "functions_declared": 36,
+    "functions_matched": 38,
+    "functions_declared": 38,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev",
@@ -430,10 +445,6 @@
         9,
         10,
         13,
-        75,
-        76,
-        77,
-        78,
         79,
         80,
         81,
@@ -446,7 +457,11 @@
         88,
         89,
         90,
-        91
+        91,
+        92,
+        93,
+        94,
+        95
       ],
       "data": [
         "_ZTI7fBase_c",

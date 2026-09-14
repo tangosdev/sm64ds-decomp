@@ -166,16 +166,16 @@
   "notes": [
     "Genuine class form: the real header's inline destructor and this TU's out-of-line InitResources key function make mwccarm own retail D1/D0 plus the complete daObjKinokoTag_c RTTI/vtable group; no hand-mangled member definition or forcing object remains.",
     "SpawnMegaMushroom and TrySpawnMegaMushroom are readable inferred private spellings. Their class ownership, call graph, bodies, relocations, and codegen are proven; their exact original English spellings are not.",
-    "Both factories retain narrow typed C ABI boundaries and the measured fBase allocator, dActor base construction, dCcAc member construction, and vptr sequence because natural new targets the wrong global allocator relocation. KINOKO_TAG and KINOKO_CREATE_TAG both construct daObjKinokoTag_c, so one global daObjKinokoTag_c_classInit spelling would collide; the exact original factory distinction is unresolved and neither factory is renamed in this wave.",
+    "Both factories are return new daObjKinokoTag_c(); the leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size) until #2570. KINOKO_TAG and KINOKO_CREATE_TAG both construct daObjKinokoTag_c, so one global daObjKinokoTag_c_classInit spelling would collide; the exact original factory distinction is unresolved and neither factory is renamed.",
     "g_profile_KINOKO_TAG and g_profile_KINOKO_CREATE_TAG are reconstructed source-style names: SM64DS proves the literal registry IDs, descriptor/factory relationships, and class identity; later EAD lineage supplies the global spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were MegaMushroomTag_SpawnInfo and MegaMushroomCreateTag_SpawnInfo.",
-    "The external mushroom backlink at offset 0x32c remains a measured seam because no trustworthy real header for that external actor exists on this base.",
+    "The PILE (Stump.h) backlink at +0x32c remains a measured seam; adding dActor_c *mKinokoTag to Stump.h is shared-header work.",
     "The resource SharedFilePtr at 0x0210da30 and __sinit_ov002_02100560 are external to this class TU and are not claimed."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daObjKinokoTag_c/daObjKinokoTag_c.o (gitignored)",
+    "object": "build/tu/ov002-daObjKinokoTag_c/d_a_obj_kinoko_tag.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 9,
     "functions_declared": 9,

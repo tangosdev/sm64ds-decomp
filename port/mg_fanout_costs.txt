@@ -168,6 +168,17 @@ bodies carry the "recovered from vtable slot identity" marker and therefore
 need a ROM adjudication before they can be seated. "nosrc" is how many have no
 matched src TU at all and will need a named trap or a decomp.
 
+  REFRESHED AGAIN 2026-09-14 at the main -> port sync (origin/main 4382d447e),
+  lane SYNC7, the same way and for the same reason. Four rows moved, all in the
+  mark column and all downward: 0x183 4 -> 3, 0x16f 7 -> 0, 0x185 1 -> 0 and
+  0x181 25 -> 13, so the table's totals go 369/148/2 -> 369/127/2. main dropped
+  the "recovered from vtable slot identity" marker from nineteen places across
+  thirteen files in this window (among them d_s_mg_trampoline2.cpp, which is
+  0x181's own TU, and dScMgBase_c::Virtual50, which several classes override
+  onto), and the shared bodies are why one commit moves four rows. ovr did not
+  move on any row and nosrc did not move at all, which is the same check as
+  last time: the ROM did not change, the decomp did.
+
   REFRESHED 2026-09-12 at the main -> port sync (origin/main 9c7f38a24), lane
   SYNC2. The mark and nosrc columns are RECONSTRUCTED, not re-reviewed: every
   one of the thirty rows was re-measured by port/tools/vtablerows.py against
@@ -193,24 +204,24 @@ matched src TU at all and will need a named trap or a decomp.
   0x16e  MgWanted                    0213cf10      36    7     0      0
   0x182  MgWhichWiggler              0213cab8      36    7     0      0
   0x16c  (g_profile_MG_SLOT1)       0213eb40      36    8     1      1
-  0x183  MgHideAndBooSeek            0213fa0c      36    8     4      0
+  0x183  MgHideAndBooSeek            0213fa0c      36    8     3      0
   0x178  MgBingoBallSlotsShot        0213eefc      36    9     1      0
   0x173  (g_profile_MG_AMIDA)       0213b918      37   11     1      0
   0x186  (g_profile_MG_FLOWER)       02140140      36   12    0      0
   0x169  (g_profile_MG_CUP)       0213c154      36   13     0      0
-  0x16f  MgBoomBox                   0213f844      36   13    7      0
+  0x16f  MgBoomBox                   0213f844      36   13    0      0
   0x17d  (g_profile_MG_MCARLO)       0213d664      36   13    0      0
   0x17e  MgPairAGoneAndOn            0213d7e8      36   14    0      0   DONE
   0x17f  MgMushroomRoulette          0213e39c      36   14    8      0   DONE
   0x16a  MgMemoryMatch               0213d1b8      36   14    8      0
   0x16b  MgMemoryMaster              0213d4d4      36   14    8      0   DONE
   0x184  MgLuckyStars                0213fec8      36   14    0      0
-  0x185  MgPsycheOut                 0213c8c4      36   14    1      0
+  0x185  MgPsycheOut                 0213c8c4      36   14    0      0
   0x16d  (g_profile_MG_SLOT3)       0213eaa8      36   15    2      0   DONE
   0x17b  MgPicturePoker              0213bdb4      36   15    0      0   DONE
   0x174  MgBounceAndPounce           0213cbe4      36   23    16      1   DONE
   0x175  MgBounceAndTrounce          0213ccfc      36   23    23      0   DONE
-  0x181  MgTrampolineTerror          0213fc7c      36   25    25      0   DONE
+  0x181  MgTrampolineTerror          0213fc7c      36   25    13      0   DONE
   0x180  MgTrampolineTime            0213fb34      36   25    25      0   DONE
   0x179  MgSnowballSlalom            0214000c      36   16    3      0   DONE
 

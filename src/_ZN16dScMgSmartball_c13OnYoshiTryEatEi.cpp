@@ -7,11 +7,11 @@
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
 extern "C" {
-void func_ov006_02115b0c(void);
+void func_ov006_02115b0c(char *self);
 void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void* p, u16 a, u16 b, u16 c, u16 d);
 void dScMgSmartball_c::OnYoshiTryEat(int /* arg */)
 {
-  func_ov006_02115b0c();
+  func_ov006_02115b0c((char *)this);
   _ZN3G2x13SetBlendAlphaEPVttttj((volatile void*)0x4000050, 0, 0x18, 4, 0xa);
   _ZN3G2x13SetBlendAlphaEPVttttj((volatile void*)0x4001050, 0, 0x18, 4, 0xa);
 }

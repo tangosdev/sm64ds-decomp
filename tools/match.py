@@ -22,6 +22,7 @@ import pathlib
 import subprocess
 import tempfile
 import os
+import shutil
 
 from elftools.elf.elffile import ELFFile
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
@@ -42,6 +43,22 @@ INCLUDE = REPO / "include"
 # on a successful compile. See notes/mwccarm-codegen.md 6as.
 DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
                  "-gccext,on -msgstyle gcc -w illpragmas")
+# The C++ lane needs one flag the C lane does not: `-Cpp_exceptions off`, which
+# `rombuild.CFLAGS` carries and DEFAULT_FLAGS does not. Without it mwccarm threads exception
+# cleanup through any function holding an object with a destructor, and the function's own
+# .text stops equalling the ROM's -- so a C++ candidate was being scored against a compile
+# the ROM build never performs. It is inert for a source with no exception state, which is
+# why this went unnoticed: measured per function on this tree, both flag sets, of the 6,200
+# committed //cpp rows config resolves a source for, 6,198 reproduce identically under both,
+# one reproduces ONLY with this flag (func_ov006_020ea914, whose "7-word floor" three lanes
+# measured was this defect), and none reproduces only without it. The same rescore over the
+# 17 //cpp near-miss rows that carry a stored target moves exactly that one row.
+# Kept OUT of DEFAULT_FLAGS on purpose: nearmiss/eval_pin.json pins DEFAULT_FLAGS verbatim
+# and tools/test_nearmiss_db.py::EvalPinGuardTests fails CI if it moves without a full
+# `nearmiss_db.py reeval`, which is lane-owned. See tools/build_pin.py (which derives its
+# flags from rombuild for the same reason), tools/swarm.py CPP_FLAGS, and
+# notes/mwccarm-codegen.md 6co.
+CPP_EXCEPTIONS_FLAG = "-Cpp_exceptions off"
 # The builds --all sweeps. This was a hand-written list of 12 while 25 mwccarm.exe were
 # installed, so `--all` ("sweep every known version") silently skipped 13 -- including
 # 2.0/sp1p5, sp1p6, sp1p7 and sp2p4, service packs of a family it already swept. Every
@@ -108,6 +125,14 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
     # container corpus link-checks are identical.) This lives here so the build box can run
     # stock repo tooling instead of a hand-patched fork of match.py.
     launcher = os.environ.get("MWCCARM_LAUNCHER", "").split()
+    if not launcher and os.name != "nt" and shutil.which("wine"):
+        # The variable is the worker's to set, and the worker sets it for rombuild.py and
+        # pr_linkcheck.py but not for validate_merge.py, whose _compiled_code_reader lands
+        # here whenever a PR touches symbols.txt (#2496: "Exec format error" on the PE).
+        # A Windows executable cannot run natively on a non-Windows host, so with Wine on
+        # PATH and no launcher named, Wine is the only thing that can be meant. Native
+        # Windows is untouched: os.name == "nt" never enters this branch.
+        launcher = ["wine"]
     with tempfile.TemporaryDirectory() as td:
         out_o = pathlib.Path(td) / "out.o"
         env = dict(os.environ, LM_LICENSE_FILE=str(LICENSE))
@@ -224,6 +249,38 @@ def compare(target: bytes, cand: bytes, relocs: set, verbose: bool = True):
     return ok, ndiff
 
 
+def resolve_cpp_flags(cfile, flags):
+    """The flag set `cfile` must actually be compiled with, given the requested `flags`.
+
+    Auto-detect C++ the same way fdiff/swarm do: a leading //cpp marker means compile with
+    -lang c++ instead of the default -lang c99, so C++ candidates stop failing to compile
+    (the file is already .cpp, so it compiles in place - no temp copy needed).
+
+    `-Cpp_exceptions off` then rides along with C++ mode HOWEVER THAT MODE WAS REACHED,
+    because the build compiles every C++ source with it and without it a source holding an
+    object with a destructor gets exception cleanup the ROM's bytes do not have (see
+    CPP_EXCEPTIONS_FLAG above). Until now the flag was appended only inside the c99 -> c++
+    rewrite, so `--flags "... -lang c++ ..."` passed by hand -- the documented way to compile
+    a candidate that is C++ without a //cpp marker -- skipped it silently and scored the
+    function against bytes the build would never produce. Nothing in the output said so:
+    the operator sees a near miss and goes looking for a source-level cause that is not there.
+    Same family as tools/pr_linkcheck.py, which compiled with flags the build does not use.
+
+    An explicit `-Cpp_exceptions` on either side is left alone, so a caller can still measure
+    the difference on purpose.
+    """
+    try:
+        is_cpp_source = cfile.read_text(encoding="utf-8").startswith("//cpp")
+    except OSError:
+        # a missing/unreadable candidate surfaces later at compile_c with a clearer error
+        is_cpp_source = False
+    if is_cpp_source and "-lang c99" in flags:
+        flags = flags.replace("-lang c99", "-lang c++")
+    if "-lang c++" in flags and "-Cpp_exceptions" not in flags:
+        flags += " " + CPP_EXCEPTIONS_FLAG
+    return flags
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--c", required=True)
@@ -275,15 +332,7 @@ def main():
             print(f"  (reloc-destination check unavailable: {e}; byte-only compare)")
 
     cfile = pathlib.Path(args.c)
-    # Auto-detect C++ the same way fdiff/swarm do: a leading //cpp marker means compile with
-    # -lang c++ instead of the default -lang c99, so C++ candidates stop failing to compile
-    # (the file is already .cpp, so it compiles in place - no temp copy needed).
-    flags = args.flags
-    try:
-        if cfile.read_text(encoding="utf-8").startswith("//cpp") and "-lang c99" in flags:
-            flags = flags.replace("-lang c99", "-lang c++")
-    except OSError:
-        pass  # a missing/unreadable candidate surfaces later at compile_c with a clearer error
+    flags = resolve_cpp_flags(cfile, args.flags)
     if args.bin:
         tgt = target_bytes(args.addr, args.size, pathlib.Path(args.bin), args.base)
     elif args.module and args.module != "arm9":

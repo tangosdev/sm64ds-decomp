@@ -305,6 +305,17 @@ extern "C" void _ZN7Message7AddCharEc(char ch)
    skipped sprite and, more usefully, prints the address of the table that is
    missing it -- which is the actual bug, some sprite table not being seated.
    The bound is generous: the biggest real list here is well under 256. */
+/* RETIRED at the main -> port sync (lane SYNC7, wave 9, the fold merge). main's
+   #2712 rewrote OAM::Render as matching C in
+   src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c, so src now DEFINES this flat
+   name itself and this forwarder is a second definition (LNK2005).
+
+   THE 0xffff TERMINATOR GUARD GOES WITH IT, and that is a real loss, not a
+   tidy-up: a sprite table seated without a terminator used to cost one skipped
+   sprite and a printed address, and now costs an access violation at 0x02400000
+   the way it did before the guard existed. It is recorded in out/SYNC7/bugs.md.
+   Putting it back means a hostgen substitution on the src TU, which is lane
+   HOSTGEN4's mechanism and not a second definition of the ROM's own name.
 extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     int sub, void *attr, int x, int y, int pal, int pri,
     int sx, int sy, int rot, int mode)
@@ -331,6 +342,7 @@ extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
                 mode);
     return 0;
 }
+*/
 
 /* shadow-defined in their own TUs (struct CylinderClsn / struct Camera) */
 extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self,

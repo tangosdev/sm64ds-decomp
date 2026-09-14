@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x021118c8",
-      "end": "0x0211207c"
+      "end": "0x021120c4"
     }
   ],
   "functions": [
@@ -122,6 +122,13 @@
       "size": "0x000001c8",
       "legacy_source": "src/_ZN10daPgDfdr_c13InitResourcesEv.cpp",
       "ordinal": 14
+    },
+    {
+      "symbol": "daPgDfdr_c_classInit",
+      "address": "0x0211207c",
+      "size": "0x00000048",
+      "legacy_source": "src/d_a_pg_dfdr.c",
+      "ordinal": 15
     }
   ],
   "data": [],
@@ -134,7 +141,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov027_02111994' differs between the legacy file that used to hold _ZN10daPgDfdr_c8BehaviorEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `void func_ov027_02111994(char*)`, the definition's own spelling; InitResources' call now passes (char*)this explicitly instead of relying on the (void*) declaration.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c7c' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c7c;`. Only the char spelling makes InitResources' `&data_ov027_02113c7c + 4` reach +4 bytes; CleanupResources only takes the address, so char*->void* covers it.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c94' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c94;`, same reason as data_ov027_02113c7c.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c6c' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c6c;`, same reason as data_ov027_02113c7c (address-only in both users)."
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov027_02113c6c' differs between the legacy file that used to hold _ZN10daPgDfdr_c16CleanupResourcesEv and the one that held _ZN10daPgDfdr_c13InitResourcesEv; kept the first. RESOLVED at promotion: reconciled to `extern char data_ov027_02113c6c;`, same reason as data_ov027_02113c7c (address-only in both users).",
+    "Leftover cleanup folded daPgDfdr_c_classInit (0x0211207c..0x021120c4) as return new daPgDfdr_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. Registry/factory-backed join: the factory sits immediately after InitResources and ends at SnowmanBreath D1."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -142,13 +150,15 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov027-daPgDfdr_c/daPgDfdr_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 15,
-    "functions_declared": 15,
+    "functions_matched": 16,
+    "functions_declared": 16,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -169,7 +179,9 @@
         19,
         20,
         21,
-        49
+        49,
+        52,
+        53
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -280,6 +292,11 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new daPgDfdr_c(); has no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",

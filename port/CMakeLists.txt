@@ -13164,7 +13164,8 @@ set_source_files_properties(
 #        factory  0x021120c0 -> 0x02113a90
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daPgDfdr_c.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/d_a_pg_dfdr.c"
+    # src/d_a_pg_dfdr.c dropped at the SYNC7 fold merge: main folded ov027
+    # .text 0x0211207c..0x021120c4 into daPgDfdr_c.cpp, the row above.
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV10daPgDfdr_c=_ZTV10daPgDfdr_c")
 # (12) DA_PG_DFDR's D0: the same two stores as its D1 twin, same order, plus
@@ -13756,9 +13757,13 @@ set_source_files_properties(
 # TextureSequence and ShadowModel constructors, `str r0,[r4]` with its own
 # 0x02113850 (pool words 0x02111d38 and 0x02111d3c). The recovered source has
 # the RTTI name on the dead first store and VT1 on the live second one.
-set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/d_a_dkk.c"
-    PROPERTIES COMPILE_DEFINITIONS "VT1=_ZTV7daDkk_c")
+# DEAD at the main->port sync (lane SYNC7, wave 9): main folded src/d_a_dkk.c
+# (ov025 .text 0x02111cf4..0x02111d40) into src/actors/daDkk_c.cpp, which spells
+# no VT1 placeholder at all -- it declares the class, so the TU emits
+# _ZTV7daDkk_c itself. The property row has no file and nothing to define.
+#set_source_files_properties(
+#    "${CMAKE_CURRENT_SOURCE_DIR}/../src/d_a_dkk.c"
+#    PROPERTIES COMPILE_DEFINITIONS "VT1=_ZTV7daDkk_c")
 #
 # W9, THE RECLAIM W4 COULD NOT DO. src/_ZN11PyramidStep16CleanupResourcesEv.cpp
 # (id 87, slot 3) is the same G0/G1 SharedFilePtr shape as ov022's LAVA_PLANK
@@ -16443,10 +16448,15 @@ endforeach()
 # ONE BINDING, read at 0x020b9144 inside daObjPushblock_c_classInit's own span in
 # config/arm9/overlays/ov002/relocs.txt: the placeholder the source spells is
 # this class's own table, hosted in hal/actor_base_tables_ov002.cpp.
-set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/d_a_obj_pushblock.cpp"
-    PROPERTIES COMPILE_DEFINITIONS
-    "_ZTV16daObjPushblock_c=_ZTV16daObjPushblock_c")
+# DEAD at the main->port sync (lane SYNC7, wave 9): main folded
+# src/d_a_obj_pushblock.cpp (ov002 .text 0x020b910c..0x020b9148) into
+# src/game/actors/daObjPushblock_c.cpp, whose classInit is new daObjPushblock_c()
+# and spells no placeholder, so this identity mapping has no file and nothing to
+# define.
+#set_source_files_properties(
+#    "${CMAKE_CURRENT_SOURCE_DIR}/../src/d_a_obj_pushblock.cpp"
+#    PROPERTIES COMPILE_DEFINITIONS
+#    "_ZTV16daObjPushblock_c=_ZTV16daObjPushblock_c")
 # GATE SLOT5 -- the thirty Render bodies the destructor fold kept unlinked
 # ===========================================================================
 #

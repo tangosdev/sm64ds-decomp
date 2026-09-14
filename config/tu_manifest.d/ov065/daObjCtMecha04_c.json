@@ -7,6 +7,7 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x211a494..0x211aae0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "adjacent CT_MECHA04L/CT_MECHA04S factories at 0x0211aae0..0x0211ab60 allocate sizeof(daObjCtMecha04_c), construct dBgActor_c plus TextureTransformer/ShadowModel, and install this class vptr; the factory join is registry/factory-backed rather than tu_map-proven",
     "class label(s): daObjCtMecha04_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x0211a494",
-      "end": "0x0211aae0"
+      "end": "0x0211ab60"
     }
   ],
   "functions": [
@@ -80,6 +81,20 @@
       "size": "0x00000014",
       "legacy_source": "src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp",
       "ordinal": 8
+    },
+    {
+      "symbol": "daObjCtMecha04_c_classInit_CT_MECHA04L",
+      "address": "0x0211aae0",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_ct_mecha04_ct_mecha04l.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "daObjCtMecha04_c_classInit_CT_MECHA04S",
+      "address": "0x0211ab20",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_ct_mecha04_ct_mecha04s.cpp",
+      "ordinal": 10
     }
   ],
   "data": [],
@@ -91,6 +106,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "The genuine dBgCh_Gnd local makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte bx lr body at its canonical arm9 home and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjCtMecha04_c() emits this homeless base-object destructor helper; it has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -175,7 +195,8 @@
     "tubuild create warning (RESOLVED): the legacy func_020393c4 declarations differed only in raw pointer/integer spellings; the consolidated TU keeps the smallest void-pointer callback-install ABI used by both callers.",
     "tubuild create warning (RESOLVED): the legacy data_0209f2c0 declarations differed only as u8 versus unsigned char; the consolidated TU keeps the equivalent u8 declaration.",
     "The inline destructor in the directly included class header makes mwccarm emit exactly the retail D1 then D0 pair, without a D2. All seven hand-written member definitions carry unique @symbol markers.",
-    "UpdateShadow, MoveActorOnBelt, and AfterClsnCallback are descriptive reconstruction labels, not ROM-preserved English names. For MoveActorOnBelt, the member/free form, target type, and dActor_c& spelling encoded in the symbol are inferred. For AfterClsnCallback, static/member/free form and all pointer/type spellings encoded in the symbol are inferred. The ROM proves class ownership or callback role, register-level call shape, bodies, layout, and relocation destinations."
+    "UpdateShadow, MoveActorOnBelt, and AfterClsnCallback are descriptive reconstruction labels, not ROM-preserved English names. For MoveActorOnBelt, the member/free form, target type, and dActor_c& spelling encoded in the symbol are inferred. For AfterClsnCallback, static/member/free form and all pointer/type spellings encoded in the symbol are inferred. The ROM proves class ownership or callback role, register-level call shape, bodies, layout, and relocation destinations.",
+    "Cleanup folded the adjacent CT_MECHA04L/CT_MECHA04S factories as return new daObjCtMecha04_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -183,13 +204,15 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov065-daObjCtMecha04_c/daObjCtMecha04_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
+    "functions_matched": 11,
+    "functions_declared": 11,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -210,7 +233,9 @@
         19,
         20,
         21,
-        36
+        36,
+        43,
+        44
       ],
       "data": [
         "_ZTI7fBase_c",

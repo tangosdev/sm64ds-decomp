@@ -176,8 +176,8 @@ proof. The documentation corrections in this revision do not resolve them.
 - Class/TU/symbol and module-qualified ROM scope: `da1up_c`, ov002, the
   contiguous `.text` run `ov002:[0x020aee40,0x020b0530)` (36 functions, ROM
   ordinals 0..35) promoted into `src/actors/da1up_c.cpp`. The two factories
-  `ov002:[0x020b0530,0x020b05d0)` stay in `src/d_a_1up_scaleup_kinoko.c` and
-  `src/d_a_1up_oneupkinoko.c`; only their vtable reference moved to the ROM name.
+  `ov002:[0x020b0530,0x020b05d0)` now live in that same cpp with the rest of
+  the class; only their vtable reference moved to the ROM name.
   Data of this class (`_ZTV7da1up_c` 0x021083c8, `_ZTI7da1up_c` 0x0210837c,
   `_ZTS7da1up_c` 0x02108370, the two profile records, the 14 PMF descriptors at
   0x02108300..0x02108370 and the bss dispatch array at 0x0210dc00) remains owned
@@ -440,7 +440,7 @@ worktree's ignored `build/`; they are not committed.
   **[verifier]**: `python tools/linkcheck.py --module ov002 --name <sym>
   --addr <a> --size <s> --c <file>` driven once for each of the 36 TU functions
   against `src/actors/da1up_c.cpp` and once for each of the two factories
-  against `src/d_a_1up_oneupkinoko.c` / `src/d_a_1up_scaleup_kinoko.c` -> exit 0,
+  now also in that cpp -> exit 0,
   **38/38 VERIFIED, 0 BLIND, 0 diffs**: every relocation slot in all 38 symbols
   links to bytes identical to the cartridge. Same tool `prepush_linkcheck`
   wraps, driven by symbol rather than by the file stem that produced `NO-SYM`
@@ -454,8 +454,7 @@ worktree's ignored `build/`; they are not committed.
   type/addend), `emission order: all 36 function(s) in the expected
   ROM-ascending section order`, reloc-destinations clean ->
   `TEXT-VERIFIED`. Log `build/tubuild-verify.log`.
-  `python tools/romdata_check.py --files src/actors/da1up_c.cpp
-  src/d_a_1up_oneupkinoko.c src/d_a_1up_scaleup_kinoko.c --json
+  `python tools/romdata_check.py --files src/actors/da1up_c.cpp --json
   build/romdata-da1up.json` -> exit 0: 11 data symbols emitted, `VERIFIED 6
   (180 bytes equal to the cartridge)`, `PARTIAL 5 (44 bytes equal, coverage
   short of the ROM's extent)`, `DIFFERS 0`, `UNNAMED 0`. The six VERIFIED are

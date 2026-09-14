@@ -15,24 +15,17 @@
  * with dScMgJump2_c (func_ov006_020eed64) -- which is what a shared base's
  * children are supposed to look like.
  *
- * TWO GAPS between arrays stay padding, but only ONE is still unevidenced.
- * 0x7b84..0x7b9c (0x18, after the last array) is: no matched access reaches
- * it, checked for split-literal forms as well as whole constants. THE OTHER
- * IS NOT, AND THE ORIGINAL CLAIM WAS AN ARTEFACT OF THE SEARCH. 0x7ac4..0x7ad0
- * (0xc, between mArray5 and mArray6) is read by this class's own Behavior --
- * 0x7ac4 as a Particle::System unique ID, 0x7ac8 as a fix12 ramped towards
- * 0x14000 -- which the sweep missed because that function was still called
- * func_ov006_02123340 and nothing tied it to this class. It stays one pad
- * rather than becoming two fields plus a tail: the third word is still
- * unreached, and cutting the gap two-thirds of the way along would assert a
- * boundary nothing shows.
+ * Two spans remain byte storage pending typed-field reconstruction (#2497).
+ * Behavior uses 0x7ac4 as a Particle::System unique ID and 0x7ac8 as a
+ * fixed-point ramp; 0x7acc is still unexplained. That unknown word does not
+ * rule out typing the first two. All six words at 0x7b84..0x7b9c have matched
+ * accesses in this TU's initialization and state functions. Their original
+ * member names are unknown; the storage is live, not unused padding.
  *
- * No Model and no typed member is needed to express the six arrays; the
- * destructor body is exactly their six reverse-order destruction calls.
- * It is permanently inline now that the class is compiler-owned by one
- * production TU. That spelling emits the retail D1/D0 order without inventing
- * a homeless D2. No separate operator delete is needed: dScMgD3DBase_c
- * provides one. */
+ * The current arrays retain raw storage and six reverse-order cleanup calls.
+ * Typed components and their lifecycle remain reconstruction work (#2497).
+ * The inline destructor body preserves the observed D1/D0 emission.
+ * dScMgD3DBase_c supplies operator delete. */
 #ifndef DSCMGTRAMPOLINE2_C_H
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"
@@ -62,14 +55,11 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     virtual int  OnPushed();                           /* slot 25 */
     virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
-    /* 0x5004 -- the state callback, a pointer-to-member of this class, which
-       is mwccarm's eight bytes exactly; Behavior calls through it every frame.
-       Same field at the same offset as dScMgJump2_c's, which is what two
-       children of dScMgD3DBase_c sharing a base ought to look like. Was "no
-       matched access", true only of the files NAMED after this class -- the
-       access was in func_ov006_02123340 all along. Left as bytes rather than
-       declared as the member pointer: naming it would fix a signature for
-       every state function in the table, and none of them is recovered. */
+    /* 0x5004 -- eight-byte state PMF, invoked by Behavior with this class as
+       receiver. The five table targets already have bodies in the TU:
+       02123b20, 02124088, 02123b24, 02123cb4 and 02123bf4 (all ov006).
+       Converting their raw records and this field together to a typed state
+       interface remains issue #2497; their original method names are unknown. */
     u8  pad_5004[0x8];   /* 0x5004 -- the state callback; see the block above */
     u8  mArray1[0x44c];   /* 0x500c -- 5 * 0xdc,    elem dtor func_ov006_020ca604 */
     u8  mArray2[0x984];   /* 0x5458 -- 3 * 0x32c,   elem dtor func_ov006_020d1008 */
@@ -78,7 +68,7 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     u8  mArray5[0x960];   /* 0x7164 -- 0x14 * 0x78, elem dtor func_ov006_02122c68 */
     u8  pad_7ac4[0xc];    /* 0x7ac4 -- Behavior reads 0x7ac4 and 0x7ac8; see banner */
     u8  mArray6[0xb4];    /* 0x7ad0 -- 5 * 0x24,    elem dtor func_ov006_02120938 */
-    u8  pad_7b84[0x18];   /* 0x7b84 -- no matched access, see banner */
+    u8  pad_7b84[0x18];   /* 0x7b84 -- six live words; see banner */
     s16 unk_7b9c;         /* 0x7b9c */
     s16 unk_7b9e;         /* 0x7b9e */
     s16 unk_7ba0;         /* 0x7ba0 */
@@ -88,17 +78,10 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     u8  unk_7baa;         /* 0x7baa */
     u8  unk_7bab;         /* 0x7bab */
 
-    /* --- this class's own vtable overrides, defined out of line in the
-       production TU. Each re-uses a slot fBase_c already holds rather
-       than appending one, and none adds a field, so the size assert below is
-       untouched. InitResources is the first non-inline virtual and the key
-       function, so this TU emits _ZTV18dScMgTrampoline2_c; the manifest owns
-       and verifies that table. Signatures are include/fBase_c.h's and
-       include/dScMgBase_c.h's own, copied unchanged.
-
-       Behavior IS THE MATCHED ACCESS THAT REACHES pad_7ac4 and pad_5004; the
-       banner above records what that costs the two "no matched access"
-       claims. --- */
+    /* These definitions override existing base slots without adding fields.
+       The production TU defines the non-inline virtuals and emits the vtable;
+       its manifest owns and verifies that table. The shared base supplies
+       reconstructed callback names and signatures, not original-name proof. */
     s32 InitResources();      /* slot 0 -- src/minigames/d_s_mg_trampoline2.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x0212318c */
     s32 Behavior();           /* slot 6 -- ov006 0x02123340 */

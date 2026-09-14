@@ -47,16 +47,6 @@ struct Widget {
 };
 """
 
-# Merge commits whose pull requests edited headers, and how many .h files each touched.
-# Confirmed against `git diff --name-only --diff-filter=AM <sha>^...<sha> -- include/`.
-REAL_HISTORY = {
-    "1659": ("def3349d82117444ccce3dcc21ee3566bb94e52e", 33),
-    "1665": ("364a743d1b11b46095dad0ad0c9ddbd89e1285d1", 15),
-    "1666": ("487026a11377471f80be63b7f54a870f405e1292", 58),
-    # #1667 is the src_tu gate: 31 files, none of them a header. The honest empty.
-    "1667": ("e022859521dee9b823df9687f9d59bb10a22c38c", 0),
-}
-
 
 def _resolve_the_old_way(base, repo):
     """The resolution as it stood before this change. Returns (headers, exit_code).
@@ -317,43 +307,239 @@ class GateStillWorksTests(unittest.TestCase):
         self.assertIn("not a pass", r.stdout + r.stderr)
 
 
-# ------------------------------------------------------------------------ real history
+# ------------------------------------------ the shapes real pull requests have, rebuilt
+#
+# This section used to pin four 40-hex commit shas -- #1659, #1665, #1666 and #1667, all
+# landed on 2026-08-21 -- and diff `<sha>^...<sha>` against THIS repository. It was the
+# one part of this file that reached outside a tmpdir, on the argument that a fixture
+# cannot show the resolution still works on history the tree really has.
+#
+# NOT a force-reset -- an identity SCRUB. At 07:50 EDT on 2026-09-13 the whole history
+# was rewritten (see tools/repin_commit_ids.py's docstring): the trees are identical, but
+# every commit got a new id, so all four pins stopped resolving. They survive in any clone
+# that was already holding the loose objects -- which is every developer's, so the suite
+# stayed green locally -- while `actions/checkout` fetches only reachable history and
+# cannot see them at all. On a runner `_require` failed five times, and the `offsets`
+# check went red on #2487, #2490, `match/f100-shapes` and `match/w4-exctab2`, none of
+# which had touched a header. A local green a runner cannot reproduce is the exact shape
+# this whole file exists to refuse. dc3dbbdfa re-pinned all four to their post-scrub ids
+# and main is green on a runner again; what follows is about the NEXT rewrite, not that
+# one.
+#
+# THIS IS NOT A RECURRENCE ARGUMENT, IT IS AN EXPOSURE ONE. Rewrites are rare: this
+# clone's `git reflog show origin/main` covers 872 fetches over 31 days with exactly one
+# forced-update, the 2026-09-13 scrub. The reason to stop pinning anyway is that the
+# material that triggered it is still here. The scrub was over a personal Windows
+# username in a hardcoded path -- tools/ovsweep.py:48, which now reads
+# `C:/Users/tango/...` -- and origin/main @ 1224afd11 still spells THIRTY-ONE paths of
+# that shape across six tracked files, sixteen under one username and fourteen under
+# another:
+#
+#     git grep -ohE 'C:[\\/]{1,2}Users[\\/]{1,2}(andre|alexs|tango)' origin/main -- .
+#
+#     25  config/match_attempts.jsonl        1  notes/tu-cpp-census-2026-08.md
+#      2  notes/real-cpp-migration-runbook.md    1  notes/agents/LAUNCH.md
+#      1  notes/agents/references/pipeline-v1.md 1  tools/ovsweep.py
+#
+# Twenty-five of the thirty-one are recorded "srcPath" values in
+# config/match_attempts.jsonl -- a generated log that keeps growing -- so the exposure is
+# not a handful of stale notes, and it is not static. Mind the separator when re-checking:
+# JSON escapes the path, so those 25 read `C:\\Users\\...` and a pattern matching a single
+# separator misses every one of them. The maintainer designed for the repeat: repin's
+# `--check` is documented as "the same predicate a pre-merge gate would use", dc3dbbdfa
+# swapped a real corpus id in tools/test_repin_commit_ids.py for a synthetic
+# `a1a1a1a1...` "so the test stays hermetic and idempotent under a future re-sweep", and
+# the treadmill already needed a second pass 98 minutes later (b9ba3a59b). This file is
+# the one repin names as more than stale prose, because a pin that no longer resolves
+# fails CI outright rather than merely reading wrong. Applying the same synthetic-fixture
+# treatment here finishes that job. The reconstruction below is built by real `git` in a
+# tmpdir, so these tests assert the same things and depend on no repository history
+# whatsoever.
+#
+# WHAT IS RECONSTRUCTED AND WHAT IS NOT. The counts are not invented. Each was measured
+# with `git diff --name-status <sha>^...<sha>` while the objects were still readable, and
+# the fixture reproduces the per-directory, per-extension file counts, the added/modified
+# split, and the topology main actually has: one SQUASHED commit per pull request, single
+# parent -- none of the four was a merge commit, which the old comment above them got
+# wrong. What it does not reproduce is the CONTENT of those headers, which these tests
+# never read: `changed_paths` resolves a work LIST, and the walk that opens the files is
+# what every other class in this file covers.
 
-class RealHistoryTests(unittest.TestCase):
-    """The fix must not have narrowed what the gate picks up. Aimed at merge commits
-    whose pull requests really did edit headers, rather than at a fixture."""
 
-    def _require(self, sha):
-        r = subprocess.run(["git", "cat-file", "-e", f"{sha}^{{commit}}"],
-                           cwd=str(REPO), capture_output=True, text=True)
-        # Reported, never skipped: a self-skipping history test is indistinguishable
-        # from one that passes, which is the failure mode this whole file is about.
-        self.assertEqual(r.returncode, 0,
-                         f"{sha} is not in this clone -- run `git fetch --unshallow` "
-                         f"(a shallow clone cannot verify the resolution against history)")
+def _numbered(pattern, count):
+    return [pattern.format(i) for i in range(count)]
+
+
+# Per pull request: the files it added and modified, and the two bucket sizes that are
+# checked -- `headers` is len(buckets["headers"]), `total` is len(buckets["total"]).
+PULL_REQUEST_SHAPES = {
+    # 44 modified: 33 include/*.h + 11 src/*.cpp.
+    "1659": {
+        "subject": "Type 43 header placeholders from reference field offsets (#1659)",
+        "added": [],
+        "modified": (_numbered("include/Placeholder{:02d}.h", 33)
+                     + _numbered("src/placeholder{:02d}.cpp", 11)),
+        "headers": 33,
+        "total": 44,
+    },
+    # 21 modified: 15 include/*.h + 6 src/*.cpp.
+    "1665": {
+        "subject": "Type the 15 short headers up to the size operator new proves (#1665)",
+        "added": [],
+        "modified": (_numbered("include/Short{:02d}.h", 15)
+                     + _numbered("src/short{:02d}.cpp", 6)),
+        "headers": 15,
+        "total": 21,
+    },
+    # 66: 2 added tools/*.py, plus 64 modified -- 58 include/*.h and 6 src/*.cpp.
+    "1666": {
+        "subject": "Read member types out of the destructor relocations (#1666)",
+        "added": ["tools/dtor_members.py", "tools/test_dtor_members.py"],
+        "modified": (_numbered("include/Dtor{:02d}.h", 58)
+                     + _numbered("src/dtor{:02d}.cpp", 6)),
+        "headers": 58,
+        "total": 66,
+    },
+    # The honest empty: 31 files, not one of them a header. 3 added (a workflow and two
+    # tools) and 28 modified (1 src_tu/*.c, 26 src_tu/*.cpp, 1 tools/*.py).
+    "1667": {
+        "subject": "src_tu was stranded by a landed rename and no gate saw it (#1667)",
+        "added": [".github/workflows/src-tu-refs.yml", "tools/check_src_tu.py",
+                  "tools/test_check_src_tu.py"],
+        "modified": (["src_tu/stranded.c"]
+                     + _numbered("src_tu/tu{:02d}.cpp", 26)
+                     + ["tools/tubuild.py"]),
+        "headers": 0,
+        "total": 31,
+    },
+}
+
+
+class SquashedHistory(Repo):
+    """A throwaway repository whose main branch advances one squashed commit per pull
+    request, which is the shape this tree's own main has.
+
+    All four are built into the SAME repository, in order, so every `<sha>^...<sha>` has
+    commits on both sides of it, and Repo's own base header sits under all of them. A
+    resolution that reached past the parent, or that quietly fell back to the working
+    tree's HEAD when `head=` was passed, would pick up a neighbour's files and blow the
+    exact counts below.
+    """
+
+    @staticmethod
+    def _body(rel, tag):
+        # Content is deliberately trivial: nothing here opens these files. `tag` differs
+        # between the seed and the pull request so git records a modification.
+        return f"/* {rel}: {tag} */\n"
+
+    def pull_request(self, spec):
+        """Land one pull request as a single squashed commit; return its sha."""
+        seed = [p for p in spec["modified"] if not (self.dir / p).exists()]
+        if seed:
+            for p in seed:
+                self.write(p, self._body(p, "before"))
+            self.commit(f"seed the files {spec['subject']} modifies")
+        for p in spec["added"]:
+            self.write(p, self._body(p, "added"))
+        for p in spec["modified"]:
+            self.write(p, self._body(p, "after"))
+        self.commit(spec["subject"])
+        return self.rev("HEAD")
+
+
+class PullRequestShapeTests(unittest.TestCase):
+    """The fix must not have narrowed what the gate picks up. Aimed at the shapes whole
+    pull requests really have -- dozens of files, most of them not headers -- rather than
+    at the two- and three-file cases the classes above use."""
+
+    @classmethod
+    def setUpClass(cls):
+        stack = contextlib.ExitStack()
+        cls.addClassCleanup(stack.close)
+        cls.repo = stack.enter_context(SquashedHistory())
+        cls.shas = {pr: cls.repo.pull_request(spec)
+                    for pr, spec in sorted(PULL_REQUEST_SHAPES.items())}
+
+    def _buckets(self, pr):
+        sha = self.shas[pr]
+        buckets, err = C.changed_paths(f"{sha}^", committed_only=True,
+                                       repo=self.repo.dir, head=sha)
+        self.assertIsNone(err)
+        return buckets
 
     def test_the_headers_each_pull_request_edited_still_come_back(self):
-        for pr, (sha, want) in sorted(REAL_HISTORY.items()):
+        for pr, spec in sorted(PULL_REQUEST_SHAPES.items()):
             with self.subTest(pr=pr):
-                self._require(sha)
-                buckets, err = C.changed_paths(f"{sha}^", committed_only=True,
-                                               repo=REPO, head=sha)
-                self.assertIsNone(err)
-                self.assertEqual(len(buckets["headers"]), want)
+                buckets = self._buckets(pr)
+                self.assertEqual(len(buckets["headers"]), spec["headers"])
                 self.assertEqual(buckets["dropped"], [])
                 self.assertTrue(buckets["total"], "the diff itself must not be empty")
+                self.assertEqual(len(buckets["total"]), spec["total"])
 
     def test_the_pull_request_that_touched_no_header_is_the_honest_empty(self):
-        sha, _ = REAL_HISTORY["1667"]
-        self._require(sha)
-        buckets, err = C.changed_paths(f"{sha}^", committed_only=True, repo=REPO, head=sha)
-        self.assertIsNone(err)
+        buckets = self._buckets("1667")
         self.assertEqual(buckets["include"], [])
         self.assertEqual(len(buckets["total"]), 31)
 
+    def test_a_pull_request_picks_up_its_own_files_and_only_its_own(self):
+        """Stronger than the counts, and the reason all four share one repository:
+        Repo's base header and the other three pull requests' 130-odd files are all
+        present in this history, and none of them may appear here."""
+        spec = PULL_REQUEST_SHAPES["1659"]
+        buckets = self._buckets("1659")
+        self.assertEqual(buckets["total"], sorted(spec["added"] + spec["modified"]))
+        self.assertEqual(buckets["headers"],
+                         sorted(p for p in spec["modified"] if p.endswith(".h")))
+        self.assertNotIn("include/Widget.h", buckets["total"])
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_pointing_head_at_history_ignores_a_dirty_working_tree(self):
+        """`head=` is how a caller aims this at a commit other than the branch tip, and
+        the working tree and untracked sources are meaningless there. The sha-pinned
+        version of these tests relied on that silently -- it ran against a working
+        checkout, which is routinely dirty -- and asserted it nowhere."""
+        before = self._buckets("1665")
+        self.repo.write("include/Placeholder00.h", "/* edited, never committed */\n")
+        self.repo.write("include/Untracked.h", BROKEN.replace("Widget", "Untracked"))
+        try:
+            after = self._buckets("1665")
+            self.assertEqual(after, before)
+            self.assertEqual(after["worktree"], [])
+            self.assertNotIn("include/Untracked.h", after["total"])
+        finally:
+            self.repo.git("checkout", "--", "include/Placeholder00.h")
+            (self.repo.dir / "include" / "Untracked.h").unlink()
+
+    def test_a_deleted_header_is_not_work_but_a_renamed_one_is(self):
+        """Not a reconstruction -- none of the four deleted or renamed anything, so this
+        is added coverage, and writing it is what found the `--no-renames` defect.
+
+        `--diff-filter=AM` is what keeps a deletion out of the work list; there is no
+        file left to open. A RENAME has to survive it, because a header that moved still
+        has to have its offsets agree and its new path is the one anything later checks.
+        changed_paths' docstring claimed it already did, "because `-M` is deliberately
+        not passed" -- but `diff.renames` has defaulted to true since git 2.9, so git
+        detected the move regardless, reported it as `R`, and the filter dropped it. A
+        pull request that only moved headers resolved to an empty work list and took the
+        honest-empty exit. The precondition below is that pre-fix command verbatim."""
+        with Repo() as r:
+            r.write("include/Gone.h", GOOD.replace("Widget", "Gone"))
+            r.write("include/Before.h", GOOD.replace("Widget", "Before"))
+            r.commit("two more headers")
+            (r.dir / "include" / "Gone.h").unlink()
+            r.git("mv", "include/Before.h", "include/After.h")
+            r.commit("retire one header and move another")
+            sha = r.rev("HEAD")
+
+            before_the_fix = r.git("diff", "--name-only", "--diff-filter=AM",
+                                   f"{sha}^...{sha}").split()
+            self.assertEqual(before_the_fix, [],
+                             "precondition: git's own rename detection emptied the list")
+
+            buckets, err = C.changed_paths(f"{sha}^", committed_only=True,
+                                           repo=r.dir, head=sha)
+            self.assertIsNone(err)
+            self.assertEqual(buckets["total"], ["include/After.h"])
+            self.assertEqual(buckets["headers"], ["include/After.h"])
 
 
 # ------------------------------------------------- defect 3: the root-vptr bail-out
@@ -895,3 +1081,17 @@ class AllocationMethodTests(unittest.TestCase):
                 rc = C.main([str(header)])
             self.assertEqual(rc, 1, out.getvalue())
             self.assertIn("1 unparsed", out.getvalue())
+
+
+# THIS BLOCK MUST BE THE LAST THING IN THE FILE, and it was not. It sat two thirds of
+# the way up, immediately below the history tests, where four later classes had not been
+# defined yet -- so `unittest.main()` collected what existed at that point and
+# `sys.exit()`ed before the interpreter ever reached the rest. header-offsets.yml invokes
+# this file as a SCRIPT, so what CI actually ran was 20 of the 53 tests: every case for
+# the root vptr, the nested-tag shadow, the qualified size assertions, the Allman inline
+# bodies and the allocation methods was defined but never collected, and the job printed
+# `Ran 20 tests ... OK` over them. `python -m unittest tools.test_check_header_offsets`
+# imports the module instead of running it, which is why running it that way locally
+# found 53 and nobody noticed the split.
+if __name__ == "__main__":
+    unittest.main()

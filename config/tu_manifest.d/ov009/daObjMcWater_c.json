@@ -83,7 +83,8 @@
     "daObjMcWater_c_classInit stores (int)&_ZTV14daObjMcWater_c[2], not the bare symbol. Because this TU emits the vtable rather than importing it, _ZTV names the emitted OBJECT -- the two-word Itanium preamble at ov009:0x02113a10 -- and the [2] steps over it onto the address point at 0x02113a18 that the cartridge's literal-pool word at 0x02111dc0 actually holds.",
     "The factory's ROM-era name was CastleWater_Spawn; it is spelled daObjMcWater_c_classInit here, matching its ov009 neighbour daObjMc_Metalnet_c_classInit.",
     "func_ov009_02111b1c stays a C-linkage free function taking char*. The cartridge gives it a global symbol that other config still names, and it is called with `this` from InitResources; promoting it to a member is a separate change with its own codegen risk.",
-    "data_0209caa0 carried two conflicting legacy spellings (bare int vs a three-int record). The record wins in this TU and InitResources reaches the same word through the byte offset its own matched body already spelled, which is why the tubuild create conflict note is resolved rather than carried."
+    "data_0209caa0 carried two conflicting legacy spellings (bare int vs a three-int record). The record wins in this TU and InitResources reaches the same word through the byte offset its own matched body already spelled, which is why the tubuild create conflict note is resolved rather than carried.",
+    "LEFTOVER CLEANUP. SUPERSEDES the factory / char* helper / data_0209caa0 notes above. classInit is now `return new daObjMcWater_c()` with a leaf `operator new(unsigned long)` forwarding `_ZN7fBase_cnwEj((unsigned)size)`. `virtual ~daObjMcWater_c() {}` is inline and first among virtuals, so mwccarm emits the retail D1-then-D0 pair and no leaf D2; InitResources is the key function and still homes _ZTV/_ZTI/_ZTS here (deadstrip-data, same 11 records). The inline chain also emits a homeless `_ZN10dBgActor_cD2Ev`, licensed deadstrip below -- the same helper ov016/daObjKi_Ita_c and ov029/daObjWc_Mizu_c record. Named-field substitutions in Init/Behavior/Render/Cleanup/func_ov009_02111b1c MATCH. func_ov009_02111b1c stays C-linkage (cartridge global); it now takes daObjMcWater_c* and uses mPosX / mAreaId."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -152,6 +153,11 @@
   },
   "compiler_only_output": [
     {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
       "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
@@ -210,21 +216,21 @@
     {
       "symbol": "_ZTI14daObjMcWater_c",
       "disposition": "deadstrip-data",
-      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x021139d4, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Emitted as vague linkage: the inline destructor is not a key function, InitResources is, and this TU defines it. The cartridge keeps the canonical record at ov009:0x021139d4, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov009",
       "canonical_address": "0x021139d4"
     },
     {
       "symbol": "_ZTS14daObjMcWater_c",
       "disposition": "deadstrip-data",
-      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x021139e0, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Emitted as vague linkage: the inline destructor is not a key function, InitResources is, and this TU defines it. The cartridge keeps the canonical record at ov009:0x021139e0, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov009",
       "canonical_address": "0x021139e0"
     },
     {
       "symbol": "_ZTV14daObjMcWater_c",
       "disposition": "deadstrip-data",
-      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x02113a18, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Emitted as vague linkage: the inline destructor is not a key function, InitResources is, and this TU defines it. The cartridge keeps the canonical record at ov009:0x02113a18, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov009",
       "canonical_address": "0x02113a18"
     }

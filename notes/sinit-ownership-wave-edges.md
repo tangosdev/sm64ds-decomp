@@ -4,8 +4,8 @@
 
 | Initializer | Classifier owner | Ownership verdict | Regeneration verdict |
 | --- | --- | --- | --- |
-| `__sinit_ov002_02107370` | `ov002/CutsceneObject+daDemo_c` | **CONFIRMED HIGH for the combined original TU.** Do not narrow it to one class: the resource half is tied to `CutsceneObject`, while ten PMF tables and all 69 used PMF descriptors stay in the same 146-function multi-class TU. | **Structurally exact but not symbol-ready.** Ordinary global objects and PMF arrays generate the exact `0xc18` `.init` bytes and relocation shape, but stand-in type/member spellings are not licensed production symbols. |
-| `__sinit_ov080_02127b2c` | `ov080/Painting` | **CONFIRMED HIGH and narrowable to `Painting`.** All 19 resource objects and the 12-entry PMF table are consumed within the 29-function Painting TU; all 12 descriptor targets are internal. | **Structurally exact but not symbol-ready.** Ordinary globals generate the exact `0x434` `.init` bytes and relocation shape; original resource-wrapper and unnamed member spellings remain to be recovered. |
+| [__sinit_ov002_02107370](../src/__sinit_ov002_02107370.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`CutsceneObject+daDemo_c` | **CONFIRMED HIGH for the combined original TU.** Do not narrow it to one class: the resource half is tied to `CutsceneObject`, while ten PMF tables and all 69 used PMF descriptors stay in the same 146-function multi-class TU. | **Structurally exact but not symbol-ready.** Ordinary global objects and PMF arrays generate the exact `0xc18` `.init` bytes and relocation shape, but stand-in type/member spellings are not licensed production symbols. |
+| [__sinit_ov080_02127b2c](../src/__sinit_ov080_02127b2c.c) | [ov080](../config/arm9/overlays/ov080/symbols.txt)/`Painting` | **CONFIRMED HIGH and narrowable to `Painting`.** All 19 resource objects and the 12-entry PMF table are consumed within the 29-function Painting TU; all 12 descriptor targets are internal. | **Structurally exact but not symbol-ready.** Ordinary globals generate the exact `0x434` `.init` bytes and relocation shape; original resource-wrapper and unnamed member spellings remain to be recovered. |
 
 Both committed C transcriptions independently pass strict byte and linked-ROM
 verification under pinned mwccarm 2004/b56. This audit confirms ownership; it
@@ -15,14 +15,14 @@ does not authorize moving either initializer or enrolling the probe.
 
 ### TU boundary and consumers
 
-The candidate is `ov002:60`, text span `0x020f1f70..0x020f8838`, with 146
-functions and RTTI labels `CutsceneObject` and `daDemo_c`. Overlay 2 is not on
+The candidate is [ov002](../config/arm9/overlays/ov002/symbols.txt):`60`, text span `0x020f1f70..0x020f8838`, with 146
+functions and RTTI labels `CutsceneObject` and `daDemo_c`. [Overlay 2](../config/arm9/overlays/ov002/symbols.txt) is not on
 `tu_map`'s under-segmented list. The immediately surrounding candidate units are:
 
-- `ov002:59`, `0x020f1bc4..0x020f1f70`, `MugenBgm`;
-- `ov002:61`, `0x020f8838..0x020f8858`, the two `daDemo_c::anmModel_c`
+- [ov002](../config/arm9/overlays/ov002/symbols.txt):`59`, `0x020f1bc4..0x020f1f70`, `MugenBgm`;
+- [ov002](../config/arm9/overlays/ov002/symbols.txt):`61`, `0x020f8838..0x020f8858`, the two `daDemo_c::anmModel_c`
   `this`-adjusting destructor thunks;
-- `ov002:62`, `0x020f8858..0x020f934c`, `Fireball`.
+- [ov002](../config/arm9/overlays/ov002/symbols.txt):`62`, `0x020f8858..0x020f934c`, `Fireball`.
 
 The initializer creates 34 eight-byte resource objects (5 model, 14 animation,
 15 texture-sequence objects), registers 34 twelve-byte destructor records, and
@@ -33,18 +33,18 @@ The source scanner directly sees only 15 ownership-global consumers: five
 resource objects and ten PMF arrays. Inverting the checked-in ROM relocations
 recovers the missing indirection:
 
-- `CutsceneObject::InitResources` loads `data_ov002_0210b600`,
-  `data_ov002_0210b610`, `data_ov002_0210bcf0`, and
-  `data_ov002_0210bd24` at `0x020f87d4`, `0x020f87dc`, `0x020f87e8`, and
+- `CutsceneObject::InitResources` loads [data_ov002_0210b600](../config/arm9/overlays/ov002/symbols.txt),
+  [data_ov002_0210b610](../config/arm9/overlays/ov002/symbols.txt), [data_ov002_0210bcf0](../config/arm9/overlays/ov002/symbols.txt), and
+  [data_ov002_0210bd24](../config/arm9/overlays/ov002/symbols.txt) at `0x020f87d4`, `0x020f87dc`, `0x020f87e8`, and
   `0x020f87e0`. Those data records point to 28 of the resource objects.
 - The same method directly loads five more resource objects at
   `0x020f87d8..0x020f87fc`.
 - Therefore 33 of 34 resource objects have a ROM consumer in
-  `CutsceneObject::InitResources`. Only `data_ov002_02110bc8` (constructed with
+  `CutsceneObject::InitResources`. Only [data_ov002_02110bc8](../config/arm9/overlays/ov002/symbols.txt) (constructed with
   ID `0x3f8`) has no relocation outside the initializer; it is an unused member
   of the otherwise TU-local resource run, not an external ownership edge.
 - The ten PMF destination arrays are consumed by ten functions from
-  `0x020f2dd4` through `0x020f5f0c`, all inside `ov002:60`. The matched consumer
+  `0x020f2dd4` through `0x020f5f0c`, all inside [ov002](../config/arm9/overlays/ov002/symbols.txt):`60`. The matched consumer
   sources establish two signatures: `void (C::*)(int)` for eight arrays and
   `void (C::*)()` for two arrays.
 - All 69 PMF descriptor records used by the initializer relocate to functions
@@ -62,33 +62,33 @@ stronger evidence.
 ### `.ctor` order
 
 Overlay 2 has 26 `__sinit` functions and 26 `.ctor` entries. This initializer is
-ordinal 22; `.p__sinit_ov002_02107370` at `0x02108128` has a relocation to
+ordinal 22; [.p__sinit_ov002_02107370](../config/arm9/overlays/ov002/symbols.txt) at `0x02108128` has a relocation to
 `0x02107370`. Its neighbors are:
 
-- ordinal 21: `__sinit_ov002_02107304`, high-confidence `daObjBC_Switch_c`
-  (`ov002:56`);
-- ordinal 23: `__sinit_ov002_02107f88`, high-confidence `daSoundObj_c`
-  (`ov002:63`).
+- ordinal 21: [__sinit_ov002_02107304](../src/__sinit_ov002_02107304.c), high-confidence `daObjBC_Switch_c`
+  ([ov002](../config/arm9/overlays/ov002/symbols.txt):`56`);
+- ordinal 23: [__sinit_ov002_02107f88](../src/__sinit_ov002_02107f88.c), high-confidence `daSoundObj_c`
+  ([ov002](../config/arm9/overlays/ov002/symbols.txt):`63`).
 
 The `56 -> 60 -> 63` text-unit ordering agrees with `.ctor` order. It is useful
 corroboration, but overlay 2 has more candidate TUs than initializers, so order
 alone is not the ownership proof.
 
-## `ov080/Painting`
+## [ov080](../config/arm9/overlays/ov080/symbols.txt)/`Painting`
 
 ### TU boundary and consumers
 
-The candidate is `ov080:2`, text span `0x02125404..0x02126fbc`, with 29
+The candidate is [ov080](../config/arm9/overlays/ov080/symbols.txt):`2`, text span `0x02125404..0x02126fbc`, with 29
 functions and class label `Painting`. Its neighbors are `CrazedCrate`
 (`0x02124a20..0x02125404`) and `daObjMaruta_c`
 (`0x02126fbc..0x0212714c`).
 
 The initializer creates 19 eight-byte resource objects, registers 19
 twelve-byte destructor records, and initializes one 12-entry non-const PMF
-array at `data_ov080_02128628`.
+array at [data_ov080_02128628](../config/arm9/overlays/ov080/symbols.txt).
 
-- Data table `data_ov080_0212775c` contains 19 consecutive relocations, one to
-  every resource object. `func_ov080_02125630`'s closing literal-pool
+- Data table [data_ov080_0212775c](../config/arm9/overlays/ov080/symbols.txt) contains 19 consecutive relocations, one to
+  every resource object. [func_ov080_02125630](../src/func_ov080_02125630.cpp)'s closing literal-pool
   relocation at `0x021256f4` points to that table. Both the function and the
   table belong to the Painting text/data cluster.
 - `Painting::InitResources` loads the PMF destination at `0x02126f7c` and
@@ -104,11 +104,11 @@ array at `data_ov080_02128628`.
 Overlay 80 has three initializers and three `.ctor` entries. The text units and
 initializer order agree exactly:
 
-1. `MontyMole+MontyMoleRock` / `__sinit_ov080_021278c0`;
-2. `CrazedCrate` / `__sinit_ov080_02127a60`;
-3. `Painting` / `__sinit_ov080_02127b2c`.
+1. `MontyMole+MontyMoleRock` / [__sinit_ov080_021278c0](../src/__sinit_ov080_021278c0.c);
+2. `CrazedCrate` / [__sinit_ov080_02127a60](../src/__sinit_ov080_02127a60.c);
+3. `Painting` / [__sinit_ov080_02127b2c](../src/__sinit_ov080_02127b2c.c).
 
-The Painting entry is `.p__sinit_ov080_02127b2c` at `0x02127f68`, relocating to
+The Painting entry is [.p__sinit_ov080_02127b2c](../config/arm9/overlays/ov080/symbols.txt) at `0x02127f68`, relocating to
 `0x02127b2c`. This order is corroboration in addition to the direct global,
 data-table, and PMF edges.
 
@@ -134,10 +134,10 @@ initializer.
 
 The surrounding compiler output has the expected original shape:
 
-- ov002: 34 separate 8-byte resource BSS objects, 34 separate 12-byte destructor
+- [ov002](../config/arm9/overlays/ov002/symbols.txt): 34 separate 8-byte resource BSS objects, 34 separate 12-byte destructor
   records, 69 separate 8-byte PMF descriptor data sections, and ten PMF-array
   BSS sections with the recovered flattened sizes;
-- ov080: 19 separate 8-byte resource BSS objects, 19 separate 12-byte destructor
+- [ov080](../config/arm9/overlays/ov080/symbols.txt): 19 separate 8-byte resource BSS objects, 19 separate 12-byte destructor
   records, twelve separate 8-byte PMF descriptor data sections, and one 0x60-byte
   PMF-array BSS section.
 
@@ -156,9 +156,9 @@ consumers` whenever the *union* of observed consumer units contains one TU. It
 does not count how many individual globals actually had a source-scanned
 consumer. Here the sentence overstates direct coverage:
 
-- ov002 says 44, while source scanning directly maps 15; raw data-table
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) says 44, while source scanning directly maps 15; raw data-table
   inversion raises real coverage to 43 of 44;
-- ov080 says 20, while source scanning directly maps one; raw data-table
+- [ov080](../config/arm9/overlays/ov080/symbols.txt) says 20, while source scanning directly maps one; raw data-table
   inversion raises real coverage to 20 of 20.
 
 The two verdicts survive, but the wording should report `mapped/total` and the
@@ -166,7 +166,7 @@ classifier should eventually follow data-pointer tables. Until then, `high`
 means one non-conflicting directional consumer cluster, not that every listed
 global was independently traced. A multi-class label should survive only when
 it denotes one credible TU and all audited branches remain internal, as they do
-for this ov002 case.
+for this [ov002](../config/arm9/overlays/ov002/symbols.txt) case.
 
 ## Commands and observed gates
 
@@ -197,13 +197,13 @@ python tools/linkcheck.py --name __sinit_ov080_02127b2c `
 Observed for both: `MATCH`; linkcheck `VERIFIED`, `blind: 0`.
 
 The probe was compiled twice with the normal pinned C++ flags plus respectively
-`-DSINIT_EDGE_OV002` and `-DSINIT_EDGE_OV080`. A pyelftools comparison against
+`-DSINIT_EDGE_OV002` and `-DSINIT_EDGE_OV080`. A `pyelftools` comparison against
 the two matched C objects produced the exact size, relocation, and difference
 counts in the table above.
 
 Additional scoped gates:
 
-```text
+```sh
 python -m unittest tools.test_sinit_owners       8 tests, OK
 python tools/port_refcheck.py                    407/407 references resolve
 python tools/langmode_audit.py --check langmode-baseline.json

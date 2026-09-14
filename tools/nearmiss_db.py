@@ -870,7 +870,11 @@ def prune_matched(args):
     if args.dry_run:
         for key, path in ghosts:
             r = db[key]
-            print(f"  would drop div={r.get('divergences'):<4} {r['module']:6} {r['name']:<40} "
+            # An unscorable row stores divergences: null, and `:<4` on None raised
+            # TypeError right here, so --dry-run died on the first such ghost while the
+            # real run (whose line does not format it) went through. Print a dash.
+            div = r.get('divergences')
+            print(f"  would drop div={'-' if div is None else div:<4} {r['module']:6} {r['name']:<40} "
                   f"-> {path.relative_to(REPO).as_posix()}")
         print(f"{len(ghosts)} ghost entries (matched in committed src/)")
         return

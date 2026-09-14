@@ -10,7 +10,7 @@ extern int data_0209b4ac;
 extern int data_0208e43c;
 extern int data_0208e444;
 extern int data_0209b4a0[];
-extern void func_02011dcc(int* g);
+extern int func_02011dcc(int* g, int x);
 }
 
 namespace Sound {
@@ -24,7 +24,7 @@ void SetMusic(unsigned int j1, unsigned int j2)
   int e = data_0208e444;
   data_0209b4ac = j2;
   if(e >= 0) return;
-  func_02011dcc(data_0209b4a0);
+  func_02011dcc(data_0209b4a0, j2);
 }
 
 }

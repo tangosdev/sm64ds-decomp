@@ -114,21 +114,21 @@ class as for the flat shadow the ROM's own code is built against.
 
 ## daDgr_c (`include/daDgr_c.h`, [ov025](../config/arm9/overlays/ov025/symbols.txt), size 0x334)
 
-A swinging platform. All nine bodies now live in one translation unit,
+Spindel (actor 163 DONGURU): a roller that turns about X and translates along Z.
+All ten bodies now live in one translation unit,
 [src/actors/daDgr_c.cpp](../src/actors/daDgr_c.cpp) — `InitResources`, `Behavior`,
-`Render`, `CleanupResources`, the `D1`/`D0` destructor pair and the three
-`func_ov025_*` helpers. They were nine separate one-function files when the offsets
-below were read, which is why the paragraphs further down still describe them one at a
-time. The factory `daDgr_c_classInit` is a separate TU and stays in
-[src/d_a_dgr.c](../src/d_a_dgr.c).
+`Render`, `CleanupResources`, the `D1`/`D0` destructor pair, the three
+`func_ov025_*` helpers, and the factory `daDgr_c_classInit`. They were separate
+one-function files when the offsets below were read, which is why the paragraphs
+further down still describe them one at a time.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mBasePosY` | `InitResources` copies `mPosY` into it once; `Behavior` never writes it again and computes `mPosY = mBasePosY + |sine * 23|` from `data_02082214` every swing frame, and puts the dust particles at `mBasePosY - 0xb9000`. The resting height the swing is measured from. |
-| 0x324 | `mAngleXSpeed` | `Behavior` sets it to `±(0x400 / n)` and then adds it to `mAngleX` — it is only ever the per-frame angular step. It is also the guard on the swing sound: the sample only plays when it is nonzero. |
+| 0x320 | `mBasePosY` | `InitResources` copies `mPosY` into it once; `Behavior` never writes it again and computes `mPosY = mBasePosY + |sine * 23|` from `data_02082214` every roll frame, and puts the dust particles at `mBasePosY - 0xb9000`. The resting height the roll is measured from. |
+| 0x324 | `mAngleXSpeed` | `Behavior` sets it to `±(0x400 / n)` and then adds it to `mAngleX` — it is only ever the per-frame angular step. It is also the guard on the grind sound: the sample only plays when it is nonzero. |
 | 0x326 | `mPhaseTimer` | incremented once per `Behavior` call on every path, and compared against `0x20`, `n + 8`, `m` and `m - 1`; zeroed whenever one of those thresholds is hit. A frame counter within the current stage. |
-| 0x328 | `mSwingStage` | counts `0 … 0x14` and then goes to the `-1` "hold at the end" sentinel; `Behavior` reads it as `10 - mSwingStage` and folds that to a magnitude, which is what makes the platform ease in and out. |
-| 0x329 | `mSwingDir` | flipped with `^ 1` exactly when a swing finishes (`mSwingStage == 0x14`), and the only thing it decides is the sign of the Z step (`±0x14000 / n`) and of `mAngleXSpeed`. A direction bit, not a counter. |
+| 0x328 | `mRollStage` | counts `0 … 0x14` and then goes to the `-1` "hold at the end" sentinel; `Behavior` reads it as `10 - mRollStage` and folds that to a magnitude, which is what makes the roller ease in and out. |
+| 0x329 | `mRollDir` | flipped with `^ 1` exactly when a roll finishes (`mRollStage == 0x14`), and the only thing it decides is the sign of the Z step (`±0x14000 / n`) and of `mAngleXSpeed`. A direction bit, not a counter. |
 | 0x32c | `mDustParticle1` | passed as the first argument of `Particle::System::New(u32, u32, …)` and overwritten with that call's result — a recycled handle. Effect `0x2d`, placed 100 units along the platform's facing (`data_02082214[(mAngleY >> 4) * 2 + 1]`). |
 | 0x330 | `mDustParticle2` | identical shape, placed 100 units the other way. The two ends of the platform. |
 
@@ -149,7 +149,7 @@ over a raw `char *`, with four local one-word shadow structs (`Model`, `ModelBas
 `dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
 *(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
 header, with `&mModel`, `&mMeshCollider`, `mClsnMat`, `mAngleY`, `mPosY` and the six
-named swing fields. Byte-exact under 2004/b56. The file's old banner claimed there was
+named roll fields. Byte-exact under 2004/b56. The file's old banner claimed there was
 "nothing to gain by converting the body and a real risk of a codegen-driven byte miss"
 — the first half was wrong and the second did not happen; the banner now records what
 was measured instead.

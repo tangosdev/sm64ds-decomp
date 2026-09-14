@@ -15,11 +15,9 @@
  * plan-cpp-language-mode.md Phase 6.
  *
  * The local `struct FileSaveData { char data[0x44]; }` shadow is retired; the type
- * now comes from SaveData.h. HONEST LEFTOVER: SetDefaultValues keeps its raw
- * mangled call -- see _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c.
+ * now comes from SaveData.h. SetDefaultValues is a real static call now.
  */
 extern "C" {
-void _ZN8SaveData16SetDefaultValuesEP12FileSaveData(FileSaveData* data);
 extern int data_0209caa0;
 }
 
@@ -28,7 +26,7 @@ int SaveData::ReadFileData(u32 fileID, FileSaveData* dest)
     char* r5 = (char*)dest;
     s32 result = SaveData::ReadDataFromCart(r5, 0x44, fileID);
     if (result) {
-        _ZN8SaveData16SetDefaultValuesEP12FileSaveData((FileSaveData*)r5);
+        SaveData::SetDefaultValues((FileSaveData*)r5);
         if (result == 2)
             return 1;
         return 0;

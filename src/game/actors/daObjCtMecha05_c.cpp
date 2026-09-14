@@ -1,26 +1,35 @@
 //cpp
 /* Production translation unit for ov065/daObjCtMecha05_c.
  *
- * mwccarm emits ordinary functions in reverse source order, so the eight
- * definitions below intentionally run from the highest retail address back
- * toward the compiler-owned destructor group. The adjacent C ABI factory is
- * independently enrolled in src/d_a_obj_ct_mecha05.cpp; adjacency alone is
- * not evidence that it belonged to this class TU.
+ * deslop
  *
- * Superseded one-function sources (ROM address order):
- *   [0] 0x0211ab60  src/_ZN16daObjCtMecha05_cD1Ev.cpp
- *   [1] 0x0211abac  src/_ZN16daObjCtMecha05_cD0Ev.cpp
- *   [2] 0x0211ac0c  src/func_ov065_0211ac0c.c
- *   [3] 0x0211ad04  src/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp
- *   [4] 0x0211ad48  src/_ZN16daObjCtMecha05_c6RenderEv.cpp
- *   [5] 0x0211ad70  src/func_ov065_0211ad70.c
- *   [6] 0x0211ae08  src/_ZN16daObjCtMecha05_c8BehaviorEv.cpp
- *   [7] 0x0211b1d4  src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp
+ * Leftover:
+ * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
+ *   stay mangled (Fix12-by-value, 6az)
+ * - func_020393d4 stores dBgW+0x18 (beforeClsnCallback); func_020393a4
+ *   stores +0x0c; func_02039394 stores +0x10 (no setter)
+ * - func_ov065_0211ac0c / func_ov065_0211ad70 stay address-named
+ *   (symbols.txt; naming them as methods would miss those labels)
+ * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
+ *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
+ *   neighbouring class
+ * - SharedFilePtr +4 BMD (LoadFile/Release; header has no fields)
+ * - common.h first (func_ov065_0211ac0c mShadowMatrix.m[9..11])
+ * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy
+ *   deadstrips it
+ *
+ * mwccarm emits ordinary functions in reverse source order, so the nine
+ * definitions below intentionally run from the highest retail address back
+ * toward the compiler-owned destructor group. Keep the factory first.
+ *
+ * The factory is `return new` in this file.
  */
 
+#include "common.h"
 #include "daObjCtMecha05_c.h"
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
+#include "dBgW.h"
 
 /* Actor/process profile descriptor at ov065:0x0211d290. Field roles are
  * recovered from fBase_c/dActor_c consumers; exact original member spellings
@@ -39,10 +48,8 @@ struct CtMecha05SpawnInfo {
 typedef char CtMecha05SpawnInfo_size_must_be_0x1c[
     sizeof(CtMecha05SpawnInfo) == 0x1c ? 1 : -1];
 
-/* The remaining C ABI declarations are measured call seams or genuinely
- * address-named free helpers. In particular, the Fix12-by-value methods stay
- * ABI-shaped because their natural declarations trigger mwccarm stack homing
- * absent from retail. */
+/* Fix12-by-value calls retain their measured raw ABI declarations. Natural
+ * class-typed declarations make mwccarm home arguments absent from retail. */
 extern "C" {
 extern void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 extern void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *matrix,
@@ -56,7 +63,6 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *collider, KCL_File *file, Matrix4x3 *matrix,
     int scale, s16 angle, CLPS_Block *clps);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void func_020393d4(dBgW *collider, void *callback);
 extern void func_020393a4(dBgW *collider, int value);
 extern void func_02039394(dBgW *collider, int value);
@@ -76,12 +82,9 @@ extern s8 data_ov065_0211d26c[];
 extern CLPS_Block data_ov035_02112258;
 }
 
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
-
-/* This descriptor belongs to the class data group even though the adjacent
- * factory is kept as a separate, independently enrolled source. */
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
- * lineage-supported reconstruction; historical alias TTC_MovingBar_SpawnInfo. */
+ * lineage-supported reconstruction. */
+extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
 extern "C" CtMecha05SpawnInfo g_profile_CT_MECHA05 = {
     daObjCtMecha05_c_classInit,
     0x0071,
@@ -94,7 +97,14 @@ extern "C" CtMecha05SpawnInfo g_profile_CT_MECHA05 = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN16daObjCtMecha05_c13InitResourcesEv, 0x0211b1d4, size 0x154 */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjCtMecha05_c_classInit
+extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit()
+{
+    return new daObjCtMecha05_c();
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c13InitResourcesEv
 int daObjCtMecha05_c::InitResources()
@@ -110,7 +120,7 @@ int daObjCtMecha05_c::InitResources()
         &mClsnMat, 0x199, mAngleY,
         &data_ov035_02112258);
     func_020393d4(&mMeshCollider,
-        (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        (void *)&dBgW::UpdatePosWithTransform);
     func_020393a4(&mMeshCollider, 0x1c0000);
     func_02039394(&mMeshCollider, 0x1000);
     mPrevAngleY = mAngleY;
@@ -133,7 +143,6 @@ int daObjCtMecha05_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN16daObjCtMecha05_c8BehaviorEv, 0x0211ae08, size 0x3cc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c8BehaviorEv
 /* mHorzSpeed is reused here as a fix12 travel accumulator rather than a
@@ -142,9 +151,7 @@ int daObjCtMecha05_c::Behavior()
 {
     if (data_0209f2c0 == 3) {
         int ang;
-        /* Read UNSIGNED here -- ldrh, not the ldrsh a plain `s16 mPrevAngleY`
-           read would emit -- matching the ROM exactly even though mPrevAngleY
-           itself is signed (dActor_c.h, evidenced elsewhere). */
+        /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
         ang = *(u16 *)&mPrevAngleY;
         mPosX = mHomePosX +
             (int)(((long long)data_02082214[(ang >> 4) << 1] * 0xfa000 + 0x800) >> 12);
@@ -238,7 +245,6 @@ Lend:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov065_0211ad70, 0x0211ad70, size 0x98 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* Address-named TU-local helper; original spelling unknown. */
 void func_ov065_0211ad70(daObjCtMecha05_c *actor)
@@ -261,7 +267,6 @@ void func_ov065_0211ad70(daObjCtMecha05_c *actor)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN16daObjCtMecha05_c6RenderEv, 0x0211ad48, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c6RenderEv
 int daObjCtMecha05_c::Render()
@@ -271,18 +276,8 @@ int daObjCtMecha05_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN16daObjCtMecha05_c16CleanupResourcesEv, 0x0211ad04, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha05_c16CleanupResourcesEv
-/* The two bss slots released here are ROM-proven by ADDRESS, not by name.
-   0x0211d904 and 0x0211d90c appear as literal-pool words in the cartridge's
-   overlay_0065.bin (file offsets 0x4e60/0x4e64, 0x542c/0x5430, 0x69fc/0x6a0c),
-   so the overlay really does share these two slots with the neighbouring class
-   -- that is fact, not a naming error carried over from it.
-   The SPELLING TTC_MovingBar_* is project convention, not the cartridge's: the
-   string "TTC_MovingBar" occurs nowhere in arm9, arm7 or any of the 103 overlay
-   binaries. These names are assigned by us, at those two addresses, in
-   config/arm9/overlays/ov065/symbols.txt. Read them as labels, not evidence. */
 int daObjCtMecha05_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -293,7 +288,6 @@ int daObjCtMecha05_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov065_0211ac0c, 0x0211ac0c, size 0xf8 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* Address-named TU-local helper; original spelling unknown. */
 void func_ov065_0211ac0c(daObjCtMecha05_c *actor)
@@ -329,7 +323,6 @@ void func_ov065_0211ac0c(daObjCtMecha05_c *actor)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinals 1 and 0 -- compiler-owned destructor variants.                */
 /*   _ZN16daObjCtMecha05_cD1Ev  0x0211ab60  size 0x4c  (complete-object)      */
 /*   _ZN16daObjCtMecha05_cD0Ev  0x0211abac  size 0x60  (deleting)            */
 /* -------------------------------------------------------------------------- */

@@ -1,13 +1,42 @@
 //cpp
+/**
+ * Rainbow Ride flying carpet (ov036 FLYING_CARPET 130).
+ *
+ * RTTI ov036:0x02113f4c names daObjRcCarpet_c; overlay_actors maps
+ * profile 130 to FLYING_CARPET. ov036 is RR. Not buranko / hane /
+ * guruguru (siblings in this overlay).
+ *
+ * deslop
+ * Leftover: factory stays the typed C-ABI seam, not
+ *   `return new daObjRcCarpet_c()`. `new` MATCH-wildcards but
+ *   linkcheck NO-REPOs classInit: dPathLiftActor_c has no out-of-line
+ *   ctor, so the inlined vptr store is `_ZTV16dPathLiftActor_c[2]`
+ *   (addend 8) against the ROM's `data_ov002_0210af70` address point.
+ * Leftover: ModelAnim::SetAnim and dBgW_KcMbg::SetFile stay mangled
+ *   -- both take Fix12<int> by value (wall 6az); a method call homes
+ *   the argument and size-DIFFs InitResources.
+ * Leftover: dBgActor_c::IsClsnInRange stays mangled -- header method
+ *   form is Undefined (Fix12i mangles as i; ROM is Fix12<int>).
+ * Leftover: func_020393d4 is an 8-byte store into dBgW+0x18
+ *   (beforeClsnCallback). This TU calls it; naming belongs with
+ *   dBgW in arm9.
+ * Leftover: func_ov002_020efaf0 is the path-lift setup helper
+ *   (ROM label; symbols.txt has not renamed it to a method).
+ * Leftover: func_ov036_021122c0 / 0211224c keep ROM labels.
+ * Leftover: 021122c0 / 0211224c translation stores stay
+ *   `(char *)self + 0x490/0x494/0x498` (mModelAnim.mat4x3.t) and
+ *   `+ 0x310/0x314/0x318` (mClsnMat.t). Nested-member stores make
+ *   b56 materialise a second 0x46c base and grow the function.
+ * Leftover: SharedFilePtr +4 BCA load (layout unrecovered).
+ * Leftover: data_ov002_0210d9f0 / data_ov036_0211419c / 021141a4 /
+ *   021141ac handles and data_ov036_02112b28 CLPS. This TU does
+ *   not own those overlay cells.
+ */
+
+#include "common.h"
 #include "daObjRcCarpet_c.h"
 #include "SharedFilePtr.h"
-
-/* Manually curated translation unit -- ov036/daObjRcCarpet_c (9 functions).
- * The ordinary definitions remain in reverse ROM order because mwccarm emits
- * one text section per function in reverse source order. The inline class
- * destructor is the exception: vtable instantiation makes the compiler emit
- * the retail D1 then D0 pair first, with no D2.
- */
+#include "dBgW.h"
 
 struct FlyingCarpetResources {
     SharedFilePtr *model;
@@ -26,15 +55,11 @@ struct FlyingCarpetSpawnInfo {
     Fix12i rangeOffsetY;
     Fix12i range;
     Fix12i drawDistance;
-    u32 unk_18;
+    u32 farDistance;
 };
 
 typedef char FlyingCarpetSpawnInfo_size_must_be_0x1c[
     sizeof(FlyingCarpetSpawnInfo) == 0x1c ? 1 : -1];
-
-struct M4x3Flat {
-    s32 m[12];
-};
 
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9f0;
@@ -67,9 +92,8 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
 extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *collider, KCL_File *file, const Matrix4x3 *matrix,
     Fix12i scale, s16 angle, CLPS_Block *clps);
-extern void func_020393d4(dBgW_KcMbg *collider, void *callback);
+extern void func_020393d4(dBgW *collider, void *callback);
 extern void func_ov002_020efaf0(dPathLiftActor_c *lift);
-extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
     dBgActor_c *actor, Fix12i low, Fix12i high);
 extern void Matrix4x3_FromRotationXYZExt(
@@ -81,12 +105,7 @@ int ApproachLinear(int &value, int target, int step);
 extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self);
 extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self);
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- daObjRcCarpet_c_classInit, 0x02112538, size 0x78 */
-/* -------------------------------------------------------------------------- */
-/* Natural new targets the global allocator and cannot reproduce the actor
- * allocation/construction relocations. Keep this typed C-ABI factory seam. */
-/* Reconstructed source-style name. Historical alias: FlyingCarpet_Spawn. */
+// @symbol daObjRcCarpet_c_classInit
 extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit()
 {
     daObjRcCarpet_c *actor =
@@ -115,9 +134,6 @@ extern "C" FlyingCarpetSpawnInfo g_profile_RC_CARPET = {
     0x00000000
 };
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- InitResources, 0x0211244c, size 0xec */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjRcCarpet_c13InitResourcesEv
 int daObjRcCarpet_c::InitResources()
 {
@@ -135,9 +151,7 @@ int daObjRcCarpet_c::InitResources()
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, collisionFile, &mClsnMat,
         0x199, mAngleY, data_ov036_02113f58.clps);
-    func_020393d4(
-        &mMeshCollider,
-        (void *)_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     func_ov002_020efaf0(this);
@@ -146,9 +160,6 @@ int daObjRcCarpet_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- Behavior, 0x021123c8, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjRcCarpet_c8BehaviorEv
 int daObjRcCarpet_c::Behavior()
 {
@@ -164,9 +175,6 @@ int daObjRcCarpet_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- Render, 0x02112378, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjRcCarpet_c6RenderEv
 int daObjRcCarpet_c::Render()
 {
@@ -176,9 +184,6 @@ int daObjRcCarpet_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- CleanupResources, 0x02112318, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjRcCarpet_c16CleanupResourcesEv
 int daObjRcCarpet_c::CleanupResources()
 {
@@ -191,9 +196,6 @@ int daObjRcCarpet_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov036_021122c0, 0x021122c0, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov036_021122c0
 extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self)
 {
@@ -209,22 +211,13 @@ extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self)
     *(s32 *)((char *)self + 0x498) = self->mPosZ >> 3;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov036_0211224c, 0x0211224c, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov036_0211224c
 extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self)
 {
-    *(M4x3Flat *)&self->mClsnMat =
-        *(M4x3Flat *)&self->mModelAnim.mat4x3;
+    self->mClsnMat = self->mModelAnim.mat4x3;
     /* As above, retail keeps `this` live as the base for these stores. */
     *(s32 *)((char *)self + 0x310) = self->mPosX;
     *(s32 *)((char *)self + 0x314) = self->mPosY + self->unk_4bc;
     *(s32 *)((char *)self + 0x318) = self->mPosZ;
     self->mMeshCollider.Transform(self->mClsnMat, self->mAngleY);
 }
-
-/* ROM ordinals 0/1 are emitted by the inline virtual destructor:
- *   _ZN15daObjRcCarpet_cD1Ev  0x02112158  size 0x70
- *   _ZN15daObjRcCarpet_cD0Ev  0x021121c8  size 0x84
- */

@@ -85,11 +85,20 @@
 
 # ---- SPINDEL (163), table 0x02113760 --------------------------------------
 src/actors/daDgr_c.cpp
-src/d_a_dgr.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daDgr_c.cpp (ov025 delinks, .text 0x02111898..0x021118c8, one
+# absorbed range), which port/slice_w3e_ov025.txt:87 already compile, so the
+# symbols this row seated now come from there and the per-function file is gone
+# from main's tree.
+#src/d_a_dgr.c
 
 # ---- GRINDEL (162), table 0x02113850 --------------------------------------
 src/actors/daDkk_c.cpp
-src/d_a_dkk.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daDkk_c.cpp (ov025 delinks, .text 0x02111cf4..0x02111d40, one
+# absorbed range), which port/slice_w3e_ov025.txt's daDkk_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_dkk.c
 
 # ---- PYRAMID_STEP (87)'s slot 3, reclaimed from wave 15's host thunk -------
 src/_ZN11PyramidStep16CleanupResourcesEv.cpp

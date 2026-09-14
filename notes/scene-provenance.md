@@ -230,8 +230,8 @@ in place for other includers; neither `BootScene` source needs it any more.
 leaf.
 
 **Vtable.** `data_02091528` is 18 slots and `BootScene` overrides two functionally —
-slot 0 `InitResources` (arm9 0x02005a58) and slot 6 `Behavior` (arm9 0x02005418) — plus
-the destructor pair at 16/17. Confirmed against `config/arm9/relocs.txt`'s vtable words
+slot 0 `InitResources` ([arm9](../config/arm9/symbols.txt) 0x02005a58) and slot 6 `Behavior` ([arm9](../config/arm9/symbols.txt) 0x02005418) — plus
+the destructor pair at 16/17. Confirmed against [config/arm9/relocs.txt](../config/arm9/relocs.txt)'s vtable words
 at 0x02091528 and 0x02091540.
 
 **Converted 2026-08-22.** Both overrides are now real `BootScene::` methods
@@ -276,13 +276,13 @@ One of `dScene_c`'s ten direct children — the "entry" scene: whichever course/
 is currently loaded, keyed off the actor ID it was spawned with (`fBase_c::actorID`,
 inherited at 0x0c).
 
-**Base.** `dScene_c`, confirmed by the RTTI edge (`dScEntry_c` ov075:0x0211c8f8 ->
-`dScene_c` arm9:0x020914d4) and independently by the vtable: reading
-`data_ov075_0211d304` (18 slots) against `_ZTV8dScene_c` slot for slot, `dScEntry_c`
+**Base.** `dScene_c`, confirmed by the RTTI edge (`dScEntry_c` [ov075](../config/arm9/overlays/ov075/symbols.txt):0x0211c8f8 ->
+`dScene_c` [arm9](../config/arm9/symbols.txt):0x020914d4) and independently by the vtable: reading
+[data_ov075_0211d304](../config/arm9/overlays/ov075/symbols.txt) (18 slots) against `_ZTV8dScene_c` slot for slot, `dScEntry_c`
 overrides exactly eight — 0, 1, 3, 6, 9, 12, 16, 17.
 
-**Construction.** Two real Spawn-style factories, `func_ov075_0211a740` and
-`func_ov075_0211a854`, both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
+**Construction.** Two real Spawn-style factories, [func_ov075_0211a740](../src/d_s_entry_result.cpp)(reconstructed names as `dScEntry_c_classInit_RESULT` in `d_s_entry_result.cpp`) and
+[func_ov075_0211a854](../src/d_s_entry_entry.cpp)(reconstructed name as `dScEntry_c_classInit_ENTRY` in `d_s_entry_entry.cpp`), both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
 `fBase_c::operator new(0x288)`. They are not C1/C2 variants: both allocate and return
 a new object. Size 0x288 is read directly off the allocator call, not inferred from
 field span.
@@ -307,7 +307,7 @@ member names are descriptive inferences, not ROM-authenticated source spellings.
 
 It does **not** hold `dScEntry_c::graphCallback_c`; equal 0x2c sizes had made that an
 attractive but false inference. The RTTI-proven graph callback is instead the separate
-0x2c-byte global at ov075:0x0211d71c. `__sinit_ov075_0211bb00` constructs it with
+0x2c-byte global at [ov075](../config/arm9/overlays/ov075/symbols.txt):0x0211d71c. [__sinit_ov075_0211bb00](../src/__sinit_ov075_0211bb00.c) constructs it with
 `_ZN10dScEntry_c15graphCallback_cC1Ev`, which writes the dGraph base and derived vptrs
 and clears its first two fields.
 
@@ -322,7 +322,7 @@ flat struct has no base to attribute it to.
 pair is at slots 16/17, not 0/1 — the `fBase_c`/actor-family convention, not the Fader
 family's.
 
-Native dScEntry_c, icon_c and graphCallback_c methods include this header directly.
+Native `dScEntry_c`, `icon_c` and `graphCallback_c` methods include this header directly.
 Unidentified plain-C helpers retain local offset views rather than borrowing the class
 name without evidence.
 
@@ -355,7 +355,7 @@ writes single bytes at both 0xe and 0xf before touching anything past 0x10. Real
 newly-added storage starts at 0x10.
 
 **Vtable.** `data_020926f0` (unnamed — like the rest of this family, only `FaderWipe`'s
-table has a real `_ZTV` symbol in `config/arm9/symbols.txt`) is ten slots and overrides
+table has a real `_ZTV` symbol in [config/arm9/symbols.txt](../config/arm9/symbols.txt)) is ten slots and overrides
 *all* of them, even the ones `FaderColor` itself inherits unmodified from
 `FaderBrightness`: every `dWipe_c` word differs from `FaderColor`'s own vtable at the
 same slot. Two of the ten (`SetToEnd`, `SetToStart`) are pure tail-call veneers to

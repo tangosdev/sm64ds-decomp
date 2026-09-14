@@ -4,7 +4,9 @@
  * ROM run 0x021113bc..0x021116ac, plus the class's .data run at
  * 0x021121a4..0x0211227c (_ZTI, _ZTS, the g_profile_CLOCK_LONG and
  * g_profile_CLOCK_SHORT descriptors, and the _ZTV whose address point is
- * 0x02112200). Its in-overlay sibling daObjClockHuriko_c is the style oracle.
+ * 0x02112200). ov013 is the clock painting overlay (not TTC / ov065):
+ * CLOCK_PAINTING_HAND_SHORT (292) and CLOCK_PAINTING_HAND_LONG (293) share
+ * this class; CLOCK_PAINTING_PENDULUM (294) is the sibling daObjClockHuriko_c.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function in the reverse of source order, so the
@@ -23,10 +25,18 @@
  *   [6] 0x021115cc  daObjClock_c::InitResources
  *   [7] 0x0211163c  daObjClock_c_classInit_CLOCK_SHORT   (factory, actor 292)
  *   [8] 0x02111674  daObjClock_c_classInit_CLOCK_LONG    (factory, actor 293)
+ *
+ * deslop leftovers:
+ * - data_ov013_021116ac / data_ov013_021116b0: per-hand angular speed and
+ *   SharedFilePtr handles. This TU consumes them; overlay .data owns them.
+ * - two C-linkage factories stay CLOCK_SHORT / CLOCK_LONG: EAD would name
+ *   both daObjClock_c_classInit (not_apply=global_classinit_name_collision).
+ * - Matrix4x3_FromRotationZXYExt stays the C helper (no class method).
+ * - func_ov013_02111430 keeps its func_ name: not a vtable slot, and
+ *   nothing in the cartridge says it is a member.
  */
 
 #include "daObjClock_c.h"
-#include "decl_common.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -34,53 +44,35 @@ extern void Matrix4x3_FromRotationZXYExt(void *, int, int, int);
 int IsAreaShowing(int areaId);
 extern signed char data_02092110[];
 extern unsigned char data_0209f2c0[];
+extern short data_ov013_021116ac[];
+extern SharedFilePtr *data_ov013_021116b0[];
+void func_ov013_02111430(daObjClock_c *self);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- daObjClock_c_classInit_CLOCK_LONG, 0x02111674, size 0x38        */
-/* ROM ordinal 7 -- daObjClock_c_classInit_CLOCK_SHORT, 0x0211163c, size 0x38       */
 /* -------------------------------------------------------------------------- */
 /* ONE CLASS, TWO PROFILES. CLOCK_LONG (actor 293) and CLOCK_SHORT (actor 292)
  * each own a descriptor and a separate factory; both install the same
  * vtable at 0x02112200 and the same 0x128 allocation, and InitResources tells
  * them apart at run time by actorID.
  *
- * The factory suffixes distinguish the two profiles in the reconstruction
- * registry. Both factory names and g_profile_ spellings are reconstructed
- * source-style names, not original identifiers recovered from the image.
- * ROM RTTI supplies the class name; the debug string table supplies the
- * CLOCK_SHORT/CLOCK_LONG tokens at 0x02090230/0x0208ffa8. */
-extern "C" {
-extern void *_ZN7fBase_cnwEj(u32 size);
-extern void _ZN8dActor_cC2Ev(void *self);
-extern void _ZN5ModelC1Ev(void *self);
+ * The factories keep their coined spellings. The registry's
+ * factory_rename_recommended is `no` for both rows for exactly this reason
+ * (not_apply=global_classinit_name_collision): the EAD convention would name
+ * both daObjClock_c_classInit, and two C-linkage definitions cannot share one
+ * name. Only the two profile records are renamed, to the spellings the ROM's
+ * own debug string table proves -- CLOCK_SHORT at 0x02090230, CLOCK_LONG at
+ * 0x0208ffa8. */
 // @symbol daObjClock_c_classInit_CLOCK_LONG
-int *daObjClock_c_classInit_CLOCK_LONG(void)
+extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_LONG()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(296);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        /* &[2], not the bare symbol: this TU EMITS the vtable, so mwcc's symbol
-         * is the object start at 0x021121f8 and +8 is what reaches the
-         * 0x02112200 address point. The addend-0 spelling is right only for a
-         * TU that imports its vtable. */
-        p[0] = (int)&_ZTV12daObjClock_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-    }
-    return p;
+    return new daObjClock_c();
 }
 
 // @symbol daObjClock_c_classInit_CLOCK_SHORT
-int *daObjClock_c_classInit_CLOCK_SHORT(void)
+extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_SHORT()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(296);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV12daObjClock_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-    }
-    return p;
-}
+    return new daObjClock_c();
 }
 
 /* The 0x1c actor descriptor, `actor_profile_0x1c` in
@@ -90,9 +82,9 @@ int *daObjClock_c_classInit_CLOCK_SHORT(void)
  * Their names describe those uses. The retained s16 fields, order and values
  * do not establish the original signedness. */
 struct ClockSpawnInfo {
-    int *(*classInit)();
-    s16 behaviorPriority;
-    s16 renderPriority;
+    daObjClock_c *(*classInit)();
+    s16 profileID;
+    s16 drawOrder;
     u32 actorFlags;
     s32 clipOffsetY;
     s32 clipRadius;                 /* 0x1000 == 1.0 */
@@ -114,7 +106,6 @@ extern "C" ClockSpawnInfo g_profile_CLOCK_SHORT = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN12daObjClock_c13InitResourcesEv, 0x021115cc, size 0x70 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c13InitResourcesEv
 /* recovered: typed actor, model, and shared-file ownership */
@@ -127,15 +118,14 @@ int daObjClock_c::InitResources()
         mHandIndex = 1;
     {
         unsigned char index = mHandIndex;
-        SharedFilePtr &file = *(SharedFilePtr *)data_ov013_021116b0[index];
+        SharedFilePtr &file = *data_ov013_021116b0[index];
         mModel.SetFile((BMD_File *)Model::LoadFile(file), 1, -1);
     }
-    func_ov013_02111430((char *)this);
+    func_ov013_02111430(this);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN12daObjClock_c8BehaviorEv, 0x021114cc, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c8BehaviorEv
 /* recovered: real C++ method over inherited actor fields */
@@ -156,12 +146,11 @@ int daObjClock_c::Behavior()
         else if (angle >= 0xe000)
             data_0209f2c0[0] = 3;
     }
-    func_ov013_02111430((char *)this);
+    func_ov013_02111430(this);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN12daObjClock_c6RenderEv, 0x021114a4, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c6RenderEv
 /* recovered: real C++ method over the owned Model */
@@ -172,31 +161,26 @@ int daObjClock_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN12daObjClock_c16CleanupResourcesEv, 0x02111478, size 0x2c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c16CleanupResourcesEv
 /* recovered: typed file ownership through the shared class APIs */
 int daObjClock_c::CleanupResources()
 {
-    ((SharedFilePtr *)data_ov013_021116b0[mHandIndex])->Release();
+    data_ov013_021116b0[mHandIndex]->Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov013_02111430, 0x02111430, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov013_02111430
 /* Rebuild the owned model matrix from inherited actor angles and position.
- * The local receiver uses the existing class layout; include order preserves
- * the Matrix4x3 view with translation in t. Keep the external char* boundary
- * and address-derived name: original member/free-function status is unproven.
- * The @symbol marker keeps this helper separate in source-quality reports. */
-extern "C" {
-void func_ov013_02111430(char *t)
+ * Not a vtable slot and not provably a member, so it keeps its func_ name.
+ * The marker above is not decoration -- without it tools/tiers.py folds this
+ * body into the preceding member's fragment. */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+void func_ov013_02111430(daObjClock_c *self)
 {
-    daObjClock_c *self = (daObjClock_c *)t;
-    Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3, self->mAngleX, self->mAngleY, self->mAngleZ);
     self->mModel.mat4x3.t.x = self->mPosX >> 3;
     self->mModel.mat4x3.t.y = self->mPosY >> 3;
     self->mModel.mat4x3.t.z = self->mPosZ >> 3;
@@ -204,8 +188,6 @@ void func_ov013_02111430(char *t)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN12daObjClock_cD0Ev, 0x021113ec, size 0x44              */
-/* ROM ordinal 0 -- _ZN12daObjClock_cD1Ev, 0x021113bc, size 0x30              */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_cD1Ev
 // @symbol _ZN12daObjClock_cD0Ev

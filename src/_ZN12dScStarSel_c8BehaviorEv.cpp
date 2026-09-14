@@ -57,12 +57,30 @@
 // scans over declaration order x type names x spellings (1475 cells from the old shape,
 // 1359 from this one) never produce the ROM's `ldrb r7,[r6,#3]`, and neither does a
 // 45-minute permuter run on a plain-C base that compiles byte-identically to this file.
-// A 40-cell additive pragma sweep is inert as well,
-// and both pragmas here are load-bearing: dropping opt_strength_reduction rebuilds the
-// frame (0x830, pushes r8, loses the `sub sp,sp,#4`), dropping opt_loop_invariants
-// keeps the exact schedule and costs 5 more coloring words.
+// The FULL verified 246-name pragma vocabulary at on and off (492 cells, on top of this
+// file's pair) is inert too: 448 cells score 11, 43 break the size, one scores 24, and not
+// one reproduces a window word. Both pragmas here are load-bearing: dropping
+// opt_strength_reduction rebuilds the frame (0x830, pushes r8, loses the `sub sp,sp,#4`),
+// dropping opt_loop_invariants keeps the exact schedule and costs 5 more coloring words.
 // Cross-build: 2004/b56 is the ONLY installed build that even reaches 0x834 here
 // (1.2 lands 2008-2012, 2.0 1952, dsi 1764-1784), so the version axis is closed too.
+//
+// ALSO MEASURED INERT, wave 9 lane CRK-L (~5,300 more compiles, notes 6cq): 6cd dead
+// assignments in the loop preamble (130 cells, byte-identical objects every time); the 6cc
+// joint rank x type-name axis applied to the loop scratch after naming it (195 cells) and
+// two annealers over the same joint space, the second adding the five inner-scope locals'
+// type names, hoisting them to function scope at any rank, and the named scratch (1,558 then
+// 2,653 compiles, 7 restarts, all end at 11) and an EXHAUSTIVE 3,300-cell grid of the
+// product that matters, `ty`'s (type name x rank) crossed with the named scratch's (type
+// name x rank), one representative per colouring class -- best 11, zero window words;
+// 6ca member-RMW respellings at all eight RMW
+// sites (16 cells, ALL break the size -- the compound-assignment spelling is already the
+// folded form); block depth (1 to 3 added bare scopes x 6 types, flat; rec/tx/ty declared
+// inside the `if (n > 0)` block in every legal order x 4 type sets, 31-32); the 6y-1
+// self-select boosters (135 cells); access-expression respellings of the scratch chain's two
+// reads (32 cells); and 175 more permuter-minutes over two structurally distinct seeds,
+// 16,626 candidates, base score 85 and minimum score 85 on both -- neither run improved on
+// its base once. Do not re-run any of those.
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 #include "common.h"

@@ -14,7 +14,7 @@
  * why the header says `struct daObjBC_Switch_c : dBgActor_c`, and why the RTTI
  * below has ROM homes to be compared against at all. It used to be called
  * BlueCoinSwitch, which was a coined placeholder and matched nothing at any
- * address.
+ * address. Profile BLUE_COIN_SWITCH(10) in symbols/overlay_actors.md.
  *
  * IT IS A LEAF. A byte scan of every file under extracted/ for the LE word
  * 0x0210b228 finds exactly one logical hit -- file offset 0x5dc08 in both
@@ -76,6 +76,20 @@
  *
  * NO PRAGMAS. None of the nine legacy sources carried one.
  *
+ * deslop leftovers:
+ * - dBgW_KcMbg::SetFile 6az: InitResources' by-value Fix12<int> scale makes
+ *   the header method form size-DIFF.
+ * - dBgActor_c::IsClsnInRange 6az: Behavior's two by-value Fix12<int>
+ *   parameters; the header method form is refused by the bytes
+ *   (include/dBgActor_c.h).
+ * - Sound::ChangeMusicVolume 6az: Behavior passes Fix12<int> by value.
+ * - func_020393c4: InitResources stores func_ov002_020f15b8 on
+ *   mMeshCollider; dBgW.h has no setter.
+ * - data_ov002_0210d6f4 CLPS handle: this TU claims .text only.
+ * - InitResources 0x32a: named mCoinTimerSeed CSE's the field address.
+ *   Keep (u16*)(c+0x300)[0x15] / ((int)c+0x32a).
+ * - Event::SetBit stays mangled: no Event header.
+ *
  * Consolidated from these legacy one-function sources (ROM address order):
  *   [0] 0x020f11b0  src/_ZN16daObjBC_Switch_cD1Ev.cpp
  *   [1] 0x020f11f4  src/_ZN16daObjBC_Switch_cD0Ev.cpp
@@ -88,119 +102,73 @@
  *   [8] 0x020f15cc  src/daObjBC_Switch_c_classInit.c
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order.
- *
- * On header ordering: include/dBgActor_c.h carries a MEASURED warning that it
- * must be included ahead of Model.h, because Matrix4x3 has two guarded
- * spellings over the same 0x30 bytes and whichever a TU sees first stands --
- * compiling dBgActor_c::UpdateClsnPosAndRot against the wrong one yields 0x74
- * bytes where the ROM has 0x64. include/daObjBC_Switch_c.h pulls Model.h
- * before dBgActor_c.h, which is the hazardous order. It is harmless HERE
- * because this TU only CALLS UpdateClsnPosAndRot; it compiles none of
- * dBgActor_c's own bodies, and all nine of its functions reproduce the
- * cartridge byte for byte. It would stop being harmless if this file ever
- * grew a body that touches Matrix4x3 -- fix the header's include order then,
- * rather than assuming the byte match still covers it. */
+/* daObjBC_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach
+   common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
 #include "daObjBC_Switch_c.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 
-/* Local declarations carried from the legacy files. Partially reconciled: the
- * two file handles below are typed as the real SharedFilePtr, and Model::Render,
- * Model::LoadFile, dBgW_Kc::LoadFile and SharedFilePtr::Release are now called
- * as real methods through include/Model.h, include/dBgW_Kc.h and
- * include/SharedFilePtr.h. The rest are still raw mangled-name externs.
- *
- * Several of THOSE do have a real declaration available -- dActor_c::PoofDust,
- * ::KillAndTrackInDeathTable and ::FindWithActorID in include/dActor_c.h,
- * dBgActor_c::UpdateModelPosAndRotY, ::UpdateClsnPosAndRot and the constructor
- * in include/dBgActor_c.h, ModelBase::SetFile in include/ModelBase.h,
- * dBgW_KcMbg::SetFile in include/dBgW_KcMbg.h -- and reconciling them is
- * worthwhile, but each one is a codegen risk that has to be re-verified
- * against the ROM bytes, so they are left explicit rather than changed blind.
- *
- * The remainder have no header to move to: IsAreaShowing, Sound::ChangeMusicVolume,
- * Event::SetBit, DecIfAbove0_Short, dBgActor_c::IsClsnInRange, func_020393c4,
- * func_ov002_020dd8b8 and func_ov002_020f1578. fBase_c::operator new is a
- * deliberate exception -- include/fBase_c.h explains that CW rejects an
- * in-class declaration of it, so the extern here is the only spelling
- * available and is not an oversight. */
-/* shadow typedef 'Fix12i' */
-typedef int Fix12i;
-
 extern "C" {
-/* The two bss file handles. decl_common.h also spells these
-   data_ov002_02110ac4/_02110acc as `extern char`; the renamed symbols are the
-   same two addresses in config/arm9/overlays/ov002/symbols.txt, typed here so
-   the calls below can be real methods rather than mangled-name externs. */
 extern SharedFilePtr daObjBC_Switch_c_ClsnFile;
 extern SharedFilePtr daObjBC_Switch_c_ModelFile;
 extern u8 IsAreaShowing(s32 idx);
+/* Sound::ChangeMusicVolume(u32, Fix12<int>) -- wall 6az on Behavior. */
 extern s32 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, s32 vol);
 extern void _ZN5Event6SetBitEj(u32 bit);
-extern void _ZN8dActor_c8PoofDustEv(void *self);
 extern u16 DecIfAbove0_Short(u16 *p);
-extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *prev);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+/* dBgActor_c::IsClsnInRange(Fix12<int>, Fix12<int>) -- wall 6az on Behavior. */
 extern s32 _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* m, void* f, int a, int b);
-extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( void* mc, void* f, void* mtx, Fix12i fx, short s, void* clps);
+/* dBgW_KcMbg::SetFile -- wall 6az on InitResources. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, Matrix4x3 *mat, int scale,
+    short angY, void *clps);
 extern "C" void func_020393c4(void* p, void* v);
 extern int func_ov002_020dd8b8(void* c);
-extern void func_ov002_020f1578(char*, char*);
-extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
-extern int _ZTV16daObjBC_Switch_c[];
-/* The alternate declarations tubuild flagged for these two symbols (from the
-   legacy InitResources file) differ only in parameter name, not type --
-   both are extern "C" void(void*); byte-neutral, kept the Behavior file's
-   spelling. */
+extern void func_ov002_020f1578(daObjBC_Switch_c *c, char *arg);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- daObjBC_Switch_c_classInit, 0x020f15cc, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjBC_Switch_c_classInit
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* Reconstructed source-style name: the ROM proves daObjBC_Switch_c and the
  * BC_SWITCH profile relationship; later EAD lineage supplies classInit.
- * Exact original SM64DS spelling is not preserved. */
-int *daObjBC_Switch_c_classInit(void)
+ * Exact original SM64DS spelling is not preserved.
+ *
+ * Every instruction the cartridge has here falls out of the one `new`.
+ * 0x020f15d0 loads 816 = 0x330 -- the class's own size -- into the header's
+ * inline operator new; 0x020f15e0 calls dBgActor_c's C2 and the store at
+ * 0x020f15ec lays down this class's vptr. The null check is the one `new`
+ * itself emits. */
+extern "C" daObjBC_Switch_c *daObjBC_Switch_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(816);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)(_ZTV16daObjBC_Switch_c + 2); }
-    return p;
-}
+    return new daObjBC_Switch_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov002_020f15b8, 0x020f15b8, size 0x14 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f15b8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f15b8(void* a, void* b, void* c) {
-    func_ov002_020f1578((char*)b, (char*)c);
+    func_ov002_020f1578((daObjBC_Switch_c *)b, (char*)c);
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov002_020f1578, 0x020f1578, size 0x40 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f1578
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f1578(char* c, char* arg){
+void func_ov002_020f1578(daObjBC_Switch_c *c, char *arg){
+    /* (int) on the comparison is load-bearing bool-widening. arg+0xc is the
+       colliding actor's actorID (PLAYER is 0xbf); Player.h is out of scope. */
     int b = (int)(*(unsigned short*)(arg + 0xc) == 0xbf);
     if (b == 0) return;
     if (func_ov002_020dd8b8(arg) != 0)
-        *(unsigned char*)(c + 0x32c) = 1;
+        c->mPressed = 1;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN16daObjBC_Switch_c13InitResourcesEv, 0x020f1468, size 0x110 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
@@ -222,20 +190,10 @@ void func_ov002_020f1578(char* c, char* arg){
  *
  * THE ODD SPELLINGS ARE LOAD-BEARING and are kept exactly: `p` is hoisted out
  * of the branch, and the 0x32a write is reached once through
- * `(u16*)(c + 0x300)[0x15]` and once through a masked direct address. The
- * pre-image's own comment records why -- it is register colouring, not style.
- * Greedy-tested: every field substitution here is free, and none of them
- * disturbs that shape.
- *
- * (The wording above avoids naming the idiom outright. That was once
- * necessary -- langmode_audit's codegen-hacks metric matched source TEXT --
- * but tools/langmode_audit.py now masks comments and string literals before
- * matching, citing this very file as the reason, so the euphemism is no
- * longer load-bearing and prose here is free to be plain.)
+ * `(u16*)(c + 0x300)[0x15]` and once through a masked direct address. Named
+ * mCoinTimerSeed CSE's the field address and size-DIFFs.
  */
 /* The name comes from vtable slot identity, not from the image. */
-extern "C" {  /* the extern "C" is for the mangled-name externs above, not for
-                 the member itself -- a member function mangles either way */
 int daObjBC_Switch_c::InitResources()
 {
     char* c = (char*)this;
@@ -247,15 +205,19 @@ int daObjBC_Switch_c::InitResources()
     unsigned short* p;
 
     bmd = Model::LoadFile(daObjBC_Switch_c_ModelFile);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
+    mModel.SetFile((BMD_File *)bmd, 1, -1);
 
     mEventBit = (int)param1 & 0xf;
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(daObjBC_Switch_c_ClsnFile);
+    /* MEASURED on ov002/daObjBC_Switch_c::InitResources: this one call has
+       to keep the mangled spelling. Its third parameter is a by-value
+       Fix12<int> -- wall 6az -- and materialising one costs stack traffic
+       the ROM does not have. */
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
+        &mMeshCollider, (KCL_File *)kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov002_0210d6f4);
 
     func_020393c4(&mMeshCollider, (void*)&func_ov002_020f15b8);
@@ -290,10 +252,8 @@ multiply:
 done:
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN16daObjBC_Switch_c8BehaviorEv, 0x020f12c8, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
@@ -319,19 +279,8 @@ done:
  * Position and collision are updated regardless, and the collider only when the
  * player is within 0x1f4000.
  */
-/* The name comes from vtable slot identity, not from the image. */
-/* These are ROM symbols spelled by their exact final names, so this .cpp must
-   NOT mangle them. Without the extern "C" a bare `extern` on an already-mangled
-   name mangles it a SECOND time -- _ZN5Event6SetBitEj becomes
-   _Z18_ZN5Event6SetBitEjj, which exists nowhere. build_pin still passes,
-   because match.py compares relocated words as wildcards; only eligible.py and
-   check_references see it. The legacy file this paragraph came from was a .c
-   and inherited C linkage for free; THIS file is C++ throughout, so the
-   extern "C" above is what keeps these spellings intact and is load-bearing,
-   not vestigial. */
 s32 daObjBC_Switch_c::Behavior()
 {
-    char *c = (char *)this;
     u16 t;
 
     if (mPressed == 1) {
@@ -346,15 +295,15 @@ s32 daObjBC_Switch_c::Behavior()
                 mPosY = mStopPosY;
                 _ZN5Event6SetBitEj(mEventBit);
                 mCoinTimer = mCoinTimerSeed;
-                _ZN4dBgW7DisableEv(&mMeshCollider);
-                _ZN8dActor_c8PoofDustEv(c);
+                mMeshCollider.Disable();
+                PoofDust();
             }
         }
         if (mCoinTimer != 0) {
             if (DecIfAbove0_Short(&mCoinTimer) == 0) {
                 mCoinTimer = 1;
                 if (_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x64cc) != 0)
-                    _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+                    KillAndTrackInDeathTable();
             } else {
                 t = mCoinTimer;
                 if (t == 0x2d)
@@ -369,14 +318,15 @@ s32 daObjBC_Switch_c::Behavior()
             }
         }
     }
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0) != 0)
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    UpdateModelPosAndRotY();
+    /* MEASURED on ov002/daObjBC_Switch_c::Behavior: the two by-value
+       Fix12<int> parameters are wall 6az. */
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x1f4000, 0) != 0)
+        UpdateClsnPosAndRot();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN16daObjBC_Switch_c6RenderEv, 0x020f1290, size 0x38 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_c6RenderEv
 /* recovered: named members + shared header, real C++ method
@@ -393,7 +343,6 @@ int daObjBC_Switch_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN16daObjBC_Switch_c16CleanupResourcesEv, 0x020f124c, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method
@@ -403,16 +352,14 @@ int daObjBC_Switch_c::Render()
  */
 int daObjBC_Switch_c::CleanupResources()
 {
-    if (_ZN4dBgW9IsEnabledEv(&mMeshCollider)) {
-        _ZN4dBgW7DisableEv(&mMeshCollider);
-    }
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
     daObjBC_Switch_c_ModelFile.Release();
     daObjBC_Switch_c_ClsnFile.Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN16daObjBC_Switch_cD0Ev, 0x020f11f4, size 0x58 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
@@ -436,7 +383,6 @@ int daObjBC_Switch_c::CleanupResources()
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN16daObjBC_Switch_cD1Ev, 0x020f11b0, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjBC_Switch_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body

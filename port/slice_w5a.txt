@@ -125,6 +125,16 @@ src/game/actors/daTrs_c/d_a_trs_teresa.cpp
 # _ZN7daTrs_c13InitResourcesEv.c: K&R ClosestPlayer declaration trips
 # tools/closestplayer_guard.py (its calls DO pass the receiver); faithful
 # mirror with the declaration reprototyped:
+#
+# TRIED AND REVERTED at the main->port sync (lane SYNC7, wave 9). main's TU
+# now declares ClosestPlayer with its receiver, so the guard's reason for the
+# mirror is gone -- but the guard is not why the copy is a .c file. The mirror
+# defines the FLAT name __ZN7daTrs_c13InitResourcesEv and the matched .cpp TU
+# defines the DECORATED member ?InitResources@daTrs_c@@UAEHXZ, which a face in
+# this slice already supplies. Swapping one for the other measured +1
+# unresolved (the flat name) and +1 LNK2005 (the decorated one) in the same
+# build. Retiring it needs the face retired in the same change, which is lane
+# FACES3's ledger and not this row.
 port/unmatched/Boo_InitResources.c
 src/game/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp
 src/game/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp
@@ -198,7 +208,15 @@ src/func_02048ed4.c
 # ---- host copies (banners carry the byte-verification numbers) -------------
 port/unmatched/Boo_Behavior.c
 port/unmatched/Boo_RenderUpdate.c
-port/unmatched/Boo_StateTalk.c
+# RETIRED at the main->port sync (lane SYNC7, wave 9): main recovered this
+# body. src/unnamed/ov063/func_ov063_02117cdc.c owns ov063 .text
+# 0x02117cdc..0x02118458 in the merged delinks, which is the 0x77c bytes the
+# host copy's banner names, so the copy and its three host edits are a second
+# definition of a name the decomp now provides. Its ClosestPlayer call passes
+# the receiver (line 53, `_ZN8dActor_c13ClosestPlayerEv(arg0)`), so
+# closestplayer_guard has no quarrel with seating it.
+#port/unmatched/Boo_StateTalk.c
+src/unnamed/ov063/func_ov063_02117cdc.c
 port/unmatched/Boo_Teleport.c
 port/unmatched/Boo_CrossNamedDispatch.c
 port/unmatched/MansionSteps_InitResources.c

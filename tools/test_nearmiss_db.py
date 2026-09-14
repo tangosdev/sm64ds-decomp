@@ -874,8 +874,11 @@ class EvalPinGuardTests(unittest.TestCase):
         # Flags are gated too, not just the compiler and the metric. -O4,p -> -O2
         # re-scores every stored source far harder than a compiler bump does, and the
         # pin already records `flags`, so leaving it out of the assertion made the
-        # pin's own field decorative. cpp_flags is derived from DEFAULT_FLAGS
-        # (swarm.CPP_FLAGS), so gating flags covers the C++ lane as well.
+        # pin's own field decorative. The C++ lane (swarm.CPP_FLAGS) is DEFAULT_FLAGS
+        # plus the language flip plus `-Cpp_exceptions off`, so gating DEFAULT_FLAGS
+        # gates everything the two lanes share; the one extra flag is deliberately not
+        # in DEFAULT_FLAGS, and it is inert on all but one of the DB's //cpp rows
+        # (measured: tools/match.py CPP_EXCEPTIONS_FLAG, notes 6co).
         self.assertEqual(
             (pin.get("canonical"), pin.get("metric"), pin.get("flags")),
             (live["CANONICAL"], NDB.METRIC_REV, live["DEFAULT_FLAGS"]),

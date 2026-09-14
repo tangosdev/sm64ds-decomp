@@ -2282,6 +2282,9 @@ src/func_ov006_020ea8e0.c:
     complete
     .text start:0x020ea8e0 end:0x020ea914
 
+src/func_ov006_020ea914.cpp:
+    .text start:0x020ea914 end:0x020eac38
+
 src/actors/dScMgHanachan_c.cpp:
     complete
     .text start:0x020eac38 end:0x020ede18
@@ -3887,6 +3890,10 @@ src/func_ov006_02126948.c:
 src/func_ov006_02126a98.c:
     complete
     .text start:0x02126a98 end:0x02126b4c
+
+src/func_ov006_02126b4c.c:
+    complete
+    .text start:0x02126b4c end:0x02126ee4
 
 src/func_ov006_02126ee4.cpp:
     complete

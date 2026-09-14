@@ -1,14 +1,34 @@
 //cpp
-/* Production translation unit for ov025/daDkk_c -- the Grindel/DONKAKU leaf of
- * the daDsnBase_c family (its siblings are daDsn_c and Thwomp, both in ov091).
+/* Production translation unit for ov025/daDkk_c -- DONKAKU / Grindel, the
+ * sliding crusher leaf of daDsnBase_c (sibling daDsn_c / Thwomp in ov091).
+ * Overlay actor 162: symbols/overlay_actors.md GRINDEL, ROM debug table
+ * DONKAKU. daDgr_c in this overlay is DONGURU, not this class.
  *
- * mwccarm emits ordinary functions in reverse source order, so the six
+ * mwccarm emits ordinary functions in reverse source order, so the
  * definitions below intentionally run from the highest retail address back
  * toward the compiler-owned destructor group. The destructor pair is written
  * by nobody: include/daDkk_c.h defines ~daDkk_c() in the class body, and that
  * alone makes mwccarm emit D1 (0x021118c8) then D0 (0x02111928) at the bottom
  * of the section list -- which is the cartridge's own order. See the header for
  * why the in-class form is load-bearing.
+ *
+ * deslop
+ * Leftover:
+ * - IsClsnInRange header method form refused (Fix12-by-value 6az) -- keep
+ *   mangled TU-local (Behavior).
+ * - dActor_c::Earthquake Fix12-by-value 6az; not declared on dActor_c.h --
+ *   keep mangled (func_ov025_02111a84).
+ * - Particle::System::NewSimple Fix12-by-value; Particle__System.h has no
+ *   NewSimple -- keep mangled (func_ov025_02111a84).
+ * - func_ov025_021119a4 / 021119f4 / 02111a84 ROM labels (no symbols.txt
+ *   names) -- stay extern "C". (int)c + 0x39e / 0x39f integer-cast forms:
+ *   named stores CSE.
+ * - func_ov091_* shared daDsnBase leaf helpers; data_ov025_02113814 file-table
+ *   handle.
+ * - common.h first via daDkk_c.h -> dBgActor_c.h (Matrix4x3 flat s32 m[12]).
+ * - Leaf operator new(unsigned long) until #2570.
+ * - g_profile_DONKAKU stays overlay data (not this TU).
+ * - ApproachLinear / func_0201267c stay mangled free functions.
  *
  * func_ov025_021119a4, func_ov025_021119f4 and func_ov025_02111a84 keep their
  * address-derived names: nothing in config/ or include/ spells them any other
@@ -24,6 +44,7 @@
  *   [5] 0x02111a84  src/func_ov025_02111a84.cpp
  *   [6] 0x02111b64  src/_ZN7daDkk_c8BehaviorEv.cpp
  *   [7] 0x02111c24  src/_ZN7daDkk_c13InitResourcesEv.cpp
+ * The factory is `return new` in this file.
  */
 
 /* INCLUDE ORDER IS LOAD-BEARING, the same way it is in the base class's own TU:
@@ -57,47 +78,58 @@ extern "C" {
 extern void func_0201267c(int a, void *b);
 extern int func_ov091_02133254(char *c);
 extern int _Z14ApproachLinearRsss(short &a, short b, short c);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *p);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *p, Fix12i a, Fix12i b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *cc);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, const Vector3 &v, int f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int x, int y, int z);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN7daDkk_c13InitResourcesEv, 0x02111c24, size 0xd0 */
+
+/* -------------------------------------------------------------------------- */
+// @symbol daDkk_c_classInit
+/* Reconstructed source-style name: SM64DS proves daDkk_c through RTTI,
+ * allocation size, vtable identity, and the DONKAKU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Grindel_Spawn.
+ *
+ * Every instruction the cartridge has here falls out of the one `new`.
+ * 0x02111cf8 loads 928 == 0x3a0 into the header's inline operator new;
+ * dBgActor_c::C2, the mid-construction daDsnBase_c vptr, TextureSequence@0x324,
+ * ShadowModel@0x338, and this class's vptr all come from the implicit ctor
+ * the `new` inlines. The null check is the one `new` itself emits. */
+extern "C" daDkk_c *daDkk_c_classInit()
+{
+    return new daDkk_c();
+}
+
+/* -------------------------------------------------------------------------- */
+
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDkk_c13InitResourcesEv
 /* Vtable slot 0, override of a slot daDsnBase_c leaves pure, and this class's
  * ABI key function -- the first declared virtual that is neither inline nor
  * pure -- so defining it here is what makes this TU emit _ZTV7daDkk_c.
  *
- * Stores the file table pointer at 0x320 (daDsnBase_c's own mFileTable), calls
- * a shared ov091 helper, then either forces mState to a fixed "already
- * airborne" value or runs a downward raycast from the actor's own position to
- * set mProbeHeight from the collision point it finds. The flag test at +0x8 and
- * the raycast machinery are read through raw offsets and opaque locals,
- * matching the un-migrated file this replaces -- neither belongs to this
- * class's own layout.
- */
+ * Stores the file table pointer at mFileTable, calls a shared ov091 helper,
+ * then either forces mState to a fixed "already airborne" value or runs a
+ * downward raycast from the actor's own position to set mProbeHeight from the
+ * collision point it finds. */
 int daDkk_c::InitResources()
 {
-    char *c = (char *)this;
-    *(void **)(c + 0x320) = data_ov025_02113814;
-    int r = func_ov091_02133254(c);
-    if (*(int *)(c + 8) & 1) {
+    mFileTable = (s32)data_ov025_02113814;
+    int r = func_ov091_02133254((char *)this);
+    if (param1 & 1) {
         mState = 6;
     } else {
         mState = 0;
         dBgCh_Lin ray;
         Vector3 va;
         Vector3 vb;
-        int x = *(int *)(c + 0x5c);
+        int x = mPosX;
         vb.x = x;
-        int y = *(int *)(c + 0x60);
+        int y = mPosY;
         vb.y = y;
-        int z = *(int *)(c + 0x64);
+        int z = mPosZ;
         va.x = x;
         vb.z = z;
         va.y = y;
@@ -114,15 +146,14 @@ int daDkk_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN7daDkk_c8BehaviorEv, 0x02111b64, size 0xc0 */
+
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDkk_c8BehaviorEv
 /* Vtable slot 6, the other slot daDsnBase_c leaves pure.
  *
  * Switches on mState to one of eight per-state step functions -- five shared
  * with the ov091 siblings, three private to this overlay -- then runs the
- * post-step housekeeping every daDsnBase_c leaf needs.
- */
+ * post-step housekeeping every daDsnBase_c leaf needs. */
 int daDkk_c::Behavior()
 {
     char *c = (char *)this;
@@ -136,26 +167,31 @@ int daDkk_c::Behavior()
     case 6: func_ov025_021119f4(c); break;
     case 7: func_ov025_021119a4(c); break;
     }
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    UpdateModelPosAndRotY();
     func_ov091_02133098(c);
+    /* IsClsnInRange: header method form refused (Fix12-by-value 6az). */
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0 ||
         func_ov091_02132dc0(c) != 0) {
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+        UpdateClsnPosAndRot();
     }
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov025_02111a84, 0x02111a84, size 0xe0 */
+
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov025_02111a84
 /* mState 5, the fall. Integrates the drop, and on reaching the stored ground
  * height snaps to it, shakes the camera, spawns the impact particle and hands
- * over to state 6. */
+ * over to state 6.
+ *
+ * Offset soup kept: named member stores CSE (mVertSpeed/mVertAccel/mPosY/
+ * unk_394/mState/unk_39e) and (int)c + 0x39f is the increment the cartridge
+ * emits. Earthquake / NewSimple stay mangled (Fix12-by-value). */
 extern "C" void func_ov025_02111a84(char *c)
 {
     Vector3 v[2];
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    ((daDkk_c *)c)->UpdatePos(0);
     if (*(int *)(c + 0xa8) >= 0)
         *(int *)(c + 0x9c) = -0x4000;
     else
@@ -180,12 +216,14 @@ extern "C" void func_ov025_02111a84(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov025_021119f4, 0x021119f4, size 0x90 */
+
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov025_021119f4
 /* mState 6, the pause after landing. Counts 0x39e down; at zero it either
  * starts the next fall (state 5) or, on the fourth pass, turns to face the
- * opposite way (state 7). */
+ * opposite way (state 7).
+ *
+ * (int)c + 0x39e integer-cast form is the decrement the cartridge emits. */
 extern "C" void func_ov025_021119f4(char *c)
 {
     *(u8 *)(((int)c + 0x39e)) =
@@ -202,7 +240,7 @@ extern "C" void func_ov025_021119f4(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov025_021119a4, 0x021119a4, size 0x50 */
+
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov025_021119a4
 /* mState 7, the turn. Steps mAngleY toward the target angle at 0x39c; once
@@ -220,19 +258,20 @@ extern "C" int func_ov025_021119a4(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN7daDkk_c16OnAimedAtWithEggEv, 0x0211199c, size 0x8 */
+
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDkk_c16OnAimedAtWithEggEv
 /* Vtable slot 29, override of dActor_c::OnAimedAtWithEgg. `mov r0,#0xce000; bx
- * lr'. 0xce000 is a Fix12i egg auto-aim lock-on radius of 206.0 -- much wider
- * than dActor_c's own default of 20.0 (0x14000). */
+ * lr'. Slot 29's return is added to pos.y (a height), same as daOts. 0xce000
+ * is a Fix12i of 206.0 -- much taller than dActor_c's own default of 20.0
+ * (0x14000). */
 int daDkk_c::OnAimedAtWithEgg()
 {
     return 0xce000;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinals 1 and 0 -- _ZN7daDkk_cD0Ev (0x02111928) and _ZN7daDkk_cD1Ev
+/*
  * (0x021118c8) are deliberately NOT written here. include/daDkk_c.h defines
  * ~daDkk_c() in the class body, and that is what makes mwccarm emit the pair in
  * the cartridge's D1-then-D0 order with no D2. What the two superseded shards

@@ -2,22 +2,11 @@
 /* Production translation unit for ov043/daObjKm1_Ukishima_c, hand-curated.
  * 7 function(s), .text 0x021111a0..0x021113fc.
  *
- * The floating island of the KM1_UKISHIMA profile: a dBgActor_c that drifts
- * forward along its own yaw and turns a quarter turn every 60 frames. The
- * ROM's own RTTI spells the class daObjKm1_Ukishima_c (_ZTS at ov043
- * 0x0211227c); the coined DiamondLift alias that named vtable 0x021122b8 in
- * ov043's symbols.txt has been renamed away. _ZTI+8 at 0x02112270 points at
- * _ZTI10dBgActor_c, so dBgActor_c is the direct and only base.
- *
- * It fills the four vtable slots its base leaves to the derived class --
- * InitResources (0), CleanupResources (3), Behavior (6) and Render (9) -- and
- * adds one byte of its own storage in dBgActor_c's tail padding at 0x31e.
- *
- * The .text run ends at 0x021113fc, where _ZN11RickshawBdwD1Ev opens the next
- * class. daObjKm1_Ukishima_c_classInit at 0x021113cc, which used to sit in its
- * own C file just past this TU's old end, has been folded in: it is the
- * KM1_UKISHIMA registry profile's factory and the ROM's .text order puts it
- * immediately after InitResources, so it was always part of this TU.
+ * BitDW floating island of the KM1_UKISHIMA profile (DIAMOND_LIFT 135): a
+ * dBgActor_c that drifts forward along its own yaw and turns a quarter
+ * turn every 60 frames. ROM RTTI spells the class daObjKm1_Ukishima_c
+ * (_ZTS at ov043 0x0211227c); _ZTI+8 at 0x02112270 points at
+ * _ZTI10dBgActor_c. ov043 is Bowser in the Dark World.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
  * emits one .text section per function in the REVERSE of source order, so the
@@ -25,49 +14,43 @@
  * tools/rombuild.py refuses the object outright when the emitted order and the
  * ROM's disagree.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN19daObjKm1_Ukishima_cD1Ev.cpp
- *   [1] 0x021111e4  src/_ZN19daObjKm1_Ukishima_cD0Ev.cpp
- *   [2] 0x0211123c  src/_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv.cpp
- *   [3] 0x02111280  src/_ZN19daObjKm1_Ukishima_c6RenderEv.cpp
- *   [4] 0x021112a8  src/_ZN19daObjKm1_Ukishima_c8BehaviorEv.cpp
- *   [5] 0x02111320  src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp
- *   [6] 0x021113cc  src/daObjKm1_Ukishima_c_classInit.c
- *
- * THE SEVENTH IS THE FACTORY. It keeps C linkage and is written first here,
- * being the highest-address member.
+ * deslop
+ * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled
+ *   in this TU -- both take Fix12<int> by value (wall 6az); a method call
+ *   homes the argument and size-DIFFs InitResources / Behavior.
+ * Leftover: func_020393d4 is a 4-byte store into dBgW+0x18
+ *   (beforeClsnCallback). This TU calls it; naming belongs with dBgW in arm9.
+ * Leftover: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
+ *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
+ *   TU does not own.
+ * Leftover: g_profile_KM1_UKISHIMA lives outside this TU (S14).
+ * Leftover: inline destructor (out-of-line emits D0 before D1).
  */
 
 #include "daObjKm1_Ukishima_c.h"
 #include "SharedFilePtr.h"
+#include "dBgW.h"
 
-/* Externs: the union of the legacy files', kept at their legacy spelling.
- * DecIfAbove0_Byte (arm9 0x0203add4) and func_020393d4 (arm9 0x020393d4) have
- * no shared header anywhere in the tree -- every caller declares them locally,
- * so this matches the house spelling rather than inventing an include. */
+struct KCL_File;
+struct CLPS_Block;
+
+/* DecIfAbove0_Byte (arm9 0x0203add4) has no shared header anywhere in the
+ * tree -- every caller declares it locally. */
 extern "C" {
 extern SharedFilePtr data_ov043_021125e0;   /* the KCL  */
 extern SharedFilePtr data_ov043_021125e8;   /* the BMD  */
-extern char data_ov043_02111c00;            /* the CLPS block SetFile is handed */
+extern CLPS_Block    data_ov043_02111c00;   /* the CLPS block SetFile is handed */
 
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_020393d4(void *bgw, void *fn);
-extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
+void func_020393d4(dBgW *bgw, void *fn);
 
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
-
-/* The factory's own dependencies, restated here exactly as the legacy file
-   spelled them. It pulled in no headers at all, so nothing new enters this TU
-   and the six already-matching members see what they saw before. */
-extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
-extern int _ZTV19daObjKm1_Ukishima_c[];
+    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
+    s16 angleY, CLPS_Block *clps);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daObjKm1_Ukishima_c_classInit, 0x021113cc, size 0x30      */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjKm1_Ukishima_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjKm1_Ukishima_c through
@@ -75,17 +58,15 @@ extern int _ZTV19daObjKm1_Ukishima_c[];
    profile; later EAD lineage supplies classInit. Exact original spelling is
    not preserved. Historical alias: DiamondLift_Spawn.
 
-   800 = 0x320 is the whole object: dBgActor_c's own size, this class's one
-   byte living in its tail padding at 0x31e. */
-extern "C" int *daObjKm1_Ukishima_c_classInit(void)
+   Every instruction the cartridge has here falls out of the one `new`.
+   0x320 is the whole object: dBgActor_c's own size, this class's one byte
+   living in its tail padding at 0x31e. */
+extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(800);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV19daObjKm1_Ukishima_c; }
-    return p;
+    return new daObjKm1_Ukishima_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN19daObjKm1_Ukishima_c13InitResourcesEv, 0x02111320, size 0xac */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c13InitResourcesEv
 /* dBgW_KcMbg::SetFile takes Fix12<int> by value. An ordinary member call
@@ -97,15 +78,14 @@ s32 daObjKm1_Ukishima_c::InitResources()
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *kcl = dBgW_Kc::LoadFile(data_ov043_021125e0);
+    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov043_021125e0);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov043_02111c00);
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
-    func_020393d4(&mMeshCollider,
-        (void *)_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
 
     mPrevAngleY = mAngleY;
     mHorzSpeed = 0xa000;
@@ -114,7 +94,6 @@ s32 daObjKm1_Ukishima_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN19daObjKm1_Ukishima_c8BehaviorEv, 0x021112a8, size 0x78 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c8BehaviorEv
 /* IsClsnInRange takes two Fix12<int> by value; see InitResources for why that
@@ -141,7 +120,6 @@ s32 daObjKm1_Ukishima_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN19daObjKm1_Ukishima_c6RenderEv, 0x02111280, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c6RenderEv
 s32 daObjKm1_Ukishima_c::Render()
@@ -151,7 +129,6 @@ s32 daObjKm1_Ukishima_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv, 0x0211123c, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv
 s32 daObjKm1_Ukishima_c::CleanupResources()
@@ -165,8 +142,6 @@ s32 daObjKm1_Ukishima_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN19daObjKm1_Ukishima_cD0Ev, 0x021111e4, size 0x58       */
-/* ROM ordinal 0 -- _ZN19daObjKm1_Ukishima_cD1Ev, 0x021111a0, size 0x44       */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_cD1Ev
 // @symbol _ZN19daObjKm1_Ukishima_cD0Ev

@@ -258,31 +258,15 @@ src/d_a_obj_ct_rotate_block_ct_mecha01.c:
 
 src/actors/daObjCtMecha03_c.cpp:
     complete
-    .text start:0x02119f3c end:0x0211a45c
-
-src/d_a_obj_ct_mecha03.c:
-    complete
-    .text start:0x0211a45c end:0x0211a494
+    .text start:0x02119f3c end:0x0211a494
 
 src/actors/daObjCtMecha04_c.cpp:
     complete
-    .text start:0x0211a494 end:0x0211aae0
-
-src/d_a_obj_ct_mecha04_ct_mecha04l.cpp:
-    complete
-    .text start:0x0211aae0 end:0x0211ab20
-
-src/d_a_obj_ct_mecha04_ct_mecha04s.cpp:
-    complete
-    .text start:0x0211ab20 end:0x0211ab60
+    .text start:0x0211a494 end:0x0211ab60
 
 src/game/actors/daObjCtMecha05_c.cpp:
     complete
-    .text start:0x0211ab60 end:0x0211b328
-
-src/d_a_obj_ct_mecha05.cpp:
-    complete
-    .text start:0x0211b328 end:0x0211b360
+    .text start:0x0211ab60 end:0x0211b360
 
 src/_ZN13TTC_MovingBarD1Ev.cpp:
     complete

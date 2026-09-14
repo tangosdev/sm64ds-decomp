@@ -16,7 +16,7 @@
     {
       "name": ".text",
       "start": "0x021118c8",
-      "end": "0x02111cf4"
+      "end": "0x02111d40"
     }
   ],
   "functions": [
@@ -75,6 +75,13 @@
       "size": "0x000000d0",
       "legacy_source": "src/_ZN7daDkk_c13InitResourcesEv.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "daDkk_c_classInit",
+      "address": "0x02111cf4",
+      "size": "0x0000004c",
+      "legacy_source": "src/d_a_dkk.c",
+      "ordinal": 8
     }
   ],
   "data": [],
@@ -87,7 +94,9 @@
     "RECONCILED, and NOT reported by tubuild's conflict detector, which does not compare return types: the two shards merged here declared func_0201267c with different return types -- src/func_ov025_021119f4.c said int func_0201267c(int, void*) and src/func_ov025_02111a84.cpp said void. Both spellings survived into the generated TU, one in the shared block and one inside a per-member block, which is a hard redeclaration error. No header in include/ declares the symbol, but the symbol's own enrolled definition does settle it: src/func_0201267c.cpp, enrolled at config/arm9/delinks.txt, defines void func_0201267c(unsigned int id, const Vector3 *v). The rest of the tree agrees by a wide margin -- 83 files spell the return type void against 21 that spell it int -- and neither call site here reads the result, so the return type cannot move a byte. The void spelling is kept. The parameter spelling (int, void*) is the tree's majority shorthand for that signature and links because the symbol is extern \"C\".",
     "RECONCILED: the two RAW-flagged shards (func_ov025_021119a4, func_ov025_02111a84) were carried verbatim by tubuild inside their own extern \"C\" blocks, one of them nested inside another. Both are now single extern \"C\" definitions at file scope, with the block-local declarations hoisted into the one shared block at the top. Bytes unchanged.",
     "DESTRUCTOR PAIR, corrected in build: the two superseded shards carried an out-of-line daDkk_c::~daDkk_c() {} apiece and NO forcing scaffold of any kind -- there was no scaffold to drop. What was dropped is the out-of-line definition itself, which moved into include/daDkk_c.h as an in-class body. This TU defines the key function (InitResources) and that alone emits the vtable and both destructor variants; both come out byte-identical with no scaffold, as tubuild verify reports.",
-    "HEADER EDIT: include/daDkk_c.h changed ~daDkk_c() from an out-of-line declaration to an in-class definition. That is a byte-level requirement (see boundary_evidence), and it moves this class's ABI key function from the destructor down to InitResources, which this TU defines. The out-of-line spelling the header used to carry came from the one-function shards, each of which compiled alone and so never exposed the destructor ordering."
+    "HEADER EDIT: include/daDkk_c.h changed ~daDkk_c() from an out-of-line declaration to an in-class definition. That is a byte-level requirement (see boundary_evidence), and it moves this class's ABI key function from the destructor down to InitResources, which this TU defines. The out-of-line spelling the header used to carry came from the one-function shards, each of which compiled alone and so never exposed the destructor ordering.",
+    "CLEANUP: folded daDkk_c_classInit (src/d_a_dkk.c, 0x02111cf4..0x02111d40) as `return new daDkk_c()`. Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. pad_394/pad_39c live bytes renamed unk_394/unk_39c/unk_39e/unk_39f. Named-field substitution on InitResources/Behavior; helpers stay offset soup.",
+    "The two-level inline constructor and destructor chain emits homeless _ZN11daDsnBase_cD2Ev and _ZN10dBgActor_cD2Ev helpers. Exact compiler-only policy removes them before linking, the same disposition ov043/daObjKm1_Kurumajiku_c records for its own pair."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -95,13 +104,17 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov025-daDkk_c/daDkk_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 9,
+    "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN11daDsnBase_cD2Ev",
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN11daDsnBase_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -125,7 +138,11 @@
         22,
         23,
         24,
-        36
+        36,
+        43,
+        44,
+        45,
+        46
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -240,6 +257,16 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN11daDsnBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained. Folding daDkk_c_classInit as `return new daDkk_c()` odr-uses the inline destructor chain and is what materialises this D2; the pre-fold TU did not emit it."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained. Folding daDkk_c_classInit as `return new daDkk_c()` odr-uses the inline destructor chain and is what materialises this D2; the pre-fold TU did not emit it."
+    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",

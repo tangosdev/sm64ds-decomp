@@ -193,18 +193,34 @@ src/_ZN15TtcRotatingCube11UpdateModelEv.cpp
 # The vtable slots say which is which: [0] InitResources 0211a358, [3] Cleanup
 # 0211a15c, [6] Behavior 0211a1c8, [9] Render 0211a1a0, [16] D1 02119f3c,
 # [17] D0 02119f88.
-src/d_a_obj_ct_mecha03.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daObjCtMecha03_c.cpp (ov065 delinks, .text 0x0211a45c..0x0211a494, one
+# absorbed range), which port/slice_w3a.txt's daObjCtMecha03_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_ct_mecha03.c
 src/actors/daObjCtMecha03_c.cpp
 
 # ---- ids 111/112, daObjCtMecha04_c, table 0x0211d1ec -----------------------
-src/d_a_obj_ct_mecha04_ct_mecha04l.cpp
-src/d_a_obj_ct_mecha04_ct_mecha04s.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daObjCtMecha04_c.cpp (ov065 delinks, .text 0x0211aae0..0x0211ab20, one
+# absorbed range), which port/slice_w3a.txt's daObjCtMecha04_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_ct_mecha04_ct_mecha04l.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daObjCtMecha04_c.cpp (ov065 delinks, .text 0x0211ab20..0x0211ab60, one
+# absorbed range), which port/slice_w3a.txt's daObjCtMecha04_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_ct_mecha04_ct_mecha04s.cpp
 src/actors/daObjCtMecha04_c.cpp
 
 # ---- id 113, daObjCtMecha05_c, table 0x0211d2b4 ----------------------------
 # The other unnamed class. Slots: [0] 0211b1d4, [3] 0211ad04, [6] 0211ae08,
 # [9] 0211ad48, [16] 0211ab60, [17] 0211abac.
-src/d_a_obj_ct_mecha05.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/daObjCtMecha05_c.cpp (ov065 delinks, .text 0x0211b328..0x0211b360, one
+# absorbed range), which port/slice_w3a.txt's daObjCtMecha05_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_ct_mecha05.cpp
 src/game/actors/daObjCtMecha05_c.cpp
 src/func_ov065_0211b40c.c
 

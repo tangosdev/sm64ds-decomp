@@ -669,7 +669,13 @@ src/_ZN5dBgPiaSERKS_.cpp
 src/_ZN8dM3dGLin3SetERK7Vector3S2_.cpp
 src/_ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j.c
 src/_ZN10dBgCh_Actr20UpdateExtraContinousEv.cpp
-src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main's #2712
+# rewrote OAM::Render (arm9 0x02020994, size 0x690) as matching C and renamed the
+# file .cpp -> .c. Same address, new spelling. The C form DEFINES the flat name
+# _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii itself, which is what the port's
+# callers already ask for, so port/hal/reverse_bridges.cpp's terminator-guard
+# forwarder of the same flat name is retired in the same change.
+src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c
 src/_ZN8dActor_c11UntrackStarERa.cpp
 src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp
 src/_ZN7fBase_c18MarkForDestructionEv.cpp
@@ -1006,7 +1012,15 @@ src/func_ov002_020d0948.c
 # was C++-mangled and is one extern "C" overload since main's sweep. It goes
 # through hostgen (GATE10_SYMS in CMakeLists.txt), which shadows the header's
 # declaration for that one name.
-port/unmatched/func_ov002_020cfea4.cpp
+# RETIRED at the main->port sync (lane SYNC7, wave 9): the named trap has a
+# body now. main recovered func_ov002_020cfea4 and gave it its own delink
+# block, ov002 .text 0x020cfea4..0x020d0178, which is exactly the 0x2d4 bytes
+# the trap's banner names, so the ROM's own code answers the name and the
+# unconditional 0 this file returned is gone with it. The trap is the second
+# way out of the ledge hang and into the climb, so returning 0 for it was a
+# live behaviour difference, not a placeholder for an unreachable path.
+#port/unmatched/func_ov002_020cfea4.cpp
+src/func_ov002_020cfea4.cpp
 src/_ZN6Player11St_Owl_MainEv.cpp
 src/_ZN6Player11St_Owl_InitEv.cpp
 src/_ZN6Player14St_Owl_CleanupEv.cpp

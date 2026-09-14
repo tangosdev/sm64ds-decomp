@@ -1,6 +1,7 @@
 //cpp
-/* A chain-chomp shutter -- the barred gate the chomp is tethered in front of.
- * ov014/daObjWanwanShutter_c.
+/* Bob-omb Battlefield Chain Chomp fence -- the barred gate the chomp is
+ * tethered in front of. ov014/daObjWanwanShutter_c, profile WANWAN_SHUTTER
+ * (CHAIN_CHOMP_FENCE 41). This is the fence, not the chomp (daWanwan_c).
  *
  * A GENUINE TRANSLATION UNIT, ENROLLED AND CANONICAL. It is the whole of the
  * cartridge's contiguous linker run .text 0x02112e0c..0x021130ac, eight
@@ -12,21 +13,8 @@
  * __si_class_type_info whose _ZTS at 0x02114874 reads exactly
  * `20daObjWanwanShutter_c`, and whose one base, at subobject offset 0, is
  * ov002 0x021089ec -- _ZTI10dBgActor_c. That is why the header says
- * `struct daObjWanwanShutter_c : dBgActor_c` and why the RTTI below has ROM
- * homes to be compared against at all: a coined name is a length-prefixed
- * mangled string that matches nothing at any address, so it can never be
- * word-compared. The historical spelling was ChainChompFence.
- *
- * IT DERIVES FROM dBgActor_c, not dActor_c. (Seven other promoted entries do
- * too -- daObjCannonShutter_c, daObjHatenaSwitch_c, daObjPushblock_c,
- * daObjC1_Trap_c, daObjC0_Switch_c, daObjFm_Battan_c, daObjCtMecha05_c -- so
- * this is the campaign's normal shape, not a first.) Two consequences show up
- * below. The destructor is 0x44 bytes for
- * an empty body because it inlines dBgActor_c's own inline destructor, which
- * destroys the Model at 0xd4 and the dBgW_KcMbg at 0x124. And the base chain's
- * VTABLES are absent from this object even though its typeinfo records are
- * present, because dBgActor_c's key function is Kill() and that lives in
- * another TU.
+ * `struct daObjWanwanShutter_c : dBgActor_c`. The historical spelling was
+ * ChainChompFence.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so the
@@ -41,233 +29,160 @@
  * 16 D1, 17 D0. Slot 31 is dBgActor_c::Kill at 0x020ee55c in both tables --
  * inherited, not overridden.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112e0c  src/_ZN20daObjWanwanShutter_cD1Ev.cpp
- *   [1] 0x02112e50  src/_ZN20daObjWanwanShutter_cD0Ev.cpp
- *   [2] 0x02112ea8  src/func_ov014_02112ea8.cpp
- *   [3] 0x02112f3c  src/_ZN20daObjWanwanShutter_c16CleanupResourcesEv.cpp
- *   [4] 0x02112f80  src/_ZN20daObjWanwanShutter_c6RenderEv.cpp
- *   [5] 0x02112fc0  src/_ZN20daObjWanwanShutter_c8BehaviorEv.cpp
- *   [6] 0x02112ffc  src/_ZN20daObjWanwanShutter_c13InitResourcesEv.cpp
- *   [7] 0x0211307c  src/daObjWanwanShutter_c_classInit.c
  */
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. The one ordering constraint that applies here -- common.h
- * ahead of Model.h -- is satisfied inside dBgActor_c.h itself, which this
- * file reaches through daObjWanwanShutter_c.h. Enrolled and compiling. */
+
+/* daObjWanwanShutter_c.h FIRST: it pulls in dBgActor_c.h, which must reach
+   common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
 #include "daObjWanwanShutter_c.h"
-#include "common.h"
-#include "decl_common.h"
+#include "Sound.h"
 #include "SharedFilePtr.h"
-#include "dBgW.h"
-#include "decl_ActorBase.h"
-#include "decl_Platform.h"
-
-/* Local shadow declarations carried from the legacy files verbatim.
- * STILL NOT reconciled against real project headers, and that is remaining
- * debt rather than a finding: each of these should be replaced by the real
- * include/*.h declaration, one at a time, re-proving the byte match after
- * each swap. They are load-bearing for the match as written -- see the
- * by-value-parameter note on func_ov014_02112ea8 for why a truer signature
- * can break it. */
-
-/* shadow struct 'Sound' */
-struct Sound { static void PlayBank3(unsigned int id, const Vector3 &v); };
-
-/* shadow namespace 'Particle' */
-namespace Particle { struct System { static void *NewSimple(unsigned int t, int x, int y, int z); };
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void * _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int t, int x, int y, int z);
- }
-
-/* (dBgW: real header type in scope) */
-
-/* shadow struct 'ActorS' */
-struct ActorS {
-    char pad0[0x5c];
-    int px, py, pz;
-    char pad1[0x74 - 0x68];
-    Vector3 v74;
-    char pad2[0x124 - 0x80];
-    char col[4];  /* dBgW slot; the real class is abstract and cannot be a by-value member */
-    char pad3[0x31e - 0x128];
-    unsigned char flag;
-    void PoofDustAt(const Vector3 &v);
-};
-
-/* shadow struct 'Base' */
-struct Base {
-    virtual int vf0(int);
-    virtual int vf1(int);
-    virtual int vf2(int);
-    virtual int vf3(int);
-    virtual int vf4(int);
-    virtual int vfunc(int a);
-};
-
-/* shadow struct 'Obj' */
-struct Obj {
-    char pad[0xd4];
-    Base sub;
-};
 
 extern "C" {
-extern "C" void _ZN8dActor_c10PoofDustAtERK7Vector3(void *, const Vector3 &v);
-extern int data_ov014_021149b8[];
-extern int data_ov014_021149c0[];
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
-extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
-extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
-extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
-extern int data_ov014_02114558[];
+/* dBgActor_c::IsClsnInRange(Fix12<int>, Fix12<int>) -- reached through the
+   mangled name because the two by-value Fix12<int> parameters are wall 6az
+   on ov014/daObjWanwanShutter_c::Behavior. */
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+
+/* dBgW_KcMbg::SetFile -- same wall on ov014/daObjWanwanShutter_c::InitResources:
+   its by-value Fix12<int> scale makes a member call cost stack the ROM does
+   not spend. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *kcl, Matrix4x3 *mat, int scale, s16 angY,
+    void *clps);
+
+/* Particle::System::NewSimple -- same wall on func_ov014_02112ea8: three
+   by-value Fix12<int> coordinates. */
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+    unsigned int t, int x, int y, int z);
+
+/* This overlay's file handles and collision-parameter block. This TU claims
+   .text only and does not define them. */
+extern SharedFilePtr data_ov014_021149c0;   /* the BMD model */
+extern SharedFilePtr data_ov014_021149b8;   /* the KCL collision mesh */
+extern CLPS_Block    data_ov014_02114558;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjWanwanShutter_c_classInit, 0x0211307c, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjWanwanShutter_c_classInit
-/* recovered: globals resolved, declarations from a shared header */
-/* recovered: globals resolved */
-/* resolved: VT = _ZTV20daObjWanwanShutter_c */
-/* Reconstructed source-style name. Historical alias: ChainChompFence_Spawn. */
-extern "C" int *daObjWanwanShutter_c_classInit(void)
+/* Reconstructed source-style name. Historical alias: ChainChompFence_Spawn.
+ *
+ * Every instruction the cartridge has here falls out of the one `new`.
+ * 0x02113080 loads 800 = 0x320 -- the class's own size -- into the header's
+ * inline operator new; 0x02113090 calls dBgActor_c's C2 and the store at
+ * 0x0211309c lays down this class's vptr. The null check is the one `new`
+ * itself emits. */
+extern "C" daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(800);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)&_ZTV20daObjWanwanShutter_c[2]; /* +8: this TU defines the vtable */ }
-    return p;
+    return new daObjWanwanShutter_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN20daObjWanwanShutter_c13InitResourcesEv, 0x02112ffc, size 0x80 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
-/* These three live in ov014, this file's own overlay. They were named off ov021 and
- * ov022, which share the same load window and so define their own symbols at the same
- * addresses -- but never at the same time as ov014, so those names cannot be what this
- * code reaches. Same address either way, so the bytes never noticed. */
+/* Vtable slot 0. Loads the fence's model and collision mesh and plants both at
+   the actor's position. Scale 0x1000 is 1.0. */
 int daObjWanwanShutter_c::InitResources()
 {
-  int m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov014_021149c0);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)&mModel, m, 1, -1);
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-  int k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov014_021149b8);
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)&mMeshCollider, k, (char*)&mClsnMat, 0x1000, mAngleY, (void*)data_ov014_02114558);
-  return 1;
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov014_021149c0), 1, -1);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
+    {
+        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov014_021149b8);
+        /* MEASURED on ov014/daObjWanwanShutter_c::InitResources: this one call
+           has to keep the mangled spelling. Its third parameter is a by-value
+           Fix12<int> -- wall 6az -- and materialising one costs stack traffic
+           the ROM does not have. */
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
+            &data_ov014_02114558);
+    }
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN20daObjWanwanShutter_c8BehaviorEv, 0x02112fc0, size 0x3c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
 int daObjWanwanShutter_c::Behavior()
 {
-    if (*(unsigned char*)((char*)&mDisabled) != 0) return 1;
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((void *)this), 0, 0);
+    if (mDisabled != 0)
+        return 1;
+    /* MEASURED on ov014/daObjWanwanShutter_c::Behavior: the two by-value
+       Fix12<int> parameters are wall 6az. */
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN20daObjWanwanShutter_c6RenderEv, 0x02112f80, size 0x40 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daObjWanwanShutter_c::Render()
 {
-    if (*(unsigned char*)((char*)&mDisabled) != 0) return 1;
-    ((Obj *)this)->sub.vfunc(0);
+    if (mDisabled != 0)
+        return 1;
+    mModel.Render(0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN20daObjWanwanShutter_c16CleanupResourcesEv, 0x02112f3c, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daObjWanwanShutter_c::CleanupResources()
 {
-    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
-    }
-    ((SharedFilePtr *)(data_ov014_021149c0))->Release();
-    ((SharedFilePtr *)(data_ov014_021149b8))->Release();
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+    data_ov014_021149c0.Release();
+    data_ov014_021149b8.Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov014_02112ea8, 0x02112ea8, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02112ea8
-/* recovered: shared common types */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void func_ov014_02112ea8(ActorS *a)
+/* The chomp's "break the fence" trigger, reached from daWanwan_c when the
+   chomp finishes its lunge at the gate. Plays bank-3 sound 0xf at camera-space
+   position, spawns particle 0x1e 300.0 above the fence, poofs, sets mDisabled
+   so Behavior/Render go idle, and drops the collider out of the world.
+ *
+ * Keeps its placeholder label: daWanwan_c calls it as a free function, and
+ * coining a method name is out of scope for this TU.
+ *
+ * Particle::System::NewSimple stays mangled: its three by-value Fix12<int>
+ * parameters are wall 6az on this helper. */
+extern "C" void func_ov014_02112ea8(daObjWanwanShutter_c *a)
 {
     Vector3 v[2];
-    Sound::PlayBank3(0xf, a->v74);
+    Sound::PlayBank3(0xf, *(Vector3 *)&a->mCamSpacePosX);
     {
-        int ty = a->py;
-        int tz = a->pz;
-        int tx = a->px;
+        int ty = a->mPosY;
+        int tz = a->mPosZ;
+        int tx = a->mPosX;
         v[0].x = tx;
         v[0].y = ty + 0x12c000;
         v[0].z = tz;
     }
-    Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1e, v[0].x, v[0].y, v[0].z);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1e, v[0].x, v[0].y, v[0].z);
     v[1].x = v[0].x;
     v[1].y = v[0].y;
     v[1].z = v[0].z;
-    _ZN8dActor_c10PoofDustAtERK7Vector3(a, v[1]);
-    a->flag = 1;
-    if (((dBgW *)a->col)->IsEnabled())
-        ((dBgW *)a->col)->Disable();
+    a->PoofDustAt(v[1]);
+    a->mDisabled = 1;
+    if (a->mMeshCollider.IsEnabled())
+        a->mMeshCollider.Disable();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN20daObjWanwanShutter_cD0Ev, 0x02112e50, size 0x58 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjWanwanShutter_cD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * D0 is the DELETING destructor: destroy through this class and its bases --
- * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~daObjWanwanShutter_c()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
- *
- * The deallocation is an inline operator delete, which is why nothing below
- * mentions a heap.
- */
-/* (no separate definition: the single ~daObjWanwanShutter_c() below emits the D0
- * and D1 variants together.) */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN20daObjWanwanShutter_cD1Ev, 0x02112e0c, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_cD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * Two vtable stores and three destructor calls, every one a consequence of
- * `struct daObjWanwanShutter_c : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
- * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
- * member with a destructor of its own.
- */
-/* (no definition here: `virtual ~daObjWanwanShutter_c() {}` is in
- * include/daObjWanwanShutter_c.h, and that placement is load-bearing rather
- * than stylistic -- out of line, mwccarm emits D0 before D1 and adds a
- * homeless D2, and objisolate then refuses this whole TU. The header carries
- * the reasoning, the leaf measurement that makes it safe, and the note that
- * the 0x44 bytes come from inlining dBgActor_c's own inline destructor.) */
+// @symbol _ZN20daObjWanwanShutter_cD0Ev
+/* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjWanwanShutter_c() {}` in the
+   header is the whole source of both variants: from an inline body mwcc emits
+   D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body
+   out of line here instead flips them to D0-before-D1 and the isolation step
+   rejects the object.
+
+   Their bodies are two vptr stores and three destructor calls, every one a
+   consequence of `daObjWanwanShutter_c : dBgActor_c`: this class's vptr, then
+   dBgActor_c's -- inlined, because that destructor is defined in its class
+   body -- then dBgActor_c's dBgW_KcMbg and Model, then dActor_c. This class
+   adds no member with a destructor of its own. */

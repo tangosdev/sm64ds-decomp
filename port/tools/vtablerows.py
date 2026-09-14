@@ -501,9 +501,10 @@ def cmd_reconstruct(root):
             diverged.append(cid)
         print("  0x%03x  vt 0x%08x  w%d  ovr %2d  mark %2d  nosrc %d%s"
               % (cid, vt, width, n_ovr, n_mark, n_nosrc, tag))
-    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 369/148/2 since "
-          "the 2026-09-12 sync refresh; it read 369/278/4 when the table was "
-          "first reviewed, and the 29 that always resolved were 353/264/4)"
+    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 369/127/2 since "
+          "the 2026-09-14 sync refresh; it was 369/148/2 after the 2026-09-12 "
+          "one, read 369/278/4 when the table was first reviewed, and the 29 "
+          "that always resolved were 353/264/4)"
           % tuple(tot))
     if diverged:
         print("vtablerows: %d row(s) DIVERGE. A divergence is a "

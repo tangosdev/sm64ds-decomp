@@ -121,6 +121,32 @@ python tools/port_refcheck.py
 Checks references only (no compiler, no ROM — about a second) and is also wired
 into `tools/hooks/pre-push`.
 
+## Declaration agreement (an `extern` vs the definition it names)
+
+`mwccarm` never compares one translation unit's `extern` against another's, the ROM
+records no types, and the link resolves by name — so a symbol can be declared
+`int f(void*, int, int, void*, void*)` in one file, `void* f(...)` in a second and
+defined `void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third with every byte
+gate green. `python tools/check_decl_agreement.py` is the check: it reads every
+declaration in `src/` and `include/`, compares return type, parameter count and
+parameter types against the symbol's definition (resolving `include/types.h`'s scalar
+typedefs and each file's own typedefs first, so `u32` and `unsigned int` are one type,
+and giving an out-of-line member back its implicit `this`), and reports each
+disagreement with the file and line on both sides. `--changed <base>` scopes it to a
+branch: the changed files, plus every declaration of the symbols that branch defines,
+plus every declaration of a symbol whose `config/**/symbols.txt` row changed, plus
+every file whose declarations resolve through a type the branch changed (a typedef,
+tag or macro, followed transitively down the typedef chain) — and both sides of a
+rename, because Git reports one `R` row and a definition can move and change signature
+in the same commit. `--symbol <name>` prints one symbol's whole declaration
+population; `--inventory` prints the headline and the worst offenders. It is a
+**ratchet**: the 23,151 disagreements the tree already carries are banked in
+`config/decl-agreement-baseline.json` and only a new one fails.
+Do not treat a banked entry as a text edit — changing a declaration can change
+instruction selection at the call site, so fixing one is matching work that needs a
+rebuild and byte proof (`tools/match.py`), and the `declaration agreement` CI job will
+never ask you for it. No compiler, no ROM, about twelve seconds.
+
 ## PR format
 
 - **Title:** describe what changed — the class(es) converted, or the function(s)

@@ -5,7 +5,7 @@
 #include "common.h"
 struct Vector3_16;
 struct dActor_c;
-extern "C" dActor_c *_ZN8dActor_c13ClosestPlayerEv(void);
+extern "C" dActor_c *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern "C" s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32,u32,const Vector3*,const Vector3_16*,s32,s32);
 extern "C" void func_0201267c(u32 a, void *b, void *c, int d);
@@ -17,7 +17,7 @@ extern "C" int func_ov098_0213b9d8(char *self)
     Vector3 v; dActor_c *player; s32 ang; s32 vel; u32 ua; int factor; int a; s16 sn, cs;
     int nx, ny, nz; int py, sy;
     if (*(u16 *)(self + 0x100)) return;
-    player = _ZN8dActor_c13ClosestPlayerEv();
+    player = _ZN8dActor_c13ClosestPlayerEv(self);
     if (!player) return;
     { char *p = (char *)(int)M((char *)player + 0x5c);
       v.x=*(int*)p; v.y=*(int*)(p+4); v.z=*(int*)(p+8); }

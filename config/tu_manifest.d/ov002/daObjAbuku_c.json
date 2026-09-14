@@ -144,7 +144,7 @@
   ],
   "notes": [
     "Genuine lifecycle source form: daObjAbuku_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU. The emitted vtable naturally requires D1 then D0 in retail order; mwcc emits no D2 and the source contains no hand-spelled destructor body or forcing helper.",
-    "The actor-table factory remains the one genuine C ABI construction boundary. Plain `new daObjAbuku_c` was measured and rejected because mwccarm calls unresolved `_Znwm`, while retail calls the actor-specific `_ZN7fBase_cnwEj`; the exact manual allocator/base/member-constructor sequence is retained rather than hiding a wrong relocation.",
+    "The actor-table factory is `return new daObjAbuku_c()`. Leaf operator new(unsigned long) forwards to _ZN7fBase_cnwEj((unsigned)size); without that leaf, mwccarm relocates to unresolved _Znwm.",
     "daObjAbuku_c_classInit and g_profile_OBJ_ABUKU are reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were Bubble_Spawn, daObjAbuku_c_Spawn, and Bubble_SpawnInfo. The manifest is deliberately text-only; all ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes.",
     "The older partitioned-link record described an out-of-line destructor source form that emitted D0, D1 and D2 in the wrong order. It was removed rather than carried forward as stale evidence after the inline/key-function form eliminated D2 and corrected section order."
   ],

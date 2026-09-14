@@ -84,7 +84,8 @@
     "Legacy src/daObjCannonShutter_c_Spawn.c already referenced this project's own _ZTV20daObjCannonShutter_c symbol (not a coined alias), so linkcheck --partial reached genuine 8/8 contribution-equivalence and PARTIAL-LINK-VERIFIED cleanly -- same clean outcome as daObjWakame_c/#1728, confirmed by reading the legacy files before writing any code. The current daObjCannonShutter_c_classInit and g_profile_CANNON_SHUTTER spellings are lineage-supported reconstructions; exact original SM64DS symbols are not preserved.",
     "First pilot in this series whose immediate base is dBgActor_c (an ov002-local class, one level below dActor_c) rather than dActor_c directly -- 32 vtable slots inherited instead of 31, and dBgActor_c's own RTTI (_ZTI10dBgActor_c/_ZTS10dBgActor_c) lives in ov002's own symbols.txt, not arm9's, unlike every prior pilot's base-RTTI chain.",
     "PROMOTED AND ENROLLED 2026-08-30. config/arm9/overlays/ov002/delinks.txt now licenses the whole 0x020bc8f4..0x020bccfc run to src/game/actors/d_a_obj_cannon_shutter.cpp; the eight legacy per-function sources are deleted. MEASURED: python tools/rombuild.py -j 16 reports 106/106 exact, 0 mismatching of 11,088 reproducing functions, with the same invocation on origin/main @ ec8fe22d6 also 106/106. python tools/romdata_check.py over this TU and daObjFl_Fall_Block_c reports 9 VERIFIED / 7 PARTIAL / 0 DIFFERS.",
-    "ONE ABI SEAM CANNOT BE WRITTEN AS A MEMBER CALL, and it is measured, not assumed. InitResources reaches dBgW_KcMbg::SetFile, whose third parameter is a by-value Fix12<int> -- a bare aggregate with no constructor (include/math/Fix12.h), so materialising one costs stack traffic the ROM does not spend. Written as mMeshCollider.SetFile(...), build/final_link.o.xMAP showed '020BCC20 000000B8 .text daObjCannonShutter_c::InitResources()' against the cartridge's 0xAC. Those 12 bytes pushed daObjCannonShutter_c_classInit to 0x020BCCD8 (ROM 0x020BCCCC) and overflowed this entry's own range end 0x020BCCFC; because ov002 is the overlay every later overlay loads behind, ov002 growing shifted 69 modules and module fidelity fell to 20/106. The call keeps the mangled spelling for that reason and that reason only. Same wall for dBgActor_c::IsClsnInRangeOnScreen(Fix12<int>, Fix12<int>), which src/game/actors/daObjPushblock_c.cpp already spells mangled for the identical cause."
+    "ONE ABI SEAM CANNOT BE WRITTEN AS A MEMBER CALL, and it is measured, not assumed. InitResources reaches dBgW_KcMbg::SetFile, whose third parameter is a by-value Fix12<int> -- a bare aggregate with no constructor (include/math/Fix12.h), so materialising one costs stack traffic the ROM does not spend. Written as mMeshCollider.SetFile(...), build/final_link.o.xMAP showed '020BCC20 000000B8 .text daObjCannonShutter_c::InitResources()' against the cartridge's 0xAC. Those 12 bytes pushed daObjCannonShutter_c_classInit to 0x020BCCD8 (ROM 0x020BCCCC) and overflowed this entry's own range end 0x020BCCFC; because ov002 is the overlay every later overlay loads behind, ov002 growing shifted 69 modules and module fidelity fell to 20/106. The call keeps the mangled spelling for that reason and that reason only. Same wall for dBgActor_c::IsClsnInRangeOnScreen(Fix12<int>, Fix12<int>), which src/game/actors/daObjPushblock_c.cpp already spells mangled for the identical cause.",
+    "Leftover cleanup folded daObjCannonShutter_c_classInit as return new daObjCannonShutter_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. The factory instantiates the class and mwcc re-emits _ZN10dBgActor_cD2Ev as a compiler-only helper; licensed as deadstrip."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -97,15 +98,17 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- 13 unlicensed symbol(s) remain, and all 13 are banked in compiler_only_output with an explicit disposition and a ROM home: 12 deadstrip-data (g_profile_CANNON_SHUTTER, inherited and own _ZTI/_ZTS, and _ZTV20daObjCannonShutter_c) and 1 deadstrip-duplicate (_ZN7Vector3D1Ev @ arm9:0x020072c0). ZERO plain deadstrip rows. The compiler-generated _ZN20daObjCannonShutter_cD2Ev row that used to sit here was DELETED: the header's inline ~daObjCannonShutter_c() {} means mwcc never emits a D2 at all, and rombuild refused the stale row with 'compiler-only symbol(s) not defined'.",
+      "declared_function_set_equals_defined_function_set": "PASS -- 14 unlicensed symbol(s) remain, and all 14 are banked in compiler_only_output: 12 deadstrip-data (g_profile_CANNON_SHUTTER, inherited and own _ZTI/_ZTS, and _ZTV20daObjCannonShutter_c), 1 deadstrip-duplicate (_ZN7Vector3D1Ev @ arm9:0x020072c0), and 1 deadstrip (_ZN10dBgActor_cD2Ev, emitted by return new daObjCannonShutter_c()). The compiler-generated _ZN20daObjCannonShutter_cD2Ev row that used to sit here stays deleted: the header's inline ~daObjCannonShutter_c() {} means mwcc never emits a derived D2, and rombuild refused the stale row with 'compiler-only symbol(s) not defined'.",
       "functions_occur_in_expected_order": "PASS -- the header's inline destructor makes mwcc emit D1 then D0, the cartridge's own order. The recorded PARTIAL ordinal pair (0, 1) was the out-of-line-destructor shape, which emits D0 before D1 and which objisolate refuses.",
       "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -214,6 +217,11 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new daObjCannonShutter_c(); has no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",

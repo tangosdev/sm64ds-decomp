@@ -15,8 +15,10 @@
 
 #include "dBgActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daObjWanwanShutter_c : dBgActor_c {
-    u8 mDisabled;                     /* 0x31e -- both Behavior and Render return immediately while it is set */
+    u8 mDisabled;                     /* 0x31e -- Behavior and Render return immediately while it is set; func_ov014_02112ea8 writes 1 when the chomp breaks the fence */
 
     /* --- vtable --- */
     /* MEASURED -- INLINE ON PURPOSE, do not move out of line.
@@ -53,7 +55,17 @@ struct daObjWanwanShutter_c : dBgActor_c {
     virtual s32 CleanupResources();    /* slot  3 -- 0x02112f3c */
     virtual s32 Behavior();            /* slot  6 -- 0x02112fc0 */
     virtual s32 Render();              /* slot  9 -- 0x02112f80 */
+
+    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
+       Parameter is size_t (unsigned long on this compiler). `return new`
+       relocates to `_Znwm` without this. */
+    static void *operator new(size_t size);
 };
+
+inline void *daObjWanwanShutter_c::operator new(size_t size)
+{
+    return _ZN7fBase_cnwEj((unsigned)size);
+}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

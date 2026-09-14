@@ -979,6 +979,20 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 /* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN5Sound9PlayBank0EjRK7Vector3, and nothing references ?_ZN5Sound9PlayBank0EjRK7Vector3@@YAHIPAX@Z, so the row can never fire and nothing wants it to. */
 // #pragma comment(linker, "/alternatename:?_ZN5Sound9PlayBank0EjRK7Vector3@@YAHIPAX@Z=__ZN5Sound9PlayBank0EjRK7Vector3")
 #pragma comment(linker, "/alternatename:?data_ov002_0211061c@@3UState@@A=_data_ov002_0211061c")
+/* ADDED at the main -> port sync (lane SYNC7, wave 9, origin/main 4382d447e).
+   Four data words whose ROM address the port already hosts under the flat C
+   name, and whose SPELLING moved when main gave the reading TU a real type: a
+   file-scope C++ declaration decorates the tag into the symbol, so
+   `daPropeller_Heyho_c::State` and `FaderColor` are new names for words the
+   link already has. Same shape as the data_0209f318 rows above and the
+   ?data_ov002_0211061c@@3UState@@A row this block follows: a name bridge over
+   one address, no convention crossed, the definition unmoved. Each RHS was
+   checked as DEFINED in walk_window's own link inputs before the row was
+   written, and each LHS is an unresolved row of that same link. */
+#pragma comment(linker, "/alternatename:?data_0209f5e8@@3UFaderColor@@A=_data_0209f5e8")
+#pragma comment(linker, "/alternatename:?data_ov002_0210af70@@3PAHA=_data_ov002_0210af70")
+#pragma comment(linker, "/alternatename:?data_ov070_021235bc@@3UState@daPropeller_Heyho_c@@A=_data_ov070_021235bc")
+#pragma comment(linker, "/alternatename:?data_ov070_021235cc@@3UState@daPropeller_Heyho_c@@A=_data_ov070_021235cc")
 #pragma comment(linker, "/alternatename:?data_ov002_02110634@@3UState@@A=_data_ov002_02110634")
 #pragma comment(linker, "/alternatename:?data_0209f318@@3PAXA=_data_0209f318")
 #pragma comment(linker, "/alternatename:?func_0200d580@@YAXPAUCamera@@H@Z=_func_0200d580")

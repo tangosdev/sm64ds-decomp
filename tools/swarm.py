@@ -1829,7 +1829,14 @@ RULES = [rule_empty, rule_ret_const, rule_ret_arg, rule_load, rule_load_mask,
 # C++ sources (for C++-ABI idioms like virtual dispatch) are marked with a leading
 # `//cpp` line; they compile with -lang c++ and a .cpp temp file. extern "C" keeps
 # the function symbol unmangled so extract_func still finds it by name.
-CPP_FLAGS = M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++")
+# `-Cpp_exceptions off` is the build's own flag for C++ sources (rombuild.CFLAGS) and it has
+# to be here, not only in DEFAULT_FLAGS: every verifier that scores a //cpp candidate --
+# linkcheck, prepush_linkcheck, reloc_audit.winning_object, bytegate, reverify_corpus, fdiff --
+# reads CPP_FLAGS. Without it mwccarm threads exception cleanup through any function holding
+# an object with a destructor and the function's .text stops equalling the ROM's, so a correct
+# source reads NO-REPRO. See tools/match.py CPP_EXCEPTIONS_FLAG for the measured blast radius
+# (one row in 6,200) and notes/mwccarm-codegen.md 6co.
+CPP_FLAGS = M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++") + " " + M.CPP_EXCEPTIONS_FLAG
 
 
 def oracle_check(c_source, name, target):

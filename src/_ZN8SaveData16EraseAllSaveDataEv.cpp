@@ -9,12 +9,10 @@
  * one fails -- and because EraseSaveFile returns 1 for success, a nonzero result
  * means at least one slot was written, not that something went wrong.
  *
- * HONEST LEFTOVER: SetDefaultValuesMg is called by its raw mangled name -- see
- * _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c for why.
+ * SetDefaultValuesMg is a real static call now.
  */
 extern "C" {
 extern unsigned char data_0209caa0[];
-void _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData(MinigameSaveData* mg);
 }
 
 u32 SaveData::EraseAllSaveData()
@@ -23,6 +21,6 @@ u32 SaveData::EraseAllSaveData()
     r4 = SaveData::EraseSaveFile(0, (char*)data_0209caa0);
     r4 |= SaveData::EraseSaveFile(1, (char*)data_0209caa0);
     r4 |= SaveData::EraseSaveFile(2, (char*)data_0209caa0);
-    _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData((MinigameSaveData*)(data_0209caa0 + 0x44));
+    SaveData::SetDefaultValuesMg((MinigameSaveData*)(data_0209caa0 + 0x44));
     return r4 | SaveData::SaveMinigames((MinigameSaveData*)(data_0209caa0 + 0x44));
 }

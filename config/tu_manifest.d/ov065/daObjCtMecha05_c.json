@@ -7,6 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x211ab60..0x211b328, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "adjacent CT_MECHA05 factory at 0x0211b328..0x0211b360 allocates sizeof(daObjCtMecha05_c), constructs dBgActor_c plus ShadowModel, and installs this class vptr; the factory join is registry/factory-backed rather than tu_map-proven",
     "class label(s): daObjCtMecha05_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x0211ab60",
-      "end": "0x0211b328"
+      "end": "0x0211b360"
     }
   ],
   "functions": [
@@ -73,6 +74,13 @@
       "size": "0x00000154",
       "legacy_source": "src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "daObjCtMecha05_c_classInit",
+      "address": "0x0211b328",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_ct_mecha05.cpp",
+      "ordinal": 8
     }
   ],
   "data": [],
@@ -84,6 +92,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "The genuine dBgCh_Gnd local makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte `bx lr` body at its canonical arm9 home and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjCtMecha05_c() emits this homeless base-object destructor helper; it has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -160,7 +173,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov065",
       "canonical_address": "0x0211d290",
-      "reason": "The source reconstructs the 0x1c actor descriptor with its relocation to the separately enrolled C ABI factory and the exact priorities, flags, and culling words; romdata_check proves the complete object at its ov065 home."
+      "reason": "The source reconstructs the 0x1c actor descriptor with its relocation to the folded C ABI factory and the exact priorities, flags, and culling words; romdata_check proves the complete object at its ov065 home."
     },
     {
       "symbol": "_ZTV16daObjCtMecha05_c",
@@ -171,10 +184,10 @@
     }
   ],
   "notes": [
-    "The live linker map bounds this class translation unit at 0x0211ab60..0x0211b328. daObjCtMecha05_c_classInit immediately follows at 0x0211b328 but remains a separately enrolled C ABI factory because there is no independent evidence that it belonged to the class TU.",
-    "One inline genuine destructor makes mwccarm emit the retail D1 then D0 pair without a D2. The dBgCh_Gnd local also emits an exact, unreferenced duplicate of Vector3's inline D1; the manifest records that compiler-only output for dead stripping.",
+    "The live linker map bounds this class translation unit at 0x0211ab60..0x0211b328. Cleanup folded the adjacent CT_MECHA05 factory at 0x0211b328..0x0211b360 as return new daObjCtMecha05_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
+    "One inline genuine destructor makes mwccarm emit the retail D1 then D0 pair without a D2. return new emits homeless _ZN10dBgActor_cD2Ev, recorded for dead stripping. The dBgCh_Gnd local also emits an exact, unreferenced duplicate of Vector3's inline D1; the manifest records that compiler-only output for dead stripping.",
     "The unisolated object naturally emits daObjCtMecha05_c RTTI, type-name, typed SpawnInfo, and full vtable storage in retail order. romdata_check reports zero differing or unnamed objects; inherited vague-linkage RTTI is explicitly externalized to its canonical homes.",
-    "Production enrollment verifies all eight class functions and the separate typed factory at blind:0, and a full normal ROM build reproduces all 106 modules. InitResources retains the measured Fix12-by-value ABI seam and an explicit model-file local required for retail code shape. daObjCtMecha05_c_classInit and g_profile_CT_MECHA05 are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were TTC_MovingBar_Spawn and TTC_MovingBar_SpawnInfo."
+    "Production enrollment verifies all nine class functions including the folded typed factory. InitResources retains the measured Fix12-by-value ABI seam and an explicit model-file local required for retail code shape. daObjCtMecha05_c_classInit and g_profile_CT_MECHA05 are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were TTC_MovingBar_Spawn and TTC_MovingBar_SpawnInfo."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -182,13 +195,15 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov065-daObjCtMecha05_c/daObjCtMecha05_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 9,
+    "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -211,7 +226,9 @@
         21,
         22,
         23,
-        30
+        30,
+        42,
+        43
       ],
       "data": [
         "_ZTI7fBase_c",

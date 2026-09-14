@@ -1,84 +1,52 @@
 //cpp
-/* Production translation unit for ov036/daObjRc_Guruguru_c, hand-curated.
- * 7 function(s), .text 0x02111d14..0x02111f8c.
+/* Rainbow Ride armed rotating platform (ARMED_ROTATING_PLATFORM 132,
+ * profile RC_GURUGURU) -- ov036/daObjRc_Guruguru_c.
  *
- * The RC_GURUGURU profile's powered turntable: a dBgActor_c that adds a fixed
- * yaw step to its own heading every frame and drags its model and collision
- * mesh round with it, until the actor is flagged and it parks itself with the
- * mesh switched off. The ROM's own RTTI spells the class daObjRc_Guruguru_c
- * (_ZTS at ov036 0x02113d90); the coined ArmedRotatingPlatform alias that
- * named vtable 0x02113dcc in ov036's symbols.txt has been renamed away.
- * _ZTI+8 at 0x02113d84 points at _ZTI10dBgActor_c, so dBgActor_c is the direct
- * and only base.
+ * A dBgActor_c that adds a fixed yaw step to its own heading every frame
+ * and drags its model and collision mesh round with it, until mFlags bit
+ * 0x8 (off screen) is set and it parks itself with the mesh switched off.
  *
- * It fills the four vtable slots its base leaves to the derived class --
- * InitResources (0), CleanupResources (3), Behavior (6) and Render (9) -- and
- * adds one s16 of its own storage in dBgActor_c's tail padding at 0x31e.
- *
- * The .text run ends at 0x02111f8c, where _ZN16daObjRc_Dorifu_cD1Ev opens the
- * next class. daObjRc_Guruguru_c_classInit at 0x02111f5c is the last function
- * inside it: the RC_GURUGURU registry profile's spawn function, sitting
- * immediately after InitResources in the ROM's own .text order. It used to
- * keep its own C file, folded in here because the promotion predated the
- * profile-reconstruction campaign, not because the ROM ever put it elsewhere.
- * It keeps C linkage and is written first here, being the highest-address
- * member.
+ * RTTI ov036:0x02113d90 names daObjRc_Guruguru_c; the debug table names
+ * RC_GURUGURU. ov036 is mixed -- this is the spinning platform, not
+ * kaitendai (ROTATING_PLATFORM_RR 129) / carpet / buranko / hane.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder:
- * tools/rombuild.py refuses the object outright when the emitted order and the
- * ROM's disagree.
+ * emits one .text section per function in the REVERSE of source order, so
+ * the highest-address ROM function is written FIRST here. Do not reorder.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111d14  src/_ZN18daObjRc_Guruguru_cD1Ev.cpp
- *   [1] 0x02111d58  src/_ZN18daObjRc_Guruguru_cD0Ev.cpp
- *   [2] 0x02111db0  src/_ZN18daObjRc_Guruguru_c16CleanupResourcesEv.cpp
- *   [3] 0x02111df8  src/_ZN18daObjRc_Guruguru_c6RenderEv.cpp
- *   [4] 0x02111e20  src/_ZN18daObjRc_Guruguru_c8BehaviorEv.cpp
- *   [5] 0x02111eb0  src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp
- *   [6] 0x02111f5c  src/daObjRc_Guruguru_c_classInit.c
+ * deslop
+ * Leftover: dBgW_KcMbg::SetFile stays mangled -- InitResources passes
+ *   Fix12<int> by value (wall 6az); a method call homes the argument and
+ *   size-DIFFs.
+ * Leftover: dBgActor_c::IsClsnInRange stays mangled -- Behavior's two
+ *   by-value Fix12<int> (wall 6az); the header method form is refused
+ *   (include/dBgActor_c.h).
+ * Leftover: func_020393d4 stores dBgW::UpdatePosAndAngs on mMeshCollider;
+ *   dBgW.h has no setter. Naming the store belongs with dBgW in arm9.
+ * Leftover: data_ov036_02113d78 is a three-word overlay table (BMD
+ *   0x021140ac, KCL 0x021140b4, CLPS 0x02112ac8). Naming the three
+ *   targets directly builds a different literal pool and moves every
+ *   call site. This TU claims .text only.
+ * Leftover: g_profile_RC_GURUGURU lives outside this TU (S14).
  */
 
 #include "daObjRc_Guruguru_c.h"
 #include "SharedFilePtr.h"
+#include "dBgW.h"
 
-/* Externs: the union of the legacy files', kept at their legacy spelling.
- *
- * data_ov036_02113d78 is a REAL three-word data object, not a literal pool.
- * MEASURED: InitResources loads its address ONCE (the literal at 0x02111f54)
- * and then indexes it -- ldr r0,[r1]; ldr r0,[r0,#4]; ldr r3,[r2,#8] -- and
- * CleanupResources loads that same one literal twice, for [0] and [1].
- * Naming the three targets instead (the SharedFilePtrs at 0x021140ac and
- * 0x021140b4 and the CLPS block at 0x02112ac8) builds a three-entry pool and
- * moves every call site, so the indirection is kept.
- *
- * func_020393d4 (arm9 0x020393d4) has no shared header anywhere in the tree --
- * every caller declares it locally, so this matches the house spelling rather
- * than inventing an include. */
 extern "C" {
 /* [0] the BMD's SharedFilePtr (0x021140ac), [1] the KCL's (0x021140b4),
    [2] the CLPS block dBgW_KcMbg::SetFile is handed (0x02112ac8). */
 extern void *data_ov036_02113d78[];
 
 void func_020393d4(void *bgw, void *fn);
-extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 
 bool _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
-
-/* The factory's own dependencies, restated here rather than pulled in through
-   decl_ActorBase.h / decl_Platform.h / decl_common.h as the legacy file did --
-   this TU declares in place, and reaching a shared header would change what
-   the rest of the TU sees. */
-extern void *_ZN7fBase_cnwEj(unsigned size);
-extern void _ZN10dBgActor_cC2Ev(void *self);
-extern int _ZTV18daObjRc_Guruguru_c[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daObjRc_Guruguru_c_classInit, 0x02111f5c, size 0x30       */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjRc_Guruguru_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjRc_Guruguru_c through
@@ -86,17 +54,17 @@ extern int _ZTV18daObjRc_Guruguru_c[];
    profile; later EAD lineage supplies classInit. Exact original spelling is
    not preserved. Historical alias: ArmedRotatingPlatform_Spawn.
 
-   800 = 0x320: dBgActor_c's own size, with this class's one s16 at 0x31e in
-   its tail padding, exactly as the header comment above reads it. */
-extern "C" int *daObjRc_Guruguru_c_classInit(void)
+   Every instruction the cartridge has here falls out of the one `new`.
+   800 = 0x320 is the class's own size, into the header's leaf operator new;
+   the implicit constructor inlines dBgActor_c's C2 and the derived vptr
+   store. Declaring a constructor of our own would emit a `bl` the factory
+   does not have. */
+extern "C" daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(800);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV18daObjRc_Guruguru_c; }
-    return p;
+    return new daObjRc_Guruguru_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN18daObjRc_Guruguru_c13InitResourcesEv, 0x02111eb0, size 0xac */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjRc_Guruguru_c13InitResourcesEv
 /* dBgW_KcMbg::SetFile takes Fix12<int> by value. An ordinary member call
@@ -116,8 +84,7 @@ s32 daObjRc_Guruguru_c::InitResources()
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */
-    func_020393d4(&mMeshCollider,
-        (void *)_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
 
     /* The default spin is clockwise at 0x80 units of yaw a frame; a level
        author overrides both rate and direction through the spawn's mAngleZ. */
@@ -128,7 +95,6 @@ s32 daObjRc_Guruguru_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN18daObjRc_Guruguru_c8BehaviorEv, 0x02111e20, size 0x90 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjRc_Guruguru_c8BehaviorEv
 /* IsClsnInRange takes two Fix12<int> by value; see InitResources for why that
@@ -141,7 +107,8 @@ s32 daObjRc_Guruguru_c::Behavior()
     mAngleY += mAngVelY;
 
     /* The temporary is load-bearing: the ROM materialises the predicate with
-       movne/moveq and then tests it, where a direct `if` folds the two. */
+       movne/moveq and then tests it, where a direct `if` folds the two.
+       Bit 0x8 is the framework off-screen flag (include/dActor_c.h). */
     int flagged = (int)((mFlags & 8) != 0);
     if (flagged != 0) {
         if (mMeshCollider.IsEnabled())
@@ -156,7 +123,6 @@ s32 daObjRc_Guruguru_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN18daObjRc_Guruguru_c6RenderEv, 0x02111df8, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjRc_Guruguru_c6RenderEv
 s32 daObjRc_Guruguru_c::Render()
@@ -166,7 +132,6 @@ s32 daObjRc_Guruguru_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN18daObjRc_Guruguru_c16CleanupResourcesEv, 0x02111db0, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjRc_Guruguru_c16CleanupResourcesEv
 s32 daObjRc_Guruguru_c::CleanupResources()
@@ -180,8 +145,6 @@ s32 daObjRc_Guruguru_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN18daObjRc_Guruguru_cD0Ev, 0x02111d58, size 0x58        */
-/* ROM ordinal 0 -- _ZN18daObjRc_Guruguru_cD1Ev, 0x02111d14, size 0x44        */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjRc_Guruguru_cD1Ev
 // @symbol _ZN18daObjRc_Guruguru_cD0Ev

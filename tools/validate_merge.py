@@ -477,6 +477,7 @@ _BLOCK_TRANSFER_VALUE = 0x08000000
 _S_BIT = 1 << 22
 _SP = 13
 _DECODER = None
+_DECODER_DEFECT = None
 
 
 def _arm_decoder():
@@ -487,20 +488,33 @@ def _arm_decoder():
     a decoder, and that exception already needs the cartridge image and the pinned
     compiler beside it. Unavailable is answered as None and refuses the exception --
     never as "the word is not a return", and never as "it is".
+
+    Refusing is correct; refusing SILENTLY is not. The import failure is kept in
+    `_DECODER_DEFECT` so the report can name the missing package, the way it already
+    names a broken relocation config or an absent cartridge image. Without that, a
+    worker with capstone and no pyyaml failed PR #2496 as "lost 1 matched function(s)"
+    and gave its author nothing to act on.
     """
-    global _DECODER
+    global _DECODER, _DECODER_DEFECT
     if _DECODER is None:
         try:
             from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
             from capstone.arm import ARM_INS_BX, ARM_INS_LDM, ARM_INS_POP
             import evidence_rom as EV
-        except (ImportError, SystemExit):
+        except (ImportError, SystemExit) as exc:
             _DECODER = False
+            _DECODER_DEFECT = str(exc) or exc.__class__.__name__
         else:
             handle = Cs(CS_ARCH_ARM, CS_MODE_ARM)
             handle.detail = True
             _DECODER = (handle, EV, (ARM_INS_BX, ARM_INS_POP, ARM_INS_LDM))
     return _DECODER or None
+
+
+def _decoder_defect():
+    """Why `_arm_decoder` is unavailable, or None when it is available."""
+    _arm_decoder()
+    return _DECODER_DEFECT
 
 
 def _is_return_word(word):
@@ -1860,6 +1874,10 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         elif getattr(code_owned, "missing", None):
             reasons.append("compiled code ownership unavailable, so nothing matched "
                            "may leave: " + "; ".join(sorted(code_owned.missing)))
+        elif _arm_decoder() is None:
+            reasons.append("ARM decoder unavailable, so nothing matched may leave: "
+                           + (_decoder_defect() or "capstone or tools/evidence_rom.py "
+                              "did not import"))
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         if repartition is None:

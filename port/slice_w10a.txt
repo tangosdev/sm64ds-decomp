@@ -120,9 +120,25 @@
 # ==== NO GUESSED BODIES ====================================================
 # None of these nine TUs is marked "recovered from vtable slot identity", so
 # port/tools/inferred_stub_guard.py's ratchet is untouched by this slice.
-src/d_a_obj_hs_billboard_hs_moon.c
-src/d_a_obj_hs_billboard_hs_star.c
-src/d_a_obj_hs_billboard_hs_y_star.c
-src/d_a_obj_hs_billboard_hs_b_star.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x021113ec..0x02111424, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_moon.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x021113b4..0x021113ec, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_star.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x0211137c..0x021113b4, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_y_star.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x02111344..0x0211137c, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_b_star.c
 src/game/actors/d_a_obj_hs_billboard.cpp
 src/__sinit_ov031_02111434.c

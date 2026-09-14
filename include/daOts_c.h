@@ -40,12 +40,15 @@
  * table will lie to you.)
  *
  * SIZE 0x398, and every member closes exactly on the next: ModelAnim 0x64 ends at
- * 0x174, dBgCh_Actr 0x1bc ends at 0x330, mFileTable and its padding end at 0x33c,
- * dCcAc_c 0x34 ends at 0x370, ShadowModel 0x28 ends at 0x398. Nothing
+ * 0x174, dBgCh_Actr 0x1bc ends at 0x330, mFileTable plus two particle ids end at
+ * 0x33c, dCcAc_c 0x34 ends at 0x370, ShadowModel 0x28 ends at 0x398. Nothing
  * allocates a plain daOts_c, so the ceiling comes from the children instead: the
- * earliest own field any of the three declares is at 0x3fa, and 0x398..0x3f9 is
- * referenced by no child source at all -- so it stays the children's padding rather
- * than being annexed into the base on no evidence.
+ * earliest own named field any of the three declares is at 0x3fa.
+ *
+ * 0x398..0x3f9 ARE WRITTEN by this class's helpers (state, pos snapshot, shadow
+ * matrix, counters). They still stay the children's padding: annexing them would
+ * grow this sizeof and force shrinking pad_398 on Bully, BigBully and
+ * daIDonketu_c, which is out of this TU. Helpers reach those bytes as offset soup.
  */
 /* THE VTABLE, all 37 slots diffed against dEnemyBase_c's and against all three children's:
  *
@@ -73,7 +76,7 @@
  * It argued this class's vtable is never emitted, so nothing could disagree with the
  * cartridge. That held while the inline destructor left the class without a key
  * function -- but `virtual int CleanupResources();` is declared non-inline here and
- * DEFINED in src/_ZN7daOts_c16CleanupResourcesEv.cpp, which makes it the key function
+ * DEFINED in src/actors/daOts_c.cpp, which makes it the key function
  * and makes that translation unit emit _ZTV7daOts_c. Measured: the emitted table
  * carried dEnemyBase_c's concrete InitResources and Behavior in slots 0 and 6 where
  * the cartridge has zeros, eight bytes wrong, and no byte gate could see it -- the
@@ -83,14 +86,18 @@
 struct daOts_c : dEnemyBase_c {
     ModelAnim           mModelAnim;             /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;          /* 0x174 */
-    /* All three children declare a field here, which is what makes it the base's
-       rather than any one of theirs. Bully is the only one that says what it is,
-       and says it twice: InitResources points it at data_ov064_0211b834, and
-       CleanupResources releases five SharedFilePtrs through it. BigBully's own
-       header called it a u8; two of the three call it a word, and the use above
-       is a pointer, so a word it is. */
+    /* Pointer to a per-variant config block (this TU casts it 16 times). All
+       three children declare a field here, which is what makes it the base's
+       rather than any one of theirs. Bully::InitResources points it at
+       data_ov064_0211b834; daOts_c::CleanupResources (inherited by Bully)
+       releases five SharedFilePtrs through it. BigBully's own header called it
+       a u8; two of the three call it a word, and the use above is a pointer, so
+       a word it is. */
     s32                 mFileTable;             /* 0x330 */
-    u8                  pad_334[0x8];
+    /* Particle::System::New unique ids. func_ov064_0211616c stores both; the
+       eight bytes were pad_334 while untyped. */
+    u32                 mParticle0;             /* 0x334 */
+    u32                 mParticle1;             /* 0x338 */
     dCcAc_c  mdCcAc_c;    /* 0x33c */
     ShadowModel         mShadowModel;           /* 0x370 */
 
@@ -108,7 +115,7 @@ struct daOts_c : dEnemyBase_c {
        pair, declared at the end of the class. */
     virtual int CleanupResources();     /* slot  3 */
     virtual int Render();               /* slot  9 */
-    virtual int OnAimedAtWithEgg();     /* slot 29 -- still a C file, see its source */
+    virtual int OnAimedAtWithEgg();     /* slot 29 */
     /* New slots 31..36. Their positions and override ownership are fixed by the
        four ROM vtables. The spellings describe their call sites; the stripped
        image carries no original method names. */

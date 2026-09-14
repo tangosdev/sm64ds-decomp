@@ -5,14 +5,14 @@
  */
 extern s8 data_0209f2f4[];
 
-extern void SetNextLevel(void);
+extern void SetNextLevel(int arg);
 extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void StartExitFaderWipe(u32 a);
 
 void HitDeathPlane(int arg)
 {
     if (data_0209f2f4[0] != 0 || arg == 0)
-        SetNextLevel();
+        SetNextLevel(arg);
     else
         _ZN8dScene_c14StartSceneFadeEjjt(8, 0, 0);
     StartExitFaderWipe(6);

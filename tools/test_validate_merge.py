@@ -1927,6 +1927,60 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         self.assertIn("ROM image unavailable, so nothing matched may leave: arm9",
                       report["reasons"])
 
+    def test_without_the_arm_decoder_the_report_fails_closed(self):
+        # No decoder: `_is_return_word` cannot answer and condition (b) refuses. It
+        # refused before this test existed too -- but SILENTLY, and a silent refusal
+        # here is indistinguishable from a real matched loss. That is what failed
+        # PR #2496 on the validator worker, which carries capstone and not pyyaml.
+        self.addCleanup(setattr, VM, "_DECODER", VM._DECODER)
+        self.addCleanup(setattr, VM, "_DECODER_DEFECT", VM._DECODER_DEFECT)
+        VM._DECODER, VM._DECODER_DEFECT = False, "No module named 'capstone'"
+        report = self.absorb()
+        self.assertRefused(report)
+        self.assertIn("ARM decoder unavailable, so nothing matched may leave: "
+                      "No module named 'capstone'", report["reasons"])
+
+    def test_a_decoder_that_loads_leaves_no_reason_behind(self):
+        # The other answer, so the assertion above is not vacuous: with the decoder
+        # available the absorption is allowed and no decoder reason is emitted.
+        report = self.absorb()
+        self.assertEqual(report["reasons"], [])
+        self.assertFalse([r for r in report["reasons"] if "ARM decoder" in r])
+
+
+class DecoderDependencies(unittest.TestCase):
+    """`tools/evidence_rom.py` must import when pyyaml is absent.
+
+    validate_merge imports that module for exactly one function --
+    `is_unconditional_return`, which reads a capstone instruction and never touches
+    yaml. evidence_rom used to `import yaml` at module scope and `sys.exit` when it
+    was missing, and `_arm_decoder` catches SystemExit, so a box carrying capstone
+    and not pyyaml lost the matched-loss exception without saying a word.
+    """
+
+    SHIM = "import sys" + chr(10) + 'sys.modules["yaml"] = None' + chr(10)
+
+    def test_evidence_rom_imports_without_pyyaml(self):
+        tools = str(pathlib.Path(VM.__file__).resolve().parent)
+        with tempfile.TemporaryDirectory() as tmp:
+            pathlib.Path(tmp, "sitecustomize.py").write_text(self.SHIM,
+                                                             encoding="utf-8")
+            probe = subprocess.run(
+                [sys.executable, "-c",
+                 "import sys; sys.path.insert(0, sys.argv[1]); import evidence_rom; "
+                 "print(evidence_rom.is_unconditional_return.__name__)", tools],
+                env=dict(os.environ, PYTHONPATH=tmp), capture_output=True, text=True)
+        # The claim under test, and it holds whether or not capstone is installed.
+        self.assertNotIn("pyyaml", probe.stderr)
+        self.assertNotIn("pyyaml", probe.stdout)
+        try:
+            import capstone  # noqa: F401
+        except ImportError:
+            return
+        # With capstone present nothing stands between the import and the function.
+        self.assertEqual(probe.returncode, 0, probe.stderr)
+        self.assertEqual(probe.stdout.strip(), "is_unconditional_return")
+
 
 class DataLeadingOverlayImageBase(unittest.TestCase):
     """The overlay word reader, on an overlay whose first symbol is DATA.

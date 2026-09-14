@@ -425,15 +425,15 @@ HEADER_SHADOW = {
     # src/game/actors/d_a_ey_bm.cpp defines it `(char*)`. One register on the
     # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
     "_ZN8daEyBm_c10HurtPlayerEv": "decl_common.h",
-    # Lane RIDE-020E444C: decl_common.h:1461 declares func_ov002_020e3f90
-    # `(void)` while src/func_ov002_020e3f90.c defines it `(char*)`, and
-    # src/func_ov002_020e444c.c calls it through that `(void)` prototype with
-    # no argument because on ARM r0 still holds the Player (0x020e4454
-    # `mov r4,r0` / 0x020e4458 `bl 0x020e3f90`). Hiding the header's
-    # declaration here lets REG_RIDE_ARG below hand the callee the receiver
-    # the ROM rode through r0. Retires
-    # port/unmatched/func_ov002_020e444c_hostcopy.c.
-    "func_ov002_020e444c": ("decl_common.h", ("func_ov002_020e3f90",)),
+    # DROPPED 2026-09-14 (main -> port sync, lane SYNC7), with the REG_RIDE_ARG
+    # row it existed to make room for, and for the same reason the
+    # func_ov102_0214b248 entry above was dropped: the collision is gone.
+    # decl_common.h:1404 now declares func_ov002_020e3f90 `(char*)`, which is
+    # what its definition says and what src/func_ov002_020e444c.c:30 calls, so
+    # the header no longer contradicts anything and hiding it left the name with
+    # no declaration at all (C3861 in the generated TU, which is how it was
+    # found). The old text is in git at d9ea8dda4.
+    # "func_ov002_020e444c": ("decl_common.h", ("func_ov002_020e3f90",)),
     # lane LINKMG, dScMgBase_c slots 30 and 29: decl_common.h:2352-2353 declare
     # both `(void*)` inside its extern "C" block while src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp
     # defines `(char*)` and src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp defines `(Obj*)`. One
@@ -550,6 +550,12 @@ EXTERN_C_DATA = {
     # opener is moved, not added, so the TU's brace count does not change.
     # CleanupResources further down the same TU releases the same seven and has
     # no declarations of its own, so it is covered by the same move.
+    # RE-DERIVED AGAIN 2026-09-14 (main -> port sync, lane SYNC7). One line of
+    # the eight moved: main retyped the state table from `extern char
+    # data_ov070_0212359c[];` to `extern daPropeller_Heyho_c::State
+    # data_ov070_0212359c;`. The move itself is unchanged and so is what it is
+    # for: a C++ type declared inside an extern "C" block still gets C linkage,
+    # which is the whole point of the row.
     "d_a_propeller_heyho": [
         ("extern SharedFilePtr data_ov070_02123530;\n"
          "extern SharedFilePtr data_ov070_02123520;\n"
@@ -558,7 +564,7 @@ EXTERN_C_DATA = {
          "extern SharedFilePtr data_ov070_02123528;\n"
          "extern SharedFilePtr data_ov070_02123508;\n"
          "extern SharedFilePtr data_ov070_02123500;\n"
-         "extern char data_ov070_0212359c[];\n"
+         "extern daPropeller_Heyho_c::State data_ov070_0212359c;\n"
          'extern "C" {\n',
          'extern "C" {\n'
          "extern SharedFilePtr data_ov070_02123530;\n"
@@ -568,7 +574,7 @@ EXTERN_C_DATA = {
          "extern SharedFilePtr data_ov070_02123528;\n"
          "extern SharedFilePtr data_ov070_02123508;\n"
          "extern SharedFilePtr data_ov070_02123500;\n"
-         "extern char data_ov070_0212359c[];\n"),
+         "extern daPropeller_Heyho_c::State data_ov070_0212359c;\n"),
     ],
 }
 
@@ -786,9 +792,16 @@ FALLS_OFF_RETURN = {
     # body into src/game/actors/d_a_propeller_heyho.cpp, so the key is the TU's
     # stem now; the patch string is unchanged and still matches exactly once in
     # main's own spelling of the body, which was checked before the key moved.
+    # RE-KEYED AGAIN 2026-09-14 (main -> port sync, lane SYNC7). Same body,
+    # same address (ov070 0x0211f0a4), same falls-off-the-end defect: main
+    # retyped the parameter from `void *c` with a local `dActor_c *a` to a
+    # typed `daPropeller_Heyho_c *c` and dropped the local, so the anchor's
+    # receiver is spelled `c` now. The string still matches exactly once in
+    # the TU; the file's other KillAndTrackInDeathTable call is the implicit
+    # one inside a void member and is not matched by it.
     "d_a_propeller_heyho": [
-        ("    a->KillAndTrackInDeathTable();\n}",
-         "    a->KillAndTrackInDeathTable();\n"
+        ("    c->KillAndTrackInDeathTable();\n}",
+         "    c->KillAndTrackInDeathTable();\n"
          "    return 1;  /* hostgen FALLS_OFF_RETURN: see the table's note */\n"
          "}"),
     ],
@@ -1803,14 +1816,23 @@ def arg_width_patch(text, sym):
 # five. A row that patches the TU's OWN declaration -- which every row added
 # below does -- needs no injection at all and gets none.
 REG_RIDE_ARG_DECL = {
-    "func_ov002_020e444c": 'extern "C" int func_ov002_020e3f90(char *);\n',
+    # DROPPED 2026-09-14 with its patch below (main -> port sync, lane SYNC7).
 }
 REG_RIDE_ARG = {
-    "func_ov002_020e444c": [
-        ("    if (func_ov002_020e3f90() == 0) {",
-         "    if (func_ov002_020e3f90(c) == 0) {  /* hostgen REG_RIDE_ARG: "
-         "ARM r0 still held c at the ROM's bl, see the table */"),
-    ],
+    # DROPPED 2026-09-14 (main -> port sync, lane SYNC7), reason gone rather
+    # than moved. This row existed because the matched C spelled the call with
+    # empty parentheses and relied on ARM r0 still holding the player across
+    # the branch. main's commit 826d762a0, "func_ov002_020e3f90 takes
+    # the player it works on: shared declaration and its caller", gave the
+    # shared declaration in include/decl_common.h:1404 the parameter and
+    # rewrote the one call site, so src/func_ov002_020e444c.c:30 now reads
+    # `if (func_ov002_020e3f90(c) == 0) {` on its own. The patch text stopped
+    # matching in this merge, which is the tool saying so out loud, and the
+    # injected declaration would now be a second, identical declaration.
+    # "func_ov002_020e444c": [
+    #     ("    if (func_ov002_020e3f90() == 0) {",
+    #      "    if (func_ov002_020e3f90(c) == 0) {"),
+    # ],
     # ------------------------------------------------------------------
     # Run link100, lane SEAT6, batch B6. Four more of the same shape, each
     # patching the DECLARATION the TU itself carries plus the call sites that
@@ -1898,21 +1920,25 @@ REG_RIDE_ARG = {
     # declaration and the call are each wrapped over two lines there, which
     # the old strings were not -- and apply_patches hard-errors if either
     # stops matching.
-    "d_a_bg_snwmn": [
-        ("extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(\n"
-         "    void *modelFile, void *textureFile);",
-         "extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(\n"
-         "    void *self, void *modelFile, void *textureFile);"
-         "  /* hostgen REG_RIDE_ARG: the third register rides through, see "
-         "the table */"),
-        ("    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(\n"
-         "        (void *)data_ov072_02122c48[1], "
-         "(void *)data_ov072_02122c50[1]);",
-         "    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(\n"
-         "        (void *)data_ov072_02122c48[1], "
-         "(void *)data_ov072_02122c50[1],\n"
-         "        (void *)data_ov072_02122c50[1]);"),
-    ],
+    # DROPPED 2026-09-14 (main -> port sync, lane SYNC7). The anchor is gone,
+    # not moved: this row rewrote a FLAT two-argument declaration and its one
+    # call into a three-argument one, and main has since given the class a
+    # real header. include/TextureSequence.h:75 declares
+    # `static void Prepare(BMD_File &model, BTP_File &animFile);` with a
+    # comment that says "Prepare is static, for the reason set out below", and
+    # src/game/actors/d_a_bg_snwmn.cpp:106 calls it
+    # `TextureSequence::Prepare(**bmd, **btp)`. There is no flat declaration
+    # left in the TU to widen.
+    #
+    # WHAT THAT COSTS IS NOT NOTHING, and it is recorded rather than patched
+    # here. The ROM body is a method and consumes three ARM registers; the
+    # port's face takes three and dereferences the third. A two-argument
+    # static call cannot feed it, so the ov072 snowman site is now the same
+    # open question as every other C++-spelled Prepare caller main has, and
+    # closing it means teaching hostgen to rewrite a MEMBER call into the flat
+    # three-argument one, which is lane HOSTGEN4's rule to write and not a row
+    # in this table. out/SYNC7/bugs.md carries it.
+    # "d_a_bg_snwmn": [ ... the two patches, in git history at d9ea8dda4 ... ],
     # ADDED 2026-09-13 (main -> port sync, lane SYNC6), and it retires
     # port/unmatched/Player_ReleaseHeldDispatch.cpp, which was this whole body
     # transcribed to change one call.
@@ -1986,8 +2012,20 @@ def reg_ride_arg_patch(text, sym):
 # on the wall.
 ZTV_C_LINKAGE = {
     "daBmb_c": [("int", "_ZTV7daBmb_c")],
-    "d_a_ey_bm": [("int", "_ZTV8daEyBm_c")],
-    "d_a_mc_flag": [("int", "_ZTV10daMcFlag_c")],
+    # DROPPED 2026-09-14 (main -> port sync, lane SYNC7), reason gone rather
+    # than moved, and the same reason for both. Lane HOSTGEN3 wrote these two
+    # rows the day before because each TU stored its own table by name, and
+    # MSVC spelled that reference decorated, which no /alternatename can bind.
+    # main's cleanup of both classes replaced the raw store with a real
+    # constructor call (daEyBm_c_classInit is `return new daEyBm_c();` now),
+    # so neither TU names its vtable symbol at all: outside decl_common.h no
+    # file under src/ or include/ mentions _ZTV8daEyBm_c or _ZTV10daMcFlag_c,
+    # and hostgen hard-errors on a row whose name is absent rather than write
+    # a declaration nothing uses. What those two classes dispatch through is
+    # MSVC's own vtable now rather than the port's hosted array, which is the
+    # vptr address-point question and is lane HOSTGEN4's work, not this row's.
+    # "d_a_ey_bm": [("int", "_ZTV8daEyBm_c")],
+    # "d_a_mc_flag": [("int", "_ZTV10daMcFlag_c")],
 }
 
 

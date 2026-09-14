@@ -4,8 +4,9 @@
 
 /* dScMgTeresa_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py (no
    RTTI record names it as a base). Own vtable slots: 0 (InitResources),
-   6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 20 (Virtual50), plus slot 34,
-   still a raw extern "C" helper.  Slot 20 IS declared now: dScMgBase_c
+   6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (OnYoshiTryEat),
+   20 (Virtual50) and 34 (Virtual88). These overrides are declared members.
+   Slot 20 is declared here because dScMgBase_c
    declares it, so leaving it out here would put the BASE's body in this
    class's slot 20 where the cartridge holds its own.  The body is a bare
    FreeGfxSlotsById(8) thunk that never reads `this`, which costs nothing --
@@ -34,7 +35,7 @@ struct dScMgTeresa_c : dScMgBase_c {
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  Virtual50();                          /* slot 20 */
+    virtual void Virtual50();                          /* slot 20 */
     virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
     u8  pad_4660[0x588];

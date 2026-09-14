@@ -1,19 +1,56 @@
 //cpp
-// NONMATCHING (TERMINAL-FLOOR): functionally-verified C at the proven compiler floor.
-// func_02009e70 @ 0x02009e70 (arm9, size 0x109c). 96 words diverge, ALL register-identity
-// swaps (88) or same-multiset reorderings (8): zero wrong opcodes, immediates, or branches,
-// semantics verified instruction-by-instruction 2026-08-01. Eight clusters, every one a
-// coloring/scheduling build delta; every source axis is closed (notes 6ay, DB row has the
-// full closed-axis list). Not byte-matchable without the NITRO V0.5-V0.6.1 compiler.
-// For recomp/port purposes this file is complete: the compiled code is functionally
-// identical to the ROM, differing only in register names and instruction order.
-// 2026-09-12 (run link100 wave 7, lane FLOORS/BANK): the L0() u64-mask launder
-// below was audited and is DEAD under 2004/b56 -- redefining it to a plain
-// identity leaves the function byte-identical at the same 96-word divergence
-// (tools/match.py --c src/func_02009e70.cpp --func func_02009e70 --addr
-// 0x02009e70 --size 0x109c --module arm9 --version 2004/b56, 96 MISMATCH both
-// before and after). Kept as a no-op macro rather than inlined at every call
-// site so the historical diff stays reviewable.
+// NONMATCHING: functionally-verified C, 72 of 1063 words diverge (was 96).
+// func_02009e70 @ 0x02009e70 (arm9, size 0x109c). Size exact; every opcode,
+// immediate, branch target and pool word is right. The residue is register
+// identity plus nine scheduling words: tools/wallcrack.py tags 63 regperm and
+// 9 SCHED, and the semantics were verified instruction by instruction (2026-08-01).
+// For recomp/port purposes the file is complete: the compiled code is
+// functionally identical to the ROM, differing only in register names and
+// instruction order.
+//
+// 2026-09-13 (run link100 crack wave 9, lane CRK-M) 96 -> 72, two source levers:
+//   * the file's own `#pragma opt_common_subs off` was a 14-word REGRESSION and
+//     is gone. Deleting it closes the whole 17-word table-lookup + FXMUL cluster
+//     at +0xa44..+0xaa4 that the near-miss DB called "RC4, the LARGEST, the one
+//     cluster with residual source-lever hope". Found by sweeping the full
+//     246-name verified pragma vocabulary at on and off (493 compiles).
+//   * `t0 = FXMUL(sp28, sp30)` instead of `FXMUL(sp30, sp28)`: the ROM wants
+//     sp28 as the smull Rm operand. Closes 10 of the 13 words at +0xe8c..+0xec4
+//     (notes 6cb lever 2, commutative operand transposition).
+// What is left, and what it is: 52 of the 72 words hang off ONE web exchange --
+// the ROM colours the mode-flags word r5 and the func_020093f4 distance limit sl,
+// this build does the reverse -- and every later cluster (the sp4c pair at
+// +0xc90, the ground height at +0xd6c..+0xdf0, the sqrt chain at +0xb38, the
+// sp28 load at +0xe8c, the +0xef8/+0xf08/+0xf18 adds) falls out of it. The
+// remaining 20 are the sp10 store interleave (+0x4ac, 6w), the self+0x100
+// materialisation schedule (+0x618, 12w) and the +0xfd4 zero temp (2w).
+// The exchange does not move on any source axis measured. Lane CRK-M swept the
+// radius-1 declaration rank x type-name neighbourhood (166 cells, twice), 20
+// random declaration orders, the pragma vocabulary (twice), 6cd dead preamble
+// stores at four positions x eleven locals, 6cb block-depth naming, 6ce pool-
+// address launders, 21 commutative transpositions and 2100 random product draws
+// over all of those jointly. Lane CRK2-M then swept, at this 72 base and scoring
+// every cell on the WHOLE function region by region, about 1,470 further cells:
+// the COMPLETE sl x r5 declaration rank cross product (156, not just radius 1),
+// that product crossed with seven equal-width type names on each of the two
+// declarations (588, the joint 6cc axis), the 246-name pragma vocabulary at on
+// and off on top of this base (492), the birth ORDER of the three sp1c loads
+// crossed with the sb initialiser's position (24) and the three FXMULC pair
+// orders (7), the limit web's callee return type, block-depth nesting of each
+// declaration, the `register` storage class, nine disjoint-local merges that
+// relieve pressure by one, dead stores at three positions inside the f20 web,
+// the flags table's pool-address launders and index spellings, sba/t1 width
+// respellings, and comparison and mask operand transpositions at every use site
+// of both webs. R01 reads exactly 4 in every one of those cells that keeps the
+// schedule; no cell anywhere reads below 72. Splitting or regrouping the webs
+// adds one live range and shifts EVERY register up by one (273-297 words), so
+// the pressure is saturated at thirteen locals. All 25 installed compiler builds
+// were swept: 2004/b56 is the only one within reach (72); every other build
+// fails the function outright. Details in the lanes' attempts.txt.
+//
+// L0() below was a u64-mask launder (`& 0xFFFFFFFFFFFFFFFFLL` through a long long
+// round trip) that lane BANK measured dead under 2004/b56; it is kept as a no-op
+// macro rather than inlined at every call site so the history stays reviewable.
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
 
@@ -94,15 +131,10 @@ extern struct CamMode data_020874cc;
 
 static inline int CheckMode(void) { return data_0209f2d8 == 1; }
 
-// L0() was a u64-mask launder (`& 0xFFFFFFFFFFFFFFFFLL` through a long long round
-// trip); dead under 2004/b56, run link100 wave 7 lane BANK: identity vs the launder
-// re-measures byte-identical at 96 (see tools/match.py output pasted in the PR).
-// Kept as a macro (not inlined at each call site) so the diff stays reviewable.
 #define L0(p) (p)
 #define FXMUL(a, b) ((s32)((((s64)(a)) * (b) + 0x800) >> 12))
 #define FXMULC(a, b) ((s32)((((s64)(a)) * (s64)(b) + 0x800) >> 12))
 
-#pragma opt_common_subs off
 s32 func_02009e70(char *self)
 {
     s32 sp04;
@@ -491,7 +523,7 @@ L_AAD0:
     if (sp1c == &data_0208706c && sp34.y < 0) t0 = 0xa49;
     else t0 = sp2c;
     r6 = FXMUL(sp28, t0);
-    t0 = FXMUL(sp30, sp28);
+    t0 = FXMUL(sp28, sp30);
     if (sp40.y < r6) r7h = *(s32 *)(self + 0x84) + r6;
     else if (sp40.y > t0) r7h = *(s32 *)(self + 0x84) + t0;
     if (data_0209f2f8 == 0x26) {

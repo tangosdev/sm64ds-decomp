@@ -10,8 +10,6 @@ extern "C" {
 
 void SaveData::SetDefaultValuesMg(MinigameSaveData * mg_)
 {
-    void* mg = (void*)mg_;
-
-  func_0205a588(((void*)this), 0, 0x2e4);
-  *(int*)((void*)this) = 0x30303035;
+  func_0205a588(((void*)mg_), 0, 0x2e4);
+  *(int*)((void*)mg_) = 0x30303035;
 }

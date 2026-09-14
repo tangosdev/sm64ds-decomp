@@ -1,16 +1,15 @@
 //cpp
 #include "dScMg3DEsp_c.h"
 // @symbol _ZN12dScMg3DEsp_c9Virtual50Ev
-// recovered name: dScMg3DEsp_c_Virtual50
-/* recovered: renamed to Class_Method */
-/* dScMg3DEsp_c::Virtual50 - recovered from vtable slot identity */
+/* Minigame slot 20; Virtual50 is a placeholder, not an original name.
+   The reconstructed void contract is documented in dScMgBase_c.h. */
 /* _ZN12dScMg3DEsp_c9Virtual50Ev at 0x020e9c10 - thunk: FreeGfxSlotsById(8) */
 
 extern "C" {
-extern int FreeGfxSlotsById(int a);
+extern void FreeGfxSlotsById(int a);
 }
 
-int dScMg3DEsp_c::Virtual50()
+void dScMg3DEsp_c::Virtual50()
 {
-    return FreeGfxSlotsById(8);
+    FreeGfxSlotsById(8);
 }

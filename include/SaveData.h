@@ -41,8 +41,14 @@ struct SaveData {
     u8  unk_042;            /* 0x042 */
 #ifdef __cplusplus
     /* methods */
-    void SetDefaultValues(FileSaveData * fsd_);
-    void SetDefaultValuesMg(MinigameSaveData * mg_);
+
+    /* Static, like the rest: both ROM bodies take one pointer in r0 and never a
+       `this`. They were declared non-static here, with the r0 pointer modelled as
+       `this` and the declared parameter left unread; the mangled names, the ROM
+       bodies and every caller all say otherwise, and both bodies reproduce byte
+       for byte with the parameter spelled honestly. */
+    static void SetDefaultValues(FileSaveData * fsd_);
+    static void SetDefaultValuesMg(MinigameSaveData * mg_);
 
     /* Static: the ROM bodies take no `this` and reach the global instance at
        0x0209caa0 directly. Declared here so the compiler mangles the names

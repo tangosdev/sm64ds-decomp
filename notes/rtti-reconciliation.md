@@ -6,10 +6,10 @@ comparison is `tools/rtti_reconcile.py`. This note is the result and the evidenc
 Most of this game was compiled with RTTI on, so the ROM stores each polymorphic class's
 original name and a pointer to its base's record. `notes/model-rtti-names.md` worked out how
 to read a record and documented 11 classes. There are **429**.
-
+```sh
     python tools/rtti_extract.py --report --check     # -> build/rtti.json
     python tools/rtti_reconcile.py --report           # -> build/rtti_reconcile.json
-
+```
 ---
 
 ## 1. The census
@@ -43,7 +43,7 @@ distinguishing framework from game code.
 ### Four traps, each of which produced a wrong answer first
 
 **Scanning `.text`.** `type_info`'s own constructors carry the three record vtable addresses
-as pool literals. A whole-image scan yields 7 arm9 hits that are code. Sections come from
+as pool literals. A whole-image scan yields 7 *arm9* hits that are code. Sections come from
 `delinks.txt`; only rodata/data are scanned.
 
 **Filtering names by first character.** An early draft accepted `\d`, `N` and `K` and so
@@ -53,22 +53,21 @@ expected; it was the filter. The census was 428/412/413 with a plausible-soundin
 attached to the missing one.
 
 **Bare addresses.** Overlays share address space and two addresses host two different
-classes: `0x02114868` is `daObjWanwanShutter_c` (ov014) *and* `daObjBk_Fall_Block_c` (ov015);
-`0x021123fc` is `daObjTtWater_c` (ov033) *and* `daObjKm3_Kuruma_c` (ov047). Record identity
+classes: `0x02114868` is `daObjWanwanShutter_c` ([ov014](../config/arm9/overlays/ov014/symbols.txt)) *and* `daObjBk_Fall_Block_c` ([ov015](../config/arm9/overlays/ov015/symbols.txt)). `0x021123fc` is `daObjTtWater_c` ([ov033](../config/arm9/overlays/ov033/symbols.txt)) *and* `daObjKm3_Kuruma_c` ([ov047](../config/arm9/overlays/ov047/symbols.txt)). Record identity
 is `(module, addr)`.
 
 **Assuming edges stay inside an overlay.** **183 of 413 edges cross overlay boundaries** —
-every ov006 `dScMg*_c` scene derives from `dScMgBase_c` in ov004. A resolver that checks the
-owning overlay and then arm9 resolves 230 of 413. Order is: own module, arm9, then whatever
+every [ov006](../config/arm9/overlays/ov006/symbols.txt) `dScMg*_c` scene derives from `dScMgBase_c` in [ov004](../config/arm9/overlays/ov004/symbols.txt). A resolver that checks the
+owning overlay and then [arm9](../config/arm9/symbols.txt) resolves 230 of 413. Order is: own module, [arm9](../config/arm9/symbols.txt), then whatever
 `tools/overlay_residency.py` leaves, then say so.
 
 ## 2. Reconciliation with `evidence_hierarchy.py`
 
 The two sides do not share a vocabulary — the ROM says `dActor_c`, the tree says `Actor` —
 so the join is the vtable address, which both can name:
-
+```sh
     record -> vtable VA -> config/**/symbols.txt -> _ZTV<TreeName>
-
+```
 That alone is not enough, and the way it fails is instructive. The first run reported **60
 disagreements**. Most were not disagreements: the tree calls `dEnemyBase_c` "Enemy", but
 `dEnemyBase_c`'s vtable is an unnamed `data_` placeholder, so the join could not see that the
@@ -143,7 +142,7 @@ Each row: the tree named an ancestor and skipped the class in between.
 | `daDsnBase_c` | 1 | Platform |
 | `daObjKuruma_c` | 1 | Platform |
 | `daObjUkiyuka_c` | 1 | Platform |
-
+```sh
     daDsn_c (Thwomp)                 : daDsnBase_c        tree said Platform
     daObjKm1_Dorifu_c                : daObjDorifu_c      tree said Platform
     daObjKm3_Dorifu_c                : daObjDorifu_c      tree said Platform
@@ -162,7 +161,7 @@ Each row: the tree named an ancestor and skipped the class in between.
     daObjFl_Ukiyuka_c                : daObjUkiyuka_c     tree said Platform
     daDonketu_c      (Bully)         : daOts_c            tree said Enemy
     daBDonketu_c     (BigBully)      : daOts_c            tree said Enemy
-
+```
 This is exactly the failure mode `evidence_hierarchy.py`'s own docstring predicts — shims
 "routinely flatten the chain" because an intermediate base whose destructor was inlined away
 leaves no call to observe. RTTI sees it anyway, because the record is emitted whether or not
@@ -176,10 +175,10 @@ Ten of those missing parents are now named. Three rickshaw platforms sharing `da
 are three flat headers that each re-derived the same fields.
 
 ## 4. The 2 unproven, and why they are not disagreements
-
+```sh
     dBgCh_SphCrr  tree:SphereClsn   ROM bases: dBgCh, dBgPi, dM3dGSph   tree said BgCh
     dBgCh_Lin     tree:RaycastLine  ROM bases: dBgCh, dBgPi, dM3dGLin   tree said BgCh
-
+```
 Both are `__vmi_class_type_info` with three bases. `include/dBgCh.h` exists, but `dBgCh`'s
 vtable (`0x020991d8`) is an unnamed `data_` placeholder, so no evidence chain reaches from
 the string "BgCh" to the record `dBgCh`. Calling that a disagreement would be a false
@@ -195,10 +194,10 @@ tree models one.
 
 `tools/rtti_symbols.py` renamed the anonymous `data_<addr>` placeholders sitting on
 those records and their name strings to the Itanium symbols they actually are:
-
+```sh
     record at 0x02086d70  ->  _ZTI7fBase_c
     string at 0x02086e60  ->  _ZTS7fBase_c
-
+```
 The mangled suffix is the raw string the ROM stores, verbatim -- that string *is* the
 Itanium type name, so `_ZTS` + it is correct with no re-mangling, and nested names and
 the `St` substitution fall out for free.
@@ -225,29 +224,27 @@ matched source is deferred, because renaming it means rewriting those sources, w
 drags every referencing file into the PR and turns `validate` red even though the rename
 is byte-safe.
 
-`0x02113a60` left this list when ov036/daObjRcBuranko_c was promoted to a single TU: by
+`0x02113a60` left this list when [ov036](../config/arm9/overlays/ov036/symbols.txt)/[daObjRcBuranko_c](../src/game/actors/d_a_obj_rc_buranko.cpp) was promoted to a single TU: by
 then nothing in `src/` referenced the coined spelling at all, its `include/decl_common.h`
 declaration was dead, and the promoted TU's manifest needs the cartridge's own `_ZTS`
 name to bank the record as `deadstrip-data`. It is now
-`_ZTS16daObjRcBuranko_c` in `config/arm9/overlays/ov036/symbols.txt`.
+`_ZTS16daObjRcBuranko_c` in [config/arm9/overlays/ov036/symbols.txt](../config/arm9/overlays/ov036/symbols.txt).
 
 For some of the rest, deferral is more than procedural -- renaming would assert
-something false. `0x0211396c` exists in **both** ov018 and ov032. The file
-`src/__sinit_ov018_02112c80.cpp` -- an ov018 file -- refers to it by ov032's spelling,
-`data_ov032_0211396c`. Renaming that to `_ZTS14daObjTdWater_c` would state that an ov018
-reference points at ov032's typeinfo string. It may; nothing here proves it. This is
-`notes/overlay-ambiguous-references.md` territory and wants
-`tools/overlay_residency.py`, one address at a time.
+something false. `0x0211396c` exists in **both** [ov018](../config/arm9/overlays/ov018/symbols.txt) and [ov032](../config/arm9/overlays/ov032/symbols.txt). The file [src/__sinit_ov018_02112c80.cpp](../src/__sinit_ov018_02112c80.cpp) -- an [ov018](../config/arm9/overlays/ov018/symbols.txt) file -- refers to it by [ov032](../config/arm9/overlays/ov032/symbols.txt)'s spelling,
+[data_ov032_0211396c](../config/arm9/overlays/ov032/symbols.txt). Renaming that to `_ZTS14daObjTdWater_c` would state that an [ov018](../config/arm9/overlays/ov018/symbols.txt) reference points at [ov032](../config/arm9/overlays/ov032/symbols.txt)'s typeinfo string. It may; nothing here proves it. This is [notes/overlay-ambiguous-references.md](../notes/overlay-ambiguous-references.md) territory and wants [tools/overlay_residency.py](../tools/overlay_residency.py), one address at a time.
 
-    data_ov032_0211396c  ov032  _ZTS14daObjTdWater_c    <- ambiguous with ov018
-    data_ov033_0211233c  ov033  _ZTI13daObjTtFuta_c
-    data_ov036_02113c00  ov036  _ZTS14daObjRc_Hane_c    <- include/decl_common.h
-    data_ov036_02113cb4  ov036  _ZTI16daObjRc_Tikuwa_c
-    data_ov036_02113cc0  ov036  _ZTS16daObjRc_Tikuwa_c
-    data_ov043_02112424  ov043  _ZTS17daObjKm1_Kuruma_c <- include/decl_common.h
-    data_ov045_02112cb0  ov045  _ZTI16daObjKm2_Agaru_c
-    data_ov052_021125b8  ov052  _ZTS14daObjEmmYuka_c
-    data_ov090_021343b0  ov090  _ZTS9daShark_c
+|Adresss|Overlay|Symbol|Note|
+|---|---|---|---|
+| data_ov032_0211396c|  [ov032](../config/arm9/overlays/ov032/symbols.txt)|  _ZTS14daObjTdWater_c|    <- ambiguous with ov018|
+| data_ov033_0211233c|  [ov033](../config/arm9/overlays/ov033/symbols.txt)|  _ZTI13daObjTtFuta_c|
+| data_ov036_02113c00|  [ov036](../config/arm9/overlays/ov036/symbols.txt)|  _ZTS14daObjRc_Hane_c|    <- include/decl_common.h|
+| data_ov036_02113cb4|  [ov036](../config/arm9/overlays/ov036/symbols.txt)|  _ZTI16daObjRc_Tikuwa_c|
+| data_ov036_02113cc0|  [ov036](../config/arm9/overlays/ov036/symbols.txt)|  _ZTS16daObjRc_Tikuwa_c|
+| data_ov043_02112424|  [ov043](../config/arm9/overlays/ov043/symbols.txt)|  _ZTS17daObjKm1_Kuruma_c| <- include/decl_common.h|
+| data_ov045_02112cb0|  [ov045](../config/arm9/overlays/ov045/symbols.txt)|  _ZTI16daObjKm2_Agaru_c|
+| data_ov052_021125b8|  [ov052](../config/arm9/overlays/ov052/symbols.txt)|  _ZTS14daObjEmmYuka_c|
+| data_ov090_021343b0|  [ov090](../config/arm9/overlays/ov090/symbols.txt)|  _ZTS9daShark_c|
 
 Two of the remaining nine touch `include/decl_common.h`, which has ~1780 consumers -- over the ~200-consumer
 threshold at which AGENTS.md refuses auto-validation. Those need human review regardless
@@ -255,11 +252,11 @@ of the ambiguity question.
 
 References from `notes/` and `progress/` were checked and deliberately ignored: the
 training corpora and worklists mention these names, but they are not build inputs.
-
+```sh
     python tools/rtti_symbols.py --report      # what would change, and the deferrals
     python tools/rtti_symbols.py --apply
     python tools/rtti_symbols.py --revert --apply
-
+```
 The undo reconstructs its map from `build/rtti.json` plus dsd's placeholder naming
 convention rather than from the tree. The first version derived it from `plan()`, which
 finds work by looking for `data_` placeholders -- so after `--apply` there were none, and
@@ -279,13 +276,13 @@ ancestor already owns, and none is attributable to the intermediate.**
 
 The `daObjDorifu_c` family is the clean case. Its three descendants' headers are
 **byte-identical**:
-
+```c
     daObjRc_Guruguru_c  |  daObjKm1_Kuruma_c  |  daObjKm3_Dorifu_c
         u8 pad_000[0xd4];
         u8 mModel;              /* 0x0d4 */
         u8 pad_0d5[0x4f];
         u8 mMovingMeshCollider; /* 0x124 */
-
+```
 which looks like strong corroboration of a shared base until you check
 `include/dBgActor_c.h:73` and `:74` — which already declare `mModel` at `0x0d4` and
 `mMeshCollider` at `0x124`.
@@ -337,8 +334,8 @@ confidence dropped to low, reporting a manufactured conflict. Only the offset-0 
 emitted now; the 8 secondary bases are counted, not represented.
 
 **A module-key mismatch dropped every overlay.** `load_symbols` keys modules by path
-relative to `config/` (`arm9/overlays/ov002`); `rtti.json` names them as dsd does
-(`ov002`). Keying on the raw string matched arm9 only — 31 classes named instead of 255,
+relative to `config/` ([arm9/overlays/ov002](../config/arm9/overlays/ov002/symbols.txt)); `rtti.json` names them as dsd does
+([ov002](../config/arm9/overlays/ov002/symbols.txt)). Keying on the raw string matched [arm9](../config/arm9/symbols.txt) only — 31 classes named instead of 255,
 and 18 usable edges instead of 168. The failure was silent and the smaller number looked
 entirely reasonable.
 
@@ -383,7 +380,7 @@ A method of class C can touch C's members and its ancestors', never a descendant
 `this`-relative offset in one of C's own overrides that no named ancestor declares belongs
 to C. Checked that no own-slot function is listed by a non-descendant class, so
 identical-code folding is not silently reattributing anything.
-
+```c
     daObjDorifu_c    4 methods    0xdc8 u8   0xdc9 u8   0xdca u8   0xdcb u8
     daObjFallBlock_c 6 methods    14 fields, 0x320..0x344 (see the header)
     daObjGuragura_c  4 methods    0x330 s32  0x334 s32  0x338 s32  0x33c s32  0x34c u8
@@ -394,7 +391,7 @@ identical-code folding is not silently reattributing anything.
     daDsnBase_c      4 methods    (none)
     daObjMaruta_c    4 methods    (none)
     daOts_c         11 methods    (none)
-
+```
 > **Correction.** `daObjSwdoor_c` read **12** own methods and four fields when this was
 > written, and both numbers came from a defect in the walk that produced them, not from
 > the ROM. `rtti_vtables.py` ended a table at "a null whose successor is a typeinfo
@@ -432,11 +429,11 @@ tree can currently see that they are wrong.
 
 Four classes were initially unreachable because they appeared to have no vtable at all.
 They have one -- **in a different overlay from their typeinfo**. `daDsnBase_c`'s record is
-in ov025 and its vtable is in ov091; `daObjFallBlock_c` ov015/ov098; `daObjMaruta_c`
-ov022/ov080; `daOts_c` ov027/ov064. Those overlay pairs occupy non-overlapping address
+in [ov025](../config/arm9/overlays/ov025/symbols.txt) and its vtable is in [ov091](../config/arm9/overlays/ov091/symbols.txt); `daObjFallBlock_c` [ov015](../config/arm9/overlays/ov015/symbols.txt)/[ov098](../config/arm9/overlays/ov098/symbols.txt); `daObjMaruta_c`
+[ov022](../config/arm9/overlays/ov022/symbols.txt)/[ov080](../config/arm9/overlays/ov080/symbols.txt); `daOts_c` [ov027](../config/arm9/overlays/ov027/symbols.txt)/[ov064](../config/arm9/overlays/ov064/symbols.txt). Those overlay pairs occupy non-overlapping address
 ranges, so both can be resident at once, and in each case exactly one module hosts a
 record at the address and `tools/overlay_residency.py` permits the pairing. Looking only
-in the record's own module and arm9 left all four with no vtable, which read downstream as
+in the record's own module and [arm9](../config/arm9/symbols.txt) left all four with no vtable, which read downstream as
 "this class has no methods" -- the opposite of the truth. `records_without_a_vtable` drops
 7 -> 3, and the 8 genuinely ambiguous cross-module cases are refused rather than guessed.
 
@@ -488,7 +485,7 @@ They are **flat**, in the style of the 241 bannered headers, not inheriting C++ 
 A derived struct cannot place a field at an absolute offset: you would need `sizeof(base)`
 to compute the leading padding, and this pass does not know it. Padding from zero states
 only what was observed.
-
+```c
     struct daObjDorifu_c {
         u8  pad_000[0xdc8];
         u8  unk_dc8;            /* 0xdc8 */
@@ -496,7 +493,7 @@ only what was observed.
         u8  unk_dca;            /* 0xdca */
         u8  unk_dcb;            /* 0xdcb */
     };
-
+```
 Each also states the padding below its first field is **unobserved, not inherited** --
 `daObjDorifu_c`'s own destructor destroys a `Model[5]` at `0x320` and a `MeshCollider[5]`
 at `0x4b0`, both its own, well below its first named field at `0xdc8`. An earlier draft
@@ -528,16 +525,17 @@ four symbols in `config/**/symbols.txt` and `delinks.txt`, renaming the four `sr
 and repointing them at new `daOts_c.h` / `daDsnBase_c.h` headers left every source
 function still reproducing (10,670 / 0 mismatching) but dropped module fidelity to
 **104/106**: six vtable words built as zero where the ROM has a pointer.
-
-    ov025  0x0211385c  built 00000000  rom 021331b8
-    ov025  0x02113874  built 00000000  rom 02133210
-    ov091  0x02135180  built 00000000  rom 021331b8   <- _ZTV6Thwomp   slot 3
-    ov091  0x02135198  built 00000000  rom 02133210   <- _ZTV6Thwomp   slot 9
-    ov091  0x02135208  built 00000000  rom 021331b8   <- daDsnBase_c   slot 3
-    ov091  0x02135220  built 00000000  rom 02133210   <- daDsnBase_c   slot 9
+|Module|Address|Built|ROM|
+|---|---|---|---|
+|[ov025](../config/arm9/overlays/ov025/symbols.txt)|  0x0211385c|  built 00000000|  rom 021331b8|
+|[ov025](../config/arm9/overlays/ov025/symbols.txt)|  0x02113874|  built 00000000|  rom 02133210|
+|[ov091](../config/arm9/overlays/ov091/symbols.txt)|  0x02135180|  built 00000000|  rom 021331b8   <- _ZTV6Thwomp   slot 3|
+|[ov091](../config/arm9/overlays/ov091/symbols.txt)|  0x02135198|  built 00000000|  rom 02133210   <- _ZTV6Thwomp   slot 9|
+|[ov091](../config/arm9/overlays/ov091/symbols.txt)|  0x02135208|  built 00000000|  rom 021331b8   <- daDsnBase_c   slot 3|
+|[ov091](../config/arm9/overlays/ov091/symbols.txt)|  0x02135220|  built 00000000|  rom 02133210   <- daDsnBase_c   slot 9|
 
 The renamed functions compile and reproduce; what breaks is the *data* side — the vtable
-slots that reference them stop binding and emit zero. Note a third vtable in **ov025**
+slots that reference them stop binding and emit zero. Note a third vtable in **[ov025](../config/arm9/overlays/ov025/symbols.txt)**
 also references them, which the ownership analysis had not predicted.
 
 So the finding stands and the rename does not: how dsd binds a cross-module vtable slot to
@@ -559,7 +557,7 @@ The bug **suppressed** evidence rather than inverting it. A constant 4 matched n
 2-byte base nor a 2-byte derived, so the row fell to "cannot decide" instead of "confirms".
 Nothing was decided wrongly on it.
 
-It also retroactively confirms the change `notes/plan-base-headers.md` describes. Those six
+It also retroactively confirms the change [notes/plan-base-headers.md](../notes/plan-base-headers.md) describes. Those six
 declarations are now landed — `Enemy` reads `s16` at `0x94` and `s32` at `0xa8`/`0xac`/`0x10c`,
 not the `u8` markers the plan found — and with correct widths the source evidence backs every
 one of them: 9 rows at `0x94` all reading w2, and 8 more at the other five offsets, all
@@ -573,9 +571,9 @@ header carries a `u8` marker where the base declares a real type:
     Shark    @0xa4 vs Enemy: base s32, derived u8
 
 ## 11. The browsable reference
-
+```sh
     python tools/rtti_reference.py        # -> docs/class-reference.html
-
+```
 Every fact on that page except the glosses comes from `build/rtti.json`, so it cannot
 drift: run the extractor, run this, and the page is current by construction — or the
 extractor's `--check` gate refuses and there is no page. A hand-written page listing 429
@@ -589,19 +587,19 @@ That is not a theoretical preference. Everything this note records as a wrong fi
 nothing in the binary says what `Ukiyuka` means. 101 entries, each carrying a confidence
 that the page prints, so a settled Mario term reads differently from somebody's reading of
 a romaji fragment:
-
+```sh
     high    85   an established series name, or a common noun corroborated by what the
                  class demonstrably does
     medium  11   sound reading, indirect corroboration
     low      5   a starting point offered as a question, not an answer
-
+```
 188 of the 429 classes have at least one glossed name part. Unglossed parts are printed
 plainly rather than guessed at.
 
 Course codes are the interesting case. The glossary records only the *etymology*; the
 code → overlay → level **mapping** is joined at generation time from
 `symbols/overlay_actors.md`, which `tools/actor_names.py` derives from the ROM's own
-`ACTOR_SPAWN_TABLE`. So "Bk means Whomp's Fortress" is backed by ov015's actual actor list
+`ACTOR_SPAWN_TABLE`. So "Bk means Whomp's Fortress" is backed by [ov015](../config/arm9/overlays/ov015/symbols.txt)'s actual actor list
 rather than by assertion — and where only the mapping is solid and the two letters are not
 actually read (`Ki`, `Fl`, `Hm`, `Rc`, `Ct`), the entry says so and scores medium or low.
 

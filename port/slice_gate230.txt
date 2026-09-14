@@ -25,4 +25,8 @@
 # _ZTV9PushBlock 0x02109800), a different class that merely got dsd's
 # "PushBlock" name. The row this gate adds is PUSHABLE_BLOCK so the two do not
 # collide; the name is a diagnostic label, and the id is the fact.
-src/d_a_obj_pushblock.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/daObjPushblock_c.cpp (ov002 delinks, .text 0x020b910c..0x020b9148, one
+# absorbed range), which port/slice_gate224.txt:23 and port/slice_gate226.txt:31 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_pushblock.cpp

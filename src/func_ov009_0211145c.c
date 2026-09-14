@@ -35,6 +35,27 @@
  * The wall is that the outgoing 0x6a pins r0 before the store is scheduled; the sibling
  * func_ov009_021116ec colours the same constant r0 only because it has no call after the
  * stores to compete for it. Ordinary ARM, so NOT an asm primitive: this stays NONMATCHING.
+ *
+ * Re-measured 2026-09-13, run link100 lane CRK-O, 1,938 further cells, nothing under 3:
+ *   * 270 cells of notes 6cd (a dead assignment to t / nvel / s and to nineteen source
+ *     expressions, at five positions from the function body down into the spawn loop's
+ *     own preamble). Every cell byte-identical to the baseline.
+ *   * 1,280 cells of the joint axis of notes 6cc and 6ce: {both store addresses laundered
+ *     none/A/B/C} x {the pool constant named int / long / unsigned / unsigned long /
+ *     char* / inline in three spellings} x {the negation named, named once, or inline in
+ *     two spellings} x declaration order. Nothing below 3.
+ *   * 388 cells of notes 6o's ordering families: the outer guard as if / inverted else /
+ *     goto-skip / do-once, crossed with equal-arm ternaries on BOTH call arguments under
+ *     seven conditions and with pointer and unsigned spellings of each.
+ *   * 135 pragma cells, the full accepted 2004/b56 vocabulary in both directions, run as
+ *     REPLACEMENTS the way notes 6cj says to run them. All 3.
+ * MICRO-LAB (the mechanism, stated so the next lane does not re-derive it): in an isolated
+ * six-line function, 2004/b56 NEVER lets a pool constant reach r0 when r0 is also an
+ * outgoing argument holding a small immediate. Across {no preamble, one call, a loop, a
+ * call plus a loop, a guarded return} x {both addresses laundered or not} x {constant
+ * named or inline}, `mov r0,#0x6a` is emitted before the 0x168 store in all forty cells
+ * and the constant takes r2 or r3 every time. It only sinks behind the store when arg0
+ * stops being an immediate (a global read), which changes other bytes. That is the floor.
  */
 
 extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);

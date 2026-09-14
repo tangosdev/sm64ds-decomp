@@ -18,6 +18,8 @@
 #include "dBgActor_c.h"
 #include "Model.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daObjC1_Trap_c : dBgActor_c {
     Model mDoorModel;                 /* 0x320 */
     Matrix4x3 mDoorMat;               /* 0x370 */
@@ -47,7 +49,16 @@ struct daObjC1_Trap_c : dBgActor_c {
     void UpdateCollisionTransform();
     void UpdateModelTransform();
     void OnCollision(dActor_c &other);
+
+    /* Leaf operator new until fBase_c can declare it (#2570). unsigned long
+       is size_t on this ABI; unsigned int is illegal. */
+    static void *operator new(size_t size);
 };
+
+inline void *daObjC1_Trap_c::operator new(size_t size)
+{
+    return _ZN7fBase_cnwEj((unsigned)size);
+}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

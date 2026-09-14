@@ -2,7 +2,7 @@
 
 Measured on `origin/main` `2404691d8`, reproducible with `python tools/rtti_name_audit.py`.
 
-```
+```sh
 total _ZTV symbols in config    541
   RTTI name AGREES with ours    276
   RTTI name DISAGREES           259
@@ -19,11 +19,12 @@ Promoting a translation unit consolidates the class's RTTI, so the compiler emit
 `_ZTI<OurName>` and `_ZTS<OurName>`. The cartridge holds those records under the class's
 real name, at a different length, so no ROM symbol can license them. `tubuild` refuses:
 
-```
-HOMELESS     _ZTS8PoleLift  STB_LOPROC .data size=0xa
-HOMELESS     _ZTI8PoleLift  STB_LOPROC .data size=0xc
-COLLIDES-GAP _ZTV8PoleLift  STB_GLOBAL .data size=0x84 already at ov045:0x02112dbc
-```
+| Symbol | Type | Section | Size |
+|---|---|---|---|
+| HOMELESS     _ZTS8PoleLift|  STB_LOPROC| .data size=0xa |
+| HOMELESS     _ZTI8PoleLift|  STB_LOPROC| .data size=0xc |
+| COLLIDES-GAP _ZTV8PoleLift|  STB_GLOBAL| .data size=0x84 already at [ov045](../config/arm9/overlays/ov045/symbols.txt):0x02112dbc |
+
 
 `PoleLift` is `daObjKm2_Ami_Bou_c` in the ROM. This was found the expensive way, on
 [#2066](https://github.com/tangosdev/sm64ds-decomp/pull/2066): the destructor work was
@@ -47,7 +48,7 @@ Direct, and self-checking. From a `_ZTV` address `V`, the word at `V-4` is the t
 pointer; a `__si_class_type_info` record is `[vptr][name ptr][base ptr]`, so word 1 leads
 to the `_ZTS` string. That string is length-prefixed, so a correct read verifies itself:
 
-```
+```sh
 _ZTV8PoleLift @ 0x02112dbc            (ov045, base 0x021111a0)
   [V-8] offset-to-top = 0x00000000
   [V-4] typeinfo      = 0x02112d74
@@ -69,8 +70,8 @@ copy returned 265/543 instead of 259/541 -- six renames had landed and two `_ZTV
 were gone entirely.
 
 **Resolve each address in its own overlay first.** Many overlays share a base address --
-ov045, ov046 and ov047 are all at `0x021111a0` -- so a reader that picks an image by
-address, or that falls back to `arm9` first, silently reads a different overlay. The tool
+[ov045](../config/arm9/overlays/ov045/symbols.txt), [ov046](../config/arm9/overlays/ov046/symbols.txt) and [ov047](../config/arm9/overlays/ov047/symbols.txt) are all at `0x021111a0` -- so a reader that picks an image by
+address, or that falls back to [arm9](../config/arm9/symbols.txt) first, silently reads a different overlay. The tool
 takes the overlay from the path of the `symbols.txt` the symbol came from.
 
 **Use `extracted/arm9_dec.bin`.** `extracted/dsd/arm9/arm9.bin` is compressed and its
@@ -98,12 +99,12 @@ helpers, none of which touches RTTI. But the *promotion* half of that list is sp
 the agreeing side. Work it top-to-bottom expecting 41 promotions and 48 of them will fail
 at `tubuild`, each after a full TU reconstruction.
 
-The disagreements concentrate: ov002 has 35, `arm9` 23, ov064 12, ov022 9, ov029 8. An
-ov002 rename pass would unblock more promotions than any other single piece of work.
+The disagreements concentrate: [ov002](../config/arm9/overlays/ov002/symbols.txt) has 35, [arm9](../config/arm9/symbols.txt) 23, [ov064](../config/arm9/overlays/ov064/symbols.txt) 12, [ov022](../config/arm9/overlays/ov022/symbols.txt) 9, [ov029](../config/arm9/overlays/ov029/symbols.txt) 8. An
+[ov002](../config/arm9/overlays/ov002/symbols.txt) rename pass would unblock more promotions than any other single piece of work.
 
 ## Using it
 
-```
+```sh
 python tools/rtti_name_audit.py                  # summary, first 25 disagreements
 python tools/rtti_name_audit.py --all            # every disagreement
 python tools/rtti_name_audit.py --class PoleLift # one class, with the chain

@@ -356,15 +356,26 @@ def changed_paths(base, committed_only=False, repo=None, head="HEAD"):
     come back. Sources 2 and 3 are relative to the working tree by definition, so they
     are only consulted when ``head`` is the working tree's own HEAD.
 
-    Renames arrive as an add because ``-M`` is deliberately not passed -- a header that
-    moved still has to have its offsets agree.
+    A renamed header must arrive as an add at its new path -- a header that moved still
+    has to have its offsets agree, and its new path is the one a later run will check.
+    This used to say that happened by itself "because ``-M`` is deliberately not
+    passed", which is not how git works: ``diff.renames`` has defaulted to true since
+    git 2.9, so the rename was detected anyway, came back as ``R``, and the
+    ``--diff-filter=AM`` then dropped it. A pull request that did nothing but move
+    headers therefore resolved to an EMPTY work list -- and because the diff itself was
+    not empty, _resolve_changed took the ONE honest-empty exit and passed it, which is
+    the shape this gate's whole empty-list argument exists to keep apart from a real
+    pass. ``--no-renames`` is what actually buys the documented behaviour: the move
+    comes back as a delete of the old path (filtered out) and an add of the new one
+    (checked).
     """
-    commits, err = _git_lines(["diff", "--name-only", "--diff-filter=AM",
+    commits, err = _git_lines(["diff", "--name-only", "--diff-filter=AM", "--no-renames",
                                f"{base}...{head}"], repo)
     if err:
         return None, err
     if head == "HEAD":
-        dirty, err = _git_lines(["diff", "--name-only", "--diff-filter=AM", "HEAD"], repo)
+        dirty, err = _git_lines(["diff", "--name-only", "--diff-filter=AM",
+                                 "--no-renames", "HEAD"], repo)
         if err:
             return None, err
         untracked, err = _git_lines(["ls-files", "--others", "--exclude-standard"], repo)

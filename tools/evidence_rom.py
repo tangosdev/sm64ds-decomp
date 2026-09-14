@@ -33,10 +33,12 @@ try:
                               ARM_INS_STRH, ARM_INS_STRD)
 except ImportError:
     sys.exit("capstone not installed. Run: pip install capstone")
-try:
-    import yaml
-except ImportError:
-    sys.exit("pyyaml not installed. Run: pip install pyyaml")
+# pyyaml is imported in main(), where it is used, and NOT here. Importing it at module
+# scope made this module unimportable without it -- and tools/validate_merge.py imports
+# it only for `is_unconditional_return`, which reads a capstone instruction and never
+# touches yaml. On a box carrying capstone but not pyyaml that turned the matched-loss
+# exception off silently: `_arm_decoder` caught the SystemExit, condition (b) refused,
+# and the report said "lost 1 matched function(s)" naming nothing. See PR #2496.
 
 BANNER = "AUTO-GENERATED from matched-function evidence"
 MANGLE = re.compile(r"_ZN(\d+)([A-Za-z_][A-Za-z_0-9]*)")
@@ -185,6 +187,11 @@ def main():
     ap.add_argument("-o", "--out", default="build/evidence_rom.json")
     ap.add_argument("--report", action="store_true")
     args = ap.parse_args()
+
+    try:
+        import yaml
+    except ImportError:
+        sys.exit("pyyaml not installed. Run: pip install pyyaml")
 
     root = pathlib.Path(args.root).resolve()
     ext = pathlib.Path(args.extracted) if args.extracted else find_extracted(root)

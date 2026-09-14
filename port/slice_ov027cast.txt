@@ -77,7 +77,11 @@ src/__sinit_ov027_02112df8.cpp
 src/__sinit_ov027_02112f70.c
 src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp
 src/actors/daPgDfdr_c.cpp
-src/d_a_pg_dfdr.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daPgDfdr_c.cpp (ov027 delinks, .text 0x0211207c..0x021120c4, one
+# absorbed range), which port/slice_ov027cast.txt's own daPgDfdr_c.cpp row, port/slice_fold2.txt:249 and port/slice_unmatch2.txt:42 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_pg_dfdr.c
 src/_ZN21SnowmanBreathParticleD1Ev.cpp
 src/_ZN21SnowmanBreathParticle9HitPlayerEv.cpp
 src/_ZN21SnowmanBreathParticle12CheckSnowmanEv.cpp

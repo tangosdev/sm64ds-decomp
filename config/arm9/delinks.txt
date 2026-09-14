@@ -3434,6 +3434,10 @@ src/_ZN3OAM11GetObjWidthEii.cpp:
     complete
     .text start:0x02020980 end:0x02020994
 
+src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c:
+    complete
+    .text start:0x02020994 end:0x02021024
+
 src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c:
     complete
     .text start:0x02021024 end:0x020214a4
@@ -4208,6 +4212,10 @@ src/ResetInput.c:
 src/_ZN5Stage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0202c9a8 end:0x0202cc0c
+
+src/_ZN5Stage13InitResourcesEv.cpp:
+    complete
+    .text start:0x0202cc0c end:0x0202d690
 
 src/_ZN5Stage14LoadGraphics2DEbi.cpp:
     complete

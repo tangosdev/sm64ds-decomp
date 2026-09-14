@@ -33,4 +33,9 @@
 # pin is measured against its own neighbour rather than assumed: 276's record is
 # at 0x02108388 and 277's at 0x021083a4, exactly 0x1c apart, and the natural
 # next-symbol delta of 0x24 would swallow the vtable's Itanium prologue.
-src/d_a_1up_scaleup_kinoko.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/da1up_c.cpp (ov002 delinks, .text 0x020b0530..0x020b0580, one
+# absorbed range), which port/slice_gate16.txt:196 and port/slice_pmfb2.txt:193 already compile, so the
+# symbols this row seated now come from there and the per-function file is gone
+# from main's tree.
+#src/d_a_1up_scaleup_kinoko.c

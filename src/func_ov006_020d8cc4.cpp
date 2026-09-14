@@ -1,5 +1,5 @@
 //cpp
-extern "C" void func_ov006_020d836c(char* c);
+extern "C" int func_ov006_020d836c(char *c);
 extern "C" void func_ov006_020d7604(void*);
 extern "C" void func_ov006_020d5e1c(void*);
 #pragma opt_strength_reduction off
