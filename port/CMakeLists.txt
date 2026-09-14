@@ -373,7 +373,17 @@ set(PORT_HOSTGEN_TU
     # collide. The substitution carries CAPSHOW's one-line correction into the
     # class TU, and unmatched/WaterfallMist_Behavior_HostSites.cpp is retired
     # in the same change.
-    src/actors/daObjMarioCap_c.cpp)
+    src/actors/daObjMarioCap_c.cpp
+    # REDECL_CONFLICT and ALTNAME, run link100 lane HOSTGEN4. The Monkey
+    # class TU, seated by port/slice_hostgen4.txt and refused by MSVC
+    # until now: eighteen block-scope redeclarations that disagree with
+    # the TU's own file-scope spelling about a return type (C2556/C2371),
+    # six function-local classes used to declare an extern (C2624), and
+    # seven ROM data references that reach the linker decorated because
+    # they are declared inside C++ members where no linkage-specification
+    # is allowed. Worth fourteen flat ROM rows. The slice file carries the
+    # whole derivation and what the seat costs.
+    src/actors/daMky_c.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4089,6 +4099,10 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov019_02112268.cpp"  # ov019 +0x370
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daPgDfdr_c.cpp"  # ov027 +0x3cc
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daMky_c.cpp"  # ov030 +0x3a4
+    # and the generated copy, lane HOSTGEN4: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the option on a source nothing
+    # compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daMky_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daBgSnmBdy_c.cpp"  # ov072 +0x38c
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11SnowmanHead17CallStateBehaviorEv.cpp"  # ov072 +0x328
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_02124718.cpp"  # ov077 +0x3f0
@@ -12256,8 +12270,15 @@ set_source_files_properties(
 # All three are already in walk_window.map on the BASE tree as _Vec3_Dist,
 # __ZN8dActor_c13SpawnSoundObjEj and __ZN5dCc_c5ClearEv, so this is a
 # spelling bridge onto bodies that already link and adds no TU to the count.
+# BOTH PATHS, run link100 lane HOSTGEN4. This TU is on PORT_HOSTGEN_TU now,
+# so the compile the build runs is the generated copy. These three renames
+# are what bind the placeholder spellings to bodies that already link; on
+# the raw path alone they would go missing and the three names would come
+# straight back onto the unresolved wall. The src/ row is kept so the
+# property is still right if the substitution is ever retired.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daMky_c.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daMky_c.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "func_0203cfdc=Vec3_Dist;func_0200f97c=_ZN8dActor_c13SpawnSoundObjEj;func_02015024=_ZN5dCc_c5ClearEv")
 # lane cast-ov030, THE G0/G1 TRAP, LIVE, and this row is the whole reason
@@ -18726,6 +18747,34 @@ foreach(line IN LISTS SLICE_FACES2_LINES)
 endforeach()
 foreach(_tfaces2 walk_window walk_window_hires smoke_player)
     target_sources(${_tfaces2} PRIVATE ${SLICE_FACES2_SOURCES})
+endforeach()
+
+# ===========================================================================
+# SLICE HOSTGEN4 (run link100, lane HOSTGEN4)
+# ===========================================================================
+#
+# One translation unit, src/actors/daMky_c.cpp, seated through the whole-TU
+# hostgen substitution declared near the top of this file. It answers fourteen
+# flat ROM names on walk_window's wall and had never been on a slice because
+# MSVC refused it: eighteen C2556/C2371 pairs where a member's block-scope
+# redeclaration disagrees with the TU's own file-scope spelling about a return
+# type, and six C2624 where a function-local class is used to declare an
+# extern. Nothing under src/ is touched; the repair is hostgen's
+# REDECL_CONFLICT and ALTNAME tables. port/slice_hostgen4.txt carries the
+# derivation, the fourteen rows it closes, the nine it costs and the collision
+# measurement against walk_window's whole link universe.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_hostgen4.txt"
+                SLICE_HOSTGEN4_LINES)
+set(SLICE_HOSTGEN4_SOURCES "")
+foreach(line IN LISTS SLICE_HOSTGEN4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_HOSTGEN4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_thg4 walk_window walk_window_hires smoke_player)
+    target_sources(${_thg4} PRIVATE ${SLICE_HOSTGEN4_SOURCES})
 endforeach()
 
 # ---- WHOLE-TU HOSTGEN SUBSTITUTION: THE COUNT ------------------------------

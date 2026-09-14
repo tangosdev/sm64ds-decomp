@@ -524,6 +524,109 @@ MEMBER_REDECL = {
 }
 
 
+# ---- TWO SPELLINGS OF ONE C NAME IN ONE TRANSLATION UNIT --------------------
+#
+# Run link100, lane HOSTGEN4. The decomp's convention was one function per file,
+# and the pret idiom that DECLARATION ORDER controls mwccarm's register
+# allocation means every member re-declares the externs it calls AT BLOCK
+# SCOPE, in its own spelling, exactly where it recovered them.
+# src/actors/daMky_c.cpp states that rule in its own header at lines 148-154.
+# main's consolidation then added ONE file-scope extern "C" block with a single
+# spelling per name, and the two now sit in one translation unit. mwccarm never
+# saw the pair; MSVC refuses it outright:
+#
+#   daMky_c.cpp(277): error C2556: 'int func_0201267c(int,void *)': overloaded
+#       function differs only by return type from 'void func_0201267c(int,void *)'
+#   daMky_c.cpp(168): note: see declaration of 'func_0201267c'
+#
+# eighteen times over, plus the C2568, C2440 and C2264 that fall out of the
+# unresolved overload sets. THE DISAGREEMENT IS THE RETURN TYPE AND NOTHING
+# ELSE at every one of the eighteen, and every call site ignores the value: a
+# site that did not could not have compiled against the `void` spelling. So the
+# block-scope copy is deleted and the file-scope one governs. Four of the seven
+# names are the TU's OWN definitions being redeclared by a sibling member
+# further down the same file, where the redeclaration is pure noise; the
+# definition is always above the use, which was checked line by line.
+#
+# THE SECOND SHAPE IN THE SAME FILE is a function-local class used to declare an
+# `extern`, which C++ forbids because a local class has no linkage (C2624). Four
+# of the six are a type the member defines for itself and one is a stray
+# `struct dActor_c;` forward declaration that SHADOWS the real class from the
+# headers -- deleting that line is the whole fix for two of the six, because the
+# elaborated specifiers below it then name the real dActor_c. The rest are
+# hoisted to file scope, and hoisted INSIDE an extern "C" block: these are ROM
+# data references that inherit C linkage from the enclosing member today, and a
+# hoist into plain namespace scope would hand them back to the linker decorated,
+# which is the defect DATA_C_LINKAGE exists to remove.
+#
+# ONLY THE TYPES MOVE, and that was measured rather than assumed. Hoisting the
+# DATA declarations with them was tried first and produced five new C2040s,
+# because the members do not agree on the type of data_ov030_02115d18:
+# EnterState10 calls it `struct S { int w[2]; }`, EnterState8
+# `struct G { void *a; void *b; }`, and three more members declare it `int []`,
+# `void *[]` and `void *` at their own block scope. Those spellings do not fight
+# each other while they stay in separate function bodies; ONE file-scope
+# declaration makes four of them an error. A block-scope declaration whose TYPE
+# has linkage is all C2624 asks for, and it keeps the C linkage of the
+# enclosing extern "C" member, which is the spelling the mount emits.
+REDECL_CONFLICT_DECL = """\
+/* hostgen REDECL_CONFLICT: the file-scope half of the repair below. ONLY THE
+   TYPES move. Each datum keeps its own block-scope declaration, in the member
+   that recovered it, because the members do not agree on its type: five
+   spellings of data_ov030_02115d18 live in this one file and a single
+   file-scope declaration would make four of them a C2040. */
+struct daMky_M4x3 { int w[12]; };
+struct daMky_S { int w[2]; };
+struct daMky_G { void *a; void *b; };
+struct daMky_Item16 { int a, b, c, d; };
+
+"""
+
+REDECL_CONFLICT = {
+    "daMky_c": [
+        # The eighteen block-scope redeclarations, in file order. Each names a
+        # symbol the TU already declares at lines 155-169 or defines above.
+        ("    extern int func_0201267c(int a, void *b);\n", ""),
+        ("    extern void *_ZN8dActor_c13ClosestPlayerEv(void *a);\n", ""),
+        ("    extern void func_ov030_02111dd0(char *c);\n", ""),
+        ("    extern void func_ov030_02111ea4(char *c);\n", ""),
+        ("    extern void func_ov030_02111bc4(void* c);\n", ""),
+        ("    void *_ZN8dActor_c13ClosestPlayerEv(void *self);\n", ""),
+        ("    void _ZN5dCc_c5ClearEv(void *thiz);\n", ""),
+        ("    extern void func_ov030_02111bc4(void *a);\n", ""),
+        ("    extern void _ZN5dCc_c5ClearEv(void *p);\n", ""),
+        ("    extern int func_0201267c(int a, void* b);\n", ""),
+        ("    extern void _ZN5dCc_c5ClearEv(void* self);\n", ""),
+        ("    extern void _ZN5dCc_c5ClearEv(void *self);\n", ""),
+        ("    extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);\n", ""),
+        ("    extern void func_ov030_02111bc4(void *c);\n", ""),
+        ("    extern void _ZN5dCc_c5ClearEv(void *c);\n", ""),
+        ("    extern void func_ov030_02111a00(char* c);\n", ""),
+        ("    extern void func_ov030_02111dd0(char* c);\n", ""),
+        ("    extern void func_ov030_02111ea4(char* c);\n", ""),
+        # The stray forward declaration that makes a LOCAL dActor_c out of the
+        # two elaborated specifiers under it. The real class is visible at file
+        # scope in this TU: func_ov030_021122b0 takes a dActor_c * at line 679.
+        ("    struct dActor_c;\n", ""),
+        # The four local types, re-pointed at the file-scope ones in
+        # REDECL_CONFLICT_DECL above. The two that are typedefs keep their
+        # names, so every use in the member reads unchanged; the two that are
+        # elaborated inside the extern itself lose the elaboration, because
+        # `struct S` is not a spelling a typedef-name answers to.
+        ("    typedef struct M4x3 { int w[12]; } M4x3;\n",
+         "    typedef daMky_M4x3 M4x3;\n"),
+        ("    struct S { int w[2]; };\n"
+         "    extern struct S data_ov030_02115d18;\n",
+         "    extern daMky_S data_ov030_02115d18;\n"),
+        ("    struct G { void *a; void *b; };\n"
+         "    extern struct G data_ov030_02115d18;\n",
+         "    extern daMky_G data_ov030_02115d18;\n"),
+        ("    typedef struct { int a, b, c, d; } Item16;\n",
+         "    typedef daMky_Item16 Item16;\n"),
+    ],
+}
+
+
 # ---- EXTERNAL DATA LEFT OUTSIDE THE TU'S OWN extern "C" BLOCK -----------------
 #
 # A recovered TU can declare its external data symbols ABOVE its own
@@ -2050,6 +2153,65 @@ def ztv_c_linkage(text, sym):
     return block + text, len(rows)
 
 
+# ---- A DECORATED ROM DATUM A FILE-SCOPE DECLARATION CANNOT REACH -----------
+#
+# Run link100, lane HOSTGEN4. DATA_C_LINKAGE below is the right fix whenever one
+# file-scope declaration can govern the whole translation unit. Sometimes it
+# cannot: src/actors/daMky_c.cpp declares data_ov030_02115d18 five different
+# ways in five different C++ MEMBERS -- `int []`, `void *[]`, `void *` and two
+# local two-word structs -- and those spellings only coexist because each lives
+# in its own function body. One file-scope declaration makes four of them a
+# C2040, so there is no single type to give C linkage to.
+#
+# The port's own answer to a name that means one thing under two spellings is
+# the /alternatename bridge, and it is already used for exactly this shape:
+# hal/actor_classes.cpp:870 carries
+# `/alternatename:?data_ov002_0210d9a8@@3DA=_data_ov002_0210d9a8`, a decorated
+# LHS bridged to the C name the mount emits. The directive is a NAME bridge and
+# nothing else, which is why it is admissible here and not for a receiver-shape
+# mismatch: a datum has no calling convention.
+#
+# THESE ARE DATA ROWS ONLY, deliberately. The same trick would close function
+# rows whose decorated twin is defined, and this lane measured eight of those in
+# this TU and did NOT write them: port/faces_sync.txt is another lane's file and
+# facegen derives exactly those rows, so an alias here would be DEFEATED the day
+# a face defines its LHS and alternatename_guard would refuse the build. The
+# eight are named in the lane's handoff instead. facegen emits no data rows, so
+# a data alias cannot collide with it.
+ALTNAME = {
+    "daMky_c": [
+        # The five members that declare a ROM datum at block scope inside a C++
+        # member rather than inside the TU's own extern "C" region. Each RHS is
+        # defined in this link: romdata.c for 02082214, ov030_syms.c for the
+        # rest.
+        ("?data_02082214@@3PAFA", "_data_02082214"),
+        ("?data_ov030_02115ce0@@3PADA", "_data_ov030_02115ce0"),
+        ("?data_ov030_02115ce0@@3PAHA", "_data_ov030_02115ce0"),
+        ("?data_ov030_02115d08@@3PAPAXA", "_data_ov030_02115d08"),
+        ("?data_ov030_02115d08@@3PAXA", "_data_ov030_02115d08"),
+        ("?data_ov030_02115d18@@3UdaMky_G@@A", "_data_ov030_02115d18"),
+        ("?data_ov030_02115d18@@3UdaMky_S@@A", "_data_ov030_02115d18"),
+    ],
+}
+
+
+def altname(text, sym):
+    """Bridge a decorated ROM datum to the C name the mount emits."""
+    rows = ALTNAME.get(sym)
+    if not rows:
+        return text, 0
+    block = ("/* hostgen ALTNAME: each of these is one ROM datum under two\n"
+             "   spellings. The declaration that produces the LHS is inside a\n"
+             "   C++ member, where a linkage-specification is not allowed and a\n"
+             "   file-scope declaration would collide with the other members'\n"
+             "   spellings of the same name, so the bridge is a linker\n"
+             "   directive. Every RHS is defined in this link. */\n"
+             + "".join('#pragma comment(linker, "/alternatename:%s=%s")\n'
+                       % (lhs, rhs) for lhs, rhs in rows)
+             + "\n")
+    return block + text, len(rows)
+
+
 # ---- A ROM DATA EXTERN THAT MSVC DECORATED ---------------------------------
 #
 # PORT_HOST_ABI, run link100, lane HOSTGEN4: the same defect as ZTV_C_LINKAGE
@@ -2308,6 +2470,14 @@ def member_redecl_patch(text, sym):
     return apply_patches(text, sym, MEMBER_REDECL, "MEMBER_REDECL")
 
 
+def redecl_conflict_patch(text, sym):
+    """Delete the block-scope redeclarations that disagree with the TU's own
+    file-scope spelling, and hoist the function-local types the ROM data
+    declarations need."""
+    return apply_patches(text, sym, REDECL_CONFLICT, "REDECL_CONFLICT",
+                         REDECL_CONFLICT_DECL)
+
+
 def extern_c_data_patch(text, sym):
     """Bring external data declarations a TU left above its own extern "C"
     block into C linkage, so the mount's C-linkage symbols resolve them."""
@@ -2356,6 +2526,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = pmf_seam_patch(text, sym)
     text, _ = uninit_local_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
+    text, _ = redecl_conflict_patch(text, sym)
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)
@@ -2367,6 +2538,10 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, ndata = data_c_linkage(text, sym)
     if ndata and not QUIET_VPTR:
         print("  %s: %d ROM data extern(s) given C linkage" % (sym, ndata))
+    text, nalt = altname(text, sym)
+    if nalt and not QUIET_VPTR:
+        print("  %s: %d decorated ROM datum(s) bridged by /alternatename"
+              % (sym, nalt))
     text, nvptr = vptr_address_point(text)
     if nvptr and not QUIET_VPTR:
         print("  %s: %d vtable address-point bias(es) dropped" % (sym, nvptr))

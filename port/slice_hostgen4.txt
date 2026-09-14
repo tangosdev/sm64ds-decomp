@@ -1,0 +1,84 @@
+# slice_hostgen4 -- run link100, lane HOSTGEN4.
+#
+# ONE TRANSLATION UNIT: src/actors/daMky_c.cpp, the Monkey (daMky_c, the thief
+# and the star carrier). It answers FOURTEEN flat ROM names on walk_window's
+# unresolved wall and it has never been on a slice, because MSVC refused it.
+#
+# WHY IT WAS REFUSED, and it is not a port problem. The decomp's convention was
+# one function per file, and the pret idiom that DECLARATION ORDER controls
+# mwccarm's register allocation means every member re-declares the externs it
+# calls AT BLOCK SCOPE, in its own spelling, where it recovered them. The file
+# says so in its own header at lines 148 to 154. main's consolidation then put
+# ONE file-scope extern "C" block at lines 155 to 169 with a single spelling per
+# name, and the two disagree on the RETURN TYPE at eighteen sites. Two spellings
+# of one C name in one translation unit is MSVC C2556 and C2371, eighteen times,
+# and mwccarm never saw the pair because each member was its own file. Six more
+# are C2624: a function-local class used to declare an extern, which C++ forbids
+# because a local class has no linkage.
+#
+# HOW IT IS SEATED. Through the whole-TU hostgen substitution, so nothing under
+# src/ is touched: tools/hostgen.py's REDECL_CONFLICT table deletes the eighteen
+# block-scope redeclarations (the file-scope spelling governs, and every call
+# site ignores the return value, which is why they disagreed about it and
+# nothing noticed), deletes the stray `struct dActor_c;` that was shadowing the
+# real class, and moves the four function-local types to file scope while
+# LEAVING EACH DATUM'S DECLARATION where it stands -- five members spell
+# data_ov030_02115d18 five different ways and one file-scope declaration makes
+# four of them a C2040. Seven of those spellings still reach the linker
+# decorated, and hostgen's ALTNAME table bridges each to the C name ov030_syms.c
+# and romdata.c emit, which is hal/actor_classes.cpp:870's own shape.
+#
+# The decomp-side edit is smaller than the substitution and would retire it.
+# It is written out with every line number in
+# runs/link100/out/HOSTGEN4/needs_main.md section 1.
+#
+# WHAT IT CLOSES, measured on the object rather than predicted: fourteen rows,
+# every one a flat ROM name the mesh of ov030 callers asks for.
+#
+#   _func_ov030_02111734  _func_ov030_02112094  _func_ov030_021122b0
+#   _func_ov030_02112400  _func_ov030_02112578  _func_ov030_02112a84
+#   _func_ov030_02112da0  _func_ov030_02113094  _func_ov030_02113324
+#   _func_ov030_02113b38  _func_ov030_02113d20  _func_ov030_02113ff0
+#   _func_ov030_02114134  _func_ov030_021141a8
+#
+# WHAT IT COSTS: NOTHING. Measured on the build rather than predicted, and the
+# prediction was wrong in the safe direction, so both are written down here.
+#
+# Compiling the TU standalone and comparing its undefined externals against the
+# DEFINED symbols of walk_window's 8660 objects said nine rows would arrive:
+# eight function names and _data_020a0eac. The build says zero. The reason is
+# that a symbol table scan cannot see an /alternatename, and this tree already
+# carries a bridge for eight of the nine:
+#
+#   port/hal/cxx_aliases.cpp:3219
+#     __ZN8SaveData16HasPlayerLostCapEv = ?HasPlayerLostCap@SaveData@@SAHXZ
+#   port/hal/cxx_aliases.cpp:3114
+#     __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
+#                        = ?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@CF@Z
+#   port/unmatched/Cap_StateDispatch.cpp:60
+#     __Z11UpdateAngleRssis = ?UpdateAngle@@YAXAAFFHF@Z
+#
+# and their siblings. Every one of them is a flat-to-static-member pair, cdecl
+# with no receiver on both sides, which is the admissibility rule met on every
+# clause -- the same rule that made this lane confident the remaining ones were
+# closable, and the reason it left them alone: writing a second alias for a name
+# the tree already bridges would be two declarations of one pair, and writing one
+# for a name port/faces_sync.txt is about to define would be DEFEATED the day the
+# face lands, which alternatename_guard refuses.
+#
+# _data_020a0eac does not arrive either, and the scan was wrong about it for a
+# second reason worth writing down: hal/cxx_aliases.cpp lines 1553 and 1563
+# point _G0 and _HEAP AT it, so it is a live RHS in this build and resolves,
+# while the object-table scan that predicted it looked only at defined externals
+# in the 8660 objects on the link line and found nothing there. The lesson for
+# the next lane using this method is the same in both halves: a defined-symbol
+# census OVER-predicts new rows, never under-predicts them, so a seat it clears
+# is clear and a seat it warns about is worth a build before believing.
+#
+# NO COLLISIONS. The object was compiled with the build's own flags and its
+# defined externals compared against walk_window's whole link universe (8660
+# objects, 46836 defined externals). Eighteen names are shared and every one of
+# them is a COMDAT already present in dozens of objects: the four RTTI records
+# of dActor_c, dBase_c and fBase_c, Vector3's inline destructor, and the four
+# __empty_global_delete stubs. No LNK2005 row.
+src/actors/daMky_c.cpp
