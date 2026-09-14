@@ -3640,3 +3640,43 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN10dCcAcPos_c4InitEP5ActorRK7Vector35Fix12IiES6_jj=__ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj")
 #pragma comment(linker, "/alternatename:__ZN5Actor9TrackStarEjj=__ZN8dActor_c9TrackStarEjj")
 #pragma comment(linker, "/alternatename:__ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P5Actor=__ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c")
+
+/* ---- 5. SEVENTEEN MORE DECORATED DATA SPELLINGS ----------------------
+ *
+ * The same shape as the fifteen rows lane FACES1 measured above and the
+ * hundred-odd rows lane ALIAS wrote before them: a caller translation unit
+ * declares one of the ROM's globals with a C++ TYPE at C++ linkage, so MSVC
+ * mangles the reference as ?<name>@@3<type>A, while the port's mount or host
+ * copy defines the same address under the plain C name. One object, two
+ * spellings, and the row is a pure name bridge.
+ *
+ * Found by sweeping every row left on the wall after this lane's gate 2 for
+ * the one question an /alternatename can answer -- is this same identifier
+ * already defined under its other spelling -- against the 48406 defined
+ * externals of walk_window's own link objects. Seventeen of the 542 were,
+ * and all seventeen are data. The sweep and its answers are in
+ * out/HALROWS/sweep_remaining.txt.
+ *
+ * Three of these (data_ov015_02113594, 02114a5c, 02114a64) already have rows
+ * further up for their ?..@@3PAXA spelling, from the MovingBarSmall platform
+ * data block. These are DIFFERENT type spellings of the same three globals
+ * by different callers, which is why they are separate rows rather than
+ * duplicates: the left hand sides differ.
+ */
+#pragma comment(linker, "/alternatename:?data_0209cef4@@3PAUShadowModel@@A=_data_0209cef4")
+#pragma comment(linker, "/alternatename:?data_0209f394@@3PAPAUPlayer@@A=_data_0209f394")
+#pragma comment(linker, "/alternatename:?data_020a0ebc@@3PADA=_data_020a0ebc")
+#pragma comment(linker, "/alternatename:?data_ov002_0210dc00@@3PAP8C@@AEXXZA=_data_ov002_0210dc00")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b020@@3UPmfRecord@@A=_data_ov006_0213b020")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b028@@3UPmfRecord@@A=_data_ov006_0213b028")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b030@@3UPmfRecord@@A=_data_ov006_0213b030")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b038@@3UPmfRecord@@A=_data_ov006_0213b038")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b058@@3UPair@@A=_data_ov006_0213b058")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b060@@3UPmfRecord@@A=_data_ov006_0213b060")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b068@@3UPair@@A=_data_ov006_0213b068")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b070@@3UPair@@A=_data_ov006_0213b070")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b078@@3UPair@@A=_data_ov006_0213b078")
+#pragma comment(linker, "/alternatename:?data_ov015_02113594@@3UCLPS_Block@@A=_data_ov015_02113594")
+#pragma comment(linker, "/alternatename:?data_ov015_02114a5c@@3USharedFilePtr@@A=_data_ov015_02114a5c")
+#pragma comment(linker, "/alternatename:?data_ov015_02114a64@@3USharedFilePtr@@A=_data_ov015_02114a64")
+#pragma comment(linker, "/alternatename:?data_ov022_021145a0@@3PAHA=_data_ov022_021145a0")
