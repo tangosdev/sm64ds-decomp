@@ -324,7 +324,13 @@ set(PORT_HOSTGEN_TU
     # measured close and duplicate counts per TU, is in slice_seats2.txt.
     src/actors/daSanbo_c.cpp
     src/actors/daPkn_c.cpp
-    src/game/actors/d_a_wanwan.cpp)
+    src/game/actors/d_a_wanwan.cpp
+    # Gate 2 of the same lane. daGmch_c needs ZTV_C_LINKAGE as well; the
+    # roulette factory is parked rather than retired, so
+    # port/unmatched/MgRoulette_Factory.cpp and its dropped-receiver repair
+    # stay exactly where they are.
+    src/minigames/d_s_mg_roulette.cpp
+    src/actors/daGmch_c.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4045,6 +4051,8 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_02124718.cpp"  # ov077 +0x3f0
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_02125e20.cpp"  # ov077 +0x3d0
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daGmch_c.cpp"  # ov081 +0x3dc
+    # and the hostgen copy lane SEATS2 seats instead of it.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daGmch_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp"  # ov085 +0x350
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daSanbo_c.cpp"  # ov096 +0x384
     # and the hostgen copy lane SEATS2 seats instead of it, so this option
@@ -18627,6 +18635,12 @@ set(PORT_FALLS_OFF_END_SOURCES
     # Measured with the build's own flags: C4716 on dScMgBase_c::OnAimedAtWithEgg
     # and nothing else.
     src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
+    # Added by lane SEATS2 at gate 2, seating src/actors/daGmch_c.cpp:
+    # daGmch_c::ApplySlopeToVertSpeed is an int body whose ROM code reaches the
+    # closing brace with the result still in r0, the same shape as the rows
+    # above. Measured with the build's own flags: C4716 on that member and on
+    # nothing else in the TU.
+    src/actors/daGmch_c.cpp
     )
 # A WHOLE-TU HOSTGEN SUBSTITUTION MOVES THE COMPILE, AND A PER-SOURCE PROPERTY
 # DOES NOT FOLLOW IT. Run link100, lane HOSTGEN2, measured: putting

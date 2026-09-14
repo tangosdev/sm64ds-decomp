@@ -16,18 +16,18 @@
 # section symbol's auxiliary record, not just the COMDAT flag. /O2 implies /Gy,
 # so every function MSVC emits here is in its own COMDAT and a census that
 # stops at the flag predicts no duplicates at all; an out-of-line body's
-# selection is 1, "pick no duplicates", which is the LNK2005. The three class
-# TUs below each duplicated three to six names on that test, and every one is
+# selection is 1, "pick no duplicates", which is the LNK2005. Four of the class
+# TUs below duplicated one to six names on that test, and every one is
 # parked in the hostgen copy rather than fought over -- see the SEAT_PARK block
 # in port/tools/hostgen.py for what a park is and why it is not a retirement.
 #
-# THE THREE CLASS TUs GO THROUGH hostgen (PORT_HOSTGEN_TU at the top of
+# FIVE OF THE SIX ROWS GO THROUGH hostgen (PORT_HOSTGEN_TU at the top of
 # port/CMakeLists.txt), so the rows below are rewritten to
 # build/port/host-src/<path> as they are read. The raw text is never compiled.
 # hostgen does four things to them: it parks the bodies the link already
-# defines, it gives daPkn_c's vtable extern C linkage, it drops the Itanium +8
-# address-point bias from every vptr store, and it applies the standard MMIO
-# and attribute rewrites.
+# defines, it gives daPkn_c's and daGmch_c's vtable externs C linkage, it drops
+# the Itanium +8 address-point bias from every vptr store, and it applies the
+# standard MMIO and attribute rewrites.
 
 # ---- ov096 POKEY (actors 240 and 241) -------------------------------------
 # Closes fourteen: daSanbo_c_classInit_SANBO, daSanbo_c_classInit_SANBO_BODY
@@ -75,8 +75,43 @@ src/game/actors/d_a_wanwan.cpp
 # functions and __cdecl on either side.
 src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
 
-# ---- the name bridges the three class seats need --------------------------
-# Seven decorated ROM data names, each a C++ declaration of a hosted symbol
+# ---- ov006 ROULETTE (scene 383) -------------------------------------------
+# One row, func_ov006_0210a4ac, and nothing else: on the parked hostgen copy
+# this TU duplicates nothing and references nothing new at all.
+# port/CMakeLists.txt carries a refusal for this file on slice_rlt.txt --
+# "slice_rlt.txt lists <dup>, which port/unmatched/ host-copies. Both would
+# define the same symbol (LNK2005). Remove the slice line." That refusal is
+# about dScMgRoulette_c_classInit, whose host copy in
+# port/unmatched/MgRoulette_Factory.cpp repairs the factory's dropped
+# receiver (_ZN11dScMgBase_cC2Ev with no argument, one of exactly two in the
+# ROM). The SEAT_PARK row brackets that one body out of the generated copy,
+# so the host copy and its repair are untouched and the duplicate the refusal
+# names does not exist. The assertion itself is left in place and still
+# guards slice_rlt.txt.
+src/minigames/d_s_mg_roulette.cpp
+
+# ---- ov081 daGmch_c ------------------------------------------------------
+# Closes two, ??1daGmch_c@@UAE@XZ and daGmch_c_classInit, which is a small
+# return for the work. It is here for the other half: seating it defines
+# twenty-four decorated members that out/FACES3/needs_seat.txt lists as
+# rows a face can bind once the definition exists, which is the largest
+# single block on that list after daMip_c.
+#
+# The seat opens nothing. Measured on the parked copy it references
+# twenty-four names outside the wall, and every one is already answered:
+# seventeen decorated ROM data names have live /alternatename rows (nine
+# more were written for this seat, in port/unmatched/Seats2_NameBridges.cpp),
+# ?_ZTV8daGmch_c@@3PAHA is the ZTV_C_LINKAGE defect and hostgen now gives
+# that extern C linkage so the existing __ZTV8daGmch_c=__ZTV8Moneybag alias
+# can reach it, ?Virtual34@fBase_c@@UAEHII@Z and ?Virtual38@fBase_c@@UAEHII@Z
+# and __Z15ApproachLinear2Riii and __ZN6Memory10DeallocateEPvP4Heap and
+# _data_020a0eac have live rows of their own, and ??_7type_info@@6B@ comes
+# out of the CRT under -MT (measured on a three-line fixture rather than
+# assumed: the object leaves it UNDEF and link resolves it, rc 0).
+src/actors/daGmch_c.cpp
+
+# ---- the name bridges the class seats need --------------------------------
+# Sixteen decorated ROM data names, each a C++ declaration of a hosted symbol
 # that MSVC decorates because the declaration carries no linkage
 # specification. The file says which flat symbol each one is.
 port/unmatched/Seats2_NameBridges.cpp

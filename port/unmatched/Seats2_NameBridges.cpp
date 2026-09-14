@@ -48,6 +48,25 @@
 #pragma comment(linker, "/alternatename:?data_ov084_02130e14@@3UPknSharedFile@@A=_data_ov084_02130e14")
 #pragma comment(linker, "/alternatename:?data_ov084_02130e24@@3UPknSharedFile@@A=_data_ov084_02130e24")
 
+
+/* GATE 2, src/actors/daGmch_c.cpp (ov081 MONEYBAG/daGmch_c). Same shape and
+ * same rule as the rows above: ROM data the translation unit declares as an
+ * ordinary C++ extern, whose storage the port hosts under the flat name.
+ * data_0209e650 gets TWO rows because two headers this TU includes declare
+ * that one address with different types, so a single row would close half
+ * the references and leave the other half on the wall (out/SEATS2/bugs.md
+ * section 2). The other decorated names this seat needs already have live
+ * rows elsewhere in port/hal/ and are not repeated here. */
+#pragma comment(linker, "/alternatename:?data_0209e650@@3PAHA=_data_0209e650")
+#pragma comment(linker, "/alternatename:?data_ov081_021280d8@@3PAPAXA=_data_ov081_021280d8")
+#pragma comment(linker, "/alternatename:?data_ov081_02128ec4@@3PAPAXA=_data_ov081_02128ec4")
+#pragma comment(linker, "/alternatename:?data_ov081_02128ec4@@3UBca2@@A=_data_ov081_02128ec4")
+#pragma comment(linker, "/alternatename:?data_ov081_02128ecc@@3PAHA=_data_ov081_02128ecc")
+#pragma comment(linker, "/alternatename:?data_ov081_02128ed4@@3PAXA=_data_ov081_02128ed4")
+#pragma comment(linker, "/alternatename:?data_ov081_02128edc@@3PAHA=_data_ov081_02128edc")
+#pragma comment(linker, "/alternatename:?data_ov081_02128ee4@@3UBca2@@A=_data_ov081_02128ee4")
+#pragma comment(linker, "/alternatename:?data_ov081_02128f40@@3DA=_data_ov081_02128f40")
+
 /* A translation unit with no code in it still has to have something to
  * compile, and the pragmas above are directives rather than definitions. */
 extern "C" int port_seats2_name_bridges_present;

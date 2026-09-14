@@ -1995,6 +1995,12 @@ ZTV_C_LINKAGE = {
     # __ZTV7daPkn_c to the host array __ZTV12PiranhaPlant cannot reach
     # across a decoration. Same defect and same fix as the three rows above.
     "daPkn_c": [("int", "_ZTV7daPkn_c")],
+    # Gate 2, same lane and same defect: src/actors/daGmch_c.cpp declares
+    # `extern int _ZTV8daGmch_c[];` without a linkage specification, and the
+    # /alternatename in port/hal/actor_classes_ov081.cpp that carries
+    # __ZTV8daGmch_c to the host array __ZTV8Moneybag cannot cross a
+    # decoration.
+    "daGmch_c": [("int", "_ZTV8daGmch_c")],
 }
 
 
@@ -2151,6 +2157,25 @@ SEAT_PARK = {
          "port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp hosts this "
          "body for the receiver-less ClosestPlayer call closestplayer_guard "
          "refuses"),
+    ],
+    # Gate 2 of the same lane.
+    "d_s_mg_roulette": [
+        # port/CMakeLists.txt refuses this TU on slice_rlt.txt: "both would
+        # define the same symbol (LNK2005). Remove the slice line." The park
+        # removes the duplicate instead of the row, so the factory stays the
+        # host copy with its dropped-receiver repair intact and the rest of
+        # the TU is seated for func_ov006_0210a4ac.
+        ('extern "C" void* dScMgRoulette_c_classInit(void){',
+         "port/unmatched/MgRoulette_Factory.cpp hosts this factory for the "
+         "dropped-receiver _ZN11dScMgBase_cC2Ev call"),
+    ],
+    "daGmch_c": [
+        ("int daGmch_c::InitResources()",
+         "faces_sync.txt F row, ROM 0x021278a8"),
+        ("int daGmch_c::Render()",
+         "faces_sync.txt F row, ROM 0x021277e0"),
+        ("int daGmch_c::Behavior()",
+         "faces_sync.txt F row, ROM 0x02127854"),
     ],
     "d_a_wanwan": [
         ("int daWanwan_c::InitResources()",
