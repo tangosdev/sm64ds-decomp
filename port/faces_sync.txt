@@ -2798,3 +2798,24 @@ __ZN8dM3dGSphD0Ev                                                        ??1dM3d
 __ZN8daDemo_c10anmModel_cD0Ev                                            _ZN8daDemo_c10anmModel_cD1Ev                                     0x020f6778 D _ZN6Memory16operator_delete2EPv  -
 __ZN8daDemo_c13simpleModel_cD0Ev                                         _ZN8daDemo_c13simpleModel_cD1Ev                                  0x020f69a8 D _ZN6Memory16operator_delete2EPv  -
 __ZN9AnimationD0Ev                                                       ??1Animation@@UAE@XZ                                             0x02015cc4 D _ZN6Memory16operator_delete2EPv  -
+
+# ---- BATCH 5: the overloads the join key could not tell apart --------------
+# Rule 2's key is (class, method) and drops the parameter list, so the three
+# ROM overloads of DetectClsn on each of dBgW, dBgW_KcMbg and dBgW_KcMbgSclY
+# landed on one key and every one of them refused as a plausible sibling. They
+# are not siblings in the dangerous sense: each ROM name spells its own
+# parameter types, each MSVC definition spells the same types its own way, and
+# the two spellings join. The rule refuses on every kind of doubt -- ROM names
+# in one join whose parameter CLASSES are not pairwise distinct (two overloads
+# differing only in a scalar type) are still refused, and so is a join where
+# more or fewer than one MSVC definition matches.
+__ZN18NestedHeapIteratorC1Ej                                             ??0NestedHeapIterator@@QAE@I@Z                                   0x0204df20 R
+__ZN4dBgW10DetectClsnER12dBgCh_SphCrr                                    ?DetectClsn@dBgW@@UAEHAAUdBgCh_SphCrr@@@Z                        0x02039470 R
+__ZN4dBgW10DetectClsnER9dBgCh_Gnd                                        ?DetectClsn@dBgW@@UAEHAAUdBgCh_Gnd@@@Z                           0x02039480 R
+__ZN4dBgW10DetectClsnER9dBgCh_Lin                                        ?DetectClsn@dBgW@@UAEHAAUdBgCh_Lin@@@Z                           0x02039478 R
+__ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr                             ?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_SphCrr@@@Z                  0x02039a3c R
+__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd                                 ?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Gnd@@@Z                     0x02039cb8 R
+__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin                                 ?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Lin@@@Z                     0x02039970 R
+__ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr                         ?DetectClsn@dBgW_KcMbgSclY@@UAEHAAUdBgCh_SphCrr@@@Z              0x0203a660 R
+__ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Gnd                             ?DetectClsn@dBgW_KcMbgSclY@@UAEHAAUdBgCh_Gnd@@@Z                 0x0203a8fc R
+__ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin                             ?DetectClsn@dBgW_KcMbgSclY@@UAEHAAUdBgCh_Lin@@@Z                 0x0203a594 R

@@ -236,6 +236,7 @@ def itanium_parse_ext(name):
             return None
         return {"comps": comps, "cls": list(comps), "meth": key,
                 "structor": tag, "const": is_const,
+                "pcls": itanium_param_classes(rest[st.end():]),
                 "arity": itanium_arity(rest[st.end():])}
     if not rest.startswith("E") or len(comps) < 2:
         return None
@@ -244,6 +245,7 @@ def itanium_parse_ext(name):
         return None
     return {"comps": comps, "cls": comps[:-1], "meth": meth,
             "structor": None, "const": is_const,
+            "pcls": itanium_param_classes(rest[1:]),
             "arity": itanium_arity(rest[1:])}
 
 
@@ -653,6 +655,61 @@ def itanium_parse(name):
     if re.match(r"^[CD][0-3]$", meth) or not meth[0].isalpha():
         return None
     return cls, meth, is_const, itanium_arity(rest[1:])
+
+
+def itanium_param_classes(params):
+    """The CLASS NAME of each argument in an Itanium parameter list.
+
+    A scalar argument contributes None and a class-typed one its innermost
+    class name, so `R9dBgCh_Lin` reads as ["dBgCh_Lin"] and `jj` as
+    [None, None]. Returns None when the list is outside the counted subset.
+    This is what lets the address binding tell two ROM OVERLOADS apart: they
+    join one (class, method) key and differ only here.
+    """
+    if params == "v":
+        return []
+    out, i = [], 0
+    while i < len(params):
+        c = params[i]
+        if c in "PRK":
+            i += 1
+            continue
+        if c.isdigit():
+            m = re.match(r"(\d+)", params[i:])
+            length = int(m.group(1))
+            name = params[i + m.end():i + m.end() + length]
+            if len(name) != length:
+                return None
+            i += m.end() + length
+            if i < len(params) and params[i] == "I":
+                return None          # a template block: outside the subset
+            out.append(name)
+            continue
+        if c == "S":
+            return None              # a back-reference: not spelled here
+        if c == "N":
+            depth, i, comps = 1, i + 1, []
+            while i < len(params) and depth:
+                if params[i] == "E":
+                    depth -= 1
+                    i += 1
+                    continue
+                m = re.match(r"(\d+)", params[i:])
+                if not m:
+                    return None
+                length = int(m.group(1))
+                comps.append(params[i + m.end():i + m.end() + length])
+                i += m.end() + length
+            if depth or not comps:
+                return None
+            out.append(comps[-1])
+            continue
+        if c in "abcdefghijlmnostuvwxyz":
+            i += 1
+            out.append(None)
+            continue
+        return None
+    return out
 
 
 def itanium_arity(params):
@@ -1283,6 +1340,85 @@ def msvc_member_index(defined):
     return idx
 
 
+def _msvc_param_classes(sig):
+    """The class name of each MSVC parameter, None for a scalar or void."""
+    out = []
+    for kind, name, _c in sig["params"]:
+        out.append(None if kind == "scalar" or name == "void"
+                   or name in SCALARS else name)
+    return out
+
+
+def pick_by_params(root, rec, ident, slot, cands, und=None):
+    """Tell two OVERLOADS apart by their parameter types.
+
+    Returns (the one decorated name, None) or (None, the reason).
+
+    THE SHAPE THIS ANSWERS. Rule 2's join key is (class, method) and drops the
+    parameter list, so the three ROM overloads of dBgW_KcMbg::DetectClsn land
+    on one key and every one of them refused as a plausible sibling. They are
+    not siblings in the dangerous sense: each ROM name spells its own parameter
+    types, each MSVC definition spells the same types its own way, and the two
+    spellings JOIN. What makes this safe rather than clever is that it refuses
+    on every kind of doubt:
+
+      * every ROM name in the join must parse into a parameter type list, and
+        those lists must be pairwise DISTINCT -- two overloads differing only
+        in a scalar type (f(int) against f(short)) are indistinguishable here
+        and are refused, never guessed;
+      * exactly one of them must be THIS row's own name;
+      * exactly one MSVC candidate's parameter class names must equal it.
+
+    A structor never reaches this: C1/C2 and D1/D2 carry the same parameter
+    list by construction, which is the structor twin rule's question instead.
+    """
+    want = rec.get("pcls")
+    if want is None:
+        return None, ("the Itanium parameter list of %s is outside the "
+                      "counted subset, so the overloads cannot be told apart"
+                      % ident)
+    seen = {}
+    for a in slot:
+        for name in slot[a]:
+            r = itanium_parse_ext(name)
+            pc = r.get("pcls") if r else None
+            if pc is None:
+                return None, ("%s in the same join has a parameter list "
+                              "outside the counted subset, so the overloads "
+                              "cannot be told apart" % name)
+            kpc = tuple(pc)
+            if kpc in seen:
+                return None, ("%s and %s take the same parameter CLASSES "
+                              "(%s), so the ROM names do not tell the "
+                              "overloads apart"
+                              % (seen[kpc], name,
+                                 ", ".join(x or "scalar" for x in pc)
+                                 or "none"))
+            seen[kpc] = name
+    if seen.get(tuple(want)) != ident:
+        return None, ("%s is not the name its own parameter list picks out of "
+                      "the join" % ident)
+    if und is None:
+        und = undname_batch(list(cands))
+    hits = []
+    for c in cands:
+        text = und.get(c)
+        if not text:
+            continue
+        sig = parse_msvc_sig(text)
+        if isinstance(sig, str):
+            continue
+        if _msvc_param_classes(sig) == want:
+            hits.append(c)
+    if len(hits) != 1:
+        return None, ("%d of the %d MSVC definitions take (%s), so the "
+                      "parameter types do not pick one (%s)"
+                      % (len(hits), len(cands),
+                         ", ".join(x or "scalar" for x in want) or "none",
+                         ", ".join(sorted(cands))))
+    return hits[0], None
+
+
 def derive_rows(flat_names, defined, root, und=None):
     """The ADDRESS BINDING, applied to a list of flat ROM names.
 
@@ -1327,9 +1463,15 @@ def derive_rows(flat_names, defined, root, und=None):
             continue
         key = (tuple(rec["cls"]), rec["meth"])
         slot = joins.get(key, {})
+        cands = midx.get(key, [])
+        overload = False
         if len(slot) > 1:
             twin, twhy = structor_twin_slot(root, rec, slot)
-            if not twin:
+            if twin:
+                pass
+            elif not rec["structor"]:
+                overload = True      # decided below, once the types are read
+            else:
                 parts = []
                 for a in sorted(slot):
                     parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
@@ -1341,16 +1483,34 @@ def derive_rows(flat_names, defined, root, und=None):
                                  % (len(slot), cpp_qualified(rec),
                                     rec["meth"], "; ".join(parts), twhy)))
                 continue
-        cands = midx.get(key, [])
         if not cands:
             refusals.append((raw, "no MSVC definition of %s::%s in this link"
                              % (cpp_qualified(rec), rec["meth"])))
             continue
-        if len(cands) > 1:
-            refusals.append((raw, "ambiguous: %d MSVC definitions of %s::%s "
-                             "(%s)" % (len(cands), cpp_qualified(rec),
-                                       rec["meth"], ", ".join(sorted(cands)))))
-            continue
+        if overload or len(cands) > 1:
+            pick, pwhy = pick_by_params(root, rec, ident, slot, cands)
+            if pick is None:
+                parts = []
+                for a in sorted(slot):
+                    parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
+                if overload:
+                    refusals.append((raw, "rule 2: %d ROM addresses join "
+                                     "%s::%s, so one decorated definition "
+                                     "cannot be all of them -- the "
+                                     "plausible-sibling trap (%s); and the "
+                                     "parameter types do not tell them apart: "
+                                     "%s" % (len(slot), cpp_qualified(rec),
+                                             rec["meth"], "; ".join(parts),
+                                             pwhy)))
+                else:
+                    refusals.append((raw, "ambiguous: %d MSVC definitions of "
+                                     "%s::%s (%s); and the parameter types do "
+                                     "not pick one: %s"
+                                     % (len(cands), cpp_qualified(rec),
+                                        rec["meth"], ", ".join(sorted(cands)),
+                                        pwhy)))
+                continue
+            cands = [pick]
         acc = decorated_access(cands[0])
         if acc is None:
             refusals.append((raw, "the access/virtualness letter of %s is not "
