@@ -3075,3 +3075,17 @@ __ZN10MemoryNode6TargetC1EPS_                                            ??0Targ
 # re-spells the stem.
 __ZN5dBgPiaSERKS_                                                        ??4dBgPi@@QAEAAU0@ABU0@@Z                                        0x02038018 R
 __ZNSt9type_infoD1Ev                                                     ??1type_info@std@@UAE@XZ                                         0x020736e4 R
+
+# 5. The same two-face shape a third time, for Tornado, at the coordinator's
+#    word: lane DTORS2 struck Tornado out of its forwarder file because
+#    emitting that class's inline destructor emits its vftable too, and the
+#    vftable references every virtual slot, of which two exist in this link
+#    only under the ROM's flat names. Same cause as Toad and daTree_c above,
+#    same answer. Addresses from config/arm9/overlays/ov096/symbols.txt:45,46;
+#    both flat bodies are defined in this link (neither src TU carries a
+#    "recovered from vtable slot identity" marker) and neither decorated name
+#    is defined by anything else, so neither row can duplicate. These two close
+#    no wall row of their own -- nothing references the decorated spellings
+#    today -- they make Tornado D0 and D1 forwardable.
+__ZN7Tornado13InitResourcesEv                                            ?InitResources@Tornado@@UAEHXZ                                   0x02137564 F
+__ZN7Tornado8BehaviorEv                                                  ?Behavior@Tornado@@UAEHXZ                                        0x02137448 F
