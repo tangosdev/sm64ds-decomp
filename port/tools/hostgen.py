@@ -2495,10 +2495,12 @@ def ledger_park(text, sym):
 # NOT a retirement of a host copy and not an edit to src/. If the decomp side
 # fixes the source the host copy retires and the row here goes with it, in a
 # change gated by a captured scene-to-level transition, because THAT change
-# moves what runs. Three of these five defects are already absent from main's
-# text in the tree this was written against; that is written up in
-# runs/link100/out/DUPES/bugs.md as the decomp side's finding, and it is not a
-# reason for a port lane to swap the bodies tonight.
+# moves what runs. FOUR of these five defects are already absent from main's
+# text in the tree this was written against, checked line by line and site by
+# site: only func_ov078_02123f1c's dropped GetHealth receiver still reads as
+# the ruling describes it. That is written up in runs/link100/out/DUPES/bugs.md
+# as the decomp side's finding, and it is not a reason for a port lane to swap
+# the bodies tonight.
 #
 # ANCHORED ON THIS TREE'S TEXT, which is the fold rule lane INT3 wrote after
 # four defects of exactly one shape. Every anchor below was taken out of the
