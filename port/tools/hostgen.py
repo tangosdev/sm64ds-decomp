@@ -2202,6 +2202,105 @@ def ztv_c_linkage(text, sym):
     return block + text, len(rows)
 
 
+# ---- A MEMBER THE FACE LEDGER ALREADY DEFINES ------------------------------
+#
+# Run link100, lane HOSTGEN4. A class TU that has never been on a slice can have
+# ONE of its members already defined in the link, because port/faces_sync.txt
+# derived a REVERSE face for it: a definition of the decorated member that
+# forwards to the flat ROM name. Seating the TU then trades every row it closes
+# for one duplicate symbol.
+#
+# THE CLEAN END STATE IS THE LEDGER'S, not the substitution's: the row flips to
+# a FORWARD face, the flat ROM name forwards to the class TU's real member, and
+# the host copy that supplies the flat body today is retired. That is one edit
+# per row in port/faces_sync.txt, which is another lane's file.
+#
+# Until then the member is PARKED: the generated copy brackets the body in
+# `#if 0`, so the TU seats, the face goes on serving the vtable exactly as it
+# does today, and no behaviour changes at all -- the face's forward target is
+# the same ROM body the host copy holds. A call to the member from inside the TU
+# still binds, to the face, under the same name. Parking is written as a bracket
+# rather than a deletion so the body stays readable next to its own ROM
+# adjudication, and so retiring the park is one line.
+LEDGER_PARK = {
+    # dScMgD3DBase_c::OnKicked, ROM ov006:0x020e6e78, vtable slot 24.
+    # faces_sync_gen.cpp defines ?OnKicked@dScMgD3DBase_c@@UAEHXZ and forwards
+    # it to _ZN14dScMgD3DBase_c8OnKickedEv, whose body is
+    # unmatched/MgD3DBase_DeclConflict.cpp. That host copy's stated reason is a
+    # C2733 between include/decl_common.h:1516 and this TU's definition, and
+    # THAT REASON IS OBSOLETE: the TU compiles clean today. So the retirement
+    # this park is waiting on is a pair -- flip the ledger row to a forward face
+    # and retire the host copy in the same change -- and neither half is this
+    # lane's to make alone.
+    "dScMgD3DBase_c": [
+        ("int dScMgD3DBase_c::OnKicked()\n{\n    char *self = (char *)this;\n",
+         "/* hostgen LEDGER_PARK: port/faces_sync.txt already defines this\n"
+         "   member as a reverse face forwarding to the flat ROM name, so a\n"
+         "   second definition here is a duplicate symbol. Parked, not deleted.\n"
+         "   See the LEDGER_PARK table in tools/hostgen.py. */\n"
+         "#if 0\n"
+         "int dScMgD3DBase_c::OnKicked()\n{\n    char *self = (char *)this;\n"),
+        ("    return 1;\n}\n\n"
+         "/* ---------------------------------------------------------------"
+         "----------- */\n"
+         "/* ROM ordinal 11 -- _ZN14dScMgD3DBase_c8OnPushedEv, 0x020e6e54, "
+         "size 0x24 */\n",
+         "    return 1;\n}\n"
+         "#endif  /* hostgen LEDGER_PARK: dScMgD3DBase_c::OnKicked */\n\n"
+         "/* ---------------------------------------------------------------"
+         "----------- */\n"
+         "/* ROM ordinal 11 -- _ZN14dScMgD3DBase_c8OnPushedEv, 0x020e6e54, "
+         "size 0x24 */\n"),
+    ],
+    # daSanbo_c (Pokey). Five members port/faces_sync.txt already defines as
+    # reverse faces, whose flat targets are all defined in this link by
+    # their own per-function TUs, plus func_ov096_02135e2c, which is not a
+    # face at all but a PORT_HOST_ABI host copy
+    # (unmatched/Pokey_HostSites.cpp). Parking that one keeps the host
+    # copy's correction on the call and asks nobody to re-adjudicate the
+    # ruling tonight.
+    "daSanbo_c": [
+        # _ZN9daSanbo_c13InitResourcesEv, _ZN9daSanbo_c8BehaviorEv, _ZN9daSanbo_c6RenderEv, _ZN9daSanbo_c16OnPendingDestroyEv, _ZN9daSanbo_c16CleanupResourcesEv
+        ("/* ROM ordinal 32 -- _ZN9daSanbo_c13InitResourcesEv, 0x02136ab0, size 0x220 */\n",
+         "/* ROM ordinal 32 -- _ZN9daSanbo_c13InitResourcesEv, 0x02136ab0, size 0x220 */\n#if 0  /* hostgen LEDGER_PARK */\n"),
+        ("/* ROM ordinal 27 -- func_ov096_02136928, 0x02136928, size 0x1c */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN9daSanbo_c13InitResourcesEv, _ZN9daSanbo_c8BehaviorEv, _ZN9daSanbo_c6RenderEv, _ZN9daSanbo_c16OnPendingDestroyEv, _ZN9daSanbo_c16CleanupResourcesEv */\n/* ROM ordinal 27 -- func_ov096_02136928, 0x02136928, size 0x1c */\n"),
+        # func_ov096_02135e2c
+        ("/* ROM ordinal 11 -- func_ov096_02135e2c, 0x02135e2c, size 0xd0 */\n",
+         "/* ROM ordinal 11 -- func_ov096_02135e2c, 0x02135e2c, size 0xd0 */\n#if 0  /* hostgen LEDGER_PARK */\n"),
+        ("/* ROM ordinal 10 -- func_ov096_02135948, 0x02135948, size 0x4e4 */\n",
+         "#endif  /* hostgen LEDGER_PARK: func_ov096_02135e2c */\n/* ROM ordinal 10 -- func_ov096_02135948, 0x02135948, size 0x4e4 */\n"),
+    ],
+    # daPkn_c (Piranha Plant). Three ledger members plus
+    # func_ov084_0212f204, whose host copy
+    # (unmatched/Actor_ClosestPlayer_OverlayReaders.cpp) carries a receiver
+    # ruling lane SYNC6 flagged as worth re-checking against main's text.
+    # Parking leaves that ruling exactly where it is.
+    "daPkn_c": [
+        # _ZN7daPkn_c8BehaviorEv, _ZN7daPkn_c6RenderEv
+        ("/* ROM ordinal 21 -- _ZN7daPkn_c8BehaviorEv, 0x0212fd4c, size 0x168 */\n",
+         "/* ROM ordinal 21 -- _ZN7daPkn_c8BehaviorEv, 0x0212fd4c, size 0x168 */\n#if 0  /* hostgen LEDGER_PARK */\n"),
+        ("/* ROM ordinal 19 -- _ZN7daPkn_c16OnPendingDestroyEv, 0x0212fcd8, size 0x4 */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN7daPkn_c8BehaviorEv, _ZN7daPkn_c6RenderEv */\n/* ROM ordinal 19 -- _ZN7daPkn_c16OnPendingDestroyEv, 0x0212fcd8, size 0x4 */\n"),
+        # _ZN7daPkn_c16CleanupResourcesEv
+        ("/* ROM ordinal 18 -- _ZN7daPkn_c16CleanupResourcesEv, 0x0212fc84, size 0x54 */\n",
+         "/* ROM ordinal 18 -- _ZN7daPkn_c16CleanupResourcesEv, 0x0212fc84, size 0x54 */\n#if 0  /* hostgen LEDGER_PARK */\n"),
+        ("/* ROM ordinal 17 -- func_ov084_0212fc10, 0x0212fc10, size 0x74 */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN7daPkn_c16CleanupResourcesEv */\n/* ROM ordinal 17 -- func_ov084_0212fc10, 0x0212fc10, size 0x74 */\n"),
+        # func_ov084_0212f204
+        ("/* ROM ordinal 8 -- func_ov084_0212f204, 0x0212f204, size 0x94 */\n",
+         "/* ROM ordinal 8 -- func_ov084_0212f204, 0x0212f204, size 0x94 */\n#if 0  /* hostgen LEDGER_PARK */\n"),
+        ("/* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */\n",
+         "#endif  /* hostgen LEDGER_PARK: func_ov084_0212f204 */\n/* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */\n"),
+    ],
+}
+
+
+def ledger_park(text, sym):
+    """Bracket a member port/faces_sync.txt already defines."""
+    return apply_patches(text, sym, LEDGER_PARK, "LEDGER_PARK")
+
+
 # ---- A DECORATED ROM DATUM A FILE-SCOPE DECLARATION CANNOT REACH -----------
 #
 # Run link100, lane HOSTGEN4. DATA_C_LINKAGE below is the right fix whenever one
@@ -2576,6 +2675,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = uninit_local_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
     text, _ = redecl_conflict_patch(text, sym)
+    text, _ = ledger_park(text, sym)
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)

@@ -383,7 +383,38 @@ set(PORT_HOSTGEN_TU
     # they are declared inside C++ members where no linkage-specification
     # is allowed. Worth fourteen flat ROM rows. The slice file carries the
     # whole derivation and what the seat costs.
-    src/actors/daMky_c.cpp)
+    src/actors/daMky_c.cpp
+    # LEDGER_PARK and the MMIO rewrite, run link100 lane HOSTGEN4.
+    # src/actors/dScMgD3DBase_c.cpp is on no slice and answers NINETEEN
+    # rows: five flat ROM names and fourteen decorated members that
+    # nothing in this link defines. It compiles clean today, which is new;
+    # unmatched/MgD3DBase_DeclConflict.cpp exists because it did not (a
+    # C2733 between include/decl_common.h:1516 and this TU's definition of
+    # OnKicked) and that reason is obsolete. It needs the substitution for
+    # two reasons: TWENTY-FOUR MMIO writes, which compiled raw would latch
+    # in the mapped I/O window and never reach the PPU, and one member,
+    # OnKicked, that port/faces_sync.txt already defines as a reverse face.
+    # That member is PARKED in the generated copy rather than duplicated;
+    # the ledger row and the host copy retire together and neither is this
+    # lane's file. Measured: no other symbol it defines is defined anywhere
+    # else in walk_window's 8661 objects, so the three MgD3DBase_* host
+    # copies are untouched and stay.
+    src/actors/dScMgD3DBase_c.cpp
+    # LEDGER_PARK, run link100 lane HOSTGEN4. Two more class TUs that are
+    # on no slice and that MSVC compiles clean today. Between them they
+    # answer TWENTY-FIVE rows. What kept each out is a handful of members
+    # port/faces_sync.txt already defines as REVERSE faces -- five for
+    # daSanbo_c, three for daPkn_c -- whose flat forward targets are all
+    # defined in this link by their own per-function TUs, so the face is
+    # serving the vtable correctly today and a second definition in the
+    # class TU would be a duplicate symbol and nothing else. Each is parked
+    # in the generated copy, so the seat changes no dispatch at all. One
+    # more member is parked in each for a different reason: they are
+    # PORT_HOST_ABI host copies (unmatched/Pokey_HostSites.cpp and
+    # unmatched/Actor_ClosestPlayer_OverlayReaders.cpp), and parking keeps
+    # each ruling exactly where it is rather than re-adjudicating it.
+    src/actors/daSanbo_c.cpp
+    src/actors/daPkn_c.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4110,6 +4141,10 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daGmch_c.cpp"  # ov081 +0x3dc
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp"  # ov085 +0x350
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daSanbo_c.cpp"  # ov096 +0x384
+    # and the generated copy, lane HOSTGEN4: this TU is on PORT_HOSTGEN_TU
+    # now, so the raw path alone would set the option on a source nothing
+    # compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daSanbo_c.cpp"
     PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
 
 # run linkw wave 18 (lane w18): the four matched dispatchers reclaimed from
@@ -18655,6 +18690,13 @@ set(PORT_FALLS_OFF_END_SOURCES
     # written up on its slice rows, so the row would name a source nothing
     # compiles:
     # src/game/actors/d_a_wanwan.cpp
+    # Added by lane HOSTGEN4 with the dScMgD3DBase_c seat. FOUR bodies in
+    # that TU reach the closing brace with the result still in r0 --
+    # Virtual7C, OnHitFromUnderneath, OnAimedAtWithEgg and
+    # func_ov006_020e6e3c -- which is the same shape as every row above.
+    # The loop below puts the option on the generated path too, so the
+    # substitution does not lose it.
+    src/actors/dScMgD3DBase_c.cpp
     )
 # A WHOLE-TU HOSTGEN SUBSTITUTION MOVES THE COMPILE, AND A PER-SOURCE PROPERTY
 # DOES NOT FOLLOW IT. Run link100, lane HOSTGEN2, measured: putting

@@ -137,3 +137,80 @@ src/actors/daMky_c.cpp
 src/__sinit_ov023_02111aa8.c
 src/func_0205fc44.c
 src/func_ov002_020e3e00.cpp
+
+# ---------------------------------------------------------------------------
+# dScMgD3DBase_c, THE MINIGAME 3D BASE CLASS
+# ---------------------------------------------------------------------------
+#
+# Nineteen rows: five flat ROM names (_Sound_PlayBank1Panned,
+# _func_ov006_020e6db4, _func_ov006_020e6e3c, _func_ov006_020e7508,
+# _func_ov006_020e759c) and fourteen decorated members that nothing in this link
+# defines -- the Before/After hooks, the five On* handlers, OnHitByMegaChar,
+# OnHitFromUnderneath, Virtual7C and Virtual84.
+#
+# It has been on no slice since lanes BNP and BNT of run mg11, which host-copied
+# four vtable slots (unmatched/MgD3DBase_Slots.cpp), the two sub-object tick
+# bodies (unmatched/MgD3DBase_ObjStateDispatch.cpp) and OnKicked
+# (unmatched/MgD3DBase_DeclConflict.cpp). MEASURED AGAINST THE WHOLE LINK, the
+# class TU as main has it today defines NONE of the six bodies those three files
+# supply, so all three stay and nothing collides with them.
+#
+# It goes through the substitution for two reasons and the first is the bigger
+# one: TWENTY-FOUR MMIO writes. Compiled raw those latch in the mapped I/O
+# window and never reach the PPU, which is the defect hostgen's MMIO rewrite
+# exists for and the reason src/actors/dScMgPanel_c.cpp is on the same list.
+#
+# The second is OnKicked, ROM ov006:0x020e6e78, vtable slot 24.
+# port/faces_sync.txt already carries it as a REVERSE face -- a definition of
+# ?OnKicked@dScMgD3DBase_c@@UAEHXZ forwarding to the flat ROM name, whose body
+# is MgD3DBase_DeclConflict.cpp -- so the class TU's own copy would be a
+# duplicate symbol. hostgen's LEDGER_PARK brackets that ONE member in the
+# generated copy. Nothing changes at run time: the face goes on serving slot 24
+# and its forward target is the same ROM body it is today.
+#
+# THE END STATE THE PARK IS WAITING FOR is a pair of edits neither of which is
+# this lane's: flip that ledger row to a FORWARD face so the flat ROM name
+# forwards to the class TU's real member, and retire
+# unmatched/MgD3DBase_DeclConflict.cpp in the same change. Its stated reason is
+# a C2733 between include/decl_common.h:1516 and this TU, and that reason is
+# OBSOLETE -- the TU compiles clean today, rc 0, with a real object.
+src/actors/dScMgD3DBase_c.cpp
+
+# ---------------------------------------------------------------------------
+# daSanbo_c AND daPkn_c, TWO CLASS TUs THE LEDGER WAS HOLDING
+# ---------------------------------------------------------------------------
+#
+# Twenty-five rows between them: fourteen for daSanbo_c (Pokey) and eleven for
+# daPkn_c (Piranha Plant), every one a flat ROM name in ov096 and ov084 plus
+# each class's factory.
+#
+# LANE SYNC6'S TABLE SAYS MSVC REFUSES BOTH. It does not, and has not for some
+# time: each compiles clean with the build's own flags, rc 0, with a real
+# object. What actually held them is smaller and was measured rather than read
+# off the table. Each defines a handful of members that port/faces_sync.txt
+# already defines as REVERSE faces -- five for daSanbo_c, three for daPkn_c --
+# and every one of those faces forwards to a flat ROM name that IS defined in
+# this link, by its own per-function TU. So the face is serving the vtable
+# correctly today, and the class TU's second definition would be a duplicate
+# symbol and nothing else. hostgen's LEDGER_PARK brackets those members in the
+# generated copy: the seat lands, the faces go on serving, and no dispatch
+# changes anywhere.
+#
+# ONE MORE MEMBER IS PARKED IN EACH, for a different reason. daSanbo_c defines
+# func_ov096_02135e2c, which unmatched/Pokey_HostSites.cpp host-copies, and
+# daPkn_c defines func_ov084_0212f204, which
+# unmatched/Actor_ClosestPlayer_OverlayReaders.cpp host-copies under a receiver
+# ruling lane SYNC6 flagged as worth re-checking. Parking the member keeps each
+# host copy's correction on the call and leaves both rulings untouched.
+#
+# THE END STATE, as with dScMgD3DBase_c above: flip those eight ledger rows to
+# FORWARD faces, retire the per-function TUs they forward to, and the parks come
+# out. That is port/faces_sync.txt's side of the work and it is written up in
+# runs/link100/out/HOSTGEN4/HANDOFF.md.
+#
+# slice_ov096.txt's own refusal block says taking daSanbo_c.cpp and the host
+# copies together would be a duplicate symbol. MEASURED AGAINST THE WHOLE LINK
+# that is true of exactly one symbol, func_ov096_02135e2c, and that one is
+# parked. The Tornado rows that block also names are untouched.
+src/actors/daSanbo_c.cpp
+src/actors/daPkn_c.cpp
