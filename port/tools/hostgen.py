@@ -1190,6 +1190,38 @@ VIRTUAL_CALL = {
     # call site this patch respelled no longer exists. The TU is quarantined
     # for C2561 in the same pass -- main's body takes a bare `return;` out of
     # an int function -- so no copy of it is generated either.
+    #
+    # WATERFALL MIST, run link100 lane HOSTGEN4. daObjMarioCap_c::Behavior
+    # calls the cap's own ModelAnim through a LOCAL four-virtual shadow,
+    # `((VObj *)(c + 0x300))->v03()`, and the ROM's ModelAnim vtable is
+    # [D1, D0, DoSetFile, UpdateVerts, Virtual10, Render, Virtual18], so +0x0c
+    # is UpdateVerts() with no arguments. The port's _ZTV9ModelAnim is filled
+    # in MSVC numbering, where the destructor is ONE slot, so +0x0c lands on
+    # Virtual10(Matrix4x3 &): a one-argument __thiscall whose `ret 4` pops a
+    # slot the frameless caller never pushed. Lane CAPSHOW measured it on VS
+    # map 2 -- the return site after `call [eax+0Ch]` comes back four bytes
+    # high on the frame a collected cap first animates, and Behavior's own ret
+    # lands on 0x300387b0.
+    #
+    # That is the whole reason port/unmatched/WaterfallMist_Behavior_HostSites
+    # .cpp exists, and before main's consolidation the src side was simply not
+    # on a slice: slice_gate33's loop skips the row by name. main then folded
+    # the body into the class TU, which slice_gate204 and slice_gate51 both
+    # name, so the matched body now arrives whether the port wants it or not
+    # and the two collide -- one of the six duplicate-symbol rows on
+    # walk_window's link. The substitution carries CAPSHOW's one-line
+    # correction into the class TU, which retires the host copy: the call is
+    # the ROM's slot-3 UpdateVerts, spelled qualified so nothing dispatches
+    # through the host table's numbering at all. The local VObj shadow stays;
+    # only the call changes.
+    "daObjMarioCap_c": [
+        ("        ((VObj *)(c + 0x300))->v03();",
+         "        /* hostgen VIRTUAL_CALL: the ROM's +0x0c on the cap's own\n"
+         "           ModelAnim is UpdateVerts(); the port's table is MSVC-\n"
+         "           numbered and puts Virtual10(Matrix4x3 &) there. Spelled\n"
+         "           qualified so no numbering is consulted. */\n"
+         "        ((ModelAnim *)(c + 0x300))->ModelAnim::UpdateVerts();"),
+    ],
 }
 
 
@@ -2059,6 +2091,29 @@ def ztv_c_linkage(text, sym):
 # datum has left the translation unit is a HARD ERROR, never a silent drop:
 # without the insertion the reference comes out decorated again and there is no
 # /alternatename that can bridge a decoration.
+# THE ADDRESS OF A ROM FUNCTION, TAKEN AS DATA. dBgW's two collision-callback
+# bodies are never CALLED by these translation units: func_020393d4 is handed
+# their address and the mesh collider calls them later, so the decomp declares
+# each one as a DATUM under its flat Itanium name. Fourteen translation units
+# do it and they do not agree on the type -- `int`, `char`, `void *`, `int[]`,
+# each one the width its own author happened to write -- so MSVC emits FOUR
+# decorated spellings of UpdatePosAndAngs and four of UpdatePosWithTransform
+# against the one ROM body. Under C linkage all seven collapse onto the flat
+# name __ZN4dBgW16UpdatePosAndAngs... (and its Transform twin), which is the
+# name the ROM itself carries and the one port/faces_sync.txt already has on
+# the wall as an ordinary face row. Nothing new arrives; seven wrong spellings
+# of one missing thing become the one right spelling.
+_DBGW_ANGS = ("_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPi"
+              "R7Vector3P10Vector3_16S8_")
+_DBGW_XFRM = ("_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPi"
+              "R7Vector3P10Vector3_16S8_")
+
+
+def _c_linkage_line(line, name):
+    """One file-scope declaration, re-declared with C linkage just above it."""
+    return (line + "\n", [(line, name)], "before")
+
+
 DATA_C_LINKAGE = {
     # Nine +0x3c state installs and two argument pairs, every one declared at
     # BLOCK SCOPE inside a member that carries no extern "C" region of its own.
@@ -2095,6 +2150,34 @@ DATA_C_LINKAGE = {
     "_ZN11ShadowModelD1Ev": ('#include "ShadowModel.h"\n', [
         ("extern ShadowModel *data_0209cef4;", "data_0209cef4"),
     ]),
+    # The dBgW collision-callback addresses, one row per translation unit and
+    # per spelling. See the block above the table.
+    "func_ov002_020b5e58":
+        _c_linkage_line("extern char %s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "_ZN13TTC_MovingBar13InitResourcesEv":
+        _c_linkage_line("extern int %s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "_ZN16RotatingCogSmall13InitResourcesEv":
+        _c_linkage_line("extern int %s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "func_ov002_020b676c":
+        _c_linkage_line("extern int %s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "_ZN25RotatingUpDownPlatformUtm13InitResourcesEv":
+        _c_linkage_line("extern void *%s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "func_ov091_02133254":
+        _c_linkage_line("extern void *%s;" % _DBGW_ANGS, _DBGW_ANGS),
+    "_ZN6ToxBox13InitResourcesEv":
+        _c_linkage_line("extern char %s;" % _DBGW_XFRM, _DBGW_XFRM),
+    "_ZN11PyramidLift13InitResourcesEv":
+        _c_linkage_line("extern int %s;" % _DBGW_XFRM, _DBGW_XFRM),
+    "_ZN11PyramidStep13InitResourcesEv":
+        _c_linkage_line("extern int %s;" % _DBGW_XFRM, _DBGW_XFRM),
+    "d_a_obj_wc_obj04":
+        _c_linkage_line("extern int %s;" % _DBGW_XFRM, _DBGW_XFRM),
+    "_ZN8CccArena13InitResourcesEv":
+        _c_linkage_line("extern int %s[];" % _DBGW_XFRM, _DBGW_XFRM),
+    "_ZN9SeesawBob13InitResourcesEv":
+        _c_linkage_line("extern int %s[];" % _DBGW_XFRM, _DBGW_XFRM),
+    "_ZN6ShipUp13InitResourcesEv":
+        _c_linkage_line("extern void* %s;" % _DBGW_XFRM, _DBGW_XFRM),
 }
 
 
@@ -2103,7 +2186,11 @@ def data_c_linkage(text, sym):
     row = DATA_C_LINKAGE.get(sym)
     if not row:
         return text, 0
-    anchor, decls = row
+    if len(row) == 3:
+        anchor, decls, where = row
+    else:
+        anchor, decls = row
+        where = "after"
     if anchor not in text:
         sys.exit("hostgen: %s: DATA_C_LINKAGE's anchor is not in the "
                  "translation unit any more:\n  %s\nRe-read the TU and move "
@@ -2127,6 +2214,8 @@ def data_c_linkage(text, sym):
              'extern "C" {\n'
              + "".join("    %s\n" % d for d, _ in decls)
              + "}\n")
+    if where == "before":
+        return text.replace(anchor, block + anchor, 1), len(decls)
     return text.replace(anchor, anchor + block, 1), len(decls)
 
 

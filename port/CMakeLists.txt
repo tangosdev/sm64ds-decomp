@@ -333,7 +333,47 @@ set(PORT_HOSTGEN_TU
     src/_ZN9TowerStep13InitResourcesEv.cpp
     src/game/actors/d_a_star_gate.cpp
     src/_ZN10LavaSeesaw16CleanupResourcesEv.cpp
-    src/_ZN11ShadowModelD1Ev.cpp)
+    src/_ZN11ShadowModelD1Ev.cpp
+    # DATA_C_LINKAGE again, run link100 lane HOSTGEN4, the dBgW collision
+    # callbacks. These thirteen translation units never CALL dBgW's two
+    # callback bodies: func_020393d4 is handed the address and the mesh
+    # collider calls it later, so each one declares the body as a DATUM under
+    # its flat Itanium name -- and they do not agree on the type. `int`,
+    # `char`, `void *`, `int[]`, whatever each author happened to write, so
+    # MSVC emits FOUR decorated spellings of UpdatePosAndAngs and FOUR of
+    # UpdatePosWithTransform against one ROM body, seven of which are on
+    # walk_window's wall. Under C linkage they collapse onto the flat name the
+    # ROM carries, which port/faces_sync.txt already has as an ordinary face
+    # row, so seven wrong spellings of one missing thing become the one right
+    # spelling and nothing new arrives. The fourteenth copy of the same
+    # declaration is unmatched/Coffin_InitResources.cpp, a host copy, which
+    # carries its own extern "C" instead.
+    src/func_ov002_020b5e58.cpp
+    src/_ZN13TTC_MovingBar13InitResourcesEv.cpp
+    src/_ZN16RotatingCogSmall13InitResourcesEv.cpp
+    src/func_ov002_020b676c.cpp
+    src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp
+    src/func_ov091_02133254.cpp
+    src/_ZN6ToxBox13InitResourcesEv.cpp
+    src/_ZN11PyramidLift13InitResourcesEv.cpp
+    src/_ZN11PyramidStep13InitResourcesEv.cpp
+    src/game/actors/d_a_obj_wc_obj04.cpp
+    src/_ZN8CccArena13InitResourcesEv.cpp
+    src/_ZN9SeesawBob13InitResourcesEv.cpp
+    src/_ZN6ShipUp13InitResourcesEv.cpp
+    # VIRTUAL_CALL, run link100 lane HOSTGEN4: the WaterfallMist duplicate, one
+    # of the six LNK2005 rows still on walk_window's link. Lane CAPSHOW's host
+    # copy exists because daObjMarioCap_c::Behavior calls the cap's own
+    # ModelAnim through a local four-virtual shadow at +0x0c, which is
+    # UpdateVerts in the ROM's numbering and Virtual10(Matrix4x3 &) in the
+    # port's MSVC-numbered table, whose `ret 4` unbalances the frameless
+    # caller. slice_gate33's loop skips the src row by name for exactly that
+    # reason -- but slice_gate204 and slice_gate51 name the class TU main
+    # folded the body into, so the matched body arrives anyway and the two
+    # collide. The substitution carries CAPSHOW's one-line correction into the
+    # class TU, and unmatched/WaterfallMist_Behavior_HostSites.cpp is retired
+    # in the same change.
+    src/actors/daObjMarioCap_c.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4359,6 +4399,15 @@ foreach(line IN LISTS SLICE33_LINES)
     # whose `ret 4` unbalances the frameless caller (measured: c0000005 on
     # the frame after a VS cap is collected). Skipped HERE so
     # slice_gate33.txt stays another lane's file, the VS_PathDivGuard shape.
+    #
+    # INERT SINCE run link100 lane HOSTGEN4, and left standing as the record.
+    # The TU is on PORT_HOSTGEN_TU now, so port_read_lines has already
+    # rewritten this row to the generated copy by the time the compare runs
+    # and the skip cannot fire. That is the intended end state: the generated
+    # copy carries CAPSHOW's correction, so there is nothing left to skip,
+    # and the host copy it used to make room for is retired. The skip stays
+    # because the substitution can be retired and this row would be needed
+    # again the same day.
     if(line STREQUAL "src/actors/daObjMarioCap_c.cpp")
         continue()
     endif()
@@ -14727,12 +14776,21 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_obj_wc_mizu.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV14daObjWc_Mizu_c=_ZTV19RotatingPlatformWdw;_ZTV10dBgActor_c=_ZTV10dBgActor_c")
+# BOTH PATHS, run link100 lane HOSTGEN4: this TU joined PORT_HOSTGEN_TU for
+# its decorated dBgW callback address, so the compile the build runs is the
+# generated copy. These two vtable renames are what make the class dispatch
+# through SwitchActivatedPlank's table at all; naming only the src/ row
+# would drop them silently, which is the drift the check near line 400
+# refuses. The src/ row is kept so the property is still right if the
+# substitution is ever retired.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_obj_wc_obj04.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_obj_wc_obj04.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV15daObjWc_Obj04_c=_ZTV20SwitchActivatedPlank;_ZTV10dBgActor_c=_ZTV10dBgActor_c")
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_obj_wc_obj04.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_obj_wc_obj04.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV15daObjWc_Obj04_c=_ZTV20SwitchActivatedPlank;_ZTV10dBgActor_c=_ZTV10dBgActor_c")
 set_source_files_properties(

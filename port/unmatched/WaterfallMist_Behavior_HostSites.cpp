@@ -65,6 +65,25 @@ extern void _ZN5dCc_c5ClearEv(void *thiz);
 extern void _ZN5dCc_c6UpdateEv(void *thiz);
 }
 
+/* RETIRED, run link100 lane HOSTGEN4. This body is now produced by the
+ * whole-TU hostgen substitution of src/actors/daObjMarioCap_c.cpp, whose
+ * VIRTUAL_CALL row carries the same one-line correction the banner above
+ * describes: the call at +0x300 is the ROM's slot-3 ModelAnim::UpdateVerts,
+ * spelled qualified, so no host table numbering is consulted.
+ *
+ * WHY IT HAD TO MOVE. Before main's consolidation the matched body was on no
+ * slice, so this copy stood alone and slice_gate33's loop skipped the src row
+ * by name. main folded the body into the class TU, which slice_gate204 line
+ * 116 and slice_gate51 line 17 both name, so the matched body arrives whether
+ * the port wants it or not and the two definitions collide -- one of the six
+ * LNK2005 rows on walk_window's link. Retiring this side ships the defect
+ * unless the correction moves with it, which is what the substitution does.
+ *
+ * THE TEXT IS KEPT, not deleted: it is the measured record of the fault and
+ * of the ROM numbering behind it, and it is what a reviewer reads to check
+ * that the substitution says the same thing.
+ */
+#if 0
 int daObjMarioCap_c::Behavior()
 {
     char *c = (char *)((Enemy *)this);
@@ -140,3 +159,4 @@ int daObjMarioCap_c::Behavior()
     _ZN5dCc_c6UpdateEv(c + 0x110);
     return 1;
 }
+#endif  /* RETIRED, lane HOSTGEN4 */

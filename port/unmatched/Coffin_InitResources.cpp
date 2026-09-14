@@ -55,7 +55,19 @@ extern SharedFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 }
 
+/* C LINKAGE, run link100 lane HOSTGEN4. This is the ADDRESS of a ROM body,
+   taken as a datum because func_020393d4 is handed it and the mesh collider
+   calls it later. Declared plain, MSVC emits the decorated
+   ?_ZN4dBgW22UpdatePosWithTransform...@@3HA, one of four decorated spellings
+   of the one ROM symbol that the fourteen translation units doing this
+   produce between them. Under C linkage they collapse onto the flat name the
+   ROM itself carries, which port/faces_sync.txt already has on the wall as an
+   ordinary face row. The thirteen src/ copies get the same treatment through
+   hostgen's DATA_C_LINKAGE table; this one is a host copy, so it is spelled
+   here. */
+extern "C" {
 extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
+}
 
 int Coffin::InitResources()
 {
