@@ -729,6 +729,43 @@ def run():
               "only definition there is, which is the honest answer: %s"
               % (dict(ref) or rows[0]["target"]))
 
+    print("case 25: the parameter-type join in the FORWARD direction")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [
+            ("_ZN8dActor_c15IsPlayerInRangeERK7Vector3i", 0x0201045C),
+            ("_ZN8dActor_c15IsPlayerInRangeEi", 0x020104DC)])
+        uni = {"__ZN8dActor_c15IsPlayerInRangeERK7Vector3i",
+               "__ZN8dActor_c15IsPlayerInRangeEi"}
+        rows, ref = facegen.derive_forward_rows(
+            ["?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z"], uni, root)
+        check(len(rows) == 1 and rows[0]["addr"] == 0x0201045C,
+              "the (Vector3 const &, int) caller takes the Vector3 overload: "
+              "%s" % (dict(ref) or "0x%08x" % rows[0]["addr"]))
+        # the REAL wall row has a third sibling whose parameter list carries a
+        # template block, and that must still refuse rather than be guessed
+        root2 = fake_root(td + "x", [
+            ("_ZN8dActor_c15IsPlayerInRangeERK7Vector3i", 0x0201045C),
+            ("_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i", 0x02010498),
+            ("_ZN8dActor_c15IsPlayerInRangeEi", 0x020104DC)])
+        rows2, ref2 = facegen.derive_forward_rows(
+            ["?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z"], uni, root2)
+        why = dict(ref2).get("?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z",
+                             "")
+        check(not rows2 and "outside the counted subset" in why,
+              "a sibling with a template parameter list still refuses the "
+              "whole join: %s" % why[-72:])
+        # two ROM names taking the same parameter CLASSES tell nothing apart
+        root3 = fake_root(td + "y", [
+            ("_ZN8Overload6UpdateEi", 0x02017800),
+            ("_ZN8Overload6UpdateEs", 0x02017840)])
+        rows3, ref3 = facegen.derive_forward_rows(
+            ["?Update@Overload@@QAEXH@Z"],
+            {"__ZN8Overload6UpdateEi", "__ZN8Overload6UpdateEs"}, root3)
+        why3 = dict(ref3).get("?Update@Overload@@QAEXH@Z", "")
+        check(not rows3 and "same parameter CLASSES" in why3,
+              "and a scalar-only pair is still the ApproachLinear refusal: %s"
+              % why3[-60:])
+
     print("")
     if FAILED:
         print("test_facegen FAIL (%d)" % len(FAILED))

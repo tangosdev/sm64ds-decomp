@@ -146,3 +146,100 @@ struct Model {
 /* PORT_HOST_ABI: the same receiver move as above. */
 void Model::_ZN5Model12SetPolygonIDEi(int id)
 { ::_ZN5Model12SetPolygonIDEi(this, id); }
+
+// =========================================================================
+// 4. EIGHT PARTICLE CALLBACKS THAT DO NOT OVERRIDE SpawnParticles
+// =========================================================================
+//
+// src/_ZN8Particle10SysTrackerC1Ev.cpp builds the thirteen particle callback
+// vtables and is the only object on this wall that asks for any of the eight
+// names below. Each is a DERIVED callback class's SpawnParticles, and
+// config/**/symbols.txt has no such function at any address: the ROM names
+// SpawnParticles on five callback classes only (the base callback_c,
+// simpleCallback_c, scaleCallback_c, checkYoganCallback_c and
+// edStarKiraCallback_c). So facegen refuses all eight under rule 1, correctly,
+// and the answer is not a ROM address for the derived name. It is that THESE
+// CLASSES DO NOT OVERRIDE IT.
+//
+// THE ROM'S OWN VTABLES SAY SO, word for word. The thirteen tables are four
+// words apart from _ZTVN5dPa_c7level_c16bubbleCallback_cE at arm9 0x0208f3a4;
+// word 0 is SpawnParticles and word 1 is OnUpdate. Read out of
+// config/arm9/relocs.txt, every one of the eight has its OWN OnUpdate in word 1
+// and a BASE CLASS's body in word 0:
+//
+//   table                        word 0 -> body            word 1
+//   bubbleCallback_c   0x0208f3a4  0x02022640 simpleCallback_c  its own
+//   splashCallback_c   0x0208f3e4  0x02022640 simpleCallback_c  its own
+//   fitWaterSimpleCallback_c 0x0208f444 0x02022640 simple...     its own
+//   checkWaterCallback_c 0x0208f3f4 0x020226d0 callback_c        its own
+//   checkWaterRippleCallback_c 0x0208f424 0x020226d0 callback_c  its own
+//   clipCallback_c     0x0208f434  0x020226d0 callback_c         its own
+//   fitWaterCallback_c 0x0208f454  0x020226d0 callback_c         its own
+//   cleanParticleCallback_c 0x0208f464 0x020226d0 callback_c     its own
+//
+// That is exactly what a C++ class that inherits a virtual without overriding
+// it produces, so a face that forwards the derived name to the base body
+// reproduces the ROM's own dispatch rather than inventing one. Both base
+// bodies are defined in this link under their flat names
+// (port/unmatched/Particle_RideThroughs.cpp hosts simpleCallback_c's, which
+// carries an ARM r1 ride-through, and the base callback_c's is a four-byte
+// stub). Nothing here changes a dispatch that exists: all eight names are
+// undefined at this tip, so nothing can currently reach them at all.
+//
+// THE TIDY VERSION is for src to stop declaring an override these classes do
+// not have, which is a matching question and is written down rather than tried.
+namespace Particle { struct System; }
+struct dPa_c { struct level_c; };
+struct dPa_c::level_c {
+    struct bubbleCallback_c;
+    struct splashCallback_c;
+    struct fitWaterSimpleCallback_c;
+    struct checkWaterCallback_c;
+    struct checkWaterRippleCallback_c;
+    struct clipCallback_c;
+    struct fitWaterCallback_c;
+    struct cleanParticleCallback_c;
+};
+extern "C" {
+void _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(
+    void *self, void *sys);
+void _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(
+    void *self, void *sys);
+}
+
+struct dPa_c::level_c::bubbleCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::splashCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::fitWaterSimpleCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::checkWaterCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::checkWaterRippleCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::clipCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::fitWaterCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+struct dPa_c::level_c::cleanParticleCallback_c
+{ virtual void SpawnParticles(Particle::System &sys); };
+
+/* the three that inherit simpleCallback_c's body, ROM word 0 = 0x02022640 */
+void dPa_c::level_c::bubbleCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::splashCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::fitWaterSimpleCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+
+/* the five that inherit the base callback_c's, ROM word 0 = 0x020226d0 */
+void dPa_c::level_c::checkWaterCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::checkWaterRippleCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::clipCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::fitWaterCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }
+void dPa_c::level_c::cleanParticleCallback_c::SpawnParticles(Particle::System &sys)
+{ _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(this, &sys); }

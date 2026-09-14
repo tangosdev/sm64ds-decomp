@@ -1784,6 +1784,51 @@ def derive_rows(flat_names, defined, root, und=None):
     return rows, refusals
 
 
+def pick_rom_by_params(slot, want):
+    """THE PARAMETER-TYPE JOIN, in the FORWARD direction.
+
+    Lane FACES3 taught the reverse direction to tell several ROM addresses on
+    one (class, method) key apart by the parameter types both sides spell, and
+    the forward direction never got it: a decorated caller name whose class and
+    method join three ROM overloads refused outright, even when its own
+    parameter list picks exactly one of them out.
+    `?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z` is the row on this wall.
+
+    `want` is _msvc_param_classes of the caller's undname signature and `slot`
+    is rom_join_addresses' {address: [ROM names]} for the key. Returns
+    (address, None) or (None, the reason), and it refuses on every kind of
+    doubt, the same three the reverse direction refuses on: a ROM name whose
+    parameter list is outside the counted subset, two ROM names taking the same
+    parameter CLASSES (an overload pair differing only in a scalar type, which
+    is the ApproachLinear shape), and a caller list that matches none of them.
+    """
+    if want is None:
+        return None, "the caller's parameter list is outside the counted subset"
+    seen = {}
+    for a in sorted(slot):
+        for name in slot[a]:
+            r = itanium_parse_ext(name)
+            pc = r.get("pcls") if r else None
+            if pc is None:
+                return None, ("%s in the same join has a parameter list "
+                              "outside the counted subset, so the overloads "
+                              "cannot be told apart" % name)
+            kpc = tuple(pc)
+            if kpc in seen:
+                return None, ("%s and %s take the same parameter CLASSES "
+                              "(%s), so the ROM names do not tell the "
+                              "overloads apart"
+                              % (seen[kpc][1], name,
+                                 ", ".join(x or "scalar" for x in pc)
+                                 or "none"))
+            seen[kpc] = (a, name)
+    hit = seen.get(tuple(want))
+    if hit is None:
+        return None, ("no ROM name in the join takes (%s)"
+                      % (", ".join(x or "scalar" for x in want) or "none"))
+    return hit[0], None
+
+
 def derive_forward_rows(decorated, defined, root, und=None):
     """The address binding in the OTHER direction: a decorated CALLER name.
 
@@ -1852,15 +1897,19 @@ def derive_forward_rows(decorated, defined, root, und=None):
             refusals.append((raw, "no ROM name for %s::%s in "
                              "config/**/symbols.txt" % (sig["cls"], meth)))
             continue
+        picked = None
         if len(slot) > 1:
-            parts = ["0x%08x %s" % (a, "/".join(sorted(slot[a])))
-                     for a in sorted(slot)]
-            refusals.append((raw, "rule 2: %d ROM addresses join %s::%s -- "
-                             "the plausible-sibling trap (%s)"
-                             % (len(slot), sig["cls"], meth,
-                                "; ".join(parts))))
-            continue
-        addr = list(slot)[0]
+            picked, pwhy = pick_rom_by_params(slot, _msvc_param_classes(sig))
+            if picked is None:
+                parts = ["0x%08x %s" % (a, "/".join(sorted(slot[a])))
+                         for a in sorted(slot)]
+                refusals.append((raw, "rule 2: %d ROM addresses join %s::%s -- "
+                                 "the plausible-sibling trap (%s); and the "
+                                 "parameter types do not tell them apart: %s"
+                                 % (len(slot), sig["cls"], meth,
+                                    "; ".join(parts), pwhy)))
+                continue
+        addr = picked if picked is not None else list(slot)[0]
         cands = [n for n in slot[addr]
                  if ("_" + n) in defined or n in defined]
         if not cands:
