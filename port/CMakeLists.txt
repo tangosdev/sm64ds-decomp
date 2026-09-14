@@ -316,7 +316,24 @@ set(PORT_HOSTGEN_TU
     src/actors/dScMgHanachan_c.cpp
     src/actors/dScMgRoulette_c.cpp
     src/game/actors/d_a_bg_snwmn.cpp
-    src/game/actors/d_a_propeller_heyho.cpp)
+    src/game/actors/d_a_propeller_heyho.cpp
+    # DATA_C_LINKAGE, run link100, lane HOSTGEN4. The same defect as the three
+    # ZTV rows above, one level out: each of these five translation units
+    # declares a ROM DATUM with a plain C++ `extern <T> data_<hex>;`, so MSVC
+    # asks the linker for the decorated name while the port's mount emits that
+    # datum with C linkage and every other consumer spells it that way. Sixteen
+    # rows of walk_window's unresolved wall, all sixteen with the C-linkage twin
+    # already DEFINED in the same link (ov006_syms.c, ov015_syms.c,
+    # ov022_syms.c, hal/actor_vtables.cpp, hal/cxxname_bridge.cpp and
+    # hal/auto_bss.cpp). hostgen inserts a file-scope extern "C" declaration
+    # after a named anchor and the TU's own declaration inherits the linkage;
+    # the DATA_C_LINKAGE block in tools/hostgen.py says why the block-scope half
+    # cannot be fixed where it stands (MSVC C2598, measured).
+    src/actors/dMgJump3DMario_c.cpp
+    src/_ZN9TowerStep13InitResourcesEv.cpp
+    src/game/actors/d_a_star_gate.cpp
+    src/_ZN10LavaSeesaw16CleanupResourcesEv.cpp
+    src/_ZN11ShadowModelD1Ev.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -17195,8 +17212,17 @@ endforeach()
 # compiled both ways and their listings are identical outside the TITLE, so the
 # option is claimed on this ONE source and on nothing else -- the treatment lane
 # MGWRITER named for func_ov006_020c07e8, measured here rather than inherited.
+#
+# BOTH PATHS, run link100 lane HOSTGEN4: this TU joined PORT_HOSTGEN_TU for its
+# nine decorated ROM data rows, so the compile the build actually runs is the
+# generated copy under build/port/host-src. /Zp4 is the pack that puts the PMF
+# at the ROM's +0x3c; naming only the src/ row would leave the generated copy
+# reading four bytes late, which is the exact drift the check near line 380
+# refuses. The src/ row is kept so the property is still right if the
+# substitution is ever retired.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/dMgJump3DMario_c.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/dMgJump3DMario_c.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4")
 foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb6} PRIVATE ${SLICE_PMFB6_SOURCES})
@@ -18464,25 +18490,14 @@ list(LENGTH _PORT_CONFIGURE_DEPS _PORT_CONFIGURE_DEPS_N)
 message(STATUS "CONFIGURE DEPS: ${_PORT_CONFIGURE_DEPS_N} configure-time inputs "
                "registered, ${_PORT_RAW_READ_N} raw reads")
 
-# ---- WHOLE-TU HOSTGEN SUBSTITUTION: THE COUNT ------------------------------
-#
-# Every substitution declared in PORT_HOSTGEN_TU near the top of this file has
-# to have replaced at least one slice row.  A substitution that matched nothing
-# generated a file no target compiles, which reads as green and ships the raw TU
-# with the defect the substitution exists to remove.  This is the assertion that
-# the FLW/BNT/TTE blocks make per slice, made once for the central mechanism.
-foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
-    if(NOT DEFINED "PORT_HOSTGEN_TU_HITS_${_hgt_rel}")
-        message(FATAL_ERROR "whole-TU hostgen: no hit counter for ${_hgt_rel}")
-    endif()
-    if("${PORT_HOSTGEN_TU_HITS_${_hgt_rel}}" EQUAL 0)
-        message(FATAL_ERROR "whole-TU hostgen: no slice row names ${_hgt_rel}, "
-                "so its generated copy is compiled by nothing and the raw TU "
-                "would carry its defects into the link")
-    endif()
-    message(STATUS "HOSTGEN TU: ${_hgt_rel} substituted in "
-                   "${PORT_HOSTGEN_TU_HITS_${_hgt_rel}} slice row(s)")
-endforeach()
+# The whole-TU hostgen COUNT assertion used to stand here. It now stands at the
+# very END of this file, because here it only saw the slice lists read above it:
+# run link100 lane HOSTGEN4 put src/actors/dMgJump3DMario_c.cpp on
+# PORT_HOSTGEN_TU and this copy refused it, naming a TU that IS on a slice row
+# (slice_slice1.txt line 71) simply because that list is read 130 lines further
+# down. The same blindness runs the other way and is the dangerous direction: a
+# substitution with one hit from an early slice and none from a late one passed
+# here while the late slice went on compiling the raw TU.
 
 # ===========================================================================
 # INT BODIES THAT FALL OFF THE END (C4716), PER SOURCE
@@ -18653,4 +18668,32 @@ foreach(line IN LISTS SLICE_FACES2_LINES)
 endforeach()
 foreach(_tfaces2 walk_window walk_window_hires smoke_player)
     target_sources(${_tfaces2} PRIVATE ${SLICE_FACES2_SOURCES})
+endforeach()
+
+# ---- WHOLE-TU HOSTGEN SUBSTITUTION: THE COUNT ------------------------------
+#
+# Every substitution declared in PORT_HOSTGEN_TU near the top of this file has
+# to have replaced at least one slice row.  A substitution that matched nothing
+# generated a file no target compiles, which reads as green and ships the raw TU
+# with the defect the substitution exists to remove.  This is the assertion that
+# the FLW/BNT/TTE blocks make per slice, made once for the central mechanism.
+#
+# LAST IN THE FILE, run link100 lane HOSTGEN4. It used to sit beside the
+# configure-deps summary, where it could only see the slice lists read above it,
+# so a substitution named only by a late list read as "no slice row names it"
+# and a substitution named by an early list AND a late one read as fully
+# covered when the late list was still compiling the raw TU. Every
+# port_read_lines call is above this point, so the count here is the whole
+# count.
+foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
+    if(NOT DEFINED "PORT_HOSTGEN_TU_HITS_${_hgt_rel}")
+        message(FATAL_ERROR "whole-TU hostgen: no hit counter for ${_hgt_rel}")
+    endif()
+    if("${PORT_HOSTGEN_TU_HITS_${_hgt_rel}}" EQUAL 0)
+        message(FATAL_ERROR "whole-TU hostgen: no slice row names ${_hgt_rel}, "
+                "so its generated copy is compiled by nothing and the raw TU "
+                "would carry its defects into the link")
+    endif()
+    message(STATUS "HOSTGEN TU: ${_hgt_rel} substituted in "
+                   "${PORT_HOSTGEN_TU_HITS_${_hgt_rel}} slice row(s)")
 endforeach()

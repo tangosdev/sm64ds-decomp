@@ -2018,6 +2018,118 @@ def ztv_c_linkage(text, sym):
     return block + text, len(rows)
 
 
+# ---- A ROM DATA EXTERN THAT MSVC DECORATED ---------------------------------
+#
+# PORT_HOST_ABI, run link100, lane HOSTGEN4: the same defect as ZTV_C_LINKAGE
+# above, one level out. A recovered translation unit declares a ROM DATUM with
+# a plain C++ `extern <T> data_<hex>;` -- at file scope above the TU's own
+# `extern "C"` region, or at block scope inside a member that has no such
+# region -- so MSVC asks the linker for the decorated name while every mount in
+# the port emits that datum with C linkage:
+#
+#   dMgJump3DMario_c.cpp.obj : error LNK2001: unresolved external symbol
+#       "struct PmfRecord data_ov006_0213b020" (?data_ov006_0213b020@@3UPmfRecord@@A)
+#
+# and ov006_syms.c defines `_data_ov006_0213b020` two feet away. mwccarm did
+# not care: the ROM carries one spelling and the decomp author's placement was
+# a matched-source detail, not a linkage decision.
+#
+# EXTERN_C_DATA above fixes the file-scope case by MOVING the TU's own
+# `extern "C" {` opener up over the run. That does not reach the block-scope
+# case at all -- a linkage-specification is namespace-scope only, and MSVC says
+# so outright (C2598: "linkage specification must be at global scope"), which
+# this lane measured before writing the rule. So this rule is purely ADDITIVE:
+# it inserts a file-scope `extern "C"` declaration of the same datum, with the
+# TU's own spelling of the type, after a named anchor, and the TU's later
+# declaration -- file scope or block scope -- inherits the linkage already
+# specified rather than fighting it. That is the same C++ rule ZTV_C_LINKAGE
+# rests on, and it was measured on this toolchain the same way: cl /c on
+#
+#     struct Pair;
+#     extern "C" { extern Pair data_test_2; }
+#     struct Pair { int a, b; };
+#     int g() { extern Pair data_test_2; return data_test_2.a; }
+#
+# emits ONE undefined symbol, `_data_test_2`, with no diagnostic.
+#
+# The anchor is named per row so the inserted block lands where the type is
+# already known: an incomplete class type is enough for an extern declaration,
+# but the TU's own typedefs and includes are not, so the rows anchor after the
+# include or after the struct the declarations use. A row whose anchor or whose
+# datum has left the translation unit is a HARD ERROR, never a silent drop:
+# without the insertion the reference comes out decorated again and there is no
+# /alternatename that can bridge a decoration.
+DATA_C_LINKAGE = {
+    # Nine +0x3c state installs and two argument pairs, every one declared at
+    # BLOCK SCOPE inside a member that carries no extern "C" region of its own.
+    # The types are the TU's own two-word shadows at lines 233 and 234, so the
+    # anchor is the second of them.
+    "dMgJump3DMario_c": ("struct Pair { int a, b; };\n", [
+        ("extern PmfRecord data_ov006_0213b020;", "data_ov006_0213b020"),
+        ("extern PmfRecord data_ov006_0213b028;", "data_ov006_0213b028"),
+        ("extern PmfRecord data_ov006_0213b030;", "data_ov006_0213b030"),
+        ("extern PmfRecord data_ov006_0213b038;", "data_ov006_0213b038"),
+        ("extern PmfRecord data_ov006_0213b060;", "data_ov006_0213b060"),
+        ("extern Pair data_ov006_0213b058;", "data_ov006_0213b058"),
+        ("extern Pair data_ov006_0213b068;", "data_ov006_0213b068"),
+        ("extern Pair data_ov006_0213b070;", "data_ov006_0213b070"),
+        ("extern Pair data_ov006_0213b078;", "data_ov006_0213b078"),
+    ]),
+    # File scope, above this TU's own extern "C" region: the two file views the
+    # step mounts and the collision-parameter block it hands dBgW_Kc.
+    "_ZN9TowerStep13InitResourcesEv": ('#include "dBgCh_Gnd.h"\n', [
+        ("extern SharedFilePtr data_ov015_02114a64;", "data_ov015_02114a64"),
+        ("extern SharedFilePtr data_ov015_02114a5c;", "data_ov015_02114a5c"),
+        ("extern CLPS_Block data_ov015_02113594;", "data_ov015_02113594"),
+    ]),
+    # File scope: the player array the gate indexes and the rotation vector it
+    # passes to Vec3_RotateYAndTranslate.
+    "d_a_star_gate": ("extern u8 data_0209f250;\n", [
+        ("extern Player *data_0209f394[];", "data_0209f394"),
+        ("extern char data_020a0ebc[];", "data_020a0ebc"),
+    ]),
+    "_ZN10LavaSeesaw16CleanupResourcesEv": ('#include "decl_common.h"\n', [
+        ("extern int data_ov022_021145a0[];", "data_ov022_021145a0"),
+    ]),
+    # The head of the live-shadow list, hosted in hal/actor_vtables.cpp.
+    "_ZN11ShadowModelD1Ev": ('#include "ShadowModel.h"\n', [
+        ("extern ShadowModel *data_0209cef4;", "data_0209cef4"),
+    ]),
+}
+
+
+def data_c_linkage(text, sym):
+    """Give a TU's ROM data externs C linkage, ahead of its own declaration."""
+    row = DATA_C_LINKAGE.get(sym)
+    if not row:
+        return text, 0
+    anchor, decls = row
+    if anchor not in text:
+        sys.exit("hostgen: %s: DATA_C_LINKAGE's anchor is not in the "
+                 "translation unit any more:\n  %s\nRe-read the TU and move "
+                 "the anchor -- do NOT drop the row. Without it every datum "
+                 "below comes out decorated and no /alternatename can bridge "
+                 "a decoration." % (sym, anchor.rstrip("\n")))
+    for decl, name in decls:
+        if name not in text:
+            sys.exit("hostgen: %s: DATA_C_LINKAGE names %s, which is not in "
+                     "the translation unit any more. Re-read the TU rather "
+                     "than dropping the row." % (sym, name))
+    block = ("/* hostgen DATA_C_LINKAGE: this TU declares these ROM data "
+             "symbols\n"
+             "   without a linkage-specification, so MSVC asks for the "
+             "decorated\n"
+             "   name while every mount emits the C one. A redeclaration "
+             "keeps the\n"
+             "   linkage already specified, so the TU's own declaration "
+             "below\n"
+             "   inherits this one. */\n"
+             'extern "C" {\n'
+             + "".join("    %s\n" % d for d, _ in decls)
+             + "}\n")
+    return text.replace(anchor, anchor + block, 1), len(decls)
+
+
 # ---- THE VTABLE ADDRESS-POINT BIAS ------------------------------------------
 #
 # PORT_HOST_ABI: mwcc's own vtable symbol denotes the OBJECT START and the
@@ -2163,6 +2275,9 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, nztv = ztv_c_linkage(text, sym)
     if nztv and not QUIET_VPTR:
         print("  %s: %d vtable extern(s) given C linkage" % (sym, nztv))
+    text, ndata = data_c_linkage(text, sym)
+    if ndata and not QUIET_VPTR:
+        print("  %s: %d ROM data extern(s) given C linkage" % (sym, ndata))
     text, nvptr = vptr_address_point(text)
     if nvptr and not QUIET_VPTR:
         print("  %s: %d vtable address-point bias(es) dropped" % (sym, nvptr))
