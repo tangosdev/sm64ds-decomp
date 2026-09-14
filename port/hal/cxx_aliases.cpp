@@ -993,6 +993,35 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_0210af70@@3PAHA=_data_ov002_0210af70")
 #pragma comment(linker, "/alternatename:?data_ov070_021235bc@@3UState@daPropeller_Heyho_c@@A=_data_ov070_021235bc")
 #pragma comment(linker, "/alternatename:?data_ov070_021235cc@@3UState@daPropeller_Heyho_c@@A=_data_ov070_021235cc")
+/* ADDED at the main -> port sync (lane SYNC7, wave 9). Five more of the same
+   shape, each RHS checked as defined in walk_window's own link inputs and each
+   LHS an unresolved row of that link.
+
+   THE FIRST ONE IS THE VTABLE, and it is a name bridge and not an address
+   change. main's 3739fdf78 gave src/d_a_obj_path_lift.cpp the imported table
+   by its Itanium name: `extern int _ZTV15daObjPathLift_c[];` and the store
+   `*(int *)actor = (int)&_ZTV15daObjPathLift_c[0];`, addend ZERO, which is the
+   correct spelling for a TU that IMPORTS its vtable. Declared in C++ at file
+   scope, MSVC decorates it. config/arm9/overlays/ov100/symbols.txt gives both
+   names the SAME address, 0x0214857c (lines 224 and 225), and
+   port/hal/actor_classes_ov100pl.cpp already hosts that table as
+   data_ov100_0214857c[33] with the address point at slot 0, so the alias binds
+   the new spelling to the array the port has always filled.
+
+   THE OTHER FOUR ARE POINTER-TYPED DATA (PAU, PAPAU, PAD, PAH), so nothing
+   reads a struct layout through the name. Thirteen more decorated data rows on
+   this wall have a defined flat counterpart and are NOT written here: nine are
+   the ov006 PmfRecord and Pair words and one is ?data_ov002_0210dc00@@3PAP8C
+   @@AEXXZA, which is pointer-to-member typed outright -- the consumer-spelling
+   law (port/mg_fanout_costs.txt section 4) says a consumer naming a member
+   pointer needs a host copy whether it is called or only copied -- and three
+   are struct-by-value words (CLPS_Block, two SharedFilePtr) whose hosted size
+   this lane did not measure. They are listed in out/SYNC7/HANDOFF.md. */
+#pragma comment(linker, "/alternatename:?_ZTV15daObjPathLift_c@@3PAHA=_data_ov100_0214857c")
+#pragma comment(linker, "/alternatename:?data_0209cef4@@3PAUShadowModel@@A=_data_0209cef4")
+#pragma comment(linker, "/alternatename:?data_0209f394@@3PAPAUPlayer@@A=_data_0209f394")
+#pragma comment(linker, "/alternatename:?data_020a0ebc@@3PADA=_data_020a0ebc")
+#pragma comment(linker, "/alternatename:?data_ov022_021145a0@@3PAHA=_data_ov022_021145a0")
 #pragma comment(linker, "/alternatename:?data_ov002_02110634@@3UState@@A=_data_ov002_02110634")
 #pragma comment(linker, "/alternatename:?data_0209f318@@3PAXA=_data_0209f318")
 #pragma comment(linker, "/alternatename:?func_0200d580@@YAXPAUCamera@@H@Z=_func_0200d580")
