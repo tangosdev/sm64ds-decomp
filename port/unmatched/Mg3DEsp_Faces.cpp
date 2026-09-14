@@ -133,8 +133,21 @@ namespace Particle { struct SysTracker { ~SysTracker(); }; }
 struct TextureSequence { ~TextureSequence(); };
 struct ModelAnim { ~ModelAnim(); };
 
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE, the same treatment the
+   Model and Particle::SysTracker faces below took at ALIAS2. This shadow
+   declares the destructor NON-VIRTUAL and src/_ZN18TextureTransformerD1Ev.cpp,
+   the TU config says owns ROM 0x0201592c, emits the VIRTUAL spelling
+   ??1TextureTransformer@@UAE@XZ, so the two mangle apart and facegen read one
+   function as two and refused to bind the flat name. Measured before removal:
+   dumpbin over all 8662 of walk_window's link inputs reports ZERO objects
+   referencing ??1TextureTransformer@@QAE@XZ, while the virtual spelling has
+   fourteen. The flat name is now defined by the face in port/faces_sync.txt.
+   The body is kept under #if 0 rather than deleted, so the evidence in it
+   stays readable. */
+#if 0
 TextureTransformer::~TextureTransformer()
 { _ZN18TextureTransformerD1Ev(this); }
+#endif
 
 /* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN10StarMarkerD1Ev.cpp emits ??1Model@@QAE@XZ as a COMDAT since main langmode migration, so this out-of-line face was the second definition (LNK2005).
    The body is kept below under #if 0 rather than deleted, so the
@@ -152,8 +165,16 @@ Particle::SysTracker::~SysTracker()
 { _ZN8Particle10SysTrackerD1Ev(this); }
 #endif
 
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE, same shape as the
+   TextureTransformer face above: non-virtual here, virtual in
+   src/_ZN15TextureSequenceD1Ev.cpp, which owns ROM 0x02015a2c and emits
+   ??1TextureSequence@@UAE@XZ. Zero objects reference the non-virtual spelling;
+   twenty-six reference the virtual one. The flat name is now defined by the
+   face in port/faces_sync.txt. */
+#if 0
 TextureSequence::~TextureSequence()
 { _ZN15TextureSequenceD1Ev(this); }
+#endif
 
 ModelAnim::~ModelAnim()
 { _ZN9ModelAnimD1Ev(this); }

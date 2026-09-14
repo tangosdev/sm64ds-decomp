@@ -116,6 +116,18 @@ MSVC_METHOD = re.compile(r"^\?(\w+)@(\w+)@@(?!Y)[A-Z]")
 # -- 34 rows of the sync wall, including ??0fBase_c@@QAE@XZ. parse_msvc_sig
 # has always reported the structor kind; only the gate was short.
 MSVC_STRUCTOR = re.compile(r"^\?\?([01])((?:\w+@)+)@[A-Z]")
+# A MEMBER OF A NESTED CLASS IS A MEMBER TOO, and MSVC_METHOD cannot see one
+# either: it allows exactly ONE qualifier component, so
+# ?SpawnParticles@splashCallback_c@level_c@dPa_c@@ and
+# ?OnUpdate@CleanParticleCallback@Particle@@ refused as "not a class-member
+# mangle" -- eleven rows of this wall, every one a real member of a class the
+# Itanium side parses happily (itanium_parse_ext has taken up to four name
+# components since lane FACES1). This is a SECOND expression rather than a
+# widening of the first, because MSVC_METHOD's group(2) is read as a bare class
+# name by build_universe and classify and a multi-component group there would be
+# a silent change to the legacy classification path. Only the FORWARD
+# direction's gate uses this one.
+MSVC_METHOD_Q = re.compile(r"^\?(\w+)@((?:\w+@)+)@(?!Y)[A-Z]")
 MSVC_NSFREE = re.compile(r"^\?(\w+)@(\w+)@@Y([A-Z])")
 MSVC_DATA = re.compile(r"^\?(\w+)@(?:(\w+)@)?@3(.+)$")
 MSVC_FREE = re.compile(r"^\?(\w+)@@Y([A-Z])")
@@ -169,6 +181,18 @@ SAFE_DATA_TYPE = re.compile(r"^(?:[PQ][AB])*(?:[CDEFGHIJKMNX]|_[JKN])[A-D]$")
 STRUCTOR_KEY = {"C1": "ctor", "C2": "ctor", "C3": "ctor",
                 "D0": "~delete", "D1": "~", "D2": "~"}
 
+# THE OPERATOR TABLE, and it has exactly one row on purpose. An operator is a
+# member like any other at the ABI -- dBgPi::operator= is __thiscall with the
+# receiver in ecx and one reference argument, which is why lane HALROWS had to
+# refuse it an /alternatename and leave it for a face. What made it unreachable
+# was the NAME: the Itanium spelling is the two-letter code aS where a method
+# name would be, and MSVC's is ??4 where ??0 and ??1 sit. Both sides are
+# mechanical; what is not mechanical is CLAIMING an operator nothing has
+# measured, so the table carries the one this wall actually has and every other
+# operator still returns None with the old reason. Each entry is
+#   Itanium code -> (the C++ spelling undname prints, the MSVC prefix).
+ITANIUM_OPERATORS = {"aS": ("operator=", "??4")}
+
 # MSVC access/virtualness letters, member functions, near (A) code model.
 # The pair is what the shadow declaration has to reproduce: get either half
 # wrong and the emitted reference names a symbol nothing defines.
@@ -207,17 +231,29 @@ def itanium_parse_ext(name):
         falling to UNKNOWN;
       * structors, keyed by STRUCTOR_KEY above;
       * method names that begin with an underscore (Heap::_Deallocate),
-        which itanium_parse rejected on meth[0].isalpha().
+        which itanium_parse rejected on meth[0].isalpha();
+      * the St abbreviation as a leading component, so _ZNSt9type_infoD1Ev
+        reads as std::type_info::~type_info and binds to ??1type_info@std@@;
+      * the operator names in ITANIUM_OPERATORS, which is operator= alone at
+        the moment: one row of this wall is dBgPi::operator=, and every other
+        operator still refuses rather than being claimed unmeasured.
 
-    Returns a dict, or None when the name is outside the subset (operators,
-    _ZTV/_ZTI, _ZSt names, template blocks in the NAME components). Arity
-    comes from itanium_arity and is -1 when that refuses.
+    Returns a dict, or None when the name is outside the subset (an operator
+    that is not in the table, _ZTV/_ZTI, template blocks in the NAME
+    components). Arity comes from itanium_arity and is -1 when that refuses.
     """
-    m = re.match(r"^_ZN(K?)(\d.*)$", name)
+    m = re.match(r"^_ZN(K?)(St\d.*|\d.*)$", name)
     if not m:
         return None
     is_const = m.group(1) == "K"
     comps, rest = [], m.group(2)
+    if rest.startswith("St"):
+        # The ABI's one-letter abbreviation for the std namespace. It is a
+        # NAME component here rather than a substitution, so it is spelled out
+        # and everything downstream (msvc_prefix, cpp_qualified, rule 3's
+        # class comparison against undname) sees an ordinary component.
+        comps.append("std")
+        rest = rest[2:]
     while rest and rest[0].isdigit():
         n = re.match(r"(\d+)", rest)
         length = int(n.group(1))
@@ -234,18 +270,29 @@ def itanium_parse_ext(name):
         key = STRUCTOR_KEY.get(tag)
         if key is None:
             return None
+        subs = subst_table(comps)
         return {"comps": comps, "cls": list(comps), "meth": key,
                 "structor": tag, "const": is_const,
-                "pcls": itanium_param_classes(rest[st.end():]),
+                "pcls": itanium_param_classes(rest[st.end():], subs),
                 "arity": itanium_arity(rest[st.end():])}
+    op = re.match(r"^(%s)E" % "|".join(sorted(ITANIUM_OPERATORS)), rest)
+    if op and comps:
+        subs = subst_table(comps)
+        return {"comps": comps + [ITANIUM_OPERATORS[op.group(1)][0]],
+                "cls": list(comps),
+                "meth": ITANIUM_OPERATORS[op.group(1)][0],
+                "structor": None, "const": is_const,
+                "pcls": itanium_param_classes(rest[op.end():], subs),
+                "arity": itanium_arity(rest[op.end():])}
     if not rest.startswith("E") or len(comps) < 2:
         return None
     meth = comps[-1]
     if not (meth[0].isalpha() or meth[0] == "_"):
         return None
+    subs = subst_table(comps[:-1])
     return {"comps": comps, "cls": comps[:-1], "meth": meth,
             "structor": None, "const": is_const,
-            "pcls": itanium_param_classes(rest[1:]),
+            "pcls": itanium_param_classes(rest[1:], subs),
             "arity": itanium_arity(rest[1:])}
 
 
@@ -260,6 +307,9 @@ def msvc_prefix(rec):
         return "??0" + qual + "@"
     if rec["meth"] == "~":
         return "??1" + qual + "@"
+    for _code, (spelling, prefix) in ITANIUM_OPERATORS.items():
+        if rec["meth"] == spelling:
+            return prefix + qual + "@"
     if rec["structor"]:
         return None                     # "~delete": ??_G, not nameable
     return "?" + rec["meth"] + "@" + qual + "@"
@@ -584,6 +634,26 @@ def structor_twin_proof(root, name_a, name_b):
     return True, None
 
 
+def itanium_stem(cls):
+    """Re-spell a parsed class path as the Itanium prefix it came from.
+
+    This is the inverse of itanium_parse_ext's component loop and it has to
+    honour the SAME abbreviation: the std namespace mangles as the two letters
+    St and never as 3std, so a class path whose first component is std has to
+    be spelled back that way or the reconstruction names a symbol that does not
+    exist. That is what made the structor twin rule refuse
+    _ZNSt9type_infoD1Ev: it rebuilt the stem as _ZN3std9type_info, compared it
+    against the ROM's real pair and reported a pair that was not a pair.
+    """
+    out = ""
+    for i, c in enumerate(cls):
+        if i == 0 and c == "std":
+            out += "St"
+        else:
+            out += "%d%s" % (len(c), c)
+    return "_ZN" + out
+
+
 def structor_twin_slot(root, rec, slot):
     """(True, None) when a rule-2 slot is a provable C1/C2 or D1/D2 pair.
 
@@ -602,7 +672,7 @@ def structor_twin_slot(root, rec, slot):
         return False, ("the two addresses carry %d ROM names (%s)"
                        % (len(names), ", ".join(names)))
     letter = "C" if rec["meth"] == "ctor" else "D"
-    stem = "_ZN" + "".join("%d%s" % (len(c), c) for c in rec["cls"])
+    stem = itanium_stem(rec["cls"])
     want = ["%s%s1Ev" % (stem, letter), "%s%s2Ev" % (stem, letter)]
     if names != want:
         return False, ("the pair is %s, not the %s1/%s2 siblings of one class"
@@ -657,7 +727,49 @@ def itanium_parse(name):
     return cls, meth, is_const, itanium_arity(rest[1:])
 
 
-def itanium_param_classes(params):
+def subst_table(cls):
+    """The Itanium SUBSTITUTION list the leading nested-name pushes.
+
+    Mangling N<A><B>E pushes A, then A::B -- every PREFIX of the qualified
+    name, in that order -- and those are what S_, S0_, S1_ ... name in the
+    parameter list that follows. A member name's own METHOD component is not a
+    prefix and is never pushed, which is why Player::IsState's S_ is Player and
+    MemoryNode::Target's is MemoryNode (not Target: the parameter PS_ of
+    _ZN10MemoryNode6TargetC1EPS_ is a MemoryNode *, and the definition the ROM
+    address names spells it PAU1@, which is the same thing on the MSVC side).
+    """
+    out, acc = [], []
+    for c in cls:
+        acc.append(c)
+        out.append("::".join(acc))
+    return out
+
+
+def subst_index(tok):
+    """A substitution token -> its index into subst_table. None if unparsable.
+
+    S_ is the first entry, then S0_, S1_ ... S9_, SA_ ... SZ_ in base 36, which
+    is the ABI's own numbering. Anything else (the standard abbreviations Sa,
+    St and friends, which carry no trailing underscore) returns None and the
+    row refuses rather than guessing.
+    """
+    if len(tok) < 2 or tok[0] != "S" or tok[-1] != "_":
+        return None
+    body = tok[1:-1]
+    if body == "":
+        return 0
+    n = 0
+    for ch in body:
+        if ch.isdigit():
+            n = n * 36 + int(ch)
+        elif ch.isupper():
+            n = n * 36 + (ord(ch) - ord("A") + 10)
+        else:
+            return None
+    return n + 1
+
+
+def itanium_param_classes(params, subs=()):
     """The CLASS NAME of each argument in an Itanium parameter list.
 
     A scalar argument contributes None and a class-typed one its innermost
@@ -665,6 +777,13 @@ def itanium_param_classes(params):
     [None, None]. Returns None when the list is outside the counted subset.
     This is what lets the address binding tell two ROM OVERLOADS apart: they
     join one (class, method) key and differ only here.
+
+    `subs` is subst_table() of the name's own class, so a parameter spelled as
+    a BACK-REFERENCE resolves instead of poisoning the whole list. Three rows
+    of this wall are that shape and no other: PS_ in
+    _ZN10MemoryNode6TargetC1EPS_, RKS_ in _ZN5dBgPiaSERKS_ and the nested
+    NS_5StateE in _ZN6Player7IsStateERNS_5StateE. A substitution the table
+    cannot answer still returns None.
     """
     if params == "v":
         return []
@@ -686,13 +805,33 @@ def itanium_param_classes(params):
             out.append(name)
             continue
         if c == "S":
-            return None              # a back-reference: not spelled here
+            j = params.find("_", i)
+            if j < 0:
+                return None          # a standard abbreviation, not a back-ref
+            k = subst_index(params[i:j + 1])
+            if k is None or k >= len(subs):
+                return None
+            out.append(subs[k].split("::")[-1])
+            i = j + 1
+            continue
         if c == "N":
             depth, i, comps = 1, i + 1, []
             while i < len(params) and depth:
                 if params[i] == "E":
                     depth -= 1
                     i += 1
+                    continue
+                if params[i] == "S":
+                    # A nested name whose PREFIX is a back-reference:
+                    # NS_5StateE is Player::State inside Player's own members.
+                    j = params.find("_", i)
+                    if j < 0:
+                        return None
+                    k = subst_index(params[i:j + 1])
+                    if k is None or k >= len(subs):
+                        return None
+                    comps += subs[k].split("::")
+                    i = j + 1
                     continue
                 m = re.match(r"(\d+)", params[i:])
                 if not m:
@@ -876,7 +1015,8 @@ def _undname_direct(exe, symbols):
 # unresolved external with no hint of why. See faces_sync.txt's header.
 SIG = re.compile(
     r"^(public|protected|private): "
-    r"(virtual )?(.*?)__thiscall ([\w:]+)::(~?\w+)\((.*)\)(const )?\s*$")
+    r"(virtual )?(.*?)__thiscall ([\w:]+)::(operator=|~?\w+)\((.*)\)"
+    r"(const )?\s*$")
 
 
 def parse_param(text):
@@ -1307,6 +1447,10 @@ def report(rows):
 # ---------------------------------------------------------------------------
 
 MSVC_QUAL = re.compile(r"^\?\?([01])((?:\w+@)+)@[A-Z]")
+# The operator mangles, keyed by the same ??<code> shape as the structors.
+MSVC_OPER = re.compile(r"^\?\?([2-9A-Z_])((?:\w+@)+)@[A-Z]")
+MSVC_OPER_KEY = dict((prefix[2:], spelling)
+                     for spelling, prefix in ITANIUM_OPERATORS.values())
 MSVC_MEM = re.compile(r"^\?(\w+)@((?:\w+@)+)@[A-Z]")
 
 
@@ -1327,9 +1471,13 @@ def msvc_member_index(defined):
         if not raw.startswith("?"):
             continue
         m = MSVC_QUAL.match(raw)
+        mo = None if m else MSVC_OPER.match(raw)
         if m:
             meth = "ctor" if m.group(1) == "0" else "~"
             quals = m.group(2).rstrip("@").split("@")
+        elif mo and mo.group(1) in MSVC_OPER_KEY:
+            meth = MSVC_OPER_KEY[mo.group(1)]
+            quals = mo.group(2).rstrip("@").split("@")
         else:
             m = MSVC_MEM.match(raw)
             if not m:
@@ -1419,6 +1567,66 @@ def pick_by_params(root, rec, ident, slot, cands, und=None):
     return hits[0], None
 
 
+# THE SHADOW RULE (lane HALROWS, wave 9b; out/HALROWS/settled.txt section A).
+#
+# Rule 2 refuses a flat name whose class::method has SEVERAL MSVC definitions
+# in the link, because one ROM address cannot be two bodies. That is right for
+# an overload and wrong for the commonest shape on this wall: a port host file
+# in port/hal or port/unmatched declares a PRIVATE SHADOW of a game class so it
+# can reach one member, spells that member with a different RETURN TYPE (int
+# against void, void * against unsigned, int against bool) or a different
+# VIRTUALNESS, and MSVC mangles the two differently. There is one function and
+# two declarations of it, not two functions.
+#
+# The join that settles which is which is the ROM ADDRESS, never the name:
+# config/**/symbols.txt gives the flat name's address, config delinks.txt gives
+# the TU that owns that address, and THAT TU'S OWN OBJECT is dumped to read the
+# decorated spelling it emits. Lane HALROWS did that join for all fifteen
+# ambiguous rows on this wall and recorded both spellings for each. The entries
+# below are the ones whose host file still carries the shadow after lane
+# FACES4's wave-9c retirements; each names the real definition it shadows, the
+# file that carries it, and what the two disagree about.
+#
+# A SHADOW IS ONLY EVER DROPPED WHEN THE DEFINITION IT SHADOWS IS ALSO IN THE
+# CANDIDATE SET. If the real one is missing, the row refuses exactly as before
+# rather than binding to the host's spelling, which would be the receiver-shape
+# failure this whole file exists to prevent.
+PORT_SHADOW_DEFINITIONS = {
+    "?LoadFile@SharedFilePtr@@QAEXXZ": (
+        "?LoadFile@SharedFilePtr@@QAEPAXXZ", "port/hal/gx_upload_bridge.cpp",
+        "the host spells the return void, the owning TU void *"),
+    "?ChangeState@Camera@@QAEXPAUState@1@@Z": (
+        "?ChangeState@Camera@@QAEHPAUState@1@@Z", "port/hal/door_ring_faces.cpp",
+        "the host spells the return void, the owning TU int"),
+    "?IsState@Player@@QAEHAAUState@1@@Z": (
+        "?IsState@Player@@QAE_NAAUState@1@@Z", "port/hal/reverse_bridges.cpp",
+        "the host spells the return int, the owning TU bool"),
+    "?TryGrab@Player@@QAE_NAAUdActor_c@@@Z": (
+        "?TryGrab@Player@@QAEHAAUdActor_c@@@Z", "port/hal/cxx_aliases.cpp",
+        "the host spells the return bool, the owning TU int"),
+    "?GetNode@PathPtr@@QBEHAAUVector3@@I@Z": (
+        "?GetNode@PathPtr@@QBEXAAUVector3@@I@Z",
+        "port/unmatched/ToxBox_ShadowFaces.cpp",
+        "the host spells the return int, the owning TU void"),
+}
+
+
+def drop_shadows(cands):
+    """Apply the shadow rule to one class::method's candidate list."""
+    if len(cands) < 2:
+        return cands, []
+    kept, dropped = [], []
+    for c in cands:
+        row = PORT_SHADOW_DEFINITIONS.get(c)
+        if row and row[0] in cands:
+            dropped.append(c)
+        else:
+            kept.append(c)
+    if len(kept) == 1:
+        return kept, dropped
+    return cands, []
+
+
 def derive_rows(flat_names, defined, root, und=None):
     """The ADDRESS BINDING, applied to a list of flat ROM names.
 
@@ -1464,6 +1672,7 @@ def derive_rows(flat_names, defined, root, und=None):
         key = (tuple(rec["cls"]), rec["meth"])
         slot = joins.get(key, {})
         cands = midx.get(key, [])
+        cands, _shadowed = drop_shadows(cands)
         overload = False
         if len(slot) > 1:
             twin, twhy = structor_twin_slot(root, rec, slot)
@@ -1595,7 +1804,7 @@ def derive_forward_rows(decorated, defined, root, und=None):
         und = undname_batch([d for d in decorated if d.startswith("?")])
     rows, refusals = [], []
     for raw in decorated:
-        if not (MSVC_METHOD.match(raw) or MSVC_STRUCTOR.match(raw)):
+        if not (MSVC_METHOD_Q.match(raw) or MSVC_STRUCTOR.match(raw)):
             refusals.append((raw, "not a class-member mangle"))
             continue
         text = und.get(raw)
@@ -2023,6 +2232,16 @@ def _walk(tree, prefix=()):
 
 QUAL_USE = re.compile(r"\b(\w+(?:::\w+)+)\b")
 
+# COMPONENTS THAT ARE NAMESPACES ON THE HOST, not classes. MSVC mangles a class
+# inside a namespace exactly as it mangles a class inside a class, so a struct
+# shadow reproduces either one and every shadow in this file has been a struct.
+# std is the exception the compiler forces: it has already declared std as a
+# namespace, so `struct std { ... };` is C2365 redefinition and every use of
+# std::type_info after it is C2027. The shadow is written as a namespace
+# instead, its members defined out of line by qualified name exactly as the
+# class shadows are.
+NAMESPACE_SHADOWS = {"std"}
+
 
 def _render_struct(path, node):
     """One class's definition, written OUT OF LINE.
@@ -2039,7 +2258,9 @@ def _render_struct(path, node):
     mangling is identical either way; what changes is only what is declared by
     the time a body is read.
     """
-    out = ["struct %s {" % "::".join(path)]
+    is_ns = len(path) == 1 and path[0] in NAMESPACE_SHADOWS
+    out = ["namespace %s {" % path[0] if is_ns
+           else "struct %s {" % "::".join(path)]
     # nested declarations first, so a member of this same shadow may use one
     for f in sorted(node.get("fwds", ())):
         out.append("    struct %s;" % f)
@@ -2047,7 +2268,7 @@ def _render_struct(path, node):
         out.append("    struct %s;" % kid)
     for d in node["decls"]:
         out.append("    %s" % d)
-    out.append("};")
+    out.append("}" if is_ns else "};")
     return out
 
 
@@ -2139,6 +2360,8 @@ def emit_sync(rows, out, header_note=""):
     # identifier at the point of use.
     for name in sorted(fwd | shadow_names | set(n.split("::")[0]
                                                 for n in nested_fwd)):
+        if name in NAMESPACE_SHADOWS:
+            continue        # already a namespace; see NAMESPACE_SHADOWS
         lines.append("struct %s;" % name)
     lines.append("")
     if any(r["rec"]["meth"] == "ctor" for r in rows):

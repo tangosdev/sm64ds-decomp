@@ -90,8 +90,19 @@ int Player::ChangeState(::State &s)
 { return _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
 void Player::ChangeState(State &s)
 { _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE. THE GLOBAL-::State
+   spelling only. src/actors/Player.cpp, the TU config says owns the ROM
+   address, emits ?IsState@Player@@QAE_NAAUState@1@@Z -- returning bool, with
+   the NESTED Player::State -- and this file spelled the same one function two
+   more ways, returning int, so facegen saw three definitions of Player::IsState
+   and refused to bind the flat name at all. Measured before removal: ZERO
+   objects in walk_window's 8662 link inputs reference
+   ?IsState@Player@@QAEHAAUState@@@Z, so it goes. The nested spelling below
+   STAYS: src/func_ov002_020e2ea0.cpp really does ask for it, and a host bridge
+   for a caller that spells a member its own way is legitimate -- what was never
+   legitimate was letting it stand in for the definition.
 int Player::IsState(::State &s)
-{ return _ZN6Player7IsStateERNS_5StateE(this, &s); }
+{ return _ZN6Player7IsStateERNS_5StateE(this, &s); }                         */
 int Player::IsState(State &s)
 { return _ZN6Player7IsStateERNS_5StateE(this, &s); }
 extern "C" int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned, int, int,

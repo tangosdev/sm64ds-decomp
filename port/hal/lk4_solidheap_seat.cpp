@@ -474,8 +474,19 @@ void *SolidHeapAllocator::Allocate(u32 size, int align)
 /* the flat body returns the granted size where the method's callers spell
    void*; same __thiscall, r0/EAX ignored, the ROM's own shape and the same
    widening the Rescue alias above documents */
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE. This is a SECOND
+   DECLARATION of one function, not a second function: it spells the return
+   void * and src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp, the TU config
+   says owns ROM 0x0204e964, spells it unsigned, so MSVC mangles the two apart
+   and facegen read the pair as an overload and refused to bind the flat name.
+   ?Reallocate@SolidHeapAllocator@@QAEIPAXI@Z is the definition and the one
+   caller, src/_ZN9SolidHeap11VReallocateEPvj.cpp, asks for it since today's
+   main merge. Measured before removal: dumpbin over all 8662 of walk_window's
+   link inputs reports ZERO objects referencing
+   ?Reallocate@SolidHeapAllocator@@QAEPAXPAXI@Z. The flat name is now defined
+   by the face in port/faces_sync.txt.
 void *SolidHeapAllocator::Reallocate(void *ptr, u32 size)
-{ return (void *)_ZN18SolidHeapAllocator10ReallocateEPvj(this, ptr, size); }
+{ return (void *)_ZN18SolidHeapAllocator10ReallocateEPvj(this, ptr, size); } */
 
 /* THE RECEIVER-BRIDGING FACE FOR Heap::ResizeToFit, replacing the third of
    the four directives this file used to carry. Same direction and same

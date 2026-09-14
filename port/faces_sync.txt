@@ -1263,7 +1263,7 @@ __ZN12dScMg3DEsp_c13OnYoshiTryEatEi                                      ?OnYosh
 __ZN12dScMg3DEsp_c16CleanupResourcesEv                                   ?CleanupResources@dScMg3DEsp_c@@UAEHXZ                           0x020e9cec F
 __ZN12dScMg3DEsp_c6RenderEv                                              ?Render@dScMg3DEsp_c@@UAEHXZ                                     0x020e9d1c R
 __ZN12dScMg3DEsp_c8BehaviorEv                                            ?Behavior@dScMg3DEsp_c@@UAEHXZ                                   0x020e9e00 R
-__ZN12dScMg3DEsp_c9Virtual50Ev                                           ?Virtual50@dScMg3DEsp_c@@UAEHXZ                                  0x020e9c10 R
+__ZN12dScMg3DEsp_c9Virtual50Ev                                           ?Virtual50@dScMg3DEsp_c@@UAEXXZ                                  0x020e9c10 R
 __ZN12dScMg3DEsp_cD1Ev                                                   ??1dScMg3DEsp_c@@UAE@XZ                                          0x020e7660 R
 
 __ZN12dScMgAmida_c13InitResourcesEv                                      ?InitResources@dScMgAmida_c@@UAEHXZ                              0x020d5384 R
@@ -1314,7 +1314,7 @@ __ZN11dScMgBase_c6RenderEv                                               ?Render
 __ZN11dScMgBase_c8BehaviorEv                                             ?Behavior@dScMgBase_c@@UAEHXZ                                    0x020b0618 R
 __ZN11dScMgBase_c8OnKickedEv                                             ?OnKicked@dScMgBase_c@@UAEHXZ                                    0x020ae140 R
 __ZN11dScMgBase_c8OnPushedEv                                             ?OnPushed@dScMgBase_c@@UAEHXZ                                    0x020ae128 R
-__ZN11dScMgBase_c9Virtual50Ev                                            ?Virtual50@dScMgBase_c@@UAEHXZ                                   0x020b2990 R
+__ZN11dScMgBase_c9Virtual50Ev                                            ?Virtual50@dScMgBase_c@@UAEXXZ                                   0x020b2990 R
 __ZN11dScMgBase_c9Virtual7CEv                                            ?Virtual7C@dScMgBase_c@@UAEHXZ                                   0x020b2880 R
 __ZN11dScMgBase_c9Virtual80Ev                                            ?Virtual80@dScMgBase_c@@UAEXXZ                                   0x020b27f4 R
 __ZN11dScMgBase_c9Virtual84Ev                                            ?Virtual84@dScMgBase_c@@UAEXXZ                                   0x020b265c R
@@ -1354,7 +1354,7 @@ __ZN10dScMgCup_c19StatePrepareShuffleEv                                  ?StateP
 __ZN10dScMgCup_c6RenderEv                                                ?Render@dScMgCup_c@@UAEHXZ                                       0x020e0068 R
 __ZN10dScMgCup_c8BehaviorEv                                              ?Behavior@dScMgCup_c@@UAEHXZ                                     0x020e0204 R
 __ZN10dScMgCup_c9StateIdleEv                                             ?StateIdle@dScMgCup_c@@QAEXXZ                                    0x020df1bc R
-__ZN10dScMgCup_c9Virtual50Ev                                             ?Virtual50@dScMgCup_c@@UAEHXZ                                    0x020dfed4 R
+__ZN10dScMgCup_c9Virtual50Ev                                             ?Virtual50@dScMgCup_c@@UAEXXZ                                    0x020dfed4 R
 __ZN10dScMgCup_cD1Ev                                                     ??1dScMgCup_c@@UAE@XZ                                            0x020de988 R
 
 __ZN15dScMgCurling2_c13InitResourcesEv                                   ?InitResources@dScMgCurling2_c@@UAEHXZ                           0x020e6894 R
@@ -1565,13 +1565,13 @@ __ZN12dScMgSound_c13InitResourcesEv                                      ?InitRe
 __ZN12dScMgSound_c13OnYoshiTryEatEi                                      ?OnYoshiTryEat@dScMgSound_c@@UAEXH@Z                             0x0211c5d0 R
 __ZN12dScMgSound_c6RenderEv                                              ?Render@dScMgSound_c@@UAEHXZ                                     0x0211c6c4 R
 __ZN12dScMgSound_c8BehaviorEv                                            ?Behavior@dScMgSound_c@@UAEHXZ                                   0x0211c720 R
-__ZN12dScMgSound_c9Virtual50Ev                                           ?Virtual50@dScMgSound_c@@UAEHXZ                                  0x0211c5b8 R
+__ZN12dScMgSound_c9Virtual50Ev                                           ?Virtual50@dScMgSound_c@@UAEXXZ                                  0x0211c5b8 R
 
 __ZN13dScMgTeresa_c13InitResourcesEv                                     ?InitResources@dScMgTeresa_c@@UAEHXZ                             0x021203fc F
 __ZN13dScMgTeresa_c13OnYoshiTryEatEi                                     ?OnYoshiTryEat@dScMgTeresa_c@@UAEXH@Z                            0x02120248 R
 __ZN13dScMgTeresa_c6RenderEv                                             ?Render@dScMgTeresa_c@@UAEHXZ                                    0x02120348 R
 __ZN13dScMgTeresa_c8BehaviorEv                                           ?Behavior@dScMgTeresa_c@@UAEHXZ                                  0x021203ac R
-__ZN13dScMgTeresa_c9Virtual50Ev                                          ?Virtual50@dScMgTeresa_c@@UAEHXZ                                 0x02120238 R
+__ZN13dScMgTeresa_c9Virtual50Ev                                          ?Virtual50@dScMgTeresa_c@@UAEXXZ                                 0x02120238 R
 __ZN13dScMgTeresa_c9Virtual88Eiiii                                       ?Virtual88@dScMgTeresa_c@@UAEXHHHH@Z                             0x021200dc R
 __ZN13dScMgTeresa_cD1Ev                                                  ??1dScMgTeresa_c@@UAE@XZ                                         0x0211cbd0 R
 
@@ -2949,3 +2949,129 @@ __ZN7daPkn_c13InitResourcesEv                                            ?InitRe
 __ZN7daPkn_c16OnAimedAtWithEggEv                                         ?OnAimedAtWithEgg@daPkn_c@@UAEHXZ                                0x0212ec58 R
 __ZN7daPkn_c16OnPendingDestroyEv                                         ?OnPendingDestroy@daPkn_c@@UAEXXZ                                0x0212fcd8 R
 __ZN10daWanwan_c16CleanupResourcesEv                                     ?CleanupResources@daWanwan_c@@UAEHXZ                             0x0211294c R
+
+# ---- BATCH 8 (lane FACES4, wave 9c): the rows the wave-9b seats and today's
+# ---- main merge left derivable on the integration tip 319f0f191.
+#
+# Every row below was derived by port/tools/facegen.py --derive against the
+# DEFINED-EXTERNAL universe of walk_window's own 8662 link inputs at that tip
+# (49647 names, dumped with dumpbin /SYMBOLS; the object list is the link edge
+# read out of build/port/build.ninja). So the decorated spelling beside each
+# flat name is the one an object in this link really emits, not one predicted
+# from a header, and facegen re-derives all of it against config/**/symbols.txt
+# on every build.
+#
+# 1. daMky_c, fifteen R rows. Lane HOSTGEN4 seated src/actors/daMky_c.cpp; the
+#    class's members are in the link under their decorated names and the ROM's
+#    callers ask for the flat ones. No body in that TU carries a "recovered
+#    from vtable slot identity" marker, so the adjudication rule is satisfied
+#    without a ruling.
+__ZN7daMky_c11EnterState0Ev                                              ?EnterState0@daMky_c@@QAEHXZ                                     0x02114124 R
+__ZN7daMky_c11EnterState1Ev                                              ?EnterState1@daMky_c@@QAEHXZ                                     0x02113fd8 R
+__ZN7daMky_c11EnterState2Ev                                              ?EnterState2@daMky_c@@QAEHXZ                                     0x02113be8 R
+__ZN7daMky_c11EnterState3Ev                                              ?EnterState3@daMky_c@@QAEHXZ                                     0x02113a80 R
+__ZN7daMky_c11EnterState4Ev                                              ?EnterState4@daMky_c@@QAEHXZ                                     0x0211360c R
+__ZN7daMky_c11EnterState5Ev                                              ?EnterState5@daMky_c@@QAEHXZ                                     0x021132d4 R
+__ZN7daMky_c11EnterState6Ev                                              ?EnterState6@daMky_c@@QAEHXZ                                     0x02112ff8 R
+__ZN7daMky_c11EnterState7Ev                                              ?EnterState7@daMky_c@@QAEHXZ                                     0x02112c14 R
+__ZN7daMky_c11EnterState8Ev                                              ?EnterState8@daMky_c@@QAEHXZ                                     0x02112a14 R
+__ZN7daMky_c11EnterState9Ev                                              ?EnterState9@daMky_c@@QAEHXZ                                     0x02112560 R
+__ZN7daMky_c12EnterState10Ev                                             ?EnterState10@daMky_c@@QAEHXZ                                    0x021123a4 R
+__ZN7daMky_c13OnTurnIntoEggER6Player                                     ?OnTurnIntoEgg@daMky_c@@UAEXAAUPlayer@@@Z                        0x021145d4 R
+__ZN7daMky_c13OnYoshiTryEatEv                                            ?OnYoshiTryEat@daMky_c@@UAEHXZ                                   0x0211172c R
+__ZN7daMky_c16CleanupResourcesEv                                         ?CleanupResources@daMky_c@@UAEHXZ                                0x021141c4 R
+__ZN7daMky_c16OnPendingDestroyEv                                         ?OnPendingDestroy@daMky_c@@UAEXXZ                                0x0211422c R
+
+# 2. dScMgD3DBase_c, six R rows. src/actors/dScMgD3DBase_c.cpp is compiled into
+#    walk_window and emits all six decorated members; these are the six rows
+#    lane FACES3 filed as "a live TU and no inline declaration explains them"
+#    (out/FACES3/needs_seat.txt), and the answer is that they never needed a
+#    seat at all, only the face. ONE of the six bodies carries the guessed-body
+#    marker, _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv, and it is admissible
+#    because it is adjudicated REAL_DECOMP in
+#    port/tools/inferred_stub_adjudicated.txt (lane BNP, slot 29: eight calls,
+#    eight in src, same order and the same three constants). The other five
+#    carry no marker.
+__ZN14dScMgD3DBase_c16OnAimedAtWithEggEv                                 ?OnAimedAtWithEgg@dScMgD3DBase_c@@UAEHXZ                         0x020e6d24 R
+__ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv                         ?OnHitByCannonBlastedChar@dScMgD3DBase_c@@UAEHXZ                 0x020e6e4c R
+__ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv                        ?OnAimedAtWithEggReturnVec@dScMgD3DBase_c@@UAEXXZ                0x020e6cac R
+__ZN14dScMgD3DBase_c8OnPushedEv                                          ?OnPushed@dScMgD3DBase_c@@UAEHXZ                                 0x020e6e54 R
+__ZN14dScMgD3DBase_c9Virtual7CEv                                         ?Virtual7C@dScMgD3DBase_c@@UAEHXZ                                0x020e72c0 R
+__ZN14dScMgD3DBase_c9Virtual84Ev                                         ?Virtual84@dScMgD3DBase_c@@UAEXXZ                                0x020e7124 R
+
+# 3. Three F rows: a caller TU spells a member on its own shadow class and the
+#    port carries the body under the ROM's flat name. Each flat body is defined
+#    in this link and carries no guessed-body marker.
+__ZN8dActor_c23HorzAngleToCPlayerOrAngEv                                 ?HorzAngleToCPlayerOrAng@dActor_c@@QAEFXZ                        0x0201097c F
+__ZN8SaveData16SetDefaultValuesEP12FileSaveData                          ?SetDefaultValues@SaveData@@QAEXPAUFileSaveData@@@Z              0x02013dc4 F
+__ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData                    ?SetDefaultValuesMg@SaveData@@QAEXPAUMinigameSaveData@@@Z        0x02013c5c F
+
+# 4. The two F rows lane DTORS-A asked for. Its 192 inline-in-header forwarders
+#    struck three rows off (__ZN4ToadD0Ev, __ZN8daTree_cD0Ev, __ZN8daTree_cD1Ev)
+#    because emitting a class's inline destructor makes MSVC emit that class's
+#    vftable too, and the vftable references EVERY virtual slot: one slot's body
+#    exists in this link only under the ROM's flat name, so the emission would
+#    have ADDED two wall rows rather than closed three. These two faces define
+#    the decorated spelling from the flat body, so the vftable resolves and
+#    those three rows become forwardable. Addresses verified against
+#    config/arm9/overlays/ov085/symbols.txt (Toad 0x02129878) and
+#    config/arm9/overlays/ov002/symbols.txt (daTree_c 0x020ec1d8); both flat
+#    bodies are defined in this link and neither decorated name is defined by
+#    anything else, so neither row can duplicate.
+__ZN4Toad8BehaviorEv                                                     ?Behavior@Toad@@UAEHXZ                                           0x02129878 F
+__ZN8daTree_c8BehaviorEv                                                 ?Behavior@daTree_c@@UAEHXZ                                       0x020ec1d8 F
+
+# ---- BATCH 9 (lane FACES4, wave 9c): the rows lane HALROWS settled by ADDRESS
+# ---- and could not take, because facegen.py was frozen under review that wave.
+#
+# out/HALROWS/settled.txt section A is the join, done the only way that is
+# evidence: config/**/symbols.txt gives the flat name's ROM address,
+# config delinks.txt gives the TU that owns that address, and THAT TU'S OWN
+# OBJECT was dumped to read the decorated spelling it emits. Fourteen of the
+# fifteen ambiguous rows turned out to be ONE ROM BODY PLUS ONE PORT-SIDE
+# SHADOW: a host file in port/hal or port/unmatched declares a private shadow of
+# the class to reach one member and spells it with a different return type or a
+# different virtualness, MSVC mangles the two apart, and facegen read one
+# function as two overloads and refused to bind either.
+#
+# EIGHT OF THOSE SHADOWS ARE RETIRED IN THIS COMMIT, each with the reason and
+# the measurement in the file that carried it: hal/heap_vtable.cpp (three),
+# hal/lk4_solidheap_seat.cpp, hal/reverse_bridges.cpp (the global-::State
+# spelling only) and unmatched/Mg3DEsp_Faces.cpp (two). Every one was measured
+# first with dumpbin over all 8662 of walk_window's link inputs and had ZERO
+# referencing objects, so retiring it adds no wall row. FIVE MORE STAY, because
+# a real caller TU spells the member that way and a host bridge for such a
+# caller is legitimate; those are recorded in facegen.py's
+# PORT_SHADOW_DEFINITIONS table, which drops a shadow from a candidate list only
+# when the definition it shadows is in that same list.
+__ZN13ExpandingHeap11VDeallocateEPv                                      ?VDeallocate@ExpandingHeap@@UAEXPAX@Z                            0x0203c50c R
+__ZN13SharedFilePtr8LoadFileEv                                           ?LoadFile@SharedFilePtr@@QAEPAXXZ                                0x02017bc4 R
+__ZN15TextureSequenceD1Ev                                                ??1TextureSequence@@UAE@XZ                                       0x02015a2c R
+__ZN18SolidHeapAllocator10ReallocateEPvj                                 ?Reallocate@SolidHeapAllocator@@QAEIPAXI@Z                       0x0204e964 R
+__ZN18TextureTransformerD1Ev                                             ??1TextureTransformer@@UAE@XZ                                    0x0201592c R
+__ZN22ExpandingHeapAllocator10ReallocateEPvj                             ?Reallocate@ExpandingHeapAllocator@@QAEIPAXI@Z                   0x0204e1e8 R
+__ZN22ExpandingHeapAllocator9SetNodeIDEj                                 ?SetNodeID@ExpandingHeapAllocator@@QAEHI@Z                       0x0204e0e8 R
+__ZN6Camera11ChangeStateEPNS_5StateE                                     ?ChangeState@Camera@@QAEHPAUState@1@@Z                           0x0200cb70 R
+__ZN6Player7IsStateERNS_5StateE                                          ?IsState@Player@@QAE_NAAUState@1@@Z                              0x020e308c R
+__ZN6Player7TryGrabER8dActor_c                                           ?TryGrab@Player@@QAEHAAUdActor_c@@@Z                             0x020daba0 R
+__ZNK7PathPtr7GetNodeER7Vector3j                                         ?GetNode@PathPtr@@QBEXAAUVector3@@I@Z                            0x0203acdc R
+
+# The fifteenth ambiguous row is the ONE GENUINE OVERLOAD PAIR on this wall: a
+# real no-argument MemoryNode::Target constructor beside the one-argument one.
+# ARITY alone picks it, and facegen could not count the Itanium side because the
+# parameter is a back-reference (PS_). It resolves now: subst_table spells out
+# what S_ names, which for _ZN10MemoryNode6TargetC1EPS_ is MemoryNode (the
+# prefix, not the class itself), and the definition the ROM address names spells
+# the same type PAU1@.
+__ZN10MemoryNode6TargetC1EPS_                                            ??0Target@MemoryNode@@QAE@PAU1@@Z                                0x0204e938 R
+
+# The two rows out/HALROWS/settled.txt section C had to refuse an /alternatename
+# because both definitions are __thiscall and an alias is a name bridge and
+# never an ABI bridge. Their bindings were settled there and only the bridge was
+# missing; what kept facegen from writing it was the NAME on the Itanium side in
+# both cases, not the binding. dBgPi::operator= mangles its method as the code
+# aS (ITANIUM_OPERATORS) and std::type_info as the abbreviation St, and the
+# destructor pair needed the same abbreviation honoured when the twin rule
+# re-spells the stem.
+__ZN5dBgPiaSERKS_                                                        ??4dBgPi@@QAEAAU0@ABU0@@Z                                        0x02038018 R
+__ZNSt9type_infoD1Ev                                                     ??1type_info@std@@UAE@XZ                                         0x020736e4 R

@@ -611,6 +611,124 @@ def run():
             % dict(ref2).get("__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin",
                              "")[-70:])
 
+    print("case 20: a member of a NESTED class is a member too")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [
+            ("_ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesE"
+             "RN8Particle6SystemE", 0x020225D0)])
+        uni = {"__ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesE"
+               "RN8Particle6SystemE"}
+        want = ("?SpawnParticles@scaleCallback_c@level_c@dPa_c@@"
+                "UAEXAAUSystem@Particle@@@Z")
+        rows, ref = facegen.derive_forward_rows([want], uni, root)
+        check(len(rows) == 1, "derived: %s" % (dict(ref) or "yes"))
+        if rows:
+            check(rows[0]["addr"] == 0x020225D0,
+                  "bound at the ROM address the config names")
+        # and the OLD gate is what refused it: one qualifier only
+        check(facegen.MSVC_METHOD.match(want) is None
+              and facegen.MSVC_METHOD_Q.match(want) is not None,
+              "MSVC_METHOD misses it and MSVC_METHOD_Q does not")
+        # a FREE function in a namespace must still miss both
+        check(facegen.MSVC_METHOD_Q.match("?Play2D@Sound@@YAXII@Z") is None,
+              "a namespace free function is still not a member")
+
+    print("case 21: the St abbreviation is the std namespace, not a class")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZNSt9type_infoD1Ev", 0x020736E4, 0x10),
+                              ("_ZNSt9type_infoD2Ev", 0x020736B0, 0x10)])
+        rec = facegen.itanium_parse_ext("_ZNSt9type_infoD1Ev")
+        check(rec is not None and rec["cls"] == ["std", "type_info"],
+              "parsed as std::type_info: %s" % (rec and rec["cls"]))
+        check(facegen.itanium_stem(["std", "type_info"]) == "_ZNSt9type_info",
+              "and the stem is re-spelled St, not 3std: %s"
+              % facegen.itanium_stem(["std", "type_info"]))
+        rows, ref = facegen.derive_rows(
+            ["__ZNSt9type_infoD1Ev"], {"??1type_info@std@@UAE@XZ"}, root)
+        check(len(rows) == 1, "the D1/D2 twin pair binds: %s"
+              % (dict(ref) or "yes"))
+        if rows:
+            check(rows[0]["target"] == "??1type_info@std@@UAE@XZ",
+                  "to the one MSVC destructor")
+        # and the shadow is written as a NAMESPACE: struct std is C2365
+        head = facegen._render_struct(("std",),
+                                      {"kids": {}, "decls": [], "fwds": set()})
+        check(head[0] == "namespace std {" and head[-1] == "}",
+              "the std shadow is a namespace: %s" % head[0])
+
+    print("case 22: operator= is a member, and only the operators in the "
+          "table are claimed")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZN5dBgPiaSERKS_", 0x02038018)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN5dBgPiaSERKS_"], {"??4dBgPi@@QAEAAU0@ABU0@@Z"}, root)
+        check(len(rows) == 1, "derived: %s" % (dict(ref) or "yes"))
+        if rows:
+            check(rows[0]["target"] == "??4dBgPi@@QAEAAU0@ABU0@@Z",
+                  "bound to the ??4 mangle")
+        check(facegen.itanium_parse_ext("_ZN5dBgPiplERKS_") is None,
+              "operator+ is NOT in the table and still refuses")
+
+    print("case 23: a back-reference parameter resolves instead of "
+          "poisoning the row")
+    check(facegen.subst_table(["MemoryNode", "Target"])
+          == ["MemoryNode", "MemoryNode::Target"],
+          "the substitution table is the PREFIXES of the qualified name")
+    rec = facegen.itanium_parse_ext("_ZN10MemoryNode6TargetC1EPS_")
+    check(rec is not None and rec["pcls"] == ["MemoryNode"],
+          "PS_ in MemoryNode::Target's ctor is a MemoryNode *: %s"
+          % (rec and rec["pcls"]))
+    rec = facegen.itanium_parse_ext("_ZN6Player7IsStateERNS_5StateE")
+    check(rec is not None and rec["pcls"] == ["State"],
+          "NS_5StateE is Player::State: %s" % (rec and rec["pcls"]))
+    rec = facegen.itanium_parse_ext("_ZN5dBgPiaSERKS_")
+    check(rec is not None and rec["pcls"] == ["dBgPi"],
+          "RKS_ in dBgPi::operator= is a dBgPi: %s" % (rec and rec["pcls"]))
+    rec = facegen.itanium_parse_ext("_ZN4Only4MethES9_")
+    check(rec is not None and rec["pcls"] is None,
+          "a substitution the table cannot answer still refuses: %s"
+          % (rec and rec["pcls"]))
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZN10MemoryNode6TargetC1EPS_", 0x0204E938)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN10MemoryNode6TargetC1EPS_"],
+            {"??0Target@MemoryNode@@QAE@PAU1@@Z",
+             "??0Target@MemoryNode@@QAE@XZ"}, root)
+        check(len(rows) == 1 and rows[0]["target"]
+              == "??0Target@MemoryNode@@QAE@PAU1@@Z",
+              "the genuine overload pair is told apart by the argument: %s"
+              % (dict(ref) or rows[0]["target"]))
+
+    print("case 24: THE SHADOW RULE -- a host spelling is not a candidate")
+    real = "?LoadFile@SharedFilePtr@@QAEPAXXZ"
+    shadow = "?LoadFile@SharedFilePtr@@QAEXXZ"
+    check(shadow in facegen.PORT_SHADOW_DEFINITIONS
+          and facegen.PORT_SHADOW_DEFINITIONS[shadow][0] == real,
+          "the table names the definition each shadow shadows")
+    kept, dropped = facegen.drop_shadows([real, shadow])
+    check(kept == [real] and dropped == [shadow],
+          "the shadow is dropped when the definition is there: %s" % kept)
+    kept, dropped = facegen.drop_shadows([shadow])
+    check(kept == [shadow] and dropped == [],
+          "a lone shadow is NOT dropped: there is nothing to prefer to it")
+    kept, dropped = facegen.drop_shadows(
+        ["?Kill@X@@QAEXXZ", "?Kill@X@@UAEXXZ"])
+    check(len(kept) == 2 and not dropped,
+          "two definitions NEITHER of which is a listed shadow still refuse")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZN13SharedFilePtr8LoadFileEv", 0x02017BC4)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN13SharedFilePtr8LoadFileEv"], {real, shadow}, root)
+        check(len(rows) == 1 and rows[0]["target"] == real,
+              "so the flat name binds to the owning TU's spelling: %s"
+              % (dict(ref) or rows[0]["target"]))
+        rows, ref = facegen.derive_rows(
+            ["__ZN13SharedFilePtr8LoadFileEv"], {shadow}, root)
+        check(len(rows) == 1 and rows[0]["target"] == shadow,
+              "and with ONLY the host spelling in the link it is still the "
+              "only definition there is, which is the honest answer: %s"
+              % (dict(ref) or rows[0]["target"]))
+
     print("")
     if FAILED:
         print("test_facegen FAIL (%d)" % len(FAILED))

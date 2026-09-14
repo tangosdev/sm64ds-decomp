@@ -26,7 +26,7 @@ typedef unsigned int u32;
 // Shadow declarations that mangle identically to the src/ definitions.
 struct ExpandingHeap {
     void *VAllocate(u32 size, int align);
-    int VDeallocate(void *p);
+    /* VDeallocate's shadow member is RETIRED at FACES4: see the block below. */
     void *VReallocate(void *p, u32 size);
     u32 VSizeof(void *p);
     /* LINKAGE SEAT: the three self-contained V-methods (no callees at all).
@@ -113,21 +113,53 @@ extern "C" int _ZN22ExpandingHeapAllocator9SetNodeIDEj(void *self, u32 id);
    NOT retired: its src TU still defines only the flat C name.
 u32 ExpandingHeapAllocator::GetNodeID()
 { return _ZN22ExpandingHeapAllocator9GetNodeIDEv(this); }                    */
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE, same shape as Reallocate
+   below: this spells the return void and the owning TU
+   (src/_ZN22ExpandingHeapAllocator9SetNodeIDEj.cpp) spells it int, so the two
+   mangle apart. ?SetNodeID@ExpandingHeapAllocator@@QAEHI@Z is the definition
+   and src/_ZN13ExpandingHeap10VSetNodeIDEj.cpp, the only caller, asks for it.
+   Zero objects in walk_window's link reference this spelling.
 void ExpandingHeapAllocator::SetNodeID(u32 id)
-{ _ZN22ExpandingHeapAllocator9SetNodeIDEj(this, id); }
+{ _ZN22ExpandingHeapAllocator9SetNodeIDEj(this, id); }                       */
 /* gate 16: ExpandingHeap::VReallocate calls the allocator as a method while
    its definition is a C name, the Allocate case one line up. */
 extern "C" u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void *self,
                                                            char *p, u32 size);
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE. This body is a SECOND
+   DECLARATION of one function, not a second function: it spells the return
+   void * where src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp, the TU
+   config says owns the ROM address, spells it unsigned -- so MSVC mangles the
+   two differently and facegen read the pair as an overload and refused to bind
+   the flat name at all. The owning TU's spelling
+   ?Reallocate@ExpandingHeapAllocator@@QAEIPAXI@Z is the definition, this one
+   was the shadow, and the one caller that used to need it
+   (src/_ZN13ExpandingHeap11VReallocateEPvj.cpp) asks for the owning TU's
+   spelling since today's main merge. Measured before removal: dumpbin over all
+   8662 of walk_window's link inputs reports ZERO objects referencing
+   ?Reallocate@ExpandingHeapAllocator@@QAEPAXPAXI@Z. The flat name above is now
+   defined by the face in port/faces_sync.txt.
 void *ExpandingHeapAllocator::Reallocate(void *p, u32 size)
 { return (void *)(size_t)_ZN22ExpandingHeapAllocator10ReallocateEPvj(
-      this, (char *)p, size); }
+      this, (char *)p, size); }                                              */
 
 // ---- cross-linkage bridges surfaced by the link, both directions ---------
-// C++ method VDeallocate -> its C-linkage definition
+// C++ method VDeallocate -> its C-linkage definition.
+//
+// RETIRED at FACES4 (wave 9c) under the SHADOW RULE. The body below spelled
+// the return int and the virtualness non-virtual; the TU config says owns ROM
+// 0x0203c50c, src/_ZN13ExpandingHeap11VDeallocateEPv.cpp, emits
+// ?VDeallocate@ExpandingHeap@@UAEXPAX@Z -- public VIRTUAL, returning void.
+// Two declarations of one function, so facegen read them as an overload and
+// refused the flat name. The face in port/faces_sync.txt now defines the flat
+// name onto the owning TU's spelling, and slot_dealloc calls the flat name
+// straight rather than going through a host method that forwards to it.
+// THE SLOT'S OWN SHAPE IS UNCHANGED: it still returns int, which is the ARM r0
+// ride-through this table has always taken, and it took it one hop later
+// before.
 extern "C" int _ZN13ExpandingHeap11VDeallocateEPv(void *self, void *p);
+/*
 int ExpandingHeap::VDeallocate(void *p)
-{ return _ZN13ExpandingHeap11VDeallocateEPv(this, p); }
+{ return _ZN13ExpandingHeap11VDeallocateEPv(this, p); }                      */
 
 // C references to Heap::Allocate/Deallocate -> the MSVC method definitions.
 // The src/ TUs declare `class Heap` (mangles PAV); a struct shadow here would
@@ -214,7 +246,7 @@ extern "C" void *hal_heap_allocate_align4(void *self, u32 size)
 static void *__fastcall slot_alloc(void *self, void *, u32 size, int align)
 { return ((ExpandingHeap *)self)->VAllocate(size, align); }
 static int __fastcall slot_dealloc(void *self, void *, void *p)
-{ return ((ExpandingHeap *)self)->VDeallocate(p); }
+{ return _ZN13ExpandingHeap11VDeallocateEPv(self, p); }
 static void *__fastcall slot_realloc(void *self, void *, void *p, u32 size)
 { return ((ExpandingHeap *)self)->VReallocate(p, size); }
 static u32 __fastcall slot_sizeof(void *self, void *, void *p)
