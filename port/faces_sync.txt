@@ -2766,3 +2766,35 @@ __ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb   ?OnUpda
 __ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE ?SpawnParticles@edStarKiraCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x0202222c R
 __ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb   ?OnUpdate@edStarKiraCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020221dc R
 __ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb ?OnUpdate@fitWaterSimpleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02022418 R
+
+# ---- BATCH 4: the twelve D0 rows lane FACES2 held back ---------------------
+# FACES2 proved 343 of the sync wall's 356 D0 bodies are "the D1 plus exactly
+# one deallocation" and refused thirteen whose instruction diff said more than
+# that. Its note says the build-time relocation check would accept twelve of
+# them, that they differ from their D1 in REGISTER ALLOCATION rather than in
+# relocations, and that a lane which wants them should normalise the receiver
+# register and re-run the diff rather than weaken it. The diff was re-run:
+# both bodies disassembled out of the ROM image with each literal pool skipped,
+# every pooled load resolved through config/**/relocs.txt and every branch
+# resolved to its target. Twelve are their D1 plus the deallocation once two
+# things are accounted for -- the receiver register a former leaf has to move
+# into r4 because it now makes a call, and the branch displacements that shift
+# with the body's address. The full streams are in
+# runs/link100/out/FACES3/d0_evidence.txt.
+#
+# _ZN15dScMgSnowball_cD0Ev is NOT here. It swaps two independent pairs of
+# instructions against its D1, which is almost certainly the scheduler moving
+# around the extra tail, but it is not one contiguous insertion and this lane
+# had no ruling that says how far a reorder may go.
+__ZN12daBgSnmBdy_cD0Ev                                                   ??1daBgSnmBdy_c@@UAE@XZ                                          0x0211f048 D _ZN6Memory10DeallocateEPvP4Heap  GAME_HEAP_PTR
+__ZN15dScMgCurling2_cD0Ev                                                ??1dScMgCurling2_c@@UAE@XZ                                       0x020e3878 D _ZN6Memory10DeallocateEPvP4Heap  GAME_HEAP_PTR
+__ZN4HeapD0Ev                                                            ??1Heap@@UAE@XZ                                                  0x0203ca20 D _ZN6Memory16operator_delete2EPv  -
+__ZN4dBgWD0Ev                                                            ??1dBgW@@UAE@XZ                                                  0x02039668 D _ZN6Memory16operator_delete2EPv  -
+__ZN5FaderD0Ev                                                           ??1Fader@@UAE@XZ                                                 0x02017848 D _ZN6Memory16operator_delete2EPv  -
+__ZN5dBgChD0Ev                                                           ??1dBgCh@@UAE@XZ                                                 0x020354e0 D _ZN6Memory16operator_delete2EPv  -
+__ZN7ClipperD0Ev                                                         _ZN7ClipperD1Ev                                                  0x020156fc D _ZN6Memory16operator_delete2EPv  -
+__ZN7dWipe_cD0Ev                                                         _ZN7dWipe_cD1Ev                                                  0x0202fbc8 D _ZN6Memory16operator_delete2EPv  -
+__ZN8dM3dGSphD0Ev                                                        ??1dM3dGSph@@UAE@XZ                                              0x0203ac2c D _ZN6Memory16operator_delete2EPv  -
+__ZN8daDemo_c10anmModel_cD0Ev                                            _ZN8daDemo_c10anmModel_cD1Ev                                     0x020f6778 D _ZN6Memory16operator_delete2EPv  -
+__ZN8daDemo_c13simpleModel_cD0Ev                                         _ZN8daDemo_c13simpleModel_cD1Ev                                  0x020f69a8 D _ZN6Memory16operator_delete2EPv  -
+__ZN9AnimationD0Ev                                                       ??1Animation@@UAE@XZ                                             0x02015cc4 D _ZN6Memory16operator_delete2EPv  -
