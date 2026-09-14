@@ -87,7 +87,7 @@ extern int Vec2_Len(V2 *p);
 extern void func_0203d480(V2 *out, V2 *in);
 extern int RandomIntInternal(int *seed);
 extern void func_ov006_021146f4(V2 *out, void *obj);
-extern void func_02012718(void *id, int x);
+extern void func_02012718(int id, int x);
 extern int func_020126e8(int x);
 extern void func_020126ac(int id, int type, int volume, int arg3, int arg4);
 extern void func_ov006_02111b90(Obj *self, int id, V2 *vel);
@@ -567,8 +567,8 @@ final_checks:
 
         if (self->soundTimer == 0) {
             if (self->velZ < -0x6000) {
-                func_02012718((void *)0x16d, self->pos[0]);
-                func_02012718((void *)0x16e, self->pos[0]);
+                func_02012718(0x16d, self->pos[0]);
+                func_02012718(0x16e, self->pos[0]);
             } else {
                 volume = (-self->velZ << 7) / 0x6000;
                 if (volume > 0x7f)
@@ -586,7 +586,7 @@ final_checks:
         if (self->soundPlayed != 0)
             return;
         if (self->velZ < -0x6000)
-            func_02012718((void *)0x16e, self->pos[0]);
+            func_02012718(0x16e, self->pos[0]);
         self->soundPlayed = 1;
         return;
     }

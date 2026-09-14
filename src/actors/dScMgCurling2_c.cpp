@@ -10,8 +10,13 @@
  * tree -- it carries a symbols.txt row but NO src/ file and NO entry in
  * config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from
  * 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes
- * cover that range.  It is a banked near-miss whose best recorded attempt sits
- * at 29 divergences (config/match_attempts.jsonl).  It sits in the MIDDLE of
+ * cover that range.  It is a banked near-miss, and the honest measurement is
+ * 191 divergent words out of 344 at the exact ROM size 0x560 (nearmiss/db.jsonl);
+ * notes/mwccarm-codegen.md section 6cz carries that line further.
+ * An older row in config/match_attempts.jsonl reads 29, but that attempt's own
+ * note records "size 0x52c vs 0x560": it was scored against a candidate 52 bytes
+ * short of the target, so the 29 is a truncated verdict over a shorter window and
+ * is not a divergence count for this function at all.  It sits in the MIDDLE of
  * the run, and nothing in this tree can express a .text claim with a hole in
  * it, so the run has to be licensed as one of its two contiguous sides.
  *

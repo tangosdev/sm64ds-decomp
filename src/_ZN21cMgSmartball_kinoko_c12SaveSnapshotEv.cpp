@@ -14,7 +14,7 @@ typedef struct { int x, y; } V2;
 
 extern "C" void func_ov006_02115598(void *c, int *src, int v2, int v3, int v5);
 extern "C" void func_ov006_02115008(void *p);
-extern "C" void func_02012718(void *a, int b);
+extern "C" void func_02012718(int a, int b);
 extern "C" void func_ov006_0211470c(int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern "C" int Vec2_Len(const void *v);
@@ -37,7 +37,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
             pair.y = mCurrent1;
             func_ov006_02115598((void *)mpManager, (int *)&pair, 0x12c, 0, 1);
             func_ov006_02115008((void *)mpManager);
-            func_02012718((void *)0x19f, mCurrent0);
+            func_02012718(0x19f, mCurrent0);
         }
         mWasHit = 0;
         if (mVariant == 1)

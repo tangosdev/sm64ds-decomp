@@ -16,7 +16,7 @@ extern "C" void func_ov006_0211470c(int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern "C" Fix12i Vec2_Len(const void *v);
 extern "C" void func_ov006_0210d8bc(char *c);
-extern "C" void func_02012718(void *a, int b);
+extern "C" void func_02012718(int a, int b);
 
 inline int *GetObj(char *g, int i)
 {
@@ -47,7 +47,7 @@ void cMgSmartball_pakkun_c::SaveSnapshot()
             unk_031 = 0;
             func_ov006_0210d8bc(*(char **)((char *)mpManager + 0x4780));
             *((char *)GetObj((char *)mpManager, i) + 0x30) = 0;
-            func_02012718((void *)0x1a0, mCurrent0);
+            func_02012718(0x1a0, mCurrent0);
             return;
         }
     }

@@ -4,7 +4,7 @@
  */
 extern void func_ov006_02111e7c(int *o);
 extern void func_ov006_0211470c(int *a, int *b);
-extern void func_02012718(void *a, int b);
+extern void func_02012718(int a, int b);
 typedef struct { int *p[13]; } Arr;
 static inline int *get(char *self, int i){ return i >= 13 ? 0 : ((Arr*)(self + 0x4688))->p[i]; }
 void func_ov006_02114ec0(char *self){
@@ -14,6 +14,6 @@ void func_ov006_02114ec0(char *self){
         if (*(unsigned char *)((char *)get(self, i) + 0x121) != 0) continue;
         func_ov006_02111e7c(get(self, i));
         func_ov006_0211470c(t, get(self, i));
-        func_02012718((void *)0x1a5, t[0]); return;
+        func_02012718(0x1a5, t[0]); return;
     }
 }

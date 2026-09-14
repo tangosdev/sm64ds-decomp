@@ -23,7 +23,7 @@ extern "C" void func_ov006_0211470c(int *a, int *b);
 extern "C" int func_ov006_02111dcc(char *p, int val);
 extern "C" void func_ov006_02114800(void *c, int *p, int f);
 extern "C" void func_ov006_0210ef48(void *c, int i);
-extern "C" void func_02012718(void *a, int b);
+extern "C" void func_02012718(int a, int b);
 namespace Sound { void PlayBank2_2D(u32 id); }
 
 static inline u8 *GetObj(char *g, int i)
@@ -113,11 +113,11 @@ void cMgSmartball_board_c::SaveSnapshot()
                         func_ov006_02114800((char *)mpManager, (int *)&a, 0);
                         SetV2(&b, (j * 0x18 + 0x10) << 12, 0x78000);
                         func_ov006_02114800((char *)mpManager, (int *)&b, 0);
-                        func_02012718((void *)0x1be, j * 0x18000 + 0x10000);
+                        func_02012718(0x1be, j * 0x18000 + 0x10000);
                     } else {
                         SetV2(&d, (j * 0x18 + 0x10) << 12, 0x78000);
                         func_ov006_02114800((char *)mpManager, (int *)&d, 1);
-                        func_02012718((void *)0x17a, j * 0x18000 + 0x10000);
+                        func_02012718(0x17a, j * 0x18000 + 0x10000);
                     }
                     func_ov006_0210ef48(this, j);
                     break;

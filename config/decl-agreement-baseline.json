@@ -14576,21 +14576,6 @@
    "src/unnamed/ov063/func_ov063_0211873c.c": ["param:#1 int", "param:#2 void *"],
    "src/unnamed/ov063/func_ov063_02118ddc.cpp": ["param:#1 int", "param:#2 char *", "return:int"]
   },
-  "func_02012718": {
-   "include/decl_common.h": ["param:#1 int"],
-   "src/actors/dMgJump3DMario_c.cpp": ["param:#1 int"],
-   "src/actors/dScMgCurling2_c.cpp": ["param:#1 int"],
-   "src/func_ov006_020cb838.cpp": ["param:#1 int"],
-   "src/func_ov006_020cbd7c.cpp": ["param:#1 int"],
-   "src/func_ov006_020d1ba0.cpp": ["param:#1 int"],
-   "src/func_ov006_020e1854.c": ["param:#1 int"],
-   "src/func_ov006_020e1dc8.cpp": ["param:#1 int"],
-   "src/func_ov006_020fd17c.c": ["param:#1 int"],
-   "src/func_ov006_0210076c.c": ["param:#1 int"],
-   "src/func_ov006_02102d6c.c": ["param:#1 int", "param:#2 unsigned int"],
-   "src/func_ov006_02125f68.cpp": ["param:#1 int"],
-   "src/minigames/d_s_mg_trampoline.cpp": ["param:#1 int"]
-  },
   "func_0201277c": {
    "include/decl_common.h": ["param:#1 int"],
    "src/func_ov055_02111264.c": ["param:#1 int", "return:void"],
