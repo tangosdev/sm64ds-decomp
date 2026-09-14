@@ -414,7 +414,16 @@ set(PORT_HOSTGEN_TU
     # unmatched/Actor_ClosestPlayer_OverlayReaders.cpp), and parking keeps
     # each ruling exactly where it is rather than re-adjudicating it.
     src/actors/daSanbo_c.cpp
-    src/actors/daPkn_c.cpp)
+    src/actors/daPkn_c.cpp
+    # And the same shape once more, lane HOSTGEN4. daWanwan_c (Chain Chomp)
+    # answers twelve ov014 rows and is held by three ledger members plus its
+    # factory, which unmatched/ChainChomp_Spawn_hostcopy.cpp supplies under
+    # the VPTR ruling. Its four parks are written PER BODY rather than banner
+    # to banner, because these members sit at the top of the file and the
+    # wider bracket swallowed an include and four file-scope declarations a
+    # member further down still needs; the LEDGER_PARK table says so at the
+    # row.
+    src/game/actors/d_a_wanwan.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4248,6 +4257,11 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020efa54.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
+    # and the generated copy TWICE, lane HOSTGEN4: this TU is on
+    # PORT_HOSTGEN_TU now, the raw rows above are a pre-existing duplicate,
+    # and the configure-time check counts spellings rather than sources.
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_021125b8.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_02112604.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_0211ddac.cpp"
@@ -13994,8 +14008,13 @@ set_source_files_properties(
 # Left unrouted it is a wrong-object bind that never fails the link: the chomp's
 # state-2 main calling the penguin's body. The reader declares the name itself
 # and includes no header that declares it either, so the -D is exact.
+# BOTH PATHS, lane HOSTGEN4. This rename is the wrong-object bind lane w3-e
+# caught with alternatename_guard; on the raw path alone it would go missing
+# the moment the substitution moved the compile, and the chomp's state-2
+# main would call the penguin's body again.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
     PROPERTIES COMPILE_DEFINITIONS "func_ov019_02111f54=func_ov014_02111f54")
 # ---- end lane w3-e ---------------------------------------------------------
 
@@ -18685,11 +18704,10 @@ set(PORT_FALLS_OFF_END_SOURCES
     src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp
     src/game/actors/daObjPushblock_c.cpp
     # d_a_wanwan.cpp raises C4716 twice as well (func_ov014_02111fb8 and
-    # func_ov014_0211150c) and its row belongs here the moment the TU is seated,
-    # but the TU is held out of the build again for the factory collision
-    # written up on its slice rows, so the row would name a source nothing
-    # compiles:
-    # src/game/actors/d_a_wanwan.cpp
+    # func_ov014_0211150c). Lane SYNC6 wrote the row here as a comment
+    # against the day the TU was seated. Lane HOSTGEN4 seated it, so the
+    # row is live now.
+    src/game/actors/d_a_wanwan.cpp
     # Added by lane HOSTGEN4 with the dScMgD3DBase_c seat. FOUR bodies in
     # that TU reach the closing brace with the result still in r0 --
     # Virtual7C, OnHitFromUnderneath, OnAimedAtWithEgg and

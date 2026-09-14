@@ -214,3 +214,31 @@ src/actors/dScMgD3DBase_c.cpp
 # parked. The Tornado rows that block also names are untouched.
 src/actors/daSanbo_c.cpp
 src/actors/daPkn_c.cpp
+
+# ---------------------------------------------------------------------------
+# d_a_wanwan, THE CHAIN CHOMP
+# ---------------------------------------------------------------------------
+#
+# Twelve ov014 rows, the fourth and last of the class TUs this lane found held
+# by the face ledger rather than by the compiler. Three members
+# (InitResources, Behavior, Render) are reverse faces whose flat targets are
+# already defined, and daWanwan_c_classInit is the FACTORY that
+# unmatched/ChainChomp_Spawn_hostcopy.cpp supplies under the VPTR ruling's
+# sequencing. All four are parked; the host factory and its addend-0 store are
+# untouched.
+#
+# THE PARKS HERE ARE PER BODY and that was learned from a build rather than
+# reasoned out. These four members sit at the top of the file, so the
+# banner-to-banner bracket the other three seats use swallowed an
+# `#include "decl_common.h"` and the file-scope declarations of
+# data_ov014_02114968, 02114978, 02114980 and 02114970 -- four C2065s on
+# CleanupResources, a member nobody was parking. Each bracket now opens on the
+# member's own definition line, so every include and declaration between the
+# banner and the body stays outside it. daWanwan_c_classInit is the exception:
+# it lives inside an `extern "C" {` block, so its bracket closes on its own last
+# line rather than at the next banner.
+#
+# The TU also joins PORT_FALLS_OFF_END_SOURCES. Lane SYNC6 wrote that row here
+# as a comment against the day the TU was seated, naming func_ov014_02111fb8 and
+# func_ov014_0211150c; this is that day.
+src/game/actors/d_a_wanwan.cpp

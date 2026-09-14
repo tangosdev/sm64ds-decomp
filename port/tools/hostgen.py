@@ -2172,6 +2172,12 @@ ZTV_C_LINKAGE = {
     "daBmb_c": [("int", "_ZTV7daBmb_c")],
     "d_a_ey_bm": [("int", "_ZTV8daEyBm_c")],
     "d_a_mc_flag": [("int", "_ZTV10daMcFlag_c")],
+    # daPkn_c, added with its seat (lane HOSTGEN4). The TU's declaration of
+    # its own table is a plain C++ `extern int _ZTV7daPkn_c[];`, so MSVC
+    # asks for ?_ZTV7daPkn_c@@3PAHA; under C linkage it asks for
+    # __ZTV7daPkn_c, which hal/actor_classes_l7.cpp line 585 already
+    # bridges to __ZTV12PiranhaPlant.
+    "daPkn_c": [("int", "_ZTV7daPkn_c")],
 }
 
 
@@ -2293,6 +2299,48 @@ LEDGER_PARK = {
         ("/* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */\n",
          "#endif  /* hostgen LEDGER_PARK: func_ov084_0212f204 */\n/* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */\n"),
     ],
+    # daWanwan_c (Chain Chomp). Three ledger members plus daWanwan_c_classInit,
+    # which is a FACTORY host copy (unmatched/ChainChomp_Spawn_hostcopy.cpp) held
+    # by the VPTR ruling's sequencing.
+    #
+    # THE BRACKETS HERE ARE PER BODY, not banner to banner like the others,
+    # and that was learned from a build. These four members sit at the TOP of
+    # the file, and a banner-to-banner bracket swallowed an
+    # `#include "decl_common.h"` and the file-scope declarations of
+    # data_ov014_02114968, 02114978, 02114980 and 02114970, which
+    # CleanupResources further down still needs: four C2065s on a member
+    # nobody was parking. So each bracket opens on the member's own
+    # definition line and closes at the next ROM banner, which leaves every
+    # include and declaration between the banner and the body outside it.
+    # classInit is the exception to the exception: it lives INSIDE an
+    # `extern "C" {` block, so its bracket closes on its own last line
+    # instead, or the block's closing brace would end up inside the #if 0.
+    "d_a_wanwan": [
+        ("void* daWanwan_c_classInit(void){\n",
+         "#if 0  /* hostgen LEDGER_PARK: daWanwan_c_classInit */\n"
+         "void* daWanwan_c_classInit(void){\n"),
+        ("    __cxa_vec_ctor(c+0x578, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);\n  }\n  return c;\n}\n",
+         "    __cxa_vec_ctor(c+0x578, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);\n  }\n  return c;\n}\n"
+         "#endif  /* hostgen LEDGER_PARK: daWanwan_c_classInit */\n"),
+        ("int daWanwan_c::InitResources()\n{\n",
+         "#if 0  /* hostgen LEDGER_PARK: _ZN10daWanwan_c13InitResourcesEv */\n"
+         "int daWanwan_c::InitResources()\n{\n"),
+        ("/* ROM ordinal 26 -- _ZN10daWanwan_c8BehaviorEv, 0x021129ec, size 0x128 */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN10daWanwan_c13InitResourcesEv */\n"
+         "/* ROM ordinal 26 -- _ZN10daWanwan_c8BehaviorEv, 0x021129ec, size 0x128 */\n"),
+        ("int daWanwan_c::Behavior()\n{\n",
+         "#if 0  /* hostgen LEDGER_PARK: _ZN10daWanwan_c8BehaviorEv */\n"
+         "int daWanwan_c::Behavior()\n{\n"),
+        ("/* ROM ordinal 25 -- _ZN10daWanwan_c6RenderEv, 0x02112994, size 0x58 */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN10daWanwan_c8BehaviorEv */\n"
+         "/* ROM ordinal 25 -- _ZN10daWanwan_c6RenderEv, 0x02112994, size 0x58 */\n"),
+        ("int daWanwan_c::Render()\n{\n",
+         "#if 0  /* hostgen LEDGER_PARK: _ZN10daWanwan_c6RenderEv */\n"
+         "int daWanwan_c::Render()\n{\n"),
+        ("/* ROM ordinal 24 -- _ZN10daWanwan_c16CleanupResourcesEv, 0x0211294c, size 0x48 */\n",
+         "#endif  /* hostgen LEDGER_PARK: _ZN10daWanwan_c6RenderEv */\n"
+         "/* ROM ordinal 24 -- _ZN10daWanwan_c16CleanupResourcesEv, 0x0211294c, size 0x48 */\n"),
+    ],
 }
 
 
@@ -2339,6 +2387,20 @@ ALTNAME = {
         ("?data_ov030_02115d08@@3PAXA", "_data_ov030_02115d08"),
         ("?data_ov030_02115d18@@3UdaMky_G@@A", "_data_ov030_02115d18"),
         ("?data_ov030_02115d18@@3UdaMky_S@@A", "_data_ov030_02115d18"),
+    ],
+    # daPkn_c, added with its seat. Seven ROM data references declared
+    # inside C++ members, where a linkage-specification is not allowed, so
+    # each reaches the linker decorated while ov002_syms.c and ov084_syms.c
+    # emit the C name. Measured against the whole link before the rows were
+    # written: every RHS below is defined.
+    "daPkn_c": [
+        ("?data_ov002_0210da38@@3UPknSharedFile@@A", "_data_ov002_0210da38"),
+        ("?data_ov084_021302f4@@3PAPAUSharedFilePtr@@A", "_data_ov084_021302f4"),
+        ("?data_ov084_02130df4@@3UPknSharedFile@@A", "_data_ov084_02130df4"),
+        ("?data_ov084_02130dfc@@3UPknSharedFile@@A", "_data_ov084_02130dfc"),
+        ("?data_ov084_02130e0c@@3UPknSharedFile@@A", "_data_ov084_02130e0c"),
+        ("?data_ov084_02130e14@@3UPknSharedFile@@A", "_data_ov084_02130e14"),
+        ("?data_ov084_02130e24@@3UPknSharedFile@@A", "_data_ov084_02130e24"),
     ],
 }
 
