@@ -128,6 +128,10 @@ src/unnamed/ov063/func_ov063_02117b0c.c:
     complete
     .text start:0x02117b0c end:0x02117cdc
 
+src/unnamed/ov063/func_ov063_02117cdc.c:
+    complete
+    .text start:0x02117cdc end:0x02118458
+
 src/unnamed/ov063/func_ov063_02118458.c:
     complete
     .text start:0x02118458 end:0x0211873c

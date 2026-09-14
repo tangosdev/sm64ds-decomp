@@ -5580,7 +5580,7 @@ wraps `i`; every source shape we can reach wraps `off`. Nothing else in either l
 * **The permuter, 90 minutes at -j4 on the div-13 base, 7,238 candidates, never beat the
   base score of 70, and a second run from the same base behaved the same.**
 
-## 6ce. A launder on a pool address picks which of two entry-block attractors wins the switch selector's register (func_ov063_02117cdc, div 3, 2026-09-12, run link100 lane DCHEAP)
+## 6ce. A launder on a pool address picks which of two entry-block attractors wins the switch selector's register (func_ov063_02117cdc, div 3 -> 0, 2026-09-12, run link100 lane DCHEAP; CLOSED 2026-09-13, see the resolution addendum)
 
 `func_ov063_02117cdc` (ov063 0x02117cdc, 0x77c) closed 9 -> 3 by folding case 9's
 three-component vector block into initialised declarations ordered x, z, y, `fl` (6aj
@@ -5597,7 +5597,9 @@ address picks between them: `LAU(&data_0209f318)` (a same-type non-volatile cast
 the selector in r0 (div 3). A plain `&data_0209f318` instead falls into 6h's
 rematerialisable-constant class, taking the leftover r0 itself and pushing the selector
 up to r1 (div 5). The ROM sits one further rotation up again (pool r1, selector r2, r0
-untouched in the entry block), which nothing source-side reaches: a non-void return type
+untouched in the entry block). THAT SENTENCE'S ORIGINAL CLAIM -- that nothing
+source-side reaches it -- IS FALSE; see the resolution addendum. What is true is that
+no spelling of the ENTRY BLOCK reaches it: a non-void return type
 does reserve r0 and shift the selector to r1, but it also shifts every OTHER scratch
 register in the function by one (div 179), so it is not a usable lever here. Also inert:
 8 selector-expression forms, 8 folded-address-temp forms, 20 pragmas, 24 top-level
@@ -5661,12 +5663,61 @@ So the blanket rule is false on this body. What the ROM reserves is narrower and
 stating separately: the INCOMING PARAMETER's register across its home instruction. Both
 entry-block webs skip r0 after `mov r6,r0` at +0x08, and no local temp anywhere else in the
 function skips anything. Under mwccarm the parameter's web dies at the home and both webs
-are free to take r0, which is why the two attractors are {r0,r1} in either order and the
-ROM's {r1,r2} is not reachable from a third spelling. Treat this as the parameter-home case
+are free to take r0 -- UNLESS a call site elsewhere in the function wants the parameter in
+r0 and can have it without a move, which is exactly what the ROM does and what this
+lane missed; see the resolution addendum. The two attractors are {r0,r1} in either
+order only while no such call site exists. Treat this as the parameter-home case
 of 6bs rather than as 6bs itself, and do not spend a lane on the general rule's escape
 hatches. 6bs's own escape was measured here and fails twice over: a `volatile int zz;` fed
 into a separate named local grows the frame from 0x1c to 0x24, emits the store and the
 reload, moves 246 of 479 words, AND STILL LEAVES THE SELECTOR IN r0.
+
+
+### 6ce resolution: the third colouring is a CALL SITE's, not the entry block's -- a callee's real parameter list reserves r0 across the dispatch (div 3 -> 0, 2026-09-13, lane f2b)
+
+`func_ov063_02117cdc` matches at 0/479. Neither of the two axes above moved it; the
+third colouring was never an entry-block spelling at all.
+
+Case 0's first statement is `*(void **)(c + 0x488) = _ZN8dActor_c13ClosestPlayerEv(...)`.
+That is `dActor_c::ClosestPlayer()`, a non-static method, so the ROM passes the calling
+actor as `this` in r0. The draft declared it `(void)` and called it with nothing. **The
+`bl` is byte-identical either way** -- so no byte gate and no disassembly can see the
+difference -- but the argument makes the parameter's incoming r0 live from entry to that
+call, mwccarm coalesces the two (no `mov r0, r6` is emitted anywhere in the function,
+cartridge or candidate), and the entry block's two temps therefore start at r1:
+
+```text
+    ClosestPlayer()  + laundered pool read    ldrb r0 / ldr r1    div 3   (the banked tip)
+    ClosestPlayer()  + plain pool read        ldrb r1 / ldr r0    div 5
+    ClosestPlayer(c) + laundered pool read    ldrb r1 / ldr r2    div 5
+    ClosestPlayer(c) + plain pool read        ldrb r2 / ldr r1    MATCH
+```
+
+Both levers are needed and they are not independent: the launder was load-bearing while
+the call was spelled `(void)` and is dead weight once it is not.
+
+**Three conditions, measured.** Synthetic probes on the same shape isolate when a call
+site reserves r0 across the dispatch: the argument must be the parameter VALUE (a cast or
+a copy through a local still works; `p + 0x10`, `*(T *)(p + off)` and the parameter in
+r1 do not), it must be in the r0 position, and it must be reached with r0 still holding
+it -- putting one other call ahead of it in the same case breaks the coalesce and the
+colouring drops back. That is why this shows up in case 0 and why bisecting the LAST case
+chased a ghost for two lanes.
+
+**The non-void return type is the same mechanism at function scope, which is why it is
+not a lever.** A non-void return with bare `return;` statements is byte-neutral (the
+function keeps its size; `return 0;` is what grows it) and does produce the ROM's entry
+block -- but it reserves r0 for the WHOLE function, shifting every other scratch register
+up by one, 174 words. The call-site reservation is scoped to the live range instead, so
+the body keeps r0.
+
+**The transferable rule.** When a residue is a pure rename in the ENTRY block and the
+whole body is exact, stop sweeping the entry block: ask which callee takes the parameter
+in r0. `notes/` already has this as a naming fact (a6894f41b fixed eleven other
+ClosestPlayer callers as a byte-neutral correctness change); what is new is that on a
+function whose first case calls such a method, the same correction is worth three words.
+A call site cannot evidence a parameter list -- but a parameter list can evidence a
+colouring.
 
 ## 6cb. Block DEPTH of a named web is a rank lever that declaration ORDER is not, and the operand order of a `+` decides which side owns the shifter-operand register (func_ov075_0211621c, div 27 -> 0, 2026-09-12, run link100 lane OV75)
 
