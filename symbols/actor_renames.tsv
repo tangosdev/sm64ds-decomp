@@ -1780,14 +1780,14 @@ ov063	0x0211d454	func_ov063_0211d454	_ZN20daObjTh_Fall_Block_c16CleanupResources
 ov063	0x0211d468	func_ov063_0211d468	_ZN20daObjTh_Fall_Block_c13InitResourcesEv	vtable slot 0
 ov063	0x0211d47c	func_ov063_0211d47c	daObjTh_Fall_Block_c_Spawn	spawnfunc
 ov063	0x0211d47c	daObjTh_Fall_Block_c_Spawn	daObjTh_Fall_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov063	0x0211d4b8	func_ov063_0211d4b8	_ZN8MadPianoD1Ev	vtable slot 16
-ov063	0x0211d54c	func_ov063_0211d54c	_ZN8MadPianoD0Ev	vtable slot 17
-ov063	0x0211de3c	func_ov063_0211de3c	_ZN8MadPiano16CleanupResourcesEv	vtable slot 3
-ov063	0x0211de8c	func_ov063_0211de8c	_ZN8MadPiano6RenderEv	vtable slot 9
-ov063	0x0211deb8	func_ov063_0211deb8	_ZN8MadPiano8BehaviorEv	vtable slot 6
-ov063	0x0211dfac	func_ov063_0211dfac	_ZN8MadPiano13InitResourcesEv	vtable slot 0
-ov063	0x0211e128	func_ov063_0211e128	MadPiano_Spawn	spawnfunc
-ov063	0x0211e128	MadPiano_Spawn	daPiano_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov063	0x0211d4b8	func_ov063_0211d4b8	_ZN9daPiano_cD1Ev	vtable slot 16
+ov063	0x0211d54c	func_ov063_0211d54c	_ZN9daPiano_cD0Ev	vtable slot 17
+ov063	0x0211de3c	func_ov063_0211de3c	_ZN9daPiano_c16CleanupResourcesEv	vtable slot 3
+ov063	0x0211de8c	func_ov063_0211de8c	_ZN9daPiano_c6RenderEv	vtable slot 9
+ov063	0x0211deb8	func_ov063_0211deb8	_ZN9daPiano_c8BehaviorEv	vtable slot 6
+ov063	0x0211dfac	func_ov063_0211dfac	_ZN9daPiano_c13InitResourcesEv	vtable slot 0
+ov063	0x0211e128	func_ov063_0211e128	daPiano_c_Spawn	spawnfunc
+ov063	0x0211e128	daPiano_c_Spawn	daPiano_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211e770	data_ov063_0211e770	Boo_SpawnInfo	spawninfo
 ov063	0x0211e770	Boo_SpawnInfo	g_profile_TERESA	reconstructed profile global; literal ROM ID TERESA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211e78c	data_ov063_0211e78c	BigBoo_SpawnInfo	spawninfo
@@ -1811,9 +1811,9 @@ ov063	0x0211ea88	data_ov063_0211ea88	_ZTV11daTrsTrap_c	vtable alloc=0x354
 ov063	0x0211eb34	data_ov063_0211eb34	daObjTh_Fall_Block_c_SpawnInfo	spawninfo
 ov063	0x0211eb34	daObjTh_Fall_Block_c_SpawnInfo	g_profile_TH_DOWN_B	reconstructed profile global; literal ROM ID TH_DOWN_B+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211eb58	data_ov063_0211eb58	_ZTV20daObjTh_Fall_Block_c	vtable alloc=0x34c
-ov063	0x0211ed10	data_ov063_0211ed10	MadPiano_SpawnInfo	spawninfo
-ov063	0x0211ed10	MadPiano_SpawnInfo	g_profile_PIANO	reconstructed profile global; literal ROM ID PIANO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov063	0x0211ed34	data_ov063_0211ed34	_ZTV8MadPiano	vtable alloc=?
+ov063	0x0211ed10	data_ov063_0211ed10	daPiano_c_SpawnInfo	spawninfo
+ov063	0x0211ed10	daPiano_c_SpawnInfo	g_profile_PIANO	reconstructed profile global; literal ROM ID PIANO+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov063	0x0211ed34	data_ov063_0211ed34	_ZTV9daPiano_c	vtable alloc=?
 ov064	0x02116ca0	func_ov064_02116ca0	_ZN7daOts_c16CleanupResourcesEv	vtable slot 3 (was _ZN5Bully16CleanupResourcesEv)
 ov064	0x02116cf0	func_ov064_02116cf0	_ZN7daOts_c6RenderEv	vtable slot 9 (was _ZN5Bully6RenderEv)
 ov064	0x02117070	func_ov064_02117070	_ZN5BullyD1Ev	vtable slot 16

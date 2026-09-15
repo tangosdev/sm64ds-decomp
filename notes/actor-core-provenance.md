@@ -169,7 +169,7 @@ declaration"), and it is neither virtual nor layout-affecting, so
 `0x080..0x08b` and the `0x098..0x0ab` block were bare padding and `u8`
 placeholders in `dActor_c.h`, while `Player.h` -- describing the same bytes --
 named them and typed them `s32`. Player is right, and the evidence is outside
-Player: `BooCage::InitResources` and `MadPiano::InitResources` write `-0x4000`
+Player: `BooCage::InitResources` and `daPiano_c::InitResources` write `-0x4000`
 and `-0x2000` to `0x09c` and `-0x46000` / `-0x3c000` to `0x0a0`, which are fix12
 gravity and terminal velocity, not bytes. `Player::St_Walk_Main` passes `0x098`
 as a 32-bit argument.

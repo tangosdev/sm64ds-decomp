@@ -26770,13 +26770,13 @@
    "start": "0x211d4b8",
    "end": "0x211e1c0",
    "classes": [
-    "MadPiano"
+    "daPiano_c"
    ],
    "n_functions_map": 17,
    "n_files": 17,
    "files": [
-    "src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp",
-    "src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp",
+    "src/game/actors/daPiano_c/_ZN9daPiano_cD1Ev.cpp",
+    "src/game/actors/daPiano_c/_ZN9daPiano_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211d5f4.c",
     "src/unnamed/ov063/func_ov063_0211d828.cpp",
     "src/unnamed/ov063/func_ov063_0211d88c.c",
@@ -26787,11 +26787,11 @@
     "src/unnamed/ov063/func_ov063_0211dd84.c",
     "src/unnamed/ov063/func_ov063_0211ddac.cpp",
     "src/unnamed/ov063/func_ov063_0211ddf4.cpp",
-    "src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp",
-    "src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp",
-    "src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp",
-    "src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp",
-    "src/actors/MadPiano/daPiano_c_classInit.cpp"
+    "src/game/actors/daPiano_c/_ZN9daPiano_c16CleanupResourcesEv.cpp",
+    "src/game/actors/daPiano_c/_ZN9daPiano_c6RenderEv.cpp",
+    "src/game/actors/daPiano_c/_ZN9daPiano_c8BehaviorEv.cpp",
+    "src/game/actors/daPiano_c/_ZN9daPiano_c13InitResourcesEv.cpp",
+    "src/actors/daPiano_c/daPiano_c_classInit.cpp"
    ],
    "ext_mix": {
     ".c": 7,

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8MadPianoD0Ev
+// @symbol _ZN9daPiano_cD0Ev
 /* The deleting variant is generated from the same native destructor and the
  * actor hierarchy's inherited operator delete. */
-#include "MadPiano.h"
+#include "daPiano_c.h"
 
-MadPiano::~MadPiano()
+daPiano_c::~daPiano_c()
 {
 }

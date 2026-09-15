@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8MadPianoD1Ev
+// @symbol _ZN9daPiano_cD1Ev
 /* Member and base ownership make CodeWarrior emit every teardown step in ROM
  * order; the recovered source destructor itself is empty. */
-#include "MadPiano.h"
+#include "daPiano_c.h"
 
-MadPiano::~MadPiano()
+daPiano_c::~daPiano_c()
 {
 }
