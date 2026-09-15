@@ -16,6 +16,7 @@
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN21SnowmanBreathParticle14UpdatePositionEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/actors/dMgJump3DMario_c.cpp": ["param:#1 Jump3DVec *", "param:#2 Jump3DVec *", "param:#3 Jump3DVec *"],
    "src/actors/daObjCtMecha03_c.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/func_02007b98.c": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
    "src/func_02009aa8.c": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
@@ -1081,6 +1082,7 @@
   },
   "NormalizeVec3IfNonZero": {
    "src/Quaternion_FromVector3.c": ["param:#1 Vec3 *"],
+   "src/actors/dMgJump3DMario_c.cpp": ["param:#1 Jump3DVec *"],
    "src/func_ov006_020c42bc.c": ["param:#1 Vec3 *"],
    "src/func_ov006_020c47d4.c": ["param:#1 Vec3 *"],
    "src/func_ov006_020c49d8.c": ["param:#1 Vec3 *"],
@@ -2010,6 +2012,7 @@
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
    "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 Vector3 *"],
    "src/actors/Goomboss.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
+   "src/actors/dMgJump3DMario_c.cpp": ["param:#1 Jump3DVec *", "param:#2 Jump3DVec *", "param:#3 Jump3DVec *"],
    "src/actors/daMip_c.cpp": ["param:#2 const void *", "param:#3 const void *"],
    "src/actors/daOts_c.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
    "src/func_020089f8.c": ["param:#1 int *", "param:#2 const int *", "param:#3 const int *"],
@@ -7407,7 +7410,6 @@
    "include/decl_Animation.h": ["return:int"],
    "src/_ZN11ChiefChilly8BehaviorEv.cpp": ["return:int"],
    "src/_ZN6Player18St_YoshiPower_MainEv.cpp": ["return:int"],
-   "src/actors/dMgJump3DMario_c.cpp": ["return:int"],
    "src/actors/daBombking_c.cpp": ["return:int"],
    "src/func_ov002_020bcdf0.c": ["return:int"],
    "src/func_ov002_020d1f78.c": ["return:int"],
@@ -8802,7 +8804,7 @@
    "src/_ZN8dScene_c14BeforeBehaviorEv.cpp": ["return:FaderObject *"],
    "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp": ["return:FaderBrightness *"],
    "src/_ZN9BootScene8BehaviorEv.cpp": ["return:unsigned char []"],
-   "src/actors/dScGameOver_c.cpp": ["return:GameOverGate *"],
+   "src/actors/dScGameOver_c.cpp": ["return:SceneGate *"],
    "src/func_ov002_020f23f0.c": ["return:void *"],
    "src/func_ov004_020b7c04.c": ["return:void *"],
    "src/func_ov005_020c0140.cpp": ["return:int * []"],
@@ -8976,6 +8978,7 @@
   "data_020a0de8": {
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char [][]"],
    "src/_ZN5Stage16CheckCameraInputEv.cpp": ["return:TouchInfo []"],
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned char [][]"],
    "src/actors/dScMgBomroom_c.cpp": ["return:Tab []"],
    "src/func_ov003_020ae358.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b0b1c.c": ["return:unsigned char [][]"],
@@ -8989,6 +8992,7 @@
   },
   "data_020a0de9": {
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char [][]"],
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned char [][]"],
    "src/func_ov003_020ae358.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b0b1c.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b65e4.c": ["return:unsigned char [][]"],
@@ -8998,6 +9002,7 @@
   "data_020a0dea": {
    "src/_ZN5Stage9LC_UpdateEv.cpp": ["return:volatile unsigned char []"],
    "src/_ZN5Stage9PS_UpdateEv.cpp": ["return:volatile unsigned char []"],
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned char [][]"],
    "src/func_ov003_020ae358.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b0b1c.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b65e4.c": ["return:unsigned char [][]"],
@@ -9011,6 +9016,7 @@
   "data_020a0deb": {
    "src/_ZN5Stage9LC_UpdateEv.cpp": ["return:volatile unsigned char []"],
    "src/_ZN5Stage9PS_UpdateEv.cpp": ["return:volatile unsigned char []"],
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned char [][]"],
    "src/func_ov003_020ae358.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b0b1c.c": ["return:unsigned char [][]"],
    "src/func_ov004_020b65e4.c": ["return:unsigned char [][]"],
@@ -10847,6 +10853,12 @@
    "src/func_ov006_020c47d4.c": ["return:struct Obj * []"],
    "src/func_ov006_020c4fa4.cpp": ["return:VB * []"]
   },
+  "data_ov006_02140400": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned char"]
+  },
+  "data_ov006_02140404": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:unsigned short"]
+  },
   "data_ov006_02140414": {
    "src/func_ov006_020c7490.c": ["return:int []"]
   },
@@ -10862,6 +10874,27 @@
    "src/func_ov006_020c7300.c": ["return:Ent *"],
    "src/func_ov006_020c7418.c": ["return:char *"],
    "src/func_ov006_020c7574.c": ["return:char *"]
+  },
+  "data_ov006_02140438": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140440": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140448": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140450": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140458": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140460": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov006_02140468": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:SharedFilePtr"]
   },
   "data_ov006_021404c4": {
    "src/func_ov006_020c8c78.c": ["return:int"]
@@ -11062,6 +11095,9 @@
    "src/func_ov006_020ca430.c": ["return:char *"],
    "src/func_ov006_020cb2b4.c": ["return:char *"],
    "src/func_ov006_020cce0c.c": ["return:char *"]
+  },
+  "data_ov006_02141a44": {
+   "src/actors/dMgJump3DMario_c.cpp": ["return:void *"]
   },
   "data_ov006_02141a50": {
    "src/func_ov006_020cb2b4.c": ["return:char *"]
@@ -14547,6 +14583,7 @@
   },
   "func_02016a04": {
    "include/decl_common.h": ["arity:2"],
+   "src/actors/dMgJump3DMario_c.cpp": ["arity:2"],
    "src/func_ov006_020c29dc.cpp": ["arity:2"],
    "src/func_ov006_020c3bf4.cpp": ["arity:2"],
    "src/func_ov006_020c6e4c.cpp": ["arity:2"],
@@ -14555,6 +14592,7 @@
   },
   "func_02016a14": {
    "include/decl_common.h": ["arity:2"],
+   "src/actors/dMgJump3DMario_c.cpp": ["arity:2"],
    "src/func_ov006_020c3bf4.cpp": ["arity:2"],
    "src/func_ov006_020c6e4c.cpp": ["arity:2"],
    "src/func_ov006_020ca430.c": ["arity:3"],
