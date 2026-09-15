@@ -17,7 +17,7 @@ extern int _ZN9Animation8FinishedEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
 extern void _Z14ApproachLinearRiii(int *, int, int);
 extern void _Z15ApproachLinear2Rsss(short *, short, short);
-extern void func_02012718(void *, int);
+extern void func_02012718(int, int);
 extern void func_ov006_020bfff8(char *, void *, int *, int *);
 extern int func_ov004_020b04c0(void);
 extern void func_ov006_02120d0c(int, int);
@@ -59,7 +59,7 @@ void func_ov006_020cb2b4(void *self)
     if (u <= 0x90000 && u >= -0x90000)
         return;
 
-    func_02012718((void *)0x1be, 0x100000);
+    func_02012718(0x1be, 0x100000);
     _Z14ApproachLinearRiii(&data_ov006_02140588, 0x270f, 1);
     data_ov006_0214058c -= 1;
     data_ov006_0214055c -= 1;

@@ -817,7 +817,7 @@
     }
   ],
   "unproven": [
-    "Whether func_ov006_020e5450 can be matched. The best recorded attempt sits at 29 divergences with a byte-clean prologue, but no matched source exists and the banked draft is at 324.",
+    "Whether func_ov006_020e5450 can be matched. The honest measurement is 191 divergent words of 344 at the exact size 0x560, which is what nearmiss/db.jsonl banks, with a byte-clean prologue; no matched source exists. An older config/match_attempts.jsonl row read 29, but it was scored over a 0x52c candidate against the 0x560 target and was a truncated verdict, not a divergence count; that field has been cleared.",
     "Whether any of the five pragma directives is load-bearing. That is a delete-outright control the writer runs; nothing here measures it.",
     "The original identifiers and member-versus-file-local form of the 21 direct-call-only helpers. Direct calls preserve targets and arguments, not source-level linkage.",
     "The original names of the 25 nonvirtual member callbacks reached through the pointer-to-member records, and the gameplay semantics of the seven BSS destination arrays.",
@@ -1041,7 +1041,7 @@
         "note": "The BANKED draft is much worse (324) than the best ATTEMPT (29). The 29-divergence grok-4.6 attempt is recorded in config/match_attempts.jsonl only -- its source is not in the bank, so a writer wanting it must regenerate from the attempt note."
       },
       "attempt_note": "common_subs off; for-loop with found body inside; slot=self+m forms px/pz; loop guards via p+0x4689 split. Prologue and loop tests byte-ok except branch offsets. Residual: z/x pair load order, frame 0x64 vs 0x7c, size 0x52c vs 0x560, found-body s64/pointer schedule.",
-      "writer_guidance": "29 divergences with the prologue and loop tests already byte-clean is a live match candidate, not a wall. But it is the ONLY thing splitting this run in two: matching it merges segments A and B into one 53-function TU. Cutting around it means shipping a 31- or 21-function partial."
+      "writer_guidance": "191 of 344 words at the exact size 0x560, with the prologue and loop tests already byte-clean, is a live match candidate, not a wall. Start from notes/mwccarm-codegen.md section 6cz, which carries this line further; do not re-derive it. Do not plan against the old 29: it was a truncated verdict over a 0x52c candidate and has been cleared. But it is the ONLY thing splitting this run in two: matching it merges segments A and B into one 53-function TU. Cutting around it means shipping a 31- or 21-function partial."
     },
     "other_run_entries": [
       {

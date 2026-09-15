@@ -2,7 +2,7 @@
 void func_ov006_020d6b88(char *this, int idx);
 void func_ov006_020d6c90(char *this, int idx);
 void func_ov006_020d6e8c(char *this, int idx);
-void func_02012718(void *a, int b);
+void func_02012718(int a, int b);
 int func_020126e8(int a);
 int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
@@ -57,7 +57,7 @@ void func_ov006_020d7f5c(char *this, int idx)
         }
 
         if (was == 0 && *(u8 *)(B + 0x69e) != 0) {
-            func_02012718((void *)0x1e4, *(int *)(B + 0x660));
+            func_02012718(0x1e4, *(int *)(B + 0x660));
         }
 
         *(int *)(B + 0x688) = func_02012468(*(int *)(B + 0x688), 2, 0x1e5, 4, 0, 0,

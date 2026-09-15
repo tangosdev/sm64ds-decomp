@@ -24,7 +24,7 @@ struct Obj {
     struct Entry entries[1];  /* 0x4660 */
 };
 
-extern void func_02012718(int soundId, u32 handle);
+extern void func_02012718(int soundId, int handle);
 
 void func_ov006_02102d6c(struct Obj *self, int i)
 {

@@ -1,5 +1,5 @@
 #include "types.h"
-extern void func_02012718(void *a, int b);
+extern void func_02012718(int a, int b);
 extern u8 data_020a0e40;
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
@@ -31,7 +31,7 @@ void func_ov006_020e1b54(char *c)
   *((u16 *) (c + 0x4ede)) = 0xc000;
   if ((*((u8 *) (c + 0x4ee9))) == 0)
   {
-    func_02012718((void *) 0x1d2, *((int *) (c + 0x4eb0)));
+    func_02012718(0x1d2, *((int *) (c + 0x4eb0)));
     *((u8 *) (c + 0x4ee9)) = 6;
   }
   *((int *) (c + 0x4ecc)) = 0;

@@ -5172,11 +5172,35 @@ the same region. On a two-line probe over a `struct S *p`, canonical flags, whol
 
 The second store is the whole difference: `add #0x5000` once, then `[r2,#0x3c0]`, which is the
 ROM's shape at that site. The bound, and it is why this reads as inert if you probe it in the
-wrong place: **the cast only matters when the base is not already byte-strided.** In the
-banked `func_ov006_020d27dc` candidate the base is a `char *`, and there both spellings
-compile to the same 3652 bytes, md5 `8462f11dba034fd64356bc06233a65cf`, at both surviving
-sites. `(int)p + k` and `p + k` on a `char *` are the same expression after canonicalisation,
-the same way index arithmetic is canonicalised in 6bv item 2.
+wrong place: **a byte-strided base does not make the cast inert, it makes it inert at most
+sites, which is not the same thing.** Re-measured 2026-09-13 against the banked
+`func_ov006_020d27dc` candidate, whose base is a `char *` and which spells `(int)p` on five
+source lines -- 40, 87, 197, 220 and 241, of which 87 is a genuine int-typed local that cannot
+drop the cast:
+
+```
+cast kept at 40/197/220/241                          3656  md5 163fe692d7ce77134ede8bc0db9f5f08
+cast dropped at 40, at 197, at 220, or at all three  3656  md5 163fe692d7ce77134ede8bc0db9f5f08
+cast dropped at 241, alone or with the other three   3652  md5 8462f11dba034fd64356bc06233a65cf
+```
+
+Three of the four removable sites are byte-inert: on either spelling they canonicalise to the
+ROM's `add rN,sb,#0x5000` with an immediate offset, and both objects carry seventeen of those.
+The fourth is worth four bytes. The cast object emits exactly one `ldr rN,[sb,rM]` in the whole
+914-instruction function, at +0x55c, and that register-offset load plus the literal-pool word it
+needs is the entire size difference:
+
+```
+ROM     add r0,sb,#0x5000 / ldr r1,[r0,#0x374] / cmp r1,#5 / blt
+(int)p  ldr r0,[pc,#0x8c4] / ldr r0,[sb,r0]    / cmp r0,#5 / addlt
+p       add r0,sb,#0x5000 / ldr r1,[r0,#0x374] / cmp r1,#5 / addlt
+```
+
+The md5 `8462f11dba034fd64356bc06233a65cf` recorded here previously as what *both* spellings
+produce is the cast-dropped object alone; the banked source produces `163fe692...` at 3656.
+Line 241 is the site whose loaded value feeds the compare of the if-converted block, which is
+why a site-local probe of this lever can return either answer. Probe it at the site that feeds
+the divergence, not at a convenient one.
 
 That lever carried `func_ov006_020d27dc` from 17 divergences to a single instruction, and the
 one that remains is the notes 6d / 6bv item 8 if-conversion floor: mwccarm predicates a
@@ -5184,6 +5208,12 @@ six-instruction else arm and duplicates the epilogue where the ROM emits `blt` a
 unpredicated block. It is now evidenced over 119 pragma settings, 5 optimisation levels, 20
 source spellings and all 20 installed builds. The endpoint source is size-wrong by four bytes,
 so it does not belong in `src/`, and by item 1 it does not belong in the DB either.
+The corollary is the uncomfortable half: the banked row is size-exact at 3656 only because of
+that one spurious pool word, so its 17 is a score on a source that is wrong at line 241, and
+`evaluate_full` sentinels the corrected 3652-byte object at 999 on the size mismatch. The
+correction therefore cannot be ingested as an improvement -- the upsert is strictly improving
+and 999 is worse than 17 -- so the row keeps its stored source and carries a floor mark
+instead. The residue that actually remains is one word, not a size-exact 17.
 
 **4. The reversed-sense ternary, and a launder that is not needed.**
 

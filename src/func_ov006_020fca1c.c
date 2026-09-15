@@ -3,7 +3,7 @@
 
 extern void func_ov006_020fb8fc(char *c, int a2, int a3, int a4, int a5, int a6);
 extern void func_ov006_020fc1b4(char *base, int val);
-extern void func_02012718(void *a, int b);
+extern void func_02012718(int a, int b);
 
 void func_ov006_020fca1c(char *c, int idx)
 {
@@ -36,7 +36,7 @@ void func_ov006_020fca1c(char *c, int idx)
                             *(int *)(c + i * 0xc + 0x5bd0),
                             2, 0, i + 1);
         func_ov006_020fc1b4(c, 0);
-        func_02012718((void *)0x18c, *(int *)(c + n + 0x4000 + 0x660));
+        func_02012718(0x18c, *(int *)(c + n + 0x4000 + 0x660));
         return;
     }
 }

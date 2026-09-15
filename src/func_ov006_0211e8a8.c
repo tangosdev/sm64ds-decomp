@@ -3,7 +3,7 @@ extern int data_ov006_0212efec[];
 
 extern int* _ZN3G2S13GetBG0CharPtrEv(void);
 extern void func_ov006_0211e55c(char* c, int idx);
-extern void func_02012718(void* a, int b);
+extern void func_02012718(int a, int b);
 
 #define A(a) (*(u8*)(a))
 
@@ -48,7 +48,7 @@ void func_ov006_0211e8a8(char* c, int idx)
     *(s16*)&((char (*)[0x24])c)[idx][0x466e] = 0x40;
     A(c + 0x4c21)++;
     func_ov006_0211e55c(c, idx);
-    func_02012718((void*)0x1f0, *(int*)(c + off + 0x4660));
+    func_02012718(0x1f0, *(int*)(c + off + 0x4660));
     if (*(u8*)(c + 0x4c26) == 0xff)
         *(u8*)(c + 0x4c26) = (u8)idx;
 }

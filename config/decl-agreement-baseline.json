@@ -14379,19 +14379,11 @@
    "src/unnamed/ov063/func_ov063_02118ddc.cpp": ["param:#1 int", "param:#2 char *", "return:int"]
   },
   "func_02012718": {
-   "include/decl_common.h": ["param:#1 int"],
-   "src/actors/dMgJump3DMario_c.cpp": ["param:#1 int"],
-   "src/actors/dScMgCurling2_c.cpp": ["param:#1 int"],
-   "src/func_ov006_020cb838.cpp": ["param:#1 int"],
-   "src/func_ov006_020cbd7c.cpp": ["param:#1 int"],
-   "src/func_ov006_020d1ba0.cpp": ["param:#1 int"],
-   "src/func_ov006_020e1854.c": ["param:#1 int"],
-   "src/func_ov006_020e1dc8.cpp": ["param:#1 int"],
-   "src/func_ov006_020fd17c.c": ["param:#1 int"],
-   "src/func_ov006_0210076c.c": ["param:#1 int"],
-   "src/func_ov006_02102d6c.c": ["param:#1 int", "param:#2 unsigned int"],
-   "src/func_ov006_02125f68.cpp": ["param:#1 int"],
-   "src/minigames/d_s_mg_trampoline.cpp": ["param:#1 int"]
+   "src/_ZN12dScMgSlot1_c8BehaviorEv.cpp": ["param:#1 void *"],
+   "src/func_ov006_020d27dc.cpp": ["param:#1 void *"],
+   "src/func_ov006_020e20bc.c": ["param:#1 void *"],
+   "src/func_ov006_020e5450.cpp": ["param:#1 void *"],
+   "src/func_ov006_020fdaf0.c": ["param:#1 void *"]
   },
   "func_0201277c": {
    "include/decl_common.h": ["param:#1 int"],
@@ -14490,8 +14482,7 @@
    "src/minigames/d_s_mg_memory.cpp": ["param:#1 int", "return:void"]
   },
   "func_020127ec": {
-   "src/func_020126ac.c": ["return:int"],
-   "src/func_02012718.c": ["param:#2 void *"]
+   "src/func_020126ac.c": ["return:int"]
   },
   "func_02012dd0": {
    "src/func_ov004_020aeb24.cpp": ["param:#1 int"],
@@ -19173,9 +19164,6 @@
   },
   "func_ov006_020e513c": {
    "src/func_ov006_020e5e3c.c": ["param:#1 char *"]
-  },
-  "func_ov006_020e5450": {
-   "src/func_ov006_020e5b70.c": ["arity:0"]
   },
   "func_ov006_020e6118": {
    "src/func_ov006_020e5ffc.c": ["param:#1 char *"]
