@@ -61,14 +61,14 @@ ov002	0x020b2af0	func_ov002_020b2af0	RedCoin_Spawn	spawnfunc
 ov002	0x020b2af0	RedCoin_Spawn	daCoin_c_classInit_RED_COIN	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020b2b48	func_ov002_020b2b48	Coin_Spawn	spawnfunc
 ov002	0x020b2b48	Coin_Spawn	daCoin_c_classInit_COIN	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x020b2ba0	func_ov002_020b2ba0	_ZN11WingFeatherD1Ev	vtable slot 16
-ov002	0x020b2be8	func_ov002_020b2be8	_ZN11WingFeatherD0Ev	vtable slot 17
-ov002	0x020b2e30	func_ov002_020b2e30	_ZN11WingFeather16CleanupResourcesEv	vtable slot 3
-ov002	0x020b2e54	func_ov002_020b2e54	_ZN11WingFeather6RenderEv	vtable slot 9
-ov002	0x020b2e9c	func_ov002_020b2e9c	_ZN11WingFeather8BehaviorEv	vtable slot 6
-ov002	0x020b311c	func_ov002_020b311c	_ZN11WingFeather13InitResourcesEv	vtable slot 0
-ov002	0x020b3248	func_ov002_020b3248	WingFeather_Spawn	spawnfunc
-ov002	0x020b3248	WingFeather_Spawn	daFeather_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov002	0x020b2ba0	func_ov002_020b2ba0	_ZN11daFeather_cD1Ev	vtable slot 16
+ov002	0x020b2be8	func_ov002_020b2be8	_ZN11daFeather_cD0Ev	vtable slot 17
+ov002	0x020b2e30	func_ov002_020b2e30	_ZN11daFeather_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020b2e54	func_ov002_020b2e54	_ZN11daFeather_c6RenderEv	vtable slot 9
+ov002	0x020b2e9c	func_ov002_020b2e9c	_ZN11daFeather_c8BehaviorEv	vtable slot 6
+ov002	0x020b311c	func_ov002_020b311c	_ZN11daFeather_c13InitResourcesEv	vtable slot 0
+ov002	0x020b3248	func_ov002_020b3248	daFeather_c_Spawn	spawnfunc
+ov002	0x020b3248	daFeather_c_Spawn	daFeather_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020b3568	func_ov002_020b3568	Bubble_Spawn	spawnfunc
 ov002	0x020b3568	Bubble_Spawn	daObjAbuku_c_Spawn	prior RTTI-anchored project alias; class identity proven, exact source spelling not preserved
 ov002	0x020b3568	daObjAbuku_c_Spawn	daObjAbuku_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
@@ -345,9 +345,9 @@ ov002	0x021087ac	RedCoin_SpawnInfo	g_profile_RED_COIN	reconstructed profile glob
 ov002	0x021087c8	data_ov002_021087c8	BlueCoin_SpawnInfo	spawninfo
 ov002	0x021087c8	BlueCoin_SpawnInfo	g_profile_BLUE_COIN	reconstructed profile global; literal ROM ID BLUE_COIN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x021087ec	data_ov002_021087ec	_ZTV4Coin	vtable alloc=0x3b4
-ov002	0x02108884	data_ov002_02108884	WingFeather_SpawnInfo	spawninfo
-ov002	0x02108884	WingFeather_SpawnInfo	g_profile_FEATHER	reconstructed profile global; literal ROM ID FEATHER+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x021088a8	data_ov002_021088a8	_ZTV11WingFeather	vtable alloc=0x388
+ov002	0x02108884	data_ov002_02108884	daFeather_c_SpawnInfo	spawninfo
+ov002	0x02108884	daFeather_c_SpawnInfo	g_profile_FEATHER	reconstructed profile global; literal ROM ID FEATHER+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov002	0x021088a8	data_ov002_021088a8	_ZTV11daFeather_c	vtable alloc=0x388
 ov002	0x02108940	data_ov002_02108940	Bubble_SpawnInfo	spawninfo
 ov002	0x02108940	Bubble_SpawnInfo	g_profile_OBJ_ABUKU	reconstructed profile global; literal ROM ID OBJ_ABUKU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02108a24	data_ov002_02108a24	BrickBlock_SpawnInfo	spawninfo

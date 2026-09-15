@@ -14940,19 +14940,19 @@
    "start": "0x20b2ba0",
    "end": "0x20b3298",
    "classes": [
-    "WingFeather"
+    "daFeather_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/game/actors/WingFeather/_ZN11WingFeatherD1Ev.cpp",
-    "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp",
-    "src/game/actors/WingFeather/func_ov002_020b2c44.cpp",
-    "src/game/actors/WingFeather/_ZN11WingFeather16CleanupResourcesEv.cpp",
-    "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp",
-    "src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp",
-    "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp",
-    "src/game/actors/WingFeather/d_a_feather.c"
+    "src/game/actors/daFeather_c/_ZN11daFeather_cD1Ev.cpp",
+    "src/game/actors/daFeather_c/_ZN11daFeather_cD0Ev.cpp",
+    "src/game/actors/daFeather_c/func_ov002_020b2c44.cpp",
+    "src/game/actors/daFeather_c/_ZN11daFeather_c16CleanupResourcesEv.cpp",
+    "src/game/actors/daFeather_c/_ZN11daFeather_c6RenderEv.cpp",
+    "src/game/actors/daFeather_c/_ZN11daFeather_c8BehaviorEv.cpp",
+    "src/game/actors/daFeather_c/_ZN11daFeather_c13InitResourcesEv.cpp",
+    "src/game/actors/daFeather_c/d_a_feather.c"
    ],
    "ext_mix": {
     ".cpp": 5,

@@ -289,7 +289,7 @@ void func_ov002_020f0918(char *a, char *b)
    synthesize D0 itself, byte-identical to the ROM (confirmed by verify, not
    assumed). This legacy body stored the coined alias _ZTV13daObjNumber_c
    directly rather than this project's own _ZTV6Number -- expect the
-   WingFeather/#1727 linkcheck --partial pitfall on this ordinal. */
+   daFeather_c/#1727 linkcheck --partial pitfall on this ordinal. */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN6NumberD1Ev, 0x020f0894, size 0x38 */

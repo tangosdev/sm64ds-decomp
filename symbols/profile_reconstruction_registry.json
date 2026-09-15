@@ -16257,7 +16257,7 @@
       "factory_module": "ov002",
       "factory_address": "0x020b3248",
       "current_factory_name": "daFeather_c_classInit",
-      "current_factory_file": "src/game/actors/WingFeather/d_a_feather.c",
+      "current_factory_file": "src/game/actors/daFeather_c/daFeather_c.cpp",
       "proposed_factory_name": "daFeather_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000388",

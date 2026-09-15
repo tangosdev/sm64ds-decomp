@@ -456,7 +456,7 @@ extern int _ZTV11PyramidStep[];
 extern int _ZTV11RollingRock[];
 extern int _ZTV11SnowmanHead[];
 extern int _ZTV11daChScene_c[];
-extern int _ZTV11WingFeather[];
+extern int _ZTV11daFeather_c[];
 extern int _ZTV11dCapEnemy_c[];
 extern int _ZTV11dScMiniGm_c[];
 extern int _ZTV11daBgSnwmn_c[];

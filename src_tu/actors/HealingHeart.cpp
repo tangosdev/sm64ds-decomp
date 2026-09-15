@@ -41,7 +41,7 @@
  * each of these before compiling; a real header should usually win.
  * dActor_c/ModelAnim/dCcAc_c/HealingHeart shadow structs dropped here: real
  * definitions come from HealingHeart.h (and its own includes), included
- * above -- same reconciliation as WingFeather/#1727 and daObjWakame_c/#1728. */
+ * above -- same reconciliation as daFeather_c/#1727 and daObjWakame_c/#1728. */
 /* shadow struct 'Base' */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 
@@ -210,11 +210,11 @@ void func_ov002_020bc664(void *tv)
  * operator delete, byte-identical to the ROM. A hand-written D0 free
  * function next to a real D1 in the same TU is an mwcc ICE (ELFgen.c:483) --
  * confirmed on InvisiblePole/#1722, daCamTag_c/#1724, daChRoom_c/#1725,
- * daChScene_c/#1726, WingFeather/#1727, and daObjWakame_c/#1728 before this pilot.
+ * daChScene_c/#1726, daFeather_c/#1727, and daObjWakame_c/#1728 before this pilot.
  *
  * This D0.c hand-wrote its vtable store against the ROM's coined alias
  * _ZTV12daObjHeart_c, not the project's own _ZTV12HealingHeart -- same shape
- * as WingFeather/#1727. Both alias the same address, so the bytes and the
+ * as daFeather_c/#1727. Both alias the same address, so the bytes and the
  * overall module link match, but linkcheck --partial's stricter per-object
  * contribution-equivalence check is expected to flag this ordinal as not
  * equivalent; report status honestly (text-verified), don't chase

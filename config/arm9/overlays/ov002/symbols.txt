@@ -134,13 +134,13 @@ _ZN4Coin13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x020b2a90
 daCoin_c_classInit_BLUE_COIN kind:function(arm,size=0x58) addr:0x020b2a98
 daCoin_c_classInit_RED_COIN kind:function(arm,size=0x58) addr:0x020b2af0
 daCoin_c_classInit_COIN kind:function(arm,size=0x58) addr:0x020b2b48
-_ZN11WingFeatherD1Ev kind:function(arm,size=0x48) addr:0x020b2ba0
-_ZN11WingFeatherD0Ev kind:function(arm,size=0x5c) addr:0x020b2be8
+_ZN11daFeather_cD1Ev kind:function(arm,size=0x48) addr:0x020b2ba0
+_ZN11daFeather_cD0Ev kind:function(arm,size=0x5c) addr:0x020b2be8
 func_ov002_020b2c44 kind:function(arm,size=0x1ec) addr:0x020b2c44
-_ZN11WingFeather16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x020b2e30
-_ZN11WingFeather6RenderEv kind:function(arm,size=0x48) addr:0x020b2e54
-_ZN11WingFeather8BehaviorEv kind:function(arm,size=0x280) addr:0x020b2e9c
-_ZN11WingFeather13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b311c
+_ZN11daFeather_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x020b2e30
+_ZN11daFeather_c6RenderEv kind:function(arm,size=0x48) addr:0x020b2e54
+_ZN11daFeather_c8BehaviorEv kind:function(arm,size=0x280) addr:0x020b2e9c
+_ZN11daFeather_c13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b311c
 daFeather_c_classInit kind:function(arm,size=0x50) addr:0x020b3248
 _ZN12daObjAbuku_cD1Ev kind:function(arm,size=0x30) addr:0x020b3298
 _ZN12daObjAbuku_cD0Ev kind:function(arm,size=0x44) addr:0x020b32c8
@@ -1726,7 +1726,6 @@ _ZTV8daCoin_c kind:data(any) addr:0x021087ec
 _ZTI11daFeather_c kind:data(any) addr:0x02108868
 _ZTS11daFeather_c kind:data(any) addr:0x02108874
 g_profile_FEATHER kind:data(any) addr:0x02108884
-_ZTV11WingFeather kind:data(any) addr:0x021088a8
 _ZTV11daFeather_c kind:data(any) addr:0x021088a8
 _ZTI12daObjAbuku_c kind:data(any) addr:0x02108924
 _ZTS12daObjAbuku_c kind:data(any) addr:0x02108930

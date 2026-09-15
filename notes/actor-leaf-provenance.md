@@ -199,7 +199,7 @@ Worth naming once here rather than thirteen times below.
   `InitResources`, run through `DecIfAbove0_Byte`/`DecIfAbove0_Short` once a
   frame, and destroying the actor at 0. Where `Render` additionally skips
   drawing on odd values below some threshold, the actor blinks before it goes --
-  `PowerFlower` and `WingFeather` both do exactly that at 0xb4 down to 0x2d.
+  `PowerFlower` and `daFeather_c` both do exactly that at 0xb4 down to 0x2d.
 - **The particle handle.** `mParticle = Particle::System::New(mParticle, effect,
   pos...)` -- last frame's handle goes back in as the first argument and the
   result is stored again, so one effect is kept alive rather than a new one
@@ -225,7 +225,7 @@ carry the rename.
 Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
 `src/_ZN12HealingHeart8BehaviorEv.cpp`, and `src_tu/actors/HealingHeart.cpp`.
 
-## WingFeather -- include/WingFeather.h
+## daFeather_c -- include/daFeather_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
@@ -234,14 +234,13 @@ Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
 | 0x380 | `mParticle` | the particle-handle shape above, effect 0x4a. |
 | 0x384 | `mLifeTimer` | 0xb4 at init, counted down only while on the ground, destroys at 0, blinks below 0x2d. |
 
-Sources: `src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp`,
-`src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp`,
-`src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp`,
-`src_tu/actors/WingFeather.cpp`.
+Sources: `src/game/actors/daFeather_c/daFeather_c.cpp` (the 8 one-function
+shards merged; the field evidence above now lives in
+`InitResources`/`Behavior`/`Render` there).
 
 ## daObjAbuku_c -- include/daObjAbuku_c.h
 
-The bubble runs the same float as `WingFeather`, one class earlier in the
+The bubble runs the same float as `daFeather_c`, one class earlier in the
 overlay.
 
 | offset | new name | evidence |
