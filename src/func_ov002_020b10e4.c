@@ -16,7 +16,8 @@ extern signed char data_0209f2f8;
 
 extern dActor_c* _ZN8dActor_c4NextEPKS_(const dActor_c* prev);
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-extern void _ZN9dBgCh_LinC1Ev(void* self);
+typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* self);
 extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern void _ZN5dBgPiC1Ev(void* self);
 extern void _ZN5dBgPiD1Ev(void* self);
@@ -62,7 +63,7 @@ void func_ov002_020b10e4(char* c)
         char rl[0x78];
         char cr[0x28];
         Vector3 va, vb;
-        _ZN9dBgCh_LinC1Ev(rl);
+        _ZN9dBgCh_LinC1Ev((dBgCh_Lin*)rl);
         _ZN5dBgPiC1Ev(cr);
         vb.x = *(int*)(c + 0x5c);
         vb.y = *(int*)(c + 0x60);

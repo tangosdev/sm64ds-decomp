@@ -7,7 +7,8 @@ struct Data02086f2c { int unk0, unk4, unk8; };
 extern struct Data02086f2c data_02086f2c;
 
 extern void Vec3_RotateYAndTranslate(struct Vector3 *out, void *a, short ang, int *t);
-extern void _ZN9dBgCh_LinC1Ev(void *self);
+typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, void *self);
@@ -48,7 +49,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp44.x = data_02086f2c.unk0;
     sp44.y = data_02086f2c.unk4;
     Vec3_RotateYAndTranslate(&sp8, arg1, *(short*)(*(char**)(self + 0x110) + 0x8e), (int*)&sp44);
-    _ZN9dBgCh_LinC1Ev(sp74);
+    _ZN9dBgCh_LinC1Ev((dBgCh_Lin *)sp74);
     sp14.x = sp8.x;
     sp14.y = sp8.y + 0x32000;
     sp14.z = sp8.z;

@@ -9,7 +9,7 @@ typedef struct dBgCh_Lin {
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
 
-extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
 extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(
     void *self, Vector3 *a, Vector3 *b, void *actor);
