@@ -12332,6 +12332,12 @@
    "src/__sinit_ov062_0211d6fc.c": ["return:S8 []"],
    "src/func_ov062_0211bd10.c": ["return:void *"]
   },
+  "data_ov063_0211e27c": {
+   "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp": ["return:SharedFilePtr * []"]
+  },
+  "data_ov063_0211e28c": {
+   "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp": ["return:SharedFilePtr * []"]
+  },
   "data_ov063_0211eb10": {
    "src/game/actors/d_a_obj_th_fall_block.cpp": ["return:ResourceDescriptor"]
   },
@@ -20593,14 +20599,8 @@
    "src/unnamed/ov063/func_ov063_02116d38.c": ["return:int"],
    "src/unnamed/ov063/func_ov063_02119274.c": ["return:int"]
   },
-  "func_ov063_0211c6f8": {
-   "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp": ["return:int"]
-  },
   "func_ov063_0211cae8": {
    "src/func_ov020_0211174c.c": ["param:#2 unsigned int"]
-  },
-  "func_ov063_0211d28c": {
-   "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c13InitResourcesEv.cpp": ["arity:0"]
   },
   "func_ov063_0211d5f4": {
    "src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp": ["param:#1 MadPiano *"],
