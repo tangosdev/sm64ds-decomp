@@ -7,11 +7,9 @@
  * >= 6 test then covers both "no cap" and any index the table cannot serve.
  */
 #include "dCapEnemy_c.h"
-
-struct SharedFilePtr { u16 fileID; u8 numRefs; char* filePtr; };
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 extern struct SharedFilePtr *data_ov002_020ff028[6];
 }
 
@@ -19,5 +17,5 @@ void dCapEnemy_c::UnloadCapModel()
 {
     s32 idx = mCapId & 7;
     if (idx >= 6) return;
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff028[idx]);
+    data_ov002_020ff028[idx]->Release();
 }

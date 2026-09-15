@@ -4,14 +4,14 @@
  * holds; it never touches `this`, which is why the legacy C form could declare
  * itself nullary and still reproduce. */
 #include "WingFeather.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov002_0210da58[];
+extern SharedFilePtr data_ov002_0210da58;
 }
 
 int WingFeather::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da58);
+    data_ov002_0210da58.Release();
     return 1;
 }

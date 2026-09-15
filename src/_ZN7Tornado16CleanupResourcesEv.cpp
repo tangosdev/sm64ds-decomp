@@ -4,16 +4,16 @@
  * holds; it never touches `this`, which is why the legacy C form could declare
  * itself nullary and still reproduce. */
 #include "Tornado.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov096_02137ba8[];
-extern int data_ov096_02137bb0[];
+extern SharedFilePtr data_ov096_02137ba8;
+extern SharedFilePtr data_ov096_02137bb0;
 }
 
 int Tornado::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov096_02137ba8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov096_02137bb0);
+    data_ov096_02137ba8.Release();
+    data_ov096_02137bb0.Release();
     return 1;
 }

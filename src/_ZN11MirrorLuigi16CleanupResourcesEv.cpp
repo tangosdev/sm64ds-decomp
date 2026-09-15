@@ -3,18 +3,18 @@
 /* MirrorLuigi::CleanupResources -- vtable slot 3. Releases the three shared
  * files the class holds; it never touches `this`. */
 #include "MirrorLuigi.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov002_0210ebb8[];
-extern int data_ov002_0210eb20[];
-extern int data_ov002_0210eaa0[];
+extern SharedFilePtr data_ov002_0210ebb8;
+extern SharedFilePtr data_ov002_0210eb20;
+extern SharedFilePtr data_ov002_0210eaa0;
 }
 
 int MirrorLuigi::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210ebb8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210eb20);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210eaa0);
+    data_ov002_0210ebb8.Release();
+    data_ov002_0210eb20.Release();
+    data_ov002_0210eaa0.Release();
     return 1;
 }

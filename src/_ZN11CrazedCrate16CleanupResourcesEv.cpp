@@ -4,14 +4,14 @@
 /* CrazedCrate::CleanupResources() -- vtable slot 3. One shared file handle to
  * give back. */
 #include "CrazedCrate.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov080_02128468[];
+extern SharedFilePtr data_ov080_02128468;
 }
 
 s32 CrazedCrate::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov080_02128468);
+    data_ov080_02128468.Release();
     return 1;
 }

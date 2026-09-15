@@ -5,11 +5,11 @@
  * _ZTV10dBgActor_c carries fBase_c's generic 0x02043bf0. Takes the inherited
  * mesh collider out of the collision world, then releases two shared files. */
 #include "daObjHmBskt_c.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov030_02115c80[];
-extern int data_ov030_02115c88[];
+extern SharedFilePtr data_ov030_02115c80;
+extern SharedFilePtr data_ov030_02115c88;
 }
 
 int daObjHmBskt_c::CleanupResources()
@@ -17,7 +17,7 @@ int daObjHmBskt_c::CleanupResources()
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov030_02115c88);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov030_02115c80);
+    data_ov030_02115c88.Release();
+    data_ov030_02115c80.Release();
     return 1;
 }

@@ -5,19 +5,19 @@
  * `struct SharedFilePtr { int data[4]; }` to type the table; spelled here as void *
  * so the file does not shadow the real class of that name. */
 #include "SnowmanHead.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *self);
-extern void *data_ov072_02122bc4;
-extern void *data_ov072_02121ffc[];
+extern SharedFilePtr data_ov072_02122bc4;
+extern SharedFilePtr *data_ov072_02121ffc[];
 }
 
 int SnowmanHead::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov072_02122bc4);
+    data_ov072_02122bc4.Release();
     int r5 = 0;
     do {
-        _ZN13SharedFilePtr7ReleaseEv(data_ov072_02121ffc[r5]);
+        data_ov072_02121ffc[r5]->Release();
         r5++;
     } while (r5 < 2);
     return 1;

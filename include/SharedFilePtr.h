@@ -30,7 +30,11 @@ struct SharedFilePtr
     void ReallocateModelFile();
     void Release();
     void *LoadFile();
-    void Load();
+    /* Load returns a value too, on the same evidence: its only caller,
+       SharedFilePtr::LoadFile, branches on the result (`if (!Load()) return 0;`)
+       and the C form it was converted from declared `int`. A return type is not
+       part of an Itanium mangled name, so this changes no symbol. */
+    int Load();
 };
 
 #endif
