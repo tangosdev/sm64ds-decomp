@@ -30,7 +30,14 @@ struct SharedFilePtr
     void ReallocateModelFile();
     void Release();
     void *LoadFile();
-    void Load();
+    /* Load's return type comes from its DEFINITION, not from a caller:
+       src/_ZN13SharedFilePtr4LoadEv.cpp declares `void *Load();` on its own
+       local struct and returns the buffer it just stashed in filePtr. The
+       host seam in port/hal/fs.cpp returns the same pointer. LoadFile only
+       tests it (`if (!Load()) return 0;`), which is why a wrong `int` here
+       went unnoticed. A return type is not part of an Itanium mangled name,
+       so this changes no symbol. */
+    void *Load();
 };
 
 #endif

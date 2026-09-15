@@ -2,31 +2,27 @@
 // @symbol _ZN5Koopa16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Koopa.h"
-struct SharedFilePtr
-{
-  unsigned int data[4];
-};
+#include "SharedFilePtr.h"
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);
 extern void UnloadBlueCoinModel(void *c);
 }
-extern struct SharedFilePtr *data_ov062_0211cee0[];
-extern struct SharedFilePtr *data_ov062_0211ced8[];
-extern struct SharedFilePtr *data_ov062_0211cee8[];
+extern SharedFilePtr *data_ov062_0211cee0[];
+extern SharedFilePtr *data_ov062_0211ced8[];
+extern SharedFilePtr *data_ov062_0211cee8[];
 
 int Koopa::CleanupResources()
 {
   int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);
   if (b == 0)
   {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);
+    data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]->Release();
   }
-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);
+  data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]->Release();
   {
     int i = 0;
     do
     {
-      _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee8[(long) i]);
+      data_ov062_0211cee8[(long) i]->Release();
       i++;
     }
     while (i < 9);

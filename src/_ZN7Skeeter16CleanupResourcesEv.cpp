@@ -9,22 +9,22 @@
  * one and ignores it, which measured byte-free.
  */
 #include "Skeeter.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov090_021344a0[];
-extern int data_ov090_02134488[];
-extern int data_ov090_02134480[];
-extern int data_ov090_02134490[];
-extern int data_ov090_02134498[];
+extern SharedFilePtr data_ov090_021344a0;
+extern SharedFilePtr data_ov090_02134488;
+extern SharedFilePtr data_ov090_02134480;
+extern SharedFilePtr data_ov090_02134490;
+extern SharedFilePtr data_ov090_02134498;
 }
 
 int Skeeter::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_021344a0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_02134488);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_02134480);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_02134490);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_02134498);
+    data_ov090_021344a0.Release();
+    data_ov090_02134488.Release();
+    data_ov090_02134480.Release();
+    data_ov090_02134490.Release();
+    data_ov090_02134498.Release();
     return 1;
 }

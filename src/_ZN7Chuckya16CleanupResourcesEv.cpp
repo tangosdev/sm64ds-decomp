@@ -11,24 +11,24 @@
  * one and ignores it, which measured byte-free.
  */
 #include "Chuckya.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov062_0211ddf0[];
-extern int data_ov062_0211dde8[];
-extern int data_ov062_0211dde0[];
-extern int data_ov062_0211de00[];
-extern int data_ov062_0211de08[];
-extern int data_ov062_0211ddf8[];
+extern SharedFilePtr data_ov062_0211ddf0;
+extern SharedFilePtr data_ov062_0211dde8;
+extern SharedFilePtr data_ov062_0211dde0;
+extern SharedFilePtr data_ov062_0211de00;
+extern SharedFilePtr data_ov062_0211de08;
+extern SharedFilePtr data_ov062_0211ddf8;
 }
 
 int Chuckya::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ddf0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211dde8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211dde0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211de00);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211de08);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ddf8);
+    data_ov062_0211ddf0.Release();
+    data_ov062_0211dde8.Release();
+    data_ov062_0211dde0.Release();
+    data_ov062_0211de00.Release();
+    data_ov062_0211de08.Release();
+    data_ov062_0211ddf8.Release();
     return 1;
 }

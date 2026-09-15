@@ -2914,7 +2914,6 @@
   },
   "_ZN13SharedFilePtr7ReleaseEv": {
    "src/_ZN11dCapEnemy_c6AddCapEj.cpp": ["return:int"],
-   "src/_ZN17BigMovingIceBlock16CleanupResourcesEv.cpp": ["return:int"],
    "src/func_ov006_020c09f8.c": ["return:int"],
    "src/func_ov006_020c1c64.c": ["return:int"],
    "src/func_ov006_020c21e4.c": ["return:int"],
@@ -2940,12 +2939,10 @@
    "src/__sinit_ov009_02112ac8.c": ["return:void"],
    "src/__sinit_ov014_02113118.c": ["return:void"],
    "src/__sinit_ov016_021136ec.c": ["return:void"],
-   "src/__sinit_ov018_02112c80.cpp": ["return:int"],
    "src/__sinit_ov019_021127a4.c": ["param:#2 int", "return:int"],
    "src/__sinit_ov020_02113674.c": ["return:int"],
    "src/__sinit_ov026_02112c94.c": ["return:void"],
    "src/__sinit_ov027_02112d1c.c": ["return:void"],
-   "src/__sinit_ov027_02112df8.cpp": ["return:int"],
    "src/__sinit_ov030_02114924.c": ["param:#2 int", "return:int"],
    "src/__sinit_ov032_02112c10.c": ["return:void"],
    "src/__sinit_ov034_021138ec.c": ["param:#2 int", "return:int"],
@@ -9714,32 +9711,35 @@
   "data_ov002_0210d9a0": {
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN4Toad13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
    "src/actors/daMky_c.cpp": ["return:SharedFilePtr_"]
   },
   "data_ov002_0210d9a8": {
-   "src/_ZN13TreasureChest13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN13TreasureChest16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN10StarMarker13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN10StarMarker16CleanupResourcesEv.cpp": ["return:char"],
    "src/_ZN4Coin13InitResourcesEv.cpp": ["return:void *"],
-   "src/_ZN6Number13InitResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN4Coin16CleanupResourcesEv.cpp": ["return:char"],
    "src/_ZN6Number16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
-   "src/_ZN8MantaRay13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN8MantaRay16CleanupResourcesEv.cpp": ["return:char []"],
-   "src/_ZN9JetStream13InitResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN9JetStream16CleanupResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
+   "src/actors/daSCoin_c.cpp": ["return:char"],
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210d9c0": {
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN4Toad13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Dorrie13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
@@ -9754,7 +9754,6 @@
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9MontyMole13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210d9e0": {
@@ -9769,7 +9768,6 @@
    "src/_ZN6Number16CleanupResourcesEv.cpp": ["return:int []"]
   },
   "data_ov002_0210d9f0": {
-   "src/_ZN11PyramidLift16CleanupResourcesEv.cpp": ["return:int []"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
    "src/func_ov002_020efaf0.cpp": ["return:PathStuff"]
   },
@@ -9781,7 +9779,6 @@
    "src/_ZN6Number16CleanupResourcesEv.cpp": ["return:int []"]
   },
   "data_ov002_0210da10": {
-   "src/_ZN8MantaRay16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN9JetStream16CleanupResourcesEv.cpp": ["return:char"],
    "src/_ZN9WaterRing13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN9WaterRing16CleanupResourcesEv.cpp": ["return:char"],
@@ -9817,8 +9814,10 @@
   "data_ov002_0210da40": {
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN4Toad13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
@@ -9827,8 +9826,7 @@
   "data_ov002_0210da58": {
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
-   "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/WingFeather/_ZN11WingFeather16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210dc70": {
    "src/__sinit_ov002_02100c50.c": ["return:Pair []"]
@@ -9933,12 +9931,10 @@
    "src/game/actors/d_a_obj_wakame.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0210e0fc": {
-   "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN12HealingHeart16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/__sinit_ov002_02101900.c": ["return:char []"]
   },
   "data_ov002_0210e104": {
-   "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN12HealingHeart16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/__sinit_ov002_02101900.c": ["return:char []"]
   },
   "data_ov002_0210e124": {
    "src/game/actors/d_a_obj_cannon_shutter.cpp": ["return:SharedFilePtr"]
@@ -10153,7 +10149,7 @@
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210eaa0": {
-   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov002_021019d0.c": ["return:char []"]
   },
   "data_ov002_0210eac8": {
@@ -10167,7 +10163,7 @@
   },
   "data_ov002_0210eb20": {
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["return:void *"],
-   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210eb38": {
@@ -10197,7 +10193,7 @@
   },
   "data_ov002_0210ebb8": {
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["return:void *"],
-   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210ebc8": {
@@ -11728,7 +11724,8 @@
    "src/__sinit_ov020_02113674.c": ["return:char []"]
   },
   "data_ov020_02114af0": {
-   "include/decl_common.h": ["return:char []"]
+   "src/_ZN12HauntedChair16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/__sinit_ov020_0211372c.c": ["return:int []"]
   },
   "data_ov021_02113a60": {
    "src/_ZN12WorkElevator13InitResourcesEv.cpp": ["return:CLPS_Block"]
@@ -11807,10 +11804,10 @@
    "src/__sinit_ov025_02112970.c": ["return:int []"]
   },
   "data_ov025_02113ad8": {
-   "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/__sinit_ov025_02112aac.c": ["return:int []"]
   },
   "data_ov025_02113ae0": {
-   "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/__sinit_ov025_02112aac.c": ["return:int []"]
   },
   "data_ov026_02113ea0": {
    "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp": ["return:SharedFilePtr"],
@@ -11844,16 +11841,16 @@
    "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
   },
   "data_ov027_02113c74": {
-   "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
+   "src/__sinit_ov027_02112df8.cpp": ["return:SharedFilePtr"]
   },
   "data_ov027_02113c7c": {
    "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
   },
   "data_ov027_02113c84": {
-   "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
+   "src/__sinit_ov027_02112df8.cpp": ["return:SharedFilePtr"]
   },
   "data_ov027_02113c8c": {
-   "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
+   "src/__sinit_ov027_02112df8.cpp": ["return:SharedFilePtr"]
   },
   "data_ov027_02113c94": {
    "src/__sinit_ov027_02112df8.cpp": ["return:char []"]
@@ -11892,10 +11889,10 @@
    "src/actors/daMky_c.cpp": ["return:SharedFilePtr_ * []"]
   },
   "data_ov030_02115c80": {
-   "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/__sinit_ov030_0211484c.c": ["return:int []"]
   },
   "data_ov030_02115c88": {
-   "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/__sinit_ov030_0211484c.c": ["return:int []"]
   },
   "data_ov030_02115cf0": {
    "src/__sinit_ov030_02114924.c": ["return:void *"]
@@ -12212,31 +12209,28 @@
    "src/__sinit_ov060_0211a428.c": ["return:void *"]
   },
   "data_ov062_0211dde0": {
-   "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/__sinit_ov062_0211cf30.c": ["return:void *"]
+   "src/__sinit_ov062_0211cf30.c": ["return:void *"],
+   "src/func_ov062_021162b8.cpp": ["return:int []"]
   },
   "data_ov062_0211dde8": {
-   "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN7Chuckya16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/__sinit_ov062_0211cf30.c": ["return:void *"]
+   "src/__sinit_ov062_0211cf30.c": ["return:void *"],
+   "src/func_ov062_02116368.c": ["return:int *"]
   },
   "data_ov062_0211ddf0": {
-   "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN7Chuckya16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/__sinit_ov062_0211cf30.c": ["return:void *"]
   },
   "data_ov062_0211ddf8": {
    "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN7Chuckya16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov062_0211cf30.c": ["return:void *"]
   },
   "data_ov062_0211de00": {
-   "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN7Chuckya16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/__sinit_ov062_0211cf30.c": ["return:void *"]
+   "src/__sinit_ov062_0211cf30.c": ["return:void *"],
+   "src/func_ov062_021164e8.cpp": ["return:void * []"]
   },
   "data_ov062_0211de08": {
-   "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN7Chuckya16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/__sinit_ov062_0211cf30.c": ["return:void *"]
+   "src/__sinit_ov062_0211cf30.c": ["return:void *"],
+   "src/func_ov062_02116238.c": ["return:int * []"]
   },
   "data_ov062_0211de70": {
    "src/func_ov062_021165e8.c": ["return:char"]
@@ -12760,7 +12754,7 @@
    "src/_ZN6Coffin13InitResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov072_02121ffc": {
-   "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp": ["return:void * []"]
+   "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp": ["return:SharedFilePtr * []"]
   },
   "data_ov072_02122004": {
    "include/decl_common.h": ["return:int []"]
@@ -12776,6 +12770,7 @@
    "src/__sinit_ov072_02122018.c": ["return:int []"]
   },
   "data_ov072_02122bc4": {
+   "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov072_021221f8.c": ["return:int []"]
   },
   "data_ov072_02122c40": {
@@ -13113,7 +13108,6 @@
    "src/__sinit_ov077_02127240.c": ["return:void *"]
   },
   "data_ov077_02127b38": {
-   "src/_ZN5Spiny16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Lakitu13InitResourcesEv.cpp": ["return:int []"],
    "src/__sinit_ov077_02127240.c": ["return:void *"]
   },
@@ -13121,7 +13115,6 @@
    "src/__sinit_ov077_02127240.c": ["return:void *"]
   },
   "data_ov077_02127b48": {
-   "src/_ZN5Spiny16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Lakitu13InitResourcesEv.cpp": ["return:int []"],
    "src/__sinit_ov077_02127240.c": ["return:void *"]
   },
@@ -13133,8 +13126,8 @@
    "src/__sinit_ov077_02127240.c": ["return:V3"]
   },
   "data_ov077_02127c14": {
-   "src/_ZN5Spiny13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov077_0212749c.c": ["return:char []"],
+   "src/func_ov077_02125480.cpp": ["return:int []"],
    "src/func_ov077_02125b1c.cpp": ["return:void * []"]
   },
   "data_ov077_02127c88": {
@@ -13237,22 +13230,19 @@
   },
   "data_ov079_021282f0": {
    "src/_ZN10BulletBill13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN10BulletBill16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN11BillBlaster16CleanupResourcesEv.cpp": ["return:void *"]
   },
   "data_ov079_02128300": {
    "src/_ZN10BulletBill13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN10BulletBill16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN11BillBlaster16CleanupResourcesEv.cpp": ["return:void *"]
   },
-  "data_ov080_0212766c": {
-   "src/_ZN9MontyMole16CleanupResourcesEv.cpp": ["return:int []"]
-  },
   "data_ov080_021283c0": {
-   "src/_ZN9MontyMole13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN9MontyMole16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/__sinit_ov080_021278c0.c": ["return:void *"]
   },
   "data_ov080_021283c8": {
-   "src/_ZN13MontyMoleRock16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN9MontyMole13InitResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["return:int []"],
    "src/__sinit_ov080_021278c0.c": ["return:void *"]
   },
   "data_ov080_021283d0": {
@@ -13265,7 +13255,8 @@
    "src/__sinit_ov080_021278c0.c": ["return:void *"]
   },
   "data_ov080_02128468": {
-   "include/decl_common.h": ["return:void *"]
+   "src/_ZN11CrazedCrate16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/__sinit_ov080_02127a60.c": ["return:int []"]
   },
   "data_ov081_02128d60": {
    "src/_ZN9Spindrift16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
@@ -13605,25 +13596,26 @@
   },
   "data_ov090_02134480": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:LocSharedFilePtr"],
-   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov090_02134488": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:LocSharedFilePtr"],
+   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov090_02133ce8.c": ["return:S8"]
   },
   "data_ov090_02134490": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:LocSharedFilePtr"],
-   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov090_02133ce8.c": ["return:S8"]
   },
   "data_ov090_02134498": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:LocSharedFilePtr"],
-   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov090_02133ce8.c": ["return:S8"]
   },
   "data_ov090_021344a0": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:LocSharedFilePtr"],
-   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/_ZN7Skeeter16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov090_021344e4": {
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["return:PMF"],
@@ -13644,10 +13636,10 @@
    "src/__sinit_ov090_02133ce8.c": ["return:S8 []"]
   },
   "data_ov090_02134524": {
-   "src/_ZN8MantaRay13InitResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/__sinit_ov090_02133ea8.c": ["return:char []"]
   },
   "data_ov090_0213452c": {
-   "src/_ZN8MantaRay13InitResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/__sinit_ov090_02133ea8.c": ["return:char []"],
    "src/func_ov090_02132a58.cpp": ["return:void * []"]
   },
   "data_ov090_0213455c": {
@@ -13683,14 +13675,17 @@
    "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": ["return:PmfRow []"]
   },
   "data_ov091_02135674": {
-   "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"]
+   "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov091_0213567c": {
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov091_02134a30.c": ["return:int []"]
   },
   "data_ov091_02135684": {
-   "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"]
+   "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
+   "src/_ZN6Fwoosh16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov091_021356d0": {
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"]
@@ -13743,6 +13738,12 @@
   "data_ov095_021375a4": {
    "src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp": ["return:CLPS_Block * []"]
   },
+  "data_ov096_02137ba8": {
+   "src/_ZN7Tornado16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov096_02137bb0": {
+   "src/_ZN7Tornado16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+  },
   "data_ov098_0213c380": {
    "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp": ["return:char []"]
   },
@@ -13772,15 +13773,15 @@
   },
   "data_ov100_02148600": {
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_02148608": {
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_02148668": {
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:int []"]
+   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_021486a4": {
    "src/__sinit_ov100_021475a4.c": ["return:char []"]
@@ -18875,9 +18876,6 @@
    "src/func_ov006_020ee3ec.c": ["arity:1", "return:void *"],
    "src/minigames/d_s_mg_jump2.cpp": ["arity:1", "return:void *"]
   },
-  "func_ov006_020c44b4": {
-   "include/decl_common.h": ["param:#1 int"]
-  },
   "func_ov006_020c4710": {
    "src/func_ov006_020c42bc.c": ["param:#1 Obj *"]
   },
@@ -21167,13 +21165,13 @@
   },
   "gPFlowerCloseModelFile": {
    "src/_ZN11PowerFlower13InitResourcesEv.cpp": ["return:void * []"],
-   "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "gPFlowerOpenModelFile": {
    "src/_ZN11PowerFlower13InitResourcesEv.cpp": ["return:void * []"],
-   "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:int []"],
+   "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
   },

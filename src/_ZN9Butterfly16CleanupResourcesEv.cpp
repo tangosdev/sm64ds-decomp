@@ -4,20 +4,20 @@
  * the class holds -- three of its own in ov100 and one shared with the other
  * small fauna in ov002; it never touches `this`. */
 #include "Butterfly.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov100_02148608[];
-extern int data_ov100_02148600[];
-extern int data_ov002_0210d9d8[];
-extern int data_ov100_02148668[];
+extern SharedFilePtr data_ov100_02148608;
+extern SharedFilePtr data_ov100_02148600;
+extern SharedFilePtr data_ov002_0210d9d8;
+extern SharedFilePtr data_ov100_02148668;
 }
 
 int Butterfly::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_02148608);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_02148600);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_02148668);
+    data_ov100_02148608.Release();
+    data_ov100_02148600.Release();
+    data_ov002_0210d9d8.Release();
+    data_ov100_02148668.Release();
     return 1;
 }

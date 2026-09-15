@@ -8,16 +8,16 @@
  * one and ignores it, which measured byte-free.
  */
 #include "BulletBill.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov079_02128300[];
-extern int data_ov079_021282f0[];
+extern SharedFilePtr data_ov079_02128300;
+extern SharedFilePtr data_ov079_021282f0;
 }
 
 int BulletBill::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov079_02128300);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov079_021282f0);
+    data_ov079_02128300.Release();
+    data_ov079_021282f0.Release();
     return 1;
 }

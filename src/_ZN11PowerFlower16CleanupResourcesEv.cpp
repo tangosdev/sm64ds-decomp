@@ -3,16 +3,16 @@
 /* PowerFlower::CleanupResources -- vtable slot 3. Releases the two shared files
  * the flower holds; it never touches `this`. */
 #include "PowerFlower.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int gPFlowerCloseModelFile[];
-extern int gPFlowerOpenModelFile[];
+extern SharedFilePtr gPFlowerCloseModelFile;
+extern SharedFilePtr gPFlowerOpenModelFile;
 }
 
 s32 PowerFlower::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(gPFlowerCloseModelFile);
-    _ZN13SharedFilePtr7ReleaseEv(gPFlowerOpenModelFile);
+    gPFlowerCloseModelFile.Release();
+    gPFlowerOpenModelFile.Release();
     return 1;
 }

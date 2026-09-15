@@ -1,15 +1,16 @@
 //cpp
+#include "SharedFilePtr.h"
+
 extern "C" {
 int func_02017acc(void*, unsigned int);
 int func_020731dc(void*, void*, void*);
 int SharedFilePtr_Construct_TexSeq(void*, unsigned int);
-int _ZN13SharedFilePtr9ConstructEj(void*, unsigned int);
 
 extern char data_ov018_02113c00[];
 extern char data_ov018_02113c28[];
-extern char data_ov018_02113bf0[];
+extern SharedFilePtr data_ov018_02113bf0;
 extern char data_ov018_02113c10[];
-extern char data_ov018_02113c08[];
+extern SharedFilePtr data_ov018_02113c08;
 extern char data_ov018_02113c1c[];
 extern char data_ov018_02113bf8[];
 extern char data_ov018_02113c34[];
@@ -32,10 +33,10 @@ extern struct D data_ov018_02113c4c;
 void __sinit_ov018_02112c80(void) {
     func_02017acc(data_ov018_02113c00, 0x3fb);
     func_020731dc(data_ov018_02113c00, func_02017ab4, data_ov018_02113c28);
-    _ZN13SharedFilePtr9ConstructEj(data_ov018_02113bf0, 0x406);
-    func_020731dc(data_ov018_02113bf0, SharedFilePtr_Destruct_Anim, data_ov018_02113c10);
-    _ZN13SharedFilePtr9ConstructEj(data_ov018_02113c08, 0x408);
-    func_020731dc(data_ov018_02113c08, SharedFilePtr_Destruct_Anim, data_ov018_02113c1c);
+    data_ov018_02113bf0.Construct(0x406);
+    func_020731dc(&data_ov018_02113bf0, SharedFilePtr_Destruct_Anim, data_ov018_02113c10);
+    data_ov018_02113c08.Construct(0x408);
+    func_020731dc(&data_ov018_02113c08, SharedFilePtr_Destruct_Anim, data_ov018_02113c1c);
     SharedFilePtr_Construct_TexSeq(data_ov018_02113bf8, 0x3fd);
     func_020731dc(data_ov018_02113bf8, SharedFilePtr_Destruct_TexSeq, data_ov018_02113c34);
     SharedFilePtr_Construct_TexSeq(data_ov018_02113be8, 0x407);
