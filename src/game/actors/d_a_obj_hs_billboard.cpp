@@ -8,6 +8,18 @@
  * mwccarm emits ordinary function sections in reverse source order. Keep the
  * HS_MOON factory first. The inline destructor emits the retail D1/D0 pair
  * first and emits no leaf D2 body.
+ *
+ * deslop leftovers:
+ * - func_ov031_02111214 (yaw mModel.mat4x3, drop translation to pos >> 3):
+ *   manifest ordinal 2 of this TU, no other src/ consumer; kept as a
+ *   C-linkage ROM label. Member/static form unmeasured.
+ * - data_ov031_02111424 is the extern four-variant SharedFilePtr table
+ *   InitResources indexes by mVariant (this TU's manifest is text-only);
+ *   the individual BMD link names stay data_ov031_*.
+ * - Matrix4x3_FromRotationY stays a TU-local extern: no header declares it.
+ * - The actorID switch stays defaultless in matched form; the registry
+ *   only spawns the four HS_* profiles (0x12e-0x131).
+ * - pad_0d0 stays: untouched anywhere in this TU (Model opens at 0x0d4).
  */
 
 #include "daObjHsBillboard_c.h"

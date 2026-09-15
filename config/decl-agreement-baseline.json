@@ -516,8 +516,7 @@
    "include/decl_common.h": ["return:int"]
   },
   "IsPlayerWarping": {
-   "include/decl_common.h": ["return:int"],
-   "src/game/actors/d_a_warpkun.cpp": ["return:int"]
+   "include/decl_common.h": ["return:int"]
   },
   "IsStarCollected": {
    "src/_ZN11BobOmbBuddy13InitResourcesEv.cpp": ["param:#1 int"],
@@ -757,6 +756,7 @@
    "src/game/actors/d_a_obj_hs_billboard.cpp": ["param:#2 short"],
    "src/game/actors/d_a_obj_kb1_billboard.cpp": ["param:#2 short"],
    "src/game/actors/d_a_obj_wakame.cpp": ["param:#2 short"],
+   "src/game/actors/d_a_tree.cpp": ["param:#2 short"],
    "src/game/actors/daObjPathLift_c.cpp": ["param:#2 short"]
   },
   "Matrix4x3_FromRotationZ": {
@@ -1713,7 +1713,7 @@
   "Vec3_AsrInPlace": {
    "include/decl_common.h": ["return:void"],
    "src/func_ov060_02117db8.c": ["param:#1 Vec3 *", "return:void"],
-   "src/game/actors/d_a_tree.cpp": ["return:void"]
+   "src/game/actors/d_a_tree.cpp": ["param:#1 Vector3 *"]
   },
   "Vec3_Dist": {
    "src/_ZN10BrickBlock8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -4446,7 +4446,6 @@
    "src/game/actors/d_a_obj_km3_dorifu.cpp": ["arity:1", "return:void"],
    "src/game/actors/d_a_obj_rc_carpet.cpp": ["arity:1", "return:void"],
    "src/game/actors/d_a_obj_rc_dorifu.cpp": ["arity:1", "return:void"],
-   "src/game/actors/d_a_tree.cpp": ["arity:1", "return:void"],
    "src/game/actors/d_a_wanwan.cpp": ["return:void"],
    "src/minigames/d_s_mg_trampoline2.cpp": ["arity:1", "return:void"]
   },
@@ -4715,7 +4714,6 @@
    "src/game/actors/d_a_obj_ks_water.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_obj_wc_mizu.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_obj_wc_obj05.cpp": ["param:#4 void *", "param:#5 unsigned int"],
-   "src/game/actors/d_a_set_se.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/unnamed/ov063/func_ov063_0211c7b0.c": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/unnamed/ov063/func_ov063_0211c89c.c": ["param:#4 const Vec3 *", "param:#5 unsigned int"],
    "src/unnamed/ov063/func_ov063_0211cc18.c": ["param:#4 const Vector3 *", "param:#5 unsigned int", "return:unsigned int"]
@@ -4864,13 +4862,11 @@
   "_ZN5dCc_c5ClearEv": {
    "src/_ZN6Player17St_PunchKick_InitEv.cpp": ["return:int"],
    "src/actors/daMky_c.cpp": ["return:int"],
-   "src/func_ov098_0213814c.cpp": ["return:int"],
-   "src/game/actors/d_a_tree.cpp": ["return:int"]
+   "src/func_ov098_0213814c.cpp": ["return:int"]
   },
   "_ZN5dCc_c6UpdateEv": {
    "src/_ZN6Player17St_PunchKick_InitEv.cpp": ["return:int"],
-   "src/func_ov100_021424c0.c": ["return:int"],
-   "src/game/actors/d_a_tree.cpp": ["return:int"]
+   "src/func_ov100_021424c0.c": ["return:int"]
   },
   "_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev": {
    "src/func_ov002_020f6448.c": ["return:void"]
@@ -5614,8 +5610,7 @@
    "src/func_ov002_020ecfc8.c": ["param:#4 unsigned int"],
    "src/func_ov102_0214d0bc.cpp": ["return:int"],
    "src/func_ov102_0214d148.cpp": ["return:int"],
-   "src/game/actors/d_a_obj_abuku.cpp": ["return:int"],
-   "src/game/actors/d_a_warpkun.cpp": ["return:int"]
+   "src/game/actors/d_a_obj_abuku.cpp": ["return:int"]
   },
   "_ZN7dCcAc_cD1Ev": {
    "include/decl_dCcAc_c.h": ["arity:1", "return:void"]
@@ -6681,8 +6676,7 @@
    "include/decl_Actor.h": ["return:int"]
   },
   "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_": {
-   "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 char *"],
-   "src/game/actors/d_a_warpkun.cpp": ["return:int"]
+   "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 char *"]
   },
   "_ZN8dActor_c9TrackStarEjj": {
    "src/_ZN11RollingRock13InitResourcesEv.cpp": ["return:unsigned char"],
@@ -6702,8 +6696,7 @@
    "src/func_ov100_021424c0.c": ["param:#2 int"]
   },
   "_ZN8dActor_cD2Ev": {
-   "include/decl_Actor.h": ["arity:1", "return:void"],
-   "src/game/actors/d_a_cam_tag.cpp": ["arity:1", "return:void"]
+   "include/decl_Actor.h": ["arity:1", "return:void"]
   },
   "_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj": {
    "src/_ZN12Flamethrower13InitResourcesEv.cpp": ["param:#2 Vec3 *"],
@@ -6711,8 +6704,7 @@
   },
   "_ZN8dCcPos_cD1Ev": {
    "src/d_a_obj_fl_koma_u.cpp": ["arity:1", "return:void"],
-   "src/d_a_obj_flamethrower.cpp": ["arity:1", "return:void"],
-   "src/game/actors/d_a_tree.cpp": ["arity:1", "return:void"]
+   "src/d_a_obj_flamethrower.cpp": ["arity:1", "return:void"]
   },
   "_ZN8dM3dGLinD2Ev": {
    "include/decl_common.h": ["arity:1", "return:void"]
@@ -7609,7 +7601,6 @@
    "src/game/actors/d_a_obj_km3_dorifu.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *"],
    "src/game/actors/d_a_obj_rc_carpet.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *"],
    "src/game/actors/d_a_obj_rc_dorifu.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *"],
-   "src/game/actors/d_a_tree.cpp": ["param:#2 int", "param:#3 int"],
    "src/game/actors/d_a_wanwan.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *", "return:int"],
    "src/game/actors/daPiano_c/d_a_piano.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *"],
    "src/minigames/d_s_mg_bsc.cpp": ["param:#2 int", "param:#3 int", "param:#4 void *", "param:#5 void *"],
@@ -7970,8 +7961,7 @@
    "src/func_ov075_0211427c.c": ["return:int []"],
    "src/func_ov075_0211afb0.c": ["return:int"],
    "src/func_ov080_02125fd0.c": ["return:int"],
-   "src/func_ov080_0212677c.c": ["return:int"],
-   "src/game/actors/d_a_tree.cpp": ["return:int"]
+   "src/func_ov080_0212677c.c": ["return:int"]
   },
   "data_0209b41c": {
    "src/_ZN14CutsceneObject6RenderEv.cpp": ["return:M48"],
@@ -8612,7 +8602,7 @@
    "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp": ["return:char *"],
    "src/game/actors/d_a_set_se.cpp": ["return:Camera *"],
    "src/game/actors/d_a_star_gate.cpp": ["return:Camera *"],
-   "src/game/actors/d_a_tree.cpp": ["return:int"],
+   "src/game/actors/d_a_tree.cpp": ["return:CamState *"],
    "src/unnamed/ov063/func_ov063_02117b0c.c": ["return:char *"]
   },
   "data_0209f31c": {
@@ -8716,8 +8706,7 @@
    "src/__sinit_02074e84.cpp": ["return:char"],
    "src/func_0200af20.c": ["return:char []"],
    "src/func_0200d954.c": ["return:int"],
-   "src/func_ov075_021152d4.cpp": ["return:Clipper"],
-   "src/game/actors/d_a_tree.cpp": ["return:int"]
+   "src/func_ov075_021152d4.cpp": ["return:Clipper"]
   },
   "data_0209f498": {
    "src/_ZN5Stage16CheckCameraInputEv.cpp": ["return:CamInput []"]
@@ -9698,6 +9687,9 @@
   },
   "data_ov002_0210bc88": {
    "src/func_ov002_020f6c34.c": ["return:int []"]
+  },
+  "data_ov002_0210c080": {
+   "src/game/actors/d_a_sound_obj.cpp": ["return:SoundObjRow []"]
   },
   "data_ov002_0210d754": {
    "src/game/actors/d_a_obj_ice_board.cpp": ["return:CLPS_Block"]
@@ -15712,6 +15704,7 @@
    "src/func_02038824.cpp": ["param:#1 A *"]
   },
   "func_020393a4": {
+   "src/actors/daObjFloatBoard_c.cpp": ["param:#1 dBgW_KcMbg *"],
    "src/game/actors/d_a_obj_bk_rotebar.cpp": ["param:#1 dBgW *"],
    "src/game/actors/d_a_obj_emm_log.cpp": ["param:#1 dBgW *"],
    "src/game/actors/daObjCtMecha05_c.cpp": ["param:#1 dBgW *"],
