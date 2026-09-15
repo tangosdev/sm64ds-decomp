@@ -316,7 +316,6 @@
    "src/_ZN21SnowmanBreathParticle8BehaviorEv.cpp": ["return:int"],
    "src/_ZN7Wiggler8BehaviorEv.cpp": ["return:int"],
    "src/_ZN9TowerStep8BehaviorEv.cpp": ["return:int"],
-   "src/actors/daDsnBase_c.cpp": ["param:#1 char *", "return:int"],
    "src/actors/daGmch_c.cpp": ["return:int"],
    "src/actors/daObjFallBlock_c.cpp": ["return:int"],
    "src/actors/daPgDfdr_c.cpp": ["return:int"],
@@ -6002,7 +6001,7 @@
    "src/actors/daBgSnmBdy_c.cpp": ["arity:3"],
    "src/actors/daDgr_c.cpp": ["arity:3"],
    "src/actors/daDkk_c.cpp": ["arity:3"],
-   "src/actors/daDsnBase_c.cpp": ["arity:3", "return:int"],
+   "src/actors/daDsnBase_c.cpp": ["arity:3"],
    "src/func_ov060_02111a28.cpp": ["arity:3"],
    "src/func_ov060_02115b0c.c": ["arity:3"],
    "src/func_ov060_02117db8.c": ["arity:3"],
@@ -6384,8 +6383,7 @@
    "src/func_ov084_0212b344.cpp": ["param:#2 char *"]
   },
   "_ZN8dActor_c15HugeLandingDustEb": {
-   "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#2 bool"],
-   "src/actors/daDsnBase_c.cpp": ["return:int"]
+   "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#2 bool"]
   },
   "_ZN8dActor_c16TriplePoofDustAtERK7Vector3": {
    "src/actors/daBombking_c.cpp": ["param:#2 Vec3 *"],
@@ -6397,7 +6395,6 @@
    "src/func_ov072_021217ac.cpp": ["param:#2 Vector3 &", "param:#3 Vector3 &", "param:#4 bool", "return:bool"]
   },
   "_ZN8dActor_c18ClosestWithActorIDEj": {
-   "src/actors/daDsnBase_c.cpp": ["return:void *"],
    "src/func_ov002_020f897c.c": ["return:void *"],
    "src/func_ov062_021199ac.c": ["return:void *"]
   },
@@ -14176,7 +14173,7 @@
    "src/actors/Scuttlebug.cpp": ["param:#1 int"],
    "src/actors/daBgSnmBdy_c.cpp": ["param:#1 int"],
    "src/actors/daDkk_c.cpp": ["param:#1 int"],
-   "src/actors/daDsnBase_c.cpp": ["param:#1 int", "return:int"],
+   "src/actors/daDsnBase_c.cpp": ["param:#1 int"],
    "src/actors/daGmch_c.cpp": ["param:#1 int"],
    "src/actors/daMky_c.cpp": ["param:#1 int"],
    "src/actors/daPgDfdr_c.cpp": ["param:#1 int", "param:#2 char *"],
