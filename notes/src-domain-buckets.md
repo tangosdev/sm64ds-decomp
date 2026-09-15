@@ -27,7 +27,7 @@ tension with this doc.
 
 ## The target tree
 
-```
+```text
 src/
   runtime/
     memory/

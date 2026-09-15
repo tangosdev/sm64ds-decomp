@@ -25,10 +25,10 @@ about structure, and the map does not merge anything.
 
 ## The trap that makes the naive detector look correct
 
-Cut wherever the class name changes, and ov062 scores 5/5. Chuckya, Koopa,
+Cut wherever the class name changes, and [ov062](../config/arm9/overlays/ov062/symbols.txt) scores 5/5. Chuckya, Koopa,
 KoopaTheQuick, KoopaFlag and Klepto really do sit in five contiguous runs.
 
-ov062 is the lucky case. Where two classes share a file, mwcc emits their methods
+[ov062](../config/arm9/overlays/ov062/symbols.txt) is the lucky case. Where two classes share a file, mwcc emits their methods
 **interleaved in source order**, not grouped by class:
 
 ```sh
@@ -40,8 +40,8 @@ _ZN9MontyMole8BehaviorEv          _ZN13MontyMoleRock8BehaviorEv
 MontyMoleRock_Spawn               MontyMole_Spawn
 ```
 
-A name-change detector turns ov080's three TUs into thirteen. ov020
-(BookShot/BookShotSpawner) and ov063 (Boo/BooCage/BigBooIcon) interleave the same way.
+A name-change detector turns [ov080](../config/arm9/overlays/ov080/symbols.txt)'s three TUs into thirteen. [ov020](../config/arm9/overlays/ov020/symbols.txt)
+(BookShot/BookShotSpawner) and [ov063](../config/arm9/overlays/ov063/symbols.txt) (Boo/BooCage/BigBooIcon) interleave the same way.
 
 ## The rule that works
 
@@ -60,21 +60,20 @@ and Koopa apart, with no "how interleaved is too interleaved" threshold to tune.
   and free-function traps). Direct evidence about the function carrying the name.
 * **Vtable slots** via `build/rtti_vtables.json`. RTTI carries EAD's real class names
   (`daChoropu_c` = Monty Mole, `daJango_c` = Klepto), so it labels code in overlays
-  where no symbol was ever named — ov006 has 1866 functions and 38 named ones.
+  where no symbol was ever named — [ov006](../config/arm9/overlays/ov006/symbols.txt) has 1866 functions and 38 named ones.
   `notes/dtor-variant-audit.md` records that mwcc emits the vtable group into the TU
   defining the destructor, so a vtable also anchors its TU in `.data`.
 
 **RTTI may extend or create a cluster; it may never bridge two symbol clusters.**
-Gate V2b found this rather than foresight. ov081:
-
+Gate V2b found this rather than foresight. [ov081](../config/arm9/overlays/ov081/symbols.txt):
 ```sh
 MrBlizzard    0x2124090-0x2125f14
 Snowball      0x2125f14-0x2126504   abuts exactly — two TUs
 daSnowman_c   0x2125eb8-0x21261d4   RTTI span straddles the boundary
 ```
 
-The naive union merged them. The sinit count adjudicates: ov081 has five named classes
-and five sinits, so five TUs is right. ov090 fails identically (`daMenbo_c` bridging
+The naive union merged them. The sinit count adjudicates: [ov081](../config/arm9/overlays/ov081/symbols.txt) has five named classes
+and five sinits, so five TUs is right. [ov090](../config/arm9/overlays/ov090/symbols.txt) fails identically (`daMenbo_c` bridging
 MantaRay and Skeeter; four classes, four sinits). An RTTI span is *inferred* from a
 slot list, and a slot can point at inherited or shared code in a neighbouring object;
 a mangled name cannot be wrong about its own function. Hence the asymmetry.
@@ -100,12 +99,12 @@ there), 11,088 functions → **501 TUs**. 388 carry a class. Boundaries: **270 h
 
 Under-segmentation is the characteristic failure and it is *silent*: a module with no
 class labels collapses into a few enormous contiguous runs and reports a TU count as
-confidently as ov062 does. `meta.under_segmented` names them — **main** (3066 functions
-in 25 runs; the real answer is certainly in the hundreds), **ov007** (548 functions,
-*zero* sinits, so no witness is even possible), **ov006**, ov075, ov004, ov084. For
+confidently as [ov062](../config/arm9/overlays/ov062/symbols.txt) does. `meta.under_segmented` names them — **main** (3066 functions
+in 25 runs; the real answer is certainly in the hundreds), **[ov007](../config/arm9/overlays/ov007/symbols.txt)** (548 functions,
+*zero* sinits, so no witness is even possible), **[ov006](../config/arm9/overlays/ov006/symbols.txt)**, [ov075](../config/arm9/overlays/ov075/symbols.txt), [ov004](../config/arm9/overlays/ov004/symbols.txt), [ov084](../config/arm9/overlays/ov084/symbols.txt). For
 those the TU count is a lower bound and should be read as one.
 
-The flag deliberately requires *both* coarseness and a missing witness: ov063 packs
+The flag deliberately requires *both* coarseness and a missing witness: [ov063](../config/arm9/overlays/ov063/symbols.txt) packs
 141 functions into 4 TUs and is right, because its 4 sinits corroborate exactly.
 
 Boundaries marked `low` rest on contiguity alone, which cannot distinguish two classes
@@ -120,10 +119,10 @@ where they are not. `--check` re-runs the known answers with mangled names strip
 
 | module | known | sighted | blind | blind-classed |
 |---|---|---|---|---|
-| ov062 | 5 | 5 | 10 | **5** |
-| ov063 | 4 | 4 | 9 | **4** |
-| ov080 | 3 | 4 | 6 | **3** |
-| ov020 | 2 | 2 | 4 | **2** |
+| [ov062](../config/arm9/overlays/ov062/symbols.txt) | 5 | 5 | 10 | **5** |
+| [ov063](../config/arm9/overlays/ov063/symbols.txt) | 4 | 4 | 9 | **4** |
+| [ov080](../config/arm9/overlays/ov080/symbols.txt) | 3 | 4 | 6 | **3** |
+| [ov020](../config/arm9/overlays/ov020/symbols.txt) | 2 | 2 | 4 | **2** |
 
 Read it as: **RTTI alone recovers the class clusters perfectly** — blind-classed hits
 the known answer in all four. What it loses is the non-polymorphic remainder, which

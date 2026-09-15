@@ -1,4 +1,4 @@
-# TU reconstruction pilot — `ov045/PoleLift`
+# TU reconstruction pilot — [ov045](../config/arm9/overlays/ov045/symbols.txt)/`PoleLift`
 
 **What this is:** the read-only experiment described in
 [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md)
@@ -62,7 +62,7 @@ OK    src/PoleLift_Spawn.c                           2004/b56
 
 | | |
 | --- | --- |
-| Candidate | `ov045` / `PoleLift`, RTTI name `daObjKm2_Ami_Bou_c` |
+| Candidate | [ov045](../config/arm9/overlays/ov045/symbols.txt) / `PoleLift`, RTTI name `daObjKm2_Ami_Bou_c` |
 | Span | `.text` `0x0211150c`–`0x02111840`, 7 functions |
 | Shadow source | `src_tu/actors/PoleLift.cpp` (`//cpp`, so C++) |
 | Compiler | `tools/mwccarm/2004/b56/mwccarm.exe` — `rombuild.VERSION`, and `config/rombuild-versions.txt` carries no override for any of the seven stems, so this is the pin for all of them |
@@ -80,7 +80,7 @@ of seven single-function ones; it lives outside the repository.
 
 From `build/tu_map.json`, unchanged and not regenerated:
 
-- `ov045` — 41 functions, 6 candidate TUs, 6 static initialisers, 6 `.ctor`
+- [ov045](../config/arm9/overlays/ov045/symbols.txt) — 41 functions, 6 candidate TUs, 6 static initialisers, 6 `.ctor`
   entries, `sinit_vs_tu: "ok"`, `corroborated: true`, all 5 internal boundaries
   `high`. This is one of the well-segmented modules §14 asks for, not one of the
   four listed as under-segmented.
@@ -88,7 +88,7 @@ From `build/tu_map.json`, unchanged and not regenerated:
   above and one class label, `PoleLift`.
 - Neighbours differ: `FireSeaElevator_Spawn` ends at `0x0211150c`,
   `_ZN17ExtendingPlatformD1Ev` begins at `0x02111840`.
-- Added here: of ov045's six static initialisers, `__sinit_ov045_02112214` is the
+- Added here: of [ov045](../config/arm9/overlays/ov045/symbols.txt)'s six static initialisers, [__sinit_ov045_02112214](../src/__sinit_ov045_02112214.c) is the
   only one that references this TU's two `.bss` `SharedFilePtr` statics
   (`0x021131a8`, `0x021131b0`), which pins the sixth corroborating initialiser to
   this specific unit rather than to the module in aggregate.
@@ -138,7 +138,7 @@ is:
 | 6 | 31 | `_ZN8PoleLift8BehaviorEv` | `0x120` | GLOBAL | 4 ✓ |
 | 7 | 33 | `_ZN8PoleLift13InitResourcesEv` | `0xd0` | GLOBAL | 5 ✓ |
 | 8 | 35 | `PoleLift_Spawn` | `0x38` | GLOBAL | 6 ✓ |
-| 9 | 39 | `_ZN8PlatformD1Ev` | `0x38` | LOPROC | — elsewhere (ov002 `0x020ee42c`) |
+| 9 | 39 | `_ZN8PlatformD1Ev` | `0x38` | LOPROC | — elsewhere ([ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020ee42c`) |
 | 10 | 41 | `_ZN8PlatformD0Ev` | `0x4c` | LOPROC | — elsewhere |
 
 **Ordinals 2–6 come out in exact ROM address order.** Writing the file in natural
@@ -186,8 +186,8 @@ Licensed: the seven in the table above. Unlicensed and emitted anyway:
 | symbol | size | binding | why it is here |
 | --- | ---: | --- | --- |
 | `_ZN8PoleLiftD2Ev` | `0x4c` | GLOBAL | mwcc emits D0/D1/D2 from one `~PoleLift()`. Byte-identical to D1. **Fact:** no such symbol appears anywhere in `config/`, and nothing in the ROM calls it. **Inference, not verified here:** the original link deadstripped it, which is what a vague-linkage-free `D2` with no caller normally suffers. |
-| `_ZN8PlatformD1Ev` | `0x38` | LOPROC | `Platform`'s destructor is inline in `include/Platform.h`; instantiating the base emits a vague-linkage out-of-line copy. The real one lives in ov002 at `0x020ee42c`, and `config/arm9/overlays/ov002/symbols.txt` gives it `size=0x38` — the same size this object emitted. |
-| `_ZN8PlatformD0Ev` | `0x4c` | LOPROC | same; ov002 `0x020ee464`, `size=0x4c`, again matching what was emitted here. |
+| `_ZN8PlatformD1Ev` | `0x38` | LOPROC | `Platform`'s destructor is inline in `include/Platform.h`; instantiating the base emits a vague-linkage out-of-line copy. The real one lives in [ov002](../config/arm9/overlays/ov002/symbols.txt) at `0x020ee42c`, and [it's symbols.txt](../config/arm9/overlays/ov002/symbols.txt) gives it `size=0x38` — the same size this object emitted. |
+| `_ZN8PlatformD0Ev` | `0x4c` | LOPROC | same; [ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020ee464`, `size=0x4c`, again matching what was emitted here. |
 
 ### `.data` — 12 sections, 0 licensed
 
@@ -320,7 +320,7 @@ were verified byte-identical rather than assumed:
 - **Language mode.** `PoleLift_Spawn` was the only C file of the seven; it is now
   compiled as C++ and needs an explicit `extern "C"` to keep its unmangled ROM
   symbol. Its bytes are unchanged by the mode switch.
-- **`data_02082214`** was declared in the `Behavior` file outside any linkage
+- **[data_02082214](../config/arm9/symbols.txt)** was declared in the `Behavior` file outside any linkage
   specification. Moved inside `extern "C"` — no ABI effect for a namespace-scope
   variable, but the intent is now stated rather than relying on that.
 - **The destructor** was two files each carrying the same empty
@@ -437,15 +437,15 @@ the tools rather than assuming a new top-level directory is ignored:
 - `build/` is gitignored, so `build/tu/ov045-PoleLift/` cannot be committed.
 
 `src/` was not modified: the seven legacy files are byte-identical to their
-committed state and still `complete` in `config/arm9/overlays/ov045/delinks.txt`.
+committed state and still `complete` in [arm9/overlays/ov045/delinks.txt](../config/arm9/overlays/ov045/delinks.txt).
 
 ## 10. Change set
 
 | Path | |
 | --- | --- |
-| `src_tu/actors/PoleLift.cpp` | new — the shadow TU, not enrolled |
-| `config/tu_manifest.d/` | new — one entry, `ov045/PoleLift`, status `text-verified` |
-| `notes/tu-reconstruction-pilot-report.md` | new — this file |
+| [src_tu/actors/PoleLift.cpp](../src_tu/actors/PoleLift.cpp) | new — the shadow TU, not enrolled |
+| [config/tu_manifest.d/](../config/tu_manifest.d/) | new — one entry, [ov045](../config/arm9/overlays/ov045/symbols.txt)/`PoleLift`, status `text-verified` |
+| [notes/tu-reconstruction-pilot-report.md](../notes/tu-reconstruction-pilot-report.md) | new — this file |
 
 Untracked build output at `build/tu/ov045-PoleLift/` (`PoleLift.o`,
 `inventory.txt`) is gitignored, per §13 item 10.

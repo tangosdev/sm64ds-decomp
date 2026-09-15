@@ -60,7 +60,7 @@ At the time `notes/tu-boundaries.md` was measured:
 - 270 boundaries were high-confidence, 107 medium-confidence, and 50 low-confidence;
 - 30 of 74 code-bearing modules were independently corroborated by static-initializer counts.
 
-The 501 value is a lower bound rather than a final source-file count. `main`, `ov006`, `ov007`, and several other modules are known to be under-segmented. Even allowing for that, the likely destination is hundreds or perhaps high hundreds of meaningful `.cpp` files—not one file per function.
+The 501 value is a lower bound rather than a final source-file count. `main`, [ov006](../config/arm9/overlays/ov006/symbols.txt), [ov007](../config/arm9/overlays/ov007/symbols.txt), and several other modules are known to be under-segmented. Even allowing for that, the likely destination is hundreds or perhaps high hundreds of meaningful `.cpp` files—not one file per function.
 
 Classes and TUs are not interchangeable:
 
@@ -502,7 +502,7 @@ The current one-function eligibility gate remains in place for legacy sources. A
 
 ## 14. Pilot selection
 
-Do not begin with `main`, `ov006`, `ov007`, or another known under-segmented module.
+Do not begin with `main`, [ov006](../config/arm9/overlays/ov006/symbols.txt), [ov007](../config/arm9/overlays/ov007/symbols.txt), or another known under-segmented module.
 
 The first candidate should have:
 

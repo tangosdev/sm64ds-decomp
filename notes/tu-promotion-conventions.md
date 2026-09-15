@@ -18,20 +18,20 @@ Seven classes across six PRs. When this note says "landed precedent" it means th
 
 | PR | class | promoted TU |
 | --- | --- | --- |
-| #2000 | daKpFr_c | `src/game/actors/d_a_kp_fr.cpp` |
-| #2043 | daObjFm_Battan_c | `src/game/actors/d_a_obj_fm_battan.cpp` |
-| #2045 | daBar_c | `src/game/actors/d_a_bar.cpp` |
-| #2047 | daObjCannonShutter_c | `src/game/actors/d_a_obj_cannon_shutter.cpp` |
-| #2047 | daObjFl_Fall_Block_c | `src/game/actors/daObjFl_Fall_Block_c.cpp` |
-| #2051 | daObjKinokoTag_c | `src/game/actors/d_a_obj_kinoko_tag.cpp` |
-| #2055 | daEyBm_c | `src/game/actors/d_a_ey_bm.cpp` |
+| #2000 | daKpFr_c | [src/game/actors/d_a_kp_fr.cpp](../src/game/actors/d_a_kp_fr.cpp) |
+| #2043 | daObjFm_Battan_c | [src/game/actors/d_a_obj_fm_battan.cpp](../src/game/actors/d_a_obj_fm_battan.cpp) |
+| #2045 | daBar_c | [src/game/actors/d_a_bar.cpp](../src/game/actors/d_a_bar.cpp) |
+| #2047 | daObjCannonShutter_c | [src/game/actors/d_a_obj_cannon_shutter.cpp](../src/game/actors/d_a_obj_cannon_shutter.cpp) |
+| #2047 | daObjFl_Fall_Block_c | [src/game/actors/daObjFl_Fall_Block_c.cpp](../src/game/actors/daObjFl_Fall_Block_c.cpp) |
+| #2051 | daObjKinokoTag_c | [src/game/actors/d_a_obj_kinoko_tag.cpp](../src/game/actors/d_a_obj_kinoko_tag.cpp) |
+| #2055 | daEyBm_c | [src/game/actors/d_a_ey_bm.cpp](../src/game/actors/d_a_ey_bm.cpp) |
 
 PR #2004 (daObjKm3_Kurumajiku_c) is an open draft. It is a data point, not precedent.
 Do not cite it as settled, and do not copy a pattern that appears only there.
 
 *Update.* #2004 was since closed and that class landed instead through #2057 ("first
-compiler-built vtable — promote ov047/daObjKm3_Kurumajiku_c to intact-object
-production"), so `src/game/actors/d_a_obj_km3_kurumajiku.cpp` is on `main` and is precedent.
+compiler-built vtable — promote [ov047](../config/arm9/overlays/ov047/symbols.txt)/[daObjKm3_Kurumajiku_c](../include/daObjKm3_Kurumajiku_c.h) to intact-object
+production"), so [src/game/actors/d_a_obj_km3_kurumajiku.cpp](../src/game/actors/d_a_obj_km3_kurumajiku.cpp) is on `main` and is precedent.
 Section 2's Kurumajiku measurements were written while it was a draft; they still hold,
 and section 6 cites the landed file.
 
@@ -39,10 +39,10 @@ and section 6 cites the landed file.
 
 ## 1. A coined mangled name must not assert a parameter type the bytes cannot prove
 
-#2055 renamed four functions in `config/arm9/overlays/ov071/symbols.txt`, among them:
-
+#2055 renamed four functions in [arm9/overlays/ov071/symbols.txt](../config/arm9/overlays/ov071/symbols.txt), among them:
+```sh
     func_ov071_02121b50  ->  _ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr
-
+```
 The trailing `R10dBgCh_Actr` asserts a **reference** parameter. The ROM cannot prove
 that. A reference and a pointer mangle differently but generate identical ARM for this
 body, so the bytes are silent on which one the original source wrote. `P10dBgCh_Actr`
@@ -56,13 +56,13 @@ the mangled spelling encodes something the bytes cannot distinguish (parameter t
 above all, and `const` qualification with them), the guess has to be disclosed next to
 the symbol, not left to be re-derived by the next reader.
 
-**Where the disclosure has to live.** Measured: `config/arm9/overlays/ov071/symbols.txt`
-contains zero comment lines, and dsd's symbol format has no comment channel at all. The
+**Where the disclosure has to live.** Measured: [arm9/overlays/ov071/symbols.txt](../config/arm9/overlays/ov071/symbols.txt)
+contains zero comment lines, and *dsd*'s symbol format has no comment channel at all. The
 most authoritative-looking surface in the whole promotion is the one surface that
 physically cannot carry the caveat. So it goes in all three of the places that *can*,
 and that stay adjacent to the name:
 
-1. **The manifest entry's `notes`.** Landed precedent: `config/tu_manifest.d/ov071/daEyBm_c.json`
+1. **The manifest entry's `notes`.** Landed precedent: [config/tu_manifest.d/ov071/daEyBm_c.json](../config/tu_manifest.d/ov071/daEyBm_c.json)
    already says the four coined spellings are "truthful inferred private spellings"
    whose "class ownership, inbound calls, bodies, layout, relocations and codegen are
    proven; the exact original English names and UpdateCollision reference spelling are
@@ -157,7 +157,7 @@ Three independent places in the tree pin that 8:
   `emitted_storage_address` and `address_point_bias`, because "recognizing `_ZTV` and
   subtracting eight here would silently reinterpret every existing symbol table."
 
-And it is stated in a landed manifest. `config/tu_manifest.d/ov071/daEyBm_c.json` records
+And it is stated in a landed manifest. [config/tu_manifest.d/ov071/daEyBm_c.json](../config/tu_manifest.d/ov071/daEyBm_c.json) records
 `_ZTV8daEyBm_c` at `0x02122de8` with the reason: "InitResources naturally emits the
 complete class vtable; romdata_check applies the measured eight-byte public address-point
 bias and proves every slot through 0x02122e64."
@@ -191,14 +191,14 @@ supply the vtable *storage* will find a delinker-invented placeholder sitting 8 
 the address point — at the offset-to-top word. That entry is not merely droppable, it is
 **unkeepable**, and the promotion cannot link while it exists.
 
-Measured on `ov047/daObjKm3_Kurumajiku_c`, whose `_ZTV21daObjKm3_Kurumajiku_c` address point
-is `0x021122a0` and whose placeholder `data_ov047_02112298` sits at the storage start.
+Measured on [ov047/`daObjKm3_Kurumajiku_c`](../config/arm9/overlays/ov047/symbols.txt), whose `_ZTV21daObjKm3_Kurumajiku_c` address point
+is `0x021122a0` and whose placeholder [data_ov047_02112298](../config/arm9/overlays/ov047/symbols.txt) sits at the storage start.
 Restoring the placeholder on top of the promotion and rebuilding produces a **new** symbol
 error, beyond the pre-existing baseline set:
-
+```c
     [ERROR] Symbol 'data_ov047_02112298' in overlay 47
             at 0x02112298 not found in linked binary
-
+```
 Once the TU supplies those 8 bytes, `0x02112298` is the storage start of the
 compiler-emitted vtable, and no symbol of that name exists in the linked binary at all.
 `dsd check symbols --fail` rejects it. The placeholder was a delinker-invented name for
@@ -224,11 +224,11 @@ the entry was keepable and the drop needs a different justification.
 Promotion renames the absorbed functions in `symbols.txt`, but the old
 `func_<module>_<addr>` names survive elsewhere. `include/decl_common.h` still declares
 three functions that #2055 renamed out of existence:
-
+```c
     extern void func_ov071_02121b08(void*);
     extern void func_ov071_02121b50(void*, void*);
     extern void func_ov071_02121ba4(void*);
-
+```
 Verified against `origin/main`: a tree-wide search finds **no source reference** to any
 of the three. (Note the count — three, not four. `func_ov071_02121c6c` was renamed by the
 same PR but was never declared in that header, so a promotion must check each absorbed
@@ -252,10 +252,10 @@ them to make a search come back clean.
 ## 4. Update the provenance comments the promotion just invalidated
 
 `include/daEyBm_c.h` still carries, after #2055:
-
+```c
     [_ZN8daEyBm_c6RenderEv.cpp, _ZN8daEyBm_c8BehaviorEv.cpp,
      _ZN8daEyBm_c13InitResourcesEv.cpp]
-
+```
 All three files were deleted by that same PR. **The rule: a promotion updates its own
 provenance comments to name the promoted TU.**
 
@@ -354,12 +354,12 @@ That promotion also spent five rows in `config/converted-backslide-exceptions.js
 ### The marker must be unique in the file
 
 `_marked_member_fragment` returns `None` unless the symbol appears exactly once:
-
+```python
     matches = [i for i, marker in enumerate(markers)
                if marker.group(1) == symbol]
     if len(matches) != 1:
         return None
-
+```
 A marker copy-pasted from the member above, or repeated on both a forward declaration and
 the definition, silently re-enables the whole-file fallback for that member. Nothing warns
 and nothing goes red; the member simply scores as if it were unmarked.
@@ -409,24 +409,24 @@ and only then can they carry markers, above their out-of-line definitions.
 Inlining the destructor to make it scoreable moves a function *body* into a struct that
 `tools/check_header_offsets.py` parses, and that gate recognises the body only when the
 signature line itself carries the `{`:
-
+```python
     if n == 0:
         depth = line.count("{") - line.count("}")
         if depth > 0:
             skip_body = depth
         continue
-
+```
 Written Allman the signature line has no brace, `skip_body` never arms, and the body's
 lines fall through to declaration parsing and are reported UNPARSED. Measured by
 rewriting nothing but the destructor of `include/dScMgBase_c.h` -- a derived class that
 declares its destructor first, which is the shape every inline-destructor promotion
 produces:
-
+```sh
     one line, with body    40 commented fields, 0 mismatched, 0 unparsed, spans 0x4660
     one line, empty {}     40 commented fields, 0 mismatched, 0 unparsed, spans 0x4660
     Allman, with body       0 commented fields, 0 mismatched, 2 unparsed, spans 0x50
     Allman, empty           0 commented fields, 0 mismatched, 1 unparsed, spans 0x50
-
+```
 Two things go wrong and only one of them is loud. The gate exits 1 on the UNPARSED line
 -- and it is green on `origin/main`, so this is a **merge-tree-only** red that
 `tools/premerge_check.py` will show you and your branch's own CI will not. The quiet half
@@ -445,11 +445,11 @@ Allman body breaks it exactly as an empty one-line body does not. It is the newl
 costs, not the statements.
 
 So write
-
+```cpp
     virtual ~PoleLift() {
         ...
     }
-
+```
 and not the Allman form. Every inline destructor in `include/` today is `virtual ~X() {}`
 on a single line, so nothing has exercised this before; the inline-destructor wave will
 exercise it repeatedly. This is a defect in the gate rather than in the style, and it is
@@ -458,7 +458,7 @@ recorded as one -- but until the gate is fixed, brace position is load-bearing.
 ### A marker on a still-unnamed member buys nothing
 
 `score_member` recomputes `real_name` from the symbol, not from the fragment, so a member
-still called `func_ov006_0210a534` fails that criterion whichever text it is scored
+still called [func_ov006_0210a534](../src/minigames/d_s_mg_single3_d_base.cpp) (ROM Ordinal 2 used to assemble TU) fails that criterion whichever text it is scored
 against. Marking it is still worth doing, because the boundary it creates is what protects
 its *neighbour* — that is the whole point of the rule above — but do not expect the marker
 to move that member's own score. Renaming it is the thing that does.
@@ -486,10 +486,10 @@ happened is that comment lines were traded for ledger rows.
   `volatile` is in one member. The other eight paid for it.
 - **#2064** (`dScMgSingle3DBase_c`, nine functions) adds **six** markers and **zero**
   backslide-exception rows. The three it leaves unmarked are the two destructor variants,
-  which is right, and one member still named `func_ov006_0210a534`, which is not.
+  which is right, and one member still named [func_ov006_0210a534](../src/minigames/d_s_mg_single3_d_base.cpp), which is not.
   Nothing backslides — neither it nor its neighbour was CONVERTED before — but the
   omission still costs, and it costs the *other* member: with no marker after it, the
-  preceding slot-26 fragment -- `func_ov006_0210a600` at the time, since renamed to
+  preceding slot-26 fragment -- [func_ov006_0210a600](../src/minigames/d_s_mg_single3_d_base.cpp) (ROM Ordinal 3 used to assemble TU) at the time, since renamed to
   `_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv` and written as a real member
   definition -- runs from its own marker to end of file and swallows a534's `volatile`
   body and raw addresses. That member is an eight-byte `return 1;` that can never score

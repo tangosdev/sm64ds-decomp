@@ -8,8 +8,9 @@ of (`tubuild.py promote --dry-run` refuses; `cpp_tu_compat` marks `enroll`/`romb
 
 ## What exists
 
-- `config_tu/arm9/**` — TU-granular delinks roots for 8 overlays (ov009, ov010, ov014,
-  ov019, ov020, ov029, ov070, ov077), from the "TU seed" PRs (#1646–1651). Each maps a
+- `config_tu/arm9/**` — TU-granular delinks roots for 8 overlays ([ov009](../config/arm9/overlays/ov009/symbols.txt), [ov010](../config/arm9/overlays/ov010/symbols.txt), [ov014](../config/arm9/overlays/ov014/symbols.txt),
+  [ov019](../config/arm9/overlays/ov019/symbols.txt), [ov020](../config/arm9/overlays/ov020/symbols.txt), [ov029](../config/arm9/overlays/ov029/symbols.txt), [ov070](../config/arm9/overlays/ov070/symbols.txt), [ov077](../config/arm9/overlays/ov077/symbols.txt)),
+  from the "TU seed" PRs (#1646–#1651). Each maps a
   TU to a merged `src_tu/actors/*.cpp` with per-section (`.text/.init/.ctor/.data/.bss`)
   ranges, but **no `complete` markers** — they are objdiff *target* roots, not builds.
 - `rombuild.py --tu-module <id>` (this branch) — swaps a module's generated delinks for
@@ -24,18 +25,18 @@ of (`tubuild.py promote --dry-run` refuses; `cpp_tu_compat` marks `enroll`/`romb
 
 `python tools/rombuild.py --no-rom --tu-module ov010` compiles all 3 merged TUs
 (daObjC1_Trap_c/LightBeam/PeachPainting) as `//cpp` and enrolls them, then **mwldarm fails**:
-
+```sh
     Multiply-defined: "typeinfo structure for fBase_c" in daObjC1_Trap_c.o
       Previously defined in _dsd_gap@main_44.o
     ... typeinfo for dBase_c / dActor_c / dBgActor_c likewise ...
-
+```
 A merged **derived-class** TU emits vague copies of its whole base chain's RTTI
 (`_ZTI`/`_ZTS` for fBase_c/dBase_c/dActor_c/dBgActor_c), which collide with the canonical
-copies the gap objects carry (those live in arm9/ov002). The per-function `src/` build
+copies the gap objects carry (those live in arm9/[ov002](../config/arm9/overlays/ov002/symbols.txt)). The per-function `src/` build
 never hit this because single-function objects emit no RTTI/vtable.
 
-The 6 currently `link-verified` manifest TUs are all *base* classes (arm9/Actor,
-ActorBase, ActorDerived, ActorBase_SceneNode, ov004/dScMgBase_c, ov002/LevelObjects) —
+The 6 currently `link-verified` manifest TUs are all *base* classes ([arm9](../config/arm9/symbols.txt)/Actor,
+ActorBase, ActorDerived, ActorBase_SceneNode, [ov004](../config/arm9/overlays/ov004/symbols.txt)/dScMgBase_c, [ov002](../config/arm9/overlays/ov002/symbols.txt)/LevelObjects) —
 they canonically own their RTTI, so no collision, no externalization needed. Derived TUs
 are the unsolved case.
 
@@ -57,7 +58,7 @@ The normal ROM builder now consumes the strict manifest-backed partition recipe:
    exact storage aliases, 106/106 module fidelity, and a packaged ROM whose SHA-256 is
    identical to the strict stock control.
 
-The first production control is `ov002/daObjAbuku_c`:
+The first production control is [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjAbuku_c`:
 
 ```powershell
 python tools/tubuild.py linkcheck --baseline --module ov002 -j 16 --clean
@@ -101,7 +102,7 @@ linker surface; it does not guess that a whole raw object is layout-equivalent.
 ## The catch for a chosen whole module
 
 The externalization recipe (which RTTI to externalize, and to what address) must exist.
-For ov010 the manifest entries are only `text-verified` with empty `data`, so the recipe
+For [ov010](../config/arm9/overlays/ov010/symbols.txt) the manifest entries are only `text-verified` with empty `data`, so the recipe
 isn't recorded yet. Two ways forward:
 1. Establish it first with `tubuild.py linkcheck ov010/<TU> --partitioned` (the scratch
    ladder), record the `data`/`externalized_output` policy in `config/tu_manifest.d/`,
@@ -111,8 +112,8 @@ isn't recorded yet. Two ways forward:
    re-derives what the ladder already knows how to prove.)
 
 M2 therefore refuses `--partitioned-tu` for an entry without a complete, previously
-partitioned-link-verified recipe. The first usable control is Abuku. ov010 still needs
-data/RTTI ownership established for each of daObjC1_Trap_c, LightBeam, and PeachPainting before
+partitioned-link-verified recipe. The first usable control is *Abuku*. [ov010](../config/arm9/overlays/ov010/symbols.txt) still needs
+data/RTTI ownership established for each of `daObjC1_Trap_c`, `LightBeam`, and `PeachPainting` before
 `--tu-module ov010` can become a verified whole-module build; the production mechanism
 is ready, but those three source/manifest inputs are not.
 
@@ -121,7 +122,7 @@ is ready, but those three source/manifest inputs are not.
 - Module-level exclusivity: a module is old-shape or ph-shape, never both. `--tu-module`
   enforces this by replacing the whole module's delinks.
 - A delinks file is a partition: no overlap, no gap, nothing the old config claimed left
-  unclaimed. ov010's `.text/.init/.ctor` are full source partitions; `.data/.bss` are
+  unclaimed. [ov010](../config/arm9/overlays/ov010/symbols.txt)'s `.text/.init/.ctor` are full source partitions; `.data/.bss` are
   TU-owned bands + ROM gap (verified).
 - Without `complete`, dsd fills from ROM bytes and the source is never compiled — check
   `source-built`, not `eligible`.

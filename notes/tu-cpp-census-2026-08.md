@@ -12,12 +12,12 @@ Data (checked in under `notes/data/`):
 
 `rtti_vtables.json` (Aug 16) was older than `rtti.json` (Aug 18) — the staleness condition `tu_map.py` refuses. Regenerated in order today: 74 modules, 11,096 fn, **524 TUs** (was 608), boundaries `{low 70, medium 102, high 278}` (was `{97,160,277}`). 104 boundaries vanished, 18 appeared.
 
-**ov006 went 178 -> 87 TUs**: the stale map invented ~91 boundaries there. DISCARD any ov006 plan predating today.
+**[ov006](../config/arm9/overlays/ov006/symbols.txt)** went 178 -> 87 TUs**: the stale map invented ~91 boundaries there. DISCARD any [ov006](../config/arm9/overlays/ov006/symbols.txt) plan predating today.
 
 All 8 `--check` gates pass; negative control did not collapse.
 
 - NOTE: this build of `tu_map.py` has NO V4 partition gate and no `meta.partition_defects` (the skill documents V4 as present; it is not in this tree). Do not rely on it.
-- NOTE: ov080's known answer is now 4; `notes/tu-boundaries.md` and the slicing skill still say 3. Notes are stale.
+- NOTE: [ov080](../config/arm9/overlays/ov080/symbols.txt)'s known answer is now 4; `notes/tu-boundaries.md` and the slicing skill still say 3. Notes are stale.
 
 ## 2. How many .c files are provably C++ (destructors EXCLUDED as evidence)
 
@@ -34,9 +34,9 @@ Restricted to TUs with both ends hard, not a swallower, not in an under-segmente
 - (+56 dtor-only `.c` files in the same TUs)
 
 **UNION: 1,167 `.c` files provably C++**, of which **293** sit inside the mergeable safe pool.
-Top modules by transitively promoted files: ov006 489, ov002 38, ov100 35, ov071 28, ov072 23.
+Top modules by transitively promoted files: [ov006](../config/arm9/overlays/ov006/symbols.txt) 489, [ov002](../config/arm9/overlays/ov002/symbols.txt) 38, [ov100](../config/arm9/overlays/ov100/symbols.txt) 35, [ov071](../config/arm9/overlays/ov071/symbols.txt) 28, [ov072](../config/arm9/overlays/ov072/symbols.txt) 23.
 
-If you drop the confidence filter and trust every boundary incl. swallowers the number is 4,010 — **DO NOT use that number**; the swallowers (main 2,927 files, ov002 Player 613) dominate it.
+If you drop the confidence filter and trust every boundary incl. swallowers the number is 4,010 — **DO NOT use that number**; the swallowers (main 2,927 files, [ov002](../config/arm9/overlays/ov002/symbols.txt) Player 613) dominate it.
 
 Other buckets: dtor-only 259 (out of scope by user's instruction) | suggestive S1 (`extern _ZTV` + hand vptr store, defines nothing) 103 | weak, calls a mangled callee only 2,036 | pure C 4,266.
 
@@ -72,20 +72,20 @@ EMPIRICAL SIZE CLIFF: 80% of 1-4-member TUs compiled; **0 of 159 with >=10 membe
 Composition: 171/173 are mixed `.c`+`.cpp`, 2 all-`.cpp`, 0 all-`.c`. 811 `.c` + 1,194 `.cpp` members.
 - 155/173 contain a member wrapped in an `extern "C" { }` block — `tubuild.py create` REFUSES those ("scanned to end of file without finding a function body"); hand-assemble via `tubuild.build_manifest_entry`.
 - 106/173 have file-scope local struct definitions in MORE THAN ONE member (collision risk).
-- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (PoleLift, daObjKm2_Fall_Block_c, LevelObjects, Platform, ov002/Enemy) — dedupe against `config/tu_manifest.d/` first.
+- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (PoleLift, daObjKm2_Fall_Block_c, LevelObjects, Platform, [ov002](../config/arm9/overlays/ov002/symbols.txt)/Enemy) — dedupe against `config/tu_manifest.d/` first.
 
 Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - `main` @0x20049f0 (2,927 files) — NOT a TU, it is the un-segmented remainder of arm9. Do not touch.
-- ov002 @0x20bd828 Player (613) — medium/high, 4 incomplete, `opt_common_subs` in 13 members.
-- ov007 @0x20b72a0 (389) / @0x20ad660 (123) — no class label, low boundaries, ZERO sinits so no witness is constructible. ov007 is where the map knows least and looks most confident.
-- ov006 `dScMg*` family — newly attractive after regeneration, but carries `#pragma opt_*` on up to 35 members in one TU. TUs carrying `#pragma opt_*` CANNOT be merged as-is.
-- ov004 @0x20b42c0 (107) — unattributed, low/low, swallower.
-- ov063 Boo family (94) / ov060 Bowser (80) — correct groupings, DEFERRED not wrong: clear the pragmas and the incomplete members and they promote into the safe pool.
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) @0x20bd828 Player (613) — medium/high, 4 incomplete, `opt_common_subs` in 13 members.
+- [ov007](../config/arm9/overlays/ov007/symbols.txt) @0x20b72a0 (389) / @0x20ad660 (123) — no class label, low boundaries, ZERO sinits so no witness is constructible. [ov007](../config/arm9/overlays/ov007/symbols.txt) is where the map knows least and looks most confident.
+- [ov006](../config/arm9/overlays/ov006/symbols.txt) `dScMg*` family — newly attractive after regeneration, but carries `#pragma opt_*` on up to 35 members in one TU. TUs carrying `#pragma opt_*` CANNOT be merged as-is.
+- [ov004](../config/arm9/overlays/ov004/symbols.txt) @0x20b42c0 (107) — unattributed, low/low, swallower.
+- [ov063](../config/arm9/overlays/ov063/symbols.txt) Boo family (94) / [ov060](../config/arm9/overlays/ov060/symbols.txt) Bowser (80) — correct groupings, DEFERRED not wrong: clear the pragmas and the incomplete members and they promote into the safe pool.
 
 ## 6. Breakage modes for a merge (detect BEFORE committing)
 
 - **SOURCE ORDER**: mwccarm 2004/b56 emits one `.text` section per function in REVERSE source order — the highest-address ROM function is written FIRST. Wrong order = address permutation, NOT a compile error; every member can match individually while the TU lands wrong. Read order from the ELF SECTION INDEX, never `st_value` (`st_value` is 0 for every symbol here). `tubuild verify` catches it; per-member `build_pin` does not.
-- **`#pragma opt_*` / `optimize_for_size` are FILE-GLOBAL, LAST-WINS.** Position irrelevant. One stray pragma silently recompiles the whole TU. Precedent: ov062/001 went 14 match/24 differ from one stray `optimize_for_size on`; removing it gave 36/2. Manifests as a silent byte diff on UNRELATED members. Static pre-merge grep removes ~92 TUs from the pool.
+- **`#pragma opt_*` / `optimize_for_size` are FILE-GLOBAL, LAST-WINS.** Position irrelevant. One stray pragma silently recompiles the whole TU. Precedent: [ov062](../config/arm9/overlays/ov062/symbols.txt)/[001](../config/arm9/overlays/ov001/symbols.txt) went 14 match/24 differ from one stray `optimize_for_size on`; removing it gave 36/2. Manifests as a silent byte diff on UNRELATED members. Static pre-merge grep removes ~92 TUs from the pool.
 - **>=10-member all-or-nothing**: greedy per-member admission, one at a time, keep only if the TU still compiles; never trade a MATCH for a DIFFER. Quadratic past ~200 members.
 - **DECLARATION HOISTING regresses, always**: 5 of 5 experiments (72->62, 72->46). Files carry real ordering dependencies (some declare `typedef int s32;` inline). Reconcile IN PLACE, keep the first occurrence, delete later duplicates. NEVER build a preamble.
 - **`extern "C"` double-mangling**: C++ silently swallows conflicting declarations as OVERLOADS, so the TU "compiles" having proven nothing and the wrong symbol links. Use `extern "C"` as a diagnostic: give every definition C linkage first, then read the errors.
@@ -93,7 +93,7 @@ Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - **VTABLE / VAGUE LINKAGE**: mwcc anchors `_ZTV`/`_ZTI` to the TU that defines the destructor OUT OF LINE. Inline it and the anchor disappears; wrong TU = undefined or multiply-defined `_ZTV` link error. objisolate addend rule: a `_ZTV*` relocation's addend must LOSE 8 on rebinding — get it wrong and it links clean and corrupts 34 modules. Use `tubuild.py linkcheck`.
 - **SINIT ORDERING**: `.ctor` entry count == `__sinit_*` count across all 106 modules, zero exceptions, targets always ascending. Two merged TUs that each had a sinit must produce ONE. `tu_map --check` V2a/V2b; 37/74 modules are `corroborated:true` and will catch a miscount.
 - **"999 word(s) differ"** means SIZES differ (D0/D1/D2 variant collapse), not a type error.
-- **A byte MATCH that calls the WRONG function**: `match.compare` WILDCARDS every relocated word. ov077 `func_ov077_02124118` called `ApproachLinear` where the ROM calls `ApproachLinear2` -> reported MATCH, cost a day. Require all three on the verify line: `byte comparison N/N MATCH`, `objisolate check: clean`, AND reloc-destinations clean.
+- **A byte MATCH that calls the WRONG function**: `match.compare` WILDCARDS every relocated word. [ov077](../config/arm9/overlays/ov077/symbols.txt) [func_ov077_02124118](../src_tu/actors/Lakitu.cpp)(ROM Ordinal 14 in `Lakitu.cpp`) called `ApproachLinear` where the ROM calls `ApproachLinear2` -> reported MATCH, cost a day. Require all three on the verify line: `byte comparison N/N MATCH`, `objisolate check: clean`, AND reloc-destinations clean.
 - **DATA-ONLY OBJECTS are invisible to the map** (built from `.text` runs). 260 delink entries tree-wide have no `.text`; zero mix `.text` with another section. Attribute non-`.text` only by "object k's contribution to every section precedes object k+1's"; discard any rule whose per-TU intervals are not ascending and disjoint. NEVER "TU k's code loads this address, so TU k owns it."
 - **`include/decl_common.h` is sometimes ACTIVELY WRONG** (declares a TU's own functions as data -> silent mismatch). Drop it and restate the 3-17 lines. Median distinct includes per safe TU is 7.
 
@@ -116,7 +116,7 @@ Wall-clock ESTIMATES ONLY (no builds were run this pass): Tier-1 create+compile 
 
 ## 9. Known inert-marker violators (report, do NOT tidy)
 
-`//cpp` must be the FIRST BYTES; an `#include` above it makes it inert. In the positive pool: `src/_ZN7dWipe_c15SetBackwardTimeEj.c`, `src/func_0204322c.c`, `src/func_ov075_0211b1cc.c`.
+`//cpp` must be the FIRST BYTES; an `#include` above it makes it inert. In the positive pool: `src/_ZN7dWipe_c15SetBackwardTimeEj.c`, `src/func_0204322c.c`, [src/func_ov075_0211b1cc.c](../src/func_ov075_0211b1cc.c).
 
 Also: 113 `.c` files tree-wide are absent from `delinks.txt` and therefore INVISIBLE to the byte gates. 190 `.cpp` files still hand-spell their own mangled symbol (separate debt, not part of this).
 
@@ -140,7 +140,7 @@ plans are authoritative where they disagree. Full detail in
   silently drops functions with no legacy source. All 100 Tier-1 TUs are genuinely clean;
   3 Tier-2 TUs and both of §5's deferred families hide blockers.
 
-**And one finding that outranks all of them:** `ov002/LevelObjects` is `link-verified` over
+**And one finding that outranks all of them:** [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects` is `link-verified` over
 a range the regenerated map cuts in two *and* extends past the verified end. In the one
 place ground truth exists to check it, a **medium/medium** boundary is wrong in both
 directions — empirical support for the high/high + module-edge gate.
