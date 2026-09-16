@@ -1,4 +1,5 @@
 //cpp
+#include "dScMgBase_c.h"
 // @symbol _ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv
 // recovered name: dScMgSlot3_c_OnAimedAtWithEggReturnVec
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -16,5 +17,5 @@ void dScMgSlot3_c::OnAimedAtWithEggReturnVec()
     void *a = (void *)this;
 
     *(volatile unsigned short*)0x400000A = (*(volatile unsigned short*)0x400000A & 0x43) | 0x1118;
-    _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv(a);
+    ((dScMgBase_c *)a)->dScMgBase_c::OnAimedAtWithEggReturnVec();
 }

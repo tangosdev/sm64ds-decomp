@@ -1,4 +1,5 @@
 //cpp
+#include "dScMgBase_c.h"
 // @symbol _ZN16dScMgSmartball_c8OnPushedEv
 // recovered name: dScMgSmartball_c_OnPushed
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -9,4 +10,4 @@
 int dScMgSmartball_c::OnPushed()
 {
     void *t = (void *)this;
- return _ZN11dScMgBase_c8OnPushedEv(t) != 0; }
+ return ((dScMgBase_c *)t)->dScMgBase_c::OnPushed() != 0; }

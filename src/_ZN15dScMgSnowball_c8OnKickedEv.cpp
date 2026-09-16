@@ -1,4 +1,5 @@
 //cpp
+#include "dScMgBase_c.h"
 #include "types.h"
 // @symbol _ZN15dScMgSnowball_c8OnKickedEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
@@ -10,7 +11,6 @@ extern "C" {
 // recovered name: dScMgSnowball_c_OnKicked
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
-extern int _ZN11dScMgBase_c8OnKickedEv(char *self);
 
 #define V (self->mScrollY >> 12)
 
@@ -42,6 +42,6 @@ int dScMgSnowball_c::OnKicked()
             *(volatile int *)0x400101c = (V << 16) & 0x1ff0000;
         }
     }
-    return _ZN11dScMgBase_c8OnKickedEv(c) != 0;
+    return ((dScMgBase_c *)c)->dScMgBase_c::OnKicked() != 0;
 }
 }

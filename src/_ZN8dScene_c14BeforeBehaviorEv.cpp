@@ -54,8 +54,6 @@ extern FaderObject  data_0209f5e8;   /* really a FaderColor */
 extern u16  data_02092664;           /* pending scene ID; 0x187 means none */
 
 extern void func_02023544(void);
-extern void _ZN15FaderBrightness14SetForwardTimeEj(FaderBrightness *self, u32 frames);
-extern int  _ZN15FaderBrightness7IsAtEndEv(FaderBrightness *self);
 extern int  func_020431c4(fBase_c *self);
 }
 
@@ -71,9 +69,9 @@ int dScene_c::BeforeBehavior()
         } else {
             if (data_0209f1e4 == 0) {
                 data_0209f5d0.currInterp = 0;   /* 0x4, not speed at 0x8 */
-                _ZN15FaderBrightness14SetForwardTimeEj(&data_0209f5d0, 0x10);
+                ((FaderBrightness *)&data_0209f5d0)->FaderBrightness::SetForwardTime(0x10);
                 data_0209f1e4 = &data_0209f5d0;
-            } else if (_ZN15FaderBrightness7IsAtEndEv(&data_0209f5d0)) {
+            } else if (((FaderBrightness *)&data_0209f5d0)->FaderBrightness::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
                 data_0209f5e8.vt->SetForwardTime(&data_0209f5e8, 0, 0);
                 MarkForDestruction();

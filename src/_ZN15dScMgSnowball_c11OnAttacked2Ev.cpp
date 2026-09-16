@@ -1,4 +1,5 @@
 //cpp
+#include "dScMgBase_c.h"
 // @symbol _ZN15dScMgSnowball_c11OnAttacked2Ev
 // recovered name: dScMgSnowball_c_OnAttacked2
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -9,4 +10,4 @@
 int dScMgSnowball_c::OnAttacked2()
 {
     void *t = (void *)this;
- return _ZN11dScMgBase_c11OnAttacked2Ev(t) != 0; }
+ return ((dScMgBase_c *)t)->dScMgBase_c::OnAttacked2() != 0; }
