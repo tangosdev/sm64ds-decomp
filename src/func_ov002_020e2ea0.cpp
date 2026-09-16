@@ -1,10 +1,8 @@
 //cpp
+#include "dActor_c.h"
 #include "dBgCh_Actr.h"
 
 extern "C" {
-struct dActor_c {
-    static dActor_c* FindWithID(unsigned int id);
-};
 struct Player {
     struct State {};
     int IsState(State &s);

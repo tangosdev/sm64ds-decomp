@@ -1,10 +1,6 @@
 //cpp
+#include "dActor_c.h"
 struct Vector3; struct Vector3_16;
-struct dActor_c {
-    static dActor_c *FindWithID(unsigned int id);
-    static int Spawn(unsigned int a, unsigned int b, const Vector3 &v,
-                     const Vector3_16 *p, signed char e, short f);
-};
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void func_02012790(int x);
 extern "C" int data_0209e650;

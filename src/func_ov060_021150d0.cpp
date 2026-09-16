@@ -1,7 +1,5 @@
 //cpp
-struct dActor_c {
-    int DistToCPlayer();
-};
+#include "dActor_c.h"
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;

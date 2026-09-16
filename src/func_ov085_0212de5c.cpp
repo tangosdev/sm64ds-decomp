@@ -1,11 +1,8 @@
 //cpp
+#include "dActor_c.h"
 #include "types.h"
 struct PMF;
 struct Player;
-struct dActor_c {
-    Player *ClosestPlayer();
-    short HorzAngleToCPlayer();
-};
 namespace Sound { void PlaySub(u32, u32, u32, Fix12i, bool);
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which

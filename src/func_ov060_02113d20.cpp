@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol func_ov060_02113d20
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
@@ -6,12 +7,6 @@
 #include "common.h"
 // func_ov060_02113d20 at 0x02113d20
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
-
-
-struct dActor_c {
-    dActor_c *ClosestWithActorID(unsigned int id);
-};
-
 
 extern "C" int func_ov060_02113d20(dActor_c *self)
 {

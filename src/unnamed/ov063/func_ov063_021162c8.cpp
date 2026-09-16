@@ -1,13 +1,10 @@
 //cpp
+#include "dActor_c.h"
 // @symbol func_ov063_021162c8
 /* recovered: shared common types */
 #include "common.h"
 struct Vector3; struct Vector3_16;
 struct dCapEnemy_c { void ReleaseCap(const Vector3 &v); };
-struct dActor_c {
-    static dActor_c *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
-                        const Vector3_16 *p, signed char e, short f);
-};
 extern "C" void func_0201267c(int a, void *b);
 
 extern "C" void func_ov063_021162c8(char *self)

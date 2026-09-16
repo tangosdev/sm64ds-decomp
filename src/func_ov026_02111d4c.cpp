@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol func_ov026_02111d4c
 // recovered name: daObjWlSubmarine_c_AfterClsn
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
@@ -12,10 +13,6 @@ struct Player {
     char pad2[0x6f9 - 0x68];
     unsigned char flag6f9;
     void EnterWhirlpool();
-};
-struct dActor_c {
-    Player* ClosestPlayer();
-    int HorzAngleToCPlayer();
 };
 
 extern "C" int Vec3_HorzDist(const Vector3* a, const Vector3* b);

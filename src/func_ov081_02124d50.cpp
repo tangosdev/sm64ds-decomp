@@ -1,7 +1,5 @@
 //cpp
-struct dActor_c {
-    static dActor_c* FindWithID(unsigned int id);
-};
+#include "dActor_c.h"
 
 extern "C" {
     void func_ov081_0212423c(char* c, int a);

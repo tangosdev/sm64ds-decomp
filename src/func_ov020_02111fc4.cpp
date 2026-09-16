@@ -1,14 +1,11 @@
 //cpp
+#include "dActor_c.h"
 // @symbol func_ov020_02111fc4
 /* recovered: shared common types */
 #include "common.h"
 typedef int Fix12i;
 typedef short s16;
 
-
-struct dActor_c {
-    virtual void v0();
-};
 extern "C" char* _ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);

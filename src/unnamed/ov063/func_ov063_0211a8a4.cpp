@@ -1,7 +1,5 @@
 //cpp
-struct dActor_c {
-    int GetSubtraction(short a, short b);
-};
+#include "dActor_c.h"
 extern "C" void func_0201267c(int a0, void *a1);
 
 extern "C" int func_ov063_0211a8a4(char *thiz)
