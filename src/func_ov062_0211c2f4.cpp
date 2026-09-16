@@ -5,14 +5,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct PathPtr {
-    int a;
-    int b;
-    PathPtr();
-    void FromID(u32 id);
-    void GetNode(Vector3 &out, u32 idx) const;
-};
-
+#include "PathPtr.h"
 extern "C" {
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int ApproachAngle(void *p, int target, int a, int b, int c);

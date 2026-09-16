@@ -3,15 +3,7 @@
 
 #include "SharedFilePtr.h"
 #include "UnchainedChomp.h"
-
-struct PathPtr {
-    char pad_00[8];
-
-    PathPtr();
-    void FromID(u32 id);
-    u32 NumNodes() const;
-    void GetNode(Vector3 &out, u32 index) const;
-};
+#include "PathPtr.h"
 
 extern "C" {
 void LoadSilverStarAndNumber();

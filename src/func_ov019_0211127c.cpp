@@ -2,12 +2,9 @@
 // @symbol func_ov019_0211127c
 /* recovered: shared common types */
 #include "common.h"
+#include "PathPtr.h"
 
 typedef int Fix12i;
-
-struct PathPtr {
-    void GetNode(Vector3 &, unsigned int) const;
-};
 
 extern "C" Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 

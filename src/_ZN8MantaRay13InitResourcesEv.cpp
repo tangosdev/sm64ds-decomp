@@ -21,17 +21,10 @@
  * and a hardcoded position. That is a scripted placement, not a spawn.
  */
 #include "MantaRay.h"
+#include "PathPtr.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct dActor_c;
-
-struct PathPtr {
-    char pad[8];
-    PathPtr();
-    void FromID(unsigned int id);
-    int NumNodes() const;
-    void GetNode(Vector3& out, unsigned int idx) const;
-};
 
 extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& p);

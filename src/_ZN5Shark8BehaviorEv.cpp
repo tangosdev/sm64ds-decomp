@@ -2,6 +2,7 @@
 // @symbol _ZN5Shark8BehaviorEv
 
 #include "Shark.h"
+#include "PathPtr.h"
 
 struct SharkCallbackOwner;
 typedef void (SharkCallbackOwner::*SharkCallback)();
@@ -9,14 +10,6 @@ typedef void (SharkCallbackOwner::*SharkCallback)();
 struct SharkBehaviorState {
     char pad_00[8];
     SharkCallback callback;
-};
-
-struct PathPtr {
-    char pad_00[8];
-
-    PathPtr();
-    void FromID(u32 id);
-    void GetNode(Vector3 &out, u32 index) const;
 };
 
 extern "C" {

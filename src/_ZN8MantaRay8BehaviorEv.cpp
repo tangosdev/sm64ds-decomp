@@ -20,16 +20,10 @@
  * are dActor_c's speed slots, repurposed as a vector.
  */
 #include "MantaRay.h"
+#include "PathPtr.h"
 struct C3;
 typedef void (C3::*Fn)();
 struct Obj { char pad[8]; Fn fn; };
-
-struct PathPtr {
-    char pad[8];
-    PathPtr();
-    void FromID(unsigned int id);
-    void GetNode(Vector3& out, unsigned int idx) const;
-};
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short* p);

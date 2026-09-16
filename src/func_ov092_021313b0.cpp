@@ -3,11 +3,9 @@
 // @symbol func_ov092_021313b0
 /* recovered: shared common types */
 #include "common.h"
+#include "PathPtr.h"
 #define LA(p) (p)
 
-struct PathPtr {
-    int GetNode(Vector3 &v, unsigned int i) const;
-};
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 
 extern "C" void func_ov092_021313b0(void *t) {
