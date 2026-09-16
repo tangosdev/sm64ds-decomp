@@ -155,7 +155,7 @@ struct fBase_c {
        (`j` / _ZN7fBase_cnwEj); CW rejects that signature in-class
        ("illegal 'operator' declaration"). `return new T` binds this size_t
        overload and forwards. Not virtual, not layout. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
     /* operator delete IS accepted in-class, and must be, INLINE: CW builds D0

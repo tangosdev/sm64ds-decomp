@@ -24,9 +24,9 @@ struct daBar_c : dActor_c {
     virtual s32 Render();
     virtual void OnPendingDestroy();
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands.
+    /* Leaf adapter until fBase_c::operator new(size_t) lands.
        `return new daBar_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

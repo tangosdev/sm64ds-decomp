@@ -82,9 +82,9 @@ struct daTBasket_c : dEnemyBase_c {
     virtual s32 Behavior();          /* slot  6 -- ov063:0x0211b888 */
     virtual s32 Render();            /* slot  9 -- ov063:0x0211b078 */
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
+    /* Leaf adapter until fBase_c::operator new(size_t) lands (#2570).
        `return new daTBasket_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

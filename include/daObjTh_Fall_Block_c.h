@@ -21,9 +21,9 @@ struct daObjTh_Fall_Block_c : daObjFallBlock_c {
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
+    /* Leaf adapter until fBase_c::operator new(size_t) lands (#2570).
        `return new daObjTh_Fall_Block_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };
