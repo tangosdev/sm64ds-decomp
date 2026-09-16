@@ -10,7 +10,7 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
 {
     char * a = (char *)a_;
 
-    if (*(int *)((char *)this) == 0) { _ZN18NestedHeapIterator4InitEP13HeapAllocator(((char *)this), a); return; }
+    if (*(int *)((char *)this) == 0) { ((NestedHeapIterator *)(((char *)this)))->Init((HeapAllocator *)a); return; }
     {
         unsigned short link_off = mLinkOffset;
         int last = (int)mLast;

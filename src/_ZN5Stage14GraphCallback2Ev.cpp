@@ -1,4 +1,5 @@
 //cpp
+#include "G2x.h"
 #include "types.h"
 #include "nitro/hw/registers.h"
 // @symbol _ZN5Stage14GraphCallback2Ev
@@ -34,7 +35,6 @@ struct SceneRelated {
    The byte gate cannot see this: match.py compares relocated words as
    wildcards and never looks at what a call targets. tools/check_references.py
    is what catches it. */
-extern "C" void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matrix2x2* mat, s32 a, s32 b, s32 c, s32 d);
 
 /* Nullary, and a member: the previous name here,
    _ZN5Stage14GraphCallback2EP12SceneRelated, guessed a SceneRelated* second
@@ -49,12 +49,6 @@ extern "C" void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matri
    legacy naming for dScStage_c and moves when that class does. */
 s32 Stage::GraphCallback2() {
     SceneRelated *scene = (SceneRelated *)this;
-    _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(
-        REG_DB_BG3PA,
-        (struct Matrix2x2*)&scene->unk4,
-        scene->unk14,
-        scene->unk18,
-        scene->unk1c,
-        scene->unk20);
+    G2x::SetBGyAffine((volatile unsigned short *)REG_DB_BG3PA, (Matrix2x2 *)&scene->unk4, scene->unk14, scene->unk18, scene->unk1c, scene->unk20);
     return 1;
 }

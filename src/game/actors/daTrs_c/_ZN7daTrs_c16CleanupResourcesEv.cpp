@@ -1,4 +1,7 @@
 //cpp
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "dCapEnemy_c.h"
 // @symbol _ZN7daTrs_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -6,11 +9,8 @@
 #include "daTrs_c.h"
 #include "SharedFilePtr.h"
 struct dActor_c;
-extern "C" dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern "C" void UnloadBlueCoinModel(void *o);
 struct SharedFilePtr;
-extern "C" void _ZN11dCapEnemy_c14UnloadCapModelEv(void *self);
 
 extern SharedFilePtr data_ov063_0211edec;
 extern SharedFilePtr data_ov063_0211edc4;
@@ -40,13 +40,13 @@ int daTrs_c::CleanupResources()
     int *cnt;
 
     if (((O *)this)->f49c != 0) {
-        ((O *)this)->f48c = _ZN8dActor_c10FindWithIDEj(((O *)this)->f49c);
+        ((O *)this)->f48c = dActor_c::FindWithID(((O *)this)->f49c);
         if (((O *)this)->f48c != 0)
-            _ZN7fBase_c18MarkForDestructionEv(((O *)this)->f48c);
+            ((fBase_c *)(((O *)this)->f48c))->MarkForDestruction();
         ((O *)this)->f48c = 0;
     }
     if (((O *)this)->f494 != 0) {
-        ((O *)this)->f48c = _ZN8dActor_c10FindWithIDEj(((O *)this)->f494);
+        ((O *)this)->f48c = dActor_c::FindWithID(((O *)this)->f494);
         if (((O *)this)->f48c != 0) {
             cnt = (int *)(((int)((O *)this)->f48c + 0x5a0));
             (*cnt)++;
@@ -71,6 +71,6 @@ int daTrs_c::CleanupResources()
             ((SharedFilePtr *)(&data_ov063_0211edcc))->Release();
         }
     }
-    _ZN11dCapEnemy_c14UnloadCapModelEv(((O *)this));
+    ((dCapEnemy_c *)(((O *)this)))->UnloadCapModel();
     return 1;
 }

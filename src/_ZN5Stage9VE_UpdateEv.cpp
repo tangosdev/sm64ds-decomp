@@ -1,4 +1,5 @@
 //cpp
+#include "dScene_c.h"
 #include "Stage.h"
 #include "types.h"
 extern "C" {
@@ -15,10 +16,8 @@ extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
-void _ZN5Stage17UpdateMenuButtonsEb(int b);
 int IsButtonInputValid(void);
 void func_02012790(unsigned int id);
-void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 
 }
 
@@ -30,7 +29,7 @@ void Stage::VE_Update()
     if (t != 0) {
         data_0209f244 = t - data_0208ee44;
         if (data_0209f244 == 0) {
-            _ZN5Stage17UpdateMenuButtonsEb(0);
+            Stage::UpdateMenuButtons(0);
         }
     }
     t2 = data_0209f22c;
@@ -63,7 +62,7 @@ void Stage::VE_Update()
             }
             data_0209f2e0 = 0;
             data_0209f22c = data_0208ee44 << 3;
-            _ZN5Stage17UpdateMenuButtonsEb(0);
+            Stage::UpdateMenuButtons(0);
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9a);
@@ -78,7 +77,7 @@ void Stage::VE_Update()
                 data_0209f244 = data_0208ee44 << 2;
             }
             data_0209f2e0 = 1;
-            _ZN5Stage17UpdateMenuButtonsEb(0);
+            Stage::UpdateMenuButtons(0);
             data_0209f22c = data_0208ee44 << 3;
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
@@ -89,9 +88,9 @@ void Stage::VE_Update()
     }
     case 1: {
         if (data_0209f2e0 == 0) {
-            _ZN8dScene_c14StartSceneFadeEjjt(6, 1, 0);
+            dScene_c::StartSceneFade(6, 1, 0);
         } else {
-            _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
+            dScene_c::StartSceneFade(1, 0, 0);
         }
         data_0209f290 = 2;
         data_0209d45c &= ~4;

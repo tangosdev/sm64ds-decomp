@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol _Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij
 /* LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable&, int, u32) at
  * ov002:0x020fe5f4 -- spawn one teleport-source actor (id 0x15b) per entry.
@@ -23,9 +24,6 @@
 #include "types.h"
 #include "LVL_Overlay.h"
 
-extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
-    s32 areaID, s32 deathTableID);
 
 void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
 {
@@ -46,8 +44,7 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 pa
         pos.y = vy;
         pos.z = vz;
 
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-            0x15b, e->param, &pos, (const Vector3s*)0, 0, -1);
+        dActor_c::Spawn(0x15b, e->param, *(const Vector3 *)&pos, (const Vector3_16 *)0, 0, -1);
 
         i++;
         e++;

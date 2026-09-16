@@ -1,4 +1,9 @@
 //cpp
+#include "dBgCh_Actr.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "dCc_c.h"
+#include "dEnemyBase_c.h"
 // @symbol _ZN10KoopaShell8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -40,22 +45,13 @@ extern char data_ov102_0214ea78;
 
 extern "C" {
 extern int func_ov002_020ad660(char *, char *, char *, int);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char *, char *);
 extern void func_ov102_0214d1f8(char *, void *);
 extern void func_ov102_0214ce60(char *);
-extern void _ZN5dCc_c5ClearEv(char *);
 extern int DecIfAbove0_Byte(char *);
-extern void _ZN7fBase_c18MarkForDestructionEv(char *);
 extern int DecIfAbove0_Short(char *);
 extern void func_ov102_0214cbec(char *);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *, char *);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char *, char *, u32);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *);
-extern void _ZN8dActor_c8PoofDustEv(char *);
 extern void func_ov102_0214c7fc(char *);
 extern void func_ov102_0214c84c(char *);
-extern void _ZN5dCc_c6UpdateEv(char *);
 }
 
 int KoopaShell::Behavior()
@@ -65,7 +61,7 @@ int KoopaShell::Behavior()
     if (func_ov002_020ad660(c, (char *)&mMeshClsn, (char *)&mModel, 3) != 0)
         return 1;
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, (char *)&mMeshClsn) != 0) {
+    if (((dEnemyBase_c *)c)->UpdateYoshiEat(*(dBgCh_Actr *)&mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngleY;
             func_ov102_0214d1f8(c, &data_ov102_0214ea78);
@@ -73,14 +69,14 @@ int KoopaShell::Behavior()
             mEatenByYoshi = 0;
         }
         func_ov102_0214ce60(c);
-        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
+        ((dCc_c *)&mdCc_c)->Clear();
         return 1;
     }
 
     if (mDespawnTimer != 0 &&
         mState == (void *)&data_ov102_0214ea68) {
         if (DecIfAbove0_Byte((char *)&mDespawnTimer) == 0) {
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
             return 1;
         }
     } else {
@@ -103,18 +99,18 @@ int KoopaShell::Behavior()
     func_ov102_0214cbec(c);
 
     if (mVertAccel != 0) {
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)&mdCc_c);
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, (char *)&mMeshClsn, 0);
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mMeshClsn) != 0 ||
-            _ZNK10dBgCh_Actr8IsOnWallEv((char *)&mMeshClsn) != 0) {
-            if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mMeshClsn) != 0) {
+        ((dActor_c *)c)->UpdatePos((dCc_c *)&mdCc_c);
+        ((dEnemyBase_c *)c)->UpdateWMClsn(*(dBgCh_Actr *)&mMeshClsn, 0);
+        if (((dBgCh_Actr *)&mMeshClsn)->IsOnGround() != 0 ||
+            ((dBgCh_Actr *)&mMeshClsn)->IsOnWall() != 0) {
+            if (((dBgCh_Actr *)&mMeshClsn)->IsOnWall() != 0) {
                 if (mState == (void *)&data_ov102_0214ea78) {
-                    _ZN8dActor_c8PoofDustEv(c);
-                    _ZN7fBase_c18MarkForDestructionEv(c);
+                    ((dActor_c *)c)->PoofDust();
+                    ((fBase_c *)c)->MarkForDestruction();
                     return 0;
                 }
             }
-            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mMeshClsn) != 0) {
+            if (((dBgCh_Actr *)&mMeshClsn)->IsOnGround() != 0) {
                 if (mState == (void *)&data_ov102_0214ea68) {
                     mVertAccel = 0;
                     mVertSpeed = 0;
@@ -129,8 +125,8 @@ int KoopaShell::Behavior()
     if (mModelIndex == 0)
         func_ov102_0214c84c(c);
     func_ov102_0214ce60(c);
-    _ZN5dCc_c5ClearEv((char *)&mdCc_c);
+    ((dCc_c *)&mdCc_c)->Clear();
     if (mState != (void *)&data_ov102_0214ea48)
-        _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
+        ((dCc_c *)&mdCc_c)->Update();
     return 1;
 }

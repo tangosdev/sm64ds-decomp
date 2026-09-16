@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol _Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij
 /* LoadExitObjects(LVL_Overlay::ObjSubTable&, int, u32) at ov002:0x020fe420 --
  * spawn one exit actor (id 0x15d) per entry.
@@ -24,9 +25,6 @@
 #include "types.h"
 #include "LVL_Overlay.h"
 
-extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
-    s32 areaID, s32 deathTableID);
 
 void LoadExitObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
 {
@@ -46,11 +44,7 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         rot.x = -e->rotX;
         rot.y = -e->rotY;
 
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-            0x15d,
-            ((u32)e->param[0] << 24) | ((u32)e->param[1] << 16)
-                | ((u32)e->param[2] << 8) | (u32)e->param[3],
-            &pos, &rot, -1, -1);
+        dActor_c::Spawn(0x15d, ((u32)e->param[0] << 24) | ((u32)e->param[1] << 16) | ((u32)e->param[2] << 8) | (u32)e->param[3], *(const Vector3 *)&pos, (const Vector3_16 *)&rot, -1, -1);
 
         e++;
     }

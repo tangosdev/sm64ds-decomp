@@ -3,10 +3,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-int _ZN6Player6IsAnimEj(void*, unsigned int);
 }
 
 int Player::IsFrontSliding()
 {
-  return _ZN6Player6IsAnimEj(((void*)this), 0x43) || _ZN6Player6IsAnimEj(((void*)this), 0x40);
+  return ((Player *)(((void*)this)))->IsAnim(0x43) || ((Player *)(((void*)this)))->IsAnim(0x40);
 }

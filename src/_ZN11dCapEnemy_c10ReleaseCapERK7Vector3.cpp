@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol _ZN11dCapEnemy_c10ReleaseCapERK7Vector3
 /* recovered: named members + shared header, real C++ method
  *
@@ -27,9 +28,6 @@ struct dActor_c;
 extern "C" {
 extern void func_02005ed8(unsigned char *t);
 extern void Vec3_Add(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
-extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int a1, unsigned int a2, const struct Vector3 *a3,
-    const struct Vector3_16 *a4, int a5, int a6);
 }
 
 struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
@@ -43,10 +41,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
         if (mCapId < 6u) {
             struct Vector3 out;
             Vec3_Add(&out, (const struct Vector3 *)&mPosX, v);
-            ret = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x10d, 0x1012 | (mCapId << 8), &out,
-                (const struct Vector3_16 *)&mAngleX,
-                mAreaId, -1);
+            ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), *(const Vector3 *)&out, (const Vector3_16 *)&mAngleX, mAreaId, -1);
             if (mCapBank != 0) {
                 *(unsigned char *)((int)c + 0x113) |= 8;
             } else {

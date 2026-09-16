@@ -17,8 +17,6 @@
  * declared in the header yet, and migration is per-reference.
  */
 extern "C" {
-void *_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(void *self, u32 size, u32 align);
-void *_ZN22ExpandingHeapAllocator16AllocateForwardsEjj(void *self, u32 size, u32 align);
 }
 
 void *ExpandingHeapAllocator::Allocate(u32 size, int align)
@@ -26,7 +24,7 @@ void *ExpandingHeapAllocator::Allocate(u32 size, int align)
     if (size == 0) size = 1;
     size = (size + 3) & ~3u;
     if (align >= 0) {
-        return _ZN22ExpandingHeapAllocator16AllocateForwardsEjj(this, size, (u32)align);
+        return this->AllocateForwards(size, (u32)align);
     }
-    return _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(this, size, (u32)-align);
+    return this->AllocateBackwards(size, (u32)-align);
 }

@@ -12,7 +12,7 @@ void NestedHeapIterator::AddFirst(HeapAllocator * a_)
 {
     char* a = (char*)a_;
 
-    if (*(char**)((char*)this) == 0) { _ZN18NestedHeapIterator4InitEP13HeapAllocator(((char*)this), a); return; }
+    if (*(char**)((char*)this) == 0) { ((NestedHeapIterator *)(((char*)this)))->Init((HeapAllocator *)a); return; }
     {
         int* pa = (int*)(a + mLinkOffset);
         pa[0] = 0;

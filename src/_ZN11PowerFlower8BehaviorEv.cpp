@@ -1,4 +1,8 @@
 //cpp
+#include "dActor_c.h"
+#include "SaveData.h"
+#include "fBase_c.h"
+#include "dCc_c.h"
 // @symbol _ZN11PowerFlower8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
@@ -6,10 +10,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PowerFlower.h"
 extern "C" {
-extern void _ZN5dCc_c5ClearEv(char* t);
-extern void _ZN5dCc_c6UpdateEv(char* t);
-extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
-extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 }
 
 int PowerFlower::Behavior()
@@ -23,11 +23,11 @@ int PowerFlower::Behavior()
     func_ov002_020b979c(((char*)this));
     func_ov002_020b9a1c(((char*)this));
     func_ov002_020b993c(((char*)this));
-    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
-    _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
-    if (_ZN8SaveData16HasPlayerLostCapEv()) {
-        _ZN8dActor_c13SmallPoofDustEv(((char*)this));
-        _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+    ((dCc_c *)&mdCcAc_c)->Clear();
+    ((dCc_c *)&mdCcAc_c)->Update();
+    if (SaveData::HasPlayerLostCap()) {
+        ((dActor_c *)(((char*)this)))->SmallPoofDust();
+        ((fBase_c *)(((char*)this)))->MarkForDestruction();
     }
     return 1;
 }

@@ -13,13 +13,8 @@
 
 struct Vector3_16 { short x, y, z; };
 
-extern "C" dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 actorID, u32 param, const void *pos, const Vector3_16 *rot,
-    s32 areaID, s32 deathTableID);
 
 void dActor_c::SpawnSoundObj(u32 soundObjParam)
 {
-    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0x167, soundObjParam, (const void *)&mPosX, (const Vector3_16 *)0,
-        (s32)mAreaId, -1);
+    dActor_c::Spawn(0x167, soundObjParam, *(const Vector3 *)&mPosX, (const Vector3_16 *)0, (s32)mAreaId, -1);
 }

@@ -1,9 +1,9 @@
 //cpp
+#include "Model.h"
 // @symbol _ZN13SnowmanBreath13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanBreath.h"
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void Vec3_Asr(Vector3 *d, const Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
@@ -18,9 +18,9 @@ typedef struct { int w[12]; } M48;
 
 int SnowmanBreath::InitResources()
 {
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9c0);
+    Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da40);
+    Model::LoadFile(*(SharedFilePtr *)data_ov002_0210d9a0);
+    Model::LoadFile(*(SharedFilePtr *)data_ov002_0210d9c0);
     mPosX = 0x3fa770;
     mPosY = 0xcb2000;
     mPosZ = 0x46988e;

@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN5Stump15OnGroundPoundedER8dActor_c
 #include "Stump.h"
 #include "dActor_c.h"
@@ -14,14 +15,13 @@
  * without a cast to Player, so it stays a raw pointer offset here too.
  * func_ov091_021334b8 is this class's own, still unmigrated. */
 extern "C" void func_ov091_021334b8(void *c, int f);
-extern "C" void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *v);
 
 void Stump::OnGroundPounded(dActor_c &other)
 {
     if (&other == 0) return;
     if (mState == 0) return;
     if (mAttackCooldown) return;
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x62, &mCamSpacePosX);
+    Sound::PlayBank3(0x62, *(const Vector3 *)&mCamSpacePosX);
     int f = 0;
     if (other.param1 == 2) goto set;
     if (*(unsigned char *)((char *)&other + 0x703) == 0) goto done;

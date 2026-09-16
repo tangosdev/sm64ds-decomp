@@ -1,4 +1,5 @@
 //cpp
+#include "OAM.h"
 // @symbol _ZN3HUD14RenderRedCoinsEv
 /* recovered: shared header, real C++ method
  *
@@ -26,7 +27,6 @@ extern unsigned char data_0209f250[];
 extern signed char data_0209f310[];
 extern signed char data_0209f30c[];
 extern struct OamAttr data_ov002_0210c6b8;
-void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(bool, struct OamAttr*, int, int, int, int, struct Matrix2x2*);
 }
 
 void HUD::RenderRedCoins()
@@ -36,6 +36,6 @@ void HUD::RenderRedCoins()
   int count = (unsigned char)data_0209f30c[idx];
   int sl = flag ? 0x1c : 0xa;
   for(int i=0;i<count;i++){
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(false, &data_ov002_0210c6b8, 0x10 + i*0xb, sl, -1, 1, (struct Matrix2x2*)0);
+    OAM::Render(false, &data_ov002_0210c6b8, 0x10 + i*0xb, sl, -1, 1, (struct Matrix2x2*)0);
   }
 }

@@ -1,4 +1,5 @@
 //cpp
+#include "dActor_c.h"
 // @symbol _ZN10BrickBlock8BehaviorEv
 #include "BrickBlock.h"
 #include "BigBrickBlock.h"
@@ -6,7 +7,6 @@
 typedef void (BrickBlock::*BrickBlockAction)();
 extern "C" BrickBlockAction data_ov002_0210dd30[];
 extern "C" {
-extern dActor_c *_ZN8dActor_c4NextEPKS_(const dActor_c *previous);
 extern s32 Vec3_Dist(const void *a, const void *b);
 }
 
@@ -16,7 +16,7 @@ int BrickBlock::Behavior()
     if (mIsAttached != 0)
         goto attached;
 
-    block = _ZN8dActor_c4NextEPKS_(0);
+    block = dActor_c::Next(0);
     while (block) {
         u16 type = block->actorID;
         int isBlock;
@@ -35,7 +35,7 @@ int BrickBlock::Behavior()
             return 1;
         }
     next:
-        block = _ZN8dActor_c4NextEPKS_(block);
+        block = dActor_c::Next(block);
     }
 
     if (block)

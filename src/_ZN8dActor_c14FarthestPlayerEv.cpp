@@ -13,7 +13,6 @@
 
 struct dActor_c;
 
-extern struct dActor_c *_ZN8dActor_c13ClosestPlayerEv(void);
 extern "C" struct dActor_c *data_0209b450; /* @ 0x0209b450 */
 
 Player *dActor_c::FarthestPlayer()
