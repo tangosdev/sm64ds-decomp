@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN5Stage7PS_InitEv
 /* recovered: real C++ method -- named members, local shadow class
  *
@@ -46,7 +47,6 @@ extern u16 data_0209f300;
 extern s32 data_0209fc68;
 
 extern int SublevelToLevel(int i);
-extern void _ZN5Sound10PauseMusicEv(void);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
 }
 
@@ -105,7 +105,7 @@ void Stage::PS_Init()
         }
     }
 
-    _ZN5Sound10PauseMusicEv();
+    Sound::PauseMusic();
     _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x04000050, r5 | 0x20, -7);
     _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x04001050, r4 | 0x20, -7);
 }

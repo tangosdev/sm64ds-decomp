@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 /* PROMOTED translation unit -- ov029/daObjWc_Mizu_c (9 function(s)).
  *
  * WDW water (profile WDW_WATER 101). RTTI ov029:0x02114098 names
@@ -65,7 +66,6 @@ void func_ov029_02112250(daObjWc_Mizu_c *self);
 void func_ov029_021122b4(daObjWc_Mizu_c *self);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int IsAreaShowing(int idx);
-unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *tt, void *bta, int a, int fix, unsigned b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int fix, short s, void *clps);
@@ -174,8 +174,7 @@ int daObjWc_Mizu_c::Behavior()
     if (mPosY != mPrevPosY) {
         /* +0x74 is mCamSpacePosX; named &mCamSpacePosX / mSoundID CSE (size-DIFF).
            Sound.h has no PlayLong. */
-        mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-            *(unsigned *)((u8 *)&mSoundID), 3, 0x96, ((u8 *)this) + 0x74, 0);
+        mSoundID = Sound::PlayLong(*(unsigned *)((u8 *)&mSoundID), 3, 0x96, *(const Vector3 *)(((u8 *)this) + 0x74), 0);
     }
 
     {

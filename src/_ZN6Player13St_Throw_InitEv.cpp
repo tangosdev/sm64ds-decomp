@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN6Player13St_Throw_InitEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -8,7 +9,6 @@
  */
 #include "Player.h"
 extern "C" {
-extern int _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned a, unsigned b, const Vector3& v);
 /* SetAnim takes a Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with a scalar in that slot. */
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
@@ -30,7 +30,7 @@ int Player::St_Throw_Init()
 anim30:
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x30, 0x40000000, 0x1000, 0);
 voice:
-        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x13, *(const Vector3*)&mCamSpacePosX);
+        Sound::PlayCharVoice(mCharacter, 0x13, *(const Vector3*)&mCamSpacePosX);
     } else {
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x8a, 0x40000000, 0x1000, 0);
     }

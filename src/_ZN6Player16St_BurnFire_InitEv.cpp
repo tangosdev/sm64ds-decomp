@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN6Player16St_BurnFire_InitEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
@@ -8,7 +9,6 @@ extern "C" {
    registers to the stack. It stays an extern "C" declaration with a scalar in
    that slot. */
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
-extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int charID, unsigned int soundID, const Vector3* pos);
 }
 
 int Player::St_BurnFire_Init()
@@ -31,6 +31,6 @@ int Player::St_BurnFire_Init()
     mStateWork = 0;
     /* mCamSpacePosX/Y/Z are three consecutive words, which is the Vector3 the
        sound wants; dActor_c.h declares them individually rather than as one. */
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x23, (const Vector3*)&mCamSpacePosX);
+    Sound::PlayCharVoice(mCharacter, 0x23, *(const Vector3 *)&mCamSpacePosX);
     return 1;
 }

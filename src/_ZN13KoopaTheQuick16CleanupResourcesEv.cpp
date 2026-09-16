@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN13KoopaTheQuick16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -27,6 +28,6 @@ int KoopaTheQuick::CleanupResources()
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e03c);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e02c);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e004);
-    if (mIsRacing) _ZN5Sound22StopLoadedMusic_Layer2Ev();
+    if (mIsRacing) Sound::StopLoadedMusic_Layer2();
     return 1;
 }

@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN9dScDSMT_c8BehaviorEv
 /* recovered: named members + real C++ method */
 /* dScDSMT_c::Behavior() -- vtable slot 6. Pumps the download-play state
@@ -26,7 +27,7 @@ s32 dScDSMT_c::Behavior()
     int result;
 
     if (data_ov007_02103260 >= 0 && DecIfAbove0_Short(&data_ov007_02104c28) == 0) {
-        _ZN5Sound22LoadAndSetMusic_Layer1Ei(data_ov007_02103260);
+        Sound::LoadAndSetMusic_Layer1(data_ov007_02103260);
         data_ov007_02103260 = -1;
     }
 

@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN15dScMgSnowball_c8BehaviorEv
 #include "decl_common.h"
 #include "dScMgSnowball_c.h"
@@ -224,7 +225,7 @@ s32 dScMgSnowball_c::Behavior()
         if (I(0xab3c) - I(0xaba0) < (I(0xba04) << 12) + 0x10000) {
             func_ov004_020adb1c(I(0xb9e0));
             I(0xb9f4) = 2;
-            _ZN5Sound12PlayBank2_2DEj(0x10e);
+            Sound::PlayBank2_2D(0x10e);
         }
         break;
 

@@ -39,13 +39,6 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
-/* func_ov102_0214b248 reaches Sound::PlayLong, which include/Sound.h does not
-   declare yet.  Re-opening the namespace here is additive: it does not restate
-   anything the header already has. */
-namespace Sound {
-unsigned int PlayLong(unsigned int, unsigned int, unsigned int, Vector3 const &, short);
-}
-
 /* func_ov102_0214bf64's own view of the object.  It reaches fifteen fields by
    name through a shadow struct rather than through daBmb_c, and it is kept that
    way: the member is byte-matched in that spelling.  The tags are uniquified

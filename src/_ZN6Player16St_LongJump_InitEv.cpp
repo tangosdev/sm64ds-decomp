@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN6Player16St_LongJump_InitEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -16,8 +17,6 @@ extern void func_ov002_020e2ad0(void* c);
 /* SetAnim takes a Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with a scalar in that slot. */
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* self, unsigned int a, int b, int c, unsigned int d);
-extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, Vector3 const & v);
-extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 const & v);
 }
 
 int Player::St_LongJump_Init()
@@ -48,10 +47,10 @@ int Player::St_LongJump_Init()
     /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
        individually rather than as one Vector3. */
     if (mIsMetal == 0) {
-        _ZN5Sound9PlayBank0EjRK7Vector3((u32)mGroundSoundType + 0x30, *(const Vector3*)&mCamSpacePosX);
+        Sound::PlayBank0((u32)mGroundSoundType + 0x30, *(const Vector3*)&mCamSpacePosX);
     } else {
-        _ZN5Sound9PlayBank0EjRK7Vector3(0xa0, *(const Vector3*)&mCamSpacePosX);
+        Sound::PlayBank0(0xa0, *(const Vector3*)&mCamSpacePosX);
     }
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 4, *(const Vector3*)&mCamSpacePosX);
+    Sound::PlayCharVoice(mCharacter, 4, *(const Vector3*)&mCamSpacePosX);
     return 1;
 }

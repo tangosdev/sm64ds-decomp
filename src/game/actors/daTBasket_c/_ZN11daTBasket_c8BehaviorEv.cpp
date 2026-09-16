@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN11daTBasket_c8BehaviorEv
 /* Vtable slot 6. The cage bounces: a ground hit halves the rise speed and
  * kicks dust, while airborne frames trail secret sparkles (effect 0x119).
@@ -13,7 +14,6 @@
  * func_ov063_021169c4 is this class's own (only caller) but enrolled
  * separately; see daTBasket_c.h. */
 extern "C" {
-int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(dActor_c *actor, u16 *timer);
 unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     int x, int y, int z, const void *dir, void *callback);
@@ -26,7 +26,7 @@ int daTBasket_c::Behavior()
     int secretDone = 1;
 
     if (mMuteSecretSound == 0)
-        secretDone = _ZN5Sound15PlaySecretSoundEP8dActor_cPt(this, (u16 *)&mSoundTimer);
+        secretDone = Sound::PlaySecretSound((dActor_c *)this, (u16 *)&mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
         int vertSpeed = mVertSpeed;

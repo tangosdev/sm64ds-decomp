@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN6Player19St_GroundPound_MainEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -12,13 +13,11 @@
 
 extern "C" {
 void _ZN6Player7SetAnimEji5Fix12IiEj(void* self, unsigned int anim, int a, int b, unsigned int c);
-void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, const Vector3* v);
 void func_ov002_020ef2a4(void* c, void* arg);
 void func_ov002_020c2f64(void* c);
 void func_ov002_020c0364(void* c, u32 arg);
 int func_ov002_020e2c84(void* self);
 void func_ov002_020dd908(void* sb);
-void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3* v);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_0200d8c8(void* cam, const void* v, int strength);
 void func_ov002_020dbc94(void* c);
@@ -55,7 +54,7 @@ int Player::St_GroundPound_Main()
                 if (mIsMega != 0) anim = 0xa1;
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, anim, 0x40000000, 0x1000, 0);
                 mVertSpeed = -0x32000;
-                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x15, (const Vector3*)&mCamSpacePosX);
+                Sound::PlayCharVoice(mCharacter, 0x15, *(const Vector3 *)&mCamSpacePosX);
                 mPeakY = mPosY;
             }
         }
@@ -83,9 +82,9 @@ int Player::St_GroundPound_Main()
                     return 1;
                 func_ov002_020dd908(this);
                 if (mIsMega != 0) {
-                    _ZN5Sound9PlayBank0EjRK7Vector3(0xd3, (const Vector3*)&mCamSpacePosX);
+                    Sound::PlayBank0(0xd3, *(const Vector3 *)&mCamSpacePosX);
                 } else {
-                    _ZN5Sound9PlayBank0EjRK7Vector3((u32)mGroundSoundType + 0x90, (const Vector3*)&mCamSpacePosX);
+                    Sound::PlayBank0((u32)mGroundSoundType + 0x90, *(const Vector3 *)&mCamSpacePosX);
                 }
                 {
                     Vector3 v;

@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 #include "types.h"
 // @symbol _ZN10PyramidTop8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -6,7 +7,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PyramidTop.h"
 extern "C" {
-extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* actor, void* pt);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int bank, void* pos);
 }
 
@@ -20,14 +20,14 @@ int PyramidTop::Behavior()
         }
         break;
     case 1:
-        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (void*)((char*)&mSoundTimer));
+        Sound::PlaySecretSound((dActor_c *)(((char*)this)), (u16 *)(((char*)&mSoundTimer)));
         if (mStateTimer == 0) {
             _ZN5Sound9PlayBank3EjRK7Vector3(0x4b, (void*)((char*)&mCamSpacePosX));
         }
         func_ov024_02111350(((char*)this));
         break;
     case 2:
-        if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (void*)((char*)&mSoundTimer))) {
+        if (Sound::PlaySecretSound((dActor_c *)(((char*)this)), (u16 *)(((char*)&mSoundTimer)))) {
             _ZN5Sound9PlayBank3EjRK7Vector3(0x4c, (void*)((char*)&mCamSpacePosX));
             func_ov024_021112c0(((char*)this));
         } else {

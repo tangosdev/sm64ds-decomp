@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN11dScMiniGm_c8BehaviorEv
 /* recovered: named members + real C++ method */
 /* dScMiniGm_c::Behavior() -- vtable slot 6. Runs the minigame-menu frame: a
@@ -14,7 +15,6 @@
 extern "C" {
 int func_02012790(int);
 int RandomIntInternal(int *seed);
-void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
 
 extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
@@ -52,7 +52,7 @@ s32 dScMiniGm_c::Behavior()
         if (mExitTimer == 1) {
             _ZN8dScene_c20SetAndStopColorFaderEv();
             ExitMinigameMenu();
-            _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
+            Sound::StopLoadedMusic_Layer1(0x1e);
             mExiting = 1;
             return 1;
         }

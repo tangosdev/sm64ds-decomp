@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN12dScStarSel_c13InitResourcesEv
 /* recovered: real C++ method over include/dScStarSel_c.h -- vtable slot 0.
  *
@@ -24,8 +25,6 @@
 
 extern "C" {
 void Enable3dEngines(void);
-void _ZN5Sound16LoadInitialGroupEi(int);
-void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int);
 void _ZN2GX12SetBankForBGEt(u16);
 void _ZN2GX13SetBankForOBJEt(u16);
 void _ZN2GX15SetBankForSubBGEt(u16);
@@ -84,12 +83,12 @@ s32 dScStarSel_c::InitResources()
     LoadTextNarcs();
     LoadArchive(0);
     Enable3dEngines();
-    _ZN5Sound16LoadInitialGroupEi(3);
+    Sound::LoadInitialGroup(3);
     if (data_02092110 == 0x24 || data_02092110 == 0x26 || data_02092110 == 0x28) {
-        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x24);
+        Sound::LoadAndSetMusic_Layer1(0x24);
         func_0201277c(0xB8);
     } else {
-        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x16);
+        Sound::LoadAndSetMusic_Layer1(0x16);
     }
     REG16(0x4000304) |= 0x8000;
     ::Initialise3dGraphics(0);

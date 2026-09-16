@@ -1,4 +1,5 @@
 //cpp
+#include "Sound.h"
 // @symbol _ZN9BootScene13InitResourcesEv
 /* BootScene::InitResources -- vtable slot 0, arm9 0x02005a58.
  *
@@ -99,7 +100,7 @@ s32 BootScene::InitResources()
     func_020233f4();
 
     *(u16 *)(&data_0209f5e8 + 0xc) = 0x7fff;
-    _ZN5Sound6Play2DEjj(4, 0);
+    Sound::Play2D(4, 0);
     data_0209f1e8 = (u8)func_0201a244((void *)func_0201a2f8, 0, 0xf, 0, 0x1000);
     return 1;
 }

@@ -33,7 +33,6 @@
  * - func_020393a4 / func_02039394 store clip ranges on mMeshCollider
  *   (no setter).
  * - func_ov002_020f0438 linked-actor helper (Behavior).
- * - Sound::PlayLong has no header declaration.
  * - OnPushed fall-off-the-end return: adding `return 0;` emits mov r0,#0
  *   and DIFFs (measured 2026-08-22).
  */
@@ -68,10 +67,6 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *a, int b, int c, void *d, int e);
 extern SharedFilePtr data_ov002_0210df9c;
 extern SharedFilePtr data_ov002_0210df94;
-}
-
-namespace Sound {
-u32 PlayLong(u32 handle, u32 bank, u32 soundId, const Vector3 &pos, s16 pitch);
 }
 
 /* -------------------------------------------------------------------------- */
