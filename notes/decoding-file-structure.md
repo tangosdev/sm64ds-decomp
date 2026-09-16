@@ -19,7 +19,7 @@ source file as one `complete` span (one object emits one contiguous
 
 There is no lookup tool; scan the owning overlay's `delinks.txt` for
 the span containing the address:
-```python
+```sh
     python3 -c "
     import re
     addr = 0x020ec100
