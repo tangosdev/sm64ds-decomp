@@ -12,14 +12,14 @@ headers.
 [delinks.txt](../config/arm9/overlays/ov002/delinks.txt) enrolls each
 source file as one `complete` span (one object emits one contiguous
 `.text`):
-
+```sh
     grep -A2 "src/game/actors/d_a_tree.cpp" config/arm9/overlays/ov002/delinks.txt
-
+```
 ## ROM address → source file
 
 There is no lookup tool; scan the owning overlay's `delinks.txt` for
 the span containing the address:
-
+```python
     python3 -c "
     import re
     addr = 0x020ec100
@@ -33,7 +33,7 @@ the span containing the address:
         if m and cur and int(m.group(1), 16) <= addr < int(m.group(2), 16):
             print(cur, ln.strip())
     "
-
+```
 ## Function → ordinal and legacy shard
 
 The old `[N] address file` header tables are the TU manifest rows:
@@ -47,9 +47,9 @@ compiler-numbered symbols in these rows honest.
 
 `symbols.txt` carries one row per function with its size, so the old
 per-function `name, address, size` banners are a grep away:
-
+```sh
     grep "_ZN8daTree_c6RenderEv" config/arm9/overlays/ov002/symbols.txt
-
+```
 ## Key function and vague linkage
 
 Which TU emits a class's `_ZTV`/`_ZTI`/`_ZTS` group, and why, is
@@ -80,8 +80,9 @@ the code they sat on.
 row per `_ZTV*` / `_ZTI*` / `_ZTS*` with its address.
 [actor-vtables.md](actor-vtables.md) explains how to read them
 (address point, slot 0, base inference):
-
+```sh
     grep "_ZTV8daTree_c" config/arm9/overlays/ov002/symbols.txt
+```
 
 ## Slot numbers
 
@@ -95,9 +96,9 @@ the annotations.
 
 Sources carry `// @symbol` markers above each function, backed by the
 same TU manifests:
-
+```sh
     grep -rn "@symbol _ZN8daTree_c6RenderEv" src/
-
+```
 ## Class size
 
 The TU's `classInit` factory carries the measured allocation size as
@@ -114,9 +115,9 @@ tables and "the decomp used to call it X" notes is commit history.
 `relocs.txt` next to each overlay's `symbols.txt` lists the expected
 relocations (`from:`/`kind:`/`to:`/`module:`) — the file behind every
 old "a relocation the ROM build checks" note:
-
+```sh
     grep "0x020ec004" config/arm9/overlays/ov002/relocs.txt
-
+```
 ## Field status in structures
 
 `unk_` is an unidentified field, `pad_` an explicit observed gap;
