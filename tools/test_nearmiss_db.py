@@ -361,11 +361,49 @@ class NearMissDbTests(unittest.TestCase):
         self.assertEqual(db[KEY]["divergences"], 2)      # untouched
 
     def test_set_divergence_drops_cand_size_not_backed_by_a_fresh_compile(self):
+        # Unstamped row: the re-stamp below moves it from no evaluator to the live one,
+        # so a size measured elsewhere must not inherit that stamp.
         self.write_rows(row(2, cand_size=0x164))
         NDB.set_divergence(argparse.Namespace(
             name="func_ov004", divergences=3, evidence="x"))
         db, _ = self.load_quiet()
         self.assertNotIn("cand_size", db[KEY])
+
+    def test_set_divergence_drops_cand_size_when_the_stamp_actually_changes(self):
+        # Same rule with an explicit foreign stamp rather than an absent one.
+        self.write_rows(row(2, cand_size=0x164, evaluator="1.2/sp2p3|m1"))
+        NDB.set_divergence(argparse.Namespace(
+            name="func_ov004", divergences=3, evidence="x"))
+        db, _ = self.load_quiet()
+        self.assertNotIn("cand_size", db[KEY])
+
+    def test_set_divergence_keeps_cand_size_when_the_stamp_is_unchanged(self):
+        # cand_size is the assembled size of the row's OWN c_source, and set_divergence
+        # never touches c_source, so when the row is already stamped by the live
+        # evaluator the stored size is still exactly as valid as before. Dropping it
+        # here destroyed good data: _size_gap falls back to 1<<30, so a fully measured
+        # row starts ranking as though it had never been compiled, and nothing
+        # downstream can re-score the seed against the target's exact size.
+        fp = NDB.current_fingerprint()
+        self.assertIsNotNone(fp, "test needs the live evaluator fingerprint")
+        self.write_rows(row(2, cand_size=0x164, evaluator=fp))
+        NDB.set_divergence(argparse.Namespace(
+            name="func_ov004", divergences=3, evidence="x"))
+        db, _ = self.load_quiet()
+        self.assertEqual(db[KEY]["cand_size"], 0x164)
+        self.assertEqual(db[KEY]["divergences"], 3)
+        self.assertEqual(NDB._size_gap(db[KEY]), 0)   # 0x164 target, 0x164 candidate
+
+    def test_set_divergence_keeps_cand_size_when_there_is_no_compile_stack(self):
+        # On a bare interpreter the evaluator is unknown, so no re-stamp happens; with
+        # nothing to misattribute the size to, there is no reason to discard it.
+        self.write_rows(row(2, cand_size=0x164, evaluator="1.2/sp2p3|m1"))
+        with mock.patch.object(NDB, "current_fingerprint", return_value=None):
+            NDB.set_divergence(argparse.Namespace(
+                name="func_ov004", divergences=3, evidence="x"))
+        db, _ = self.load_quiet()
+        self.assertEqual(db[KEY]["cand_size"], 0x164)
+        self.assertEqual(db[KEY]["evaluator"], "1.2/sp2p3|m1")   # not re-stamped
 
     def test_is_manual_false_by_default(self):
         self.assertFalse(NDB._is_manual(row(10)))

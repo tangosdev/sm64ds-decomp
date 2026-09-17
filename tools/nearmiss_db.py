@@ -761,8 +761,19 @@ def set_divergence(args):
         r["manual_divergences"] = True
         r["manual_evidence"] = args.evidence
         r["manual_date"] = str(datetime.date.today())
-        r.pop("cand_size", None)     # the manual count is not backed by a fresh compile
+        # cand_size is the assembled size of THIS row's c_source, and this command
+        # never touches c_source (see the docstring), so correcting the divergence
+        # count cannot invalidate it. What can is the evaluator re-stamp below: a size
+        # measured under one evaluator must not end up wearing another's stamp. So drop
+        # it only when the stamp actually CHANGES, and keep it when the row was already
+        # scored under the evaluator we are about to claim. Dropping it unconditionally
+        # destroyed good data: _size_gap then reads 1<<30, so the row ranks as if it had
+        # never been measured, export-close emits cand_size null, and nothing
+        # downstream can re-score the seed against the target's exact size -- scoring a
+        # seed at the wrong size is the defect this field exists to prevent.
         fp = current_fingerprint()
+        if fp and r.get("evaluator") != fp:
+            r.pop("cand_size", None)
         if fp:
             r["evaluator"] = fp
         save_db(db)
