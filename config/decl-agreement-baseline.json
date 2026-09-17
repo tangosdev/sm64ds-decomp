@@ -2382,7 +2382,7 @@
    "src/_ZN10DonutBlock13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN10RockPillar8BehaviorEv.cpp": ["return:int"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN15FireSeaElevator8BehaviorEv.cpp": ["return:int"],
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["return:int"],
@@ -2411,7 +2411,7 @@
   },
   "_ZN10dBgActor_c21UpdateModelPosAndRotYEv": {
    "src/_ZN10DonutBlock13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN15FireSeaElevator8BehaviorEv.cpp": ["return:int"],
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["return:int"],
@@ -2540,7 +2540,7 @@
    "src/_ZN11PyramidStep13InitResourcesEv.cpp": ["param:#3 Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/_ZN12FortressWall13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["param:#3 Matrix4x3 *"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int", "return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int", "return:int"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["param:#2 int"],
    "src/_ZN16SpinningPlatform13InitResourcesEv.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
@@ -3325,7 +3325,7 @@
    "src/func_020510a4.c": ["param:#1 int", "return:void"]
   },
   "_ZN18TextureTransformer6UpdateER15ModelComponents": {
-   "src/_ZN13BasementWater6RenderEv.cpp": ["param:#2 void *"],
+   "src/_ZN14daObjC0Water_c6RenderEv.cpp": ["param:#2 void *"],
    "src/_ZN8Goomboss6RenderEv.cpp": ["param:#2 void *"],
    "src/_ZN9TinyWater6RenderEv.cpp": ["param:#2 void *"],
    "src/_ZN9Whirlpool6RenderEv.cpp": ["param:#2 void *"],
@@ -3334,7 +3334,7 @@
   },
   "_ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File": {
    "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp": ["arity:2"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["arity:2", "return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["arity:2", "return:int"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["arity:2"],
    "src/_ZN5Stage23LoadTextureTransformersEv.cpp": ["arity:2"],
    "src/_ZN7Tornado13InitResourcesEv.cpp": ["arity:2"],
@@ -3347,7 +3347,7 @@
   },
   "_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj": {
    "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp": ["param:#5 unsigned int"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["param:#5 unsigned int", "return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["param:#5 unsigned int", "return:int"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN5Stage23LoadTextureTransformersEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN7Tornado13InitResourcesEv.cpp": ["param:#5 unsigned int"],
@@ -3368,6 +3368,7 @@
    "src/func_ov006_020c2848.cpp": ["param:#5 unsigned int"],
    "src/func_ov006_020cecc0.cpp": ["param:#2 BTA_File &", "param:#5 unsigned int"],
    "src/func_ov074_02121a4c.cpp": ["param:#5 unsigned int"],
+   "src/game/actors/d_a_obj_c0_water.cpp": ["param:#5 unsigned int"],
    "src/game/actors/d_a_obj_ks_water.cpp": ["param:#5 unsigned int"],
    "src/game/actors/d_a_obj_mc_water.cpp": ["param:#5 unsigned int"],
    "src/game/actors/d_a_obj_td_water.cpp": ["param:#2 BTA_File &", "param:#5 unsigned int"],
@@ -4305,7 +4306,7 @@
    "src/_ZN12HauntedChair13InitResourcesEv.cpp": ["arity:1", "return:BMD_File *"],
    "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["arity:1", "return:BMD_File *"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["arity:1", "return:BMD_File *"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["arity:1", "return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["arity:1", "return:void"],
@@ -4579,7 +4580,7 @@
    "src/func_ov100_02144730.cpp": ["param:#3 void *", "return:void"]
   },
   "_ZN5Sound15PlaySecretSoundEP8dActor_cPt": {
-   "src/_ZN13BasementWater8BehaviorEv.cpp": ["return:void"]
+   "src/_ZN14daObjC0Water_c8BehaviorEv.cpp": ["return:void"]
   },
   "_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE": {
    "src/_ZN7Message11PrepareTalkEv.cpp": ["return:void"],
@@ -4665,7 +4666,7 @@
    "src/_ZN10SlidingIce8BehaviorEv.cpp": ["param:#4 void *", "param:#5 unsigned int"],
    "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#4 const Vector3 *", "return:unsigned int"],
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#4 const void *", "return:unsigned int"],
-   "src/_ZN13BasementWater8BehaviorEv.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
+   "src/_ZN14daObjC0Water_c8BehaviorEv.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/_ZN13SnowmanBreath8BehaviorEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#4 const Vector3 *", "param:#5 unsigned int"],
    "src/_ZN6Player16St_BurnFire_MainEv.cpp": ["param:#4 const void *", "param:#5 unsigned int"],
@@ -4712,6 +4713,7 @@
    "src/func_ov100_0214272c.cpp": ["param:#4 void *", "param:#5 unsigned int"],
    "src/func_ov100_02142918.cpp": ["param:#1 void *", "param:#4 void *", "param:#5 unsigned int", "return:void *"],
    "src/func_ov102_0214c84c.c": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
+   "src/game/actors/d_a_obj_c0_water.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_obj_ks_water.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_obj_wc_mizu.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_obj_wc_obj05.cpp": ["param:#4 void *", "param:#5 unsigned int"],
@@ -5553,7 +5555,7 @@
    "src/_ZN11VolcanoRing13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN12FortressWall13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["arity:1", "return:KCL_File *"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["arity:1", "return:int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["arity:1", "return:void *"],
@@ -7095,7 +7097,7 @@
    "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN12daDossyCap_c13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN13BasementWater13InitResourcesEv.cpp": ["param:#2 int"],
+   "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp": ["param:#2 int"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 int"],
@@ -11513,11 +11515,23 @@
   "data_ov010_02112d64": {
    "src/__sinit_ov010_0211215c.c": ["return:int []"]
   },
+  "data_ov012_02111c24": {
+   "src/game/actors/d_a_obj_c0_water.cpp": ["return:BTA_File"]
+  },
+  "data_ov012_02111c90": {
+   "src/game/actors/d_a_obj_c0_water.cpp": ["return:CLPS_Block"]
+  },
   "data_ov012_021124a0": {
    "src/game/actors/d_a_obj_c0_switch.cpp": ["return:SharedFilePtr"]
   },
   "data_ov012_021124a8": {
    "src/game/actors/d_a_obj_c0_switch.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov012_021124c8": {
+   "src/game/actors/d_a_obj_c0_water.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov012_021124d0": {
+   "src/game/actors/d_a_obj_c0_water.cpp": ["return:SharedFilePtr"]
   },
   "data_ov013_021116b0": {
    "src/actors/daObjClock_c.cpp": ["return:SharedFilePtr * []"]

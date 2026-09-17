@@ -231,7 +231,7 @@ daObjBk_Lift_c	DONE	include\TowerStep.h  [alias: header uses pre-rename name]	dB
 daObjBk_Rotebar_c	DONE	include\daObjBk_Rotebar_c.h	dBgActor_c	0	ov015	6
 daObjBlockL_c	DONE	include\BigBrickBlock.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov002	14
 daObjBlockS_c	DONE	include\Crate.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov098	10
-daObjC0Water_c	DONE	include\BasementWater.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov012	6
+daObjC0Water_c	DONE	include\daObjC0Water_c.h	dBgActor_c	0	ov012	6
 daObjC0_Switch_c	DONE	include\daObjC0_Switch_c.h	dBgActor_c	0	ov012	7
 daObjC1_Trap_c	DONE	include\daObjC1_Trap_c.h	dBgActor_c	0	ov010	15
 daObjCannonShutter_c	DONE	include\daObjCannonShutter_c.h	dBgActor_c	0	ov002	6

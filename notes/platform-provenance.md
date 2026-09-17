@@ -59,7 +59,7 @@ non-`dBgActor_c` vtable store each, so no intermediate — and each places a
 | header name | RTTI name | member at 0x320 |
 |---|---|---|
 | `PyramidTop`    | `daObjDlPyramid_c` | `Model` |
-| `BasementWater` | `daObjC0Water_c`   | `TextureTransformer` |
+| `daObjC0Water_c` | `daObjC0Water_c`   | `TextureTransformer` |
 | `TowerStep`     | `daObjBk_Lift_c`   | `ShadowModel` |
 | `WallSign`      | `daObjKanban_c`    | `dCcAcPos_c` |
 
