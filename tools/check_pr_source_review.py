@@ -284,7 +284,7 @@ def check_pr(repo, number, publish=False):
         report = {"result": "fail", "summary": "Source review could not be established: " + str(exc)}
     report.update(pr=number, head=head, base=base, base_ref=branch,
                   live_tip=window[0] if window else None, base_window=window,
-                  pr_base=pr["base"].get("sha"), queue_commit=state_sha)
+                  pr_base=pr["base"].get("sha"), queue_commit=state_sha, published=False)
     if not publish and report["result"] != "pass":
         return report
     current_head_confirmed = False
@@ -305,7 +305,10 @@ def check_pr(repo, number, publish=False):
                           observed_base=current_base, observed_base_ref=current_branch)
     except (RuntimeError, sr.ReviewError, ValueError, KeyError, TypeError) as exc:
         report.update(result="fail", summary="Final review inputs could not be confirmed: " + str(exc))
-    if publish and current_head_confirmed:
+    # Only a verdict its check run carries is actually reported; one that could
+    # not be published speaks for nothing. main() keys its exit code on this.
+    report["published"] = bool(publish and current_head_confirmed)
+    if report["published"]:
         api(f"repos/{repo}/check-runs", {
             "name": "Source review", "head_sha": head, "status": "completed",
             "conclusion": "success" if report["result"] == "pass" else "failure",
@@ -328,7 +331,15 @@ def main(argv=None):
             f"repos/{args.repo}/pulls?state=open&per_page=100", paginate=True) for pr in page]
         reports = [check_pr(args.repo, n, args.publish) for n in numbers]
         print(json.dumps(reports, indent=2))
-        return int(any(r["result"] == "fail" for r in reports))
+        # A published failure is already reported by its own "Source review"
+        # check run. Failing the job too states the same verdict a second
+        # time, doubling the red marks on every PR without adding signal:
+        # measured 2026-09-17, 17 open PRs carried 34 red checks for 17
+        # distinct verdicts. A read-only run has no check run to speak for
+        # it, and a publish that could not create one is an unreported
+        # failure, so both of those still exit nonzero.
+        return int(any(r["result"] == "fail" and not r.get("published")
+                       for r in reports))
     except (RuntimeError, ValueError, KeyError, TypeError) as exc:
         print("Source review unavailable: " + str(exc), file=sys.stderr)
         return 1

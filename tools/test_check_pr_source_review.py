@@ -225,6 +225,19 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertTrue(all("/commits/" in call for call in tail[:-1]))
         self.assertTrue(tail[-1].endswith("/check-runs"))
 
+    def test_report_records_whether_the_verdict_reached_a_check_run(self):
+        """main() keys its exit code on this, so it has to track publication."""
+        tip = "e" * 40
+        published, _, posts, _ = self.run_fixture([tip, tip], review_base=tip, publish=True)
+        self.assertTrue(published["published"])
+        self.assertEqual(len(posts), 1)
+        readonly, _, posts, _ = self.run_fixture([tip, tip], review_base=tip)
+        self.assertFalse(readonly["published"])
+        self.assertEqual(posts, [])
+        blocked, _, posts, _ = self.run_fixture([BASE], publish=True, final_head="f" * 40)
+        self.assertFalse(blocked["published"])
+        self.assertEqual(posts, [])
+
     def test_current_base_review_can_publish_despite_retained_pr_base_metadata(self):
         tip = "e" * 40
         result, _, posts, _ = self.run_fixture([tip, tip], review_base=tip, publish=True)
@@ -711,6 +724,44 @@ class StableTargetTest(unittest.TestCase):
         self.assertEqual(result["base"], self.SOURCE)
         self.assertEqual(result["live_tip"], self.BOT1)
         self.assertEqual(result["base_window"], [self.BOT1, self.SOURCE])
+
+
+class ExitCodeTest(unittest.TestCase):
+    """A published verdict is reported once, by its own check run.
+
+    The job conclusion used to restate it, so every failing PR carried two red
+    marks for one finding -- measured 2026-09-17, 17 open PRs and 34 red checks
+    for 17 distinct verdicts. Only a failure with no check run to speak for it,
+    a read-only run or a publication that could not be created, still exits
+    nonzero.
+    """
+
+    def run_main(self, reports, argv, numbers=None):
+        replies = iter(reports)
+        pages = [[{"number": n} for n in (numbers or [2447])]]
+        with patch.object(gate, "api", return_value=pages), patch.object(
+                gate, "check_pr", side_effect=lambda *a, **k: next(replies)):
+            return gate.main(argv)
+
+    def test_published_failure_does_not_also_fail_the_job(self):
+        self.assertEqual(
+            self.run_main([{"result": "fail", "published": True}], ["--publish"]), 0)
+
+    def test_unpublished_failure_still_exits_nonzero(self):
+        for report in ({"result": "fail", "published": False}, {"result": "fail"}):
+            for argv in (["--publish"], []):
+                with self.subTest(report=report, argv=argv):
+                    self.assertEqual(self.run_main([dict(report)], argv), 1)
+
+    def test_passing_verdict_exits_zero_either_way(self):
+        self.assertEqual(
+            self.run_main([{"result": "pass", "published": True}], ["--publish"]), 0)
+        self.assertEqual(self.run_main([{"result": "pass"}], []), 0)
+
+    def test_one_unpublished_failure_among_published_ones_still_exits_nonzero(self):
+        reports = [{"result": "fail", "published": True},
+                   {"result": "fail", "published": False}]
+        self.assertEqual(self.run_main(reports, ["--publish"], numbers=[2447, 2448]), 1)
 
 
 if __name__ == "__main__":
