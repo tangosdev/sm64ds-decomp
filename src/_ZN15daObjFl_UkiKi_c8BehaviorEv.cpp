@@ -1,5 +1,5 @@
 //cpp
-#include "LavaPlank.h"
+#include "daObjFl_UkiKi_c.h"
 
 struct SinCosEntry { s16 sin, cos; };
 extern "C" {
@@ -9,7 +9,7 @@ extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
 }
 extern SinCosEntry data_02082214[];
 
-int LavaPlank::Behavior()
+int daObjFl_UkiKi_c::Behavior()
 {
     int val = (u16)mPhaseAngle >> 4;
     mPosY = data_02082214[val].sin * (s16)0x1e + mOriginalPosY;

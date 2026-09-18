@@ -224,7 +224,7 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 | --- | --- | --- |
 | 0x110 | `mCapBank` | `src/_ZN11dCapEnemy_c6AddCapEj.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp` picks marker bit 3 vs bit 7 of `mCapId` by it, and `src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp` re-binds the model only for bank 0. |
 | 0x111 | `mIsDormant` | `src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `src/_ZN7daKrb_c6RenderEv.cpp` draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
-| 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of [func_ov001_020ab228](../src/func_ov001_020ab228.c), the cap-icon setup. |
+| 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of [func_ov001_020ab228](../src/actors/dCapIcon_c.cpp), the cap-icon setup. |
 
 ---
 

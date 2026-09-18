@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9LavaPlank13InitResourcesEv
+// @symbol _ZN15daObjFl_UkiKi_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "LavaPlank.h"
+#include "daObjFl_UkiKi_c.h"
 typedef short s16;
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -16,7 +16,7 @@ extern int func_020393d4(void*, void*);
 extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
-int LavaPlank::InitResources()
+int daObjFl_UkiKi_c::InitResources()
 {
   void* mdl;
   void* kcl;
