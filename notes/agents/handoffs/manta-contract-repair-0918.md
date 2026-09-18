@@ -84,3 +84,17 @@ committed-candidate results are recorded separately in verification evidence;
 do not infer a pending result from this handoff. There is no shared-header edit
 or file move, so no new header consumer expansion or metadata ownership proof
 is required for this narrow change. Private PR validation remains pending.
+
+
+## Independent review rework
+
+The first candidate was rejected for two additional retained return-contract
+errors. `PATHPTR-2729-05` identified that `func_ov090_02132ac4` returns `int`,
+not `void`; `PATHPTR-2729-06` identified the same mistake for
+`ApproachLinear(short&, short, short)`. Both callers discard the return value,
+which is why byte equality alone did not reveal either incorrect declaration.
+This revision corrects both declarations to match their definitions. It also
+restores the `char*` parameter of `func_ov090_02132b14` and the const input
+pointers of the two vector-angle helpers. Fresh committed-candidate results
+belong to the separate rework verification evidence. The initial review and its
+findings remain in the queue history; the first candidate was not accepted.

@@ -28,7 +28,7 @@ struct dActor_c;
 
 extern "C" {
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, const Vector3& v, int b, int c, unsigned int d, unsigned int e);
-void func_ov090_02132ac4(unsigned char* c, void* p);
+int func_ov090_02132ac4(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov090_02134524;
 extern SharedFilePtr data_ov002_0210da10;
