@@ -18,20 +18,21 @@
  * nested {r, t} spelling never defines. Translation is m[9..11]; the
  * d828 struct copy is the ROM's twelve-word copy (daBmb's note).
  *
+ * This is a promoted translation unit: one delinks entry licenses the
+ * whole .text run 0x0211d4b8..0x0211e1c0, seventeen functions, and the
+ * manifest entry ov063/daPiano_c carries the licenses.
+ *
  * deslop leftovers:
  * - Factory stays hand-rolled (see the comment above it): `return new
- *   daPiano_c()` matches but emits unlicensed dBgActor_cD2/Vector3D1
- *   copies the multi-symbol path refuses. daPiano_c is not a promoted
- *   TU, so it owns no manifest under config/tu_manifest.d/ov063 -- and a
- *   TU manifest is the only place a deadstrip-duplicate license can live.
- *   (The overlay itself does have manifests; ov063 carries
- *   daObjTh_Fall_Block_c.) Packaging, not a byte wall. daWanwan-consistent.
- * - D0/D1 stay split (one line each): the vtable is a symbols.txt blob
- *   (_ZTV9daPiano_c), and defining ~daPiano_c here would emit a
- *   competing _ZTV (key function) the fail-closed path refuses. Same
- *   wall as the factory.
+ *   daPiano_c()` matches the factory's own bytes but instantiates
+ *   dBgActor_cD2 and Vector3D1 copies on top of them. Promotion now gives
+ *   this class a manifest that could license those, so the wall is gone --
+ *   but converting the factory is a codegen change this promotion did not
+ *   measure, and promotion deliberately changes no codegen. Left as it is,
+ *   for a follow-up that carries its own byte proof. daWanwan-consistent.
  * - __sinit_ov063_0211e5fc stays split: delinks places one range per
- *   file, and nothing owns .text plus .init.
+ *   file, and nothing owns .text plus .init. It keeps its own entry in
+ *   config/arm9/overlays/ov063/delinks.txt and is NOT in this TU's range.
  * - ModelAnim::SetAnim / dBgCh_Actr::Init / dCcAcPos_c::Init /
  *   dBgW_KcMbg::SetFile stay mangled free declarations (wall 6az: the
  *   ROM signatures carry Fix12<int> by value; the header method forms
@@ -57,7 +58,7 @@
  * - func_0201267c (sound 0x106) is unmatched; called by address.
  */
 #include "daPiano_c.h"
-#include "MadPianoResources.h"
+#include "daPiano_c_resources.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 
@@ -95,7 +96,6 @@ void __cxa_vec_ctor(void *array, int count, int stride, void *ctor, void *dtor);
 void _ZN10dCcAcPos_cC1Ev(void *self);
 void _ZN10dCcAcPos_cD1Ev(void *self);
 void _ZN10dBgCh_ActrC1Ev(void *self);
-extern void *_ZTV9daPiano_c;
 }
 
 /* The registry factory. C LINKAGE IS LOAD-BEARING -- the ROM symbol is the
@@ -121,13 +121,21 @@ extern void *_ZTV9daPiano_c;
  * allocation size, vtable identity, and the PIANO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daPiano_c_Spawn. */
+/* Promotion makes this TU the emitter of the class's own vtable, so the vptr
+ * seam is a plain namespace-scope array declaration here rather than an
+ * extern "C" pointer. mwccarm's _ZTV9daPiano_c addresses the vtable OBJECT;
+ * config/arm9/overlays/ov063/symbols.txt records the public address point
+ * 0x0211ed34, eight bytes later. On an int[] that bias is exactly &arr[2], so
+ * the compiler computes it and no relocation is ever hand-edited. */
+extern int _ZTV9daPiano_c[];
+
 // @symbol daPiano_c_classInit
 extern "C" daPiano_c *daPiano_c_classInit()
 {
     daPiano_c *actor = (daPiano_c *)_ZN7fBase_cnwEj(sizeof(daPiano_c));
     if (actor) {
         _ZN10dBgActor_cC2Ev(actor);
-        *(void **)actor = &_ZTV9daPiano_c;
+        *(int *)actor = (int)&_ZTV9daPiano_c[2];
         _ZN9ModelAnimC1Ev(&actor->mModelAnim);
         _ZN11ShadowModelC1Ev(&actor->mShadowModel1);
         _ZN11ShadowModelC1Ev(&actor->mShadowModel2);
@@ -589,3 +597,12 @@ void func_ov063_0211d5f4(daPiano_c *self)
         self, &self->mShadowModel2, &self->mShadowMats[1], 0x80000, 0x50000, 0xf0000, 0xf);
 }
 }
+
+/* _ZN9daPiano_cD1Ev (0x0211d4b8) and _ZN9daPiano_cD0Ev (0x0211d54c) are NOT
+ * written here on purpose, and carry no @symbol marker: the inline destructor
+ * in include/daPiano_c.h emits D1 then D0 -- the cartridge's order -- and no
+ * D2, ahead of every function written below. tools/tiers.py scores both
+ * through that inline definition. Their pre-promotion one-line sources lived
+ * directly under src/ and no longer exist; the manifest entry
+ * config/tu_manifest.d/ov063/daPiano_c.json keeps their full paths in the two
+ * legacy_source rows. */

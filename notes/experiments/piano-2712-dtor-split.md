@@ -3,8 +3,10 @@
 - tested_commit: b19392a93 (cleanup-dapiano at experiment time)
 - compiler: mwccarm 2004/b56 (tools/mwccarm/2004/b56/mwccarm.exe)
 - claim: `src/game/actors/daPiano_c/d_a_piano.cpp:29-32` keep D0/D1 split
-  (one line each in `src/game/actors/daPiano_c/_ZN9daPiano_cD0Ev.cpp` and
-  `.../D1Ev.cpp`) because the vtable is a `symbols.txt` blob
+  (one line each in two per-function sources that sat beside it and no
+  longer exist -- promoting the class absorbed them; the two
+  `legacy_source` rows in `config/tu_manifest.d/ov063/daPiano_c.json`
+  keep their full paths) because the vtable is a `symbols.txt` blob
   (`_ZTV9daPiano_c`) and defining `~daPiano_c` in the TU would emit a
   competing `_ZTV` (key function) the fail-closed path refuses.
   Emission-type experiment.
@@ -96,4 +98,15 @@ _ZTV9daPiano_c type=STT_OBJECT size=0x88 sec=.data[20]
 unlicensed content in text-only multi-symbol object: section[5] .data size 0x8 defines ['_ZTI7fBase_c']; section[7] .data size 0x9 defines ['_ZTS7dBase_c']; section[8] .data size 0x9 defines ['_ZTS7fBase_c']; section[9] .data size 0xa defines ['_ZTS8dActor_c']; section[10] .data size 0xb defines ['_ZTS9daPiano_c']; section[11] .data size 0xc defines ['_ZTI10dBgActor_c']; section[13] .data size 0xc defines ['_ZTI7dBase_c']; section[15] .data size 0xc defines ['_ZTI8dActor_c']; section[17] .data size 0xc defines ['_ZTI9daPiano_c']; section[19] .data size 0xd defines ['_ZTS10dBgActor_c']; section[20] .data size 0x88 defines ['_ZTV9daPiano_c']; section[22] .text size 0x94 defines ['_ZN9daPiano_cD2Ev']; section[24] .text size 0xa8 defines ['_ZN9daPiano_cD0Ev']; section[26] .text size 0x94 defines ['_ZN9daPiano_cD1Ev']
 ```
 
-- verdict: CONSTRAINT SUPPORTED
+- verdict: CONSTRAINT SUPPORTED at the time, SUPERSEDED by the promotion of
+  ov063/daPiano_c. The refusal quoted in the log above is `unlicensed content
+  in text-only multi-symbol object` -- a property of a text-only enrollment
+  with no manifest entry to license the vague-linkage data, not a property of
+  the destructor. A manifest entry licenses those eleven records as
+  `deadstrip-data` against their configured ROM homes, and declaring the
+  destructor inline and empty in `include/daPiano_c.h` -- rather than out of
+  line as the diff above does -- emits D1 then D0, the cartridge's own order,
+  and no D2 at all. All 17 functions then MATCH inside the one TU and
+  objisolate reduces the object cleanly. The out-of-line spelling this note
+  tested is still the wrong one: its own emission log shows D2 and D0 ahead
+  of D1.
