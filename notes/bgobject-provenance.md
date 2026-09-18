@@ -489,7 +489,7 @@ mismatching, 106/106 exact) and `tools/check_src_tu_compiles.py` (72/72).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4dc | `mStarActor` | `src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN13daObjHmBskt_c8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
+| 0x4dc | `mStarActor` | `daObjHmBskt_c::InitResources` in `src/game/actors/d_a_obj_hm_bskt.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `daObjHmBskt_c::Behavior`, in the same TU, writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
 
 In the `#else` C twin, ten offsets already named at exactly those offsets in
 `include/dActor_c.h` were repointed to those names: `mPosX/Y/Z` (0x05c),
@@ -729,7 +729,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | | 0x42b | `mTriggerDelay` | `AfterClsn` fires `func_ov002_020efa54(this, 1)` only when `DecIfAbove0_Byte(&mTriggerDelay)` returns 0 and `mState == 0`. |
 | `daObjWc_Mizu_c` ([ov029](../config/arm9/overlays/ov029/symbols.txt)) | 0x338 | `mUseSpawnPosY` | `InitResources` sets `param1 & 1`, and when it is clear — and only then — overrides `mPosY` from `data_ov029_02112b2c[clock setting]` before snapshotting `mTargetPosY`. |
 | `daObjWanwanShutter_c` ([ov060](../config/arm9/overlays/ov060/symbols.txt)) | 0x31e | `mDisabled` | both `Behavior` and `Render` return immediately while it is nonzero, and nothing else in a matched body touches it. |
-| `LavaPlank` ([ov022](../config/arm9/overlays/ov022/symbols.txt)) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
+| `daObjFl_UkiKi_c` ([ov022](../config/arm9/overlays/ov022/symbols.txt)) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
 `PathLift::mAfterClsnRan` also carried into the `daObjRcCarpet_c::Behavior` member
 in `src/game/actors/d_a_obj_rc_carpet.cpp`, a subclass that reads the inherited field — the
