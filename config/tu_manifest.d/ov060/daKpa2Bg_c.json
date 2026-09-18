@@ -1,0 +1,322 @@
+{
+  "id": "ov060/daKpa2Bg_c",
+  "module": "ov060",
+  "source": "src/actors/daKpa2Bg_c.cpp",
+  "promoted_source": "src/actors/daKpa2Bg_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "PARTIAL PROMOTION. daKpa2Bg_c's contiguous linker run is 0x02117980..0x02117d1c, ten functions (build/tu_map.json, tools/tu_map.py). src/actors/daKpa2Bg_c.cpp licenses only the ROM-ascending prefix 0x02117980..0x02117c30 -- eight of them. The two above the boundary, _ZN10daKpa2Bg_c13InitResourcesEv (0x02117c30) and daKpa2Bg_c_classInit (0x02117cdc), keep their own enrolled shards (src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp and src/d_a_kpa2_bg.c) and are not written in the merged source at all.",
+    "THE BOUNDARY IS A RELOCATION, NOT A BYTE. Both held-out functions were written in this TU first and both reproduced their cartridge bytes from it: `python tools/tubuild.py verify ov060/daKpa2Bg_c` with all ten licensed reported `byte comparison : 10/10 MATCH`, objisolate clean, reloc-destinations clean; and after the boundary was settled, `python tools/match.py --c src/actors/daKpa2Bg_c.cpp --func _ZN10daKpa2Bg_c13InitResourcesEv --addr 0x02117c30 --size 0xac --module ov060 ...` and the same for daKpa2Bg_c_classInit at 0x02117cdc size 0x40 each printed `MATCHING VERSIONS: 2004/b56`. Nothing about either is unsolved as codegen.",
+    "WHAT BLOCKS InitResources: it hands dBgW_KcMbg::SetFile a CLPS block loaded from 0x021115bc. config/arm9/overlays/ov060/relocs.txt records that site as `from:0x02117cd4 kind:load to:0x021115bc module:overlays(8,11,17,28,31,33,37,39,40,41,42,44,46,48,50,51,53,54,57,59)` -- twenty candidate modules, and ov060 makes no unambiguous call to any of them that would narrow it. No config/**/symbols.txt in the tree defines a name for that address, so the reference stays the phantom `func_021115bc` (declared only in include/decl_common.h) and tools/eligible.py rule 5 rejects the file. Its delinks.txt entry is correspondingly the one entry in this run WITHOUT `complete`.",
+    "THE TOOL REFUSED THE WIDER RANGE IN THOSE WORDS. `python tools/tubuild.py linkcheck ov060/daKpa2Bg_c -j 16` against the ten-function manifest stopped at phase 1 with: \"REFUSED -- the scratch delinks substitution is not safe: entry src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp is NOT `complete` today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step\".",
+    "WHY THE FACTORY IS HELD OUT TOO: daKpa2Bg_c_classInit is the HIGHEST function in the run at 0x02117cdc, with InitResources between it and everything else, so no contiguous `complete` span can reach the factory without also claiming InitResources. src/d_a_kpa2_bg.c stays enrolled and keeps supplying it.",
+    "WHY NEITHER IS CARRIED AS deadstrip-duplicate, WHICH WAS TRIED FIRST: tools/objisolate.py only discards a duplicate body whose symbol has VAGUE linkage (STB_LOPROC). An out-of-line member and an extern \"C\" free function are both STB_GLOBAL, and the production build refused them in those words -- `FAIL src/actors/daKpa2Bg_c.cpp: isolate: compiler-only deadstrip refused: _ZN10daKpa2Bg_c13InitResourcesEv: duplicate deadstrip needs vague linkage, got STB_GLOBAL` (tools/rombuild.py -j16). The destructor pair below the boundary is the opposite case and is why the inline in-class body matters: it is emitted with vague linkage. So the two held-out bodies are simply not written in the merged source, and the file says so where they would have been.",
+    "NOTHING IS LOST BY THEIR ABSENCE. With `virtual ~daKpa2Bg_c() {}` inline in the header, this class's key function is Behavior, so src/actors/daKpa2Bg_c.cpp is still the translation unit that emits _ZTV10daKpa2Bg_c, the _ZTI/_ZTS chain and both destructor variants -- exactly the bytes the licensed run has to produce. The eleven compiler_only_output rows below are that emission, each with a canonical ROM home outside every claimed range.",
+    "WHAT THE NARROWED RANGE PROVED. `tubuild verify`: 8/8 MATCH, objisolate clean, emission order ROM-ascending. `tubuild linkcheck ov060/daKpa2Bg_c -j 16` -> SCRATCH-LINK-VERIFIED: TU .text range 0x02117980..0x02117c30, 688 bytes, IDENTICAL; module fidelity 106/106 exact; full ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the source-independent stock control. `dsd check symbols --fail` FAILS on 9 error lines, all 9 present in the `linkcheck --baseline` control too (0 new), so they are the tree's and not this TU's -- but that check is NOT green and is not reported as such. Production `python tools/rombuild.py -j16`: 1 compiled, exit 0, intact TU gates PASS, 11,207 source-built functions reproducing / 0 mismatching, module fidelity 106/106 exact, same ROM sha256.",
+    "TO CLOSE THE BOUNDARY LATER: disambiguate the cross-overlay load at 0x021115bc so some module's symbols.txt legitimately names the CLPS block, mark src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp `complete`, then move both bodies into this file and license 0x02117980..0x02117d1c as one range. No other source change is needed -- both bodies are known to match from here."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02117980",
+      "end": "0x02117c30"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10daKpa2Bg_cD1Ev",
+      "address": "0x02117980",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN10daKpa2Bg_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10daKpa2Bg_cD0Ev",
+      "address": "0x021179d4",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN10daKpa2Bg_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov060_02117a3c",
+      "address": "0x02117a3c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov060_02117a3c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov060_02117a64",
+      "address": "0x02117a64",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov060_02117a64.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov060_02117ae0",
+      "address": "0x02117ae0",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov060_02117ae0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10daKpa2Bg_c16CleanupResourcesEv",
+      "address": "0x02117b58",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN10daKpa2Bg_c6RenderEv",
+      "address": "0x02117b9c",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10daKpa2Bg_c6RenderEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN10daKpa2Bg_c8BehaviorEv",
+      "address": "0x02117bc8",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN10daKpa2Bg_c8BehaviorEv.cpp",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold func_ov060_02117a64 and the one that held func_ov060_02117ae0; kept the first, the other is commented out for review -- RESOLVED: the two legacy helper files disagreed only because Matrix4x3 has two 0x30-byte spellings behind one MATRIX4X3_DEFINED guard and whichever a TU reaches first stands. This TU includes common.h BEFORE daKpa2Bg_c.h, so the flat `s32 m[12]` form wins and one file-scope declaration of each of the three now serves every member. Measured both ways; the other order inflates func_ov060_02117a64 to 0x90 and func_ov060_02117ae0 to 0x94 against the ROM's 0x7c and 0x78. Verified 8/8 MATCH afterwards.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_ApplyInPlaceToRotationX' differs between the legacy file that used to hold func_ov060_02117a64 and the one that held func_ov060_02117ae0; kept the first, the other is commented out for review -- RESOLVED: the two legacy helper files disagreed only because Matrix4x3 has two 0x30-byte spellings behind one MATRIX4X3_DEFINED guard and whichever a TU reaches first stands. This TU includes common.h BEFORE daKpa2Bg_c.h, so the flat `s32 m[12]` form wins and one file-scope declaration of each of the three now serves every member. Measured both ways; the other order inflates func_ov060_02117a64 to 0x90 and func_ov060_02117ae0 to 0x94 against the ROM's 0x7c and 0x78. Verified 8/8 MATCH afterwards.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_ApplyInPlaceToRotationZ' differs between the legacy file that used to hold func_ov060_02117a64 and the one that held func_ov060_02117ae0; kept the first, the other is commented out for review -- RESOLVED: the two legacy helper files disagreed only because Matrix4x3 has two 0x30-byte spellings behind one MATRIX4X3_DEFINED guard and whichever a TU reaches first stands. This TU includes common.h BEFORE daKpa2Bg_c.h, so the flat `s32 m[12]` form wins and one file-scope declaration of each of the three now serves every member. Measured both ways; the other order inflates func_ov060_02117a64 to 0x90 and func_ov060_02117ae0 to 0x94 against the ROM's 0x7c and 0x78. Verified 8/8 MATCH afterwards.",
+    "RESOLVED, the three `tubuild create` extern CONFLICT warnings above: Matrix4x3_FromTranslation / _ApplyInPlaceToRotationX / _ApplyInPlaceToRotationZ differed because the two legacy helper files disagreed on which Matrix4x3 they had seen. The type has two 0x30-byte spellings behind one MATRIX4X3_DEFINED guard and whichever a TU reaches first stands. This TU includes common.h BEFORE daKpa2Bg_c.h so the flat `s32 m[12]` form wins; daKpa2Bg_c.h reaches math/Matrix.h through Model.h before it reaches dBgActor_c.h's common.h, and with that order the .r/.t spelling inflates func_ov060_02117a64 to 0x90 and func_ov060_02117ae0 to 0x94 against the ROM's 0x7c and 0x78. Measured both ways."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov060-daKpa2Bg_c/daKpa2Bg_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI10daKpa2Bg_c",
+        "_ZTS10daKpa2Bg_c",
+        "_ZTV10daKpa2Bg_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI10daKpa2Bg_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS10daKpa2Bg_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV10daKpa2Bg_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov060-daKpa2Bg_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02117980",
+        "end": "0x02117c30",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02117980",
+          "end": "0x02117c30",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "production": {
+      "round": "tools/rombuild.py -j16 -- the real production build, AFTER promotion",
+      "verdict": "exit 0",
+      "compiled": "8572 reused from cache, 1 compiled (this TU; a zero here would mean the file never compiled)",
+      "gates": "[4/6] mwldarm intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "fidelity": "source-built functions 11,207 (96.12% of code bytes), reproducing 11,207, mismatching 0; module fidelity 106/106 exact, 100.000000%; ROM-build analysis PASS",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      },
+      "note": "verification.linkcheck above is the PRE-promotion shadow run, over the same 0x02117980..0x02117c30 range. `tubuild linkcheck` cannot be re-run against this entry now that it is promoted: its enrolled-intact branch goes through tu_production.prepare_intact_object, which refuses a text-only TU -- \"ov060/daKpa2Bg_c: intact production requires one .text claim and at least one non-text claim\". That is true of 132 of the 155 promoted entries in config/tu_manifest.d, so the production rombuild above is the post-promotion proof."
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names this class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTI10daKpa2Bg_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov060",
+      "canonical_address": "0x0211a870",
+      "reason": "This class's own typeinfo record, vague-linkage. MEASURED: an __si_class_type_info whose base pointer is 0x021089ec = _ZTI10dBgActor_c. The cartridge copy at ov060:0x0211a870 is in this module's .data but OUTSIDE the 0x02117980..0x02117c30 .text run this entry claims."
+    },
+    {
+      "symbol": "_ZTS10daKpa2Bg_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov060",
+      "canonical_address": "0x0211a87c",
+      "reason": "This class's own type-name string. The cartridge copy at ov060:0x0211a87c is the length-prefixed '10daKpa2Bg_c' -- the ROM's own spelling, not a coined one -- and lies outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTV10daKpa2Bg_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov060",
+      "canonical_address": "0x0211a8b0",
+      "reason": "This class's own vtable, emitted because the inline destructor makes Behavior the key function and this TU defines it. The cartridge's address point is at ov060:0x0211a8b0 and the storage starts eight bytes earlier at 0x0211a8a8; both are outside the .text run this entry claims, and the symbols.txt address is unchanged."
+    }
+  ]
+}

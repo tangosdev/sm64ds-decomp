@@ -1,7 +1,26 @@
 //cpp
-/* dScMgSlot1_c_classInit at 0x0210d6b8 (ov006), size 0x88
- * Matched byte-for-byte with mwccarm 1.2/sp2p3.
+/* Production translation unit for ov006/dScMgSlot1_c_classInit  (1 function).
+ *
+ * Enrolled and canonical: this file's licensed text range
+ * (.text 0x0210d6b8..0x0210d740) is linked into the ROM build.
+ *
+ * dScMgSlot1_c_classInit at 0x0210d6b8 (ov006), size 0x88.
+ * Matched byte-for-byte with mwccarm 2004/b56.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
+ *
+ * THIS IS THE FACTORY ONLY, NOT THE WHOLE CLASS. dScMgSlot1_c's own methods
+ * still live as per-function files across 0x0210c374..0x0210d6b8 and are a
+ * separate, larger promotion; this entry claims only the one factory the
+ * delinker already carved as a complete range. See the manifest entry's
+ * boundary_evidence for why that cut is DISCLOSED AS UNCONFIRMED.
+ *
+ * Only one function, so mwccarm's reverse-source-order .text emission has
+ * nothing to order here.
+ *
+ * Assembled from this legacy source, which is this same file: it lived
+ * directly under src/ and moved here.  The manifest's legacy_source row
+ * keeps its former full path:
+ *   [0] 0x0210d6b8  d_s_mg_slot1.cpp
  */
 /* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
  *  2 func_ov006_*                unnamed in config symbols.txt; each needs a

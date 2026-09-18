@@ -530,21 +530,9 @@ src/_ZN16daObjKaitendai_cD1Ev.cpp:
     complete
     .text start:0x020b6664 end:0x020b66a8
 
-src/func_ov002_020b66a8.c:
+src/actors/daObjKaitendai_c.cpp:
     complete
-    .text start:0x020b66a8 end:0x020b66f0
-
-src/_ZN16daObjKaitendai_c6RenderEv.cpp:
-    complete
-    .text start:0x020b66f0 end:0x020b6718
-
-src/_ZN16daObjKaitendai_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b6718 end:0x020b676c
-
-src/func_ov002_020b676c.cpp:
-    complete
-    .text start:0x020b676c end:0x020b6814
+    .text start:0x020b66a8 end:0x020b6814
 
 src/_ZN13daObjKuruma_cD0Ev.cpp:
     complete

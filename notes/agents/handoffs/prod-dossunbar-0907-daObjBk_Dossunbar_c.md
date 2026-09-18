@@ -143,10 +143,13 @@ This document describes this commit. The queue records its immutable output SHA.
   is reported here, not fixed**: the ov015 `.bss` symbols
   `MovingBarSmall_ClsnFile` (`0x02114a5c`) and `MovingBarSmall_ModelFile`
   (`0x02114a64`) carry this class's old coined prefix but belong to daObjBk_Lift_c --
-  the only file that references either is
-  `src/_ZN14daObjBk_Lift_c16CleanupResourcesEv.cpp`. They are outside this fold, the
-  rename tool left them alone because there is no word boundary after the coined
-  prefix, and the promoted TU does not reference them. They need an owner.
+  the one file that used to reference either has since been absorbed into
+  `src/actors/daObjBk_Lift_c.cpp`, which reaches both addresses by their
+  address-true `data_ov015_02114a5c` / `data_ov015_02114a64` spellings instead.
+  Nothing in the tree references the coined names now. They are outside this
+  fold, the rename tool left them alone because there is no word boundary after
+  the coined prefix, and the promoted TU does not reference them. They need an
+  owner.
 
 ## Proof
 

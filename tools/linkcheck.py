@@ -298,18 +298,27 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
         alt = BG.alias_target_size(mod, addr)
         if alt:
             size = alt
+    diagnostics = {}
     if obj is None:
         obj, sym, err, off = RA.winning_object(name, addr, size, mod, candidate,
-                                               include_dirs, name_index)
+                                               include_dirs, name_index,
+                                               diagnostics=diagnostics)
     if obj is None:
-        # A missing or wrong-length source is NOT a false match; give it a verdict
-        # distinct from NO-REPRO so it does not read as "the source stopped matching".
+        # Only proven emitted-function near misses are draft-eligible. Unknown
+        # failure reasons, compiler failures and missing symbols fail closed.
         verdict = {"no-source": "NO-SRC", "no-module-bin": "NO-BIN",
-                   "len-mismatch": "NO-SYM"}.get(err, "NO-REPRO")
+                   "no-repro": "NO-REPRO",
+                   "requested-size-mismatch": "NO-REPRO"}.get(err, "NO-SYM")
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": verdict,
-                "reason": err, "diffs": [], "blind": 0}
+                "reason": err, "diffs": [], "blind": 0, **diagnostics}
     target = RV.rom_bytes(mod, addr, size)
-    code, _ = M.extract_func(obj, sym)
+    if target is None or len(target) != size:
+        return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "NO-BIN",
+                "reason": "no-module-bin", "diffs": [], "blind": 0}
+    try:
+        code, _ = M.extract_func(obj, sym)
+    except Exception:
+        code = None
     if off and code is not None:
         # Nested entry point: `sym` is the CONTAINING symbol the object actually
         # defines (a hand-asm block packing several ROM functions into one compiled
@@ -327,8 +336,16 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
         if ext is not None and len(ext) == len(code):
             target = ext
     if code is None or len(code) != len(target):
-        return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "NO-SYM",
-                "reason": "len-mismatch", "diffs": [], "blind": 0}
+        # A pre-supplied containing symbol with a wrong window is still NO-SYM.
+        # Only the complete requested function can establish a size near miss.
+        emitted_size = RA.defined_function_size(obj, name) if sym == name and not off else None
+        near = (size > 0 and emitted_size is not None and emitted_size != size
+                and code is not None and len(code) == emitted_size)
+        return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
+                "verdict": "NO-REPRO" if near else "NO-SYM",
+                "reason": "requested-size-mismatch" if near else "len-mismatch",
+                "diffs": [], "blind": 0,
+                **({"expected_size": size, "emitted_sizes": [emitted_size]} if near else {})}
     relocs = func_relocs_typed(obj, sym, name_index)
     if off:
         relocs = [dict(rl, off=rl["off"] - off) for rl in relocs
