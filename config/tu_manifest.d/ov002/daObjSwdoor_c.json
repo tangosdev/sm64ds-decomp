@@ -1,0 +1,313 @@
+{
+  "id": "ov002/daObjSwdoor_c",
+  "module": "ov002",
+  "source": "src/actors/daObjSwdoor_c.cpp",
+  "promoted_source": "src/actors/daObjSwdoor_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020bab0c..0x020badd0, 6 function(s), bounded on the left by daObjSwitch_c_classInit_HANSWITCH (0x020baadc, a different class's factory) and on the right by _ZN8SignPostD1Ev (0x020badd0). build/tu_map.json (tools/tu_map.py) segments this as 0x020bab0c..0x020bac18, 4 functions -- the shard count the promotion queue carries -- because func_ov002_020bac18 carries no mangled name and no vtable slot, so no label bounds the run on its right. The span is EXTENDED BY HAND to take in func_ov002_020bac18 and func_ov002_020bad10; the census below is the reason.",
+    "class label(s): daObjSwdoor_c",
+    "CALL-SITE CENSUS over every config/**/relocs.txt in the tree, FILTERED ON THE RELOCATION'S TARGET MODULE. daObjSwdoor_c has exactly two descendants -- daObjBSwdoor_c (ov014) and daObjCvShutter_c (ov021). _ZN13daObjSwdoor_c6RenderEv (0x020babf0) is a known member of this class by vtable slot 9 and is the positive control: outside its own vtable word it is named from exactly {ov014 0x0211462c, ov021 0x02114938}. All three unattributed neighbours share that referrer set exactly and have no other referrer in the image -- func_ov002_020baba8 (ov014 0x02111260, ov021 0x02112e74), func_ov002_020bac18 (ov014 0x02111274, ov021 0x02112e88), func_ov002_020bad10 (ov014 0x021112a4, ov021 0x02112ecc). Two descendants, three helpers, one referrer set.",
+    "THE FILTER IS LOAD-BEARING AND WAS MEASURED, NOT ASSUMED. Run unfiltered, the same census invents referrers this class does not have: _ZN13daObjSwdoor_cD0Ev (0x020bab0c) reads as {ov000, ov002, ov004} because ov000 0x020befd8 and ov004 0x020b9f38 each carry a relocation to that ADDRESS whose target module is overlay(0) and overlay(4) -- ov000, ov002 and ov004 overlap in address space. Filtering on the target module leaves exactly one referrer, ov002 0x02109a28, which is this class's own vtable slot 17.",
+    "BASE-RATE CONTROL, which is what makes the census discriminating rather than merely consistent: the same census run over the neighbouring classes in this same overlay returns a DIFFERENT referrer set. SignPost, whose run opens at 0x020badd0 immediately above this one, has four unattributed neighbours -- func_ov002_020bae9c (referrers {ov002 0x020bb41c, 0x020bbc64, 0x020bc138}), func_ov002_020baf80 ({ov002 0x020baf14, 0x020bc01c, 0x020bc2cc}), func_ov002_020bafc0 ({ov002 0x020bbaa0, 0x020bc1d4}) and func_ov002_020bb060 ({ov002 0x020bbe80, 0x020bbf1c}) -- and every one of them is reached only from inside ov002, never from ov014 or ov021. Below this run, StarSwitch's Render (0x020ba5f4) and Behavior (0x020ba624) are likewise named only by ov002's own vtable, and func_ov002_020baa2c/func_ov002_020baa98 only from inside the switch family's own code. The census is measuring the class, not the overlay.",
+    "THE RUN'S RIGHT EDGE IS 0x020badd0, NOT 0x020bad10. func_ov002_020bad10 is the last function whose referrer set is {ov014, ov021}; the very next function, _ZN8SignPostD1Ev at 0x020badd0, is named by one word only -- ov002 0x02109b38, SignPost's own vtable -- and opens that class's run.",
+    "SEMANTIC CORROBORATION, arrived at from the other side: func_ov002_020bad10 is the setup half and func_ov002_020bac18 the consumer half of the same shutter. The setup writes 0x31e (open/close sense), 0x31f (state), 0x320 and 0x321 out of the actor's spawn parameter word at 0x8; func_ov002_020bac18 switches on 0x31f, gates on Event::GetBit of 0x321, counts 0x320 down and reads 0x31e to pick the yaw direction. include/daObjBSwdoor_c.h already names 0x320/0x321 mTimer and mEventBit and attributes them to \"the ov002 setup helper\", written before this fold and independently of it.",
+    "THE FIELDS ABOVE sizeof ARE A PROPERTY OF THE HELPERS' SIGNATURE, NOT A REFUTATION. sizeof(daObjSwdoor_c) is 0x320 and both helpers touch 0x320 and 0x321, which would sink a MEMBER of this class -- that is the test that moved daObjKaitendai_c's left edge. It does not apply here: neither helper is a member. Both are free functions taking the object as a plain char*/void* first parameter precisely so the two leaves, which are 0x324 apiece, can hand their own tail bytes to shared code the abstract base owns. The base's own members stay inside 0x320: Render (slot 9) reaches only mModel at 0xd4, and the destructor pair only dBgActor_c's dBgW_KcMbg at 0x124 and Model at 0xd4.",
+    "RTTI edge: ov002:0x021099c0 _ZTI13daObjSwdoor_c -> __si_class_type_info, _ZTS '13daObjSwdoor_c' at 0x021099cc, base ov002:0x021089ec _ZTI10dBgActor_c. All three of the RTTI home triple are present in config/arm9/overlays/ov002/symbols.txt, so the class name is the cartridge's own and not coined.",
+    "vtable ov002 storage 0x021099dc, address point 0x021099e4, 32 slots (0x88) ending at 0x02109a64, where data_ov002_02109a64 opens the next run -- so the data run 0x021099c0..0x02109a64 is closed by this class with nothing between, and the 32-slot length is dBgActor_c's, which is what fixes the base. Read out of the cartridge, the table overrides exactly slots 9 (Render, 0x020babf0), 16 (D1, 0x020bab64) and 17 (D0, 0x020bab0c); slots 0 (InitResources), 3 (CleanupResources) and 6 (Behavior) are bare zero words with no relocation -- the class is abstract in three slots, which is why none of the three func_ov002_ helpers occupies a slot and why each is reached by an ordinary call or literal-pool load from each leaf instead.",
+    "SHAPE: [D0, D1, teardown helper, Render, per-frame helper, setup helper]. Under mwccarm's reverse-source-order .text emission that is the source order [setup, per-frame, Render, teardown, <implicit destructors>], which is an ordinary C++ file. It is the same shape the four already-folded classes in this ov002 platform series carry, with Behavior demoted from a vtable slot to a plain helper because this class leaves slot 6 null.",
+    "module sinit corroboration: this entry claims no .ctor and no static initializer; the class has no factory and no g_profile row of its own (both leaves carry theirs in ov014 and ov021), which is why the entry claims no data and no BSS.",
+    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020baba8..0x020badd0 (4 functions) inside the 0x020bab0c..0x020badd0 object the evidence above establishes. The cartridge places _ZN13daObjSwdoor_cD0Ev at 0x020bab0c BELOW _ZN13daObjSwdoor_cD1Ev at 0x020bab64. THE FULL 2x2 LEVER GRID WAS MEASURED HERE on mwccarm 2004/b56 against this TU, one compile per cell, reading the object's .text section order: {inline-in-class, out-of-line} x {deferred codegen, `#pragma defer_codegen off`}. (A) inline-in-class + deferred (the stock header): [D1, D0, func_020baba8, Render, func_020bac18, func_020bad10] -- the pair leads, D1 first. (B) inline-in-class + `defer_codegen off`: [func_020bad10, func_020bac18, Render, func_020baba8, D1, D0] -- the pair moves to the tail, still D1 first; rewriting the four members in ROM-ascending order as well changes only the members' order and leaves the pair at the tail as [D1, D0]. (C) out-of-line + deferred: [func_020baba8, Render, func_020bac18, func_020bad10, D2, D0, D1]. (D) out-of-line + `defer_codegen off`: [D2, D0, D1, func_020bad10, func_020bac18, Render, func_020baba8]; ascending members likewise [D2, D0, D1, ...]. TWO RESULTS. First, the pragma's effect INVERTS across the destructor axis: with an inline-in-class destructor it moves the group from the head to the tail, with an out-of-line one it moves it from the tail to the head. A rule recorded on one axis does not transfer to the other. Second, D0-BEFORE-D1 IS REACHABLE ON THIS CLASS -- the out-of-line axis produces it in both of its cells -- but only ever as [D2, D0, D1], and the cartridge contains no D2. There is no room for one either: 0x020bab0c..0x020baba8 is exactly D0 (0x58) then D1 (0x44), contiguous, with the teardown helper immediately after. No cell of the grid emits the cartridge's [D0, D1] with nothing before it.",
+    "THE OUT-OF-LINE FORM IS REFUTED INDEPENDENTLY OF THE D2, BY THE CARTRIDGE. The target-module-filtered relocation census finds _ZN13daObjSwdoor_cD0Ev (0x020bab0c) named by EXACTLY ONE word in the image, ov002:0x02109a28, and _ZN13daObjSwdoor_cD1Ev (0x020bab64) by exactly one, ov002:0x02109a24. Those two words are slots 17 and 16 of _ZTV13daObjSwdoor_c (address point 0x021099e4; 0x02109a24 - 0x021099e4 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor; both descendants inline this destructor's vptr store instead, which the compiler can only do from a body visible in the class. An out-of-line definition would make ov014's and ov021's destructors emit a `bl` the cartridge does not have and break their already-matched TUs. This is the same disposition already taken by ov002/daObjKaitendai_c, ov002/daObjUkiyuka_c and ov002/daObjFloatBoard_c, each of whose destructor pairs sits in the identical D0-below-D1 arrangement."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020baba8",
+      "end": "0x020badd0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov002_020baba8",
+      "address": "0x020baba8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020baba8.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjSwdoor_c6RenderEv",
+      "address": "0x020babf0",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN13daObjSwdoor_c6RenderEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020bac18",
+      "address": "0x020bac18",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov002_020bac18.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020bad10",
+      "address": "0x020bad10",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov002_020bad10.c",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13daObjSwdoor_cD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020bab64",
+      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjSwdoor_c is defined inline in include/daObjSwdoor_c.h. The cartridge owns it at ov002:0x020bab64 and src/_ZN13daObjSwdoor_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZN13daObjSwdoor_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020bab0c",
+      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020bab0c, BELOW D1 -- see this entry's boundary_evidence for the full 2x2 lever grid measured against that order and for why the two cells that do emit D0 before D1 are refuted by the cartridge. src/_ZN13daObjSwdoor_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
+    },
+    {
+      "symbol": "_ZTV13daObjSwdoor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021099e4",
+      "reason": "This TU defines Render (vtable slot 9), the only out-of-line virtual the class declares and therefore its key function -- the destructor is inline in the class body and the other three slots it touches are pure -- so mwcc anchors the complete 0x88-byte vtable storage here. The cartridge keeps it at ov002:0x021099e4 (storage 0x021099dc) in .data, which no section this entry licenses (.text 0x020baba8-0x020badd0) reaches, so dsd supplies those bytes independently and production isolation discards the emitted duplicate."
+    },
+    {
+      "symbol": "_ZTI13daObjSwdoor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021099c0",
+      "reason": "This class's own __si_class_type_info record, emitted alongside the vtable by the key function. Canonical home ov002:0x021099c0 is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTS13daObjSwdoor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021099cc",
+      "reason": "This class's own type-name string \"13daObjSwdoor_c\", emitted alongside the vtable by the key function. Canonical home ov002:0x021099cc is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI: naming daObjSwdoor_c's typeinfo drags its direct base's record in. Canonical copy ov002:0x021089ec, outside this entry's licensed range; it is the ROM word this class's own _ZTI carries at +8."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string for the direct base. Canonical copy ov002:0x02108a04, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI, one link further up the fBase_c -> dBase_c -> dActor_c -> dBgActor_c chain. Canonical copy arm9:0x0208e390, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string for dActor_c. Canonical copy arm9:0x0208e384, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string for dBase_c. Canonical copy arm9:0x02086e54, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI for the root of the chain. Canonical copy arm9:0x02086d70, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string for fBase_c. Canonical copy arm9:0x02086e60, outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+    }
+  ],
+  "notes": [
+    "Cut by hand, not seeded by tools/tubuild.py create: build/tu_map.json's span for this class stops at Render's end because the two functions above it carry no mangled name and no vtable slot. See boundary_evidence for the target-module-filtered call-site census that moves the run's right edge out to 0x020badd0, for the base-rate control that makes it discriminating, and for the destructor pair's exclusion from the licensed range.",
+    "NO FORCING FUNCTION AND NO PRAGMA IN THE FOLDED TU. The two legacy destructor shards each carry a scaffold (`delete p`, `p->~daObjSwdoor_c()`) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV13daObjSwdoor_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN13daObjSwdoor_cD0Ev.cpp and src/_ZN13daObjSwdoor_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "THE KEY FUNCTION MOVED, AND THAT IS THE ONE BEHAVIOURAL CHANGE THIS FOLD MAKES. Before this promotion daObjSwdoor_c had no out-of-line virtual at all, so the two destructor shards' scaffolds were what anchored _ZTV13daObjSwdoor_c and _ZTI13daObjSwdoor_c as vague-linkage data in their own objects. Render is now declared out of line and defined here, so this TU is the key-function TU and carries that data instead. Both shards' banners are updated to say so; neither emits the vtable any more, and both still byte-match their ROM homes.",
+    "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN BEYOND THE CANDIDATE SPAN. func_ov002_020bac18 is this class's per-frame shutter step and func_ov002_020bad10 its resource setup, reached by an ordinary call or a literal-pool load from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0, 3 and 6. build/tu_map.json cannot see either: neither carries a mangled name or a vtable slot, so no label bounds the run on the right.",
+    "func_ov002_020baba8, func_ov002_020bac18 and func_ov002_020bad10 keep their address-derived names. None occupies a vtable slot in any class in the image and nothing in the ROM names any of them, so a coined English name would be invention, not recovery.",
+    "ONE DECLARATION WAS RECONCILED ACROSS THE FOLD, and it is the only source change beyond moving text: the pre-fold shard for 0x020bac18 declared _ZN10dBgActor_c21UpdateModelPosAndRotYEv as returning void and the shard for 0x020bad10 declared it as returning int. One TU can carry only one spelling; the int form is kept and both call sites discard the result, so the choice is codegen-neutral. It is proved codegen-neutral by the 4/4 byte match below, which covers both call sites. The shard for 0x020bac18 also carried file-local `typedef unsigned char u8` and `typedef struct { int x, y, z; } Vector3` declarations, and the shard for 0x020bad10 a file-local `typedef int Fix12`; all three name types the header already supplies (and `Fix12` is a class template once the header is in scope), so they are dropped and the header's spellings used.",
+    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION whole-range link recorded below (scratch-link-verified, full ROM built and byte-identical to the stock control), which is the same state the other promoted text-only entries in this series carry, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the rest of this series."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjSwdoor_c/daObjSwdoor_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN13daObjSwdoor_cD1Ev",
+        "_ZN13daObjSwdoor_cD0Ev"
+      ],
+      "deadstripped": [
+        "_ZN13daObjSwdoor_cD0Ev",
+        "_ZN13daObjSwdoor_cD1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "data": [
+        "_ZTV13daObjSwdoor_c",
+        "_ZTI13daObjSwdoor_c",
+        "_ZTS13daObjSwdoor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjSwdoor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjSwdoor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjSwdoor_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-daObjSwdoor_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020baba8",
+        "end": "0x020badd0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020baba8",
+          "end": "0x020badd0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 4
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

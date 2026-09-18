@@ -766,21 +766,9 @@ src/_ZN13daObjSwdoor_cD1Ev.cpp:
     complete
     .text start:0x020bab64 end:0x020baba8
 
-src/func_ov002_020baba8.cpp:
+src/actors/daObjSwdoor_c.cpp:
     complete
-    .text start:0x020baba8 end:0x020babf0
-
-src/_ZN13daObjSwdoor_c6RenderEv.cpp:
-    complete
-    .text start:0x020babf0 end:0x020bac18
-
-src/func_ov002_020bac18.c:
-    complete
-    .text start:0x020bac18 end:0x020bad10
-
-src/func_ov002_020bad10.c:
-    complete
-    .text start:0x020bad10 end:0x020badd0
+    .text start:0x020baba8 end:0x020badd0
 
 src/_ZN8SignPostD1Ev.cpp:
     complete
