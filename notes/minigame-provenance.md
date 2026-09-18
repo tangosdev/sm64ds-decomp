@@ -41,7 +41,7 @@ Field names and the matched body that settles each:
 | --- | --- | --- |
 | 0x050 | `mSubBgScrollX` | InitResources sets it to 0xb0 or 0 from [data_0209b304](../config/arm9/symbols.txt) (the page index), then feeds it to `SetSubBg0Offset` / `SetSubBg2Offset` / `SetSubBg3Offset` and to `*(u32*)0x400101c = mSubBgScrollX & 0x1ff`. |
 | 0x054 | `mPageFlipped` | u8. Zeroed by InitResources; Behavior sets it to 1 on each of the two page-timer expiries. Render draws the left/right page arrows only while it is 0. |
-| 0x058 | `mGroupBase` | InitResources seeds it from [data_0208a170](../config/arm9/symbols.txt), the base index into the minigame table [data_ov005_020c24d8](../config/arm9/overlays/ov005/symbols.txt)`[]`. [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
+| 0x058 | `mGroupBase` | InitResources seeds it from [data_0208a170](../config/arm9/symbols.txt), the base index into the minigame table [data_ov005_020c24d8](../config/arm9/overlays/ov005/symbols.txt)`[]`. [func_ov005_020c0878](../src/actors/dScMiniGm_c.cpp) copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
 | 0x05c | `unk_05c` | Zeroed by InitResources; func_ov005_020c0378 copies it into `(&data_0209b308)[0x30]`. Role not settled -- left `unk_`. |
 | 0x060 | `unk_060` | Zeroed by InitResources, no other matched access. |
 | 0x064 | `unk_064` | Zeroed by InitResources, no other matched access. |
@@ -50,10 +50,10 @@ Field names and the matched body that settles each:
 | 0x094 | `mNextPageTimer` | Same shape; expiry sets [data_0209b304](../config/arm9/symbols.txt) `= 1`. Drives the right arrow. |
 | 0x098 | `mExitTimer` | Behavior counts it down to 1, then `dScene_c::SetAndStopColorFader()`, `ExitMinigameMenu()`, stops the music and sets `mExiting`. |
 | 0x09c | `mIconBlinkPhase` | Behavior free-runs it 0..0x3f; Render picks between two arrow frames on `>= 0x20`. |
-| 0x0a0 | `mScrollDelay` | [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) decrements it, reloads it to 0x1e after committing a group change, and gates cursor input on `<= 0`. |
+| 0x0a0 | `mScrollDelay` | [func_ov005_020c0878](../src/actors/dScMiniGm_c.cpp) decrements it, reloads it to 0x1e after committing a group change, and gates cursor input on `<= 0`. |
 | 0x0a4 | `unk_0a4` | Zeroed by InitResources, no other matched access. |
 | 0x0a8 | `unk_0a8` | Zeroed by InitResources, no other matched access. |
-| 0x0ac | `mExiting` | u8. Behavior sets it on the exit branch; [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) / [func_ov005_020c0378](../src/func_ov005_020c0378.cpp) / [func_ov005_020c06cc](../src/func_ov005_020c06cc.c) all early-out while it is set. |
+| 0x0ac | `mExiting` | u8. Behavior sets it on the exit branch; [func_ov005_020c0878](../src/actors/dScMiniGm_c.cpp) / [func_ov005_020c0378](../src/actors/dScMiniGm_c.cpp) / [func_ov005_020c06cc](../src/actors/dScMiniGm_c.cpp) all early-out while it is set. |
 
 0x064..0x08c and 0x0ad..0xb0 are padding: no slot function touches them, and
 `mExiting` plus three bytes of tail padding closes exactly on the 0xb0
