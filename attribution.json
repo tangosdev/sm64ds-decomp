@@ -3619,6 +3619,15 @@
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16OnPendingDestroyEv": "andrewboudreau",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c6RenderEv": "tangosdev",
-    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev"
+    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_cD1Ev": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_cD0Ev": "tangosdev",
+    "src/actors/dScTitle_c.cpp#func_ov003_020ad6ec": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c16OnPendingDestroyEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c6RenderEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c8BehaviorEv": "ruspecial",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c13InitResourcesEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#dScTitle_c_classInit": "ruspecial"
   }
 }
