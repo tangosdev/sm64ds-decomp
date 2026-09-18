@@ -298,5 +298,230 @@ class LinkedDestinationUnit(unittest.TestCase):
         self.assertEqual(r["verdict"], "WRONG")
         self.assertEqual(r["diffs"][0]["target"], f"0x{self.BASE:08x}")
 
+
+
+def _draft_object(name="wanted", code=b"aaaa", kind=2, section=4,
+                  declared_size=None, start=0, text_flags=6):
+    """Small ARM ELF with real symbol metadata; no compiler/ROM fixture needed."""
+    shstr = b"\0.shstrtab\0.strtab\0.symtab\0.text\0"
+    strtab = b"\0" + name.encode() + b"\0"
+    size = len(code) if declared_size is None else declared_size
+    symtab = bytes(16) + struct.pack("<IIIBBH", 1, start, size, 0x10 | kind, 0, section)
+    blobs = [b"", shstr, strtab, symtab, code]
+    offsets, cursor = [], 52
+    for blob in blobs:
+        offsets.append(cursor if blob else 0)
+        cursor += len(blob)
+    head = struct.pack("<16sHHIIIIIHHHHHH",
+                       b"\x7fELF\x01\x01\x01" + bytes(9),
+                       1, 40, 1, 0, 0, cursor, 0, 52, 0, 0, 40, 5, 1)
+    sections = [(0, 0, 0, 0, 0), (1, 3, 0, 0, 0), (11, 3, 0, 0, 0),
+                (19, 2, 2, 1, 16), (27, 1, 0, 0, 0)]
+    out = bytearray(head + b"".join(blobs))
+    for i, (nameoff, stype, link, info, entsize) in enumerate(sections):
+        out += struct.pack("<10I", nameoff, stype, text_flags if i == 4 else 0, 0,
+                           offsets[i], len(blobs[i]), link, info, 4, entsize)
+    return bytes(out)
+
+
+class DraftClassificationIntegration(unittest.TestCase):
+    """Exercise real ELF extraction and RA -> LC -> PR policy without private inputs.
+
+    Only compilation and ROM acquisition are replaced. This proves the positive
+    emission boundary rather than mocking the new classifier to return its answer.
+    """
+    ADDR = 0x02000000
+    DRAFT = "//cpp\n// NONMATCHING\nvoid wanted() {}\n"
+    PLAIN = "//cpp\nvoid wanted() {}\n"
+
+    def setUp(self):
+        import contextlib
+        import pr_linkcheck as PL
+        self.PL = PL
+        self.stack = contextlib.ExitStack()
+        self.addCleanup(self.stack.close)
+        self.stack.enter_context(mock.patch.object(RV, "ALL_VERSIONS", ["test-compiler"]))
+        self.stack.enter_context(mock.patch.object(RV, "src_texts", return_value=[self.DRAFT]))
+        self.stack.enter_context(mock.patch.object(RA, "_as_the_build_links_it", side_effect=lambda o, n: o))
+        # A lookup reaching real ROM/config or a real compiler is a test bug.
+        self.stack.enter_context(mock.patch.object(RV, "mod_for", side_effect=AssertionError("ROM access")))
+        self.compiled = self.stack.enter_context(mock.patch.object(LC.M, "compile_c"))
+        self.rom = self.stack.enter_context(mock.patch.object(RV, "rom_bytes"))
+        self.rom.side_effect = lambda mod, addr, size: b"b" * size
+
+    def run_object(self, obj, supplied=False, size=8):
+        self.compiled.return_value = obj
+        kw = {"obj": obj, "sym": "wanted"} if supplied else {}
+        return LC.linkcheck("wanted", self.ADDR, size, "arm9", {}, **kw)
+
+    def assert_hard(self, result):
+        self.assertEqual(result["verdict"], "NO-SYM")
+        self.assertEqual(self.PL.source_policy(result["verdict"], self.DRAFT), "NO-SYM")
+
+    def test_shorter_and_longer_requested_functions_are_nonreproducing(self):
+        for size in (4, 12, 80):
+            with self.subTest(emitted=size):
+                r = self.run_object(_draft_object(code=b"a" * size))
+                self.assertEqual(r["verdict"], "NO-REPRO")
+                self.assertEqual(r["reason"], "requested-size-mismatch")
+                self.assertEqual(r["expected_size"], 8)
+                self.assertEqual(r["emitted_sizes"], [size])
+                self.assertEqual(self.PL.source_policy(r["verdict"], self.DRAFT), "DRAFT")
+                self.assertEqual(self.PL.source_policy(r["verdict"], self.PLAIN), "NO-REPRO")
+
+    def test_same_size_near_miss_retains_no_repro(self):
+        r = self.run_object(_draft_object(code=b"a" * 8))
+        self.assertEqual((r["verdict"], r["reason"]), ("NO-REPRO", "no-repro"))
+
+    def test_no_compiler_output_stays_hard(self):
+        r = self.run_object(None)
+        self.assert_hard(r)
+        self.assertEqual(r["reason"], "compile-failed")
+
+    def test_invalid_or_missing_requested_function_stays_hard(self):
+        for label, obj in [
+            ("malformed", b"not an object"),
+            ("empty output", b""),
+            ("sibling wrong length", _draft_object(name="other")),
+            ("sibling expected length", _draft_object(name="other", code=b"a" * 8)),
+            ("data", _draft_object(kind=1)),
+            ("non-code function label", _draft_object(text_flags=3)),
+            ("undefined", _draft_object(section=0)),
+            ("absolute", _draft_object(section=0xfff1)),
+            ("zero extent", _draft_object(declared_size=0)),
+            ("truncated extent", _draft_object(declared_size=16)),
+            ("outside section", _draft_object(start=40)),
+        ]:
+            with self.subTest(case=label):
+                self.assert_hard(self.run_object(obj))
+
+    def test_presupplied_short_function_needs_actual_function_evidence(self):
+        r = self.run_object(_draft_object(), supplied=True)
+        self.assertEqual((r["verdict"], r["reason"]), ("NO-REPRO", "requested-size-mismatch"))
+        for obj in (_draft_object(kind=1), _draft_object(declared_size=16), b"bad elf"):
+            with self.subTest(obj=obj[:20]):
+                self.assert_hard(self.run_object(obj, supplied=True))
+
+    def test_exact_requested_and_existing_any_symbol_successes_keep_four_tuple(self):
+        for name in ("wanted", "other"):
+            with self.subTest(name=name):
+                self.compiled.return_value = _draft_object(name=name, code=b"b" * 8)
+                winner = RA.winning_object("wanted", self.ADDR, 8, "arm9")
+                self.assertEqual(len(winner), 4)
+                self.assertEqual(winner[1:], (name, None, 0))
+                r = LC.linkcheck("wanted", self.ADDR, 8, "arm9", {})
+                self.assertEqual(r["verdict"], "VERIFIED")
+
+    def test_full_overhang_success_is_preserved_but_tail_is_not_truncated(self):
+        self.assertEqual(self.run_object(_draft_object(code=b"b" * 12))["verdict"], "VERIFIED")
+        r = self.run_object(_draft_object(code=b"b" * 8 + b"a" * 4))
+        self.assertEqual(r["verdict"], "NO-REPRO")
+        self.assertEqual(r["reason"], "requested-size-mismatch")
+
+    def test_orphan_zero_alias_does_not_become_a_size_draft(self):
+        with mock.patch.object(BG, "alias_target_size", return_value=None):
+            # Exceed the carrier overhang bound to ensure no existing full-match success.
+            r = self.run_object(_draft_object(code=b"a" * 80), size=0)
+        self.assert_hard(r)
+
+    def test_unknown_error_reason_is_not_draft_eligible(self):
+        with mock.patch.object(RA, "winning_object", return_value=(None, None, "unexpected", 0)):
+            self.assert_hard(LC.linkcheck("wanted", self.ADDR, 8, "arm9", {}))
+
+    def test_missing_rom_source_and_unrecognized_verdict_cannot_hide_in_draft(self):
+        for verdict in ("NO-SRC", "NO-BIN", "ERROR", "FUTURE-FAILURE"):
+            with self.subTest(verdict=verdict):
+                w = self.PL.worst([{"verdict": "NO-REPRO"}, {"verdict": verdict}])
+                self.assertNotEqual(self.PL.source_policy(w, self.DRAFT), "DRAFT")
+        self.rom.return_value = None
+        self.rom.side_effect = None
+        self.assertEqual(self.run_object(_draft_object())["verdict"], "NO-BIN")
+        self.assertEqual(self.run_object(_draft_object(), supplied=True)["verdict"], "NO-BIN")
+
+    def test_check_file_carries_sizes_and_keeps_sibling_missing_symbol_hard(self):
+        self.compiled.return_value = _draft_object()
+        idx = {name: [(self.ADDR, 8, "arm9")] for name in ("wanted", "missing")}
+        with mock.patch.object(self.PL.SP, "symbols_for", return_value=list(idx)):
+            rep = self.PL.check_file("src/draft.cpp", idx, {})
+        self.assertEqual([r["verdict"] for r in rep["results"]], ["NO-REPRO", "NO-SYM"])
+        self.assertEqual(rep["results"][0]["emitted_sizes"], [4])
+        w = self.PL.worst(rep["results"])
+        self.assertEqual(self.PL.source_policy(w, self.DRAFT), "NO-SYM")
+
+    def test_wrong_destination_remains_hard_next_to_a_draft(self):
+        # The real relocated-destination/addend tests above establish WRONG itself.
+        w = self.PL.worst([{"verdict": "NO-REPRO"}, {"verdict": "WRONG"}])
+        self.assertEqual(self.PL.source_policy(w, self.DRAFT), "WRONG")
+
+    def test_counted_assembly_and_unbannered_transcription_are_never_drafts(self):
+        primitive = ("// NONMATCHING (ASM-PRIMITIVE)\n// HAND-ASM PRIMITIVE\n"
+                     "asm void f() { mrs r0,cpsr\n bx lr }\n")
+        dcd = "asm void f() { dcd 0xe92d43f0\n dcd 0xe12fff1e\n }\n"
+        self.assertTrue(self.PL.AP.counts_as_matched(primitive))
+        self.assertEqual(self.PL.source_policy("NO-REPRO", primitive), "NO-REPRO")
+        self.assertEqual(self.PL.source_policy("NO-REPRO", dcd), "RAW-ASM")
+        self.assertEqual(self.PL.source_policy("NO-REPRO", "// NONMATCHING\n" + dcd), "DRAFT")
+        self.assertFalse(self.PL.AP.counts_as_matched(self.DRAFT))
+
+    def _cli(self, text, results):
+        import contextlib
+        import io
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td)
+            path = root / "draft.cpp"
+            path.write_text(text, encoding="utf-8")
+            output = root / "result.json"
+            report = {"file": str(path), "symbol": "wanted", "results": results, "note": ""}
+            with contextlib.ExitStack() as s:
+                s.enter_context(mock.patch.object(self.PL, "REPO", root))
+                s.enter_context(mock.patch.object(RA, "build_name_index", return_value={}))
+                s.enter_context(mock.patch.object(self.PL, "build_symbol_index", return_value={}))
+                s.enter_context(mock.patch.object(self.PL, "changed_src_files", return_value=[str(path)]))
+                s.enter_context(mock.patch.object(self.PL, "check_file", return_value=report))
+                s.enter_context(mock.patch.object(sys, "argv", ["pr_linkcheck", "--fail", "-j1", "--json", str(output)]))
+                s.enter_context(contextlib.redirect_stdout(io.StringIO()))
+                try:
+                    self.PL.main()
+                    status = 0
+                except SystemExit as exc:
+                    status = exc.code
+            return status, json.loads(output.read_text())[0]
+
+    def test_cli_draft_positive_and_hard_failure_controls(self):
+        near = self.run_object(_draft_object())
+        status, rep = self._cli(self.DRAFT, [near])
+        self.assertEqual((status, rep["worst"]), (0, "DRAFT"))
+        self.assertEqual(rep["results"][0]["emitted_sizes"], [4])
+        self.assertEqual(self._cli(self.PLAIN, [near])[0], 1)
+        for verdict in ("NO-SYM", "WRONG", "NO-BIN", "NO-SRC", "ERROR"):
+            with self.subTest(verdict=verdict):
+                status, rep = self._cli(self.DRAFT, [near, {"verdict": verdict, "diffs": []}])
+                self.assertEqual(status, 1)
+                self.assertNotEqual(rep["worst"], "DRAFT")
+
+    def test_markdown_reports_drafts_and_unverified_rows_without_exact_claims(self):
+        for verdict in ("DRAFT", "BLIND", "UNRESOLVED", "NONE", "NO-SYM", "BENIGN"):
+            with self.subTest(verdict=verdict):
+                rep = {"file": "src/draft.cpp", "symbol": "wanted", "worst": verdict,
+                       "results": [{"sym": "wanted", "verdict": "NO-REPRO", "reason": "requested-size-mismatch",
+                                    "expected_size": 8, "emitted_sizes": [4]}]}
+                exact = {"file": "src/good.cpp", "symbol": "good", "worst": "VERIFIED", "results": []}
+                md = self.PL.render_md([exact, rep], [])
+                self.assertNotIn("compile to the ROM byte-for-byte", md)
+                self.assertIn("expected 8", md)
+                if verdict == "DRAFT":
+                    self.assertIn("excluded from matched counts", md)
+                    self.assertIn("not verified", md)
+
+    def test_markdown_passengers_are_checked_with_their_actual_verdict(self):
+        rep = {"file": "src/file.cpp", "symbol": "wanted", "worst": "NO-SYM",
+               "results": [{"sym": "passenger", "verdict": "NO-SYM", "passenger": True}]}
+        md = self.PL.render_md([rep], [(rep["file"], "NO-SYM")])
+        self.assertNotIn("also verified", md)
+        self.assertIn("`passenger` (NO-SYM)", md)
+        self.assertIn("failed validation", md)
+
 if __name__ == "__main__":
     unittest.main()
