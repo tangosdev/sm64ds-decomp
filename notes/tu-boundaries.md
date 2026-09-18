@@ -144,3 +144,49 @@ python tools/tu_map.py --check            # gates V1-V3 + the negative control
 Merging files. A merged TU must emit its functions in exactly the ROM's order, and
 `notes/mwccarm-codegen.md` records that TUs carrying `#pragma opt_*` cannot be merged
 as-is. `rombuild.py` is the verdict on any such change, not this map.
+
+## Worked example: a class is not a TU (ov065, `daDossyCap_c`)
+
+`daDossyCap_c` looks like a clean fold candidate from outside the map: 6 loose shards in
+[ov065](../config/arm9/overlays/ov065/symbols.txt), its own `include/daDossyCap_c.h`, a full
+RTTI triple homed in its own overlay (`_ZTI12daDossyCap_c` 0x0211cd4c, `_ZTS12daDossyCap_c`
+0x0211cd58, `_ZTV12daDossyCap_c` 0x0211cdc4), and a vtable that claims exactly those 6 and no
+more. `tubuild` refuses it — `no candidate TU 'ov065/daDossyCap_c' in build/tu_map.json` — and
+the refusal is correct.
+
+The committed delinks settle it with no tool at all:
+
+| address | function |
+|---|---|
+| 0x02118d80 | `_ZN6Dorrie6RenderEv` |
+| 0x02118da8 | `_ZN12daDossyCap_c6RenderEv` |
+| 0x02118df0 | `_ZN6Dorrie8BehaviorEv` |
+| 0x021190a8 | `_ZN12daDossyCap_c8BehaviorEv` |
+| 0x02119228 | `_ZN6Dorrie13InitResourcesEv` |
+| 0x021194e8 | `_ZN12daDossyCap_c13InitResourcesEv` |
+
+Every `daDossyCap_c` member sits strictly between two `Dorrie` members, with no gap on either
+side. For `daDossyCap_c` to be its own object the linker would have had to split `Dorrie`'s
+`.text` in half around it — the one thing the contiguity rule this whole map rests on says
+never happens. The two `classInit` bodies interleave the same way (`daDossyCap_c_classInit`
+0x021195ec, then `daDossy_c_classInit` 0x02119634, then `_ZN14DorriePlatformC1Ev` 0x021196bc),
+so `daDossyCap_c_classInit` is inside the unit but so is a second class's.
+
+The unit is 0x02117f40..0x021196d8 — 29 functions, 3 classes — which is what
+`notes/data/tu-promotion-queue.tsv` already calls `Dorrie+DorriePlatform+daDossyCap_c`.
+
+Two blockers on that unit, independent of each other:
+
+* **`Dorrie` is a coined name.** The ROM's own RTTI spells the class `daDossy_c`
+  (`_ZTS9daDossy_c` 0x0211cd34, `_ZTI9daDossy_c` 0x0211cd40, vtable 0x0211ce48), but the tree
+  still spells the vtable `_ZTV6Dorrie` and `notes/data/class-build-worklist.tsv` records the
+  header as a pre-rename alias. `DorriePlatform` has no RTTI at all. The rename to the ROM
+  spelling is a prerequisite and belongs in its own change, before any fold.
+* **The generated shadow does not compile.** `tubuild create` on the real candidate emits 17
+  human-review items — 16 conflicting `extern` declarations plus one body it cannot split at
+  all, because `src/func_ov065_021182e4.cpp` defines it inside an `extern "C"` block — and the
+  result fails under 2004/b56 on a redefined `dBgW` and a redeclared `data_ov065_0211c080`.
+  Five `#pragma` directives survive in the legacy sources on top of that.
+
+The general lesson: a complete, correctly-homed RTTI triple says the *name* is real. It says
+nothing about where the *file* boundary falls. Check the span for overlap before scoping a fold.
