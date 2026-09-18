@@ -157,33 +157,9 @@ src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c:
     complete
     .text start:0x021120f4 end:0x02112130
 
-src/_ZN15daObjFl_UkiKi_cD1Ev.cpp:
+src/actors/daObjFl_UkiKi_c.cpp:
     complete
-    .text start:0x02112130 end:0x02112174
-
-src/_ZN15daObjFl_UkiKi_cD0Ev.cpp:
-    complete
-    .text start:0x02112174 end:0x021121cc
-
-src/_ZN15daObjFl_UkiKi_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021121cc end:0x02112210
-
-src/_ZN15daObjFl_UkiKi_c6RenderEv.cpp:
-    complete
-    .text start:0x02112210 end:0x02112238
-
-src/_ZN15daObjFl_UkiKi_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02112238 end:0x021122ac
-
-src/_ZN15daObjFl_UkiKi_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021122ac end:0x02112350
-
-src/d_a_obj_fl_uki_ki.c:
-    complete
-    .text start:0x02112350 end:0x02112380
+    .text start:0x02112130 end:0x02112380
 
 src/game/actors/daObjFl_Fall_Block_c.cpp:
     complete
