@@ -9,7 +9,7 @@
     "contiguous linker run: 0x2111ba0..0x2112290, 25 function(s). tools/tu_map.py splits this into 0x2111ba0..0x2112230 (23) plus a separate 0x2112230..0x2112290 two-function unit holding the factories; the split is the known unhandled-_classInit segmentation defect and the two are folded back together here.",
     "class label(s): daObjBk_Dossunbar_c",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "FOLD. The 25 delink entries of config/arm9/overlays/ov015/delinks.txt tile 0x02111ba0..0x02112290 with no gap and no overlap, bounded below by daObjBk_Botaosi_c_classInit (0x02111b68) and above by _ZN9TowerStepD1Ev (0x02112290). Both factories store the same vptr 0x0211458c and allocate the same 0x338, so they are two registry profiles of this one class. Same precedent as the sibling oracle daObjBkBillboard_c, whose factory was folded in on 2026-09-04."
+    "FOLD. The 25 delink entries of config/arm9/overlays/ov015/delinks.txt tile 0x02111ba0..0x02112290 with no gap and no overlap, bounded below by daObjBk_Botaosi_c_classInit (0x02111b68) and above by _ZN14daObjBk_Lift_cD1Ev (0x02112290). Both factories store the same vptr 0x0211458c and allocate the same 0x338, so they are two registry profiles of this one class. Same precedent as the sibling oracle daObjBkBillboard_c, whose factory was folded in on 2026-09-04."
   ],
   "sections": [
     {

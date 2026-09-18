@@ -524,7 +524,7 @@ int func_ov077_02125908(char *c)
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov077_021258dc
-// recovered name: Lakitu_Kill
+// recovered name: daJgm_c_Kill
 /* recovered: renamed to Class_Method */
 /* daJgm_c::Kill - recovered from vtable slot identity */
 extern void _ZN5dCc_c5ClearEv(void *);

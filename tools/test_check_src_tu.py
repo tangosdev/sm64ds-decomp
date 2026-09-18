@@ -131,11 +131,19 @@ class SymbolTests(unittest.TestCase):
 
     def test_a_compiler_emitted_variant_of_a_real_class_is_forgiven(self):
         """D2 and the vague-linkage _ZTV/_ZTI/_ZTS are minted by the TU itself and are
-        in no symbols.txt; forgiving them is what keeps this gate free of noise."""
+        in no symbols.txt; forgiving them is what keeps this gate free of noise.
+
+        TWO classes on purpose, because a token that IS listed short-circuits before
+        the forgiveness rule and so tests nothing. `daObjKm2_Ami_Bou_c` supplies the
+        D2 (ov045 licenses D1/D0 but no D2); `fLiNdBa_c` supplies the RTTI trio (its
+        D1 is in config/arm9/symbols.txt and it has no _ZTV/_ZTI/_ZTS row anywhere).
+        This test previously used `PoleLift` for all four, which stopped exercising
+        anything the moment that coined name was retired for the ROM's RTTI name."""
         with Scratch() as s:
             report = s.write("t.cpp", f'#include "{GOOD_HEADER}"\n'
-                                      "void g(){_ZN8PoleLiftD2Ev(); (void)_ZTI8PoleLift;"
-                                      " (void)_ZTV8PoleLift; (void)_ZTS8PoleLift;}\n").check()
+                                      "void g(){_ZN18daObjKm2_Ami_Bou_cD2Ev();"
+                                      " (void)_ZTI9fLiNdBa_c;"
+                                      " (void)_ZTV9fLiNdBa_c; (void)_ZTS9fLiNdBa_c;}\n").check()
             self.assertTrue(report["ok"], report["failures"])
 
     def test_a_compiler_emitted_variant_of_a_class_the_rom_never_names_fails(self):

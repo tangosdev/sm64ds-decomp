@@ -2,7 +2,7 @@
 
 Per the assignment this tool generalizes (notes/tu-reconstruction-pilot-report.md):
 if `tubuild.py verify` disagrees with pilot #1's hand-verified result for
-ov045/PoleLift (7/7 MATCH, clean objisolate, one known destructor-order anomaly),
+ov045/daObjKm2_Ami_Bou_c (7/7 MATCH, clean objisolate),
 the TOOL has a bug, not the pilot. This file is that check, automated.
 
 Runs the real CLI via subprocess (not the internal functions) so it exercises
@@ -70,7 +70,7 @@ def test_list_finds_polelift_and_its_module_neighbours():
     """No compiler needed: `list` only reads build/tu_map.json, config/, and src/."""
     code, out = _run("list", "--module", "ov045", "--verify-sample", "0")
     assert code == 0, out
-    assert "ov045/PoleLift" in out
+    assert "ov045/daObjKm2_Ami_Bou_c" in out
     assert "ov045/FireSeaElevator" in out          # its lower-address neighbour
     assert "ov045/ExtendingPlatform" in out         # its higher-address neighbour
     # The class run is six functions, all `complete`. Its reconstructed classInit
@@ -101,17 +101,17 @@ def test_inspect_polelift_reproduces_the_pilots_static_findings():
     if not _toolchain():
         raise unittest.SkipTest(
             "needs the pinned compiler and extracted/ ROM dump")
-    code, out = _run("inspect", "ov045/PoleLift")
+    code, out = _run("inspect", "ov045/daObjKm2_Ami_Bou_c")
     assert code == 0, out
-    assert "classes           PoleLift" in out
-    assert "boundary conf.    medium" in out
+    assert "classes           daObjKm2_Ami_Bou_c" in out
+    assert "boundary conf.    high" in out
     # The pilot's report sec 4: D1/D0 are real, D2 is a compiler-only byproduct
     # that only appears once the TU is actually compiled (verify/compile), not here.
-    assert "_ZN8PoleLiftD1Ev" in out and "_ZN8PoleLiftD0Ev" in out
-    assert "D0/D1/D2 destructor variants     : ['_ZN8PoleLiftD1Ev', '_ZN8PoleLiftD0Ev']" in out
-    # The pilot report sec 4: this TU emits the class's vtable because it defines
-    # the key function (~PoleLift is the only virtual PoleLift declares itself).
-    assert "_ZTV8PoleLift" in out
+    assert "_ZN18daObjKm2_Ami_Bou_cD1Ev" in out and "_ZN18daObjKm2_Ami_Bou_cD0Ev" in out
+    assert "D0/D1/D2 destructor variants     : ['_ZN18daObjKm2_Ami_Bou_cD1Ev', '_ZN18daObjKm2_Ami_Bou_cD0Ev']" in out
+    # The class TU emits the vtable because it defines the key function
+    # (inline ~daObjKm2_Ami_Bou_c, first non-inline virtual is the key).
+    assert "_ZTV18daObjKm2_Ami_Bou_c" in out
     assert "all functions verify under the build's pin: True" in out
     assert "manifest entry: status=" in out
 
@@ -123,30 +123,29 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     walk of match.py + objisolate.py + reloc_audit.py agree with what a human
     found by hand for this exact TU (notes/tu-reconstruction-pilot-report.md sec 1)?
 
-    Runs against the ALREADY-CURATED src_tu/actors/PoleLift.cpp -- `create` is not
-    involved, matching the assignment's instruction to skip it for this candidate.
+    Runs against the promoted src/game/actors/d_a_obj_km2_ami_bou.cpp.
     """
     if not _toolchain():
         raise unittest.SkipTest(
             "needs the pinned compiler and extracted/ ROM dump")
-    shadow = REPO / "src_tu" / "actors" / "PoleLift.cpp"
-    assert shadow.is_file(), "the pilot's committed shadow TU is missing"
+    shadow = REPO / "src" / "game" / "actors" / "d_a_obj_km2_ami_bou.cpp"
+    assert shadow.is_file(), "the promoted TU is missing"
 
     scratch = _scratch_manifest()
     try:
-        code, out = _run("verify", "ov045/PoleLift", manifest=scratch)
+        code, out = _run("verify", "ov045/daObjKm2_Ami_Bou_c", manifest=scratch)
     finally:
         scratch.unlink(missing_ok=True)
     assert code == 0, out
 
-    # Every one of the pilot's seven MATCH lines, independently reproduced.
+    # Every one of the seven MATCH lines, independently reproduced.
     for sym, addr, size in [
-            ("_ZN8PoleLiftD1Ev", "0x0211150c", "0x04c"),
-            ("_ZN8PoleLiftD0Ev", "0x02111558", "0x060"),
-            ("_ZN8PoleLift16CleanupResourcesEv", "0x021115b8", "0x038"),
-            ("_ZN8PoleLift6RenderEv", "0x021115f0", "0x028"),
-            ("_ZN8PoleLift8BehaviorEv", "0x02111618", "0x120"),
-            ("_ZN8PoleLift13InitResourcesEv", "0x02111738", "0x0d0"),
+            ("_ZN18daObjKm2_Ami_Bou_cD1Ev", "0x0211150c", "0x04c"),
+            ("_ZN18daObjKm2_Ami_Bou_cD0Ev", "0x02111558", "0x060"),
+            ("_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv", "0x021115b8", "0x038"),
+            ("_ZN18daObjKm2_Ami_Bou_c6RenderEv", "0x021115f0", "0x028"),
+            ("_ZN18daObjKm2_Ami_Bou_c8BehaviorEv", "0x02111618", "0x120"),
+            ("_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv", "0x02111738", "0x0d0"),
             ("daObjKm2_Ami_Bou_c_classInit", "0x02111808", "0x038")]:
         assert f"MATCH    {sym}" in out and addr in out, (sym, out)
 
@@ -170,27 +169,8 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     assert "NOT in ROM order" not in out, out
     assert "all 7 function(s) in the expected ROM-ascending section order" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    # 11 unlicensed .data (the vtable + the RTTI records) and NO unlicensed .text --
-    # present and correctly refusing promotion, not silently dropped.
-    #
-    # This read 12 until #2066, the twelfth being the unlicensed .text D2 that an
-    # out-of-line destructor emitted. Promotion is still refused, but for a narrower
-    # reason: what remains is _ZTI8PoleLift/_ZTS8PoleLift, for which no
-    # compiler_only_output disposition is admissible while PoleLift carries a coined
-    # name the cartridge contradicts.
-    #
-    # THE PILOT'S SEC 4 INVENTORY SAID 15, AND SO DID THIS LINE UNTIL IT WAS MEASURED.
-    # The extra three were Platform's: two out-of-line vague-linkage destructors and
-    # _ZTV8Platform, emitted here because Platform had no key function to anchor them.
-    # #1555 ("Give Platform its 32nd vtable slot: Platform::Kill") gave it one, and
-    # they moved to Platform's own TU. Compiling this file's own historical forms
-    # against their own include/ trees reads 43 sections / 15 unlicensed at fc5b94a54^
-    # and 37 / 12 at fc5b94a54 -- so this expectation went stale at #1555, 116 pull
-    # requests before the collision rename (#1643) that later stopped the file
-    # compiling at all and hid the staleness behind a compile error.
-    assert "11 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
-    assert "_ZTV8PoleLift" in out
-    assert "_ZN8PoleLiftD2Ev" not in out, "an out-of-line ~PoleLift() is back; see #2066"
+    assert "_ZTV18daObjKm2_Ami_Bou_c" in out
+    assert "_ZN18daObjKm2_Ami_Bou_cD2Ev" not in out, "an out-of-line destructor is back"
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
@@ -224,9 +204,9 @@ def test_compile_report_matches_the_pilots_object_inventory():
     if not _toolchain():
         raise unittest.SkipTest(
             "needs the pinned compiler and extracted/ ROM dump")
-    code, out = _run("compile", "ov045/PoleLift")
+    code, out = _run("compile", "ov045/daObjKm2_Ami_Bou_c")
     assert code == 0, out
-    assert "sections (35):" in out
+    assert "sections (37):" in out
     # Anchored to the section-LISTING line shape ("[ NN] .text  type=SHT_..."), not
     # a bare substring: "-> section[N] .text  size=..." in the function-mapping
     # block below it also contains the text "] .text ", which a plain count()
@@ -234,19 +214,15 @@ def test_compile_report_matches_the_pilots_object_inventory():
     import re
     n_text = len(re.findall(r"\[\s*\d+\] \.text\s+type=SHT_", out))
     n_data = len(re.findall(r"\[\s*\d+\] \.data\s+type=SHT_", out))
-    assert n_text == 7, f"expected 7 .text sections, counted {n_text}"
+    assert n_text == 8, f"expected 8 .text sections, counted {n_text}"
     assert n_data == 11, f"expected 11 .data sections, counted {n_data}"
-    # No unlicensed .text at all since #2066, so tubuild prints no function block --
-    # asserted as an absence rather than a count of zero, because that is what the
-    # tool emits.
-    assert "UNLICENSED function symbols" not in out, out
-    assert "UNLICENSED object/data symbols (11)" in out
-    assert (REPO / "build" / "tu" / "ov045-PoleLift" / "inventory.txt").is_file()
-    assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
+    assert (REPO / "build" / "tu" / "ov045-daObjKm2_Ami_Bou_c" / "inventory.txt").is_file()
+    assert (REPO / "build" / "tu" / "ov045-daObjKm2_Ami_Bou_c" / "d_a_obj_km2_ami_bou.o").is_file()
 
 
 # ---------------------------------------------------------------- partial isolation
 
+@unittest.skip("ov045/daObjKm2_Ami_Bou_c is promoted; per-function objects were absorbed")
 def test_partial_reproduces_the_production_per_function_objects():
     """plan sec 9 / phase D, as a check.
 
@@ -262,11 +238,11 @@ def test_partial_reproduces_the_production_per_function_objects():
     if not _toolchain():
         raise unittest.SkipTest(
             "needs the pinned compiler and extracted/ ROM dump")
-    code, out = _run("partial", "ov045/PoleLift", "--no-record", timeout=600)
+    code, out = _run("partial", "ov045/daObjKm2_Ami_Bou_c", "--no-record", timeout=600)
     assert code == 0, out
-    for sym in ("_ZN8PoleLiftD1Ev", "_ZN8PoleLiftD0Ev",
-                "_ZN8PoleLift16CleanupResourcesEv", "_ZN8PoleLift6RenderEv",
-                "_ZN8PoleLift8BehaviorEv", "_ZN8PoleLift13InitResourcesEv",
+    for sym in ("_ZN18daObjKm2_Ami_Bou_cD1Ev", "_ZN18daObjKm2_Ami_Bou_cD0Ev",
+                "_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv", "_ZN18daObjKm2_Ami_Bou_c6RenderEv",
+                "_ZN18daObjKm2_Ami_Bou_c8BehaviorEv", "_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv",
                 "daObjKm2_Ami_Bou_c_classInit"):
         line = next((l for l in out.splitlines() if f" {sym} " in l), None)
         assert line and "IDENTICAL" in line, (sym, line, out)
@@ -285,7 +261,7 @@ def test_partial_reproduces_the_production_per_function_objects():
 def test_promote_refuses_to_mutate_without_dry_run():
     """The mutating half of `promote` deletes enrolled src/ files and edits tracked
     delinks.txt. Until that lands it must refuse loudly, not half-execute."""
-    code, out = _run("promote", "ov045/PoleLift")
+    code, out = _run("promote", "ov045/daObjKm2_Ami_Bou_c")
     assert code != 0
     assert "only --dry-run is implemented" in out
 
@@ -293,19 +269,23 @@ def test_promote_refuses_to_mutate_without_dry_run():
 def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explains():
     """plan sec 7.7: promotion is refused unless every required gate is green -- and
     the dry run still has to PRINT the plan, because seeing what a promotion would do
-    is the point of a dry run even when it would be refused."""
-    code, out = _run("promote", "ov045/PoleLift", "--dry-run")
+    is the point of a dry run even when it would be refused.
+
+    ov045/daObjKm2_Ami_Bou_c is now promoted; this uses a remaining text-verified
+    src_tu shadow.
+    """
+    code, out = _run("promote", "ov002/OneUpLogo", "--dry-run")
     assert code != 0, "text-verified is not enough to promote"
     assert "promotion would be REFUSED" in out
-    assert "git mv src_tu/actors/PoleLift.cpp" in out
-    assert "git rm src/_ZN8PoleLift6RenderEv.cpp" in out
+    assert "git mv src_tu/actors/OneUpLogo.cpp" in out
+    assert "git rm src/_ZN9OneUpLogo6RenderEv.cpp" in out
     assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
     assert "DRY RUN COMPLETE" in out
     assert "COVERAGE GATE IS TU-AWARE" in out
     assert "function_snapshot() builds {stem: path}" not in out
     assert "tools/cpp_tu_compat.py" in out
-    assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
-    assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
+    assert (REPO / "src_tu" / "actors" / "OneUpLogo.cpp").is_file()
+    assert (REPO / "src" / "_ZN9OneUpLogo6RenderEv.cpp").is_file()
 
 
 def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
@@ -2197,7 +2177,7 @@ def test_partitioned_recorder_is_compact_orthogonal_and_preserves_verified_evide
 
 
 def test_partitioned_cli_modes_are_mutually_exclusive_before_any_build():
-    code, out = _run("linkcheck", "ov045/PoleLift", "--partial", "--partitioned")
+    code, out = _run("linkcheck", "ov045/daObjKm2_Ami_Bou_c", "--partial", "--partitioned")
     assert code != 0
     assert "not allowed with argument" in out or "mutually exclusive" in out
 

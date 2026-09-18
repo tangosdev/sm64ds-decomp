@@ -65,7 +65,8 @@ rejected them as redeclarations. Measured: at candidate `eb06f6ebe`,
 `tools/check_src_tu_compiles.py` exited 1 with 156/160; at base `11ef9a7dd` it
 exited 0 with 159/159 (the denominator moves because the candidate enrolls
 `ov002/da1up_c`). The four definitions — `src_tu/actors/Actor.cpp:1140`,
-`src_tu/actors/Koopa+KoopaSmall.cpp:347`, `src_tu/actors/Lakitu.cpp:88` and
+`src_tu/actors/Koopa+KoopaSmall.cpp:347`, `daJgm_c::OnTurnIntoEgg` (measured in
+the ov077 staging TU, since promoted to `src/game/actors/d_a_jgm.cpp`) and
 `src_tu/actors/Spiny.cpp:88` — are now void, and the evidence bullet below
 records the re-run.
 
@@ -174,7 +175,7 @@ figure below is the one measured on this tree.
   rising total can hide a dropped unit.
 - `tubuild verify` on the four repaired translation units, re-run separately
   after the merge: `arm9/Actor` **97/97 MATCH**, `ov062/Koopa+KoopaSmall`
-  **39/39 MATCH**, `ov077/Lakitu` **32/32 MATCH**, `ov077/Spiny` **34/34
+  **39/39 MATCH**, `ov077/daJgm_c` **32/32 MATCH**, `ov077/Spiny` **34/34
   MATCH**, all four objisolate clean, reloc-destinations clean and
   TEXT-VERIFIED, and all four exit 1 on the same unlicensed compiler-only
   records. The base control at `11ef9a7dd` reproduces every one of those
@@ -225,7 +226,7 @@ Independent verification must still pin the final candidate.
   now cleared. This gate proves compilation only; it says nothing about bytes.
 - `tubuild verify` on the four repaired TUs, each run separately, after the edit:
   `arm9/Actor` **97/97 MATCH**, `ov062/Koopa+KoopaSmall` **39/39 MATCH**,
-  `ov077/Lakitu` **32/32 MATCH**, `ov077/Spiny` **34/34 MATCH** — all four
+  `ov077/daJgm_c` **32/32 MATCH**, `ov077/Spiny` **34/34 MATCH** — all four
   objisolate clean and reloc-destinations clean, all four TEXT-VERIFIED. The
   return type is therefore not load-bearing in the emitted code for any of them.
   All four also exit 1 on the same unlicensed compiler-only records (`_ZTV`/
