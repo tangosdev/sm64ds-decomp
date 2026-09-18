@@ -2364,7 +2364,6 @@
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN6ShipUp8BehaviorEv.cpp": ["return:int"],
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["return:int"],
    "src/func_ov002_020b6244.c": ["return:int"],
    "src/func_ov002_020b6584.c": ["return:int"],
@@ -2390,7 +2389,6 @@
    "src/_ZN15FireSeaElevator8BehaviorEv.cpp": ["return:int"],
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["return:int"],
    "src/func_ov002_020b6244.c": ["return:int"],
    "src/func_ov002_020b6584.c": ["return:int"],
    "src/func_ov002_020b6958.c": ["return:int"],
@@ -2525,7 +2523,6 @@
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["param:#2 int", "param:#6 int", "return:int"],
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["param:#3 char *"],
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 int", "param:#6 int", "return:int"],
    "src/_ZN9Submarine13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int"],
    "src/actors/daDgr_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
@@ -4065,7 +4062,6 @@
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)", "return:int"],
    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": ["kind:data"],
    "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)", "return:int"],
    "src/_ZN9TowerStep13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/func_ov002_020b6958.c": ["arity:0", "mangled:0 parameter(s)", "return:int"],
    "src/func_ov080_021274ac.c": ["kind:data"],
@@ -4273,7 +4269,6 @@
    "src/_ZN8Snowball13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8WallSign13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["arity:1"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN9MontyMole13InitResourcesEv.cpp": ["arity:1", "return:struct BMD_File *"],
    "src/_ZN9OneUpLogo13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN9RabbitKey13InitResourcesEv.cpp": ["arity:1"],
@@ -5432,7 +5427,6 @@
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN8PoleLift13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["arity:1", "return:void *"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN9Submarine13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN9TinyCover13InitResourcesEv.cpp": ["arity:1", "return:void *"],
@@ -7455,7 +7449,6 @@
    "src/func_02041d28.c": ["return:int"]
   },
   "data_02082214": {
-   "src/_ZN9LavaPlank8BehaviorEv.cpp": ["return:SinCosEntry []"],
    "src/func_ov006_020c35e8.c": ["return:int []"],
    "src/func_ov075_021194e4.cpp": ["return:S4 []"],
    "src/func_ov075_021199d8.cpp": ["return:S4 []"],
@@ -11617,10 +11610,12 @@
    "src/_ZN10LavaSeesaw13InitResourcesEv.cpp": ["return:void *"]
   },
   "data_ov022_02114618": {
-   "src/__sinit_ov022_02112f78.c": ["return:int []"]
+   "src/__sinit_ov022_02112f78.c": ["return:int []"],
+   "src/actors/LavaPlank.cpp": ["return:SharedFilePtr"]
   },
   "data_ov022_02114620": {
-   "src/__sinit_ov022_02112f78.c": ["return:int []"]
+   "src/__sinit_ov022_02112f78.c": ["return:int []"],
+   "src/actors/LavaPlank.cpp": ["return:SharedFilePtr"]
   },
   "data_ov023_02112080": {
    "src/game/actors/d_a_obj_fm_battan.cpp": ["return:BattanCollisionFilePtr"]
@@ -12187,6 +12182,9 @@
   },
   "data_ov064_0211ba4c": {
    "src/game/actors/d_a_obj_fm_battan.cpp": ["return:char []"]
+  },
+  "data_ov064_0211ba6c": {
+   "src/actors/LavaPlank.cpp": ["return:CLPS_Block"]
   },
   "data_ov064_0211c3d0": {
    "src/_ZN9WaterRing13InitResourcesEv.cpp": ["return:int []"]
@@ -15593,9 +15591,9 @@
    "src/_ZN6Eyerok13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN6ToxBox13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["param:#2 void *"],
-   "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["param:#2 void *", "return:int"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN9TowerStep13InitResourcesEv.cpp": ["param:#1 dBgW *", "param:#2 void *"],
+   "src/actors/LavaPlank.cpp": ["param:#1 dBgW *", "param:#2 void *"],
    "src/actors/daObjCtKaitendai_c.cpp": ["param:#2 void *"],
    "src/actors/daObjCtMecha03_c.cpp": ["param:#2 void *"],
    "src/actors/daObjFl_London_c.cpp": ["param:#2 void *"],

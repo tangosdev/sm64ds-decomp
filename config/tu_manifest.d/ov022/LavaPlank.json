@@ -1,0 +1,83 @@
+{
+  "id": "ov022/LavaPlank",
+  "module": "ov022",
+  "source": "src/actors/LavaPlank.cpp",
+  "promoted_source": "src/actors/LavaPlank.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2112130..0x2112350, 6 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the upper 4-function sub-range 0x21121cc..0x2112350 and leaves the D1/D0 pair below it as one-function sources.",
+    "class label(s): LavaPlank -- the cartridge's own RTTI spelling is daObjFl_UkiKi_c (_ZTS at ov022 0x021141b8 reads '15daObjFl_UkiKi_c'; _ZTI at 0x021141ac points at _ZTS and at _ZTI10dBgActor_c).",
+    "PARTIAL BOUNDARY, MEASURED 2026-09-18: the destructor is this class's key function, so any source defining _ZN9LavaPlankD1Ev/_ZN9LavaPlankD0Ev also emits _ZTV9LavaPlank, _ZTI9LavaPlank and _ZTS9LavaPlank as vague linkage. _ZTV9LavaPlank has a configured home (ov022 0x021141f0) but _ZTI9LavaPlank / _ZTS9LavaPlank do not: the cartridge's records at ov022 0x021141ac / 0x021141b8 are configured under the ROM's own spelling, _ZTI15daObjFl_UkiKi_c / _ZTS15daObjFl_UkiKi_c. A homeless RTTI record can be licensed neither as deadstrip-data (needs a home, then compares the bytes) nor as a plain deadstrip (rombuild.compiler_only_policies and tubuild.apply_compiler_only_policy both refuse an _ZTI/_ZTS/_ZTV plain deadstrip), and objisolate.plan_multi refuses any surviving non-.text content, so the 6-function object cannot be isolated. Compiling the 6-function merge is otherwise green: 6/6 byte MATCH, objisolate clean, reloc-destinations clean, correct ROM-ascending emission order. Renaming the class to daObjFl_UkiKi_c is the precondition for licensing the whole run as one file.",
+    "MEASURED: with the destructor declared out of line and left undefined, this 4-function source emits no unlicensed symbol or section at all, so it takes the ordinary text-only multi-symbol isolation path with no compiler_only_output policy.",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021121cc",
+      "end": "0x02112350"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9LavaPlank16CleanupResourcesEv",
+      "address": "0x021121cc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN9LavaPlank16CleanupResourcesEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9LavaPlank6RenderEv",
+      "address": "0x02112210",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN9LavaPlank6RenderEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN9LavaPlank8BehaviorEv",
+      "address": "0x02112238",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN9LavaPlank8BehaviorEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN9LavaPlank13InitResourcesEv",
+      "address": "0x021122ac",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN9LavaPlank13InitResourcesEv.cpp",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from 4 of the 6 legacy one-function sources; see the file's own header comment for the reconciliation and for why the D1/D0 pair is not folded in.",
+    "The two extern declarations tubuild create flagged as CONFLICT (_ZN10dBgActor_c21UpdateModelPosAndRotYEv and _ZN10dBgActor_c19UpdateClsnPosAndRotEv, declared void(void*) by the Behavior source and int(void*) by the InitResources source) were resolved by dropping both: dBgActor_c.h already declares them as real members and this TU calls them that way, which is the spelling src/game/actors/d_a_obj_km1_ukishima.cpp proves.",
+    "include/decl_common.h was dropped: it declares data_ov022_02114618/02114620 as `char[]`, which blocks the SharedFilePtr member calls this TU needs. They are declared here as SharedFilePtr, the same way the ov043 sibling declares its own pair.",
+    "STYLE ORACLES: src/game/actors/daObjFl_Fall_Block_c.cpp (same overlay, same base, same D1/D0-then-methods shape) and src/game/actors/d_a_obj_km1_ukishima.cpp (same class shape member for member)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov022-LavaPlank/LavaPlank.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "production_mode": "text-only"
+}
