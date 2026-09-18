@@ -51,6 +51,7 @@ struct Kb1BillboardModelFilePtr : SharedFilePtr {
 };
 
 extern "C" Kb1BillboardModelFilePtr data_ov044_02111680;
+// @symbol __sinit_d_a_obj_kb1_billboard.cpp
 Kb1BillboardModelFilePtr data_ov044_02111680(1570);
 
 /* Every instruction the cartridge has here falls out of the one `new`.

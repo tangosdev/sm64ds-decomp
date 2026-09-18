@@ -52,6 +52,7 @@ extern int data_0208ee44;
 /* -------------------------------------------------------------------------- */
 /* ordinal 1 -- 0x020ab550  _ZN9dThIcon_c8BehaviorEv                          */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN9dThIcon_c8BehaviorEv
 /* Vtable slot 0, and the shared tail of the whole hierarchy. Of the three
  * RTTI-proven derived classes, dMgPsOpt_c::TouchIcon_c does not override this
  * slot at all and dispatches straight here; the other two,
@@ -89,6 +90,7 @@ void dThIcon_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* ordinal 0 -- 0x020ab54c  _ZN9dThIcon_c6RenderEv                            */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN9dThIcon_c6RenderEv
 /* Vtable slot 1, and empty in the cartridge: a single `bx lr`, four bytes. All
  * three RTTI-proven derived classes replace this entry in their own tables --
  * dMgPsOpt_c::TouchIcon_c, dScEntry_c::icon_c and dScMgSlot1_c::betIcon_c each

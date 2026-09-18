@@ -18,11 +18,13 @@
 typedef char SceneNode_size_must_be_0x14[sizeof(fBase_c::SceneNode) == 0x14 ? 1 : -1];
 #endif
 
+// @symbol _ZN7fBase_c9SceneNodeC1Ev
 fBase_c::SceneNode::SceneNode()
 {
     Reset();
 }
 
+// @symbol _ZN7fBase_c9SceneNode5ResetEv
 void fBase_c::SceneNode::Reset()
 {
     parent = 0;

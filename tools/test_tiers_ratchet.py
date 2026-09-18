@@ -819,7 +819,17 @@ class SyntheticTree:
     inherit and re-run every --check test along with it.
     """
 
-    TWO_FN = "//cpp\nvoid First() {}\nvoid Second() {}\n"
+    # Marked, because an unmarked member of a promoted TU is now a gate failure in
+    # its own right: with no marker it scores against the WHOLE FILE, so one dirty
+    # neighbour fails every clean member of the TU -- on main, after the merge.
+    # UNMARKED_TWO_FN is the same file without the markers and is the fixture that
+    # gate fires on.
+    TWO_FN = ("//cpp\n// @symbol First\nvoid First() {}\n"
+              "// @symbol Second\nvoid Second() {}\n")
+    UNMARKED_TWO_FN = "//cpp\nvoid First() {}\nvoid Second() {}\n"
+    # Left UNMARKED on purpose, and it must stay that way: the file-scope `unk_18`
+    # only reaches `Second` through the whole-file fallback. Mark it and `Second`
+    # starts passing, which is a different fixture than the tests below want.
     FAILING_TWO_FN = ("//cpp\nint unk_18;\n"
                       "void First() { unk_18 = 1; }\nvoid Second() {}\n")
     # One member fails and the other passes -- the shape VFY-2543-15 is about, and
@@ -827,7 +837,12 @@ class SyntheticTree:
     # named func_02013edc. FAILING_TWO_FN cannot express it: a file-scope `unk_18`
     # fails BOTH members, so every earlier fixture had the file and its members
     # agreeing, which is exactly the case that hides this defect.
-    MIXED_TWO_FN = "//cpp\nvoid func_02013edc() {}\nvoid Second() {}\n"
+    # Marked as the real src/actors/ActorDerived.cpp now is. The unbanked
+    # `func_02013edc` carries a marker too -- a fragment runs from its marker to the
+    # NEXT one, so leaving it out would fold it into `Second`'s body and fail the
+    # member this fixture exists to watch pass.
+    MIXED_TWO_FN = ("//cpp\n// @symbol func_02013edc\nvoid func_02013edc() {}\n"
+                    "// @symbol Second\nvoid Second() {}\n")
     MIXED_OWN = ["func_02013edc", "Second"]
 
     def _tree(self, tree, banked, extra=None):
@@ -911,6 +926,88 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertIn("CONVERTED ratchet PASS", text)
         self.assertNotIn("ORPHANED", text)
+
+    def test_an_unmarked_banked_member_fails_the_gate(self):
+        """The defect that red main twice in one day, as a gate outcome.
+
+        Both members are clean, nothing is orphaned and nothing backslides, so every
+        other gate passes. What is wrong is that neither member carries a `@symbol`
+        marker, so each scores against the whole file -- and the day a neighbour goes
+        dirty the failure lands on whoever merges next, not on the branch that caused
+        it. That is why this fires while the tree is still green.
+        """
+        rel = "src/actors/TU.cpp"
+        code, text = self._run({f"{rel}#First", f"{rel}#Second"}, [rel],
+                               {rel: ["First", "Second"]}, ["--check"],
+                               extra={rel: self.UNMARKED_TWO_FN})
+
+        self.assertEqual(code, 1)
+        self.assertIn("WHOLE-FILE SCORED", text)
+        self.assertIn(rel, text)
+        self.assertIn("First", text)
+        self.assertIn("Second", text)
+        self.assertNotIn("CONVERTED ratchet PASS", text)
+
+    def test_marking_those_members_is_what_makes_the_gate_pass(self):
+        """The repair the gate prints, run end to end.
+
+        Same tree, same baseline, same ownership; the only difference from the test
+        above is the two comment lines. Without this the gate is only ever observed
+        failing, and a gate that no edit can satisfy is worse than no gate.
+        """
+        rel = "src/actors/TU.cpp"
+        code, text = self._run({f"{rel}#First", f"{rel}#Second"}, [rel],
+                               {rel: ["First", "Second"]}, ["--check"],
+                               extra={rel: self.TWO_FN})
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertNotIn("WHOLE-FILE SCORED", text)
+
+    def test_a_one_member_file_is_exempt_from_the_marker_gate(self):
+        """Where the file IS the member's body the fallback is not a fallback.
+
+        Without this exemption the gate would fail on every single-function source in
+        the tree, none of which has ever needed a marker.
+        """
+        code, text = self._run({"src/Kept.cpp"}, ["src/Kept.cpp"],
+                               {"src/Kept.cpp": ["Kept"]}, ["--check"])
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertNotIn("WHOLE-FILE SCORED", text)
+
+    def test_an_unmarked_member_that_is_not_banked_does_not_fail_the_gate(self):
+        """The gate is about what the BASELINE promises, not about house style.
+
+        `func_02013edc` in this fixture is defined in the file and owned by it but is
+        not banked. Failing on it would make the ratchet an opinion about unconverted
+        code, and would red the tree for files nobody has promoted yet.
+        """
+        rel = "src/actors/TU.cpp"
+        unmarked = ("//cpp\n// @symbol Second\nvoid Second() {}\n"
+                    "void func_02013edc() {}\n")
+        code, text = self._run({f"{rel}#Second"}, [rel], {rel: self.MIXED_OWN},
+                               ["--check"], extra={rel: unmarked})
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertNotIn("WHOLE-FILE SCORED", text)
+
+    def test_a_real_backslide_is_reported_ahead_of_a_missing_marker(self):
+        """Order of diagnosis: the dirty member is the cause, the marker is the
+        amplifier. Reporting the marker first would send the reader to add a comment
+        when what the file needs is the raw offset taken out -- and adding the marker
+        there would make `Second` pass while `First` still does not, which looks like
+        a fix and is not one."""
+        dest = "src/actors/TU.cpp"
+        code, text = self._run(
+            {f"{dest}#First"}, [dest], {dest: ["First", "Second"]}, ["--check"],
+            extra={dest: self.FAILING_TWO_FN})
+
+        self.assertEqual(code, 1)
+        self.assertIn("CONVERTED backslide", text)
+        self.assertNotIn("WHOLE-FILE SCORED", text)
 
     def test_a_bare_path_scored_per_member_stays_a_transition_and_passes(self):
         """`absorbed_clean` branch 1: the file STILL EXISTS, so it is not an orphan."""

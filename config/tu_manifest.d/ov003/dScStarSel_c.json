@@ -1,0 +1,205 @@
+{
+  "id": "ov003/dScStarSel_c",
+  "module": "ov003",
+  "source": "src/actors/dScStarSel_c.cpp",
+  "promoted_source": "src/actors/dScStarSel_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020addfc..0x020b04f0, 14 function(s), from build/tu_map.json (tools/tu_map.py), extended over the abutting factory dScStarSel_c_classInit at 0x020b04f0..0x020b0580. The class's REAL member list is 15 functions, not 14: _ZN12dScStarSel_c8BehaviorEv (0x020af038..0x020af86c) sits in the middle of the run and has no delinks entry at all, because it is still an unmatched draft, so tu_map cannot see it. The licensed range below is a deliberate SUBSET of the run -- see the last three entries.",
+    "class label(s): dScStarSel_c",
+    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "METHOD: every boundary below was settled by a ROM-wide relocation referrer-set census -- for each candidate address, every arm_call/data word in every module that relocates to it, with the referrer resolved against the owning module's own symbol table including data symbols. The census was run with both controls. POSITIVE CONTROL: the seven vtable-pinned members each return exactly ONE inbound relocation and it is always _ZTV12dScStarSel_c at the exact slot offset -- InitResources +0x0 (slot 0), CleanupResources +0xc (slot 3), Behavior +0x18 (slot 6), Render +0x24 (slot 9), OnPendingDestroy +0x30 (slot 12), D1 +0x40 (slot 16), D0 +0x44 (slot 17), against the address point 0x020b1704. BASE-RATE CONTROL: the same census run over the two sibling scene classes in this overlay returns a different, class-specific set each time -- func_ov003_020ad6ec is reached only from dScTitle_c::InitResources and ::Behavior; func_ov003_020b060c only from dScGameOver_c::Behavior; func_ov003_020b0730 only from dScGameOver_c::InitResources and ::Behavior; dScTitle_c_classInit only from g_profile_TITLE; dScGameOver_c_classInit only from g_profile_GAME_OVER. The census therefore discriminates and is not returning the whole overlay.",
+    "INTERIOR, seven unlabelled helpers CONFIRMED as members: every inbound relocation to each of them originates inside this class's own run and there is no referrer in any other module. func_ov003_020adec0 <- func_ov003_020ae358. func_ov003_020adf50 <- Render (x2), Behavior. func_ov003_020adfc8 <- Render. func_ov003_020ae0b0 <- Render. func_ov003_020ae1a4 <- func_ov003_020adfc8, func_ov003_020ae0b0, func_ov003_020ae238. func_ov003_020ae238 <- Render. func_ov003_020ae358 <- Behavior. Corroborated semantically: they are the cursor/character-plate helpers Render and Behavior drive.",
+    "BOUNDARY, left edge REFUTED at 0x020adc74 and CONFIRMED at 0x020addfc. config/tu_manifest.d/ov003/dScTitle_c.json states that func_ov003_020adc74 and func_ov003_020adcbc are shared because 'the dScStarSel_c run below 0x020addfc also uses' them. Measured today, that is false: ZERO relocations from anywhere in 0x020addfc..0x020b0580 point into 0x020adc74..0x020addfc. The census instead shows func_ov003_020adc74 with 45 inbound arm_calls -- one from func_ov003_020ad6ec (a dScTitle_c member) and 44 from ov006 -- making it a widely shared utility rather than any one class's member, and func_ov003_020adcbc with exactly one caller, also func_ov003_020ad6ec. Both stay separately enrolled and this TU's licensed .text starts at 0x020addfc.",
+    "BOUNDARY, right edge of the RUN confirmed at 0x020b0580: dScStarSel_c_classInit is referenced exactly once, from g_profile_STAR_SELECT at ov003:0x020b16b4 (.data), abuts InitResources at 0x020b04f0 with a zero-byte gap, and both landed sibling TUs in this overlay fold their own classInit in.",
+    "ABSTRACT-SLOT HAZARD DOES NOT APPLY. dScene_c leaves vtable slots 0 (InitResources) and 3 (CleanupResources) abstract, so a member pinned only by one of those slots can hide at a run's edge. Read directly out of extracted/overlays/overlay_0003.bin at the address point 0x020b1704: slot -1 is _ZTI12dScStarSel_c 0x020b16bc, slot 0 is 0x020af8a0 (the real InitResources) and slot 3 is 0x020af86c (the real CleanupResources). Both are inside the run and already labelled; 18 slots total; nothing is hidden.",
+    "LICENSED RANGE IS A SUBSET OF THE RUN, deliberately, and TWO independent things set its edges. (a) _ZN12dScStarSel_c8BehaviorEv (0x020af038, 0x834 bytes) does not match under any configuration reached here and is left as its existing unenrolled draft. Because it sits in the MIDDLE of the run, the licensed .text cannot skip it: a delinks entry carries exactly one .text range (no entry anywhere in config/ carries two) so a licensed range must be contiguous. That caps the fold at 0x020af038 and splits the run in two -- eleven functions below Behavior, three above it (CleanupResources 0x34, InitResources 0xc50, dScStarSel_c_classInit 0x90). The three above all match; they are simply the smaller side and stay as their existing shards. (b) of the eleven below, the destructor pair D1 (0x020addfc) and D0 (0x020ade54) cannot be folded either, for a reason independent of Behavior: the cartridge places D1 BELOW D0, and mwccarm only emits that order when the destructor is inline in the class body AND the same TU defines the class's key function, InitResources -- which is on the far side of Behavior. Defined out of line instead, mwccarm emits D0 before D1 and adds an unconfigured base-object D2; `tubuild.py linkcheck` correctly REFUSED that object with 'licensed .text functions are not emitted in ROM address order'. See the DESTRUCTOR FORM note for the full 2x2 measurement. The licensed range is therefore the nine functions between the destructor pair and Behavior: 0x020adec0..0x020af038, 0x1178 bytes (4472), verified reproducing through a real scratch link.",
+    "WHY BEHAVIOR DOES NOT CLOSE: it is a released near-miss (see the near-miss bank record for ov003:0x020af038, which documents a 187-cell rank-by-type sweep, a 180-cell scratch sweep, two randomized product scans, a permuter run, a 40-cell pragma sweep and a cross-build sweep). Re-tested inside this fold, as a promotion is supposed to do, it did not close: the residual is 23 words, every one of them the same instruction with a different register number and no schedule change at all -- the bank's own r6/r7 swap at +0x248 plus a re-opened register-routing cluster at +0x210..+0x2ec. The fold is not the shape that fixes it. Closing it is the single blocker for the whole class: with Behavior's draft body in place, a scratch build of all fifteen functions with the inline-in-class destructor emits every function in exact ROM-ascending order with no D2, at 13/14."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020adec0",
+      "end": "0x020af038"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov003_020adec0",
+      "address": "0x020adec0",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov003_020adec0.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov003_020adf50",
+      "address": "0x020adf50",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov003_020adf50.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov003_020adfc8",
+      "address": "0x020adfc8",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov003_020adfc8.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov003_020ae0b0",
+      "address": "0x020ae0b0",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov003_020ae0b0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov003_020ae1a4",
+      "address": "0x020ae1a4",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov003_020ae1a4.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov003_020ae238",
+      "address": "0x020ae238",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov003_020ae238.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov003_020ae358",
+      "address": "0x020ae358",
+      "size": "0x00000398",
+      "legacy_source": "src/func_ov003_020ae358.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12dScStarSel_c16OnPendingDestroyEv",
+      "address": "0x020ae6f0",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12dScStarSel_c16OnPendingDestroyEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN12dScStarSel_c6RenderEv",
+      "address": "0x020ae6f4",
+      "size": "0x00000944",
+      "legacy_source": "src/_ZN12dScStarSel_c6RenderEv.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov003_020adfc8.cpp (func_ov003_020adfc8) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'FH' differs between the legacy file that used to hold _ZN12dScStarSel_c6RenderEv and the one that held _ZN12dScStarSel_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8SaveData19IsCharacterUnlockedEj' differs between the legacy file that used to hold func_ov003_020adec0 and the one that held func_ov003_020ae358; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8SaveData19IsCharacterUnlockedEj' differs between the legacy file that used to hold func_ov003_020adec0 and the one that held _ZN12dScStarSel_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold func_ov003_020ae358 and the one that held _ZN12dScStarSel_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0208ee44' differs between the legacy file that used to hold func_ov003_020ae358 and the one that held _ZN12dScStarSel_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e40' differs between the legacy file that used to hold func_ov003_020ae358 and the one that held _ZN12dScStarSel_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0208ee44' differs between the legacy file that used to hold func_ov003_020ae358 and the one that held _ZN12dScStarSel_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "RESOLUTION of the create warnings above: every conflicting object got ONE file-scope spelling, chosen as the one the surviving call sites already hold -- data_02092110 and data_02092128 scalar, data_020a0e58 as u16[], data_020a0e5a as u16[][2], _ZN3OAM5TIMESE scalar, func_ov003_020ae1a4's first parameter char*. Each is the same address arithmetic written differently and none moves a byte; the u16[][2] choice was measured against the flat u16[i*2] form, which costs func_ov003_020ae358 seventeen words. The generator's shadow 'class Sound' was dropped in favour of include/Sound.h, then Sound.h itself was dropped when the members that used it left the file.",
+    "PRAGMA: #pragma opt_strength_reduction off is file-global last-wins in mwccarm 2004/b56, not positional. Of the four cells of {opt_strength_reduction, opt_loop_invariants} x {on, off} this is the only one in which all of this TU's functions reproduce; both-default and loop-invariants-off each cost Render 0x10 bytes of frame. Bracketing the pragma around one member was tested and does nothing -- the last directive in the file wins for the whole file, and adding `#pragma defer_codegen off` does NOT make the brackets bind.",
+    "DESTRUCTOR FORM, measured, and it is the key to finishing this class. The cartridge places D1 (0x020addfc) BELOW D0 (0x020ade54). Of the 2x2 grid {inline in the class body, defined out of line} x {deferred codegen, #pragma defer_codegen off}: defining it out of line emits D0 before D1 -- the reverse of retail -- and additionally emits a base-object _ZN12dScStarSel_cD2Ev that the cartridge does not carry and ov003's symbols.txt does not configure; `defer_codegen off` changes neither. Defining it inline in the class body emits nothing at all UNLESS the same TU also defines the class's key function (InitResources, the first declared non-inline virtual), because nothing else odr-uses it. With the destructor inline in the header AND all fifteen functions in one file, mwccarm emits every function in exact ROM-ascending order, D1 first, with no D2 -- verified here on a scratch build that reached 13/14. So D1/D0 can only be folded together with InitResources, which is on the far side of Behavior. The header is deliberately LEFT as an out-of-line declaration by this change, because the existing D1/D0 one-function shards still define it and still supply the vtable; flipping the header to the inline form is part of the follow-up that folds the whole class, not of this partial.",
+    "FOLLOW-UP, in order, the moment Behavior closes: flip include/dScStarSel_c.h to `virtual ~dScStarSel_c() {}` inline in the class body, add Behavior, CleanupResources, InitResources and dScStarSel_c_classInit back to this file, extend the licensed .text to 0x020addfc..0x020b0580, and add the ten compiler_only_output rows the key function then needs (one deadstrip-data per ancestor typeinfo record/name -- _ZTI7fBase_c arm9:0x02086d70, _ZTS7fBase_c arm9:0x02086e60, _ZTS7dBase_c arm9:0x02086e54, _ZTS8dScene_c arm9:0x020914b0, _ZTI7dBase_c arm9:0x02086e78, _ZTI8dScene_c arm9:0x020914d4 -- plus this class's own _ZTI12dScStarSel_c ov003:0x020b16bc, _ZTS12dScStarSel_c ov003:0x020b16d4 and _ZTV12dScStarSel_c ov003:0x020b1704, whose emitted section is 0x50 bytes running 0x020b16fc..0x020b174c because the symbols.txt address point is 8 bytes above the section start). No D2 row is needed in that form."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov003-dScStarSel_c/dScStarSel_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov003-dScStarSel_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020adec0",
+        "end": "0x020af038",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020adec0",
+          "end": "0x020af038",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 9
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": []
+}
