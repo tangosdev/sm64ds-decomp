@@ -19,17 +19,18 @@
  * dBgW_KcMbg at 0x124 and Model at 0xd4, the same as
  * _ZN10dBgActor_cD1Ev.
  *
- * UNLIKE ITS SEVEN SIBLINGS IN THIS SERIES, this class declares no
- * out-of-line virtual at all yet: Render, InitResources and
- * CleanupResources are all still unmigrated and none of them is spelled as
- * a member function in include/daObjSwdoor_c.h (see its banner: "ABSTRACT
- * IN THREE SLOTS"). With only the inline destructor declared, this class
- * currently has NO key function, so referencing the destructor group here
- * makes THIS TU the one that defines _ZTV13daObjSwdoor_c and
- * _ZTI13daObjSwdoor_c as vague-linkage data, the same way
- * src/_ZN8Vector3sD1Ev.cpp's own banner describes for a class with no key
- * function. tools/objisolate.py reduces the object to the declared function
- * before eligible.py and rombuild.py judge it -- checked on this file, not
+ * THIS FILE NO LONGER CARRIES THE CLASS'S VAGUE-LINKAGE DATA. It used to:
+ * with only the inline destructor declared, daObjSwdoor_c had no key
+ * function anywhere and referencing the destructor group here made this TU
+ * the one that defined _ZTV13daObjSwdoor_c and _ZTI13daObjSwdoor_c, the same
+ * way src/_ZN8Vector3sD1Ev.cpp's own banner describes for a class with no
+ * key function. Render (slot 9) is now declared out of line in
+ * include/daObjSwdoor_c.h and defined in src/actors/daObjSwdoor_c.cpp, so
+ * that TU is the key-function TU and anchors the vtable and typeinfo
+ * instead. InitResources, CleanupResources and Behavior are pure here and
+ * can never be a key function; each leaf supplies its own.
+ * tools/objisolate.py reduces the object to the declared function before
+ * eligible.py and rombuild.py judge it -- checked on this file, not
  * assumed.
  */
 #include "daObjSwdoor_c.h"
