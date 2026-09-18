@@ -392,6 +392,10 @@
     "src/_ZN16daObjKaitendai_cD0Ev.cpp": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.c": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.cpp": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#func_ov002_020b66a8": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c6RenderEv": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c8BehaviorEv": "andrewboudreau",
+    "src/actors/daObjKaitendai_c.cpp#func_ov002_020b676c": "tangosdev",
     "src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp": "tangosdev",
     "src/_ZN16daObjPushblock_c6RenderEv.cpp": "tangosdev",
     "src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.cpp": "tangosdev",
@@ -3627,6 +3631,14 @@
     "src/game/actors/d_a_obj_ki_fune.cpp#_ZN14daObjKi_Fune_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_ki_fune.cpp#_ZN14daObjKi_Fune_c8BehaviorEv": "andrewboudreau",
     "src/game/actors/d_a_obj_ki_fune.cpp#_ZN14daObjKi_Fune_c13InitResourcesEv": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#_ZN10daKpa2Bg_cD1Ev": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#_ZN10daKpa2Bg_cD0Ev": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#func_ov060_02117a3c": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#func_ov060_02117a64": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#func_ov060_02117ae0": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#_ZN10daKpa2Bg_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#_ZN10daKpa2Bg_c6RenderEv": "tangosdev",
+    "src/actors/daKpa2Bg_c.cpp#_ZN10daKpa2Bg_c8BehaviorEv": "tangosdev",
     "src/actors/dCapIcon_c.cpp#_ZN10dCapIcon_c6UnlinkEv": "lunavyqo",
     "src/actors/dCapIcon_c.cpp#func_ov001_020ab228": "tangosdev",
     "src/actors/dCapIcon_c.cpp#func_ov001_020ab2e4": "tangosdev",
@@ -3666,6 +3678,7 @@
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "andrewboudreau",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev",
+    "src/minigames/d_s_mg_slot1.cpp#dScMgSlot1_c_classInit": "ruspecial"
   }
 }

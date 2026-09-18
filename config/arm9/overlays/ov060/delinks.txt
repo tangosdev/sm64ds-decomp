@@ -432,37 +432,9 @@ src/d_a_kpa_fire.c:
     complete
     .text start:0x02117938 end:0x02117980
 
-src/_ZN10daKpa2Bg_cD1Ev.cpp:
+src/actors/daKpa2Bg_c.cpp:
     complete
-    .text start:0x02117980 end:0x021179d4
-
-src/_ZN10daKpa2Bg_cD0Ev.cpp:
-    complete
-    .text start:0x021179d4 end:0x02117a3c
-
-src/func_ov060_02117a3c.c:
-    complete
-    .text start:0x02117a3c end:0x02117a64
-
-src/func_ov060_02117a64.c:
-    complete
-    .text start:0x02117a64 end:0x02117ae0
-
-src/func_ov060_02117ae0.c:
-    complete
-    .text start:0x02117ae0 end:0x02117b58
-
-src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02117b58 end:0x02117b9c
-
-src/_ZN10daKpa2Bg_c6RenderEv.cpp:
-    complete
-    .text start:0x02117b9c end:0x02117bc8
-
-src/_ZN10daKpa2Bg_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02117bc8 end:0x02117c30
+    .text start:0x02117980 end:0x02117c30
 
 src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp:
     .text start:0x02117c30 end:0x02117cdc

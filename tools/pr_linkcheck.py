@@ -36,6 +36,7 @@ Usage:
   python tools/pr_linkcheck.py --json out.json --fail       # CI mode
 """
 import argparse
+import collections
 import concurrent.futures
 import glob
 import json
@@ -238,8 +239,7 @@ def check_file(path, idx, ledger):
                              obj=obj, sym=(wsym if obj is not None else None),
                              off=(off if obj is not None else 0))
             results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
-                            "verdict": r["verdict"], "diffs": r.get("diffs", []),
-                            "passenger": False})
+                            **r, "passenger": False})
 
         # Full-file: every OTHER function symbol this object emits that also owns a ROM
         # slot. Checked straight out of the object (a thunk has no source file of its
@@ -259,16 +259,19 @@ def check_file(path, idx, ledger):
             for addr, size, mod in pslots:
                 r = LC.linkcheck(psym, addr, size, mod, _NAME_INDEX, obj=obj, sym=psym)
                 results.append({"sym": psym, "addr": f"0x{addr:08x}", "module": mod,
-                                "verdict": r["verdict"], "diffs": r.get("diffs", []),
-                                "passenger": True})
+                                **r, "passenger": True})
     return {"file": path, "symbol": " + ".join(sym for sym, _ in named),
             "symbols": [sym for sym, _ in named], "results": results, "note": ""}
 
 
 def worst(results):
-    order = ["WRONG", "NO-REPRO", "NO-SYM", "BLIND", "BENIGN", "VERIFIED"]
+    # A sibling near miss must never hide a hard failure behind DRAFT policy.
+    order = ["WRONG", "NO-SYM", "NO-BIN", "NO-SRC", "ERROR", "NO-REPRO",
+             "BLIND", "BENIGN", "VERIFIED"]
     verdicts = [x["verdict"].split("-")[0] if x["verdict"].startswith("BLIND")
                 else x["verdict"] for x in results]
+    if any(v not in order for v in verdicts):
+        return "ERROR"
     for v in order:
         if v in verdicts:
             return v
@@ -315,9 +318,8 @@ def source_policy(worst, text):
     unmatched", is exactly the condition to ask about, and asking the older question
     would hand a counted match the downgrade that exists for uncounted drafts.
 
-    The draft downgrade cannot collide with the transcription check: a transcription
-    has no banner by definition, because a NONMATCHING banner reclassifies it as an
-    honest draft (asm_policy.classify returns None for it).
+    Reject unbannered transcription first: it is also excluded from matched
+    counts, but that exclusion does not make it an honest declared draft.
 
     This lives outside main() because it is only reachable when a file FAILS, which is
     the one path a green CI run never exercises. `asm_policy.has_draft_banner` was
@@ -325,10 +327,10 @@ def source_policy(worst, text):
     NO-REPRO -- and then the validator died on a NameError mid-loop, reporting "worker
     error" instead of grading the file. Untestable because inline, so untested.
     """
-    if worst == "NO-REPRO" and text and not AP.counts_as_matched(text):
-        return "DRAFT"
     if AP.classify(text) == "transcribed":
         return "RAW-ASM"
+    if worst == "NO-REPRO" and text and not AP.counts_as_matched(text):
+        return "DRAFT"
     return worst
 
 
@@ -398,7 +400,7 @@ def main():
     # disagreeing with decl_common.h), carries no NONMATCHING banner, and was edited by a
     # merged PR while broken. A gate that cannot fail the file it could not even build is
     # not gating; a self-declared draft still gets the DRAFT pass below.
-    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM", "NO-SYM"}
+    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM", "NO-SYM", "NO-BIN", "NO-SRC", "ERROR"}
     reports, bad = [], []
     for path, rep in zip(files, checked):
         reports.append(rep)
@@ -449,30 +451,49 @@ _LABEL = {
                   "vacuously; banner it HAND-ASM PRIMITIVE or NONMATCHING",
     "NO-SYM":     "🔶 no-sym",
     "UNRESOLVED": "🔶 unresolved (symbol not in config/ledger)",
-    "DRAFT":      "ok - declared draft (header says NONMATCHING; non-reproduction expected)",
+    "DRAFT":      "draft - compiled, does not reproduce ROM; excluded from matched counts",
+    "NO-BIN":     "missing ROM bytes (not verified)",
+    "NO-SRC":     "missing source (not verified)",
+    "ERROR":      "validation error (not verified)",
 }
 
 
 def render_md(reports, bad):
     n = len(reports)
     out = []
-    if bad:
-        kinds = ", ".join(sorted({v for _, v in bad}))
-        out.append(f"**{len(bad)} of {n} changed file(s) do not match the ROM** ({kinds}).")
-    else:
+    if n and all(rep.get("worst") == "VERIFIED" for rep in reports):
         out.append(f"**All {n} changed file(s) compile to the ROM byte-for-byte with correct relocation targets.**")
+    else:
+        counts = collections.Counter(rep.get("worst", "UNKNOWN") for rep in reports)
+        summary = ", ".join(f"{count} {verdict}" for verdict, count in sorted(counts.items()))
+        out.append(f"**Checked {n} changed file(s): {summary or 'no results'}.**")
+        if bad:
+            out.append(f"{len(bad)} file(s) failed validation.")
+        if counts.get("DRAFT"):
+            out.append("Drafts compiled but do not reproduce the ROM; their bytes and relocation "
+                       "destinations are not verified, and they remain excluded from matched counts.")
     out += ["", "| File | Symbol | Result | Slots checked |", "|---|---|---|---|"]
     for rep in reports:
         w = rep.get("worst", "?")
         npass = sum(1 for r in rep["results"] if r.get("passenger"))
         checked = f"{len(rep['results'])}" + (f" (+{npass} passenger)" if npass else "")
         out.append(f"| `{rep['file']}` | `{rep['symbol']}` | {_LABEL.get(w, w)} | {checked} |")
-    # list the compiler-emitted passengers that were also verified (thunks / weak copies)
+    # Retain the failure reason and actual extents, including for draft rows.
     for rep in reports:
-        ps = sorted({r["sym"] for r in rep["results"] if r.get("passenger")})
+        for r in rep["results"]:
+            if r.get("reason"):
+                sizes = ""
+                if r.get("emitted_sizes"):
+                    sizes = (f"; emitted {r['emitted_sizes']} byte(s), "
+                             f"expected {r.get('expected_size')}")
+                out += ["", f"- `{rep['file']}` `{r.get('sym', rep['symbol'])}`: "
+                            f"{r['reason']}{sizes}"]
+    # Passengers were checked, not necessarily verified (thunks / weak copies).
+    for rep in reports:
+        ps = sorted({(r["sym"], r["verdict"]) for r in rep["results"] if r.get("passenger")})
         if ps:
-            out += ["", f"- `{rep['file']}` also verified {len(ps)} emitted passenger(s): "
-                        + ", ".join(f"`{p}`" for p in ps)]
+            out += ["", f"- `{rep['file']}` checked emitted passenger(s): "
+                        + ", ".join(f"`{p}` ({v})" for p, v in ps)]
     # spell out every wrong-dest reloc so a reviewer can see the exact bad link
     for rep in reports:
         for r in rep["results"]:

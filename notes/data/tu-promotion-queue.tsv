@@ -2,7 +2,10 @@ class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	
 # HOW TO READ THIS FILE. Rows whose first field starts with '#' are notes;
 # tools/classqueue.py skips them. Re-derive the data rows with:
 #     python tools/rtti_extract.py && python tools/tu_map.py --out build/tu_map.json
-#     python tools/queue_audit.py --write        (--check in CI, --help for the method)
+#     python tools/queue_audit.py --write        (needs the ROM dump; --help for the method)
+# CI runs --check-promoted, which audits already_promoted ONLY. The other columns need
+# build/rtti.json and build/tu_map.json, both derived from the cartridge dump, so no
+# runner can check them. A green CI run says nothing about shard_count or any blocker.
 #
 # shard_count is a FLOOR, not a figure. It counts distinct src/ files covering the TU's
 # ROM run as tools/tu_map.py cuts it, extended over zero-gap <Class>_classInit factories
@@ -40,7 +43,7 @@ class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	
 dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	68	1844	ov006	yes	no	pragma:8;multi-class-tu:3;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1; excludes 2 unresolved: dMg3DEspAnimSet_c,dMg3DEspModel_c)	dScMgSingle3DBase_c	text-only
 dMgJump3DMario_c	1	844	ov006	yes	yes	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
 dScMgD3DBase_c	1	835	ov006	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
-daMky_c	3	2381	ov030	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
+daMky_c	3	2382	ov030	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 da1up_c	1	1228	ov002	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
 daOts_c	1	885	ov064	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjFl_Gura_c	text-only
 Scuttlebug	3	1059	ov071	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daEyBm_c	text-only
@@ -76,14 +79,14 @@ PowerFlower	18	508	ov002	yes	no	compiler-only:>=9(derived from own chain: 4 clas
 daYurei_Mucho_c	1	746	ov065	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjCtMecha05_c	text-only
 daDgr_c	1	392	ov025	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 Swoop	21	676	ov065	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjCtMecha05_c	text-only
-dScTitle_c	9	319	ov003	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
+dScTitle_c	1	350	ov003	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 daDkk_c	1	284	ov025	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	-	text-only
 daObjWlPolelift_c	1	265	ov026	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 daPkn_c	1	961	ov084	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 KoopaShell	23	708	ov102	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 Player+dMgTrmpln2Mario_c+dMgTrmpln3DMario_c	88	3160	ov006	partial	no	pragma:2;multi-class-tu:3;classif:no-header:dMgTrmpln2Mario_c;classif:no-header:dMgTrmpln3DMario_c;compiler-only:>=19(derived from own chain: 8 classes incl. self via build/rtti.json + include/ base clause; floor 2x8+3)	dScMgSingle3DBase_c	text-only
 dScMgSlot1_c	1	64	ov006	yes	no	already-one-legacy-file:src/actors/MgBingoBallSlotsShot.cpp(needs manifest registration, not a shard merge);compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
-daObjHmBskt_c	8	214	ov030	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
+daObjHmBskt_c	1	177	ov030	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 BobOmbBuddy	22	734	ov084	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 ToxBox	22	687	ov092	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 BigBrickBlock	14	592	ov002	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
