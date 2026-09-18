@@ -175,8 +175,65 @@
     "MEASURED, NOT APPLIED: include/TowerStep.h still declares the destructor out of line, so this object carries a compiler-emitted _ZN9TowerStepD2Ev the cartridge does not have (banked deadstrip) and the D1/D0 pair comes out in the compiler's own order rather than source order. Declaring it inline as `virtual ~TowerStep() {}` ahead of the other virtuals -- the form include/daObjBk_Rotebar_c.h and include/daObjBk_Dossunbar_c.h use -- was measured here and gives the same 9/9 MATCH with NO D2 and a clean ROM-ascending emission order. It is not applied because the nine legacy shards are still enrolled `complete`, and src/_ZN9TowerStepD1Ev.cpp / src/_ZN9TowerStepD0Ev.cpp define the destructor out of line: an inline body in the class makes both a redefinition and reds the ROM build. Make that header change in the same change that deletes the shards.",
     "PROMOTION IS BLOCKED ON THE CLASS NAME, not on the source. This TU is text-verified (9/9 MATCH, objisolate clean, reloc-destinations clean) but tools/tubuild.py verify and linkcheck both refuse it at the licensing audit: `_ZTI9TowerStep` and `_ZTS9TowerStep` are declared compiler-only data with no configured ROM home. They have none because TowerStep is a COINED name. The cartridge names this class outright -- _ZTS at ov015:0x02114618 spells \"14daObjBk_Lift_c\", the _ZTI record at 0x0211460c points at it and at &_ZTI10dBgActor_c, and config/arm9/overlays/ov015/symbols.txt already carries _ZTI14daObjBk_Lift_c and _ZTS14daObjBk_Lift_c on exactly those two addresses. apply_compiler_only_policy in tools/tubuild.py states the remedy in its own docstring: rename the class to the cartridge's RTTI spelling so the rows resolve as deadstrip-data and are compared. Renaming TowerStep to daObjBk_Lift_c is therefore a PREREQUISITE of this promotion, not a follow-up.",
     "REFUTED here: moving the destructor declaration to the end of the class does not suppress the vtable/RTTI group. This TU defines every virtual the class declares, so it is the key-function TU under any declaration order; the emitted set is the same 11 data symbols either way.",
-    "SCOPE: this entry claims 0x02112290..0x021128e8 only. The two small helpers at 0x021128e8 / 0x021128f8 and the registry factory at 0x0211290c (src/d_a_obj_bk_lift.c, the BK_LIFT01 classInit) stay separate delinks entries. The sibling precedents fold the factory in -- daObjBk_Rotebar_c did on 2026-09-04 and daObjBk_Dossunbar_c folded two -- so a later pass should re-derive the right boundary over 0x02112290..0x02112944 rather than treat this cut as settled."
+    "SCOPE: this entry claims 0x02112290..0x021128e8 only. The two small helpers at 0x021128e8 / 0x021128f8 and the registry factory at 0x0211290c (src/d_a_obj_bk_lift.c, the BK_LIFT01 classInit) stay separate delinks entries. The sibling precedents fold the factory in -- daObjBk_Rotebar_c did on 2026-09-04 and daObjBk_Dossunbar_c folded two -- so a later pass should re-derive the right boundary over 0x02112290..0x02112944 rather than treat this cut as settled.",
+    "LINK EVIDENCE (tools/tubuild.py linkcheck ov015/TowerStep --partial): the nine per-function objects derived from this TU's single compile link, and the scratch ROM is byte-identical to the source-independent stock control (sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8) -- 106/106 modules exact, 11,207 source-built functions reproducing, 0 mismatching, 0 NEW `dsd check symbols` errors against the baseline control's 9 pre-existing ones. The run still reports 8/9 contribution-equivalent, and the one row is _ZN9TowerStep16CleanupResourcesEv: identical bytes, identical relocation offsets and types, differing only in which of two symbols.txt ALIASES the last two relocations name -- production's MovingBarSmall_ModelFile / MovingBarSmall_ClsnFile against this TU's address-true data_ov015_02114a64 / data_ov015_02114a5c on the same two addresses. That is the deliberate reconciliation above, not a divergence.",
+    "HAZARD: tools/tu_promote.py --dry-run reports this entry as promotable. It deliberately compiles nothing, so it does not reach the compiler-only licensing audit that tools/tubuild.py verify/linkcheck and tools/rombuild.py (_compiler_only_policy -> BuildError) both refuse it on. Do not read that dry run as clearance."
   ],
+  "partial_isolation": {
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "contributionEquivalent": "8/9",
+    "delinksChanged": false,
+    "derivedObjects": 9,
+    "extraImportsWithNoHome": [],
+    "extraInertImports": 93,
+    "moduleFidelityPassed": true,
+    "phases": {
+      "checkModules": true,
+      "checkSymbols": false,
+      "compile": true,
+      "delink": true,
+      "lcf": true,
+      "link": true,
+      "rom": true
+    },
+    "result": "failed",
+    "rom": {
+      "bytes": 16777216,
+      "matchesStockRom": true,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "scratch": "build/tu/ov015-TowerStep/link-partial (gitignored)",
+    "state": "derived",
+    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "substitutedObjectPaths": [
+      "src/_ZN9TowerStepD1Ev.cpp",
+      "src/_ZN9TowerStepD0Ev.cpp",
+      "src/_ZN9TowerStep4KillEv.cpp",
+      "src/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp",
+      "src/func_ov015_021123c8.cpp",
+      "src/_ZN9TowerStep16CleanupResourcesEv.cpp",
+      "src/_ZN9TowerStep6RenderEv.cpp",
+      "src/_ZN9TowerStep8BehaviorEv.cpp",
+      "src/_ZN9TowerStep13InitResourcesEv.cpp"
+    ],
+    "symbolCheckNewVsBaseline": [],
+    "tuRange": {
+      "differingBytes": 0,
+      "end": "0x021128e8",
+      "firstDiff": null,
+      "start": "0x02112290"
+    }
+  },
   "production_mode": "text-only",
   "promoted_source": "src/actors/TowerStep.cpp",
   "sections": [
@@ -191,11 +248,6 @@
   "verification": {
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9TowerStepD2Ev"
-      ],
-      "unhandled": [],
       "data": [
         "_ZTI7fBase_c",
         "_ZTS7fBase_c",
@@ -208,7 +260,12 @@
         "_ZTI9TowerStep",
         "_ZTS9TowerStep",
         "_ZTV9TowerStep"
-      ]
+      ],
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9TowerStepD2Ev"
+      ],
+      "unhandled": []
     },
     "criteria": {
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
