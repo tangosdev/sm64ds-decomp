@@ -769,7 +769,7 @@
     "src/_ZN15dScMgSnowball_c13OnYoshiTryEatEi.cpp",
     "src/_ZN15dScMgSnowball_cD0Ev.cpp",
     "src/_ZN15dScMgSnowball_cD1Ev.cpp",
-    "src/_ZN15daObjGuragura_c6RenderEv.cpp",
+    "src/actors/daObjGuragura_c.cpp#_ZN15daObjGuragura_c6RenderEv",
     "src/_ZN15daObjGuragura_cD0Ev.cpp",
     "src/_ZN15daObjGuragura_cD1Ev.cpp",
     "src/_ZN16BowserShockwaves16CleanupResourcesEv.cpp",
