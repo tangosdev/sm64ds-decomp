@@ -82,6 +82,11 @@ PRAGMA_RE = re.compile(r"^\s*#pragma\s+\w+")
 BASE_RE = re.compile(
     r"^\s*(?:class|struct)\s+([A-Za-z_]\w*)\s*:\s*"
     r"(?:public\s+|private\s+|protected\s+|virtual\s+)*([A-Za-z_][\w:]*)\s*(?:,|\{|$)")
+# A class a header DEFINES. The brace is required, so `struct C;` -- which
+# declares nothing a TU can be compiled against -- does not count. Matching the
+# looser form would retire a real blocker, which is the expensive direction.
+DEFN_RE = re.compile(r"^\s*(?:class|struct)\s+([A-Za-z_]\w*)\s*(?::[^;{]*)?\{")
+NO_HEADER_RE = re.compile(r"classif:no-header:([A-Za-z_]\w*)$")
 
 
 def split_blockers(s):
@@ -136,11 +141,15 @@ class Graph:
         self.rtti_names = {v["name"] for v in rt["records"].values()}
 
         self.hdr_parent = collections.defaultdict(set)
+        self.hdr_defines = set()
         for f in glob.glob(str(REPO / "include" / "**" / "*.h"), recursive=True):
             for line in open(f, encoding="utf-8", errors="replace"):
                 m = BASE_RE.match(line)
                 if m and m.group(1) != m.group(2).split("::")[-1]:
                     self.hdr_parent[m.group(1)].add(m.group(2).split("::")[-1])
+                d = DEFN_RE.match(line)
+                if d:
+                    self.hdr_defines.add(d.group(1))
 
     def ancestors(self, cls, seen=frozenset()):
         """({cls} | ancestors, provenance) -- 'rtti', 'header' or 'unknown'."""
@@ -337,7 +346,10 @@ NOTES = [
     "# HOW TO READ THIS FILE. Rows whose first field starts with '#' are notes;",
     "# tools/classqueue.py skips them. Re-derive the data rows with:",
     "#     python tools/rtti_extract.py && python tools/tu_map.py --out build/tu_map.json",
-    "#     python tools/queue_audit.py --write        (--check in CI, --help for the method)",
+    "#     python tools/queue_audit.py --write        (needs the ROM dump; --help for the method)",
+    "# CI runs --check-promoted, which audits already_promoted ONLY. The other columns need",
+    "# build/rtti.json and build/tu_map.json, both derived from the cartridge dump, so no",
+    "# runner can check them. A green CI run says nothing about shard_count or any blocker.",
     "#",
     "# shard_count is a FLOOR, not a figure. It counts distinct src/ files covering the TU's",
     "# ROM run as tools/tu_map.py cuts it, extended over zero-gap <Class>_classInit factories",
@@ -420,6 +432,19 @@ def run(write, check):
                     changed["compiler-only"] += 1
                 out.append(cell)
                 continue
+            # Everything the loop below does not recognise falls through its
+            # `else` and is copied verbatim, so a `classif:` token written once
+            # can never be retired -- which is how `classif:no-header:<C>`
+            # survives on rows whose own has_header column reads yes. Retire it
+            # when a tracked header defines the class. The probe is keyed on the
+            # DEFINITION and not on a `<Class>.h` filename, because five of the
+            # nine it currently clears are defined in a header named after a
+            # different class: dScMgCard_c.h, dScMgMCarlo_c.h, dScMgMCarlo2_c.h
+            # and CapIcon.h.
+            d = NO_HEADER_RE.match(b)
+            if d and d.group(1) in graph.hdr_defines:
+                changed["classif:no-header"] += 1
+                continue
             for key, field in (("no-legacy-source", "no_legacy_source"),
                                ("unmatched", "unmatched")):
                 if re.match(re.escape(key) + r":(\d+)$", b) and m is not None:
@@ -465,12 +490,120 @@ def run(write, check):
     return 0
 
 
+def check_promoted_only():
+    """Audit ONLY already_promoted, from git-tracked files, for CI.
+
+    The full audit cannot run on a GitHub runner. `compiler-only` needs
+    build/rtti.json and every measured column needs build/tu_map.json, and both
+    are derived from extracted/arm9_dec.bin and extracted/overlays/*.bin -- the
+    cartridge dump, which is not in the repository. So `--check` has always been
+    a local-only gate, even though the queue's own header advertises it as
+    running in CI. It did not, and a four-day-stale row survived a same-day
+    regeneration because of it.
+
+    `already_promoted` is the exception, and it is also the column that costs
+    real work. `Tree.measure()` derives it as `all(c in self.promoted ...)`, and
+    `self.promoted` is read entirely from config/tu_manifest.d/**/*.json -- all
+    git-tracked. Nothing about it needs the ROM; it sat behind the ROM-derived
+    inputs only because it was computed inside a method that loads them for the
+    other columns.
+
+    This is deliberately ONE column. A row can be stale in shard_count,
+    total_lines or any blocker and still pass here, and the output says so, so a
+    green run is never mistaken for the full audit.
+
+    Why this column specifically: the queue is what fleet dispatch screens TU
+    candidates from. A row reading `already_promoted = no` for a class that is
+    already promoted sends an agent to redo landed work. That happened on
+    2026-09-18 with daObjTh_Fall_Block_c, promoted four days earlier; the agent
+    produced no commit because there was nothing to do, and daTrsTrap_c was next
+    on the same screen. No other column can waste an agent that way.
+
+    AN EMPTY CHECK IS NOT A PASS. No manifest entries and no rows both exit 2
+    rather than printing a reassuring `checked 0`.
+    """
+    promoted, entries = set(), 0
+    for f in glob.glob(str(REPO / "config" / "tu_manifest.d" / "**" / "*.json"),
+                       recursive=True):
+        if os.path.basename(f) == "_meta.json":
+            continue
+        entries += 1
+        d = json.loads(open(f, encoding="utf-8").read())
+        if d.get("status") == "promoted":
+            for c in d["id"].split("/")[-1].split("+"):
+                promoted.add(c)
+    if not entries:
+        print("queue_audit: no manifest entries under config/tu_manifest.d -- "
+              "relocated directory or partial checkout, not a pass", file=sys.stderr)
+        return 2
+
+    with QUEUE.open(newline="", encoding="utf-8") as fh:
+        rd = csv.DictReader(fh, delimiter="	")
+        fields, all_rows = rd.fieldnames, list(rd)
+    rows = [r for r in all_rows if not (r[fields[0]] or "").lstrip().startswith("#")]
+    if not rows:
+        print("queue_audit: the queue resolved to no rows -- not a pass",
+              file=sys.stderr)
+        return 2
+
+    # Rows carrying "-" make no promotion claim: UNATTRIBUTED and
+    # UNATTRIBUTED-CORE are aggregate counts of unplaced .text runs, not
+    # classes, and there is nothing about them for a manifest to agree with.
+    # The full audit skips them for the same reason by a different route --
+    # Tree.measure() returns None because tu_map cannot place a name that is
+    # not a class. Auditing them here would red the gate permanently on two
+    # rows that are correct, which is how a gate gets switched off.
+    wrong, no_claim = [], 0
+    for row in rows:
+        classes = [c.strip() for c in row["class_name"].split("+") if c.strip()]
+        have = (row.get("already_promoted") or "").strip()
+        if not classes:
+            continue
+        if have not in ("yes", "no"):
+            no_claim += 1
+            continue
+        want = "yes" if all(c in promoted for c in classes) else "no"
+        if have != want:
+            wrong.append((row["class_name"], row.get("overlay", "?"), have, want))
+
+    audited = len(rows) - no_claim
+    if not audited:
+        print("queue_audit: no row made a promotion claim -- not a pass",
+              file=sys.stderr)
+        return 2
+    print("queue_audit --check-promoted: %d of %d row(s) audited against %d "
+          "manifest entries (%d promoted class(es)); %d row(s) make no "
+          "promotion claim" % (audited, len(rows), entries, len(promoted), no_claim))
+    print("  checks already_promoted ONLY; shard_count, total_lines and every "
+          "blocker need the ROM dump and are NOT checked here")
+    if not wrong:
+        print("queue_audit: every row's already_promoted agrees with "
+              "config/tu_manifest.d")
+        return 0
+    for cls, ov, have, want in wrong:
+        why = ("is promoted but the queue says no" if want == "yes"
+               else "is NOT promoted but the queue says yes")
+        print("  %-28s %-7s %s (has %r, want %r)" % (cls, ov, why, have, want))
+    print("queue_audit: FAIL -- %d row(s) disagree. Regenerate with "
+          "'python tools/queue_audit.py --write' (needs the ROM dump; see --help)"
+          % len(wrong))
+    return 1
+
+
 def main():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--write", action="store_true", help="rewrite the queue in place")
     p.add_argument("--check", action="store_true", help="exit 1 if the queue is stale")
+    p.add_argument("--check-promoted", action="store_true",
+                   help="audit ONLY already_promoted, from git-tracked files; "
+                        "needs no ROM dump, so this is the arm that runs in CI")
     args = p.parse_args()
+    if args.check_promoted:
+        if args.write or args.check:
+            p.error("--check-promoted is a standalone arm; it does not combine "
+                    "with --write or --check")
+        return check_promoted_only()
     return run(args.write, args.check)
 
 

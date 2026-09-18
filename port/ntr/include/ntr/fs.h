@@ -34,7 +34,7 @@ int32_t fs_overlay_count();          // = the root directory's first file ID
 // those. The two spaces differ by a constant.
 //
 // Established empirically against the decomp's recovered asset evidence
-// (include/MadPianoResources.h, include/MessageBank.h) on the readable/
+// (include/daPiano_c_resources.h, include/MessageBank.h) on the readable/
 // asset-evidence-seed branch. Eight independent points across two distant
 // regions, five of them name-confirmed:
 //
