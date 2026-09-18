@@ -1640,5 +1640,387 @@ class BomTests(unittest.TestCase):
         self.assertEqual([d.symbol for d in defs if d.symbol in ("u8", "u16")], [])
 
 
+class StaticMemberTests(unittest.TestCase):
+    """A static member has no `this`, and its DEFINITION cannot say so.
+
+    C++ forbids repeating `static` on an out-of-line definition, so `fBase_c
+    *dBase_c::Spawn(u32, fBase_c *, int, int)` is character-for-character what a
+    non-static member's definition looks like; the keyword survives only in the class
+    body. The tool prepended a `this` to every out-of-line member it saw, which
+    invented a fifth parameter for `dBase_c::Spawn` and billed three correct
+    four-argument declarations for an arity disagreement.
+
+    THE DEFECT WAS ALWAYS THERE. Before `dBase_c::Spawn`'s definition gained an
+    `@symbol` marker the tool could not recover its linker name at all, so it went to
+    `orphans` and claimed nothing. The marker only made the phantom visible, and any
+    file that gains one over a static member would hit it again.
+
+    BOTH DIRECTIONS ARE TESTED, and the second one is the one that matters: the
+    implicit `this` has to keep being added for a NON-static member, because that is
+    what keeps roughly 3,000 correct flat externs of real members out of the report. A
+    fix that simply stopped adding it would pass the first test here and silently
+    switch two thirds of the gate off.
+    """
+
+    HEADER = (
+        "struct dBase_c {\n"
+        "    void AfterInitResources(u32 vfSuccess);\n"
+        "    static struct fBase_c *Spawn(u32 id, struct fBase_c *parent,\n"
+        "                                 int a, int b);\n"
+        "};\n")
+
+    SPAWN_DEF = (
+        '#include "types.h"\n'
+        "// @symbol _ZN7dBase_c5SpawnEjP7fBase_cii\n"
+        "struct fBase_c *dBase_c::Spawn(u32 id, struct fBase_c *parent,\n"
+        "                               int a, int b)\n"
+        "{\n"
+        "    (void)id; (void)a; (void)b;\n"
+        "    return parent;\n"
+        "}\n")
+
+    def _tree(self, t):
+        t.write("include/dBase_c.h", self.HEADER)
+        t.write("src/ActorDerived.cpp", self.SPAWN_DEF)
+
+    # ------------------------------------------------ direction 1: no phantom
+
+    def test_a_static_member_definition_gets_no_this(self):
+        _findings, _d, defs, _files = build(self._tree)
+        rec = [d for d in defs
+               if d.symbol == "_ZN7dBase_c5SpawnEjP7fBase_cii"][0]
+        self.assertFalse(rec.is_member)
+        self.assertEqual(rec.flat_params(),
+                         ("unsigned int", "fBase_c *", "int", "int"))
+
+    def test_a_flat_four_argument_declaration_of_it_agrees(self):
+        def tree(t):
+            self._tree(t)
+            t.write("src/shard.c",
+                    '#include "types.h"\n'
+                    "extern struct fBase_c *_ZN7dBase_c5SpawnEjP7fBase_cii(\n"
+                    "    u32 a, struct fBase_c *b, int c, int d);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN7dBase_c5SpawnEjP7fBase_cii"), [])
+
+    def test_a_five_argument_declaration_of_it_is_now_the_wrong_one(self):
+        """The phantom is gone, not inverted: 5 against 4 is still reported."""
+        def tree(t):
+            self._tree(t)
+            t.write("src/shard.c",
+                    '#include "types.h"\n'
+                    "extern struct fBase_c *_ZN7dBase_c5SpawnEjP7fBase_cii(\n"
+                    "    void *thiz, u32 a, struct fBase_c *b, int c, int d);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN7dBase_c5SpawnEjP7fBase_cii"),
+                         [("arity", "src/shard.c", "5", "4")])
+
+    # -------------------------- direction 2: the regression that matters most
+
+    def test_a_non_static_member_definition_still_gets_its_this(self):
+        _findings, _d, defs, _files = build(self._tree_with_instance_member)
+        rec = [d for d in defs
+               if d.symbol == "_ZN7dBase_c18AfterInitResourcesEj"][0]
+        self.assertTrue(rec.is_member)
+        self.assertEqual(rec.flat_params(), ("<this>", "unsigned int"))
+
+    def _tree_with_instance_member(self, t):
+        self._tree(t)
+        t.write("src/AfterInit.cpp",
+                '#include "types.h"\n'
+                "// @symbol _ZN7dBase_c18AfterInitResourcesEj\n"
+                "void dBase_c::AfterInitResources(u32 vfSuccess)\n"
+                "{\n    (void)vfSuccess;\n}\n")
+
+    def test_a_flat_declaration_of_it_missing_the_this_is_still_reported(self):
+        def tree(t):
+            self._tree_with_instance_member(t)
+            t.write("src/shard.c",
+                    '#include "types.h"\n'
+                    "extern void _ZN7dBase_c18AfterInitResourcesEj(u32 a);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN7dBase_c18AfterInitResourcesEj"),
+                         [("arity", "src/shard.c", "1", "2")])
+
+    def test_a_flat_declaration_of_it_writing_the_this_out_agrees(self):
+        def tree(t):
+            self._tree_with_instance_member(t)
+            t.write("src/shard.c",
+                    '#include "types.h"\n'
+                    "extern void _ZN7dBase_c18AfterInitResourcesEj(\n"
+                    "    void *thiz, u32 a);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN7dBase_c18AfterInitResourcesEj"), [])
+
+    def test_one_class_flips_one_member_and_not_its_sibling(self):
+        """The paired control. Same header, same class, same definition file."""
+        def tree(t):
+            t.write("include/dBase_c.h", self.HEADER)
+            t.write("src/both.cpp",
+                    '#include "types.h"\n'
+                    "// @symbol _ZN7dBase_c18AfterInitResourcesEj\n"
+                    "void dBase_c::AfterInitResources(u32 v)\n{\n    (void)v;\n}\n"
+                    "// @symbol _ZN7dBase_c5SpawnEjP7fBase_cii\n"
+                    "struct fBase_c *dBase_c::Spawn(u32 id, struct fBase_c *p,\n"
+                    "                               int a, int b)\n"
+                    "{\n    (void)id; (void)a; (void)b;\n    return p;\n}\n")
+        _findings, _d, defs, _files = build(tree)
+        flags = {d.symbol: d.is_member for d in defs}
+        self.assertFalse(flags["_ZN7dBase_c5SpawnEjP7fBase_cii"])
+        self.assertTrue(flags["_ZN7dBase_c18AfterInitResourcesEj"])
+
+
+class StaticMemberIndexTests(unittest.TestCase):
+    """What the index reads, and the three things it must not confuse with it.
+
+    `static` means three different things in C++ and only one of them is a static
+    member: at file scope it is internal linkage, inside a function body it is a local
+    with static storage, and inside a class body it is "no `this`". The index is a
+    brace-scope walk for that reason, not a regex for the keyword.
+    """
+
+    def index(self, files):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            for rel, text in files.items():
+                t.write(rel, text)
+            return CDA.static_member_index(t.root)
+
+    def test_a_static_member_is_indexed_static(self):
+        idx = self.index({"include/w.h":
+                          "struct Widget {\n    static int Make(int a);\n};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.STATIC_MEMBER)
+
+    def test_a_plain_member_is_indexed_instance(self):
+        idx = self.index({"include/w.h":
+                          "struct Widget {\n    int Make(int a);\n};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.INSTANCE_MEMBER)
+
+    def test_an_access_label_does_not_hide_the_keyword(self):
+        """`private:` carries no `;`, so it glues itself to the next member."""
+        idx = self.index({"include/w.h":
+                          "class Widget {\n"
+                          "private:\n"
+                          "    static int Hidden(void);\n"
+                          "public:\n"
+                          "    static int Shown(void);\n"
+                          "};\n"})
+        self.assertEqual(idx[("Widget", "Hidden")], CDA.STATIC_MEMBER)
+        self.assertEqual(idx[("Widget", "Shown")], CDA.STATIC_MEMBER)
+
+    def test_a_static_free_function_at_file_scope_is_not_a_member(self):
+        """Internal linkage, which is what line ~1144 of the tool already handles."""
+        idx = self.index({"include/w.h":
+                          "static int Helper(int a);\n"
+                          "struct Widget {\n    int Make(int a);\n};\n"})
+        self.assertEqual([k for k in idx if k[1] == "Helper"], [])
+        self.assertEqual(idx[("Widget", "Make")], CDA.INSTANCE_MEMBER)
+
+    def test_a_declaration_inside_a_member_body_does_not_reach_the_class(self):
+        """One brace deeper is a function body, and its contents are not members."""
+        idx = self.index({"include/w.h":
+                          "struct Widget {\n"
+                          "    static int Total(void) { int Leak(void);"
+                          " return Leak(); }\n"
+                          "};\n"})
+        self.assertEqual(idx[("Widget", "Total")], CDA.STATIC_MEMBER)
+        self.assertNotIn(("Widget", "Leak"), idx)
+
+    def test_an_anonymous_body_does_not_lend_members_to_its_enclosing_class(self):
+        idx = self.index({"include/w.h":
+                          "struct Widget {\n"
+                          "    struct { int Anon(void); } u;\n"
+                          "    static int Real(void);\n"
+                          "};\n"})
+        self.assertEqual(idx[("Widget", "Real")], CDA.STATIC_MEMBER)
+        self.assertNotIn(("Widget", "Anon"), idx)
+
+    def test_a_nested_class_is_keyed_on_the_inner_name(self):
+        """`A::B::f` is a member of B, and B is what the definition spells."""
+        idx = self.index({"include/w.h":
+                          "struct Outer {\n"
+                          "    struct Inner { static int Make(int a); };\n"
+                          "    int Make(int a);\n"
+                          "};\n"})
+        self.assertEqual(idx[("Inner", "Make")], CDA.STATIC_MEMBER)
+        self.assertEqual(idx[("Outer", "Make")], CDA.INSTANCE_MEMBER)
+
+    def test_a_class_body_in_a_source_file_is_not_indexed(self):
+        """HEADERS ONLY. A class re-declared inside one shard is that shard's
+        private reconstruction, as likely to be a guess as the extern beside it."""
+        idx = self.index({"src/shard.cpp":
+                          "struct Widget {\n    static int Make(int a);\n};\n"})
+        self.assertEqual(idx, {})
+
+    def test_two_different_classes_do_not_contaminate_each_other(self):
+        idx = self.index({"include/a.h":
+                          "struct Alpha {\n    static int Spawn(int a);\n};\n",
+                          "include/b.h":
+                          "struct Beta {\n    int Spawn(int a);\n};\n"})
+        self.assertEqual(idx[("Alpha", "Spawn")], CDA.STATIC_MEMBER)
+        self.assertEqual(idx[("Beta", "Spawn")], CDA.INSTANCE_MEMBER)
+
+    def test_one_class_declared_twice_the_same_way_stays_decisive(self):
+        idx = self.index({"include/a.h":
+                          "struct Widget {\n    static int Make(int a);\n};\n",
+                          "include/b.h":
+                          "struct Widget {\n    static int Make(int a);\n};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.STATIC_MEMBER)
+
+    # ------------------------------------------------------------- ambiguity
+
+    def test_two_headers_that_disagree_are_ambiguous(self):
+        idx = self.index({"include/a.h":
+                          "struct Widget {\n    static int Make(int a);\n};\n",
+                          "include/b.h":
+                          "struct Widget {\n    int Make(int a);\n};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.AMBIGUOUS_MEMBER)
+
+    def test_an_overload_set_holding_both_kinds_is_ambiguous(self):
+        """The index is keyed on the NAME. It cannot tell two overloads apart, and
+        the definition's parameter list is not enough to pick one either."""
+        idx = self.index({"include/w.h":
+                          "struct Widget {\n"
+                          "    static int Make(int a);\n"
+                          "    int Make(void);\n"
+                          "};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.AMBIGUOUS_MEMBER)
+
+    def test_ambiguity_is_sticky(self):
+        """A third agreeing declaration does not vote the contradiction away."""
+        idx = self.index({"include/a.h":
+                          "struct Widget {\n    static int Make(int a);\n};\n",
+                          "include/b.h":
+                          "struct Widget {\n    int Make(int a);\n};\n",
+                          "include/c.h":
+                          "struct Widget {\n    int Make(int a);\n};\n"})
+        self.assertEqual(idx[("Widget", "Make")], CDA.AMBIGUOUS_MEMBER)
+
+
+class AmbiguousStaticMemberTests(unittest.TestCase):
+    """When the index contradicts itself the definition states NO arity.
+
+    Neither reading is privileged, so the tool claims nothing about the parameter
+    count rather than picking a side -- the same choice the docstring makes about
+    every other thing it cannot recover ("claiming them is worse than missing them").
+    It is NOT silence about everything: a return type still disagrees, which is what
+    says this path declines one question rather than switching the symbol off.
+    """
+
+    def _tree(self, t):
+        t.write("include/a.h",
+                "struct Widget {\n    static int Make(int a);\n};\n")
+        t.write("include/b.h",
+                "struct Widget {\n    int Make(int a);\n};\n")
+        t.write("src/Make.cpp",
+                '#include "types.h"\n'
+                "// @symbol _ZN6Widget4MakeEi\n"
+                "int Widget::Make(int a)\n{\n    return a;\n}\n")
+
+    def test_the_definition_declines_to_state_an_arity(self):
+        _findings, _d, defs, _files = build(self._tree)
+        rec = [d for d in defs if d.symbol == "_ZN6Widget4MakeEi"][0]
+        self.assertTrue(rec.this_unknown)
+        self.assertIs(rec.flat_params(), CDA.UNSPECIFIED)
+
+    def test_neither_arity_is_billed(self):
+        def tree(t):
+            self._tree(t)
+            t.write("src/one.c", "extern int _ZN6Widget4MakeEi(int a);\n")
+            t.write("src/two.c",
+                    "extern int _ZN6Widget4MakeEi(void *thiz, int a);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN6Widget4MakeEi"), [])
+
+    def test_a_return_type_disagreement_is_still_reported(self):
+        def tree(t):
+            self._tree(t)
+            t.write("src/one.c", "extern void _ZN6Widget4MakeEi(int a);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "_ZN6Widget4MakeEi"),
+                         [("return", "src/one.c", "void", "int")])
+
+    def test_the_spelling_says_the_this_is_the_unknown_part(self):
+        _findings, _d, defs, _files = build(self._tree)
+        rec = [d for d in defs if d.symbol == "_ZN6Widget4MakeEi"][0]
+        self.assertEqual(rec.spelling(), "int (<this?>, int)")
+
+
+class StaticMemberScopeTests(unittest.TestCase):
+    """The index is built over EVERY header, whatever `collect` was narrowed to.
+
+    A class body is not a declaration of anything this tool collects, so no
+    `--changed` scope rule would ever fold `include/dBase_c.h` in for a branch that
+    only touched the file DEFINING `dBase_c::Spawn`. Narrow the index with the scan
+    and the phantom comes straight back in the narrowed run -- which is the run every
+    pull request gets.
+    """
+
+    def test_a_narrowed_collect_still_reads_the_class_body(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            t.write("include/dBase_c.h", StaticMemberTests.HEADER)
+            t.write("src/ActorDerived.cpp", StaticMemberTests.SPAWN_DEF)
+            _files, _decls, defs, _u = CDA.collect(
+                t.root, files=["src/ActorDerived.cpp"])
+        rec = [d for d in defs
+               if d.symbol == "_ZN7dBase_c5SpawnEjP7fBase_cii"][0]
+        self.assertFalse(rec.is_member)
+
+    def test_without_an_index_a_member_keeps_the_old_reading(self):
+        """`parse_file(..., statics=None)` is the pre-index behaviour, and it is
+        what the assertions above are measured against."""
+        decls, defs, _u = CDA.parse_file(
+            "src/ActorDerived.cpp", StaticMemberTests.SPAWN_DEF, {}, None)
+        del decls
+        rec = [d for d in defs
+               if d.symbol == "_ZN7dBase_c5SpawnEjP7fBase_cii"][0]
+        self.assertTrue(rec.is_member)
+        self.assertEqual(rec.flat_params()[0], "<this>")
+
+
+class RealTreeStaticMemberTests(unittest.TestCase):
+    """The live fixture: `dBase_c::Spawn` and its non-static sibling, same file.
+
+    `include/dBase_c.h` declares `Spawn` static and `AfterInitResources` virtual, and
+    `src/actors/ActorDerived.cpp` defines both out of line with an `@symbol` marker
+    over each. One must lose its `this` and the other must keep it, which no
+    whole-file switch can satisfy.
+    """
+
+    def setUp(self):
+        for rel in ("include/dBase_c.h", "src/actors/ActorDerived.cpp"):
+            if not (REPO / rel).exists():
+                self.skipTest("%s is not in this tree" % rel)
+        self.index = CDA.static_member_index(REPO)
+
+    def test_the_header_records_Spawn_static(self):
+        self.assertEqual(self.index.get(("dBase_c", "Spawn")),
+                         CDA.STATIC_MEMBER)
+        self.assertEqual(self.index.get(("dBase_c", "AfterInitResources")),
+                         CDA.INSTANCE_MEMBER)
+
+    def test_the_real_definitions_split_the_right_way(self):
+        rel = "src/actors/ActorDerived.cpp"
+        _d, defs, _u = CDA.parse_file(
+            rel, (REPO / rel).read_text(encoding="utf-8", errors="replace"),
+            CDA.scalar_typedefs(REPO), self.index)
+        by = {d.symbol: d for d in defs}
+        spawn = by["_ZN7dBase_c5SpawnEjP7fBase_cii"]
+        self.assertFalse(spawn.is_member)
+        self.assertEqual(len(spawn.flat_params()), 4)
+        after = by["_ZN7dBase_c18AfterInitResourcesEj"]
+        self.assertTrue(after.is_member)
+        self.assertEqual(after.flat_params()[0], "<this>")
+
+    def test_the_tree_still_reads_most_members_as_instance_members(self):
+        """The floor under direction 2. If a change made everything static this
+        collapses, and so do the 3,000 flat externs the wildcard `this` protects."""
+        verdicts = list(self.index.values())
+        self.assertGreater(verdicts.count(CDA.INSTANCE_MEMBER), 1000)
+        self.assertGreater(verdicts.count(CDA.STATIC_MEMBER), 50)
+        self.assertEqual(verdicts.count(CDA.AMBIGUOUS_MEMBER), 0)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
