@@ -1,5 +1,5 @@
-#ifndef TOWERSTEP_H
-#define TOWERSTEP_H
+#ifndef DAOBJBK_LIFT_C_H
+#define DAOBJBK_LIFT_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -19,7 +19,7 @@
 #include "dBgActor_c.h"
 #include "ShadowModel.h"
 
-struct TowerStep : dBgActor_c {
+struct daObjBk_Lift_c : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
@@ -34,14 +34,14 @@ struct TowerStep : dBgActor_c {
     u8 mMove;                       /* 0x392 */
 
     /* --- vtable --- */
-    virtual ~TowerStep();
+    virtual ~daObjBk_Lift_c();
 
     int InitResources();
     int CleanupResources();
     int Behavior();
     int Render();
     virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
-    /* dBgActor_c's own slot, overridden here: _ZTV9TowerStep+0x7c relocates to
+    /* dBgActor_c's own slot, overridden here: _ZTV14daObjBk_Lift_c+0x7c relocates to
        0x0211233c while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */
     virtual void Kill();              /* slot 31 */
@@ -49,7 +49,7 @@ struct TowerStep : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
+typedef char daObjBk_Lift_c_size_must_be_0x394[sizeof(daObjBk_Lift_c) == 0x394 ? 1 : -1];
 #endif
 
 #else
@@ -57,7 +57,7 @@ typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct TowerStep {
+struct daObjBk_Lift_c {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
@@ -78,7 +78,7 @@ struct TowerStep {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~TowerStep calls _ZN10dBgW_KcMbgD1Ev at
+    /* dBgW_KcMbg member. The cartridge's own ~daObjBk_Lift_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
@@ -98,4 +98,4 @@ struct TowerStep {
 
 #endif /* __cplusplus */
 
-#endif /* TOWERSTEP_H */
+#endif /* DAOBJBK_LIFT_C_H */

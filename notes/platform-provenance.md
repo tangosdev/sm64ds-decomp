@@ -60,7 +60,7 @@ non-`dBgActor_c` vtable store each, so no intermediate — and each places a
 |---|---|---|
 | `PyramidTop`    | `daObjDlPyramid_c` | `Model` |
 | `daObjC0Water_c` | `daObjC0Water_c`   | `TextureTransformer` |
-| `TowerStep`     | `daObjBk_Lift_c`   | `ShadowModel` |
+| `daObjBk_Lift_c`     | `daObjBk_Lift_c`   | `ShadowModel` |
 | `WallSign`      | `daObjKanban_c`    | `dCcAcPos_c` |
 
 Each is read straight off that class's destructor, which destroys its own member
