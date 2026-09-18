@@ -83,20 +83,24 @@ struct daObjGuragura_c : dBgActor_c {
        RENDER IS DECLARED FIRST ON PURPOSE, AND THE ORDER IS WHAT MATTERS, not the
        slot number. The destructor above is inline, so the KEY FUNCTION -- the first
        non-inline virtual declared in the class -- is whichever of these comes
-       first, and the key function's translation unit is the one that emits
-       _ZTV15daObjGuragura_c. That symbol is already delinked data (ov002
+       first, and the key function's translation unit is the one mwccarm asks to
+       emit _ZTV15daObjGuragura_c. That symbol is already delinked data (ov002
        0x02109084, config/arm9/overlays/ov002/symbols.txt), and tools/eligible.py
        drops any file whose object carries a section other than .text -- so a TU
-       that emitted it would be dropped from the build entirely and the function it
-       defines would stop being compiled, with every gate still reporting green
-       (notes: "unbuildable files are invisible"). Render's definition
-       (func_ov002_020b6144) is not migrated, so naming it here parks the key
-       function on a translation unit that does not exist and no file emits the
-       vtable -- the tree's state today, and the same mechanism
-       include/dBgActor_c.h's own destructor comment relies on. Measured on the
-       sibling daObjKuruma_c: with Behavior declared first the object came out with
-       eleven .data sections; with Render first, one .text. */
-    s32 Render();                      /* slot  9 -- see above; not yet migrated */
+       that KEPT it would be dropped from the build entirely and the functions it
+       defines would stop being compiled, with every gate still reporting green.
+       Render's definition (ov002 0x020b6144) now lives in
+       src/actors/daObjGuragura_c.cpp, so that file IS this class's key-function
+       TU. It stays eligible anyway: mwccarm dead-strips the vtable and RTTI it
+       asks for, and `python tools/tubuild.py verify ov002/daObjGuragura_c` records
+       each dropped symbol, with the ROM home it would have collided with, in the
+       compiler_only_output block of
+       config/tu_manifest.d/ov002/daObjGuragura_c.json. tools/eligible.py lists all
+       seven members of that file as ELIGIBLE, and the ROM build reproduces the
+       cartridge byte for byte with it enrolled. Measured on the sibling
+       daObjKuruma_c: with Behavior declared first the object came out with eleven
+       .data sections; with Render first, one .text. */
+    s32 Render();                      /* slot  9 -- see above */
     s32 Behavior();                    /* slot  6 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --

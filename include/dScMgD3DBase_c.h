@@ -33,8 +33,11 @@
  * only member it has past mSysTracker and the reason this file does not
  * stop at 0x5000 (the first draft of it did; the write is what caught it).
  *
- * From above, the bound is dScMgJump_c's: a Jump helper
- * (src/func_ov006_020ee2c4.c) writes 0x5004 and 0x5014, and no method of
+ * From above, the bound is dScMgJump_c's: a Jump helper (func_ov006_020ee2c4,
+ * once a one-function source directly under src/ that no longer exists --
+ * it is now a member of src/actors/dScMgJump_c.cpp, whose manifest entry
+ * config/tu_manifest.d/ov006/dScMgJump_c.json keeps the old full path in its
+ * functions[].legacy_source row) writes 0x5004 and 0x5014, and no method of
  * THIS class touches either. Its three siblings begin at 0x500c instead, so
  * 0x5004..0x500c is Jump's alone.
  *

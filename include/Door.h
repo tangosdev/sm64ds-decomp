@@ -123,11 +123,11 @@ struct Door : dActor_c {
          mKeyFile   -- the SharedFilePtr that model's file came from, handed to
                        Model::LoadFile and Release()d in CleanupResources. Three
                        sources: data_ov002_0211094c when the entry's b8 is
-                       positive, func_02132894[mKeyModelIdx + 1] for the
+                       positive, data_ov089_02132894[mKeyModelIdx + 1] for the
                        param1 9..0xd (keyed-door) range, else
                        data_ov089_02132c50.
          mKeyModelIdx -- param1 - 8 for that same 9..0xd range, re-zeroed for
-                       param1 0xc; indexes LoadKeyModels/func_02132894.
+                       param1 0xc; indexes LoadKeyModels/data_ov089_02132894.
        [_ZN4Door13InitResourcesEv.c, _ZN4Door6RenderEv.cpp,
         _ZN4Door16CleanupResourcesEv.cpp] */
     Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */

@@ -12,6 +12,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RollingIronBall.h"
+// C linkage: these are ROM symbols named by their final linker name. Without
+// it the compiler mangles the name a second time and the call resolves to
+// nothing -- which the byte gate cannot see, because a relocated word is a
+// wildcard.
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -21,6 +26,7 @@ extern int Vec3_Equal(void *a, void *b);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, int v1);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
+}
 
 extern char data_ov100_02148668;
 extern int data_02092138;
