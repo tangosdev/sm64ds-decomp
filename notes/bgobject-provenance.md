@@ -539,7 +539,7 @@ Raw-offset collapses, each re-verified byte-exact: the six
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mAngleXSpeed` | `src/_ZN10daKpa2Bg_c8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
+| 0x31e | `mAngleXSpeed` | `daKpa2Bg_c::Behavior` (now in `src/actors/daKpa2Bg_c.cpp`) adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
 | 0x320 | `mAngleYSpeed` | the same, into `mAngleY`. |
 | 0x322 | `mAngleZSpeed` | the same, into `mAngleZ`. |
 

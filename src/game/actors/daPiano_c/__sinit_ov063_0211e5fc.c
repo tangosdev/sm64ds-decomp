@@ -1,4 +1,4 @@
-#include "MadPianoResources.h"
+#include "daPiano_c_resources.h"
 
 extern void func_02017acc();
 extern void func_020731dc();

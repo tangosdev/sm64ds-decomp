@@ -21,7 +21,7 @@
 ```
 
 - result (naive): does not compile. `gPianoModelFile` etc. are macros for
-  `data_ov063_0211ef80/...` (`include/MadPianoResources.h:46-48`), so the
+  `data_ov063_0211ef80/...` (`include/daPiano_c_resources.h:49-51`), so the
   sinit's `SharedFilePtrLayout` decls redeclare this file's `SharedFilePtr`
   decls; and the `.c` file's `()` prototypes mean unspecified args in C but
   zero args in C++, so every sinit call mismatches.
