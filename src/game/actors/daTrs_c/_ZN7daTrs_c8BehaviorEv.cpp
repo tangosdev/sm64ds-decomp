@@ -1,61 +1,45 @@
 //cpp
 // @symbol _ZN7daTrs_c8BehaviorEv
-/* daTrs_c::Behavior (slot 6, fBase_c) -- ov063 0x0211b0a4, 0x7e4 bytes.
- * Recovered from the banked near-miss C draft (nearmiss/db.jsonl, floored at
- * 54 divergences as a free C function) and finished as a real C++ method; the
- * last regallocation walls fell to spelling choices, not new semantics:
+/* daTrs_c::Behavior (slot 6): the chase. Re-syncs the 0xd3 follower, dies to
+ * the invincible character (permanently when mDeathMode says so), hides while
+ * its home area is off, runs the Yoshi-mouth/talk flow, measures the player,
+ * dispatches the unk_5cf variant arm, integrates motion with a ground
+ * raycast, and advances the animation and the collision.
  *
- *   - The respawn-position block reads the 0x5xx fields with direct
- *     (c + 0x5d0/0x570/...) spellings so the compiler synthesizes the
- *     r+0x500 base itself (an explicit `base = c + 0x500` local colors the
- *     base wrong), and copies the 0x92 angle triple through
- *     `s16 (*ap)[3] = (s16 (*)[3])(c + 0x92)` -- the array-pointer deref is
- *     the one spelling that makes that base outrank the copy scratch.
- *   - The show-hide block wants the opposite ranking: plain pointer locals
- *     (`r2 = c + 0x92; fp = (u16 *)(c + 0x5d4);`) declared before the
- *     position stores, with the same direct 0x5xx loads.
- *   - `*(u16 *)(c + 0x100) += 1;` -- the compound form colors the
- *     address/value pair the way the ROM has it; the spelled-out
- *     load-add-store form colors it backwards.
- *   - The closest-player Vector3 copy must be memberwise through an s32*
- *     (three load/store pairs interleave); going through locals first merges
- *     the base add into a pre-indexed ldr and drops an instruction.
- *   - In the raycast setup the y+0x32000 sum must be computed into its own
- *     local BETWEEN the z and x loads (creation order drives the r3/ip
- *     coloring of x vs the sum).
- *   - The talk-state counter increments and the flag RMWs go through plain
- *     pointer locals (`bp = (u8 *)(c + 0x5d1);` etc.) -- the RMW through a
- *     pointer variable materializes the address (0x5d1/0x5d4 are not ARM
- *     rotate-immediates, so the compiler spells them via the literal pool,
- *     exactly the ROM's shape). The C draft needed `& 0xFFFF...` laundering
- *     masks for the same effect; as a real method none of them are needed.
+ * Codegen notes (all load-bearing, all measured):
+ * - The 0x5xx fields are read through direct spellings so the compiler
+ *   synthesizes the r+0x500 base itself; the 0x92 angle triple copies through
+ *   an s16 array-pointer deref, and the show-hide block wants plain r2/fp
+ *   pointer locals instead.
+ * - `*(u16 *)&mStateTimer += 1` stays in cast form: the compound spelling
+ *   colors the address/value pair the way the ROM has it.
+ * - The closest-player copy stays memberwise through an s32*; the raycast
+ *   y+0x32000 sum stays in its own local between the z and x loads.
+ * - The mTalkStep/mFlags_5d4 RMWs stay through bp/fp pointer locals: 0x5d1
+ *   and 0x5d4 are not ARM rotate-immediates, and the pointer form is what
+ *   materializes the ROM's literal-pool addresses.
  *
- * unk_* raw offsets beyond the typed members follow the same convention as
- * the sibling daTrs_c files (see _ZN7daTrs_c6RenderEv.cpp). */
+ * deslop leftovers:
+ * - dCapEnemy_c::GetCapState has no header declaration (shared-header
+ *   addition is out of scope for this TU); the mangled call stays.
+ * - mdCcAcPos_c.flags |= 1 stays a raw 0x19c RMW (same class as daBmb_c's
+ *   load-bearing *(this+0x128)).
+ * - func_0200f760 / func_0201267c / IsAreaShowing / Vec3_HorzAngle /
+ *   Vec3_HorzDist / DecIfAbove0_Short have no header declarations; the
+ *   TU-local externs stay. func_ov063_* are unowned state helpers.
+ */
 #include "daTrs_c.h"
 #include "dBgCh_Gnd.h"
+#include "Player.h"
 
 extern "C" {
 void func_0200f760(void *thiz, void *cyl);
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
 int _ZN11dCapEnemy_c11GetCapStateEv(char *c);
-int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(char *c, void *w, void *m, u32 j);
-void _ZN8dActor_c8PoofDustEv(char *c);
-void _ZN8dActor_c24KillAndTrackInDeathTableEv(char *c);
 void func_0201267c(u32 a, void *b);
-void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(char *c);
 u8 IsAreaShowing(s8 idx);
 int func_ov063_02116190(char *c);
-void _ZN11dCapEnemy_c12Unk_02005d94Ev(char *c);
-int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char *c, void *w);
-int _ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3(char *c, const Vector3 *v);
 void func_ov063_02119ab0(char *c);
-int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *plr, void *base, u32 id, const void *pos, u32 e, u32 f);
-int _ZN6Player12GetTalkStateEv(void *plr);
-void _ZN6Player9DropActorEv(void *plr);
 void func_ov063_021166ac(char *c);
-void _ZN5dCc_c5ClearEv(void *cyl);
-void *_ZN8dActor_c13ClosestPlayerEv(char *c);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_ov063_021192d4(char *c);
@@ -68,11 +52,6 @@ void func_ov063_021172a8(char *c);
 void func_ov063_02119274(char *c);
 void func_ov063_02116fac(char *c);
 u16 DecIfAbove0_Short(void *p);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *cyl);
-void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char *c, void *w, u32 j);
-void _ZN9Animation7AdvanceEv(void *anim);
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *cyl, void *v);
-void _ZN5dCc_c6UpdateEv(void *cyl);
 }
 
 int daTrs_c::Behavior()
@@ -97,50 +76,50 @@ int daTrs_c::Behavior()
     int d1;
     int v;
 
-    func_0200f760(c, c + 0x184);
-    if ((*(u32 *)(c + 0x49c)) != 0) {
-        *(void **)(c + 0x48c) = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x49c));
-        q = *(char **)(c + 0x48c);
+    func_0200f760(c, &mdCcAcPos_c);
+    if (mSpawnedActorID != 0) {
+        mFoundActor = dActor_c::FindWithID(mSpawnedActorID);
+        q = (char *)mFoundActor;
         if (q != 0) {
-            *(s32 *)(q + 0x5c) = *(s32 *)(c + 0x5c);
-            *(s32 *)(q + 0x60) = *(s32 *)(c + 0x60);
-            *(s32 *)(q + 0x64) = *(s32 *)(c + 0x64);
+            *(s32 *)(q + 0x5c) = mPosX;
+            *(s32 *)(q + 0x60) = mPosY;
+            *(s32 *)(q + 0x64) = mPosZ;
         }
-        *(void **)(c + 0x48c) = 0;
+        mFoundActor = 0;
     }
     if (_ZN11dCapEnemy_c11GetCapStateEv(c) == 0)
         return 1;
 
-    t = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, c + 0x1c4, c + 0x380, 0);
+    t = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
     if (t != 0) {
         if (t == 2) {
-            _ZN8dActor_c8PoofDustEv(c);
-            if ((*(s32 *)(c + 0x5a4)) != 0) {
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
-                func_0201267c(0xd5, c + 0x74);
-                if (((*(u8 *)(c + 0x113)) & 0xf) < 6) {
-                    *(s32 *)(c + 0x5c) = *(s32 *)(c + 0x51c);
-                    *(s32 *)(c + 0x60) = *(s32 *)(c + 0x520);
-                    *(s32 *)(c + 0x64) = *(s32 *)(c + 0x524);
-                    *(s8 *)(c + 0xcc) = *(s8 *)(c + 0x5d0);
-                    *(s16 *)(c + 0x92) = *(s16 *)(c + 0x570);
-                    *(s16 *)(c + 0x94) = *(s16 *)(c + 0x572);
-                    *(s16 *)(c + 0x96) = *(s16 *)(c + 0x574);
+            PoofDust();
+            if (mDeathMode != 0) {
+                KillAndTrackInDeathTable();
+                func_0201267c(0xd5, &mCamSpacePosX);
+                if (((mCapId) & 0xf) < 6) {
+                    mPosX = mHomePosX;
+                    mPosY = mHomePosY;
+                    mPosZ = mHomePosZ;
+                    mAreaId = mAreaIdx;
+                    mPrevAngleX = mHomeAngleX;
+                    mPrevAngleY = mHomeAngleY;
+                    mPrevAngleZ = mHomeAngleZ;
                     {
                         s16 (*ap)[3] = (s16 (*)[3])(c + 0x92);
-                        *(s16 *)(c + 0x8c) = (*ap)[0];
-                        *(s16 *)(c + 0x8e) = (*ap)[1];
-                        *(s16 *)(c + 0x90) = (*ap)[2];
+                        mAngleX = (*ap)[0];
+                        mAngleY = (*ap)[1];
+                        mAngleZ = (*ap)[2];
                     }
-                    p = _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
+                    p = RespawnIfHasCap();
                     if (p != 0) {
                         fp = (u16 *)((char *)p + 0x5d4);
                         *fp = (*fp) & (~2);
                     }
                 }
             } else {
-                *(u8 *)(c + 0x5cc) = 5;
-                *(u8 *)(c + 0x5ce) = 0;
+                unk_5cc = 5;
+                mSubState = 0;
                 p19c = (s32 *)(c + 0x19c);
                 *p19c = (*p19c) | 1;
                 fp = (u16 *)(c + 0x5d4);
@@ -150,69 +129,70 @@ int daTrs_c::Behavior()
         return 1;
     }
 
-    *(s8 *)(c + 0xcc) = -1;
-    if ((*(u16 *)(c + 0x5c6)) == 0) {
-        if ((IsAreaShowing(*(s8 *)(c + 0x5d0)) == 0) || (func_ov063_02116190(c) != 0)) {
-            if ((((u32)((*(u16 *)(c + 0x5d4)) << 0x18)) >> 0x1f) == 0) {
-                r2 = c + 0x92;
-                *(s32 *)(c + 0x5c) = *(s32 *)(c + 0x51c);
+    mAreaId = -1;
+    if (mSoundCount == 0) {
+        /* b7 clear: not hidden yet. */
+        if ((IsAreaShowing(mAreaIdx) == 0) || (func_ov063_02116190(c) != 0)) {
+            if (mFlags_5d4.b7 == 0) {
+                r2 = (char *)&mPrevAngleX;
+                mPosX = mHomePosX;
                 fp = (u16 *)(c + 0x5d4);
-                *(s32 *)(c + 0x60) = *(s32 *)(c + 0x520);
-                *(s32 *)(c + 0x64) = *(s32 *)(c + 0x524);
-                *(s16 *)(c + 0x92) = *(s16 *)(c + 0x570);
-                *(s16 *)(c + 0x94) = *(s16 *)(c + 0x572);
-                *(s16 *)(c + 0x96) = *(s16 *)(c + 0x574);
-                *(s16 *)(c + 0x8c) = *(s16 *)r2;
-                *(s16 *)(c + 0x8e) = *(s16 *)(r2 + 2);
-                *(s16 *)(c + 0x90) = *(s16 *)(r2 + 4);
+                mPosY = mHomePosY;
+                mPosZ = mHomePosZ;
+                mPrevAngleX = mHomeAngleX;
+                mPrevAngleY = mHomeAngleY;
+                mPrevAngleZ = mHomeAngleZ;
+                mAngleX = *(s16 *)r2;
+                mAngleY = *(s16 *)(r2 + 2);
+                mAngleZ = *(s16 *)(r2 + 4);
                 *fp = (*fp) | 0x10;
-                *(u8 *)(c + 0x5cc) = 0;
-                *(s32 *)(c + 0x98) = 0;
-                *(s32 *)(c + 0x9c) = 0;
-                *(s32 *)(c + 0xa8) = 0;
-                *(u8 *)(c + 0x5ce) = 0;
-                *(s8 *)(c + 0xcc) = *(s8 *)(c + 0x5d0);
+                unk_5cc = 0;
+                mHorzSpeed = 0;
+                mVertAccel = 0;
+                mVertSpeed = 0;
+                mSubState = 0;
+                mAreaId = mAreaIdx;
             }
             return 1;
         }
     }
-    _ZN11dCapEnemy_c12Unk_02005d94Ev(c);
-    t = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, c + 0x1c4);
+    Unk_02005d94();
+    t = UpdateYoshiEat(mWithMeshClsn);
     if (t != 0) {
         if (t == 1) {
-            ve.x = *(s32 *)(c + 0x564);
-            ve.y = *(s32 *)(c + 0x568);
-            ve.z = *(s32 *)(c + 0x56c);
-            if (_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3(c, &ve) != 0)
+            ve.x = mCapPosX;
+            ve.y = mCapPosY;
+            ve.z = mCapPosZ;
+            if (GetCapEatenOffIt(ve) != 0)
                 return 1;
         }
-        *(s32 *)(c + 0x9c) = -0x2000;
+        mVertAccel = -0x2000;
         func_ov063_02119ab0(c);
-        if ((*(u8 *)(c + 0x107)) != 0) {
-            u16 *p100 = (u16 *)(c + 0x100);
+        if (mEatenByYoshi != 0) {
+            u16 *p100 = (u16 *)&mStateTimer;
             if (p100[2] == 0) {
-                *(u8 *)(c + 0x107) = 0;
-                ((u16 *)(c + 0x100))[2] = 0;
-                *(s32 *)(c + 0x9c) = 0;
-                *(s32 *)(c + 0xa8) = 0;
+                mEatenByYoshi = 0;
+                ((u16 *)&mStateTimer)[2] = 0;
+                mVertAccel = 0;
+                mVertSpeed = 0;
                 goto block_39;
             }
         }
-        v = ((*(s32 *)(c + 0xb0)) & 0x40000) ? 1 : 0;
+        v = (((mFlags) & 0x40000) ? 1 : 0);
         if (v != 0) {
-            u8 st = *(u8 *)(c + 0x5d1);
-            char *pl = *(char **)(c + 0xd0);
+            u8 st = mTalkStep;
+            Player *pl = (Player *)mEatingPlayer;
             switch (st) {
             case 0:
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, 0x15a, 0, 0, 2) != 0) {
+                if (pl->ShowMessage(*this, 0x15a, 0, 0, 2) != 0) {
                     bp = (u8 *)(c + 0x5d1);
                     *bp = (*bp) + 1;
-                    func_0201267c(0xf8, c + 0x74);
+                    func_0201267c(0xf8, &mCamSpacePosX);
                 }
                 break;
             case 1:
-                if (_ZN6Player12GetTalkStateEv(pl) == -1) {
-                    _ZN6Player9DropActorEv(pl);
+                if (pl->GetTalkState() == -1) {
+                    pl->DropActor();
                     bp = (u8 *)(c + 0x5d1);
                     *bp = (*bp) + 1;
                 }
@@ -220,31 +200,31 @@ int daTrs_c::Behavior()
             }
         }
         func_ov063_021166ac(c);
-        _ZN5dCc_c5ClearEv(c + 0x184);
+        mdCcAcPos_c.Clear();
         return 1;
     }
 block_39:
-    *(u8 *)(c + 0x5d1) = 0;
+    mTalkStep = 0;
 
     {
-        void *plr = _ZN8dActor_c13ClosestPlayerEv(c);
-        *(void **)(c + 0x484) = plr;
-        plr = *(void **)(c + 0x484);
+        mClosestPlayer = ClosestPlayer();
+        Player *plr = mClosestPlayer;
         if (plr != 0) {
             s32 *pp = (s32 *)(((char *)plr) + 0x5c);
             pv.x = pp[0];
             pv.y = pp[1];
             pv.z = pp[2];
-            *(s16 *)(c + 0x5b0) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &pv);
-            *(s32 *)(c + 0x580) = Vec3_HorzDist((Vector3 *)(c + 0x5c), &pv);
+            /* (Vector3 *)&mPosX pun: no shared overlay accessor exists. */
+            mAngleToPlayer = Vec3_HorzAngle((const Vector3 *)&mPosX, &pv);
+            mDistToPlayer = Vec3_HorzDist((const Vector3 *)&mPosX, &pv);
         } else {
             r1 = c + 0x500;
-            *(s16 *)(r1 + 0xb0) = *(s16 *)(c + 0x8e);
-            *(s32 *)(c + 0x580) = 0x2710000;
+            *(s16 *)(r1 + 0xb0) = mAngleY;
+            mDistToPlayer = 0x2710000;
         }
     }
-    *(u8 *)(c + 0x5cd) = *(u8 *)(c + 0x5cc);
-    switch (*(u8 *)(c + 0x5cf)) {
+    mPrevState = unk_5cc;
+    switch (unk_5cf) {
     case 0:
     case 1:
     case 2:
@@ -284,54 +264,57 @@ block_39:
         func_ov063_02116fac(c);
     }
 
-    if ((((u32)((*(u16 *)(c + 0x5d4)) << 0x1d)) >> 0x1f) != 0)
-        *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
-    *(u16 *)(c + 0x100) += 1;
-    DecIfAbove0_Short(c + 0x5c0);
-    if ((*(u8 *)(c + 0x5cd)) != (*(u8 *)(c + 0x5cc)))
-        *(u16 *)(c + 0x100) = 0;
-    if ((*(u8 *)(c + 0x5cf)) != 3) {
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x184);
+    /* b2 set: copy the yaw through. */
+    if (mFlags_5d4.b2 != 0)
+        mAngleY = mPrevAngleY;
+    *(u16 *)&mStateTimer += 1;
+    DecIfAbove0_Short(&mTimer5c0);
+    if (mPrevState != unk_5cc)
+        mStateTimer = 0;
+    if (unk_5cf != 3) {
+        UpdatePos(&mdCcAcPos_c);
         func_ov063_02119ab0(c);
-        if (((((u32)((*(u16 *)(c + 0x5d4)) << 0x1f)) >> 0x1f) != 0) && ((*(s32 *)(c + 0x64)) < -0x12c000))
-            *(s32 *)(c + 0x64) = -0x12c000;
+        /* b0 set: clamp z. */
+        if ((mFlags_5d4.b0 != 0) && (mPosZ < -0x12c000))
+            mPosZ = -0x12c000;
         dBgCh_Gnd rc1;
-        y = *(s32 *)(c + 0x60);
-        z = *(s32 *)(c + 0x64);
+        y = mPosY;
+        z = mPosZ;
         w = y + 0x32000;
-        x = *(s32 *)(c + 0x5c);
+        x = mPosX;
         v1.x = x;
         v1.y = w;
         v1.z = z;
         rc1.SetObjAndPos(v1, (dActor_c*)this);
         if (rc1.DetectClsn() != 0) {
             s32 ground = rc1.clsnY + 0x2000;
-            if ((*(s32 *)(c + 0x60)) < ground)
-                *(s32 *)(c + 0x60) = ground;
+            if (mPosY < ground)
+                mPosY = ground;
         }
-        if (((*(u8 *)(c + 0x5cf)) != 4) && ((*(u8 *)(c + 0x5cf)) != 0xb)) {
+        if ((unk_5cf != 4) && (unk_5cf != 0xb)) {
             dBgCh_Gnd rc2;
-            y = *(s32 *)(c + 0x60);
-            z = *(s32 *)(c + 0x64);
+            y = mPosY;
+            z = mPosZ;
             w = y + 0x32000;
-            x = *(s32 *)(c + 0x5c);
+            x = mPosX;
             v2.x = x;
             v2.y = w;
             v2.z = z;
             rc2.SetObjAndPos(v2, (dActor_c*)this);
-            d1 = (int)((*(u16 *)(c + 0xc)) == 0xd1);
+            d1 = (int)(actorID == 0xd1);
             if (d1 != 0) {
-                if ((*(u8 *)(c + 0x5cf)) < 8) {
-                    if ((((u32)((*(u16 *)(c + 0x5d4))) << 0x1a) >> 0x1f) != 0) {
+                if (unk_5cf < 8) {
+                    /* b5 set: ground already found. */
+                    if (mFlags_5d4.b5 != 0) {
                         if ((rc2.DetectClsn() == 0) ||
-                            (((*(s32 *)(c + 0x60)) - rc2.clsnY) > 0x12c000)) {
-                            *(s32 *)(c + 0x5c) = *(s32 *)(c + 0x528);
-                            *(s32 *)(c + 0x60) = *(s32 *)(c + 0x52c);
-                            *(s32 *)(c + 0x64) = *(s32 *)(c + 0x530);
+                            ((mPosY - rc2.clsnY) > 0x12c000)) {
+                            mPosX = mLastGroundPosX;
+                            mPosY = mLastGroundPosY;
+                            mPosZ = mLastGroundPosZ;
                         } else {
-                            *(s32 *)(c + 0x528) = *(s32 *)(c + 0x5c);
-                            *(s32 *)(c + 0x52c) = *(s32 *)(c + 0x60);
-                            *(s32 *)(c + 0x530) = *(s32 *)(c + 0x64);
+                            mLastGroundPosX = mPosX;
+                            mLastGroundPosY = mPosY;
+                            mLastGroundPosZ = mPosZ;
                         }
                     } else {
                         goto ray_e;
@@ -342,24 +325,24 @@ block_39:
             } else {
             ray_e:
                 if ((rc2.DetectClsn() != 0) &&
-                    (((*(s32 *)(c + 0x60)) - rc2.clsnY) < 0x12c000)) {
+                    ((mPosY - rc2.clsnY) < 0x12c000)) {
                     fp = (u16 *)(c + 0x5d4);
                     *fp = (*fp) | 0x20;
-                    *(s32 *)(c + 0x528) = *(s32 *)(c + 0x5c);
-                    *(s32 *)(c + 0x52c) = *(s32 *)(c + 0x60);
-                    *(s32 *)(c + 0x530) = *(s32 *)(c + 0x64);
+                    mLastGroundPosX = mPosX;
+                    mLastGroundPosY = mPosY;
+                    mLastGroundPosZ = mPosZ;
                 }
             }
-            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x1c4, 0);
+            UpdateWMClsn(mWithMeshClsn, 0);
         }
     }
-    if (((((*(u8 *)(c + 0x5cc)) != 3) && ((*(u8 *)(c + 0x5cc)) != 3)) && ((*(u8 *)(c + 0x5cc)) != 3)) && ((*(u8 *)(c + 0x5cc)) != 3))
-        _ZN9Animation7AdvanceEv(c + 0x3d0);
+    if ((((unk_5cc != 3) && (unk_5cc != 3)) && (unk_5cc != 3)) && (unk_5cc != 3))
+        mModelAnim.Advance();
     func_ov063_021166ac(c);
-    _ZN5dCc_c5ClearEv(c + 0x184);
-    if ((*(u8 *)(c + 0x5c8)) == 0xff) {
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x184, c + 0x534);
-        _ZN5dCc_c6UpdateEv(c + 0x184);
+    mdCcAcPos_c.Clear();
+    if (mOpacity == 0xff) {
+        mdCcAcPos_c.SetPosRelativeToActor(*(const Vector3 *)&mClsnOffX);
+        mdCcAcPos_c.Update();
     }
     return 1;
 }
