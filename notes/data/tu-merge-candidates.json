@@ -6610,18 +6610,18 @@
    "start": "0x211260c",
    "end": "0x21129d0",
    "classes": [
-    "ShipUp"
+    "daObjKi_Fune_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN6ShipUpD1Ev.cpp",
-    "src/_ZN6ShipUpD0Ev.cpp",
+    "src/_ZN14daObjKi_Fune_cD1Ev.cpp",
+    "src/_ZN14daObjKi_Fune_cD0Ev.cpp",
     "src/func_ov016_021126a8.c",
-    "src/_ZN6ShipUp16CleanupResourcesEv.cpp",
-    "src/_ZN6ShipUp6RenderEv.cpp",
-    "src/_ZN6ShipUp8BehaviorEv.cpp",
-    "src/_ZN6ShipUp13InitResourcesEv.cpp",
+    "src/_ZN14daObjKi_Fune_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjKi_Fune_c6RenderEv.cpp",
+    "src/_ZN14daObjKi_Fune_c8BehaviorEv.cpp",
+    "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp",
     "src/d_a_obj_ki_fune_ki_fune_up.c"
    ],
    "ext_mix": {
