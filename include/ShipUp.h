@@ -13,7 +13,7 @@ struct ShipUp : dBgActor_c {
     u8  pad_322[0x2];
     s32 mSoundHandle;            /* 0x324 */
     u16 unk_328;            /* 0x328 */
-    virtual ~ShipUp();
+    virtual ~ShipUp() {}
     virtual int InitResources();
     virtual int CleanupResources();
     virtual int Behavior();
