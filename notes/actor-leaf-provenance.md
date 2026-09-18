@@ -167,11 +167,11 @@ one up, and its parameter list is half the evidence here.
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x138 | `mOwnerUniqueID` | `src/game/actors/d_a_obj_number.cpp` Behavior resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
-| 0x13c | `mStartPosX` | copied from `mPosX` in `src/game/actors/d_a_obj_number.cpp` InitResources, alongside the already-named `mStartPosY` at 0x140. |
-| 0x144 | `mStartPosZ` | same, `mPosZ`. |
-| 0x148 | `mFollowOffsetY` | added to `mPosY - mStartPosY` -- how far the popup has risen -- when the position is taken from the owner. |
+| 0x13c | `mStartPos.x` | copied from `mPosX` in `src/game/actors/d_a_obj_number.cpp` InitResources, alongside the already-named `mStartPos.y` at 0x140. |
+| 0x144 | `mStartPos.z` | same, `mPosZ`. |
+| 0x148 | `mFollowOffsetY` | added to `mPosY - mStartPos.y` -- how far the popup has risen -- when the position is taken from the owner. |
 | 0x14c | `mDelay` | the `delay` argument of `SpawnNumber`: while nonzero `Behavior` returns immediately and `Render` decrements it and draws nothing. |
-| 0x14e | `mState` | the bounce. 0: rising, and the first frame back below `mStartPosY` snaps to that floor, sets `mVertSpeed` 0xf000 and advances to 1. 1: the next fall below the floor emits particle 0xd2 and marks the popup for destruction. |
+| 0x14e | `mState` | the bounce. 0: rising, and the first frame back below `mStartPos.y` snaps to that floor, sets `mVertSpeed` 0xf000 and advances to 1. 1: the next fall below the floor emits particle 0xd2 and marks the popup for destruction. |
 
 ## CrazedCrate, MontyMole, BowserShockwaves -- nothing named
 

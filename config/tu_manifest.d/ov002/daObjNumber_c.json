@@ -4,11 +4,12 @@
   "source": "src/game/actors/d_a_obj_number.cpp",
   "promoted_source": "src/game/actors/d_a_obj_number.cpp",
   "status": "promoted",
-  "boundary_confidence": "high",
+  "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20f0894..0x20f0dd0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): daObjNumber_c",
-    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "Fresh tools/rtti_extract.py, tools/rtti_vtables.py and tools/tu_map.py observation on the repaired 5add4b136b53f98b1fa040adec1db9b9cb8dc43f input: seven class-labelled functions at 0x020f0894..0x020f0d90, followed by the anonymous factory run 0x020f0d90..0x020f0dd0. Class-to-anonymous boundaries are medium confidence; this is not the archived eight-function/high heuristic.",
+    "The manifest deliberately includes the adjacent daObjNumber_c_classInit factory: its allocation size, base/member constructors and class vptr prove membership. All eight configured functions preserve ROM order and relocated bytes in the current whole-object verify.",
+    "ov002 has 26 sinits and 26 ctor entries, sinit_vs_tu=ok and corroborated=False. This module-wide observation does not narrow initializer ownership to Number.",
+    "Raw current map: build/number-probes/tu-map.json. Original boundary and failed partial-link observations remain under historical_evidence with their immutable pre-promotion snapshot."
   ],
   "sections": [
     {
@@ -22,14 +23,14 @@
       "symbol": "_ZN13daObjNumber_cD1Ev",
       "address": "0x020f0894",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN13daObjNumber_cD1Ev.cpp",
+      "legacy_source": "src/_ZN6NumberD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN13daObjNumber_cD0Ev",
       "address": "0x020f08cc",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN13daObjNumber_cD0Ev.cpp",
+      "legacy_source": "src/_ZN6NumberD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -43,28 +44,28 @@
       "symbol": "_ZN13daObjNumber_c16CleanupResourcesEv",
       "address": "0x020f093c",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN13daObjNumber_c16CleanupResourcesEv.cpp",
+      "legacy_source": "src/_ZN6Number16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN13daObjNumber_c6RenderEv",
       "address": "0x020f0994",
       "size": "0x000000cc",
-      "legacy_source": "src/_ZN13daObjNumber_c6RenderEv.cpp",
+      "legacy_source": "src/_ZN6Number6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN13daObjNumber_c8BehaviorEv",
       "address": "0x020f0a60",
       "size": "0x00000174",
-      "legacy_source": "src/_ZN13daObjNumber_c8BehaviorEv.cpp",
+      "legacy_source": "src/_ZN6Number8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN13daObjNumber_c13InitResourcesEv",
       "address": "0x020f0bd4",
       "size": "0x000001bc",
-      "legacy_source": "src/_ZN13daObjNumber_c13InitResourcesEv.cpp",
+      "legacy_source": "src/_ZN6Number13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
@@ -81,120 +82,10 @@
     "Genuine class form: the real header's inline destructor and this TU's out-of-line InitResources key function make mwccarm own retail D1/D0 plus the complete daObjNumber_c RTTI/vtable group; no hand-mangled member definition remains.",
     "Factory is return new daObjNumber_c(); fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size). The implicit constructor emits dActor_c C2, the class vptr as &_ZTV13daObjNumber_c[2], Model C1 at +0xd4 and TextureSequence C1 at +0x124.",
     "daObjNumber_c_classInit is a reconstructed source-style name: SM64DS proves the class through RTTI, allocation size, vtable identity, and the OBJ_NUMBER registry profile; later EAD lineage supplies classInit. Exact original SM64DS spelling is not preserved. Historical aliases: Number_Spawn / daObjNumber_c_Spawn.",
-    "func_ov002_020f0918 stays a C ABI helper: not a vtable slot, and the only inbound call is arm9 dActor_c::SpawnNumber. Parameter types daObjNumber_c* / dActor_c* are recovered from this consumer and this class's fields; the C name encodes no argument types.",
-    "g_profile_OBJ_NUMBER and the four SharedFilePtr handles at 0x0210d9a8/0x0210d9e8/0x0210da08/0x0210da28 are overlay data/bss this TU consumes and does not claim."
+    "func_ov002_020f0918 stays a C ABI helper: not a vtable slot, and the only inbound call is arm9 dActor_c::SpawnNumber. Both arguments and the return use dActor_c* consistently with SpawnNumber; a local derived cast accesses popup fields, and both paths return the incoming popup. The C name encodes no argument types.",
+    "g_profile_OBJ_NUMBER and the four SharedFilePtr handles at 0x0210d9a8/0x0210d9e8/0x0210da08/0x0210da28 are overlay data/bss this TU consumes and does not claim.",
+    "NUMBER-2744-04: legacy_source records the actual pre-promotion paths; historical_evidence preserves the original failed 7/8 partial experiment without renaming its inputs. Fresh verification describes the current source separately."
   ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daObjNumber_c/d_a_obj_number.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "droppedSections": [
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18
-      ],
-      "data": [
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS7dBase_c",
-        "_ZTS8dActor_c",
-        "_ZTI7dBase_c",
-        "_ZTI13daObjNumber_c",
-        "_ZTS13daObjNumber_c",
-        "_ZTI8dActor_c",
-        "_ZTV13daObjNumber_c"
-      ],
-      "dataExternalized": [
-        "_ZTI13daObjNumber_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS13daObjNumber_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV13daObjNumber_c"
-      ]
-    }
-  },
-  "partial_isolation": {
-    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-    "delinksChanged": false,
-    "derivedObjects": 8,
-    "contributionEquivalent": "7/8",
-    "comparedFields": [
-      "keptSection",
-      "keptBytes",
-      "relocs",
-      "defined",
-      "mapping",
-      "live",
-      "undefReferenced"
-    ],
-    "substitutedObjectPaths": [
-      "src/_ZN13daObjNumber_cD1Ev.cpp",
-      "src/_ZN13daObjNumber_cD0Ev.cpp",
-      "src/func_ov002_020f0918.c",
-      "src/_ZN13daObjNumber_c16CleanupResourcesEv.cpp",
-      "src/_ZN13daObjNumber_c6RenderEv.cpp",
-      "src/_ZN13daObjNumber_c8BehaviorEv.cpp",
-      "src/_ZN13daObjNumber_c13InitResourcesEv.cpp",
-      "src/d_a_obj_number.c"
-    ],
-    "extraInertImports": 71,
-    "extraImportsWithNoHome": [],
-    "result": "failed",
-    "phases": {
-      "delink": true,
-      "lcf": true,
-      "compile": true,
-      "link": true,
-      "checkModules": true,
-      "checkSymbols": false,
-      "rom": true
-    },
-    "tuRange": {
-      "start": "0x020f0894",
-      "end": "0x020f0dd0",
-      "differingBytes": 0,
-      "firstDiff": null
-    },
-    "moduleFidelityPassed": true,
-    "symbolCheckNewVsBaseline": [],
-    "rom": {
-      "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
-    },
-    "scratch": "build/tu/ov002-daObjNumber_c/link-partial (gitignored)",
-    "state": "derived",
-    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
-  },
   "compiler_only_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -258,7 +149,161 @@
       "canonical_module": "ov002",
       "canonical_address": "0x0210b0ec",
       "reason": "InitResources naturally emits the complete class vtable storage. romdata_check applies the measured eight-byte public-address-point bias and proves every slot before isolation. Address point 0x0210b0ec is unchanged from symbols.txt."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Real Vector3 storage emits this four-byte vague-linkage destructor. The existing arm9 ROM definition owns it; strict linkcheck verifies this compiler copy and rombuild compares its body before discarding the duplicate. It is not a ninth Number function or a new byte-match."
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "historical_evidence": [
+    {
+      "snapshot_commit": "4e844d388f0d37e688ebf9899a7d532dff9d7146",
+      "snapshot_path": "config/tu_manifest.d/ov002/Number.json",
+      "archive": "https://github.com/tangosdev/sm64ds-decomp/blob/4e844d388f0d37e688ebf9899a7d532dff9d7146/config/tu_manifest.d/ov002/Number.json",
+      "measurement_commit": null,
+      "state": "superseded historical experiments, not proof of this promoted source",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x20f0894..0x20f0dd0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Number",
+        "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov002-Number/Number.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 8,
+        "functions_declared": 8,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "delinksChanged": false,
+        "derivedObjects": 8,
+        "contributionEquivalent": "7/8",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "substitutedObjectPaths": [
+          "src/_ZN6NumberD1Ev.cpp",
+          "src/_ZN6NumberD0Ev.cpp",
+          "src/func_ov002_020f0918.c",
+          "src/_ZN6Number16CleanupResourcesEv.cpp",
+          "src/_ZN6Number6RenderEv.cpp",
+          "src/_ZN6Number8BehaviorEv.cpp",
+          "src/_ZN6Number13InitResourcesEv.cpp",
+          "src/d_a_obj_number.c"
+        ],
+        "extraInertImports": 71,
+        "extraImportsWithNoHome": [],
+        "result": "failed",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x020f0894",
+          "end": "0x020f0dd0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        },
+        "scratch": "build/tu/ov002-Number/link-partial (gitignored)",
+        "state": "derived",
+        "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      }
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjNumber_c/d_a_obj_number.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        30
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI13daObjNumber_c",
+        "_ZTS13daObjNumber_c",
+        "_ZTI8dActor_c",
+        "_ZTV13daObjNumber_c"
+      ],
+      "dataExternalized": [
+        "_ZTI13daObjNumber_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS13daObjNumber_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjNumber_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
 }

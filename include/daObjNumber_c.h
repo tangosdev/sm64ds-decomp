@@ -21,15 +21,13 @@ struct daObjNumber_c : dActor_c {
     /* Follow target. Behavior looks this uniqueID up with FindWithID;
        0 means the popup is not following anyone. SpawnNumber's owner. */
     s32 mOwnerUniqueID;              /* 0x138 */
-    /* Copy of mPos taken in InitResources. mStartPosY is the bounce floor. */
-    s32 mStartPosX;                  /* 0x13c */
-    s32 mStartPosY;                  /* 0x140 */
-    s32 mStartPosZ;                  /* 0x144 */
+    /* Copy of mPos taken in InitResources. mStartPos.y is the bounce floor. */
+    Vector3 mStartPos;               /* 0x13c */
     s32 mFollowOffsetY;              /* 0x148 */
     /* SpawnNumber's delay: while nonzero Behavior returns immediately and
        Render decrements it, so the popup is not drawn yet. */
     u16 mDelay;                      /* 0x14c */
-    /* Bounce. 0: rise, snap to mStartPosY, give mVertSpeed 0xf000, go to 1.
+    /* Bounce. 0: rise, snap to mStartPos.y, give mVertSpeed 0xf000, go to 1.
        1: next fall below the floor emits particle 0xd2 and dies. */
     u8  mState;                      /* 0x14e */
 
