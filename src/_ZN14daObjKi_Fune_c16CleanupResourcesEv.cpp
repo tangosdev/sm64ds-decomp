@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN6ShipUp16CleanupResourcesEv
+// @symbol _ZN14daObjKi_Fune_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ShipUp.h"
+#include "daObjKi_Fune_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 extern "C" {
 }
 
-int ShipUp::CleanupResources()
+int daObjKi_Fune_c::CleanupResources()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled())
     ((dBgW *)((char*)&mMeshCollider))->Disable();
