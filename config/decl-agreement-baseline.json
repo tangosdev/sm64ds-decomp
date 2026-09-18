@@ -2433,7 +2433,6 @@
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 void *", "return:int"],
    "src/_ZN13PrincessPeach13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
-   "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
    "src/_ZN15RollingIronBall13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN3Key13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
@@ -2485,6 +2484,7 @@
    "src/game/actors/d_a_jgm.cpp": ["param:#2 dActor_c *", "param:#5 void *", "param:#6 void *", "return:int"],
    "src/game/actors/d_a_kp_fr.cpp": ["param:#2 dActor_c *", "param:#5 void *"],
    "src/game/actors/d_a_krpa.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
    "src/game/actors/d_a_pg_mthr.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/game/actors/d_a_pg_rcer.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/game/actors/d_a_propeller_heyho.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
@@ -5683,7 +5683,6 @@
    "src/func_ov002_020edca4.c": ["return:void"],
    "src/func_ov021_021123b0.c": ["return:void"],
    "src/func_ov024_021112c0.c": ["return:void"],
-   "src/func_ov030_0211124c.cpp": ["return:void"],
    "src/func_ov060_021135fc.c": ["return:void"],
    "src/func_ov060_021172e0.cpp": ["return:void"],
    "src/func_ov060_021185c4.c": ["return:void"],
@@ -5723,6 +5722,7 @@
    "src/game/actors/d_a_obj_abuku.cpp": ["return:void"],
    "src/game/actors/d_a_obj_bk_dossunbar.cpp": ["return:void"],
    "src/game/actors/d_a_obj_hatena_switch.cpp": ["return:void"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["return:void"],
    "src/game/actors/d_a_obj_ice_board.cpp": ["return:void"],
    "src/game/actors/d_a_obj_number.cpp": ["return:void"],
    "src/game/actors/d_a_obj_wanwan_shutter.cpp": ["return:void"],
@@ -6429,7 +6429,6 @@
    "src/func_ov009_021116ec.cpp": ["arity:6", "return:int"],
    "src/func_ov020_02111340.c": ["arity:6", "return:int"],
    "src/func_ov020_02112110.cpp": ["arity:6", "return:int"],
-   "src/func_ov030_0211124c.cpp": ["arity:6", "return:void"],
    "src/func_ov060_021135fc.c": ["arity:6", "return:void *"],
    "src/func_ov060_02114858.c": ["arity:6", "return:void"],
    "src/func_ov060_02115b0c.c": ["arity:6", "return:void *"],
@@ -6477,6 +6476,7 @@
    "src/func_ov102_02149478.c": ["arity:6", "return:int"],
    "src/func_ov102_0214953c.c": ["arity:6", "return:void *"],
    "src/game/actors/d_a_jgm.cpp": ["arity:6", "return:int"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["arity:6", "return:void"],
    "src/game/actors/d_a_pg_mthr.cpp": ["arity:6", "return:void"],
    "src/unnamed/ov063/func_ov063_02116244.c": ["arity:6", "return:char *"],
    "src/unnamed/ov063/func_ov063_02116bf4.c": ["arity:6", "return:char *"],
@@ -7399,7 +7399,6 @@
    "src/func_ov002_020ecd18.cpp": ["arity:1"],
    "src/func_ov020_02111b28.cpp": ["arity:1"],
    "src/func_ov021_02112544.cpp": ["arity:1"],
-   "src/func_ov030_0211124c.cpp": ["arity:1"],
    "src/func_ov060_021128c0.cpp": ["arity:1"],
    "src/func_ov072_02120fd4.cpp": ["arity:1", "return:int"],
    "src/func_ov072_021212c0.cpp": ["arity:1"],
@@ -7416,6 +7415,7 @@
    "src/func_ov098_021388bc.cpp": ["arity:1"],
    "src/func_ov098_021389f8.cpp": ["arity:1"],
    "src/game/actors/d_a_kp_fr.cpp": ["arity:1"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["arity:1"],
    "src/game/actors/daFeather_c/daFeather_c.cpp": ["arity:1"],
    "src/game/actors/daObjPushblock_c.cpp": ["arity:1"],
    "src/game/actors/daPiano_c/d_a_piano.cpp": ["arity:1"]
@@ -11718,10 +11718,12 @@
    "src/actors/daMky_c.cpp": ["return:SharedFilePtr * []"]
   },
   "data_ov030_02115c80": {
-   "src/__sinit_ov030_0211484c.c": ["return:int []"]
+   "src/__sinit_ov030_0211484c.c": ["return:int []"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["return:SharedFilePtr"]
   },
   "data_ov030_02115c88": {
-   "src/__sinit_ov030_0211484c.c": ["return:int []"]
+   "src/__sinit_ov030_0211484c.c": ["return:int []"],
+   "src/game/actors/d_a_obj_hm_bskt.cpp": ["return:SharedFilePtr"]
   },
   "data_ov030_02115cf0": {
    "src/__sinit_ov030_02114924.c": ["return:void *"]
@@ -20268,9 +20270,6 @@
   },
   "func_ov029_02112710": {
    "include/decl_common.h": ["param:#1 char *"]
-  },
-  "func_ov030_0211124c": {
-   "src/_ZN13daObjHmBskt_c8BehaviorEv.cpp": ["param:#1 daObjHmBskt_c *", "param:#2 dBgCh_Actr *"]
   },
   "func_ov034_021125b8": {
    "src/func_ov034_021119ac.c": ["return:int"],
