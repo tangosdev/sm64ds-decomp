@@ -32,7 +32,7 @@ English ones:
     daChoropu_c + daChoro_Rock_c      (tree: MontyMole + MontyMoleRock)
     daStar_c    + daStarBase_c        (tree: PowerStar + PowerStarBase)
     daKpa_c     + daKpaTail_c         (tree: Bowser + BowserTail)
-    daDossy_c   + daDossyCap_c        (tree: Dorrie + daDossyCap_c)
+    daDossy_c   + daDossyCap_c        (tree: both, since the Dorrie rename)
     daBook_c    + daBookGen_c         (tree: BookShot + BookShotSpawner)
 
 That is an independent corroboration of the interval union-find, arrived at from

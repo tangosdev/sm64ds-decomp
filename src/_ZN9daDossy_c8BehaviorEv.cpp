@@ -1,6 +1,6 @@
 //cpp
 #pragma opt_propagation off
-#include "Dorrie.h"
+#include "daDossy_c.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 
@@ -20,7 +20,7 @@ extern PMF data_ov065_0211d7fc[];
 extern short data_02082214[];
 }
 
-int Dorrie::Behavior()
+int daDossy_c::Behavior()
 {
     char* c = (char*)this;
     int d;

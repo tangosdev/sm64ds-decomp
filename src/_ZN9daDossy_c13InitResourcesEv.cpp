@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN6Dorrie13InitResourcesEv
+// @symbol _ZN9daDossy_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Dorrie.h"
+#include "daDossy_c.h"
 #include "dBgW.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
@@ -30,7 +30,7 @@ extern int data_ov002_0210d9c0;
 extern void* data_ov065_0211c080[];
 extern void* data_ov065_0211c08c[];
 
-int Dorrie::InitResources()
+int daDossy_c::InitResources()
 {
     int i;
     void* f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d720);

@@ -2,7 +2,7 @@
  * rejects every source spelling of placement new/operator new available to
  * this tree (notes/ctor-migration.md 5d), so pretending this is a C++ factory
  * would only preserve the extern-C shell. The constructed member sequence is
- * nevertheless the exact Dorrie layout declared in include/Dorrie.h. */
+ * nevertheless the exact daDossy_c layout declared in include/daDossy_c.h. */
 extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void*);
 extern void _ZN9ModelAnimC1Ev(void*);
@@ -12,7 +12,7 @@ extern void _ZN10dCcAcPos_cC1Ev(void*);
 extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void _ZN14DorriePlatformD1Ev(void*);
 extern void _ZN14DorriePlatformC1Ev(void*);
-extern void* _ZTV6Dorrie[];
+extern void* _ZTV9daDossy_c[];
 
 /* Reconstructed source-style name: SM64DS proves daDossy_c through RTTI,
  * allocation size, vtable identity, and the DOSSY registry profile;
@@ -23,7 +23,7 @@ int* daDossy_c_classInit(void)
     int* p = (int*)_ZN7fBase_cnwEj(0x11b8);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        *(void***)p = (void**)_ZTV6Dorrie;
+        *(void***)p = (void**)_ZTV9daDossy_c;
         _ZN9ModelAnimC1Ev((char*)p + 0xec);
         __cxa_vec_ctor((char*)p + 0x150, 7, 0x200,
                       _ZN14DorriePlatformC1Ev, _ZN14DorriePlatformD1Ev);

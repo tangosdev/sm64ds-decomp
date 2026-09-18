@@ -1,10 +1,13 @@
-/* Dorrie, reconstructed from its factory, destructor pair, vtable/RTTI and
+/* daDossy_c, reconstructed from its factory, destructor pair, vtable/RTTI and
  * five matched methods.
  *
- * The cartridge calls this class daDossy_c in RTTI, while its configured
- * methods use the compatibility spelling Dorrie. The compiler-facing Dorrie
- * metadata is therefore a per-function passenger; the ROM-owned vtable still
- * has to be checked directly for its exact 31-slot dActor_c shape.
+ * NAME: daDossy_c is the cartridge's own RTTI spelling. _ZTS at ov065
+ * 0x0211cd34 is the length-prefixed byte string "9daDossy_c"
+ * (39 64 61 44 6f 73 73 79 5f 63 00), and the type-info word four bytes below
+ * the vtable address point at 0x0211ce48 reads _ZTI9daDossy_c (0x0211cd40), so
+ * the vtable this tree used to spell _ZTV6Dorrie is this type's. Dorrie was a
+ * coined name; the ROM-owned vtable still has to be checked directly for its
+ * exact 31-slot dActor_c shape.
  *
  * DorriePlatform is independently corroborated by the two 0x1c callbacks used
  * by daDossy_c_classInit and the D1/D0 pair: each callback constructs or destroys a
@@ -17,8 +20,8 @@
  * Dorrie_Spawn) constructs it for the DOSSY
  * registry profile.
  */
-#ifndef DORRIE_H
-#define DORRIE_H
+#ifndef DADOSSY_C_H
+#define DADOSSY_C_H
 
 #include "dActor_c.h"
 #include "ModelAnim.h"
@@ -44,7 +47,7 @@ typedef char DorriePlatform_size_must_be_0x200[
     sizeof(DorriePlatform) == 0x200 ? 1 : -1];
 #endif
 
-struct Dorrie : dActor_c {
+struct daDossy_c : dActor_c {
     u32 unk_0d0;                 /* 0x0d0 */
     daDossyCap_c *mCap;         /* 0x0d4 */
     s32 mCapPosX;               /* 0x0d8 */
@@ -81,7 +84,7 @@ struct Dorrie : dActor_c {
 
     /* Inline is load-bearing: explicit use in the destructor source files
      * emits D1 then D0 without inventing a homeless D2. */
-    virtual ~Dorrie() {}
+    virtual ~daDossy_c() {}
 
     virtual int InitResources();
     virtual int CleanupResources();
@@ -91,8 +94,8 @@ struct Dorrie : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Dorrie_size_must_be_0x11b8[
-    sizeof(Dorrie) == 0x11b8 ? 1 : -1];
+typedef char daDossy_c_size_must_be_0x11b8[
+    sizeof(daDossy_c) == 0x11b8 ? 1 : -1];
 #endif
 
-#endif /* DORRIE_H */
+#endif /* DADOSSY_C_H */

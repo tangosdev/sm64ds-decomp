@@ -114,7 +114,7 @@ daCoin_c	DONE	include\Coin.h  [alias: header uses pre-rename name]	dActor_c	0	ov
 daDemo_c	DONE	include\daDemo_c.h	dActor_c	0	ov002	4
 daDoor_c	DONE	include\Door.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7
 daDossyCap_c	DONE	include\daDossyCap_c.h	dActor_c	0	ov065	6
-daDossy_c	DONE	include\Dorrie.h  [alias: header uses pre-rename name]	dActor_c	0	ov065	6
+daDossy_c	DONE	include\daDossy_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov065	6
 daECreate_c	DONE	include\EnemySpawner.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	5
 daESwitch_c	DONE	include\EnemySwitchTag.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	5
 daEyBm_c	DONE	include\daEyBm_c.h	dActor_c	0	ov071	12

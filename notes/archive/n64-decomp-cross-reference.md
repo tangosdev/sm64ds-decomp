@@ -343,7 +343,7 @@ Combined with N64's field vocabulary (`oPosX`/`oAction`/…) and the hitbox cons
 `InitResources()` or renaming `func_ov###_########` placeholders for these actors.
 
 DS-only / EAD additions, not chased: `KoopaTheQuick`, `daIDonketu_c` (then called `ChillBully` here)/`ChiefChilly` (Snowman's Land
-reskins — N64 doesn't reuse Bully there), `Toad`, `Dorrie`.
+reskins — N64 doesn't reuse Bully there), `Toad`, `daDossy_c` (then called `Dorrie` here).
 
 ---
 

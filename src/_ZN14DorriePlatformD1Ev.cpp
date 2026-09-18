@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN14DorriePlatformD1Ev
-#include "Dorrie.h"
+#include "daDossy_c.h"
 
 DorriePlatform::~DorriePlatform()
 {

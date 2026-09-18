@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN6Dorrie16CleanupResourcesEv
+// @symbol _ZN9daDossy_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Dorrie.h"
+#include "daDossy_c.h"
 #include "dBgW.h"
 struct SharedFilePtr { unsigned int data[4]; };
 extern "C" {
@@ -14,7 +14,7 @@ extern struct SharedFilePtr *data_ov065_0211c08c[];
 extern struct SharedFilePtr *data_ov065_0211c080[];
 extern struct SharedFilePtr data_ov065_0211d720;
 
-int Dorrie::CleanupResources()
+int daDossy_c::CleanupResources()
 {
     int i;
     char *p;
