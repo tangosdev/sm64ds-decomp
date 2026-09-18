@@ -1,0 +1,133 @@
+{
+  "id": "ov006/dScMgSlot1_c_classInit",
+  "module": "ov006",
+  "source": "src/minigames/d_s_mg_slot1.cpp",
+  "promoted_source": "src/minigames/d_s_mg_slot1.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0210d6b8..0x0210d740, 1 function, from config/arm9/overlays/ov006/delinks.txt and symbols.txt. HAND-BUILT manifest entry (tools/build_manifest_entry's schema, not its code path): build/tu_map.json is a gitignored build artifact, so `tubuild.py create` has no candidate to read, the same route ov006/MgBingoBallSlotsShot took.",
+    "THE RANGE IS NOT NEW. main already carries `src/d_s_mg_slot1.cpp: complete / .text start:0x0210d6b8 end:0x0210d740` in config/arm9/overlays/ov006/delinks.txt (`git show 3e24f2d0e:config/arm9/overlays/ov006/delinks.txt`). This promotion therefore widens no span and relinquishes no legacy entry: the only delinks change is the PATH, src/d_s_mg_slot1.cpp -> src/minigames/d_s_mg_slot1.cpp. The queue row's blocker said as much -- `needs manifest registration, not a shard merge` -- though the file it named, src/actors/MgBingoBallSlotsShot.cpp, does not exist in the tree and is a mis-pasted citation; the real one-legacy-file is src/d_s_mg_slot1.cpp.",
+    "class label: dScMgSlot1_c, the cartridge's own RTTI spelling -- _ZTS12dScMgSlot1_c at ov006:0x0213e5bc, _ZTI12dScMgSlot1_c at 0x0213e5a0, _ZTV12dScMgSlot1_c at 0x0213eb40. Nothing here is coined, so the coined-name RTTI-home refusal does not apply.",
+    "TOP BOUNDARY IS REAL, BOTTOM BOUNDARY IS DISCLOSED AS UNCONFIRMED. Above, 0x0210d740 starts _ZN16dScMgSmartball_cD1Ev -- a different class -- so the run cannot legitimately extend upward. Below, _ZN12dScMgSlot1_c13InitResourcesEv occupies 0x0210d1fc..0x0210d6b8 with a ZERO-byte gap, and the whole stretch 0x0210c374..0x0210d6b8 is dScMgSlot1_c's own members (betIcon_c::Render, betIcon_c::Behavior, OnHitFromUnderneath, OnHitByMegaChar, OnYoshiTryEat, Render, Behavior, InitResources, with unlabelled helpers between). The ROM's original .cpp was very probably WIDER than this one function. What is claimed here is only the cut the delinker already made and main already ships; the wider run is the still-open queue row `dScMgSlot1_c+dScMgSlot3_c` (41 shards, 4 unmatched/pragma/multi-class blockers), and promoting this factory does not foreclose it -- a later, wider promotion absorbs this span the way ov063/daTrsTrap_c and ov063/daTrsTrap_c_classInit coexist today.",
+    "module sinit corroboration, narrowed: ov006's .ctor table is 31 entries at 0x0213356c..0x021335e8 and NOT ONE of them points inside 0x0210d6b8..0x0210d740 (read out of extracted/overlays/overlay_0006.bin, module base 0x020bfec0). This TU has no static initialiser of its own."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210d6b8",
+      "end": "0x0210d740"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "dScMgSlot1_c_classInit",
+      "address": "0x0210d6b8",
+      "size": "0x00000088",
+      "legacy_source": "src/d_s_mg_slot1.cpp",
+      "ordinal": 0
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-built manifest entry, NOT tools/tubuild.py create output -- see boundary_evidence. The shadow src_tu/minigames/d_s_mg_slot1.cpp is the legacy src/d_s_mg_slot1.cpp verbatim below its banner; only the file-header comment was rewritten, to name the promoted TU rather than the legacy path (notes/tu-promotion-conventions.md section 4).",
+    "compiler_only_output is EMPTY, and that is measured rather than assumed. The queue row predicted `compiler-only:>=11` from dScMgSlot1_c's five-deep ancestor chain, but the floor does not apply when the key function falls outside the licensed range -- queue_audit.py's own header says so, measured on dScMgBase_c, dScMgHanachan_c and dScMgBomroom_c. This TU defines no virtual at all: dScMgSlot1_c's key function is its destructor, at 0x0210a8c0/0x0210a900, far outside this range. `tubuild.py compile` reports seven ELF sections, one .text, and `no unlicensed symbols or sections`.",
+    "This TU is the FACTORY ONLY. dScMgSlot1_c's methods remain per-function files and its destructors sit in a different run entirely (_ZN12dScMgSlot1_cD1Ev 0x0210a8c0, _ZN12dScMgSlot1_cD0Ev 0x0210a900), so the class is NOT fully promoted by this entry and the queue row for the class must not be read as closed. The entry is deliberately id'd `dScMgSlot1_c_classInit`, not `dScMgSlot1_c`, so queue_audit.py does not mark the class promoted -- the same split ov063 landed as daTrsTrap_c plus daTrsTrap_c_classInit."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSlot1_c_classInit/d_s_mg_slot1.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov006-dScMgSlot1_c_classInit/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0210d6b8",
+        "end": "0x0210d740",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0210d6b8",
+          "end": "0x0210d740",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 1
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

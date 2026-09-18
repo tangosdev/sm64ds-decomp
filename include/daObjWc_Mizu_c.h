@@ -39,7 +39,7 @@ struct daObjWc_Mizu_c : dBgActor_c {
     u8 mTrueAreaID;                    /* 0x340 -- stored u8; Behavior reads it signed (ldrsb) */
     u8  pad_341;
     /* Behavior adds 0x200 per frame; (u16)>>4 indexes data_02082214.
-       Same sine-table shape as LavaPlank::mPhaseAngle. Was pad_341[3]
+       Same sine-table shape as daObjFl_UkiKi_c::mPhaseAngle. Was pad_341[3]
        covering this live halfword. */
     s16 mPhaseAngle;                   /* 0x342 */
     s32 mWaterHeight;                  /* 0x344 */

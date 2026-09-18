@@ -7876,17 +7876,17 @@
    "start": "0x2112130",
    "end": "0x2112380",
    "classes": [
-    "LavaPlank"
+    "daObjFl_UkiKi_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9LavaPlankD1Ev.cpp",
-    "src/_ZN9LavaPlankD0Ev.cpp",
-    "src/_ZN9LavaPlank16CleanupResourcesEv.cpp",
-    "src/_ZN9LavaPlank6RenderEv.cpp",
-    "src/_ZN9LavaPlank8BehaviorEv.cpp",
-    "src/_ZN9LavaPlank13InitResourcesEv.cpp",
+    "src/_ZN15daObjFl_UkiKi_cD1Ev.cpp",
+    "src/_ZN15daObjFl_UkiKi_cD0Ev.cpp",
+    "src/_ZN15daObjFl_UkiKi_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjFl_UkiKi_c6RenderEv.cpp",
+    "src/_ZN15daObjFl_UkiKi_c8BehaviorEv.cpp",
+    "src/_ZN15daObjFl_UkiKi_c13InitResourcesEv.cpp",
     "src/d_a_obj_fl_uki_ki.c"
    ],
    "ext_mix": {

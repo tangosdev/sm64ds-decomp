@@ -21,7 +21,7 @@
  * _ZN10dBgActor_cD1Ev.
  *
  * This class's key function is Behavior (already out of line, in
- * src/_ZN16daObjKaitendai_c8BehaviorEv.cpp -- see
+ * src/actors/daObjKaitendai_c.cpp -- see
  * include/daObjKaitendai_c.h), so this file does not carry
  * _ZTV16daObjKaitendai_c / _ZTI16daObjKaitendai_c.
  */

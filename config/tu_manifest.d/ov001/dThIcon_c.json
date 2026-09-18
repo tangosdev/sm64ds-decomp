@@ -1,0 +1,178 @@
+{
+  "id": "ov001/dThIcon_c",
+  "module": "ov001",
+  "source": "src/actors/dThIcon_c.cpp",
+  "promoted_source": "src/actors/dThIcon_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20ab54c..0x20ab5b0, 2 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dThIcon_c",
+    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ab54c",
+      "end": "0x020ab5b0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9dThIcon_c6RenderEv",
+      "address": "0x020ab54c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9dThIcon_c6RenderEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9dThIcon_c8BehaviorEv",
+      "address": "0x020ab550",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN9dThIcon_c8BehaviorEv.cpp",
+      "ordinal": 1
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Reconstructed by tools/tubuild.py create and then reconciled by hand. No pragma is needed anywhere in this unit: both functions reproduced byte-exact on the first compile under the build's stock flags, with codegen left deferred, so the whole file is written in the reverse of ROM address order and mwccarm's end-of-file emission puts the two .text sections back in ROM-ascending order.",
+    "tubuild create reported no cross-file conflicts in includes, externs, macros or local declarations, and no destructor variants or pragmas in either legacy source. The only reconciliation was cosmetic: the Behavior shard routed both of its tests through a redundant `int v` temporary copied out of unk_00c, which the merged source drops in favour of testing the member directly. Both functions were re-verified byte-exact afterwards.",
+    "The one extern this TU carries, data_0208ee44, is spelt `extern int` -- the plurality spelling in the tree and the one its other scalar users (src/actors/dScMgCup_c.cpp, src/minigames/d_s_mg_base.cpp) already use. config/decl-agreement-baseline.json banks five pre-existing disagreements on this symbol (`unsigned char []`, `char`, `int []`); this TU does not add to them and none were touched.",
+    "This class's constructor and destructor are inline in include/dThIcon_c.h and are not odr-used here, so unlike the sibling dCapIcon_c TU in this overlay no C1/C2/D0/D1/D2 variant is emitted at all. The only compiler-only output is the vague-linkage RTTI trio below, and all three have ROM homes, so this TU has no homeless symbol to deadstrip."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov001-dThIcon_c/dThIcon_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 2,
+    "functions_declared": 2,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "data": [
+        "_ZTV9dThIcon_c",
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c"
+      ],
+      "dataExternalized": [
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c",
+        "_ZTV9dThIcon_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov001-dThIcon_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020ab54c",
+        "end": "0x020ab5b0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020ab54c",
+          "end": "0x020ab5b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 2
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad494",
+      "reason": "The vtable this TU is the key function for: dThIcon_c's two virtuals, Behavior and Render, are both defined out of line here and its destructor is inline and nonvirtual, so mwccarm anchors the vague-linkage group in this object. verify's EXTRA line reports size=0x10 for the copy this TU emits -- four words, the two-word RTTI prologue plus the two dispatch slots. The cartridge's copy of those four words is at ov001:0x020ad48c in extracted/dsd/arm9_overlays/ov001.bin: offset-to-top 0, &_ZTI9dThIcon_c (0x020ad478), then slot 0 = _ZN9dThIcon_c8BehaviorEv (0x020ab550) and slot 1 = _ZN9dThIcon_c6RenderEv (0x020ab54c), both inside this TU's licensed run. The _ZTV9dThIcon_c row in config/arm9/overlays/ov001/symbols.txt is at 0x020ad494, which is the table's ADDRESS POINT (&_ZTV[2]) rather than its first word -- that is the value a vptr store writes, and it is why the row's extent to the next symbol is 8 bytes and not 0x10. Production isolation rebinds this TU's relocations to that ROM home and deadstrips the duplicate."
+    },
+    {
+      "symbol": "_ZTI9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad478",
+      "reason": "This class's own __class_type_info, emitted as a passenger beside the vtable. ROM home ov001:0x020ad478, two words -- the __class_type_info vtable pointer (0x0209a774, the same one dCapIcon_c's record at 0x020ad450 carries) and a pointer to the type-name string below (0x020ad480). That is exactly the size=0x8 verify reports for the copy in this object, and it is the record that proves the class name this TU uses, so no rename is involved."
+    },
+    {
+      "symbol": "_ZTS9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad480",
+      "reason": "Type-name string `9dThIcon_c\\u0000`, 0xb bytes -- the exact size verify reports for the copy in this object, and the exact bytes at ov001:0x020ad480 in the extracted overlay. ROM home ov001:0x020ad480."
+    }
+  ],
+  "production_mode": "text-only"
+}

@@ -47,28 +47,9 @@ src/func_ov001_020aaf40.c:
     complete
     .text start:0x020aaf40 end:0x020ab110
 
-src/_ZN10dCapIcon_c6UnlinkEv.cpp:
-    .text start:0x020ab110 end:0x020ab228
-
-src/func_ov001_020ab228.c:
+src/actors/dCapIcon_c.cpp:
     complete
-    .text start:0x020ab228 end:0x020ab2e4
-
-src/func_ov001_020ab2e4.c:
-    complete
-    .text start:0x020ab2e4 end:0x020ab374
-
-src/_ZN10dCapIcon_cD0Ev.cpp:
-    complete
-    .text start:0x020ab374 end:0x020ab3a0
-
-src/_ZN10dCapIcon_cD1Ev.cpp:
-    complete
-    .text start:0x020ab3a0 end:0x020ab3c4
-
-src/_ZN10dCapIcon_cC1Ev.cpp:
-    complete
-    .text start:0x020ab3c4 end:0x020ab3f0
+    .text start:0x020ab110 end:0x020ab3f0
 
 src/func_ov001_020ab3f0.c:
     complete
@@ -82,13 +63,9 @@ src/TouchArea_Update.c:
     complete
     .text start:0x020ab450 end:0x020ab54c
 
-src/_ZN9dThIcon_c6RenderEv.cpp:
+src/actors/dThIcon_c.cpp:
     complete
-    .text start:0x020ab54c end:0x020ab550
-
-src/_ZN9dThIcon_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020ab550 end:0x020ab5b0
+    .text start:0x020ab54c end:0x020ab5b0
 
 src/func_ov001_020ab5b0.c:
     complete
