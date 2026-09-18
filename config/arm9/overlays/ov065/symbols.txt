@@ -112,13 +112,13 @@ func_ov065_0211ad70 kind:function(arm,size=0x98) addr:0x0211ad70
 _ZN16daObjCtMecha05_c8BehaviorEv kind:function(arm,size=0x3cc) addr:0x0211ae08
 _ZN16daObjCtMecha05_c13InitResourcesEv kind:function(arm,size=0x154) addr:0x0211b1d4
 daObjCtMecha05_c_classInit kind:function(arm,size=0x38) addr:0x0211b328
-_ZN13TTC_MovingBarD1Ev kind:function(arm,size=0x4c) addr:0x0211b360
-_ZN13TTC_MovingBarD0Ev kind:function(arm,size=0x60) addr:0x0211b3ac
+_ZN18daObjCtKaitendai_cD1Ev kind:function(arm,size=0x4c) addr:0x0211b360
+_ZN18daObjCtKaitendai_cD0Ev kind:function(arm,size=0x60) addr:0x0211b3ac
 func_ov065_0211b40c kind:function(arm,size=0x70) addr:0x0211b40c
-_ZN13TTC_MovingBar16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211b47c
-_ZN13TTC_MovingBar6RenderEv kind:function(arm,size=0x28) addr:0x0211b4e0
-_ZN13TTC_MovingBar8BehaviorEv kind:function(arm,size=0x138) addr:0x0211b508
-_ZN13TTC_MovingBar13InitResourcesEv kind:function(arm,size=0x140) addr:0x0211b640
+_ZN18daObjCtKaitendai_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211b47c
+_ZN18daObjCtKaitendai_c6RenderEv kind:function(arm,size=0x28) addr:0x0211b4e0
+_ZN18daObjCtKaitendai_c8BehaviorEv kind:function(arm,size=0x138) addr:0x0211b508
+_ZN18daObjCtKaitendai_c13InitResourcesEv kind:function(arm,size=0x140) addr:0x0211b640
 daObjCtKaitendai_c_classInit_CT_MECHA07 kind:function(arm,size=0x38) addr:0x0211b780
 daObjCtKaitendai_c_classInit_CT_MECHA06 kind:function(arm,size=0x38) addr:0x0211b7b8
 _ZN15TtcRotatingGearD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
@@ -247,7 +247,6 @@ data_ov065_0211d360 kind:data(any) addr:0x0211d360
 data_ov065_0211d364 kind:data(any) addr:0x0211d364
 g_profile_CT_MECHA06 kind:data(any) addr:0x0211d374 ambiguous
 g_profile_CT_MECHA07 kind:data(any) addr:0x0211d390 ambiguous
-_ZTV13TTC_MovingBar kind:data(any) addr:0x0211d3b4
 _ZTV18daObjCtKaitendai_c kind:data(any) addr:0x0211d3b4
 _ZTI16daObjCtMecha08_c kind:data(any) addr:0x0211d434
 _ZTS16daObjCtMecha08_c kind:data(any) addr:0x0211d440

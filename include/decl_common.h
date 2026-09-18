@@ -511,7 +511,6 @@ extern int _ZTV13QuestionBlock[];
 extern int _ZTV13RacingPenguin[];
 extern int _ZTV21daObj_volcanoCannon_c[];
 extern int _ZTV7daMky_c[];
-extern int _ZTV13TTC_MovingBar[];
 extern int _ZTV13TreasureChest[];
 extern int _ZTV13UpDownLiftBbh[];
 extern int _ZTV13dScGameOver_c[];

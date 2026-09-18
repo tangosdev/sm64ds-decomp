@@ -6074,19 +6074,19 @@
    "start": "0x211b328",
    "end": "0x211b780",
    "classes": [
-    "TTC_MovingBar"
+    "daObjCtKaitendai_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/TTC_MovingBar_Spawn.c",
-    "src/_ZN13TTC_MovingBarD1Ev.cpp",
-    "src/_ZN13TTC_MovingBarD0Ev.cpp",
+    "src/daObjCtKaitendai_c_Spawn.c",
+    "src/_ZN18daObjCtKaitendai_cD1Ev.cpp",
+    "src/_ZN18daObjCtKaitendai_cD0Ev.cpp",
     "src/func_ov065_0211b40c.c",
-    "src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp",
-    "src/_ZN13TTC_MovingBar6RenderEv.cpp",
-    "src/_ZN13TTC_MovingBar8BehaviorEv.cpp",
-    "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp"
+    "src/_ZN18daObjCtKaitendai_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjCtKaitendai_c6RenderEv.cpp",
+    "src/_ZN18daObjCtKaitendai_c8BehaviorEv.cpp",
+    "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".c": 2,

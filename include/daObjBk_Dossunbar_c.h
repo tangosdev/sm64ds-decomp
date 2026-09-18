@@ -26,8 +26,8 @@
  * MovingBarBig_Spawn) and daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S
  * (historical alias MovingBarSmall_Spawn) -- call fBase_c::operator new(0x338)
  * and store the same vptr, so these are two registry entries for one class and
- * not two classes. TTC_MovingBar / daObjCtMecha05_c in ov065 is a different
- * class in a different overlay and shares only a coined word.
+ * not two classes. daObjCtKaitendai_c and daObjCtMecha05_c in ov065 are
+ * different classes in a different overlay and share only a coined word.
  *
  * THE TREE NAME WAS COINED. This class was called MovingBar until the ROM's own
  * type string was read; "MovingBar" occurs nowhere in the 9.0 MiB cartridge

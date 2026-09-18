@@ -243,7 +243,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 | TU | Address | Files | Description | Status |
 |----|---------|-------|-------------|--------|
 |[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211ab60|  n=8|   `daObjCtMecha05_c`|   CONF3|
-|[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211b328|  n=8|   `TTC_MovingBar`|      CONF2|
+|[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211b328|  n=8|   `daObjCtKaitendai_c`|      CONF2|
 |[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x2126dbc|  n=9|   `BillBlaster`|        CONF2|
 |[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x21271e4|  n=9|   `FortressWall`|       CONF1|
 |[ov091](../config/arm9/overlays/ov091/symbols.txt)| 0x2132404|  n=7|   `SlidingPlatformWf`|  CONF2|
@@ -876,7 +876,7 @@ Run because they were the cheapest, not because the others were blocked.
 | [ov036](../config/arm9/overlays/ov036/symbols.txt)/`daObjRc_Dorifu_c` | 4 | blocked on `mMovingMeshCollider` — the class header does not declare the member. **Header work, not merge work.** |
 | [ov043](../config/arm9/overlays/ov043/symbols.txt)/`daObjKm1_Dorifu_c` | 4 | same |
 | [ov047](../config/arm9/overlays/ov047/symbols.txt)/`daObjKm3_Dorifu_c` | 5 | same, plus an ambiguous overload |
-| [ov065](../config/arm9/overlays/ov065/symbols.txt)/`TTC_MovingBar` | 8 | `class 'TTC_MovingBar' redefined` — the loud form of the local-struct collision |
+| [ov065](../config/arm9/overlays/ov065/symbols.txt)/`daObjCtKaitendai_c` | 8 | `class 'daObjCtKaitendai_c' redefined` — the loud form of the local-struct collision |
 | [ov065](../config/arm9/overlays/ov065/symbols.txt)/`daObjCtMecha05_c` | 8 | [data_ov065_0211c0c8](../config/arm9/overlays/ov065/symbols.txt) redeclared, `short` vs other |
 | [ov006](../config/arm9/overlays/ov006/symbols.txt)/`MgTrampolineTerror` | 2 | overload conflict at the extern block |
 
