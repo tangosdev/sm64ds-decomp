@@ -1,9 +1,9 @@
 {
   "id": "ov015/daObjBk_Lift_c",
   "module": "ov015",
-  "source": "src_tu/actors/daObjBk_Lift_c.cpp",
+  "source": "src/actors/daObjBk_Lift_c.cpp",
   "promoted_source": "src/actors/daObjBk_Lift_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2112290..0x2112944, 12 function(s). build/tu_map.json (tools/tu_map.py) cuts this into 0x2112290..0x21128e8 (class-labelled daObjBk_Lift_c) plus 0x21128e8..0x2112944 (unlabelled: the two dBgW callback helpers and the BK_LIFT01 factory). The cut is an artefact of tu_map's class labelling, not a linker boundary: it makes the same cut for every class in this overlay, and the already-promoted sibling immediately above -- config/tu_manifest.d/ov015/daObjBk_Rotebar_c.json, 0x2112944..0x2112bd0 -- folds exactly that split (daObjBk_Rotebar_c_classInit at 0x2112ba0 sits in its own tu_map unit and is licensed by the class TU). daObjBk_Dossunbar_c folds two factories the same way.",
