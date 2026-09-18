@@ -26,11 +26,15 @@ struct dScMiniGm_c : dScene_c {
     u8  mExiting;                /* 0x0ac */
     u8  pad_0ad[0x3];
 
-    /* Declared first -- key function; see the family convention discussed
-       in dScene_c.h. Never defined as a real method in any TU: both D1 and
-       D0 are plain functions carrying their literal mangled name
-       (src/_ZN11dScMiniGm_cD1Ev.c, src/_ZN11dScMiniGm_cD0Ev.c). */
-    virtual ~dScMiniGm_c();                              /* slots 16 (D1), 17 (D0) */
+    /* Defined inline, and that is load-bearing rather than a style choice.
+       The cartridge puts D1 (0x020bfec0) BELOW D0 (0x020bfefc); under mwccarm's
+       default deferred codegen an inline body emits exactly that pair in that
+       order and no D2, whereas an out-of-line definition emits D0 ahead of D1
+       plus a homeless D2 that has no address anywhere in config/. The body is
+       empty because dScMiniGm_c adds only scalars over dScene_c, so the vptr
+       store and the ~dScene_c chain follow from the base clause alone.
+       Declared first so this class's key function is its destructor. */
+    virtual ~dScMiniGm_c() {}                            /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */
