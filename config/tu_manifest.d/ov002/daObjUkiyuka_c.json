@@ -1,0 +1,179 @@
+{
+  "id": "ov002/daObjUkiyuka_c",
+  "module": "ov002",
+  "source": "src_tu/actors/daObjUkiyuka_c.cpp",
+  "promoted_source": "src/actors/daObjUkiyuka_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b6388..0x20b6584, 5 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjUkiyuka_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b6388",
+      "end": "0x020b6584"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjUkiyuka_cD0Ev",
+      "address": "0x020b6388",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN14daObjUkiyuka_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_cD1Ev",
+      "address": "0x020b63e0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN14daObjUkiyuka_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b6424",
+      "address": "0x020b6424",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020b6424.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_c6RenderEv",
+      "address": "0x020b646c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN14daObjUkiyuka_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_c8BehaviorEv",
+      "address": "0x020b6494",
+      "size": "0x000000f0",
+      "legacy_source": "src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Reconciled by hand from the five legacy one-function sources; see the file's own header comment for the full measurement. The destructor is NOT written in the TU: it is inline in the class body in include/daObjUkiyuka_c.h and this TU owns the class's key function (Behavior, the first out-of-line virtual), so the compiler emits _ZTV14daObjUkiyuka_c and the D1/D0 pair it references. The two legacy shards' EmitDestructor / EmitDeletingDestructor forcing functions are dropped: in a merged TU the vtable already odr-uses both variants, and the forcers only added two source-written .text sections promotion cannot license.",
+    "NOT PROMOTED, and the blocker is destructor EMISSION ORDER, not bytes. The cartridge orders D0 (0x020b6388, 0x58) below D1 (0x020b63e0, 0x44) as the first two functions of the range; mwccarm emits the pair D1 then D0. Five source forms were measured, one compile each: inline dtor with deferred codegen (default), the same with the two forcers swapped, the same with the destructor declared last in the class, and inline dtor under `#pragma defer_codegen off` all give D1, D0 (the first three at the front of the object, the last at the end). Only an out-of-line destructor gives D0, D1.",
+    "THE OUT-OF-LINE FORM IS REFUTED BY THE CARTRIDGE. Moving ~daObjUkiyuka_c out of line makes descendants call it instead of inlining its vptr store: ov045/daObjKm2_Ukishima_c, already landed and byte-verified, drops from 5/5 to 3/5 with `999 word(s) differ` (a size disagreement) on both _ZN19daObjKm2_Ukishima_cD1Ev and _ZN19daObjKm2_Ukishima_cD0Ev, plus one wrong relocation destination (data_020a0eac != 0x020112c8:arm9). The inline form in the header is load-bearing and was restored.",
+    "Under `#pragma defer_codegen off` the pair follows the REVERSE of its first odr-use within one function's codegen, so one function containing `p->~daObjUkiyuka_c(); delete p;` does emit D0 then D1 -- but after that function's own section, and the cartridge puts the pair first in the range. A `static inline` helper is never codegen'd and never instantiates the variants at all (measured). Every remaining route costs a source-written .text section ahead of the pair, which compiler_only_output may not launder: it is an allow-list for compiler-generated output.",
+    "NEXT STEP IS A SLICING QUESTION, NOT A CODEGEN ONE. The left TU boundary is tu_map `medium`. If the original TU began at 0x020b6244 (the currently unattributed three-function run ahead of it) the destructor pair would sit mid-range, where an odr-use in a preceding member reproduces the cartridge's order with no extra section. Test that before trying further source forms.",
+    "The class's _ZTV/_ZTI/_ZTS group and the four inherited vague-linkage RTTI copies are emitted here as key-function passengers and stay unlicensed until the manifest carries a compiler_only_output block with a romdata_check verdict per symbol, the way ov002/daBar_c does. This TU is text-only; no data, initializer or BSS ownership is claimed."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjUkiyuka_c/daObjUkiyuka_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "object-audit-refused",
+      "scratch": "build/tu/ov002-daObjUkiyuka_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": {
+          "COLLIDES-GAP": 11,
+          "LICENSED": 5
+        },
+        "emittedTextOrderIsRomAscending": false,
+        "nonLicensedSymbols": [
+          "COLLIDES-GAP _ZTI7fBase_c STB_LOPROC .data size=0x8 already at arm9:0x02086d70",
+          "COLLIDES-GAP _ZTS7fBase_c STB_LOPROC .data size=0x9 already at arm9:0x02086e60",
+          "COLLIDES-GAP _ZTS7dBase_c STB_LOPROC .data size=0x9 already at arm9:0x02086e54",
+          "COLLIDES-GAP _ZTS8dActor_c STB_LOPROC .data size=0xa already at arm9:0x0208e384",
+          "COLLIDES-GAP _ZTI7dBase_c STB_LOPROC .data size=0xc already at arm9:0x02086e78",
+          "COLLIDES-GAP _ZTI10dBgActor_c STB_LOPROC .data size=0xc already at ov002:0x021089ec",
+          "COLLIDES-GAP _ZTS10dBgActor_c STB_LOPROC .data size=0xd already at ov002:0x02108a04",
+          "COLLIDES-GAP _ZTI8dActor_c STB_LOPROC .data size=0xc already at arm9:0x0208e390",
+          "COLLIDES-GAP _ZTI14daObjUkiyuka_c STB_LOPROC .data size=0xc already at ov002:0x02109104",
+          "COLLIDES-GAP _ZTS14daObjUkiyuka_c STB_LOPROC .data size=0x11 already at ov002:0x02109110",
+          "COLLIDES-GAP _ZTV14daObjUkiyuka_c STB_GLOBAL .data size=0x88 already at ov002:0x0210912c"
+        ],
+        "unlicensedSections": [
+          {
+            "name": ".data",
+            "size": 8
+          },
+          {
+            "name": ".data",
+            "size": 9
+          },
+          {
+            "name": ".data",
+            "size": 9
+          },
+          {
+            "name": ".data",
+            "size": 10
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 13
+          },
+          {
+            "name": ".data",
+            "size": 17
+          },
+          {
+            "name": ".data",
+            "size": 136
+          }
+        ]
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null
+    }
+  }
+}
