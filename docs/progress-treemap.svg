@@ -17429,11 +17429,11 @@ matched: yes</title></rect><rect x="354.10" y="850.13" width="9.56" height="3.90
 module: ov002
 addr: 0x020f085c
 size: 56 bytes
-matched: yes</title></rect><rect x="354.10" y="854.03" width="9.56" height="3.90" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6NumberD1Ev
+matched: yes</title></rect><rect x="354.10" y="854.03" width="9.56" height="3.90" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_cD1Ev
 module: ov002
 addr: 0x020f0894
 size: 56 bytes
-matched: yes</title></rect><rect x="354.10" y="857.93" width="9.56" height="5.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6NumberD0Ev
+matched: yes</title></rect><rect x="354.10" y="857.93" width="9.56" height="5.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_cD0Ev
 module: ov002
 addr: 0x020f08cc
 size: 76 bytes
@@ -17441,19 +17441,19 @@ matched: yes</title></rect><rect x="354.10" y="863.22" width="9.56" height="2.51
 module: ov002
 addr: 0x020f0918
 size: 36 bytes
-matched: yes</title></rect><rect x="354.10" y="865.73" width="9.56" height="6.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Number16CleanupResourcesEv
+matched: yes</title></rect><rect x="354.10" y="865.73" width="9.56" height="6.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_c16CleanupResourcesEv
 module: ov002
 addr: 0x020f093c
 size: 88 bytes
-matched: yes</title></rect><rect x="354.10" y="871.86" width="9.56" height="14.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Number6RenderEv
+matched: yes</title></rect><rect x="354.10" y="871.86" width="9.56" height="14.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_c6RenderEv
 module: ov002
 addr: 0x020f0994
 size: 204 bytes
-matched: yes</title></rect><rect x="354.10" y="886.07" width="9.56" height="25.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Number8BehaviorEv
+matched: yes</title></rect><rect x="354.10" y="886.07" width="9.56" height="25.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_c8BehaviorEv
 module: ov002
 addr: 0x020f0a60
 size: 372 bytes
-matched: yes</title></rect><rect x="354.10" y="911.98" width="9.56" height="30.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Number13InitResourcesEv
+matched: yes</title></rect><rect x="354.10" y="911.98" width="9.56" height="30.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjNumber_c13InitResourcesEv
 module: ov002
 addr: 0x020f0bd4
 size: 444 bytes

@@ -1224,13 +1224,13 @@ _ZN9daSCoin_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x020f069c
 _ZN9daSCoin_c8BehaviorEv kind:function(arm,size=0x11c) addr:0x020f06c0
 _ZN9daSCoin_c13InitResourcesEv kind:function(arm,size=0x80) addr:0x020f07dc
 daSCoin_c_classInit kind:function(arm,size=0x38) addr:0x020f085c
-_ZN6NumberD1Ev kind:function(arm,size=0x38) addr:0x020f0894
-_ZN6NumberD0Ev kind:function(arm,size=0x4c) addr:0x020f08cc
+_ZN13daObjNumber_cD1Ev kind:function(arm,size=0x38) addr:0x020f0894
+_ZN13daObjNumber_cD0Ev kind:function(arm,size=0x4c) addr:0x020f08cc
 func_ov002_020f0918 kind:function(arm,size=0x24) addr:0x020f0918
-_ZN6Number16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x020f093c
-_ZN6Number6RenderEv kind:function(arm,size=0xcc) addr:0x020f0994
-_ZN6Number8BehaviorEv kind:function(arm,size=0x174) addr:0x020f0a60
-_ZN6Number13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x020f0bd4
+_ZN13daObjNumber_c16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x020f093c
+_ZN13daObjNumber_c6RenderEv kind:function(arm,size=0xcc) addr:0x020f0994
+_ZN13daObjNumber_c8BehaviorEv kind:function(arm,size=0x174) addr:0x020f0a60
+_ZN13daObjNumber_c13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x020f0bd4
 daObjNumber_c_classInit kind:function(arm,size=0x40) addr:0x020f0d90
 _ZN9OneUpLogoD1Ev kind:function(arm,size=0x38) addr:0x020f0dd0
 _ZN9OneUpLogoD0Ev kind:function(arm,size=0x4c) addr:0x020f0e08
@@ -2245,7 +2245,6 @@ _ZTV9daSCoin_c kind:data(any) addr:0x0210b030
 _ZTI13daObjNumber_c kind:data(any) addr:0x0210b0ac
 _ZTS13daObjNumber_c kind:data(any) addr:0x0210b0b8
 g_profile_OBJ_NUMBER kind:data(any) addr:0x0210b0c8
-_ZTV6Number kind:data(any) addr:0x0210b0ec
 _ZTV13daObjNumber_c kind:data(any) addr:0x0210b0ec
 _ZTI14daObj1UpLogo_c kind:data(any) addr:0x0210b168
 _ZTS14daObj1UpLogo_c kind:data(any) addr:0x0210b174

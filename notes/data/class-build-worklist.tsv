@@ -154,7 +154,7 @@ daObjKinokoTag_c	DONE	include\daObjKinokoTag_c.h	dActor_c	0	ov002	7
 daObjKm2_Nobiru_c	DONE	include\ExtendingPlatform.h  [alias: header uses pre-rename name]	dActor_c	0	ov045	9
 daObjKumo_c	DONE	include\daObjKumo_c.h	dActor_c	0	ov039	6
 daObjLava_c	DONE	include\daObjLava_c.h	dActor_c	0	ov002	3
-daObjNumber_c	DONE	include\Number.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
+daObjNumber_c	DONE	include\daObjNumber_c.h	dActor_c	0	ov002	6
 daObjPowerUpItem_c	DONE	include\PowerFlower.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	7
 daObjRc_Hane_c	DONE	include\daObjRc_Hane_c.h	dActor_c	0	ov036	6
 daObjShell_c	DONE	include\Clam.h  [alias: header uses pre-rename name]	dActor_c	0	ov064	6
