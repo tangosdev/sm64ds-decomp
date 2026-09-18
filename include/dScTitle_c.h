@@ -13,10 +13,13 @@
  * other direct child -- 0, 3, 6, 9, 12, 16, 17 (rtti_vtables.py --own
  * dScTitle_c). No new virtual is added.
  *
- * CONSTRUCTION. dScTitle_c_classInit is the factory: it opens with
- * `_ZN7fBase_cnwEj(0x54)`, i.e. fBase_c::operator new(0x54). SIZE 0x54 is
- * read directly off the allocator call. There is no base-object-constructor
- * sibling visible in this TU; only one caller of this factory exists.
+ * CONSTRUCTION. dScTitle_c_classInit is the factory, and it lives in this
+ * class's TU as `return new dScTitle_c()`: that one `new` is
+ * fBase_c::operator new(0x54) -- the allocator literal is the size -- then
+ * the inlined ctor chain (fBase_c C2, dBase_c/dScene_c vptrs, pauseFlags
+ * |= 1 and 4, this class's vptr). SIZE 0x54 is read directly off the
+ * allocator call. There is no base-object-constructor sibling visible in
+ * this TU; only one caller of this factory exists.
  *
  * MEMBERS BELOW 0x50 are all inherited (dScene_c/dBase_c add none of their
  * own -- see dScene_c.h). The only own storage is a 2-byte repeat-delay
@@ -31,9 +34,9 @@
  * VTABLE ORDER follows dScene_c's (unchanged slot indices; dScTitle_c adds
  * no new virtual). The destructor pair is at slots 16/17, same convention as
  * dScEntry_c and every other fBase_c-family class (dScene_c.h/dScEntry_c.h),
- * confirmed here too: func_ov003_020ad660 (D1) writes _ZTV10dScTitle_c then
+ * confirmed here too: 0x020ad660 (D1) writes _ZTV10dScTitle_c then
  * tail-calls into dScene_c's/dBase_c's vptr writes before fBase_c::~fBase_c;
- * func_ov003_020ad69c (D0) does the same then calls
+ * 0x020ad69c (D0) does the same then calls
  * Memory::Deallocate(this, GAME_HEAP_PTR) -- dScTitle_c declares no
  * operator delete of its own, so this finds dScene_c's inline copy on its
  * immediate base, same as dScEntry_c.
@@ -41,10 +44,17 @@
 struct dScTitle_c : dScene_c {
     u16 unk_050;                   /* 0x050 -- repeat-delay counter, Behavior */
 
-    /* Declared first -- key function; see the family convention discussed in
-       dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
-       D1 and D0 are plain functions carrying their literal mangled name. */
-    virtual ~dScTitle_c();                               /* slots 16 (D1), 17 (D0) */
+    /* Declared first and DEFINED INLINE, both deliberately -- the same form
+       dScene_c.h and dBase_c.h use one and two levels up. Inline-in-class is
+       the only source form that makes mwccarm emit D1 before D0, and the
+       cartridge puts D1 at 0x020ad660 below D0 at 0x020ad69c; out of line it
+       emits D2, D0, D1 plus a D2 the ROM never carried. An inline virtual
+       cannot be the key function, so InitResources (the first DECLARED
+       non-inline virtual) is -- and defining it in the class TU is what emits
+       the vtable and, through slots 16/17, this destructor pair. The empty
+       body still reproduces all 0x8c bytes: three inlined vptr stores plus
+       fBase_c::~fBase_c, and D0's inherited operator delete. */
+    virtual ~dScTitle_c() {}                             /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */
