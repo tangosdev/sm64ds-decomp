@@ -524,7 +524,6 @@
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 const Vector3 *"],
    "src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp": ["param:#1 Vector3 *"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 Vector3 *"],
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *"],
    "src/_ZN4Coin8BehaviorEv.cpp": ["param:#1 char *"],
    "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *"],
@@ -549,6 +548,7 @@
    "src/func_ov081_0212538c.c": ["param:#1 Vector3 *"],
    "src/func_ov084_0212cda0.c": ["param:#1 Vector3 *"],
    "src/func_ov085_0212d73c.c": ["param:#1 Vector3 *"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#1 Vector3 *"],
    "src/game/actors/d_a_wanwan.cpp": ["param:#1 Vector3 *"],
    "src/unnamed/ov063/func_ov063_02117cdc.c": ["param:#1 int *"]
   },
@@ -1543,7 +1543,6 @@
   "SubVec3": {
    "src/Camera_UpdateMatrices.c": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/actors/daPkn_c.cpp": ["param:#1 PknVec3 *", "param:#2 PknVec3 *", "param:#3 PknVec3 *"],
    "src/func_02009e70.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
@@ -1570,6 +1569,7 @@
    "src/func_ov065_02118838.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
    "src/func_ov081_021237ec.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/func_ov081_021250c8.c": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"]
   },
   "SublevelToLevel": {
@@ -1924,7 +1924,6 @@
   "Vec3_MulScalar": {
    "src/Vec3_ApproachHorz.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"],
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
    "src/actors/daMip_c.cpp": ["param:#2 const void *"],
    "src/func_0200b0fc.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
@@ -1942,7 +1941,8 @@
    "src/func_ov006_020d01e0.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/func_ov062_0211c2f4.cpp": ["param:#2 Vector3 *"],
    "src/func_ov081_021250c8.c": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
-   "src/func_ov100_021437d4.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *"]
+   "src/func_ov100_021437d4.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"]
   },
   "Vec3_MulScalarInPlace": {
    "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *"],
@@ -1979,7 +1979,6 @@
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
@@ -2026,6 +2025,7 @@
    "src/func_ov100_02146640.c": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/func_ov100_02146828.c": ["param:#1 Vector3 *"],
    "src/game/actors/d_a_ch_room.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/game/actors/d_a_star_gate.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"]
   },
   "Vec3_VertAngle": {
@@ -6233,7 +6233,6 @@
    "src/func_ov002_020ed7f8.c": ["param:#7 unsigned int"],
    "src/func_ov015_021114f0.c": ["param:#7 unsigned int", "return:int"],
    "src/func_ov015_021123c8.cpp": ["param:#7 unsigned int"],
-   "src/func_ov026_02111234.cpp": ["param:#7 unsigned int"],
    "src/func_ov065_0211bc88.cpp": ["param:#7 unsigned int"],
    "src/func_ov079_02124188.c": ["param:#7 unsigned int"],
    "src/func_ov080_02124c3c.cpp": ["param:#7 unsigned int"],
@@ -6241,6 +6240,7 @@
    "src/func_ov098_021396a4.cpp": ["param:#7 unsigned int"],
    "src/func_ov102_02149ea4.c": ["param:#7 unsigned int"],
    "src/game/actors/d_a_obj_fm_battan.cpp": ["param:#7 unsigned int", "return:int"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#7 unsigned int"],
    "src/game/actors/daObjCtMecha05_c.cpp": ["param:#7 unsigned int"],
    "src/game/actors/daObjPathLift_c.cpp": ["param:#7 unsigned int"]
   },
@@ -7239,9 +7239,6 @@
   "_ZTV17dScMgTrampoline_c": {
    "src/minigames/d_s_mg_trampoline.cpp": ["return:int []"]
   },
-  "_ZTV17daObjWlPolelift_c": {
-   "src/d_a_obj_wl_polelift.cpp": ["return:void *"]
-  },
   "_ZTV18dScMgTrampoline2_c": {
    "src/minigames/d_s_mg_trampoline2.cpp": ["return:int []"]
   },
@@ -7840,7 +7837,6 @@
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN13QuestionBlock6RenderEv.cpp": ["return:int"],
-   "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp": ["return:unsigned int []"],
    "src/_ZN3HUD13InitResourcesEv.cpp": ["return:CAA0"],
    "src/_ZN6Player13InitResourcesEv.cpp": ["return:CAA0"],
    "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp": ["return:unsigned int []"],
@@ -7871,7 +7867,8 @@
    "src/func_ov100_02144528.c": ["return:unsigned char []"],
    "src/func_ov100_02144730.cpp": ["return:char"],
    "src/func_ov100_02144cf8.c": ["return:GlobCaa0"],
-   "src/game/actors/d_a_obj_hatena_switch.cpp": ["return:unsigned int []"]
+   "src/game/actors/d_a_obj_hatena_switch.cpp": ["return:unsigned int []"],
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["return:unsigned int []"]
   },
   "data_0209cae4": {
    "src/func_ov005_020bff4c.cpp": ["return:MinigameSaveData"]
@@ -11633,8 +11630,7 @@
    "src/__sinit_ov025_02112aac.c": ["return:int []"]
   },
   "data_ov026_02113ea0": {
-   "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["return:SharedFilePtr"]
   },
   "data_ov026_02113eb4": {
    "src/__sinit_ov026_02112bbc.c": ["return:int []"]
@@ -20240,13 +20236,6 @@
   },
   "func_ov025_021125dc": {
    "include/decl_common.h": ["kind:data"]
-  },
-  "func_ov026_02111234": {
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 daObjWlPolelift_c *"]
-  },
-  "func_ov026_021112a4": {
-   "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp": ["param:#1 daObjWlPolelift_c *"],
-   "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp": ["param:#1 daObjWlPolelift_c *"]
   },
   "func_ov026_02112324": {
    "include/decl_common.h": ["arity:1"]

@@ -3619,6 +3619,15 @@
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16OnPendingDestroyEv": "andrewboudreau",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c6RenderEv": "tangosdev",
-    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev"
+    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD1Ev": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD0Ev": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#func_ov026_02111234": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#func_ov026_021112a4": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "tangosdev",
+    "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev"
   }
 }

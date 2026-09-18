@@ -1,0 +1,301 @@
+{
+  "id": "ov026/daObjWlPolelift_c",
+  "module": "ov026",
+  "source": "src/game/actors/d_a_obj_wl_polelift.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_wl_polelift.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x021111a0..0x021116c8, nine functions with no foreign symbol inside the span (config/arm9/overlays/ov026/symbols.txt runs _ZN17daObjWlPolelift_cD1Ev .. daObjWlPolelift_c_classInit with nothing else between)",
+    "single class label over the whole run (daObjWlPolelift_c, ROM RTTI _ZTS17daObjWlPolelift_c at ov026:0x02113aa8); the neighbour above is a different class (_ZN13BowserShutterD1Ev begins at 0x021116c8) and the run starts at the module's .text edge (0x021111a0)",
+    "build/tu_map.json (tools/tu_map.py) splits this into ov026/daObjWlPolelift_c 0x021111a0..0x02111678 plus the single-function run @02111678-021116c8; the factory daObjWlPolelift_c_classInit is this class's own initializer -- it allocates sizeof(daObjWlPolelift_c) and stores this class's vtable -- so it is joined back on, the same shape landed for ov045/daObjKm2_Ami_Bou_c",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x021116c8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17daObjWlPolelift_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN17daObjWlPolelift_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17daObjWlPolelift_cD0Ev",
+      "address": "0x021111e0",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN17daObjWlPolelift_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov026_02111234",
+      "address": "0x02111234",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov026_02111234.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov026_021112a4",
+      "address": "0x021112a4",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov026_021112a4.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
+      "address": "0x021112e4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
+      "address": "0x02111308",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN17daObjWlPolelift_c6RenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
+      "address": "0x02111330",
+      "size": "0x00000268",
+      "legacy_source": "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
+      "address": "0x02111598",
+      "size": "0x000000e0",
+      "legacy_source": "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daObjWlPolelift_c_classInit",
+      "address": "0x02111678",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_obj_wl_polelift.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Promoted from nine per-function sources. The destructor was moved inline into include/daObjWlPolelift_c.h: written out of line mwccarm 2004/b56 emits the synthesized D0 ahead of the written D1 and adds a homeless D2, which is the reverse of the cartridge's 0x021111a0 (D1) / 0x021111e0 (D0) pair. Inline emits D1 then D0 and no D2, and moves the key function to the first non-inline virtual, InitResources -- which is why this TU now emits the class vtable and RTTI chain as compiler-only output.",
+    "func_ov026_02111234 and func_ov026_021112a4 keep their placeholder names. They are file-local helpers with no ROM-proven spelling; the delinked .c source for func_ov026_021112a4 was rewritten as C++ with an explicit extern \"C\" definition and a daObjWlPolelift_c* parameter so one TU can declare and define it once. The bodies still walk a char cursor because the fields they touch are still modelled as padding.",
+    "The factory's vptr store changed spelling from `*(void **)actor = &_ZTV17daObjWlPolelift_c;` to `*(int *)actor = (int)&_ZTV17daObjWlPolelift_c[2];`. The per-function shard referenced the ROM's data symbol, which config/arm9/overlays/ov026/symbols.txt records at the public address point 0x02113ae0. This TU emits its own vtable, whose _ZTV symbol addresses the vtable object eight bytes lower, so the source has to compute the same address point itself -- the measured eight-byte bias tools/objisolate.py and tools/reloc_audit.py both pin. The symbols.txt address is unchanged."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov026-daObjWlPolelift_c/d_a_obj_wl_polelift.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        32
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI17daObjWlPolelift_c",
+        "_ZTS17daObjWlPolelift_c",
+        "_ZTV17daObjWlPolelift_c"
+      ],
+      "dataExternalized": [
+        "_ZTI17daObjWlPolelift_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS17daObjWlPolelift_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV17daObjWlPolelift_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov026-daObjWlPolelift_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x021116c8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x021116c8",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 9
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an inline empty destructor -- declared because the ROM destroys arrays of it -- so every TU that builds Vector3 locals re-emits the trivial vague-linkage D1. Behavior builds six of them. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by an enrolled source; rombuild compares this object's body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c. Cartridge copy at arm9:0x02086e60, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c. Cartridge copy at arm9:0x02086e78, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c. Cartridge copy at arm9:0x02086e54, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the direct base dActor_c. Cartridge copy at arm9:0x0208e390, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the direct base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI17daObjWlPolelift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov026",
+      "canonical_address": "0x02113a90",
+      "reason": "This class's own typeinfo record, vague-linkage. The cartridge copy at ov026:0x02113a90 is inside this module's .data but OUTSIDE the 0x021111a0..0x021116c8 .text run this entry claims. It is an __si_class_type_info whose base pointer is arm9:0x0208e390 = _ZTI8dActor_c."
+    },
+    {
+      "symbol": "_ZTS17daObjWlPolelift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov026",
+      "canonical_address": "0x02113aa8",
+      "reason": "This class's own type-name string. The cartridge copy at ov026:0x02113aa8 is the length-prefixed '17daObjWlPolelift_c' -- the ROM's own spelling, not a coined one. Text-only TU; the ROM blob owns the address."
+    },
+    {
+      "symbol": "_ZTV17daObjWlPolelift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov026",
+      "canonical_address": "0x02113ae0",
+      "reason": "This class's own vtable, emitted because the inline destructor makes the first declared non-inline virtual (InitResources, defined here) the key function. The cartridge's public address point is ov026:0x02113ae0, outside the .text run; the emitted storage starts eight bytes earlier, which is why the factory's vptr store is spelled &_ZTV17daObjWlPolelift_c[2]. The address in config/arm9/overlays/ov026/symbols.txt is unchanged."
+    }
+  ]
+}
