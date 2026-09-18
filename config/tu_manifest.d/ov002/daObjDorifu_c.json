@@ -1,0 +1,311 @@
+{
+  "id": "ov002/daObjDorifu_c",
+  "module": "ov002",
+  "source": "src/actors/daObjDorifu_c.cpp",
+  "promoted_source": "src/actors/daObjDorifu_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b4a70..0x20b4ed8, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjDorifu_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "BOTH EDGES ARE PINNED BY LANDED TUs, so nothing can hide at them. config/arm9/overlays/ov002/delinks.txt gives src/game/actors/d_a_obj_kinoko_tag.cpp .text 0x020b46a0..0x020b4a70 immediately below and src/game/actors/d_a_obj_hatena_switch.cpp .text 0x020b4ed8..0x020b5734 immediately above; both are already-promoted TUs of other classes. The 0x468 bytes between them are exactly this run.",
+    "SYMBOL GAP AUDIT over 0x020b4a00..0x020b4f50 in config/arm9/overlays/ov002/symbols.txt: the six rows tile the range with zero gaps and zero unlabelled func_ov002_* neighbours, so the abstract-slot hazard (an unlabelled helper sitting at a TU edge where tu_map cannot see it) does not apply here -- the census was run anyway and is recorded below.",
+    "REFERRER CENSUS, positive control PASSED. Every vtable-pinned member returns this class's own _ZTV at the exact predicted slot: _ZN13daObjDorifu_cD1Ev <- _ZTV13daObjDorifu_c+0x40 (slot 16), D0 <- +0x44 (slot 17), Render <- +0x24 (slot 9), Behavior <- +0x18 (slot 6). The offsets were predicted from a raw dump of extracted/overlays/overlay_0002.bin before the census was run and matched it word for word.",
+    "REFERRER CENSUS, base-rate control DISCRIMINATED. The same census run unchanged over two sibling classes in this module, daObjKinokoTag_c and daObjHatenaSwitch_c, returns each sibling's OWN _ZTV and never this class's, so the census is not returning every vtable in the overlay. The siblings' slot 0 is populated where this class's is a bare zero word, which is the concrete/abstract difference below showing up in the control.",
+    "REFUTATION THAT FAILED TO DISCRIMINATE, recorded as required. Keying inbound relocations on the TARGET ADDRESS alone over-collects, because several overlays share the load address 0x020ad660: ov004 does, and __sinit_ov004_020b955c+0x468 came back as an apparent referrer of this class's D0 with target_module=overlay(4). It is an artifact of the shared base, not a real inbound edge. Filtering the census on the relocation's own target_module drops it cleanly and changes no other row, so the module filter is load-bearing and a target-address-only census must not be trusted in this module.",
+    "ABSTRACT, read out of the ROM rather than inferred. The vtable was dumped directly from extracted/overlays/overlay_0002.bin at load base 0x020ad660: storage begins 0x02108d8c, the public address point _ZTV13daObjDorifu_c is at 0x02108d94 (the usual +8 Itanium bias past the offset-to-top and typeinfo words), and 32 slots run to 0x02108e14. SLOTS 0 AND 3 WERE CHECKED SPECIFICALLY and are bare zero words carrying no relocation: InitResources() and CleanupResources() are pure virtual.",
+    "The two resource-table overloads InitResources(daObjDorifuResources*) and CleanupResources(daObjDorifuResources*) have ZERO referrers inside ov002. They are reached only from the 0x14-byte slot-0 and slot-3 overrides of the three concrete descendants -- daObjRc_Dorifu_c (ov036), daObjKm1_Dorifu_c (ov043), daObjKm3_Dorifu_c (ov047) -- each of which calls through at +0xc. Those overrides live in other modules, so no descendant code is claimed by this TU and the empty referrer set is expected rather than a sign of a missing edge."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b4a70",
+      "end": "0x020b4ed8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjDorifu_cD0Ev",
+      "address": "0x020b4a70",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN13daObjDorifu_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjDorifu_cD1Ev",
+      "address": "0x020b4af8",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN13daObjDorifu_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources",
+      "address": "0x020b4b6c",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13daObjDorifu_c6RenderEv",
+      "address": "0x020b4bc4",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN13daObjDorifu_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13daObjDorifu_c8BehaviorEv",
+      "address": "0x020b4bfc",
+      "size": "0x0000015c",
+      "legacy_source": "src/_ZN13daObjDorifu_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources",
+      "address": "0x020b4d58",
+      "size": "0x00000180",
+      "legacy_source": "src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI13daObjDorifu_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108d70",
+      "reason": "Behavior is this class's key function and naturally emits the ROM-proven class RTTI. romdata_check proves its complete single-inheritance record -- __si_class_type_info, _ZTS13daObjDorifu_c, and the dBgActor_c base at ov002 0x021089ec -- and its relocations before isolation."
+    },
+    {
+      "symbol": "_ZTS13daObjDorifu_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108d7c",
+      "reason": "Behavior naturally emits the ROM-proven class type-name string \"13daObjDorifu_c\". romdata_check proves its exact payload before isolation."
+    },
+    {
+      "symbol": "_ZTV13daObjDorifu_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108d94",
+      "reason": "Behavior naturally emits the complete 0x88-byte class vtable storage at ov002 0x02108d8c. romdata_check applies the measured eight-byte public address-point bias and proves every slot -- including the two bare zero words at slots 0 and 3 that make this class abstract -- before isolation."
+    },
+    {
+      "symbol": "_Z36daObjDorifu_c_EmitDeletingDestructorP13daObjDorifu_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function, carried over verbatim from src/_ZN13daObjDorifu_cD0Ev.cpp, which this TU replaces. The class destructor is defined inline in include/daObjDorifu_c.h because the three concrete descendants inline its vptr store, so no file can define it out of line; a delete-expression is what asks for the deleting variant by name. It is needed HERE as well as in the shard because this file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- that pragma is the only measured lever that makes mwccarm emit D0 (0x020b4a70) before D1 (0x020b4af8) as the cartridge has them, and the forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections; verify reports all 6 licensed functions in the expected ROM-ascending section order with it present. config/arm9/overlays/ov002/symbols.txt has no row for it and no address anywhere in config/ names one, so it is homeless: plain `deadstrip`."
+    },
+    {
+      "symbol": "_Z28daObjDorifu_c_EmitDestructorP13daObjDorifu_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function, carried over verbatim from src/_ZN13daObjDorifu_cD1Ev.cpp. An explicit `p->~daObjDorifu_c()` asks for the complete-object variant by name; the delete-expression above cannot serve both, because dBgActor_c declares Kill, a key function reachable from this class, so a plain destructor call alone does not reproduce D0 out of line. Emitted after the licensed D1 section and before the first real member, so it does not disturb the licensed run. Homeless for the same reason as the forcer above."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjDorifu_c/daObjDorifu_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_Z36daObjDorifu_c_EmitDeletingDestructorP13daObjDorifu_c",
+        "_Z28daObjDorifu_c_EmitDestructorP13daObjDorifu_c"
+      ],
+      "deadstripped": [
+        "_Z28daObjDorifu_c_EmitDestructorP13daObjDorifu_c",
+        "_Z36daObjDorifu_c_EmitDeletingDestructorP13daObjDorifu_c"
+      ],
+      "droppedSections": [
+        5,
+        8,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI13daObjDorifu_c",
+        "_ZTS13daObjDorifu_c",
+        "_ZTV13daObjDorifu_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjDorifu_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjDorifu_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjDorifu_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-daObjDorifu_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b4a70",
+        "end": "0x020b4ed8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b4a70",
+          "end": "0x020b4ed8",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
