@@ -56,7 +56,7 @@ src/unnamed/ov063/func_ov063_0211640c.c:
     complete
     .text start:0x0211640c end:0x021166ac
 
-src/func_ov063_021166ac.cpp:
+src/game/actors/daTrs_c/func_ov063_021166ac.cpp:
     complete
     .text start:0x021166ac end:0x021169c4
 
@@ -336,17 +336,9 @@ src/game/actors/daTBasket_c/_ZN11daTBasket_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
-src/game/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
+src/game/actors/daTrs_c/d_a_trs_cleanup_render.cpp:
     complete
-    .text start:0x0211ae40 end:0x0211af6c
-
-src/game/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0211af6c end:0x0211af70
-
-src/game/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
-    complete
-    .text start:0x0211af70 end:0x0211b078
+    .text start:0x0211ae40 end:0x0211b078
 
 src/game/actors/daTBasket_c/_ZN11daTBasket_c6RenderEv.cpp:
     complete
@@ -384,13 +376,9 @@ src/game/actors/daTBasket_c/d_a_t_basket.cpp:
     complete
     .text start:0x0211c4d0 end:0x0211c520
 
-src/game/actors/daTrs_c/d_a_trs_boss_teresa.cpp:
+src/game/actors/daTrs_c/d_a_trs_factories.cpp:
     complete
-    .text start:0x0211c520 end:0x0211c590
-
-src/game/actors/daTrs_c/d_a_trs_teresa.cpp:
-    complete
-    .text start:0x0211c590 end:0x0211c600
+    .text start:0x0211c520 end:0x0211c600
 
 src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp:
     complete
