@@ -210,19 +210,7 @@ src/_ZN16daObjFallBlock_cD1Ev.cpp:
 
 src/actors/daObjFallBlock_c.cpp:
     complete
-    .text start:0x0213a00c end:0x0213a794
-
-src/func_ov098_0213a794.cpp:
-    complete
-    .text start:0x0213a794 end:0x0213a8e0
-
-src/func_ov098_0213a8e0.c:
-    complete
-    .text start:0x0213a8e0 end:0x0213a8ec
-
-src/func_ov098_0213a8ec.c:
-    complete
-    .text start:0x0213a8ec end:0x0213a900
+    .text start:0x0213a00c end:0x0213a900
 
 src/_ZN6CannonD1Ev.cpp:
     complete

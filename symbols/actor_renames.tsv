@@ -1992,12 +1992,12 @@ ov065	0x0211ab20	func_ov065_0211ab20	TtcConveyorBeltSmall_Spawn	spawnfunc
 ov065	0x0211ab20	TtcConveyorBeltSmall_Spawn	daObjCtMecha04_c_classInit_CT_MECHA04S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211b328	func_ov065_0211b328	TTC_MovingBar_Spawn	spawnfunc
 ov065	0x0211b328	TTC_MovingBar_Spawn	daObjCtMecha05_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
-ov065	0x0211b360	func_ov065_0211b360	_ZN13TTC_MovingBarD1Ev	vtable slot 16
-ov065	0x0211b3ac	func_ov065_0211b3ac	_ZN13TTC_MovingBarD0Ev	vtable slot 17
-ov065	0x0211b47c	func_ov065_0211b47c	_ZN13TTC_MovingBar16CleanupResourcesEv	vtable slot 3
-ov065	0x0211b4e0	func_ov065_0211b4e0	_ZN13TTC_MovingBar6RenderEv	vtable slot 9
-ov065	0x0211b508	func_ov065_0211b508	_ZN13TTC_MovingBar8BehaviorEv	vtable slot 6
-ov065	0x0211b640	func_ov065_0211b640	_ZN13TTC_MovingBar13InitResourcesEv	vtable slot 0
+ov065	0x0211b360	func_ov065_0211b360	_ZN18daObjCtKaitendai_cD1Ev	vtable slot 16 (was _ZN13TTC_MovingBarD1Ev)
+ov065	0x0211b3ac	func_ov065_0211b3ac	_ZN18daObjCtKaitendai_cD0Ev	vtable slot 17 (was _ZN13TTC_MovingBarD0Ev)
+ov065	0x0211b47c	func_ov065_0211b47c	_ZN18daObjCtKaitendai_c16CleanupResourcesEv	vtable slot 3 (was _ZN13TTC_MovingBar16CleanupResourcesEv)
+ov065	0x0211b4e0	func_ov065_0211b4e0	_ZN18daObjCtKaitendai_c6RenderEv	vtable slot 9 (was _ZN13TTC_MovingBar6RenderEv)
+ov065	0x0211b508	func_ov065_0211b508	_ZN18daObjCtKaitendai_c8BehaviorEv	vtable slot 6 (was _ZN13TTC_MovingBar8BehaviorEv)
+ov065	0x0211b640	func_ov065_0211b640	_ZN18daObjCtKaitendai_c13InitResourcesEv	vtable slot 0 (was _ZN13TTC_MovingBar13InitResourcesEv)
 ov065	0x0211b780	func_ov065_0211b780	TtcRotatingTriangle_Spawn	spawnfunc
 ov065	0x0211b780	TtcRotatingTriangle_Spawn	daObjCtKaitendai_c_classInit_CT_MECHA07	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211b7b8	func_ov065_0211b7b8	TtcRotatingGear_Spawn	spawnfunc
@@ -2048,7 +2048,7 @@ ov065	0x0211d374	data_ov065_0211d374	TtcRotatingGear_SpawnInfo	spawninfo
 ov065	0x0211d374	TtcRotatingGear_SpawnInfo	g_profile_CT_MECHA06	reconstructed profile global; literal ROM ID CT_MECHA06+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211d390	data_ov065_0211d390	TtcRotatingTriangle_SpawnInfo	spawninfo
 ov065	0x0211d390	TtcRotatingTriangle_SpawnInfo	g_profile_CT_MECHA07	reconstructed profile global; literal ROM ID CT_MECHA07+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov065	0x0211d3b4	data_ov065_0211d3b4	_ZTV13TTC_MovingBar	vtable alloc=0x394
+ov065	0x0211d3b4	data_ov065_0211d3b4	_ZTV18daObjCtKaitendai_c	vtable alloc=0x394 (was _ZTV13TTC_MovingBar)
 ov065	0x0211d454	data_ov065_0211d454	TtcMovingCubeA_SpawnInfo	spawninfo
 ov065	0x0211d454	TtcMovingCubeA_SpawnInfo	g_profile_CT_MECHA08A	reconstructed profile global; literal ROM ID CT_MECHA08A+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211d470	data_ov065_0211d470	TtcMovingCubeB_SpawnInfo	spawninfo
@@ -2878,6 +2878,9 @@ ov098	0x02139b0c	func_ov098_02139b0c	_ZN5Crate8BehaviorEv	vtable slot 6
 ov098	0x02139d14	func_ov098_02139d14	_ZN5Crate13InitResourcesEv	vtable slot 0
 ov098	0x02139f04	func_ov098_02139f04	Crate_Spawn	spawnfunc
 ov098	0x02139f04	Crate_Spawn	daObjBlockS_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov098	0x0213a794	func_ov098_0213a794	daObjFallBlock_c_InitResources	shared InitResources body; Model::LoadFile / dBgW_Kc::LoadFile / CLPS SetFile; called from all four leaf InitResources overrides. C linkage: the base leaves slots 0/3 pure virtual
+ov098	0x0213a8e0	func_ov098_0213a8e0	daObjFallBlock_c_RequestShake	writes mShakeRequested at 0x33e; callee of the dBgW+0x1c veneer
+ov098	0x0213a8ec	func_ov098_0213a8ec	daObjFallBlock_c_OnStoodOn	dBgW+0x1c callback veneer; drops collider, forwards actor into RequestShake
 ov098	0x0213a900	func_ov098_0213a900	_ZN6CannonD1Ev	vtable slot 16
 ov098	0x0213a938	func_ov098_0213a938	_ZN6CannonD0Ev	vtable slot 17
 ov098	0x0213b1d8	func_ov098_0213b1d8	_ZN6Cannon16CleanupResourcesEv	vtable slot 3

@@ -15,6 +15,13 @@
  *   [1] 0x020ede80  src/func_ov006_020ede80.c
  */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  3 func_ov006_* + 1 data_*     unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  2 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ */
+
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int _ZN11dScMgBase_cC2Ev(void *p);

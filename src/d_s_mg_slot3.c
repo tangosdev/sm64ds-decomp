@@ -1,3 +1,11 @@
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  1 func_ov006_*                unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  3 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ */
+
 extern void *_ZN7fBase_cnwEj(unsigned);
 extern void _ZN11dScMgBase_cC2Ev(void *);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);

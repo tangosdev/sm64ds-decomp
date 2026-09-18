@@ -48,6 +48,16 @@
  *   [54] 0x020d7c00  src/func_ov006_020d7c00.cpp
  */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  48 func_ov006_* + 19 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  2 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  ~126 *(T *)(p + 0x..)         class layout does not name these offsets.
+ */
+
 #include "types.h"
 #include "decl_common.h"
 

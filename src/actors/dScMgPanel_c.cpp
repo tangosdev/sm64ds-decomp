@@ -107,6 +107,19 @@
 
 #pragma defer_codegen off
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  81 func_ov006_* + 32 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  7 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  4 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~346 *(T *)(p + 0x..)         class layout does not name these offsets.
+ *  1 VirtualNN, 15 unk_NN        slot/field name not evidenced.
+ */
+
 #include "types.h"
 #include "dScMgPanel_c.h"
 #include "private/ov006_m8c.h"

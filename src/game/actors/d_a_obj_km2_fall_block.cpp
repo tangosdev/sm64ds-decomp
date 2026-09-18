@@ -43,7 +43,7 @@
 extern "C" {
 extern int _ZTV21daObjKm2_Fall_Block_c[];
 extern int _ZTV16daObjFallBlock_c[];
-int func_ov098_0213a794(void *self, void *data);
+int daObjFallBlock_c_InitResources(void *self, void *data);
 int func_ov098_0213a2cc(void *self, void *data);
 extern int data_ov045_021130ac[];
 }
@@ -90,11 +90,11 @@ extern "C" int *daObjKm2_Fall_Block_c_classInit(void)
 /* daObjKm2_Fall_Block_c::InitResources -- vtable slot 0, ov045 0x02111e10.
  *
  * Real member function. Forwards `this` and the class's shared parameter block
- * at ov045 0x021130ac to the generic implementation the whole fall-block family
- * shares, which lives in ov098 and is still under its func_ov098_ name. */
+ * at ov045 0x021130ac to daObjFallBlock_c_InitResources, the shared
+ * implementation the whole fall-block family lives in ov098. */
 s32 daObjKm2_Fall_Block_c::InitResources()
 {
-    return func_ov098_0213a794(this, data_ov045_021130ac);
+    return daObjFallBlock_c_InitResources(this, data_ov045_021130ac);
 }
 
 /* -------------------------------------------------------------------------- */

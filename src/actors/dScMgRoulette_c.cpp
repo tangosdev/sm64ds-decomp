@@ -106,6 +106,21 @@
  * spelling where it has one, with a cast at the head of the body when the
  * legacy file wanted a different pointer type.
  */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  63 func_ov004_* + 49 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  2 _ZN..E member call(s)       already declared -- needs the
+ *                                scope-qualified spelling on a real `this`.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  7 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  5 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~117 *(T *)(p + 0x..)         class layout does not name these offsets.
+ *  8 unk_NN                      slot/field name not evidenced.
+ */
+
 #include "common.h"
 #include "types.h"
 #include "dScMgRoulette_c.h"

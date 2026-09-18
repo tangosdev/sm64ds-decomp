@@ -59,10 +59,10 @@ struct ResourceDescriptor {
 };
 
 extern "C" {
-/* ov098's shared falling-block setup and teardown, still under placeholder
-   names. Both take the actor and the per-level descriptor. */
+/* ov098's shared falling-block setup and teardown. Cleanup is still under
+   its placeholder name. Both take the actor and the per-level descriptor. */
 int func_ov098_0213a2cc(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
-int func_ov098_0213a794(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
+int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov015_02114880;
 
 /* The factory's own dependencies, restated here. The legacy file already
@@ -114,7 +114,7 @@ extern "C" int *daObjBk_Fall_Block_c_classInit(void)
 #pragma long_calls on  /* carried verbatim from the legacy file (positional) */
 int daObjBk_Fall_Block_c::InitResources()
 {
-    return func_ov098_0213a794(this, &data_ov015_02114880);
+    return daObjFallBlock_c_InitResources(this, &data_ov015_02114880);
 }
 #pragma long_calls off  /* close the bracket: positional, must not leak downward */
 

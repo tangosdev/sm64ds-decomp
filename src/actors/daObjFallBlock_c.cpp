@@ -6,7 +6,8 @@
  * the vtable lives here at 0x0213c5bc, and the four leaf profiles are
  * FALL_BLOCK_WF (ov015), FALL_BLOCK_LLL (ov022), FALL_BLOCK_BFS (ov045),
  * FALL_BLOCK_BBH (ov063). ABSTRACT: slots 0 and 3 are pure, so there is no
- * classInit to fold.
+ * classInit to fold. Leaves call daObjFallBlock_c_InitResources /
+ * func_ov098_0213a2cc with this overlay's model/KCL/CLPS table.
  *
  * common.h FIRST: func_ov098_0213a23c writes Model::mat4x3 (this+0xf0) as a
  * rotation plus translation row. common.h's flat s32 m[12] is the spelling
@@ -21,6 +22,16 @@
  *   header method form is refused by the bytes (include/dBgActor_c.h).
  * - Particle::System::NewSimple 6az: Kill's three by-value Fix12<int>;
  *   declaring the true types changes how the caller passes them.
+ * - dBgW_KcMbg::SetFile 6az: InitResources' by-value Fix12<int> scale 0x199;
+ *   the header method homes the argument and size-DIFFs this TU.
+ * - func_020393c4: 4-byte store into dBgW+0x1c (unk_1c). This TU stores
+ *   daObjFallBlock_c_OnStoodOn there; naming belongs with dBgW in arm9.
+ * - daObjFallBlock_c_OnStoodOn keeps #pragma long_calls: the ROM veneer is
+ *   the pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call (size 0x14); a
+ *   near `b` to RequestShake in this same TU is 0xc.
+ * - daObjFallBlock_c_RequestShake keeps a second unused parameter: the
+ *   veneer forwards two registers after dropping the collider; a 1-arg
+ *   callee drops `mov r1, r2`.
  * - MarkForDestruction stays mangled in func_ov098_0213a0a8: fBase_c.h spells
  *   it void, and this helper returns the callee's r0.
  * - Behavior case 2 keeps `((int)this + 0x8c) & U64` / `+ 0x90` for mAngleX /
@@ -37,8 +48,21 @@
 #include "daObjFallBlock_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
+#include "dBgCh_Gnd.h"
 
 #define U64 0xFFFFFFFFFFFFFFFFLL
+
+struct CLPS_Block;
+
+struct ResourceDescriptor {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+#ifndef SM64DS_PLATFORM_PC
+typedef char ResourceDescriptor_size_must_be_0x0c[
+    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#endif
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -56,8 +80,93 @@ void func_ov098_0213a0e8(daObjFallBlock_c *c);
 void func_ov098_0213a148(daObjFallBlock_c *c);
 void func_ov098_0213a23c(daObjFallBlock_c *c);
 int _ZN7fBase_c18MarkForDestructionEv(void *);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *kcl, const Matrix4x3 *mat, int scale, short angle, void *clps);
+void func_020393c4(int *p, int v);
+int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused);
+int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *unused);
+int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp);
 extern s16 data_02082214[];
 extern signed char data_0209f2f8;
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjFallBlock_c_OnStoodOn
+/* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
+   RequestShake. long_calls is the ROM's pooled absolute tail-call. */
+extern "C" {
+#pragma long_calls on
+int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *unused)
+{
+    return daObjFallBlock_c_RequestShake(block, unused);
+}
+#pragma long_calls off
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjFallBlock_c_RequestShake
+/* Sets mShakeRequested so Behavior case 0 starts the shake. Second parameter
+   is the veneer's extra forwarded register -- a 1-arg callee drops mov r1,r2. */
+extern "C" {
+int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused)
+{
+    block->mShakeRequested = 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjFallBlock_c_InitResources
+/* Shared InitResources body for the four leaves. Slot 0 is Model::LoadFile,
+   slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile. Ground-raycasts
+   mKillY, copies mRestPos, and arms the OnStoodOn mesh callback. */
+extern "C" {
+int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp)
+{
+    Vector3 v;
+    int r2;
+    int y;
+
+    self->mModel.SetFile((BMD_File *)Model::LoadFile(*fp->model), 1, -1);
+    self->UpdateModelPosAndRotY();
+    self->UpdateClsnPosAndRot();
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &self->mMeshCollider,
+        dBgW_Kc::LoadFile(*fp->collision),
+        &self->mClsnMat,
+        0x199,
+        self->mAngleY,
+        fp->clps);
+    func_020393c4((int *)&self->mMeshCollider, (int)&daObjFallBlock_c_OnStoodOn);
+    v.x = self->mPosX;
+    y = self->mPosY;
+    v.y = y;
+    v.z = self->mPosZ;
+    v.y = y - 0x64000;
+    {
+        dBgCh_Gnd rc;
+        rc.SetObjAndPos(v, 0);
+        self->mKillY = v.y;
+        if (rc.DetectClsn())
+            self->mKillY = rc.clsnY;
+        self->mVertAccel = -0x4000;
+        self->mTerminalVelocity = -0xc8000;
+        r2 = 1;
+        self->mStateTimer = 4;
+        self->mReady = r2;
+        self->mRestPos.x = self->mPosX;
+        self->mRestPos.y = self->mPosY;
+        self->mRestPos.z = self->mPosZ;
+        self->mLinkedStarID = 0;
+        if (self->actorID != 0x53)
+            r2 = 0;
+        if (r2 != 0)
+            self->mSuppressed = 1;
+    }
+    return 1;
+}
 }
 
 /* -------------------------------------------------------------------------- */

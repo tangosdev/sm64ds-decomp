@@ -30,6 +30,14 @@
 /* Includes: union of the legacy files', first-seen in ROM-ascending
  * processing order. NOT verified for header ordering constraints (e.g. a
  * common.h-before-X rule) -- watch for new compile errors after this. */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  6 func_ov004_* + 8 data_*     unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  11 _ZN..E call(s)             no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  1 VirtualNN                   slot/field name not evidenced.
+ */
+
 #include "dScMgSingle3DBase_c.h"
 #include "types.h"
 #include "decl_common.h"

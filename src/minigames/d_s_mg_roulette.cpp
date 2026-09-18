@@ -15,6 +15,14 @@
  *   [1] 0x0210a4ac  src/func_ov006_0210a4ac.c
  */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  3 func_ov006_*                unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  4 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ */
+
 extern "C" {
 extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void _ZN11dScMgBase_cC2Ev(void);

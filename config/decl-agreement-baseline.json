@@ -1182,7 +1182,7 @@
    "src/_ZN15daObjGuragura_c8BehaviorEv.cpp": ["param:#1 char *", "param:#2 char *", "param:#4 char *"]
   },
   "RandomIntInternal": {
-   "src/_ZN13TTC_MovingBar8BehaviorEv.cpp": ["return:unsigned int"],
+   "src/actors/daObjCtKaitendai_c.cpp": ["return:unsigned int"],
    "src/_ZN16SpinningPlatform8BehaviorEv.cpp": ["param:#1 char *"],
    "src/_ZN9Butterfly6State4Ev.cpp": ["return:unsigned int"],
    "src/actors/daGmch_c.cpp": ["return:unsigned int"],
@@ -2242,7 +2242,7 @@
    "src/_ZN10RockPillar8BehaviorEv.cpp": ["return:int"],
    "src/_ZN11BobOmbBuddy8BehaviorEv.cpp": ["return:int"],
    "src/_ZN13PrincessPeach6State3Ev.cpp": ["return:int"],
-   "src/_ZN13TTC_MovingBar8BehaviorEv.cpp": ["return:int"],
+   "src/actors/daObjCtKaitendai_c.cpp": ["return:int"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["return:int"],
    "src/_ZN15TtcRotatingCube8BehaviorEv.cpp": ["param:#2 int", "param:#3 int", "return:int"],
    "src/_ZN16RotatingCogSmall8BehaviorEv.cpp": ["return:int"],
@@ -2557,6 +2557,7 @@
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 int", "param:#6 int", "return:int"],
    "src/_ZN9Submarine13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int"],
    "src/actors/daDgr_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
+   "src/actors/daObjCtKaitendai_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/actors/daObjCtMecha03_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/actors/daObjCtMecha04_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/actors/daObjFl_London_c.cpp": ["param:#3 Matrix4x3 *"],
@@ -2691,7 +2692,7 @@
    "src/_ZN10MrBlizzard13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN11ChiefChilly13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN12HauntedChair13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp": ["return:void"],
+   "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN4Toad13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN6Eyerok13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN7Chuckya13InitResourcesEv.cpp": ["return:void"],
@@ -4128,7 +4129,7 @@
    "src/_ZN10PyramidTop13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)", "return:int"],
    "src/_ZN11VolcanoRing13InitResourcesEv.cpp": ["kind:data"],
-   "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp": ["kind:data"],
+   "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp": ["kind:data"],
    "src/_ZN15RotatingFirebar13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": ["kind:data"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["kind:data"],
@@ -4308,7 +4309,7 @@
    "src/_ZN13PrincessPeach13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["arity:1"],
-   "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp": ["arity:1"],
+   "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["arity:1"],
@@ -5550,7 +5551,7 @@
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["arity:1", "return:void *"],
-   "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp": ["arity:1", "return:void *"],
+   "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["arity:1", "return:void *"],
@@ -6449,6 +6450,7 @@
    "src/actors/daBgSnmBdy_c.cpp": ["param:#6 unsigned int"],
    "src/actors/daBombking_c.cpp": ["param:#6 unsigned int"],
    "src/actors/daGmch_c.cpp": ["param:#6 unsigned int"],
+   "src/actors/daObjCtKaitendai_c.cpp": ["param:#6 unsigned int"],
    "src/actors/daMip_c.cpp": ["param:#6 unsigned int"],
    "src/actors/daObjMarioCap_c.cpp": ["param:#6 int"],
    "src/actors/daOts_c.cpp": ["param:#6 unsigned int"],
@@ -7091,7 +7093,7 @@
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 int"],
    "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN13TTC_MovingBar13InitResourcesEv.cpp": ["return:void"],
+   "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:void"],
@@ -12409,6 +12411,9 @@
   "data_ov065_0211c0d4": {
    "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": ["return:char []"]
   },
+  "data_ov065_0211d35c": {
+   "src/actors/daObjCtKaitendai_c.cpp": ["return:KaitendaiResources []"]
+  },
   "data_ov065_0211d600": {
    "src/actors/daYurei_Mucho_c.cpp": ["return:SharedFilePtr"]
   },
@@ -15784,6 +15789,7 @@
    "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["param:#2 void *", "return:int"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN9TowerStep13InitResourcesEv.cpp": ["param:#1 dBgW *", "param:#2 void *"],
+   "src/actors/daObjCtKaitendai_c.cpp": ["param:#2 void *"],
    "src/actors/daObjCtMecha03_c.cpp": ["param:#2 void *"],
    "src/actors/daObjFl_London_c.cpp": ["param:#2 void *"],
    "src/func_ov002_020b5e58.cpp": ["param:#2 void *"],

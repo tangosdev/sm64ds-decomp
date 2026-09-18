@@ -1,0 +1,263 @@
+{
+  "id": "ov065/daObjCtKaitendai_c",
+  "module": "ov065",
+  "source": "src/actors/daObjCtKaitendai_c.cpp",
+  "promoted_source": "src/actors/daObjCtKaitendai_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211b360..0x211b7f0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjCtKaitendai_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211b360",
+      "end": "0x0211b7f0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN18daObjCtKaitendai_cD1Ev",
+      "address": "0x0211b360",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN18daObjCtKaitendai_cD0Ev",
+      "address": "0x0211b3ac",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov065_0211b40c",
+      "address": "0x0211b40c",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov065_0211b40c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN18daObjCtKaitendai_c16CleanupResourcesEv",
+      "address": "0x0211b47c",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN18daObjCtKaitendai_c6RenderEv",
+      "address": "0x0211b4e0",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN18daObjCtKaitendai_c8BehaviorEv",
+      "address": "0x0211b508",
+      "size": "0x00000138",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN18daObjCtKaitendai_c13InitResourcesEv",
+      "address": "0x0211b640",
+      "size": "0x00000140",
+      "legacy_source": "src/_ZN18daObjCtKaitendai_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA07",
+      "address": "0x0211b780",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_ct_kaitendai_ct_mecha07.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA06",
+      "address": "0x0211b7b8",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_ct_kaitendai_ct_mecha06.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The genuine dBgCh_Gnd local in InitResources makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte bx lr body at its canonical arm9 home (config/arm9/symbols.txt names _ZN7Vector3D1Ev there) and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjCtKaitendai_c() emits this homeless base-object destructor helper; it has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits inherited fBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits inherited dBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits inherited dActor_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "The key-function TU emits inherited dBgActor_c typeinfo as vague linkage. Its canonical home is NOT this TU's module: config/arm9/overlays/ov002/symbols.txt is the only symbols.txt that names this address, and romdata_check verifies the complete single-inheritance record there."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "The key-function TU emits inherited dBgActor_c's type-name string as vague linkage; the linker kept the one copy in ov002, and romdata_check verifies its compiler-sized payload at that canonical home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI18daObjCtKaitendai_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d338",
+      "reason": "The genuine class identity naturally emits daObjCtKaitendai_c's 12-byte single-inheritance typeinfo record. romdata_check verifies its ABI kind, type-name relocation, and dBgActor_c base link at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTS18daObjCtKaitendai_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d344",
+      "reason": "The genuine class identity naturally emits the ROM-named daObjCtKaitendai_c type string; romdata_check verifies its exact compiler-sized bytes at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTV18daObjCtKaitendai_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d3b4",
+      "reason": "Owning every virtual makes this the class's key-function TU, so it emits the full daObjCtKaitendai_c vtable storage. romdata_check applies the measured eight-byte ABI address-point bias and verifies the retail slots plus storage preamble at the canonical ov065 home before text-only production isolation discards it."
+    }
+  ],
+  "notes": [
+    "Production translation unit promoted from a tools/tubuild.py shadow after all nine owned text functions, emission order, relocation addends, and relocation destinations verified from one compile.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN18daObjCtKaitendai_c8BehaviorEv and the one that held _ZN18daObjCtKaitendai_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN18daObjCtKaitendai_c8BehaviorEv and the one that held _ZN18daObjCtKaitendai_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild reconcile note: both warnings above were false positives of the union step and are reconciled. The legacy Behavior and InitResources files spelled the same extern \"C\" void(void*) declaration of _ZN10dBgActor_c21UpdateModelPosAndRotYEv / _ZN10dBgActor_c19UpdateClsnPosAndRotEv with different PARAMETER NAMES, so the texts differed and the types did not; the consolidated TU keeps one spelling and calls the real member, byte-neutral. The markers those warnings were frozen against are no longer present in src/actors/daObjCtKaitendai_c.cpp. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Same shape as ov002/daObjBC_Switch_c. Checked by tools/check_tubuild_conflicts.py.",
+    "The inline destructor in the directly included class header, declared last, makes mwccarm emit exactly the retail D1 (0x0211b360) then D0 (0x0211b3ac) pair, without a D2.",
+    "func_ov065_0211b40c keeps its address-derived name because config/arm9/overlays/ov065/symbols.txt spells it that way; it stays an extern \"C\" free function rather than being renamed into a member.",
+    "daObjCtKaitendai_c_classInit_CT_MECHA06 / CT_MECHA07 are reconstructed source-style names: ROM RTTI names the class, the CT_MECHA06/07 registry profiles select the factories, and later EAD lineage supplies classInit. Exact original SM64DS spellings are not preserved. Historical aliases were TtcRotatingGear_Spawn and TtcRotatingTriangle_Spawn.",
+    "compiler_only_output is 13 rows: 2 x (4 ancestors + self) typeinfo/type-string rows + 1 vtable + 1 Vector3 D1 + 1 homeless dBgActor_c D2 from return new. Every canonical_module/canonical_address was read out of the ROM's own symbols.txt, not copied from a sibling without checking this class's homes.",
+    "Cleanup folded the adjacent CT_MECHA06/CT_MECHA07 factories as return new daObjCtKaitendai_c(). Inherited fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daObjCtKaitendai_c/daObjCtKaitendai_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        35,
+        38,
+        39
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI18daObjCtKaitendai_c",
+        "_ZTS18daObjCtKaitendai_c",
+        "_ZTV18daObjCtKaitendai_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI18daObjCtKaitendai_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS18daObjCtKaitendai_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV18daObjCtKaitendai_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

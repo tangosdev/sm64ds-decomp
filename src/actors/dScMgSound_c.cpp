@@ -120,6 +120,22 @@
 /* Includes: union of the legacy files', first-seen in ROM-ascending
  * processing order. NOT verified for header ordering constraints (e.g. a
  * common.h-before-X rule) -- watch for new compile errors after this. */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  96 func_ov004_* + 68 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  2 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  4 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  3 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ *  4 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~439 *(T *)(p + 0x..)         class layout does not name these offsets.
+ *  2 VirtualNN                   slot/field name not evidenced.
+ */
+
 #include "dScMgSound_c.h"
 #include "types.h"
 #include "decl_common.h"
