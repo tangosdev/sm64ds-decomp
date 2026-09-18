@@ -503,7 +503,6 @@
   "IsStarCollected": {
    "src/_ZN11BobOmbBuddy13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN12dScStarSel_c13InitResourcesEv.cpp": ["param:#1 int"],
-   "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN5Stage9PS_RenderEv.cpp": ["param:#1 int"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp": ["param:#1 int"],
@@ -511,7 +510,8 @@
    "src/_ZN9JetStream13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#1 int"],
    "src/func_0201d850.c": ["param:#1 unsigned int", "param:#2 unsigned char"],
-   "src/func_ov007_020cc168.c": ["param:#1 int"]
+   "src/func_ov007_020cc168.c": ["param:#1 int"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["param:#1 int"]
   },
   "IsStarCollectedInCurLevel": {
    "src/_ZN10StarMarker13InitResourcesEv.cpp": ["param:#1 unsigned char"],
@@ -2358,7 +2358,6 @@
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN10RockPillar8BehaviorEv.cpp": ["return:int"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN14daObjKi_Fune_c8BehaviorEv.cpp": ["return:int"],
    "src/_ZN15FireSeaElevator8BehaviorEv.cpp": ["return:int"],
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["return:int"],
@@ -4079,7 +4078,6 @@
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/_ZN12WorkElevator13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["kind:data"],
-   "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp": ["kind:data"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["kind:data"],
    "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
    "src/_ZN16SpinningPlatform13InitResourcesEv.cpp": ["arity:0", "mangled:0 parameter(s)"],
@@ -4097,6 +4095,7 @@
    "src/func_ov066_02117bf0.c": ["kind:data"],
    "src/func_ov066_02118188.c": ["kind:data"],
    "src/game/actors/d_a_obj_fm_battan.cpp": ["arity:0", "mangled:0 parameter(s)"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["kind:data"],
    "src/game/actors/d_a_obj_wc_obj02.cpp": ["kind:data"],
    "src/game/actors/d_a_obj_wc_obj04.cpp": ["kind:data"],
    "src/game/actors/d_a_obj_wc_obj05.cpp": ["kind:data"]
@@ -4221,7 +4220,6 @@
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["arity:1"],
-   "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN15RollingIronBall13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN15RotatingFirebar13InitResourcesEv.cpp": ["arity:1"],
@@ -4307,6 +4305,7 @@
    "src/func_ov006_020cef14.c": ["arity:1"],
    "src/func_ov080_021274ac.c": ["arity:1", "return:int"],
    "src/game/actors/d_a_jgm.cpp": ["arity:1"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["arity:1"],
    "src/game/actors/d_a_pg_mthr.cpp": ["arity:1"],
    "src/minigames/d_s_mg_jump2.cpp": ["arity:1"],
    "src/minigames/d_s_mg_trampoline2.cpp": ["arity:1", "return:BMD_File *"]
@@ -4535,7 +4534,6 @@
    "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#4 const Vector3 *", "return:unsigned int"],
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#4 const void *", "return:unsigned int"],
    "src/_ZN13SnowmanBreath8BehaviorEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
-   "src/_ZN14daObjKi_Fune_c8BehaviorEv.cpp": ["param:#4 void *", "param:#5 unsigned int"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#4 const Vector3 *", "param:#5 unsigned int"],
    "src/_ZN6Player16St_BurnFire_MainEv.cpp": ["param:#4 const void *", "param:#5 unsigned int"],
    "src/_ZN6Player16St_BurnLava_MainEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
@@ -4577,6 +4575,7 @@
    "src/func_ov102_0214c84c.c": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_holhei.cpp": ["param:#4 const void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/game/actors/d_a_jgm.cpp": ["param:#4 const Vector3 *", "param:#5 unsigned int", "return:unsigned int"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["param:#4 void *", "param:#5 unsigned int"],
    "src/game/actors/d_a_obj_wc_obj05.cpp": ["param:#4 void *", "param:#5 unsigned int"],
    "src/game/actors/d_a_pg_rcer.cpp": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
    "src/unnamed/ov063/func_ov063_0211c7b0.c": ["param:#4 void *", "param:#5 unsigned int", "return:unsigned int"],
@@ -5407,7 +5406,6 @@
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["arity:1", "return:void *"],
-   "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN15RotatingFirebar13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": ["arity:1", "return:void *"],
@@ -5440,7 +5438,8 @@
    "src/func_ov002_020b6958.c": ["arity:1", "return:void *"],
    "src/func_ov002_020b6c54.c": ["arity:1", "return:void *"],
    "src/func_ov002_020bad10.c": ["arity:1", "return:void *"],
-   "src/func_ov080_021274ac.c": ["arity:1", "return:int"]
+   "src/func_ov080_021274ac.c": ["arity:1", "return:int"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["arity:1", "return:void *"]
   },
   "_ZN7dCcAc_c10GetOwnerIDEv": {
    "include/decl_dCcAc_c.h": ["arity:0", "return:void"]
@@ -6881,7 +6880,6 @@
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN14daObjKi_Fune_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
    "src/_ZN15RotatingFirebar13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": ["return:void"],
@@ -6933,6 +6931,7 @@
    "src/func_ov075_02114ddc.cpp": ["return:void"],
    "src/func_ov080_021274ac.c": ["param:#2 int", "return:void"],
    "src/game/actors/d_a_jgm.cpp": ["return:void"],
+   "src/game/actors/d_a_obj_ki_fune.cpp": ["return:void"],
    "src/game/actors/d_a_pg_mthr.cpp": ["return:void"],
    "src/minigames/d_s_mg_trampoline2.cpp": ["return:void"]
   },

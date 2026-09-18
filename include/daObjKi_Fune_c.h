@@ -13,7 +13,21 @@ struct daObjKi_Fune_c : dBgActor_c {
     u8  pad_322[0x2];
     s32 mSoundHandle;            /* 0x324 */
     u16 unk_328;            /* 0x328 */
-    virtual ~daObjKi_Fune_c();
+    /* Inline is load-bearing. Written out of line mwccarm 2004/b56 emits the
+       synthesized D0 ahead of the written D1 and adds a homeless D2, the
+       reverse of the cartridge's D1 0x0211260c / D0 0x02112650 pair, which
+       has no D2 at all. Inline emits D1 then D0 and no D2, and moves the key
+       function to InitResources, the first non-inline virtual, which is what
+       makes the promoted TU emit this class's vtable and RTTI records under
+       the ROM's own names. Body is empty: destroying the dBgW_KcMbg and Model
+       subobjects and running dBgActor_c's own destructor all follow from the
+       declarations above. Keep the brace on the signature line --
+       tools/check_header_offsets.py only recognises a body written that way.
+
+       Every member of this class is defined in one translation unit,
+       src/game/actors/d_a_obj_ki_fune.cpp, which owns the whole
+       0x0211260c..0x021129a0 linker run. */
+    virtual ~daObjKi_Fune_c() {}
     virtual int InitResources();
     virtual int CleanupResources();
     virtual int Behavior();
