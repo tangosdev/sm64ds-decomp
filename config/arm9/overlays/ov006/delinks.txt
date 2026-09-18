@@ -4015,41 +4015,9 @@ src/d_s_mg_snowball.cpp:
     complete
     .text start:0x0212a520 end:0x0212a554
 
-src/_ZN13dScMgFlower_cD1Ev.cpp:
+src/actors/dScMgFlower_c.cpp:
     complete
-    .text start:0x0212a554 end:0x0212a5c8
-
-src/_ZN13dScMgFlower_cD0Ev.cpp:
-    complete
-    .text start:0x0212a5c8 end:0x0212a650
-
-src/func_ov006_0212a650.c:
-    complete
-    .text start:0x0212a650 end:0x0212a654
-
-src/func_ov006_0212a654.c:
-    complete
-    .text start:0x0212a654 end:0x0212a764
-
-src/func_ov006_0212a764.cpp:
-    complete
-    .text start:0x0212a764 end:0x0212aa74
-
-src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x0212aa74 end:0x0212aacc
-
-src/_ZN13dScMgFlower_c6RenderEv.cpp:
-    complete
-    .text start:0x0212aacc end:0x0212ac74
-
-src/_ZN13dScMgFlower_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0212ac74 end:0x0212b480
-
-src/_ZN13dScMgFlower_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212b480 end:0x0212b7f8
+    .text start:0x0212a554 end:0x0212b7f8
 
 src/d_s_mg_flower.cpp:
     complete

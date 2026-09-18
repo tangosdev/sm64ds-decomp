@@ -3645,6 +3645,15 @@
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "andrewboudreau",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_cD1Ev": "andrewboudreau",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_cD0Ev": "andrewboudreau",
+    "src/actors/dScMgFlower_c.cpp#func_ov006_0212a650": "tangosdev",
+    "src/actors/dScMgFlower_c.cpp#func_ov006_0212a654": "andrewboudreau",
+    "src/actors/dScMgFlower_c.cpp#func_ov006_0212a764": "tangosdev",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c13OnYoshiTryEatEi": "ruspecial",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c6RenderEv": "ruspecial",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c8BehaviorEv": "ruspecial",
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c13InitResourcesEv": "andrewboudreau"
   }
 }
