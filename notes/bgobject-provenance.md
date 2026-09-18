@@ -489,7 +489,7 @@ mismatching, 106/106 exact) and `tools/check_src_tu_compiles.py` (72/72).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4dc | `mStarActor` | `src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN13daObjHmBskt_c8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
+| 0x4dc | `mStarActor` | `daObjHmBskt_c::InitResources` in `src/game/actors/d_a_obj_hm_bskt.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `daObjHmBskt_c::Behavior`, in the same TU, writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
 
 In the `#else` C twin, ten offsets already named at exactly those offsets in
 `include/dActor_c.h` were repointed to those names: `mPosX/Y/Z` (0x05c),
@@ -750,7 +750,7 @@ same offsets:
   `mDeathTableID` (0x0ce).
 * `include/daObjC1_Trap_c.h` — its production class TU uses inherited `mPosX/Y/Z`
   (0x05c), `mAngleY` (0x08e), and `mAreaId` (0x0cc) directly through `dActor_c`.
-* `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
+* `include/daObjBk_Lift_c.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
 * `include/daObjMc_Metalnet_c.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
 * `include/daObjKm2_Ami_Bou_c.h` — `param1`, `mAngleY`.
 * `include/daObjIceBoard_c.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`

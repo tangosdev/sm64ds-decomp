@@ -1,0 +1,329 @@
+{
+  "id": "ov030/daObjHmBskt_c",
+  "module": "ov030",
+  "source": "src/game/actors/d_a_obj_hm_bskt.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_hm_bskt.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x021111a0..0x0211155c, eight functions with no foreign symbol inside the span",
+    "single class label over the whole run (daObjHmBskt_c, ROM RTTI name _ZTS13daObjHmBskt_c at ov030:0x02115940); the neighbours on both sides carry different class labels (_ZN13RollingLogTtmD1Ev begins at 0x0211155c, and 0x021111a0 is the first function in the module's .text)",
+    "build/tu_map.json puts the seven member functions in one run 0x021111a0..0x02111524 and daObjHmBskt_c_classInit alone in the next; the factory is joined to the class run because it is the class's own factory -- it allocates 0x4e0, calls dBgActor_c's constructor, stores _ZTV13daObjHmBskt_c and constructs the dBgCh_Actr at +0x320, and nothing else in the module references it. The same join is landed precedent for ov045/daObjKm2_Ami_Bou_c.",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x0211155c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjHmBskt_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN13daObjHmBskt_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjHmBskt_cD0Ev",
+      "address": "0x021111ec",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN13daObjHmBskt_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov030_0211124c",
+      "address": "0x0211124c",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov030_0211124c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13daObjHmBskt_c16CleanupResourcesEv",
+      "address": "0x0211130c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13daObjHmBskt_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13daObjHmBskt_c6RenderEv",
+      "address": "0x02111350",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN13daObjHmBskt_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN13daObjHmBskt_c8BehaviorEv",
+      "address": "0x02111384",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN13daObjHmBskt_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN13daObjHmBskt_c13InitResourcesEv",
+      "address": "0x02111410",
+      "size": "0x00000114",
+      "legacy_source": "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjHmBskt_c_classInit",
+      "address": "0x02111524",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_hm_bskt.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Genuine lifecycle source form: include/daObjHmBskt_c.h defines the virtual destructor inline and this TU defines InitResources as the key function. mwccarm owns retail D1/D0 and the class data with no D2, no manual metadata and no forcing output.",
+    "All eight functions reproduce their ROM bytes from one compile, and the whole 0x021111a0..0x0211155c .text run reproduces from one object in a scratch link that rebuilds the stock ROM byte for byte.",
+    "Text-only route. The vtable and the five-class RTTI chain are emitted by the key function and licensed as deadstrip-data at their unchanged config/arm9/overlays/ov030/symbols.txt addresses; this entry claims no .data and no .bss. _ZTV13daObjHmBskt_c's address point 0x02115974 is unchanged, and its 32-slot array ends at 0x021159f4, the next configured symbol.",
+    "The factory is `return new daObjHmBskt_c()`, which reproduces the cartridge's fBase_c::operator new(1248) / dBgActor_c constructor / vptr store / dBgCh_Actr construction sequence exactly, and drags in dBgActor_c's D2 helper as compiler-only text with no ROM home.",
+    "func_ov030_0211124c keeps its address-derived name and its (char*, char*) parameter spelling, which include/decl_common.h already declares. The ROM proves the body, the single inbound call from daObjHmBskt_c::Behavior, and that the first argument is the cage; it proves no name and no parameter types, so nothing was coined here. Behavior's call casts at the call site rather than asserting a signature the bytes do not carry.",
+    "daObjHmBskt_c_classInit and g_profile_HM_BASKET are reconstructed source-style names: SM64DS proves the RTTI class daObjHmBskt_c, the HM_BASKET registry ID, the descriptor/factory relationship, the 0x4e0 allocation size and the vtable identity; later EAD lineage supplies the spelling prior. The exact original SM64DS spellings are not preserved. Historical alias: UkikiCage_Spawn. Coined C name; it makes no parameter-type claim.",
+    "Behavior keeps the four-word volatile stack reservation the pre-promotion shard carried; without it the body is 17 words short of the cartridge's. It costs that one member its no_codegen_trick reading and nothing else, because every hand-written member carries its own @symbol boundary.",
+    "The two destructor variants carry no @symbol marker on purpose: they have no definition text in the TU, and tools/tiers.py scores them through the inline definition in include/daObjHmBskt_c.h."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov030-daObjHmBskt_c/daObjHmBskt_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        28,
+        39,
+        40
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI13daObjHmBskt_c",
+        "_ZTS13daObjHmBskt_c",
+        "_ZTV13daObjHmBskt_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjHmBskt_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjHmBskt_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjHmBskt_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov030-daObjHmBskt_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x0211155c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x0211155c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjHmBskt_c() instantiates the class, so mwccarm emits the base-object destructor helper for the direct base. No configured ROM symbol anywhere in the tree and no inbound relocation once the licensed leaf D1/D0 pair is retained."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the Vector3 automatic in InitResources (starPos) and the one in func_ov030_0211124c pull it in. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c. Cartridge copy at arm9:0x02086e60, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c. Cartridge copy at arm9:0x02086e78, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c. Cartridge copy at arm9:0x02086e54, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c. Cartridge copy at arm9:0x0208e390, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the direct base dBgActor_c. Cartridge copy at ov002:0x021089ec, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the direct base dBgActor_c. Cartridge copy at ov002:0x02108a04, outside this entry's .text claim."
+    },
+    {
+      "symbol": "_ZTI13daObjHmBskt_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x02115934",
+      "reason": "This class's own typeinfo record, vague-linkage. Cartridge copy at ov030:0x02115934 is inside this module's .data but OUTSIDE the 0x021111a0..0x0211155c .text run this entry claims. MEASURED: __si_class_type_info whose base pointer is 0x021089ec = _ZTI10dBgActor_c."
+    },
+    {
+      "symbol": "_ZTS13daObjHmBskt_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x02115940",
+      "reason": "This class's own type-name string. Cartridge copy at ov030:0x02115940 is the length-prefixed '13daObjHmBskt_c' -- the ROM's own spelling, not a coined one. Text-only TU; the ROM blob keeps the address."
+    },
+    {
+      "symbol": "_ZTV13daObjHmBskt_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x02115974",
+      "reason": "This class's own vtable, emitted because the inline destructor makes the first declared non-inline virtual (InitResources) the key function. Cartridge address point at ov030:0x02115974, outside the .text run; the 32-slot array ends at 0x021159f4, the next configured symbol. The emitted storage starts 8 bytes earlier at 0x0211596c. The address in config/arm9/overlays/ov030/symbols.txt is unchanged."
+    }
+  ]
+}
