@@ -1,0 +1,226 @@
+{
+  "id": "ov001/dCapIcon_c",
+  "module": "ov001",
+  "source": "src/actors/dCapIcon_c.cpp",
+  "promoted_source": "src/actors/dCapIcon_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20ab110..0x20ab3f0, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dCapIcon_c",
+    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ab110",
+      "end": "0x020ab3f0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dCapIcon_c6UnlinkEv",
+      "address": "0x020ab110",
+      "size": "0x00000118",
+      "legacy_source": "src/_ZN10dCapIcon_c6UnlinkEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov001_020ab228",
+      "address": "0x020ab228",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov001_020ab228.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov001_020ab2e4",
+      "address": "0x020ab2e4",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov001_020ab2e4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dCapIcon_cD0Ev",
+      "address": "0x020ab374",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10dCapIcon_cD0Ev.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN10dCapIcon_cD1Ev",
+      "address": "0x020ab3a0",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN10dCapIcon_cD1Ev.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10dCapIcon_cC1Ev",
+      "address": "0x020ab3c4",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10dCapIcon_cC1Ev.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Reconstructed by tools/tubuild.py create and then reconciled by hand. The file's own header comment records the two decisions that are load-bearing: `#pragma defer_codegen off` over ordinals 0 and 1 so the `opt_common_subs off` bracket binds to ordinal 1 alone, and the resulting split emission order (parse-time half ascending, deferred half descending).",
+    "tubuild create reported one declaration CONFLICT, `func_ov001_020aa6cc`, declared `void func_ov001_020aa6cc(int r0)` by the legacy source for ordinal 1 and `void func_ov001_020aa6cc(int character)` by the one for ordinal 0. The two spellings differ only in the parameter name, so the merged TU keeps one declaration; nothing was left commented out.",
+    "The head array data_ov001_020ad634 was declared three ways across the legacy shards (`dCapIcon_c *[]`, `void *[]`, `int[]`). The node-pointer view is the complete one -- ordinal 0 walks the nodes -- and is the one the TU keeps; ordinal 1 takes one added cast at its store and is byte-identical with it.",
+    "Five extern declarations were reconciled against the rest of the tree after tools/check_decl_agreement.py flagged them: data_0209f3e8 is spelt `int[]` (the plurality) with the dActor_c* view moved to a cast at the use site, data_ov001_020ad620 and data_ov001_020ad624 are scalars rather than arrays, func_ov001_020aa6b0 takes `int *` as its definition does, and SaveData::IsCharacterUnlocked is called through include/SaveData.h instead of a flat mangled extern. The cast on the slot-table compare has to be on the LEFT operand: `data_0209f3e8[mSlot] == (int)mOwner` swaps two register assignments in ordinal 0 and costs three words. All six functions were re-verified byte-exact afterwards, and tools/rombuild.py rebuilt the full ROM to the same sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 as the source-independent control. The verification.linkcheck record below predates that reconciliation; the full-ROM rombuild run is what proves the final source."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov001-dCapIcon_c/dCapIcon_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dCapIcon_cD2Ev",
+        "_ZN10dCapIcon_cC2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dCapIcon_cC2Ev",
+        "_ZN10dCapIcon_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        16,
+        17,
+        24,
+        25
+      ],
+      "data": [
+        "_ZTV10dCapIcon_c",
+        "_ZTI10dCapIcon_c",
+        "_ZTS10dCapIcon_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dCapIcon_c",
+        "_ZTS10dCapIcon_c",
+        "_ZTV10dCapIcon_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov001-dCapIcon_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020ab110",
+        "end": "0x020ab3f0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020ab110",
+          "end": "0x020ab3f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV10dCapIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad470",
+      "reason": "The vtable this TU is the key function for: dCapIcon_c's only virtual is its destructor and this TU defines it out of line, so mwccarm anchors the vague-linkage group here. config/arm9/overlays/ov001/symbols.txt rows _ZTV10dCapIcon_c at ov001:0x020ad470, and verify's EXTRA line independently reports size=0x10 -- four words, i.e. the two-word RTTI prologue plus the two dispatch slots the cartridge fills with D1 (0x020ab3a0) and D0 (0x020ab374). The constructor and both destructor variants odr-use this copy for their vptr stores; production isolation rebinds those relocations to the ROM home and deadstrips the duplicate."
+    },
+    {
+      "symbol": "_ZTI10dCapIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad450",
+      "reason": "This class's own __class_type_info, emitted as a passenger beside the vtable. ROM home ov001:0x020ad450, which is the record that proves the class name this TU uses -- the cartridge pairs it with the string below."
+    },
+    {
+      "symbol": "_ZTS10dCapIcon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad458",
+      "reason": "Type-name string `10dCapIcon_c\u0000`, 0xd bytes -- the exact size verify reports for the copy in this object. ROM home ov001:0x020ad458."
+    },
+    {
+      "symbol": "_ZN10dCapIcon_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor definition makes mwcc emit three variants -- in the deferred half of this file, in the order D2, D0, D1 -- but the cartridge carries only D0 (0x020ab374, 0x2c) and D1 (0x020ab3a0, 0x24). config/arm9/overlays/ov001/symbols.txt has no D2 row for this class and no address anywhere in config/ names one, so it has no ROM home: plain `deadstrip`, not `deadstrip-duplicate`. It is emitted between ordinal 2 and ordinal 3, so it does not disturb the licensed run -- verify reports all 6 licensed functions in the expected ROM-ascending section order with it present."
+    },
+    {
+      "symbol": "_ZN10dCapIcon_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless, for the same reason as the D2 above: one constructor definition emits both the complete C1 and the base C2, and the cartridge carries only C1 (0x020ab3c4, 0x2c). symbols.txt has no C2 row for this class. It is emitted after ordinal 5, i.e. past the end of the licensed run."
+    }
+  ],
+  "production_mode": "text-only"
+}
