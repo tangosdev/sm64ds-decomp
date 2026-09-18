@@ -1,0 +1,296 @@
+{
+  "id": "ov063/daPiano_c",
+  "module": "ov063",
+  "source": "src/game/actors/daPiano_c/d_a_piano.cpp",
+  "promoted_source": "src/game/actors/daPiano_c/d_a_piano.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0211d4b8..0x0211e128, 16 function(s), from build/tu_map.json (tools/tu_map.py), class label daPiano_c.",
+    "daPiano_c_classInit (0x0211e128..0x0211e1c0) is cut as its own single-function unit by tu_map and is folded in here: it is the PIANO registry profile's factory, it sits immediately after InitResources in the ROM's .text order, and it closes the module's .text at 0x0211e1c0. Same fold, and the same reasoning, as daObjTh_Fall_Block_c_classInit in ov063/daObjTh_Fall_Block_c.",
+    "bounded below by src/game/actors/d_a_obj_th_fall_block.cpp, whose complete range ends exactly at 0x0211d4b8; bounded above by the end of ov063's .text section, 0x0211e1c0, where .rodata begins.",
+    "class label: daPiano_c (ROM _ZTS at ov063 0x0211ecf8, measured as the length-prefixed 9daPiano_c); _ZTI at 0x0211ed04 names _ZTI10dBgActor_c as the direct base; _ZTV address point 0x0211ed34, whose slots 16 and 17 are this range's first two functions.",
+    "__sinit_ov063_0211e5fc (.init 0x0211e5fc..0x0211e6fc) belongs to this class and is deliberately NOT in this entry: one delinks entry licenses one contiguous range in one section, and nothing in this tree owns .text plus .init. It keeps its own delinks entry and its own source, src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211d4b8",
+      "end": "0x0211e1c0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daPiano_cD1Ev",
+      "address": "0x0211d4b8",
+      "size": "0x00000094",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN9daPiano_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daPiano_cD0Ev",
+      "address": "0x0211d54c",
+      "size": "0x000000a8",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN9daPiano_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov063_0211d5f4",
+      "address": "0x0211d5f4",
+      "size": "0x00000234",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211d5f4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov063_0211d828",
+      "address": "0x0211d828",
+      "size": "0x00000064",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211d828.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov063_0211d88c",
+      "address": "0x0211d88c",
+      "size": "0x00000040",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211d88c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov063_0211d8cc",
+      "address": "0x0211d8cc",
+      "size": "0x000002d8",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211d8cc.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov063_0211dba4",
+      "address": "0x0211dba4",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211dba4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov063_0211dbb8",
+      "address": "0x0211dbb8",
+      "size": "0x000001c0",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211dbb8.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov063_0211dd78",
+      "address": "0x0211dd78",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211dd78.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov063_0211dd84",
+      "address": "0x0211dd84",
+      "size": "0x00000028",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211dd84.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov063_0211ddac",
+      "address": "0x0211ddac",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211ddac.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov063_0211ddf4",
+      "address": "0x0211ddf4",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/ov063/func_ov063_0211ddf4.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN9daPiano_c16CleanupResourcesEv",
+      "address": "0x0211de3c",
+      "size": "0x00000050",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN9daPiano_c6RenderEv",
+      "address": "0x0211de8c",
+      "size": "0x0000002c",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN9daPiano_c8BehaviorEv",
+      "address": "0x0211deb8",
+      "size": "0x000000f4",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN9daPiano_c13InitResourcesEv",
+      "address": "0x0211dfac",
+      "size": "0x0000017c",
+      "legacy_source": "src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "daPiano_c_classInit",
+      "address": "0x0211e128",
+      "size": "0x00000098",
+      "legacy_source": "src/game/actors/daPiano_c/d_a_piano.cpp",
+      "ordinal": 16
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "PROMOTED 2026-09-18. This entry is the second half of a two-step fold. PR #2712 had already merged fifteen of the seventeen functions into src/game/actors/daPiano_c/d_a_piano.cpp -- the four class methods from their _ZN8MadPiano*.cpp sources and ten helpers from src/unnamed/ov063/ -- but left the destructor pair split in one-line sources, because with the destructor merely declared in the header nothing in the TU defined the key function and the tree had no manifest here to license what the alternative emits. This entry supplies that manifest and folds the pair in, so config/arm9/overlays/ov063/delinks.txt now licenses the whole run 0x0211d4b8..0x0211e1c0 to one file.",
+    "THE ONLY CODEGEN-VISIBLE EDIT IS ONE LINE OF HEADER. include/daPiano_c.h changed `virtual ~daPiano_c();` to `virtual ~daPiano_c() {}`. MEASURED 2026-09-18 under the pinned 2004/b56: the inline form emits _ZN9daPiano_cD1Ev then _ZN9daPiano_cD0Ev, with no homeless D2, into the two .text sections immediately ahead of every function written in the file -- so all seventeen sections come out in exactly the cartridge's ascending order, 0x0211d4b8 first and daPiano_c_classInit last. Both bodies byte-MATCH at their cartridge addresses (tools/match.py, --strict-relocs). The cartridge puts D1 below D0 here, which is the order the inline form produces, so this class needed none of the destructor-order machinery: no pragma, no forcing scaffold, no partial boundary. The earlier out-of-line experiment recorded in notes/experiments/piano-2712-dtor-split.md is not contradicted -- it measured writing the destructor body into the .cpp, which makes the TU the key-function home and emits a D2 the licensed run cannot carry.",
+    "The eleven compiler_only_output rows are what the inline destructor costs. With a definition of the destructor visible, this TU becomes a candidate emitter for the class's vague-linkage RTTI, so it emits _ZTV9daPiano_c plus the _ZTI/_ZTS pair for daPiano_c and for each of its four inherited bases. Every one of the eleven has a real cartridge home outside this entry's claimed .text range, so all eleven are deadstrip-data and none is a plain deadstrip. The eight base-class rows carry the same canonical addresses this overlay's other promoted entry, ov063/daObjTh_Fall_Block_c, already verified; each was re-checked against config/arm9/symbols.txt and config/arm9/overlays/ov002/symbols.txt for this entry rather than copied on trust.",
+    "daPiano_c_classInit is the one function here whose legacy_source is this entry's own source path, and that is not a copy-paste slip: on this history the factory has never had a per-function file. src/game/actors/daPiano_c/d_a_piano.cpp was created already holding it, and the promotion deletes no file on its account. The two destructor sources ARE deleted by this promotion; the other fourteen legacy_source paths were deleted by PR #2712 and are kept here as the historical record the conventions ask for.",
+    "The factory stays hand-rolled. Promotion gives this class a manifest that could now license what `return new daPiano_c()` instantiates on top of the factory's own matching bytes -- dBgActor_c's D2 helper and a re-emitted Vector3 inline destructor -- so the packaging wall the source comment used to name is gone. Converting it is still a codegen change, and promotion changes no codegen; it is left for a follow-up that carries its own byte proof."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI9daPiano_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov063",
+      "canonical_address": "0x0211ed04",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names it. The cartridge's own copy lives at ov063:0x0211ed04 -- inside this module's .data, but OUTSIDE the 0x0211d4b8..0x0211e1c0 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them. MEASURED 2026-09-18 in extracted/overlays/overlay_0063.bin (ov063 base 0x02115ee0): 0x0211ed04 reads [0x0209a764, 0x0211ecf8, 0x021089ec] -- __si_class_type_info's vtable address point, this class's own _ZTS, and _ZTI10dBgActor_c -- so the cartridge itself states the direct base is dBgActor_c, which is what include/daPiano_c.h models."
+    },
+    {
+      "symbol": "_ZTS9daPiano_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov063",
+      "canonical_address": "0x0211ecf8",
+      "reason": "This class's own type-name string, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov063:0x0211ecf8, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's bytes against the cartridge's before isolation discards them. MEASURED 2026-09-18: the eleven bytes there are the length-prefixed Itanium spelling 9daPiano_c followed by NUL -- so daPiano_c is the ROM's own name for this class, not a coined one. The tree called the class MadPiano until that measurement renamed it."
+    },
+    {
+      "symbol": "_ZTV9daPiano_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov063",
+      "canonical_address": "0x0211ed34",
+      "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor in include/daPiano_c.h makes every TU that names the class a candidate emitter. The cartridge's own copy lives at ov063:0x0211ed34, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED 2026-09-18 in extracted/overlays/overlay_0063.bin: symbols.txt's 0x0211ed34 IS the address point -- 0x0211ed2c is the offset-to-top word 0 and 0x0211ed30 is 0x0211ed04 (&_ZTI9daPiano_c), so the eight-byte public address-point bias applies exactly as tools/objisolate.py's VTABLE_PREAMBLE spells it. Slot 0 at 0x0211ed34 is 0x0211dfac (InitResources), slot 3 is 0x0211de3c (CleanupResources), slot 6 is 0x0211deb8 (Behavior), slot 9 is 0x0211de8c (Render), and slots 16 and 17 are 0x0211d4b8 (D1) and 0x0211d54c (D0) -- the cartridge's own statement that D1 precedes D0, which is why the inline destructor form needs no order lever on this class. Thirty-two slots plus the two-word preamble is 0x88, exactly the size this TU emits."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov063-daPiano_c/d_a_piano.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 17,
+    "functions_declared": 17,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI9daPiano_c",
+        "_ZTS9daPiano_c",
+        "_ZTV9daPiano_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daPiano_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daPiano_c",
+        "_ZTV9daPiano_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

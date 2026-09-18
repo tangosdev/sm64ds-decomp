@@ -42,7 +42,9 @@ struct daPiano_c : dBgActor_c {
      * func_ov063_0211d8cc counts it down and bites at zero. */
     u8 mAttackTimer;            /* 0x6e0 */
     u8 pad_6e1[3];
-    virtual ~daPiano_c();
+    /* Inline and empty: mwccarm emits D1 then D0 -- the cartridge's order at
+     * 0x0211d4b8 and 0x0211d54c -- and no homeless D2. Slots 16 (D1) and 17 (D0). */
+    virtual ~daPiano_c() {}
 
     virtual int InitResources();
     virtual int CleanupResources();
