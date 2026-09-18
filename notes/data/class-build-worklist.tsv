@@ -271,7 +271,7 @@ daObjKi_Fune_c	DONE	include\ShipUp.h  [alias: header uses pre-rename name]	dBgAc
 daObjKi_Hasira_c	PARTIAL	include\daObjKi_Hasira_c.h	dBgActor_c	0	ov016	6
 daObjKm1_Ukishima_c	DONE	include\daObjKm1_Ukishima_c.h	dBgActor_c	0	ov043	6
 daObjKm2_Agaru_c	PARTIAL	include\daObjKm2_Agaru_c.h	dBgActor_c	0	ov045	0
-daObjKm2_Ami_Bou_c	DONE	include\PoleLift.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov045	6
+daObjKm2_Ami_Bou_c	DONE	include\daObjKm2_Ami_Bou_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov045	6
 daObjKsWater_c	DONE	include\daObjKsWater_c.h	dBgActor_c	0	ov017	6
 daObjMcWater_c	DONE	include\daObjMcWater_c.h	dBgActor_c	0	ov009	6
 daObjMc_Metalnet_c	DONE	include\daObjMc_Metalnet_c.h	dBgActor_c	0	ov009	7

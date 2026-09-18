@@ -1487,14 +1487,14 @@ ov044	0x021115e0	OrangeBallBillboard_SpawnInfo	g_profile_KB1_BILLBOARD	reconstru
 ov044	0x02111604	_ZTV19OrangeBallBillboard	_ZTV19daObjKb1Billboard_c	vtable alloc=0x124; class identity proven by ov044 RTTI/ZTS
 ov045	0x021114dc	func_ov045_021114dc	FireSeaElevator_Spawn	spawnfunc
 ov045	0x021114dc	FireSeaElevator_Spawn	daObjKm2_Agaru_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x0211150c	func_ov045_0211150c	_ZN8PoleLiftD1Ev	vtable slot 16 (was _ZN15FireSeaElevatorD1Ev)
-ov045	0x02111558	func_ov045_02111558	_ZN8PoleLiftD0Ev	vtable slot 17 (was _ZN15FireSeaElevatorD0Ev)
-ov045	0x021115b8	func_ov045_021115b8	_ZN8PoleLift16CleanupResourcesEv	vtable slot 3 (was _ZN15FireSeaElevator16CleanupResourcesEv)
-ov045	0x021115f0	func_ov045_021115f0	_ZN8PoleLift6RenderEv	vtable slot 9 (was _ZN15FireSeaElevator6RenderEv)
-ov045	0x02111618	func_ov045_02111618	_ZN8PoleLift8BehaviorEv	vtable slot 6 (was _ZN15FireSeaElevator8BehaviorEv)
-ov045	0x02111738	func_ov045_02111738	_ZN8PoleLift13InitResourcesEv	vtable slot 0 (was _ZN15FireSeaElevator13InitResourcesEv)
+ov045	0x0211150c	func_ov045_0211150c	_ZN18daObjKm2_Ami_Bou_cD1Ev	vtable slot 16 (was _ZN15FireSeaElevatorD1Ev)
+ov045	0x02111558	func_ov045_02111558	_ZN18daObjKm2_Ami_Bou_cD0Ev	vtable slot 17 (was _ZN15FireSeaElevatorD0Ev)
+ov045	0x021115b8	func_ov045_021115b8	_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv	vtable slot 3 (was _ZN15FireSeaElevator16CleanupResourcesEv)
+ov045	0x021115f0	func_ov045_021115f0	_ZN18daObjKm2_Ami_Bou_c6RenderEv	vtable slot 9 (was _ZN15FireSeaElevator6RenderEv)
+ov045	0x02111618	func_ov045_02111618	_ZN18daObjKm2_Ami_Bou_c8BehaviorEv	vtable slot 6 (was _ZN15FireSeaElevator8BehaviorEv)
+ov045	0x02111738	func_ov045_02111738	_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv	vtable slot 0 (was _ZN15FireSeaElevator13InitResourcesEv)
 ov045	0x02111808	func_ov045_02111808	PoleLift_Spawn	spawnfunc
-ov045	0x02111808	PoleLift_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov045	0x02111808	PoleLift_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved. Historical alias PoleLift_Spawn. Coined C name: no param-type claim.
 ov045	0x02111840	func_ov045_02111840	_ZN17ExtendingPlatformD1Ev	vtable slot 16
 ov045	0x02111878	func_ov045_02111878	_ZN17ExtendingPlatformD0Ev	vtable slot 17
 ov045	0x021118c4	func_ov045_021118c4	_ZN17ExtendingPlatform23UpdateColliderTransformEv	InitResources-only helper; writes owned collider transform
@@ -1527,8 +1527,8 @@ ov045	0x02111e24	daObjKm2_Fall_Block_c_Spawn	daObjKm2_Fall_Block_c_classInit	rec
 ov045	0x02112cd0	data_ov045_02112cd0	FireSeaElevator_SpawnInfo	spawninfo
 ov045	0x02112cd0	FireSeaElevator_SpawnInfo	g_profile_KM2_AGARU	reconstructed profile global; literal ROM ID KM2_AGARU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112d98	data_ov045_02112d98	PoleLift_SpawnInfo	spawninfo
-ov045	0x02112d98	PoleLift_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile global; literal ROM ID KM2_AMI_BOU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x02112dbc	data_ov045_02112dbc	_ZTV8PoleLift	vtable alloc=? (was _ZTV15FireSeaElevator)
+ov045	0x02112d98	PoleLift_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile global; literal ROM ID KM2_AMI_BOU+registry role+later EAD lineage; exact SM64DS spelling not preserved. Historical alias PoleLift_SpawnInfo.
+ov045	0x02112dbc	data_ov045_02112dbc	_ZTV18daObjKm2_Ami_Bou_c	vtable alloc=? (was _ZTV15FireSeaElevator)
 ov045	0x02112e5c	data_ov045_02112e5c	ExtendingPlatform_SpawnInfo	spawninfo
 ov045	0x02112e5c	ExtendingPlatform_SpawnInfo	g_profile_KM2_NOBIRU	reconstructed profile global; literal ROM ID KM2_NOBIRU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112e80	data_ov045_02112e80	_ZTV17ExtendingPlatform	vtable alloc=0x328
@@ -3655,6 +3655,14 @@ ov065	0x02116f0c	_ZN6Snufit16OnAimedAtWithEggEv	_ZN15daYurei_Mucho_c16OnAimedAtW
 ov065	0x02116f14	_ZN6Snufit13OnTurnIntoEggER6Player	_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player	vtable slot 19; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge; the R6Player reference spelling is a coined guess the bytes cannot distinguish from a pointer
 ov065	0x02116f40	_ZN6Snufit13OnYoshiTryEatEv	_ZN15daYurei_Mucho_c13OnYoshiTryEatEv	vtable slot 18; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
 ov065	0x0211cba4	_ZTV6Snufit	_ZTV15daYurei_Mucho_c	coined alias row deleted; the address already carried the ROM RTTI vtable name. Exactly one spelling may survive: the promoted TU owns the key function and emits _ZTV15daYurei_Mucho_c, and dsd resolves the .data records that point here by NAME
+ov045	0x0211150c	_ZN8PoleLiftD1Ev	_ZN18daObjKm2_Ami_Bou_cD1Ev	vtable slot 16 (was _ZN8PoleLiftD1Ev); class renamed to the cartridge RTTI name, _ZTS at 0x02112d80 reads 18daObjKm2_Ami_Bou_c. Address unchanged.
+ov045	0x02111558	_ZN8PoleLiftD0Ev	_ZN18daObjKm2_Ami_Bou_cD0Ev	vtable slot 17 (was _ZN8PoleLiftD0Ev); class renamed to the cartridge RTTI name, _ZTS at 0x02112d80 reads 18daObjKm2_Ami_Bou_c. Address unchanged.
+ov045	0x021115b8	_ZN8PoleLift16CleanupResourcesEv	_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv	vtable slot 3 (was _ZN8PoleLift16CleanupResourcesEv); class renamed to the cartridge RTTI name. Address unchanged.
+ov045	0x021115f0	_ZN8PoleLift6RenderEv	_ZN18daObjKm2_Ami_Bou_c6RenderEv	vtable slot 9 (was _ZN8PoleLift6RenderEv); class renamed to the cartridge RTTI name. Address unchanged.
+ov045	0x02111618	_ZN8PoleLift8BehaviorEv	_ZN18daObjKm2_Ami_Bou_c8BehaviorEv	vtable slot 6 (was _ZN8PoleLift8BehaviorEv); class renamed to the cartridge RTTI name. Address unchanged.
+ov045	0x02111738	_ZN8PoleLift13InitResourcesEv	_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv	vtable slot 0 (was _ZN8PoleLift13InitResourcesEv); class renamed to the cartridge RTTI name. Ev encodes no param type.
+ov045	0x02111808	PoleLift_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI daObjKm2_Ami_Bou_c + KM2_AMI_BOU registry. Historical alias PoleLift_Spawn. Exact original SM64DS spelling is not preserved. Coined C name: no param-type claim.
+ov045	0x02112dbc	_ZTV8PoleLift	_ZTV18daObjKm2_Ami_Bou_c	coined alias row deleted; the address already carried the ROM RTTI vtable name. Address 0x02112dbc is the address point, unchanged.
 ov015	0x02112290	_ZN9TowerStepD1Ev	_ZN14daObjBk_Lift_cD1Ev	vtable slot 16; class renamed to its ROM RTTI name 14daObjBk_Lift_c: extracted/overlays/overlay_0015.bin at file offset 0x3478 (address 0x02114618, module base 0x021111a0) holds '14daObjBk_Lift_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI14daObjBk_Lift_c at 0x0211460c points at; coined TowerStep retired -- the ASCII string occurs in no cartridge image
 ov015	0x021122dc	_ZN9TowerStepD0Ev	_ZN14daObjBk_Lift_cD0Ev	vtable slot 17; class renamed to its ROM RTTI name 14daObjBk_Lift_c: extracted/overlays/overlay_0015.bin at file offset 0x3478 (address 0x02114618, module base 0x021111a0) holds '14daObjBk_Lift_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI14daObjBk_Lift_c at 0x0211460c points at; coined TowerStep retired -- the ASCII string occurs in no cartridge image
 ov015	0x0211233c	_ZN9TowerStep4KillEv	_ZN14daObjBk_Lift_c4KillEv	vtable slot 31; class renamed to its ROM RTTI name 14daObjBk_Lift_c: extracted/overlays/overlay_0015.bin at file offset 0x3478 (address 0x02114618, module base 0x021111a0) holds '14daObjBk_Lift_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI14daObjBk_Lift_c at 0x0211460c points at; coined TowerStep retired -- the ASCII string occurs in no cartridge image

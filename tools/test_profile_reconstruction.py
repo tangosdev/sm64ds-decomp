@@ -362,10 +362,10 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
         self.assertEqual(
             shared,
             {
-                "TERESAPIT": "d_a_trs_trap_teresapit.c",
-                "KAIDAN": "d_a_trs_trap_kaidan.c",
-                "BOOKSHELF": "d_a_trs_trap_bookshelf.c",
-                "MERRYGOROUND": "d_a_trs_trap_merrygoround.c",
+                "TERESAPIT": "d_a_trs_trap_teresapit.cpp",
+                "KAIDAN": "d_a_trs_trap_kaidan.cpp",
+                "BOOKSHELF": "d_a_trs_trap_bookshelf.cpp",
+                "MERRYGOROUND": "d_a_trs_trap_merrygoround.cpp",
             },
         )
         for row in self.full_rows:

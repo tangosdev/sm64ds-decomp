@@ -177,7 +177,7 @@ Against the three `config/tu_manifest.d/` entries:
 
 | entry | status | result |
 | --- | --- | --- |
-| [ov045](../config/arm9/overlays/ov045/symbols.txt)/`PoleLift` | text-verified | `0x211150c..0x2111840` — **exact match** |
+| [ov045](../config/arm9/overlays/ov045/symbols.txt)/`daObjKm2_Ami_Bou_c` | text-verified | `0x211150c..0x2111840` — **exact match** |
 | [ov045](../config/arm9/overlays/ov045/symbols.txt)/`daObjKm2_Fall_Block_c` | text-verified | `0x2111d48..0x2111e60` — **exact match** |
 | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects` | link-verified | manifest `0x20fe190..0x20fea4c`, map `0x20fe190..0x20fe33c` — **start agrees, end short by 0x710** |
 

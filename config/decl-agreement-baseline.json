@@ -4266,7 +4266,6 @@
    "src/_ZN8Goomboss13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8MantaRay13InitResourcesEv.cpp": ["arity:1", "return:BMD_File *"],
-   "src/_ZN8PoleLift13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8Snowball13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN8WallSign13InitResourcesEv.cpp": ["arity:1"],
@@ -5428,7 +5427,6 @@
    "src/_ZN7SkiLift13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["arity:1", "return:void *"],
-   "src/_ZN8PoleLift13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN9LavaPlank13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["arity:1", "return:int"],
@@ -6913,7 +6911,6 @@
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["param:#2 int"],
    "src/_ZN8Goomboss13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN8PoleLift13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN8WallSign13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN9MontyMole13InitResourcesEv.cpp": ["param:#2 struct BMD_File *", "return:void"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 int"],
@@ -11906,6 +11903,9 @@
   "data_ov043_021126a0": {
    "src/game/actors/d_a_obj_km1_dorifu.cpp": ["return:SharedFilePtr"]
   },
+  "data_ov045_02112510": {
+   "src/game/actors/d_a_obj_km2_ami_bou.cpp": ["return:CLPS_Block"]
+  },
   "data_ov045_021125b0": {
    "src/_ZN17ExtendingPlatform13InitResourcesEv.cpp": ["return:CLPS_Block"]
   },
@@ -11914,6 +11914,12 @@
   },
   "data_ov045_021130ac": {
    "src/game/actors/d_a_obj_km2_fall_block.cpp": ["return:ResourceDescriptor"]
+  },
+  "data_ov045_021131a8": {
+   "src/game/actors/d_a_obj_km2_ami_bou.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov045_021131b0": {
+   "src/game/actors/d_a_obj_km2_ami_bou.cpp": ["return:SharedFilePtr"]
   },
   "data_ov045_021131d0": {
    "src/__sinit_ov045_02112280.c": ["return:int []"]

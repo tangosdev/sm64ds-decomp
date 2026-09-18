@@ -7,7 +7,7 @@ workflow without relying on chat history. It is an operational companion to:
   for the architecture and invariants;
 - [`tu-boundaries.md`](tu-boundaries.md) for how candidate TU boundaries are inferred;
 - [`tu-reconstruction-pilot-report.md`](tu-reconstruction-pilot-report.md) for the
-  original text-only `PoleLift` experiment;
+  original text-only `daObjKm2_Ami_Bou_c` experiment;
 - [`dtor-migration.md`](dtor-migration.md) for destructor-specific codegen traps;
 - `ov002/daObjAbuku_c` in [`config/tu_manifest.d/`](../config/tu_manifest.d/)
   for the first landed partitioned text-plus-data proof.

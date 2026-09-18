@@ -326,10 +326,6 @@
    "ref": "include/Platform.h"
   },
   {
-   "file": "notes/tu-reconstruction-pilot-report.md",
-   "ref": "src/PoleLift_Spawn.c"
-  },
-  {
    "file": "port/docs/mmio-inventory.md",
    "ref": "port/salvage-port-repo-tools"
   },
