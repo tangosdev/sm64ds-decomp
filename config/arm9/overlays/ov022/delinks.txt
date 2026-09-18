@@ -157,27 +157,27 @@ src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c:
     complete
     .text start:0x021120f4 end:0x02112130
 
-src/_ZN9LavaPlankD1Ev.cpp:
+src/_ZN15daObjFl_UkiKi_cD1Ev.cpp:
     complete
     .text start:0x02112130 end:0x02112174
 
-src/_ZN9LavaPlankD0Ev.cpp:
+src/_ZN15daObjFl_UkiKi_cD0Ev.cpp:
     complete
     .text start:0x02112174 end:0x021121cc
 
-src/_ZN9LavaPlank16CleanupResourcesEv.cpp:
+src/_ZN15daObjFl_UkiKi_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021121cc end:0x02112210
 
-src/_ZN9LavaPlank6RenderEv.cpp:
+src/_ZN15daObjFl_UkiKi_c6RenderEv.cpp:
     complete
     .text start:0x02112210 end:0x02112238
 
-src/_ZN9LavaPlank8BehaviorEv.cpp:
+src/_ZN15daObjFl_UkiKi_c8BehaviorEv.cpp:
     complete
     .text start:0x02112238 end:0x021122ac
 
-src/_ZN9LavaPlank13InitResourcesEv.cpp:
+src/_ZN15daObjFl_UkiKi_c13InitResourcesEv.cpp:
     complete
     .text start:0x021122ac end:0x02112350
 

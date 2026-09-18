@@ -259,7 +259,7 @@ daObjFl_London_c	PARTIAL	include\daObjFl_London_c.h	dBgActor_c	0	ov022	6
 daObjFl_Puzzle_c	DONE	include\BowserPuzzlePiece.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
 daObjFl_Ring_c	DONE	include\VolcanoRing.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov022	6
 daObjFl_Seesaw_c	PARTIAL	include\daObjFl_Seesaw_c.h	dBgActor_c	0	ov022	6
-daObjFl_UkiKi_c	DONE	include\LavaPlank.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov022	6
+daObjFl_UkiKi_c	DONE	include\daObjFl_UkiKi_c.h	dBgActor_c	0	ov022	6
 daObjFm_Battan_c	DONE	include\daObjFm_Battan_c.h	dBgActor_c	0	ov023	8
 daObjHatenaBlock_c	DONE	include\QuestionBlock.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov102	11
 daObjHatenaSwitch_c	DONE	include\daObjHatenaSwitch_c.h	dBgActor_c	0	ov002	12
