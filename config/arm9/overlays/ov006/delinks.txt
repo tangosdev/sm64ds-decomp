@@ -3019,77 +3019,9 @@ src/d_s_mg_slot3.c:
     complete
     .text start:0x0210c120 end:0x0210c180
 
-src/func_ov006_0210c180.c:
+src/actors/dScMgSlot1_c.cpp:
     complete
-    .text start:0x0210c180 end:0x0210c1a8
-
-src/func_ov006_0210c1a8.c:
-    complete
-    .text start:0x0210c1a8 end:0x0210c208
-
-src/func_ov006_0210c208.c:
-    complete
-    .text start:0x0210c208 end:0x0210c218
-
-src/func_ov006_0210c218.c:
-    complete
-    .text start:0x0210c218 end:0x0210c234
-
-src/func_ov006_0210c234.c:
-    complete
-    .text start:0x0210c234 end:0x0210c278
-
-src/func_ov006_0210c278.c:
-    complete
-    .text start:0x0210c278 end:0x0210c2b0
-
-src/func_ov006_0210c2b0.c:
-    complete
-    .text start:0x0210c2b0 end:0x0210c2c0
-
-src/func_ov006_0210c2c0.c:
-    complete
-    .text start:0x0210c2c0 end:0x0210c2d4
-
-src/func_ov006_0210c2d4.c:
-    complete
-    .text start:0x0210c2d4 end:0x0210c354
-
-src/func_ov006_0210c354.c:
-    complete
-    .text start:0x0210c354 end:0x0210c374
-
-src/_ZN12dScMgSlot1_c9betIcon_c6RenderEv.cpp:
-    complete
-    .text start:0x0210c374 end:0x0210c410
-
-src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0210c410 end:0x0210c478
-
-src/func_ov006_0210c478.c:
-    complete
-    .text start:0x0210c478 end:0x0210c4b8
-
-src/_ZN12dScMgSlot1_c19OnHitFromUnderneathEv.cpp:
-    complete
-    .text start:0x0210c4b8 end:0x0210c4dc
-
-src/_ZN12dScMgSlot1_c15OnHitByMegaCharEv.cpp:
-    complete
-    .text start:0x0210c4dc end:0x0210c500
-
-src/func_ov006_0210c500.c:
-    complete
-    .text start:0x0210c500 end:0x0210c638
-
-src/func_ov006_0210c638.c:
-    complete
-    .text start:0x0210c638 end:0x0210c674
-
-src/_ZN12dScMgSlot1_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x0210c674 end:0x0210c6c0
+    .text start:0x0210c180 end:0x0210c6c0
 
 src/_ZN12dScMgSlot1_c6RenderEv.cpp:
     complete
