@@ -1,0 +1,1067 @@
+{
+  "id": "ov006/dScMgSmartball_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgSmartball_c.cpp",
+  "promoted_source": "src/actors/cMgSmartball_ana_c+cMgSmartball_ball_c+cMgSmartball_board_c+cMgSmartball_dokan_c+cMgSmartball_kinoko_c+cMgSmartball_object_c+cMgSmartball_pakkun_c+cMgSmartball_propeller_c+cMgSmartball_pushswitch_c+cMgSmartball_slot_c+cMgSmartball_spring_c+cMgSmartball_wing_c+dScMgSmartball_c.cpp",
+  "status": "shadow",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x210d740..0x2119824, 130 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): cMgSmartball_ana_c, cMgSmartball_ball_c, cMgSmartball_board_c, cMgSmartball_dokan_c, cMgSmartball_kinoko_c, cMgSmartball_object_c, cMgSmartball_pakkun_c, cMgSmartball_propeller_c, cMgSmartball_pushswitch_c, cMgSmartball_slot_c, cMgSmartball_spring_c, cMgSmartball_wing_c, dScMgSmartball_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210d740",
+      "end": "0x02119824"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16dScMgSmartball_cD1Ev",
+      "address": "0x0210d740",
+      "size": "0x000000a0",
+      "legacy_source": "src/_ZN16dScMgSmartball_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_cD0Ev",
+      "address": "0x0210d7e0",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN16dScMgSmartball_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_0210d894",
+      "address": "0x0210d894",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_0210d894.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_0210d898",
+      "address": "0x0210d898",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov006_0210d898.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_0210d8bc",
+      "address": "0x0210d8bc",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_0210d8bc.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_0210d93c",
+      "address": "0x0210d93c",
+      "size": "0x00000274",
+      "legacy_source": "src/func_ov006_0210d93c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_0210dbb0",
+      "address": "0x0210dbb0",
+      "size": "0x00000240",
+      "legacy_source": "src/func_ov006_0210dbb0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_wing_c6UpdateEv",
+      "address": "0x0210ddf0",
+      "size": "0x00000224",
+      "legacy_source": "src/_ZN19cMgSmartball_wing_c6UpdateEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_wing_c12SaveSnapshotEv",
+      "address": "0x0210e014",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN19cMgSmartball_wing_c12SaveSnapshotEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_wing_c14RestoreInitialEv",
+      "address": "0x0210e098",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN19cMgSmartball_wing_c14RestoreInitialEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_0210e0d0",
+      "address": "0x0210e0d0",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_0210e0d0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_0210e120",
+      "address": "0x0210e120",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov006_0210e120.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_0210e1fc",
+      "address": "0x0210e1fc",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov006_0210e1fc.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN25cMgSmartball_pushswitch_c6UpdateEv",
+      "address": "0x0210e364",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN25cMgSmartball_pushswitch_c6UpdateEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv",
+      "address": "0x0210e3e8",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN25cMgSmartball_pushswitch_c14RestoreInitialEv",
+      "address": "0x0210e460",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN25cMgSmartball_pushswitch_c14RestoreInitialEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_0210e480",
+      "address": "0x0210e480",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_0210e480.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_0210e4c8",
+      "address": "0x0210e4c8",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_0210e4c8.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_board_c6UpdateEv",
+      "address": "0x0210e4f4",
+      "size": "0x000007b0",
+      "legacy_source": "src/_ZN20cMgSmartball_board_c6UpdateEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_0210eca4",
+      "address": "0x0210eca4",
+      "size": "0x000002a4",
+      "legacy_source": "src/func_ov006_0210eca4.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_0210ef48",
+      "address": "0x0210ef48",
+      "size": "0x0000061c",
+      "legacy_source": "src/func_ov006_0210ef48.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_board_c12SaveSnapshotEv",
+      "address": "0x0210f564",
+      "size": "0x000003b0",
+      "legacy_source": "src/_ZN20cMgSmartball_board_c12SaveSnapshotEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_board_c14RestoreInitialEv",
+      "address": "0x0210f914",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN20cMgSmartball_board_c14RestoreInitialEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_0210f998",
+      "address": "0x0210f998",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_0210f998.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_0210f9f8",
+      "address": "0x0210f9f8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_0210f9f8.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_0210fa40",
+      "address": "0x0210fa40",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_0210fa40.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_0210fa6c",
+      "address": "0x0210fa6c",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_0210fa6c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_0210fb04",
+      "address": "0x0210fb04",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov006_0210fb04.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_0210fb58",
+      "address": "0x0210fb58",
+      "size": "0x000003c4",
+      "legacy_source": "src/func_ov006_0210fb58.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_slot_c6UpdateEv",
+      "address": "0x0210ff1c",
+      "size": "0x0000018c",
+      "legacy_source": "src/_ZN19cMgSmartball_slot_c6UpdateEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_slot_c12SaveSnapshotEv",
+      "address": "0x021100a8",
+      "size": "0x000000ac",
+      "legacy_source": "src/_ZN19cMgSmartball_slot_c12SaveSnapshotEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_slot_c14RestoreInitialEv",
+      "address": "0x02110154",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_021101bc",
+      "address": "0x021101bc",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_021101bc.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_02110244",
+      "address": "0x02110244",
+      "size": "0x0000027c",
+      "legacy_source": "src/func_ov006_02110244.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_pakkun_c6UpdateEv",
+      "address": "0x021104c0",
+      "size": "0x000001f4",
+      "legacy_source": "src/_ZN21cMgSmartball_pakkun_c6UpdateEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_pakkun_c12SaveSnapshotEv",
+      "address": "0x021106b4",
+      "size": "0x0000019c",
+      "legacy_source": "src/_ZN21cMgSmartball_pakkun_c12SaveSnapshotEv.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_pakkun_c14RestoreInitialEv",
+      "address": "0x02110850",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN21cMgSmartball_pakkun_c14RestoreInitialEv.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_02110874",
+      "address": "0x02110874",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02110874.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov006_021108bc",
+      "address": "0x021108bc",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_021108bc.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_dokan_c6UpdateEv",
+      "address": "0x02110928",
+      "size": "0x000000f8",
+      "legacy_source": "src/_ZN20cMgSmartball_dokan_c6UpdateEv.cpp",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_dokan_c12SaveSnapshotEv",
+      "address": "0x02110a20",
+      "size": "0x00000194",
+      "legacy_source": "src/_ZN20cMgSmartball_dokan_c12SaveSnapshotEv.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_dokan_c14RestoreInitialEv",
+      "address": "0x02110bb4",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_ov006_02110bc0",
+      "address": "0x02110bc0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02110bc0.c",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov006_02110c08",
+      "address": "0x02110c08",
+      "size": "0x00000220",
+      "legacy_source": "src/func_ov006_02110c08.c",
+      "ordinal": 43
+    },
+    {
+      "symbol": "func_ov006_02110e28",
+      "address": "0x02110e28",
+      "size": "0x00000204",
+      "legacy_source": "src/func_ov006_02110e28.c",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN24cMgSmartball_propeller_c6UpdateEv",
+      "address": "0x0211102c",
+      "size": "0x00000118",
+      "legacy_source": "src/_ZN24cMgSmartball_propeller_c6UpdateEv.cpp",
+      "ordinal": 45
+    },
+    {
+      "symbol": "_ZN24cMgSmartball_propeller_c12SaveSnapshotEv",
+      "address": "0x02111144",
+      "size": "0x000000ac",
+      "legacy_source": "src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp",
+      "ordinal": 46
+    },
+    {
+      "symbol": "_ZN24cMgSmartball_propeller_c14RestoreInitialEv",
+      "address": "0x021111f0",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN24cMgSmartball_propeller_c14RestoreInitialEv.cpp",
+      "ordinal": 47
+    },
+    {
+      "symbol": "func_ov006_02111220",
+      "address": "0x02111220",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02111220.c",
+      "ordinal": 48
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_spring_c6UpdateEv",
+      "address": "0x02111268",
+      "size": "0x000000e4",
+      "legacy_source": "src/_ZN21cMgSmartball_spring_c6UpdateEv.cpp",
+      "ordinal": 49
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_spring_c12SaveSnapshotEv",
+      "address": "0x0211134c",
+      "size": "0x00000214",
+      "legacy_source": "src/_ZN21cMgSmartball_spring_c12SaveSnapshotEv.cpp",
+      "ordinal": 50
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_spring_c14RestoreInitialEv",
+      "address": "0x02111560",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN21cMgSmartball_spring_c14RestoreInitialEv.cpp",
+      "ordinal": 51
+    },
+    {
+      "symbol": "func_ov006_0211157c",
+      "address": "0x0211157c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_0211157c.c",
+      "ordinal": 52
+    },
+    {
+      "symbol": "func_ov006_021115c4",
+      "address": "0x021115c4",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov006_021115c4.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "func_ov006_021115cc",
+      "address": "0x021115cc",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_021115cc.c",
+      "ordinal": 54
+    },
+    {
+      "symbol": "_ZN18cMgSmartball_ana_c6UpdateEv",
+      "address": "0x02111654",
+      "size": "0x0000009c",
+      "legacy_source": "src/_ZN18cMgSmartball_ana_c6UpdateEv.cpp",
+      "ordinal": 55
+    },
+    {
+      "symbol": "_ZN18cMgSmartball_ana_c12SaveSnapshotEv",
+      "address": "0x021116f0",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN18cMgSmartball_ana_c12SaveSnapshotEv.cpp",
+      "ordinal": 56
+    },
+    {
+      "symbol": "_ZN18cMgSmartball_ana_c14RestoreInitialEv",
+      "address": "0x02111750",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN18cMgSmartball_ana_c14RestoreInitialEv.cpp",
+      "ordinal": 57
+    },
+    {
+      "symbol": "func_ov006_02111774",
+      "address": "0x02111774",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02111774.c",
+      "ordinal": 58
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_kinoko_c6UpdateEv",
+      "address": "0x021117bc",
+      "size": "0x00000170",
+      "legacy_source": "src/_ZN21cMgSmartball_kinoko_c6UpdateEv.cpp",
+      "ordinal": 59
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv",
+      "address": "0x0211192c",
+      "size": "0x000001f4",
+      "legacy_source": "src/_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv.cpp",
+      "ordinal": 60
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_kinoko_c14RestoreInitialEv",
+      "address": "0x02111b20",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN21cMgSmartball_kinoko_c14RestoreInitialEv.cpp",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_ov006_02111b40",
+      "address": "0x02111b40",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_02111b40.c",
+      "ordinal": 62
+    },
+    {
+      "symbol": "func_ov006_02111b90",
+      "address": "0x02111b90",
+      "size": "0x000001bc",
+      "legacy_source": "src/func_ov006_02111b90.c",
+      "ordinal": 63
+    },
+    {
+      "symbol": "func_ov006_02111d4c",
+      "address": "0x02111d4c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_02111d4c.c",
+      "ordinal": 64
+    },
+    {
+      "symbol": "func_ov006_02111d6c",
+      "address": "0x02111d6c",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov006_02111d6c.c",
+      "ordinal": 65
+    },
+    {
+      "symbol": "func_ov006_02111d74",
+      "address": "0x02111d74",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_02111d74.c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "func_ov006_02111dcc",
+      "address": "0x02111dcc",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02111dcc.c",
+      "ordinal": 67
+    },
+    {
+      "symbol": "func_ov006_02111df4",
+      "address": "0x02111df4",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov006_02111df4.c",
+      "ordinal": 68
+    },
+    {
+      "symbol": "func_ov006_02111e48",
+      "address": "0x02111e48",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov006_02111e48.c",
+      "ordinal": 69
+    },
+    {
+      "symbol": "func_ov006_02111e7c",
+      "address": "0x02111e7c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_02111e7c.c",
+      "ordinal": 70
+    },
+    {
+      "symbol": "func_ov006_02111e90",
+      "address": "0x02111e90",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_02111e90.c",
+      "ordinal": 71
+    },
+    {
+      "symbol": "func_ov006_02111ee8",
+      "address": "0x02111ee8",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_02111ee8.c",
+      "ordinal": 72
+    },
+    {
+      "symbol": "func_ov006_02111f8c",
+      "address": "0x02111f8c",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_02111f8c.cpp",
+      "ordinal": 73
+    },
+    {
+      "symbol": "func_ov006_02112030",
+      "address": "0x02112030",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_02112030.c",
+      "ordinal": 74
+    },
+    {
+      "symbol": "func_ov006_021120d4",
+      "address": "0x021120d4",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_021120d4.c",
+      "ordinal": 75
+    },
+    {
+      "symbol": "func_ov006_02112190",
+      "address": "0x02112190",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov006_02112190.c",
+      "ordinal": 76
+    },
+    {
+      "symbol": "func_ov006_021122e0",
+      "address": "0x021122e0",
+      "size": "0x000001ac",
+      "legacy_source": "src/func_ov006_021122e0.c",
+      "ordinal": 77
+    },
+    {
+      "symbol": "func_ov006_0211248c",
+      "address": "0x0211248c",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_0211248c.c",
+      "ordinal": 78
+    },
+    {
+      "symbol": "func_ov006_02112504",
+      "address": "0x02112504",
+      "size": "0x000001b0",
+      "legacy_source": "src/func_ov006_02112504.c",
+      "ordinal": 79
+    },
+    {
+      "symbol": "func_ov006_021126b4",
+      "address": "0x021126b4",
+      "size": "0x00000248",
+      "legacy_source": "src/func_ov006_021126b4.c",
+      "ordinal": 80
+    },
+    {
+      "symbol": "func_ov006_021128fc",
+      "address": "0x021128fc",
+      "size": "0x000001dc",
+      "legacy_source": "src/func_ov006_021128fc.c",
+      "ordinal": 81
+    },
+    {
+      "symbol": "func_ov006_02112ad8",
+      "address": "0x02112ad8",
+      "size": "0x0000113c",
+      "legacy_source": "src/func_ov006_02112ad8.c",
+      "ordinal": 82
+    },
+    {
+      "symbol": "func_ov006_02113c14",
+      "address": "0x02113c14",
+      "size": "0x00000240",
+      "legacy_source": "src/func_ov006_02113c14.c",
+      "ordinal": 83
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_ball_c6UpdateEv",
+      "address": "0x02113e54",
+      "size": "0x000000c8",
+      "legacy_source": "src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp",
+      "ordinal": 84
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_ball_c12SaveSnapshotEv",
+      "address": "0x02113f1c",
+      "size": "0x0000053c",
+      "legacy_source": "src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp",
+      "ordinal": 85
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_ball_c14RestoreInitialEv",
+      "address": "0x02114458",
+      "size": "0x000000f0",
+      "legacy_source": "src/_ZN19cMgSmartball_ball_c14RestoreInitialEv.cpp",
+      "ordinal": 86
+    },
+    {
+      "symbol": "func_ov006_02114548",
+      "address": "0x02114548",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02114548.c",
+      "ordinal": 87
+    },
+    {
+      "symbol": "func_ov006_02114590",
+      "address": "0x02114590",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov006_02114590.c",
+      "ordinal": 88
+    },
+    {
+      "symbol": "func_ov006_021146ac",
+      "address": "0x021146ac",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_021146ac.c",
+      "ordinal": 89
+    },
+    {
+      "symbol": "func_ov006_021146cc",
+      "address": "0x021146cc",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_021146cc.c",
+      "ordinal": 90
+    },
+    {
+      "symbol": "func_ov006_021146e0",
+      "address": "0x021146e0",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_021146e0.c",
+      "ordinal": 91
+    },
+    {
+      "symbol": "func_ov006_021146f4",
+      "address": "0x021146f4",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_021146f4.c",
+      "ordinal": 92
+    },
+    {
+      "symbol": "func_ov006_0211470c",
+      "address": "0x0211470c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_0211470c.c",
+      "ordinal": 93
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_object_c6UpdateEv",
+      "address": "0x02114720",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN21cMgSmartball_object_c6UpdateEv.cpp",
+      "ordinal": 94
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_object_c12SaveSnapshotEv",
+      "address": "0x02114724",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN21cMgSmartball_object_c12SaveSnapshotEv.cpp",
+      "ordinal": 95
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_object_c14RestoreInitialEv",
+      "address": "0x02114738",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp",
+      "ordinal": 96
+    },
+    {
+      "symbol": "func_ov006_0211474c",
+      "address": "0x0211474c",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_0211474c.c",
+      "ordinal": 97
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c8OnPushedEv",
+      "address": "0x021147ac",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN16dScMgSmartball_c8OnPushedEv.cpp",
+      "ordinal": 98
+    },
+    {
+      "symbol": "func_ov006_021147d0",
+      "address": "0x021147d0",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov006_021147d0.c",
+      "ordinal": 99
+    },
+    {
+      "symbol": "func_ov006_02114800",
+      "address": "0x02114800",
+      "size": "0x00000310",
+      "legacy_source": "src/func_ov006_02114800.c",
+      "ordinal": 100
+    },
+    {
+      "symbol": "func_ov006_02114b10",
+      "address": "0x02114b10",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov006_02114b10.c",
+      "ordinal": 101
+    },
+    {
+      "symbol": "func_ov006_02114c04",
+      "address": "0x02114c04",
+      "size": "0x000001cc",
+      "legacy_source": "src/func_ov006_02114c04.c",
+      "ordinal": 102
+    },
+    {
+      "symbol": "func_ov006_02114dd0",
+      "address": "0x02114dd0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_02114dd0.c",
+      "ordinal": 103
+    },
+    {
+      "symbol": "func_ov006_02114dfc",
+      "address": "0x02114dfc",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov006_02114dfc.c",
+      "ordinal": 104
+    },
+    {
+      "symbol": "func_ov006_02114ec0",
+      "address": "0x02114ec0",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov006_02114ec0.c",
+      "ordinal": 105
+    },
+    {
+      "symbol": "func_ov006_02114f98",
+      "address": "0x02114f98",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02114f98.c",
+      "ordinal": 106
+    },
+    {
+      "symbol": "func_ov006_02114fb4",
+      "address": "0x02114fb4",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02114fb4.c",
+      "ordinal": 107
+    },
+    {
+      "symbol": "func_ov006_02114fd0",
+      "address": "0x02114fd0",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02114fd0.c",
+      "ordinal": 108
+    },
+    {
+      "symbol": "func_ov006_02114fec",
+      "address": "0x02114fec",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02114fec.c",
+      "ordinal": 109
+    },
+    {
+      "symbol": "func_ov006_02115008",
+      "address": "0x02115008",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02115008.c",
+      "ordinal": 110
+    },
+    {
+      "symbol": "func_ov006_02115024",
+      "address": "0x02115024",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02115024.c",
+      "ordinal": 111
+    },
+    {
+      "symbol": "func_ov006_02115040",
+      "address": "0x02115040",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_02115040.c",
+      "ordinal": 112
+    },
+    {
+      "symbol": "func_ov006_02115060",
+      "address": "0x02115060",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02115060.c",
+      "ordinal": 113
+    },
+    {
+      "symbol": "func_ov006_0211507c",
+      "address": "0x0211507c",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov006_0211507c.c",
+      "ordinal": 114
+    },
+    {
+      "symbol": "func_ov006_02115150",
+      "address": "0x02115150",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov006_02115150.c",
+      "ordinal": 115
+    },
+    {
+      "symbol": "func_ov006_02115248",
+      "address": "0x02115248",
+      "size": "0x00000238",
+      "legacy_source": "src/func_ov006_02115248.cpp",
+      "ordinal": 116
+    },
+    {
+      "symbol": "func_ov006_02115480",
+      "address": "0x02115480",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov006_02115480.c",
+      "ordinal": 117
+    },
+    {
+      "symbol": "func_ov006_02115598",
+      "address": "0x02115598",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov006_02115598.cpp",
+      "ordinal": 118
+    },
+    {
+      "symbol": "func_ov006_02115680",
+      "address": "0x02115680",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_02115680.c",
+      "ordinal": 119
+    },
+    {
+      "symbol": "func_ov006_021156f8",
+      "address": "0x021156f8",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov006_021156f8.c",
+      "ordinal": 120
+    },
+    {
+      "symbol": "func_ov006_02115830",
+      "address": "0x02115830",
+      "size": "0x0000022c",
+      "legacy_source": "src/func_ov006_02115830.c",
+      "ordinal": 121
+    },
+    {
+      "symbol": "func_ov006_02115a5c",
+      "address": "0x02115a5c",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov006_02115a5c.c",
+      "ordinal": 122
+    },
+    {
+      "symbol": "func_ov006_02115b0c",
+      "address": "0x02115b0c",
+      "size": "0x000018bc",
+      "legacy_source": "src/func_ov006_02115b0c.c",
+      "ordinal": 123
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c6RenderEv",
+      "address": "0x021173c8",
+      "size": "0x000010c0",
+      "legacy_source": "src/_ZN16dScMgSmartball_c6RenderEv.cpp",
+      "ordinal": 124
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c8BehaviorEv",
+      "address": "0x02118488",
+      "size": "0x00000604",
+      "legacy_source": "src/_ZN16dScMgSmartball_c8BehaviorEv.cpp",
+      "ordinal": 125
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c13OnYoshiTryEatEi",
+      "address": "0x02118a8c",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 126
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c9Virtual7CEv",
+      "address": "0x02118ae4",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp",
+      "ordinal": 127
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c13InitResourcesEv",
+      "address": "0x02118b70",
+      "size": "0x000008dc",
+      "legacy_source": "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp",
+      "ordinal": 128
+    },
+    {
+      "symbol": "_ZN16dScMgSmartball_c21AfterCleanupResourcesEj",
+      "address": "0x0211944c",
+      "size": "0x000003d8",
+      "legacy_source": "src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp",
+      "ordinal": 129
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov006_021101bc.cpp (func_ov006_021101bc) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU)",
+    "tubuild create warning: RAW: src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp (_ZN16dScMgSmartball_c13OnYoshiTryEatEi) did not split (the definition is inside the extern \"C\" block opened on line 10, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU)",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0210d93c' differs between the legacy file that used to hold _ZN19cMgSmartball_wing_c12SaveSnapshotEv and the one that held _ZN19cMgSmartball_wing_c14RestoreInitialEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold _ZN25cMgSmartball_pushswitch_c6UpdateEv and the one that held _ZN20cMgSmartball_board_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_0210d8bc and the one that held func_ov006_0210ef48; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN20cMgSmartball_board_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_0210d8bc and the one that held func_ov006_0210fb04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_0210d8bc and the one that held func_ov006_0210fb58; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02115598' differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held func_ov006_0210fb58; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold _ZN19cMgSmartball_wing_c6UpdateEv and the one that held _ZN19cMgSmartball_slot_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0210fb04' differs between the legacy file that used to hold func_ov006_0210e1fc and the one that held _ZN19cMgSmartball_slot_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114590' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02110244; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c6UpdateEv and the one that held _ZN21cMgSmartball_pakkun_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold _ZN25cMgSmartball_pushswitch_c6UpdateEv and the one that held _ZN21cMgSmartball_pakkun_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN20cMgSmartball_dokan_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02115598' differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held _ZN20cMgSmartball_dokan_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d5bc' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02110c08; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114590' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02110c08; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold _ZN25cMgSmartball_pushswitch_c6UpdateEv and the one that held _ZN24cMgSmartball_propeller_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02110e28' differs between the legacy file that used to hold _ZN24cMgSmartball_propeller_c12SaveSnapshotEv and the one that held _ZN24cMgSmartball_propeller_c14RestoreInitialEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Sound_PlayIfNotActive' differs between the legacy file that used to hold func_ov006_0210fb58 and the one that held _ZN21cMgSmartball_spring_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114800' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_021115cc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02115598' differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held func_ov006_021115cc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_021115cc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold _ZN19cMgSmartball_wing_c6UpdateEv and the one that held _ZN18cMgSmartball_ana_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold _ZN25cMgSmartball_pushswitch_c6UpdateEv and the one that held _ZN21cMgSmartball_kinoko_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c6UpdateEv and the one that held _ZN21cMgSmartball_kinoko_c6UpdateEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02115598' differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held func_ov006_02111b90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02111b90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114800' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_02111e48; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02112190; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114590' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_021122e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114590' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_021126b4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c6UpdateEv and the one that held func_ov006_021128fc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0211470c' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d5bc' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d388' differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_020126e8' differs between the legacy file that used to hold func_ov006_02111b90 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_020126ac' differs between the legacy file that used to hold func_ov006_02111b90 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02111dcc' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_021115c4' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held func_ov006_02113c14; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d5bc' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02113c14; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold _ZN25cMgSmartball_pushswitch_c6UpdateEv and the one that held func_ov006_02113c14; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d434' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d630' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d480' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02114590' differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02111dcc' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02111e48' differs between the legacy file that used to hold func_ov006_02111e7c and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02112ad8' differs between the legacy file that used to hold func_ov006_021128fc and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held func_ov006_02114590; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held func_ov006_021146f4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d388' differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02114800; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold _ZN19cMgSmartball_wing_c6UpdateEv and the one that held func_ov006_02114b10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02114c04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d434' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held func_ov006_02114c04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d630' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held func_ov006_02114c04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_0210fa6c and the one that held func_ov006_02114c04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d388' differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02114c04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held func_ov006_02114ec0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_0210e120 and the one that held func_ov006_02115150; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d434' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held func_ov006_02115150; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d630' differs between the legacy file that used to hold func_ov006_02112ad8 and the one that held func_ov006_02115150; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02115598' differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held func_ov006_02115480; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv and the one that held func_ov006_02115830; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0203d388' differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02115830; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020adb1c' differs between the legacy file that used to hold func_ov006_02115598 and the one that held func_ov006_02115b0c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetOwnerLanguage' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c6UpdateEv and the one that held func_ov006_02115b0c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN3G2S12GetBG3ScrPtrEv' differs between the legacy file that used to hold func_ov006_0210eca4 and the one that held func_ov006_02115b0c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold _ZN20cMgSmartball_board_c6UpdateEv and the one that held func_ov006_02115b0c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'SetSubBg0Offset' differs between the legacy file that used to hold func_ov006_02115b0c and the one that held _ZN16dScMgSmartball_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold _ZN19cMgSmartball_wing_c6UpdateEv and the one that held _ZN16dScMgSmartball_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020adbc0' differs between the legacy file that used to hold func_ov006_02115598 and the one that held _ZN16dScMgSmartball_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_020a0e40' differs between the legacy file that used to hold _ZN21cMgSmartball_spring_c12SaveSnapshotEv and the one that held _ZN16dScMgSmartball_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN16dScMgSmartball_c6RenderEv and the one that held _ZN16dScMgSmartball_c9Virtual7CEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold _ZN16dScMgSmartball_c8BehaviorEv and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020adc74' differs between the legacy file that used to hold func_ov006_02115b0c and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Ov004_Deallocate' differs between the legacy file that used to hold func_ov006_02115b0c and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'DecompressLZ16' differs between the legacy file that used to hold func_ov006_02115b0c and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_0210eca4 and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Znwj' differs between the legacy file that used to hold func_ov006_02115b0c and the one that held _ZN16dScMgSmartball_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'V2') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held _ZN20cMgSmartball_board_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'V2') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held _ZN20cMgSmartball_dokan_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('namespace', 'Sound') differs between the legacy file that used to hold _ZN20cMgSmartball_board_c12SaveSnapshotEv and the one that held _ZN20cMgSmartball_dokan_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02110e28; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'V2') differs between the legacy file that used to hold func_ov006_0210e0d0 and the one that held func_ov006_02111e90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'V2') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'State') differs between the legacy file that used to hold func_ov006_0210dbb0 and the one that held func_ov006_02112ad8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'V2') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held _ZN19cMgSmartball_ball_c12SaveSnapshotEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'S') differs between the legacy file that used to hold func_ov006_02110244 and the one that held func_ov006_021146ac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'S') differs between the legacy file that used to hold func_ov006_02110244 and the one that held func_ov006_02114dd0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'S') differs between the legacy file that used to hold func_ov006_0210ef48 and the one that held func_ov006_02115598; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'V2') differs between the legacy file that used to hold func_ov006_0210d93c and the one that held func_ov006_02115b0c; kept the first, the other is commented out for review",
+    "Entry id is SHORT BY NECESSITY: tu_map's key for this unit names all 13 classes, giving a 280-byte filename that NTFS refuses (255-byte cap on a name component; measured, not MAX_PATH). tu_manifest.slug documents the filename as non-identifying, and 27 committed entries already use author-chosen ids. The full class list is in `boundary_evidence`/the source banner, and the span below is the identity that matters."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSmartball_c/dScMgSmartball_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 107,
+    "functions_declared": 130,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "GetEntity",
+        "GetHazard",
+        "_ZN16dScMgSmartball_cD2Ev",
+        "_ZN5TVec2D1Ev"
+      ],
+      "data": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "FAIL",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 51 unlicensed section/symbol(s), 4 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
+    }
+  }
+}
