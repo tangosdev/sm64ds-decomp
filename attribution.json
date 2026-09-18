@@ -3600,6 +3600,8 @@
     "src/game/actors/daPiano_c/d_a_piano.cpp#_ZN9daPiano_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/daPiano_c/d_a_piano.cpp#_ZN9daPiano_c6RenderEv": "tangosdev",
     "src/game/actors/daPiano_c/d_a_piano.cpp#_ZN9daPiano_c8BehaviorEv": "tangosdev",
+    "src/game/actors/daPiano_c/d_a_piano.cpp#_ZN9daPiano_cD0Ev": "tangosdev",
+    "src/game/actors/daPiano_c/d_a_piano.cpp#_ZN9daPiano_cD1Ev": "tangosdev",
     "src/game/actors/daPiano_c/d_a_piano.cpp#daPiano_c_classInit": "tangosdev",
     "src/game/actors/daPiano_c/d_a_piano.cpp#func_ov063_0211d5f4": "tangosdev",
     "src/game/actors/daPiano_c/d_a_piano.cpp#func_ov063_0211d828": "tangosdev",
