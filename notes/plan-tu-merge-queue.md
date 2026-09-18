@@ -211,7 +211,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov010](../config/arm9/overlays/ov010/symbols.txt)| 0x2111e10|  n=8|   `PeachPainting`|    CONF1 pcov=3|
 |[ov012](../config/arm9/overlays/ov012/symbols.txt)| 0x2111450|  n=7|   `daObjC0Water_c`|    CONF2|
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)| 0x2112944|  n=7|   `daObjBk_Rotebar_c`|   CONF2|
-|[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x211260c|  n=8|   `ShipUp`|           CONF1|
+|[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x211260c|  n=8|   `daObjKi_Fune_c`|           CONF1|
 
 
 **B7 — R1 · 8 TUs / 63 files / net −55 / 1,440 lines**
@@ -537,7 +537,7 @@ python tu_preflight.py --batch B3
 |---|---|---|---|
 | **P1** | **any-pragma scan** — `split_legacy_source(text)["pragmas"]`, not just `opt_*` | `long_calls` going file-global (§0.4); `create` dropping a pragma a member needed. Precedent: [ov062](../config/arm9/overlays/ov062/symbols.txt)/001 went 14 match/24 differ from one stray `optimize_for_size on`; removing it gave 36/2 | **FAIL** if non-empty and the TU is not in B12/B13 with an explicit two-run plan |
 | **P2** | **local-struct + extern collision scan** — replay `tubuild._merge_field`, print both texts side by side; flag same-key/same-text `struct` decls in ≥3 members as advisory | silent layout divergence (§2.5) | **WARN**; count must equal the batch's `CONFn`, all resolved before `verify` |
-| **P3** | **`decl_common.h` usage** — count members including it, print what each actually consumes | it sometimes declares a TU's own functions as **data** → silent mismatch | **WARN**. Policy: drop it and restate the 3–17 lines. Median distinct includes is 6–7; usage 0–6 members/TU (highest [ov016](../config/arm9/overlays/ov016/symbols.txt)/`ShipUp` 6/8) |
+| **P3** | **`decl_common.h` usage** — count members including it, print what each actually consumes | it sometimes declares a TU's own functions as **data** → silent mismatch | **WARN**. Policy: drop it and restate the 3–17 lines. Median distinct includes is 6–7; usage 0–6 members/TU (highest [ov016](../config/arm9/overlays/ov016/symbols.txt)/`daObjKi_Fune_c` 6/8) |
 | **P4** | **sinit accounting** — module `sinits` / `ctor_entries` / `sinit_vs_tu` / `corroborated`, plus this TU's share | two merged TUs that each carried a sinit must produce **one** | **FAIL** if `sinit_vs_tu != "ok"`. **WARN** on `corroborated:false` (67 of 100 Tier-1 — *unavailable*, not *failed*). Corroboration is module-wide, **not narrowed to this TU** |
 | **P5** | **manifest dedupe** — join on `entries[*].functions[*].legacy_source`, **not** the census flag | redoing daObjKm2_Ami_Bou_c/daObjKm2_Fall_Block_c, or fighting an entry that already claims a member (§0.2) | **FAIL** on partial overlap; route whole-TU overlap to B0 as a re-verify |
 | **P6** | **completeness re-derived** — `SP.path_for(sym)` not `None`, `is_complete(module, path)`, assert `len(unit_functions) == len(census files)` | the census drops sourceless functions (§0.5). Without `complete`, dsd supplies the range from ROM bytes and **your source is never compiled** | **FAIL** on any missing or incomplete. All 100 Tier-1 pass today; 3 Tier-2 fail |
