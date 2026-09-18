@@ -31129,11 +31129,11 @@ matched: yes</title></rect><rect x="1174.00" y="142.06" width="9.46" height="1.7
 module: ov018
 addr: 0x02112e00
 size: 108 bytes
-matched: yes</title></rect><rect x="1193.46" y="134.22" width="2.82" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguinD1Ev
+matched: yes</title></rect><rect x="1193.46" y="134.22" width="2.82" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_cD1Ev
 module: ov019
 addr: 0x021111a0
 size: 80 bytes
-matched: yes</title></rect><rect x="1193.46" y="138.47" width="2.82" height="5.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguinD0Ev
+matched: yes</title></rect><rect x="1193.46" y="138.47" width="2.82" height="5.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_cD0Ev
 module: ov019
 addr: 0x021111f0
 size: 100 bytes
@@ -31225,19 +31225,19 @@ matched: yes</title></rect><rect x="1262.61" y="134.22" width="2.01" height="2.0
 module: ov019
 addr: 0x021122dc
 size: 28 bytes
-matched: yes</title></rect><rect x="1262.61" y="136.31" width="2.01" height="7.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguin16CleanupResourcesEv
+matched: yes</title></rect><rect x="1262.61" y="136.31" width="2.01" height="7.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_c16CleanupResourcesEv
 module: ov019
 addr: 0x021122f8
 size: 100 bytes
-matched: yes</title></rect><rect x="1264.62" y="134.54" width="1.88" height="4.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguin6RenderEv
+matched: yes</title></rect><rect x="1264.62" y="134.54" width="1.88" height="4.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_c6RenderEv
 module: ov019
 addr: 0x02112360
 size: 52 bytes
-matched: yes</title></rect><rect x="1264.62" y="138.68" width="1.88" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguin8BehaviorEv
+matched: yes</title></rect><rect x="1264.62" y="138.68" width="1.88" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_c8BehaviorEv
 module: ov019
 addr: 0x02112394
 size: 64 bytes
-matched: yes</title></rect><rect x="1266.50" y="134.22" width="7.65" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RacingPenguin13InitResourcesEv
+matched: yes</title></rect><rect x="1266.50" y="134.22" width="7.65" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daPgRcer_c13InitResourcesEv
 module: ov019
 addr: 0x021123d4
 size: 488 bytes

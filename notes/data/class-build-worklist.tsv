@@ -167,7 +167,7 @@ daObj_volcanoCannon_c	DONE	include\daObj_volcanoCannon_c.h	dActor_c	0	ov022	6
 daPeach_c	DONE	include\PrincessPeach.h  [alias: header uses pre-rename name]	dActor_c	0	ov085	23
 daPgBby_c	DONE	include\BabyPenguin.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	9
 daPgMthr_c	DONE	include\daPgMthr_c.h	dActor_c	0	ov018	7
-daPgRcer_c	DONE	include\RacingPenguin.h  [alias: header uses pre-rename name]	dActor_c	0	ov019	7
+daPgRcer_c	DONE	include\daPgRcer_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov019	7
 daPicGate_c	PARTIAL	include\daPicGate_c.h	dActor_c	0	ov080	7
 daPly_c	DONE	include\Player.h  [alias: header uses pre-rename name]	dActor_c	0	ov002;ov006	248
 daRFlag_c	DONE	include\KoopaFlag.h  [alias: header uses pre-rename name]	dActor_c	0	ov062	6

@@ -700,8 +700,8 @@ src/_ZN13PeachPaintingD0Ev.c	DTOR-ONLY	ov010	daObjC1Peach_c	PeachPainting/daObjC
 src/_ZN18daObjBkBillboard_cD0Ev.c	DTOR-ONLY	ov015	daObjBkBillboard_c	daObjBkBillboard_c/daObjBkBillboard_c	_ZN18daObjBkBillboard_cD0Ev	1		True	_ZTV18daObjBkBillboard_c	-
 src/_ZN13PrincessPeachD0Ev.c	DTOR-ONLY	ov085	daPeach_c	PrincessPeach/daPeach_c	_ZN13PrincessPeachD0Ev	1		True		-
 src/_ZN13QuestionBlock13InitResourcesEv.c	P1-vtable+mangled	ov102	daObjHatenaBlock_c	QuestionBlock/daObjHatenaBlock_c	vtable daObjHatenaBlock_c slot 0 @0x214a4a4 | _ZN13QuestionBlock13InitResourcesEv	1		True		-
-src/_ZN13RacingPenguin16OnPendingDestroyEv.c	P1-vtable+mangled	ov019	daPgRcer_c	RacingPenguin/daPgRcer_c	vtable daPgRcer_c slot 12 @0x211235c | _ZN13RacingPenguin16OnPendingDestroyEv	1		True		-
-src/_ZN13RacingPenguinD0Ev.c	DTOR-ONLY	ov019	daPgRcer_c	RacingPenguin/daPgRcer_c	_ZN13RacingPenguinD0Ev	1		True		-
+src/_ZN10daPgRcer_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov019	daPgRcer_c	daPgRcer_c/daPgRcer_c	vtable daPgRcer_c slot 12 @0x211235c | _ZN10daPgRcer_c16OnPendingDestroyEv	1		True		-
+src/_ZN10daPgRcer_cD0Ev.c	DTOR-ONLY	ov019	daPgRcer_c	daPgRcer_c/daPgRcer_c	_ZN10daPgRcer_cD0Ev	1		True		-
 src/_ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c.c	P3-mangled-method-only	arm9		RaycastGround	_ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c	1		True		-
 src/_ZN13RaycastGroundC1Ev.c	P3-mangled-method-only	arm9		RaycastGround	_ZN13RaycastGroundC1Ev	1		True		-
 src/_ZN13RaycastGroundD1Ev.c	DTOR-ONLY	arm9	dBgCh_Gnd	RaycastGround/dBgCh_Gnd	_ZN13RaycastGroundD1Ev	1		True		-

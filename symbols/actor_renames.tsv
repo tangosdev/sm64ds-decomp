@@ -878,24 +878,24 @@ ov018	0x02113a50	daSCre_c_SpawnInfo	g_profile_STAR_CREATE	reconstructed profile 
 ov018	0x02113b10	data_ov018_02113b10	daObjIceBoard_c_classInitInfo	spawninfo
 ov018	0x02113b10	daObjIceBoard_c_classInitInfo	g_profile_ICE_BOARD	reconstructed profile global; literal ROM ID ICE_BOARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov018	0x02113b34	data_ov018_02113b34	_ZTV15daObjIceBoard_c	vtable alloc=0x320
-ov019	0x021111a0	func_ov019_021111a0	_ZN13RacingPenguinD1Ev	vtable slot 16
-ov019	0x021111f0	func_ov019_021111f0	_ZN13RacingPenguinD0Ev	vtable slot 17
-ov019	0x021122f8	func_ov019_021122f8	_ZN13RacingPenguin16CleanupResourcesEv	vtable slot 3
-ov019	0x0211235c	func_ov019_0211235c	_ZN13RacingPenguin16OnPendingDestroyEv	vtable slot 12
-ov019	0x02112360	func_ov019_02112360	_ZN13RacingPenguin6RenderEv	vtable slot 9
-ov019	0x02112394	func_ov019_02112394	_ZN13RacingPenguin8BehaviorEv	vtable slot 6
-ov019	0x021123d4	func_ov019_021123d4	_ZN13RacingPenguin13InitResourcesEv	vtable slot 0
-ov019	0x021125bc	func_ov019_021125bc	RacingPenguin_Spawn	spawnfunc
-ov019	0x021125bc	RacingPenguin_Spawn	daPgRcer_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov019	0x021111a0	func_ov019_021111a0	_ZN10daPgRcer_cD1Ev	vtable slot 16
+ov019	0x021111f0	func_ov019_021111f0	_ZN10daPgRcer_cD0Ev	vtable slot 17
+ov019	0x021122f8	func_ov019_021122f8	_ZN10daPgRcer_c16CleanupResourcesEv	vtable slot 3
+ov019	0x0211235c	func_ov019_0211235c	_ZN10daPgRcer_c16OnPendingDestroyEv	vtable slot 12
+ov019	0x02112360	func_ov019_02112360	_ZN10daPgRcer_c6RenderEv	vtable slot 9
+ov019	0x02112394	func_ov019_02112394	_ZN10daPgRcer_c8BehaviorEv	vtable slot 6
+ov019	0x021123d4	func_ov019_021123d4	_ZN10daPgRcer_c13InitResourcesEv	vtable slot 0
+ov019	0x021125bc	func_ov019_021125bc	daPgRcer_c_Spawn	spawnfunc
+ov019	0x021125bc	daPgRcer_c_Spawn	daPgRcer_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov019	0x0211261c	func_ov019_0211261c	_ZN10daSldMng_cD1Ev	vtable slot 16
 ov019	0x02112640	func_ov019_02112640	_ZN10daSldMng_cD0Ev	vtable slot 17
 ov019	0x02112678	func_ov019_02112678	_ZN10daSldMng_c8BehaviorEv	vtable slot 6
 ov019	0x0211271c	func_ov019_0211271c	_ZN10daSldMng_c13InitResourcesEv	vtable slot 0
 ov019	0x0211274c	func_ov019_0211274c	daSldMng_c_Spawn	spawnfunc
 ov019	0x0211274c	daSldMng_c_Spawn	daSldMng_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov019	0x021132ec	data_ov019_021132ec	RacingPenguin_SpawnInfo	spawninfo
-ov019	0x021132ec	RacingPenguin_SpawnInfo	g_profile_PENGUIN_RACER	reconstructed profile global; literal ROM ID PENGUIN_RACER+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov019	0x02113310	data_ov019_02113310	_ZTV13RacingPenguin	vtable alloc=0x398
+ov019	0x021132ec	data_ov019_021132ec	daPgRcer_c_SpawnInfo	spawninfo
+ov019	0x021132ec	daPgRcer_c_SpawnInfo	g_profile_PENGUIN_RACER	reconstructed profile global; literal ROM ID PENGUIN_RACER+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov019	0x02113310	data_ov019_02113310	_ZTV10daPgRcer_c	vtable alloc=0x398
 ov019	0x021133a8	data_ov019_021133a8	daSldMng_c_SpawnInfo	spawninfo
 ov019	0x021133a8	daSldMng_c_SpawnInfo	g_profile_SLIDER_MANAGER	reconstructed profile global; literal ROM ID SLIDER_MANAGER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov019	0x021133cc	data_ov019_021133cc	_ZTV10daSldMng_c	vtable alloc=0xd8

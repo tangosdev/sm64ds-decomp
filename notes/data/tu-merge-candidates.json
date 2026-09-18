@@ -24496,13 +24496,13 @@
    "start": "0x21111a0",
    "end": "0x211261c",
    "classes": [
-    "RacingPenguin"
+    "daPgRcer_c"
    ],
    "n_functions_map": 30,
    "n_files": 30,
    "files": [
-    "src/_ZN13RacingPenguinD1Ev.cpp",
-    "src/_ZN13RacingPenguinD0Ev.c",
+    "src/_ZN10daPgRcer_cD1Ev.cpp",
+    "src/_ZN10daPgRcer_cD0Ev.c",
     "src/func_ov019_02111254.c",
     "src/func_ov019_0211127c.cpp",
     "src/func_ov019_021112b8.c",
@@ -24525,11 +24525,11 @@
     "src/func_ov019_02112268.cpp",
     "src/func_ov019_021122a4.cpp",
     "src/func_ov019_021122dc.c",
-    "src/_ZN13RacingPenguin16CleanupResourcesEv.cpp",
-    "src/_ZN13RacingPenguin16OnPendingDestroyEv.c",
-    "src/_ZN13RacingPenguin6RenderEv.cpp",
-    "src/_ZN13RacingPenguin8BehaviorEv.cpp",
-    "src/_ZN13RacingPenguin13InitResourcesEv.cpp",
+    "src/_ZN10daPgRcer_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daPgRcer_c16OnPendingDestroyEv.c",
+    "src/_ZN10daPgRcer_c6RenderEv.cpp",
+    "src/_ZN10daPgRcer_c8BehaviorEv.cpp",
+    "src/_ZN10daPgRcer_c13InitResourcesEv.cpp",
     "src/d_a_pg_rcer.c"
    ],
    "ext_mix": {
