@@ -342,7 +342,33 @@ def resolve_nested_slice(sym, code, relocs, addr, size, name_index):
     return code[off:off + size], {r - off for r in relocs if off <= r < off + size}, off
 
 
-def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_index=None):
+def defined_function_size(obj, name):
+    """Size of a real, complete named function, or None when emission is unproven.
+
+    extract_func also accepts data symbols and truncated section slices. Neither
+    is evidence that the compiler emitted the requested function as a draft.
+    """
+    try:
+        elf = ELFFile(io.BytesIO(obj))
+        st = elf.get_section_by_name(".symtab")
+        for sym in st.iter_symbols():
+            if sym.name != name or sym["st_info"]["type"] != "STT_FUNC":
+                continue
+            index, start, size = sym["st_shndx"], sym["st_value"], sym["st_size"]
+            if not isinstance(index, int) or not 0 < index < elf.num_sections():
+                continue
+            sec = elf.get_section(index)
+            if (size > 0 and sec["sh_type"] == "SHT_PROGBITS"
+                    and sec["sh_flags"] & 4  # SHF_EXECINSTR
+                    and 0 <= start < start + size <= len(sec.data())):
+                return size
+    except Exception:
+        pass  # Invalid/missing output is never positive draft evidence.
+    return None
+
+
+def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_index=None,
+                   diagnostics=None):
     """Reproduce the match the way reverify does, but return the object that did it.
 
     Mirrors reverify_corpus.compiles_to so the audit measures exactly what reverify
@@ -350,7 +376,9 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_
     When ``candidate`` is supplied, verify that source file directly instead of
     looking it up under ``src/``. This is the safe bridge for workbench artifacts.
 
-    Returns a 4-tuple ``(obj, sym, err, offset)``. ``offset`` is 0 for every ordinary
+    Returns a 4-tuple ``(obj, sym, err, offset)``. Optional ``diagnostics`` collects
+    expected/emitted sizes on failure without changing that caller contract.
+    ``offset`` is 0 for every ordinary
     match (`sym`'s own compiled bytes are what `name` names) and nonzero only for a
     NESTED entry point: a hand-asm block that packs several ROM functions into ONE
     compiled symbol, e.g. func_01ff97d8.c, whose object defines only "func_01ff97d8"
@@ -364,13 +392,14 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_
     containers (which carry their address in the name itself) get nested-slice support."""
     import reverify_corpus as RV
     target = RV.rom_bytes(mod, addr, size)
-    if target is None:
+    if target is None or len(target) != size:
         return None, None, "no-module-bin", 0
-    # Distinguish the three ways this can fail so callers do not report a missing
-    # or wrong-length source as "no-repro" (which reads as a false-match red flag).
-    # saw_source: src_texts yielded at least one candidate to try.
-    # saw_len:    a candidate compiled to a function of the expected length.
-    saw_source = saw_len = False
+    # Keep failure evidence separate from the any-symbol match search: a sibling
+    # near miss cannot prove that the requested function compiled at all.
+    saw_source = saw_output = False
+    emitted_sizes = set()
+    if diagnostics is not None:
+        diagnostics.update(expected_size=size, emitted_sizes=[])
     candidate_path = pathlib.Path(candidate) if candidate is not None else None
     if candidate_path is not None:
         try:
@@ -405,7 +434,14 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_
                     obj = M.compile_c(cfile, v, flags, include_dirs)
                     if obj is None:
                         continue
-                    obj = _as_the_build_links_it(obj, name)
+                    saw_output = True
+                    try:
+                        obj = _as_the_build_links_it(obj, name)
+                    except Exception:
+                        continue
+                    emitted_size = defined_function_size(obj, name)
+                    if emitted_size is not None:
+                        emitted_sizes.add(emitted_size)
                     import probe_versions as PV
                     try:
                         candidate_syms = list(PV.funcs_in(obj).keys())
@@ -421,7 +457,10 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_
                     # D1's ROM bytes and called a correct file WRONG.
                     candidate_syms = [name] + [s for s in candidate_syms if s != name]
                     for sym in candidate_syms:
-                        code, relocs = M.extract_func(obj, sym)
+                        try:
+                            code, relocs = M.extract_func(obj, sym)
+                        except Exception:
+                            continue
                         if code is None:
                             continue
                         tgt, off = target, 0
@@ -447,18 +486,25 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_
                                 if sliced is None:
                                     continue
                                 code, relocs, off = sliced
-                        saw_len = True
                         ok, _ = M.compare(tgt, code, relocs, verbose=False)
                         if ok:
                             return obj, sym, None, off
             finally:
                 if tmp is not None:
                     pathlib.Path(tmp).unlink(missing_ok=True)
+    if diagnostics is not None:
+        diagnostics["emitted_sizes"] = sorted(emitted_sizes)
     if not saw_source:
-        return None, None, "no-source", 0      # no src/<name>.c|.cpp on disk to try
-    if not saw_len:
-        return None, None, "len-mismatch", 0   # compiled, but never the target's length
-    return None, None, "no-repro", 0           # right length, but bytes never matched
+        return None, None, "no-source", 0
+    if not saw_output:
+        return None, None, "compile-failed", 0
+    if not emitted_sizes:
+        return None, None, "missing-symbol", 0
+    if size <= 0:
+        return None, None, "len-mismatch", 0  # unresolved zero-size alias
+    if size not in emitted_sizes:
+        return None, None, "requested-size-mismatch", 0
+    return None, None, "no-repro", 0
 
 
 def classify(cand_name, cand_mod, cand_addr, cfg, sym_index):

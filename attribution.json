@@ -392,6 +392,10 @@
     "src/_ZN16daObjKaitendai_cD0Ev.cpp": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.c": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.cpp": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#func_ov002_020b66a8": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c6RenderEv": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c8BehaviorEv": "andrewboudreau",
+    "src/actors/daObjKaitendai_c.cpp#func_ov002_020b676c": "tangosdev",
     "src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp": "tangosdev",
     "src/_ZN16daObjPushblock_c6RenderEv.cpp": "tangosdev",
     "src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.cpp": "tangosdev",
@@ -3644,6 +3648,14 @@
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev",
+    "src/game/actors/d_a_obj_maruta.cpp#_ZN13daObjMaruta_c15OnHitByMegaCharER6Player": "andrewboudreau",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_02127094": "tangosdev",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_021270dc": "tangosdev",
+    "src/game/actors/d_a_obj_maruta.cpp#_ZN13daObjMaruta_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_0212714c": "lunavyqo",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_021274ac": "tangosdev",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_0212758c": "andrewboudreau",
+    "src/game/actors/d_a_obj_maruta.cpp#func_ov080_02127658": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD1Ev": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD0Ev": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#func_ov030_0211124c": "tangosdev",
@@ -3660,6 +3672,7 @@
     "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c13OnYoshiTryEatEi": "ruspecial",
     "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c6RenderEv": "ruspecial",
     "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c8BehaviorEv": "ruspecial",
-    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c13InitResourcesEv": "andrewboudreau"
+    "src/actors/dScMgFlower_c.cpp#_ZN13dScMgFlower_c13InitResourcesEv": "andrewboudreau",
+    "src/minigames/d_s_mg_slot1.cpp#dScMgSlot1_c_classInit": "ruspecial"
   }
 }
