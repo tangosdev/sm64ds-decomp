@@ -1,5 +1,5 @@
-#ifndef LAVAPLANK_H
-#define LAVAPLANK_H
+#ifndef DAOBJFL_UKIKI_C_H
+#define DAOBJFL_UKIKI_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -18,13 +18,13 @@
 
 #include "dBgActor_c.h"
 
-struct LavaPlank : dBgActor_c {
+struct daObjFl_UkiKi_c : dBgActor_c {
     u8  pad_31e[0x2];
     s32 mOriginalPosY;                      /* 0x320 */
     s16 mPhaseAngle;                  /* 0x324 -- seeded from mAngleX, += 0x400 per Behavior; (>>4) indexes the sine table */
 
     /* --- vtable --- */
-    virtual ~LavaPlank();
+    virtual ~daObjFl_UkiKi_c();
 
     int Behavior();
     int CleanupResources();
@@ -34,7 +34,7 @@ struct LavaPlank : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char LavaPlank_size_must_be_0x328[sizeof(LavaPlank) == 0x328 ? 1 : -1];
+typedef char daObjFl_UkiKi_c_size_must_be_0x328[sizeof(daObjFl_UkiKi_c) == 0x328 ? 1 : -1];
 #endif
 
 #else
@@ -42,7 +42,7 @@ typedef char LavaPlank_size_must_be_0x328[sizeof(LavaPlank) == 0x328 ? 1 : -1];
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct LavaPlank {
+struct daObjFl_UkiKi_c {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x28];
@@ -52,7 +52,7 @@ struct LavaPlank {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~LavaPlank calls _ZN10dBgW_KcMbgD1Ev at
+    /* dBgW_KcMbg member. The cartridge's own ~daObjFl_UkiKi_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
@@ -63,4 +63,4 @@ struct LavaPlank {
 
 #endif /* __cplusplus */
 
-#endif /* LAVAPLANK_H */
+#endif /* DAOBJFL_UKIKI_C_H */

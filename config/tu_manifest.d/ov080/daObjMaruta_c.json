@@ -1,0 +1,345 @@
+{
+  "id": "ov080/daObjMaruta_c",
+  "module": "ov080",
+  "source": "src/game/actors/d_a_obj_maruta.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_maruta.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02127058..0x0212766c, 8 function(s), from build/tu_map.json (tools/tu_map.py) after the join described below. The run ends at the module .text edge -- data_ov080_0212766c is the first .data symbol in config/arm9/overlays/ov080/symbols.txt and nothing in ov080 has .text above it.",
+    "class label(s): daObjMaruta_c",
+    "SPAN JOINED, +4 functions over the queue row 6. build/tu_map.json cut this class at 0x0212714c, putting func_ov080_0212714c, _021274ac, _0212758c and _02127658 in an unlabelled 4-function unit of their own. They are this class members: RollingLogLll (ov022) and RollingLogTtm (ov030) are its only two descendants and each one three virtual overrides are thin forwarders into ov080 -- InitResources calls func_ov080_021274ac, Behavior calls func_ov080_0212714c, CleanupResources calls func_ov080_021270dc (src/_ZN13RollingLogLll13InitResourcesEv.cpp, _8BehaviorEv.cpp, _16CleanupResourcesEv.cpp and the RollingLogTtm pair). func_ov080_021270dc sits INSIDE the queue own span, so a span holding it while dropping the other two forwarding targets is not a coherent unit. Internally: func_ov080_021274ac registers the address of func_ov080_02127658 on the dBgW at 0x124, func_ov080_02127658 tail-calls func_ov080_0212758c, and both func_ov080_0212714c and func_ov080_021274ac call func_ov080_02127094.",
+    "left edge: 0x02127058 is preceded by the destructor pair (below), and below that by daPicGate_c_classInit at 0x02126f8c, which is the tail of the Painting/daPicGate_c unit -- every other unit in ov080 ends with its own classInit (daChoro_Rock_c/daChoropu_c at 0x02124998, daBttBk_c at 0x021253b4, daPicGate_c at 0x02126f8c). daObjMaruta_c is abstract and has no factory of its own, which is why nothing follows this run.",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "PARTIAL PROMOTION, 8 of 10 functions. The destructor pair at 0x02126fbc (D0) and 0x02127014 (D1) stays in its two enrolled shards and this TU own copies are licensed deadstrip-duplicate. Both copies BYTE-MATCH: the pre-narrowing run, with all 10 licensed, reported 10/10 MATCH, so the source form is right and only the ORDER is unreproducible. As shipped this entry licenses 8, and tubuild verify reports 8/8 MATCH.",
+    "Why the order cannot be reproduced, measured on this class: the cartridge puts D0 (0x02126fbc) BELOW D1 (0x02127014). With the destructor defined in the class body, mwccarm 2004/b56 emits D1 then D0 -- unchanged by moving the declaration below the overrides, by making Render rather than OnHitByMegaChar the first declared out-of-line virtual, and by defer_codegen off (which moves the pair to the end of the object, keeps D1 first, and additionally flips every other member to forward source order). An out-of-line definition DOES emit D0 then D1, verified here at 10/10 MATCH with all ten in ROM-ascending section order -- but it also adds a _ZN13daObjMaruta_cD2Ev the cartridge does not carry, and it is inadmissible for the reason below.",
+    "The class-body definition is required independently: include/daObjMaruta_c.h defines the destructor in the class body so that both descendants INLINE the body. Measured both ways with tools/match.py against 2004/b56 -- with the class-body definition _ZN13RollingLogLllD1Ev, _ZN13RollingLogLllD0Ev, _ZN13RollingLogTtmD1Ev and _ZN13RollingLogTtmD0Ev all MATCH; with an out-of-line declaration all four shrink to a bl (0x50 to 0x24, and 0x64 to 0x38) and none match. So the header cannot change, and the pair cannot join this TU licensed run (linkcheck refuses a licensed .text that is not ROM-ascending).",
+    "Reachability: the only references to either destructor address in config/ are the two vtable words inside _ZTV13daObjMaruta_c (ov080 0x02128338). No instruction in the image calls either address directly, so nothing outside the vtable depends on their order."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02127058",
+      "end": "0x0212766c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjMaruta_c15OnHitByMegaCharER6Player",
+      "address": "0x02127058",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov080_02127094",
+      "address": "0x02127094",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov080_02127094.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov080_021270dc",
+      "address": "0x021270dc",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov080_021270dc.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13daObjMaruta_c6RenderEv",
+      "address": "0x02127124",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN13daObjMaruta_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov080_0212714c",
+      "address": "0x0212714c",
+      "size": "0x00000360",
+      "legacy_source": "src/func_ov080_0212714c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov080_021274ac",
+      "address": "0x021274ac",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov080_021274ac.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov080_0212758c",
+      "address": "0x0212758c",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov080_0212758c.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov080_02127658",
+      "address": "0x02127658",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov080_02127658.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Promoted from eight per-function sources. This TU defines the key function -- daObjMaruta_c::OnHitByMegaChar, the first out-of-line virtual, the destructor above it being defined in the class body -- so it emits _ZTV13daObjMaruta_c, the five-class RTTI chain and both destructor variants as compiler-only output. All fourteen are licensed below; none is in the licensed .text range.",
+    "THE RTTI RECORD AND THE VTABLE ARE IN DIFFERENT MODULES, and each compiler_only_output row is keyed to the module that actually owns the address: _ZTI13daObjMaruta_c and _ZTS13daObjMaruta_c are in ov022 (0x02114350, 0x0211435c), where the daObjFlMaruta_c factory is, while _ZTV13daObjMaruta_c is in ov080 (0x02128338) with the code. include/daObjMaruta_c.h already records the split and how the ov079/ov080 ambiguity on the vtable address is settled.",
+    "The four func_ov080_ members keep their placeholder names. They are the class non-virtual shared implementation and both leaves call them by these exact symbols from other overlays, so they keep C linkage; there is no ROM-proven English spelling for any of them. Their bodies still walk a char cursor because the fields they touch, all above 0x320, are the LEAVES fields -- include/daObjMaruta_c.h declares no members of its own and says why.",
+    "RECONCILED, five declaration conflicts tubuild create flagged, all between the legacy files for func_ov080_0212714c and func_ov080_021274ac: func_ov080_02127094, _ZN10dBgActor_c19UpdateClsnPosAndRotEv, Vec3_Sub, LenVec3 and Vec3_HorzAngle. Each pair differed only in spelling the same pointer as void* or as a struct Vector3* / char*; the merged TU declares each once with the void* spelling and the call sites stand verbatim. Byte-neutral: 8/8 MATCH. The alternate markers were deleted from the merged source.",
+    "RECONCILED: func_ov080_02127658 was declared int in the legacy file of its caller and defined void in its own, which one TU cannot hold. It is a tail-call veneer whose only use is as an address handed to func_020393c4, so it is spelled void once. Bytes unchanged. Its long_calls pragma is carried verbatim and bracketed off immediately after, because long_calls is positional.",
+    "The two destructor shards src/_ZN13daObjMaruta_cD0Ev.cpp and src/_ZN13daObjMaruta_cD1Ev.cpp are untouched and stay enrolled, with their forcing scaffolds. They remain the canonical source for 0x02126fbc..0x02127058; see boundary_evidence for the measurement that keeps them there."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at ov002:0x021089ec, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at ov002:0x02108a04, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114350",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at ov022:0x02114350, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x0211435c",
+      "reason": "Emitted as vague linkage because this TU defines the class key function (daObjMaruta_c::OnHitByMegaChar). The cartridge keeps its canonical copy at ov022:0x0211435c, outside this entry only licensed range (.text 0x02127058-0x0212766c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTV13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov080",
+      "canonical_address": "0x02128338",
+      "reason": "The class vtable, emitted by this TU because it defines the key function (daObjMaruta_c::OnHitByMegaChar -- the first declared virtual that is neither inline nor pure). Section size 0x88 = 2 preamble words + 32 slots, which agrees with the slot count include/daObjMaruta_c.h records and with the cartridge own _ZTV13daObjMaruta_c. The canonical copy is in THIS module at ov080:0x02128338 but outside this entry only licensed range (.text 0x02127058-0x0212766c), which is .text only, so dsd supplies it as ROM data. Note the RTTI record it points at lives in ov022, not here."
+    },
+    {
+      "symbol": "_ZN13daObjMaruta_cD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov080",
+      "canonical_address": "0x02127014",
+      "reason": "The class D1, emitted here because owning the key function drags both destructor variants in. Its bytes MATCH the cartridge, but the cartridge orders D0 below D1 and no admissible source form reproduces that order, so it is deliberately left OUT of the licensed run and its enrolled shard src/_ZN13daObjMaruta_cD1Ev.cpp stays canonical. This object copy is therefore a duplicate that production isolation discards. See boundary_evidence."
+    },
+    {
+      "symbol": "_ZN13daObjMaruta_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov080",
+      "canonical_address": "0x02126fbc",
+      "reason": "The class D0, the deleting destructor, emitted here for the same reason as D1 and left out of the licensed run for the same reason. Its bytes MATCH the cartridge; src/_ZN13daObjMaruta_cD0Ev.cpp stays the canonical enrolled source and this object copy is a duplicate that production isolation discards."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 four-byte inline destructor, emitted as vague linkage because func_ov080_021274ac takes a Vector3 local. The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object copy is a duplicate that production isolation discards."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov080-daObjMaruta_c/d_a_obj_maruta.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN13daObjMaruta_cD1Ev",
+        "_ZN13daObjMaruta_cD0Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN13daObjMaruta_cD0Ev",
+        "_ZN13daObjMaruta_cD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        37
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTV13daObjMaruta_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjMaruta_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov080-daObjMaruta_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02127058",
+        "end": "0x0212766c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02127058",
+          "end": "0x0212766c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
