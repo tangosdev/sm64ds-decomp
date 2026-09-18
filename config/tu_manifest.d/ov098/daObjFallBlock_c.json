@@ -10,13 +10,14 @@
     "class label(s): daObjFallBlock_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "EMISSION ORDER -- MEASURED REFUSAL, not a near-miss. The ROM puts D0 (0x02139f70) BELOW D1 (0x02139fc8). daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and an in-class inline destructor emits D1 then D0; the only other admissible spelling, out of line, emits D2/D0/D1. Scaffolds change nothing (the two legacy shards carried one each and both are dropped here). So the licensed run cannot be put in ROM order without spelling the destructor out of line, and the cartridge refuses that spelling: config/arm9/overlays/ov098/relocs.txt carries exactly two inbound references to the pair -- from:0x0213c5fc to:0x02139fc8 and from:0x0213c600 to:0x02139f70 -- which are _ZTV16daObjFallBlock_c + 0x40 and + 0x44 off the address point, i.e. vtable slots 16 and 17, the two the header already names. NO instruction in the image calls either address, and no _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt -- an out-of-line base destructor would make each of the four descendants call D2 and would leave it live. The in-class inline body is the cartridge's form. Same shape daObjFloatBoard_c settled at (notes/agents/roles/writer.md, 'When a subset is the right answer'), and settled the same way here: the licensed set is cut to the orderable 10 and the destructor pair is held out as deadstrip-duplicate against its own ROM homes. The 12/12 evidence is not discarded -- it is preserved in this branch's first commit and in the partial_isolation block below, which records a 12-object PARTIAL-LINK-VERIFIED run whose ROM is byte-identical to the stock control.",
-    "PARTIAL PROMOTION, 10 OF 12. All TWELVE functions verify byte-for-byte from this one TU (12/12 MATCH, objisolate clean, reloc-destinations clean, and PARTIAL-LINK-VERIFIED with the full ROM identical to the stock control -- see the branch's first commit, which licensed all 12). D0 and D1 are held out of the licensed run for EMISSION ORDER ALONE, per the daObjFloatBoard_c / ov029/daObjWcObj01_c precedent: they keep their delinks.txt entries and their src/ shards, and this TU's own copies are licensed deadstrip-duplicate against ov098 0x02139f70 / 0x02139fc8. The licensed run is now 0x0213a00c..0x0213a794, ten functions in ROM-ascending order."
+    "PARTIAL PROMOTION, 10 OF 12. All TWELVE functions verify byte-for-byte from this one TU (12/12 MATCH, objisolate clean, reloc-destinations clean, and PARTIAL-LINK-VERIFIED with the full ROM identical to the stock control -- see the branch's first commit, which licensed all 12). D0 and D1 are held out of the licensed run for EMISSION ORDER ALONE, per the daObjFloatBoard_c / ov029/daObjWcObj01_c precedent: they keep their delinks.txt entries and their src/ shards, and this TU's own copies are licensed deadstrip-duplicate against ov098 0x02139f70 / 0x02139fc8. The licensed run is now 0x0213a00c..0x0213a794, ten functions in ROM-ascending order.",
+    "CLEANUP leftover fold: daObjFallBlock_c_InitResources (0x0213a794, size 0x14c), daObjFallBlock_c_RequestShake (0x0213a8e0, size 0xc) and daObjFallBlock_c_OnStoodOn (0x0213a8ec, size 0x14) sit immediately after Behavior with no gap, and Cannon D1 starts at 0x0213a900. RequestShake writes mShakeRequested at this+0x33e (830). OnStoodOn is the dBgW+0x1c veneer Init arms via func_020393c4. Licensed run is now 0x0213a00c..0x0213a900, thirteen functions in ROM-ascending order. D0/D1 stay held out."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0213a00c",
-      "end": "0x0213a794"
+      "end": "0x0213a900"
     }
   ],
   "functions": [
@@ -89,6 +90,27 @@
       "size": "0x00000428",
       "legacy_source": "src/_ZN16daObjFallBlock_c8BehaviorEv.cpp",
       "ordinal": 9
+    },
+    {
+      "symbol": "daObjFallBlock_c_InitResources",
+      "address": "0x0213a794",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov098_0213a794.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "daObjFallBlock_c_RequestShake",
+      "address": "0x0213a8e0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov098_0213a8e0.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "daObjFallBlock_c_OnStoodOn",
+      "address": "0x0213a8ec",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov098_0213a8ec.c",
+      "ordinal": 12
     }
   ],
   "data": [],
@@ -109,8 +131,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov098-daObjFallBlock_c/daObjFallBlock_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 10,
-    "functions_declared": 10,
+    "functions_matched": 13,
+    "functions_declared": 13,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN16daObjFallBlock_cD0Ev",
