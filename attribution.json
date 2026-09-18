@@ -3636,6 +3636,7 @@
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "andrewboudreau",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev",
+    "src/minigames/d_s_mg_slot1.cpp#dScMgSlot1_c_classInit": "ruspecial"
   }
 }
