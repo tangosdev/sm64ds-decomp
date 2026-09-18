@@ -571,6 +571,47 @@ def why(identity, scores, tracked, moves=None, ownership=None):
     return "; ".join(tiers.CRITERION_LABEL[k] for k in failed)
 
 
+def whole_file_scored(banked, tracked, ownership):
+    """Banked member identities that score against the ENTIRE FILE, not their own body.
+
+    `tiers.score_member` slices a member out of its file at `// @symbol <linker-name>`
+    boundaries. With no marker it falls back to `tiers._lifecycle_member_fragment`,
+    which covers only ctor/dtor variants defined inline in a directly included class
+    header. With neither, it scores the whole file -- so one raw offset or one `unk_`
+    field anywhere in a promoted TU fails EVERY banked member of that TU.
+
+    The damage does not land on the PR that causes it. `--check` on the promoting
+    branch compares against the baseline as it stands at that moment, so the file
+    passes there and reds `main` for whoever merges next. That has happened twice.
+
+    A fragment runs from its marker to the NEXT marker, which makes partial marking
+    worse than none: an unmarked member sitting below a marked one is absorbed into
+    the marked member's fragment and drags its neighbour's text along. The remedy is
+    to mark EVERY member defined in the file, including ones that are not banked.
+
+    Single-member files are exempt: there the whole file IS the member's body, so the
+    fallback is not a fallback.
+    """
+    out, texts = [], {}
+    for identity in sorted(banked):
+        rel, sep, member = identity.partition("#")
+        if not sep or rel not in tracked:
+            continue
+        own = ownership.get(rel) or []
+        if len(own) < 2:
+            continue
+        if rel not in texts:
+            texts[rel] = source_text(rel)
+        text = texts[rel]
+        if text is None:
+            continue
+        if any(m.group(1) == member for m in tiers.SYMBOL.finditer(text)):
+            continue
+        if tiers._lifecycle_member_fragment(rel, text, member, REPO) is None:
+            out.append(identity)
+    return out
+
+
 def orphaned_identities(banked, tracked):
     """Banked identities whose FILE part is not a tracked source any more.
 
@@ -1418,6 +1459,29 @@ def main():
                           f"{why(rel, scores, tracked_set, moves, ownership)}")
             print(f"\nbaseline {len(banked)}   current {len(current)}   "
                   f"({len(orphans)} orphaned, {len(live)} still naming a tracked file)")
+            return 1
+        exposed = whole_file_scored(banked, tracked_set, ownership)
+        if exposed:
+            by_file = {}
+            for identity in exposed:
+                rel, _, member = identity.partition("#")
+                by_file.setdefault(rel, []).append(member)
+            print("WHOLE-FILE SCORED: %d banked identity(ies) in %d file(s) carry "
+                  "no `// @symbol` marker\n" % (len(exposed), len(by_file)))
+            for rel, members in sorted(by_file.items()):
+                print("  %s" % rel)
+                for m in sorted(members):
+                    print("      %s" % m)
+            print("\nThese score against the ENTIRE FILE, so one raw offset or one\n"
+                  "`unk_` field anywhere in the file fails all of them at once -- and\n"
+                  "it fails on main, after the merge, not on the branch that\n"
+                  "introduced it.\n\n"
+                  "Add a `// @symbol <linker-name>` line above EVERY member defined\n"
+                  "in each file above, not only the ones listed. A fragment runs from\n"
+                  "its marker to the next one, so a member left unmarked below a marked\n"
+                  "one is absorbed into its neighbour's fragment.\n\n"
+                  "`tools/tubuild.py` emits these markers on promotion, so a file here\n"
+                  "was almost certainly assembled by hand.")
             return 1
         tail = f"   (+{gained} gained, not yet banked)" if gained else ""
         moved = (f"   ({len(absorbed_clean)} clean ownership transition(s))"

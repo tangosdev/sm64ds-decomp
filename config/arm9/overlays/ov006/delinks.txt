@@ -2293,73 +2293,9 @@ src/minigames/d_s_mg_hanachan.cpp:
     complete
     .text start:0x020ede18 end:0x020edec0
 
-src/_ZN11dScMgJump_cD1Ev.cpp:
+src/actors/dScMgJump_c.cpp:
     complete
-    .text start:0x020edec0 end:0x020edf54
-
-src/_ZN11dScMgJump_cD0Ev.cpp:
-    complete
-    .text start:0x020edf54 end:0x020edffc
-
-src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020edffc end:0x020ee034
-
-src/_ZN11dScMgJump_c6RenderEv.cpp:
-    complete
-    .text start:0x020ee034 end:0x020ee27c
-
-src/_ZN11dScMgJump_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020ee27c end:0x020ee2c0
-
-src/func_ov006_020ee2c0.c:
-    complete
-    .text start:0x020ee2c0 end:0x020ee2c4
-
-src/func_ov006_020ee2c4.c:
-    complete
-    .text start:0x020ee2c4 end:0x020ee3bc
-
-src/func_ov006_020ee3bc.c:
-    complete
-    .text start:0x020ee3bc end:0x020ee3ec
-
-src/func_ov006_020ee3ec.c:
-    complete
-    .text start:0x020ee3ec end:0x020ee44c
-
-src/func_ov006_020ee44c.c:
-    complete
-    .text start:0x020ee44c end:0x020ee4e0
-
-src/func_ov006_020ee4e0.c:
-    complete
-    .text start:0x020ee4e0 end:0x020ee508
-
-src/func_ov006_020ee508.c:
-    complete
-    .text start:0x020ee508 end:0x020ee598
-
-src/func_ov006_020ee598.c:
-    complete
-    .text start:0x020ee598 end:0x020ee5b8
-
-src/func_ov006_020ee5b8.c:
-    complete
-    .text start:0x020ee5b8 end:0x020ee658
-
-src/func_ov006_020ee658.c:
-    complete
-    .text start:0x020ee658 end:0x020ee690
-
-src/_ZN11dScMgJump_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020ee690 end:0x020ee8dc
-
-src/_ZN11dScMgJump_c13OnTurnIntoEggEi.cpp:
-    complete
-    .text start:0x020ee8dc end:0x020ee994
+    .text start:0x020edec0 end:0x020ee994
 
 src/d_s_mg_jump.cpp:
     complete
@@ -3927,41 +3863,9 @@ src/d_s_mg_snowball.cpp:
     complete
     .text start:0x0212a520 end:0x0212a554
 
-src/_ZN13dScMgFlower_cD1Ev.cpp:
+src/actors/dScMgFlower_c.cpp:
     complete
-    .text start:0x0212a554 end:0x0212a5c8
-
-src/_ZN13dScMgFlower_cD0Ev.cpp:
-    complete
-    .text start:0x0212a5c8 end:0x0212a650
-
-src/func_ov006_0212a650.c:
-    complete
-    .text start:0x0212a650 end:0x0212a654
-
-src/func_ov006_0212a654.c:
-    complete
-    .text start:0x0212a654 end:0x0212a764
-
-src/func_ov006_0212a764.cpp:
-    complete
-    .text start:0x0212a764 end:0x0212aa74
-
-src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x0212aa74 end:0x0212aacc
-
-src/_ZN13dScMgFlower_c6RenderEv.cpp:
-    complete
-    .text start:0x0212aacc end:0x0212ac74
-
-src/_ZN13dScMgFlower_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0212ac74 end:0x0212b480
-
-src/_ZN13dScMgFlower_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212b480 end:0x0212b7f8
+    .text start:0x0212a554 end:0x0212b7f8
 
 src/d_s_mg_flower.cpp:
     complete
