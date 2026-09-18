@@ -1,11 +1,12 @@
 #include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
+typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
 
 extern void _ZN9dBgCh_GndC1Ev(void* self);
 extern void _ZN9dBgCh_GndD1Ev(void* self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, Vec3* pos, void* actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
-extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* self);
 extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
@@ -85,7 +86,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
-    _ZN9dBgCh_LinC1Ev(rl);
+    _ZN9dBgCh_LinC1Ev((dBgCh_Lin*)rl);
     pos1.y = gy;
     {
         int tz = *(int*)(c + 0x64);

@@ -1,91 +1,88 @@
 //cpp
-/* Reconstructed production translation unit.
- * ov047/daObjKm3_Kurumajiku_c  (5 function(s))
+/**
+ * Bowser in the Sky's rickshaw axle (`kurumajiku`).
  *
- * This one compiler invocation owns the retail D1/D0 pair, both resource
- * methods, the factory, resource descriptor, type-name string, SpawnInfo, and
- * vtable storage. Exact per-member authorship remains in attribution.json.
+ * No fields of its own. InitResources / CleanupResources hand this
+ * overlay's model and collision files to daObjKurumajiku_c's shared
+ * ov002 helpers. func_ov002_020b6c54 loads slot 0 with Model::LoadFile,
+ * slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, then
+ * Spawns four carts (actor id KM3_KURUMA) and stores their uniqueIDs
+ * in mMountedActorIds. ov047 sinit constructs those SharedFilePtrs as
+ * file IDs 1665 / 1666.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (destructor variants have compiler-chosen order). The destructor
- * lives inline in the class definition so mwccarm emits only the retail D1/D0
- * pair, in retail order.
+ * The three-word file table is defined in this TU. Retail .data
+ * order is descriptor, type-name, profile, vtable.
  *
- * The manifest records the five absorbed intake sources and the exact text/data
- * ownership proof; do not recreate per-function production files for this class.
+ * daObjKm3_Kurumajiku_c_classInit is reconstructed (RTTI
+ * daObjKm3_Kurumajiku_c, KM3_KURUMAJIKU registry). Retail does not
+ * store that spelling.
+ *
+ * deslop
+ * Leftover: func_ov002_020b6c54 / func_ov002_020b6ac8 are still the
+ *   linker names of the shared ov002 setup/teardown helpers. Naming
+ *   belongs in ov002.
+ * Leftover: the BMD/KCL SharedFilePtrs and CLPS_Block are still
+ *   data_ov047_*.
  */
+
+#include "SharedFilePtr.h"
+
+struct CLPS_Block;
+
+struct ResourceDescriptor {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+typedef char ResourceDescriptor_size_must_be_0x0c[
+    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+
+extern "C" {
+extern SharedFilePtr data_ov047_021125e8;
+extern SharedFilePtr data_ov047_021125e0;
+extern CLPS_Block data_ov047_02111b54;
+}
+
+/* Retail data order: this descriptor, then type name, profile, vtable. */
+extern "C" ResourceDescriptor data_ov047_02112258 = {
+    &data_ov047_021125e8,
+    &data_ov047_021125e0,
+    &data_ov047_02111b54
+};
 
 #include "daObjKm3_Kurumajiku_c.h"
 
-struct ResourceDescriptor {
-    void *entries[3];
-};
-
 extern "C" {
-extern char data_ov047_021125e8[];
-extern char data_ov047_021125e0[];
-extern char data_ov047_02111b54[];
+int func_ov002_020b6c54(daObjKm3_Kurumajiku_c *self,
+                        ResourceDescriptor *descriptor, unsigned actorID);
+int func_ov002_020b6ac8(daObjKm3_Kurumajiku_c *self,
+                        ResourceDescriptor *descriptor);
 }
 
-/* Keep this definition before the SpawnInfo and method definitions. Retail
- * places the descriptor between the class typeinfo and type-name records. */
-extern "C" ResourceDescriptor data_ov047_02112258 = {
-    data_ov047_021125e8,
-    data_ov047_021125e0,
-    data_ov047_02111b54
-};
-
-struct Km3SpawnInfo {
+struct KurumajikuSpawnInfo {
     daObjKm3_Kurumajiku_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
+    s16 executePriority; /* +4: also KM3_KURUMAJIKU registry id 0x0098 = 152 */
+    s16 renderPriority;  /* +6 */
     u32 actorFlags;
     Fix12i clipOffsetY;
     Fix12i clipRadius;
     Fix12i clipDistance;
     Fix12i farDistance;
 };
+typedef char KurumajikuSpawnInfo_size_must_be_0x1c[
+    sizeof(KurumajikuSpawnInfo) == 0x1c ? 1 : -1];
 
-typedef char Km3SpawnInfo_size_must_be_0x1c[
-    sizeof(Km3SpawnInfo) == 0x1c ? 1 : -1];
+/* KM3_KURUMA: the cart this axle drives. The helper Spawns four of them. */
+enum { kCartActorId = 0x97 };
 
-extern "C" {
-extern void *_ZN7fBase_cnwEj(unsigned size);
-extern void _ZN10dBgActor_cC2Ev(void *self);
-extern int _ZTV17daObjKurumajiku_c[];
-extern int _ZTV21daObjKm3_Kurumajiku_c[];
-int func_ov002_020b6ac8(daObjKm3_Kurumajiku_c *self,
-                        ResourceDescriptor *descriptor);
-int func_ov002_020b6c54(daObjKm3_Kurumajiku_c *self,
-                        ResourceDescriptor *descriptor, unsigned actorID);
-}
-
-/* Reconstructed source-style names: SM64DS proves the RTTI class,
- * KM3_KURUMAJIKU registry ID, descriptor/factory relationship, and object
- * shape; later EAD lineage supplies the spelling prior. Exact original
- * SM64DS symbols are not preserved. Historical project aliases:
- * RickshawBs_Spawn and RickshawBs_SpawnInfo. */
-/* ROM ordinal 4 -- class initializer, 0x02111280, size 0x3c */
 // @symbol daObjKm3_Kurumajiku_c_classInit
 extern "C" daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit()
 {
-    daObjKm3_Kurumajiku_c *actor =
-        static_cast<daObjKm3_Kurumajiku_c *>(_ZN7fBase_cnwEj(0x330));
-
-    if (actor) {
-        _ZN10dBgActor_cC2Ev(actor);
-        *reinterpret_cast<int *>(actor) = (int)_ZTV17daObjKurumajiku_c;
-        *reinterpret_cast<int *>(actor) =
-            (int)&_ZTV21daObjKm3_Kurumajiku_c[2];
-    }
-
-    return actor;
+    return new daObjKm3_Kurumajiku_c();
 }
 
-extern "C" Km3SpawnInfo g_profile_KM3_KURUMAJIKU = {
+// @symbol g_profile_KM3_KURUMAJIKU
+extern "C" KurumajikuSpawnInfo g_profile_KM3_KURUMAJIKU = {
     daObjKm3_Kurumajiku_c_classInit,
     0x0098,
     0x00df,
@@ -96,22 +93,14 @@ extern "C" Km3SpawnInfo g_profile_KM3_KURUMAJIKU = {
     0
 };
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv, 0x02111268, size 0x18 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv
-/* Delegates to the shared setup with this class's three-word descriptor and
- * the actor ID of the cart it drives. */
-int daObjKm3_Kurumajiku_c::InitResources()
+s32 daObjKm3_Kurumajiku_c::InitResources()
 {
-    return func_ov002_020b6c54(this, &data_ov047_02112258, 0x97);
+    return func_ov002_020b6c54(this, &data_ov047_02112258, kCartActorId);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv, 0x02111254, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv
-int daObjKm3_Kurumajiku_c::CleanupResources()
+s32 daObjKm3_Kurumajiku_c::CleanupResources()
 {
     return func_ov002_020b6ac8(this, &data_ov047_02112258);
 }

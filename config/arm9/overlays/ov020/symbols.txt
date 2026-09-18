@@ -29,19 +29,19 @@ daBook_c_classInit_BOOK_SWITCH kind:function(arm,size=0x5c) addr:0x021127f4
 daBookGen_c_classInit kind:function(arm,size=0x30) addr:0x02112850
 daBook_c_classInit_KILLER_BOOK kind:function(arm,size=0x5c) addr:0x02112880
 daBook_c_classInit_SHOOT_BOOK kind:function(arm,size=0x5c) addr:0x021128dc
-_ZN12HauntedChairD1Ev kind:function(arm,size=0x48) addr:0x02112938
-_ZN12HauntedChairD0Ev kind:function(arm,size=0x5c) addr:0x02112980
-_ZN12HauntedChair6State3Ev kind:function(arm,size=0x124) addr:0x021129dc
-_ZN12HauntedChair6State2Ev kind:function(arm,size=0x394) addr:0x02112b00
-_ZN12HauntedChair6State1Ev kind:function(arm,size=0x234) addr:0x02112e94
-_ZN12HauntedChair6State0Ev kind:function(arm,size=0x80) addr:0x021130c8
-_ZN12HauntedChair18ApproachStateValueEPsS0_isis kind:function(arm,size=0xb0) addr:0x02113148
-_ZN12HauntedChair5BreakEv kind:function(arm,size=0x48) addr:0x021131f8
-_ZN12HauntedChair11UpdateModelEv kind:function(arm,size=0x98) addr:0x02113240
-_ZN12HauntedChair16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021132d8
-_ZN12HauntedChair6RenderEv kind:function(arm,size=0x28) addr:0x021132fc
-_ZN12HauntedChair8BehaviorEv kind:function(arm,size=0x8c) addr:0x02113324
-_ZN12HauntedChair13InitResourcesEv kind:function(arm,size=0xe4) addr:0x021133b0
+_ZN9daChair_cD1Ev kind:function(arm,size=0x48) addr:0x02112938
+_ZN9daChair_cD0Ev kind:function(arm,size=0x5c) addr:0x02112980
+_ZN9daChair_c6State3Ev kind:function(arm,size=0x124) addr:0x021129dc
+_ZN9daChair_c6State2Ev kind:function(arm,size=0x394) addr:0x02112b00
+_ZN9daChair_c6State1Ev kind:function(arm,size=0x234) addr:0x02112e94
+_ZN9daChair_c6State0Ev kind:function(arm,size=0x80) addr:0x021130c8
+_ZN9daChair_c18ApproachStateValueEPsS0_isis kind:function(arm,size=0xb0) addr:0x02113148
+_ZN9daChair_c5BreakEv kind:function(arm,size=0x48) addr:0x021131f8
+_ZN9daChair_c11UpdateModelEv kind:function(arm,size=0x98) addr:0x02113240
+_ZN9daChair_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021132d8
+_ZN9daChair_c6RenderEv kind:function(arm,size=0x28) addr:0x021132fc
+_ZN9daChair_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x02113324
+_ZN9daChair_c13InitResourcesEv kind:function(arm,size=0xe4) addr:0x021133b0
 daChair_c_classInit kind:function(arm,size=0x50) addr:0x02113494
 data_ov020_021134e4 kind:data(any) addr:0x021134e4
 data_ov020_021134e8 kind:data(any) addr:0x021134e8
@@ -217,7 +217,6 @@ _ZTS9daChair_c kind:data(any) addr:0x021149d8
 _ZTI9daChair_c kind:data(any) addr:0x021149e4
 g_profile_CHAIR kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
-_ZTV12HauntedChair kind:data(any) addr:0x02114a14
 _ZTV9daChair_c kind:data(any) addr:0x02114a14
 data_ov020_02114a18 kind:data(any) addr:0x02114a18 ambiguous
 data_ov020_02114aa0 kind:bss addr:0x02114aa0

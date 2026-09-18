@@ -1,0 +1,87 @@
+{
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "Hand-cut cleanup merge, not a tu_map cut: the five methods are the contiguous ROM run 0x0211cdec..0x0211d270, bounded below by the state-body block (0x0211c684..0x0211cdec, a later TU of its own) and above by the collision-callback pair (0x0211d270..0x0211d2a0).",
+    "The class's destructors (0x0211c600..0x0211c684) stay legacy single-function sources, and the four factories (0x0211d2a0..0x0211d3a0) ship in d_a_trs_trap_classinits.cpp under entry ov063/daTrsTrap_c_classInit: one delinks entry licenses one contiguous range, so the ROM-interleaved class cannot be one file.",
+    "class label: daTrsTrap_c (ROM _ZTS at ov063 0x0211e9d8); _ZTV address point 0x0211ea88."
+  ],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "canonical_address": "0x020072c0",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-duplicate",
+      "reason": "InitResources holds Vector3 locals (pos, base), and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation.",
+      "symbol": "_ZN7Vector3D1Ev"
+    }
+  ],
+  "data": [],
+  "externalized_output": [],
+  "functions": [
+    {
+      "address": "0x0211cdec",
+      "legacy_source": "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp",
+      "ordinal": 0,
+      "size": "0x00000044",
+      "symbol": "_ZN11daTrsTrap_c16CleanupResourcesEv"
+    },
+    {
+      "address": "0x0211ce30",
+      "legacy_source": "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp",
+      "ordinal": 1,
+      "size": "0x00000004",
+      "symbol": "_ZN11daTrsTrap_c16OnPendingDestroyEv"
+    },
+    {
+      "address": "0x0211ce34",
+      "legacy_source": "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c6RenderEv.cpp",
+      "ordinal": 2,
+      "size": "0x00000040",
+      "symbol": "_ZN11daTrsTrap_c6RenderEv"
+    },
+    {
+      "address": "0x0211ce74",
+      "legacy_source": "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp",
+      "ordinal": 3,
+      "size": "0x0000008c",
+      "symbol": "_ZN11daTrsTrap_c8BehaviorEv"
+    },
+    {
+      "address": "0x0211cf00",
+      "legacy_source": "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c13InitResourcesEv.cpp",
+      "ordinal": 4,
+      "size": "0x00000370",
+      "symbol": "_ZN11daTrsTrap_c13InitResourcesEv"
+    }
+  ],
+  "id": "ov063/daTrsTrap_c",
+  "module": "ov063",
+  "notes": [
+    "Hand-merged deslop cleanup (Big Boo's Haunt animated-furniture traps), not a tubuild create shadow: five legacy one-function sources consolidated into d_a_trs_trap.cpp with named fields, typed resource rows, and `return new` factories next door. See the file's own header comment for the split rationale and leftovers.",
+    "InitResources keeps two load-bearing preheader shapes (offset table referenced by symbol at the use site; v16 written x, y, z); Behavior spells mStateTimer two ways to keep the increment and reset address computations apart. Both are commented at the code."
+  ],
+  "production_mode": "text-only",
+  "promoted_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+  "sections": [
+    {
+      "end": "0x0211d270",
+      "name": ".text",
+      "start": "0x0211cdec"
+    }
+  ],
+  "source": "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp",
+  "status": "promoted",
+  "verification": {
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity), via tools/prepush_linkcheck.py --files",
+    "criteria": {
+      "every_declared_function_bytes_match": "PASS",
+      "every_declared_function_defined": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_declared": 5,
+    "functions_matched": 5,
+    "round": "tools/prepush_linkcheck.py --files src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp -- 5 checked, 5 verified, 0 warnings, 0 blocking",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe"
+  }
+}

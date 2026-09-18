@@ -6,12 +6,12 @@
  * Real inheritance (was a flat, non-inheriting struct with dActor_c's own
  * 0x074..0x0d0 fields re-declared inline): build/rtti_vtables.json keys this
  * class as "daObjHeart_c" (the ROM's own coined RTTI name, same
- * same-length-different-spelling shape as WingFeather/daFeather_c --
+ * same-length-different-spelling shape daFeather_c's tree name once had --
  * config/arm9/overlays/ov002/symbols.txt is the only reliable check, a
  * length-only heuristic would wrongly call this data-verifiable). parent:
  * dActor_c, parent_slots: 31, own overrides at slots 0/3/6/9 (InitResources/
  * CleanupResources/Behavior/Render) plus the destructor pair at 16/17 -- no
- * OnPendingDestroy override, same shape as WingFeather. */
+ * OnPendingDestroy override, same shape as daFeather_c. */
 #ifndef HEALINGHEART_H
 #define HEALINGHEART_H
 #include "types.h"

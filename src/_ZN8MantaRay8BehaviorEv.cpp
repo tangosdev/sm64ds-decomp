@@ -29,19 +29,16 @@ extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
 int LenVec3(Vector3* v);
-short Vec3_HorzAngle(Vector3* v0, Vector3* v1);
-short Vec3_VertAngle(Vector3* v0, Vector3* v1);
+short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
+short Vec3_VertAngle(const Vector3* v0, const Vector3* v1);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* thiz, void* clsn);
-void func_ov090_02132b14(void* c);
-void _ZN5dCc_c5ClearEv(void* c);
-void _ZN5dCc_c6UpdateEv(void* c);
+void func_ov090_02132b14(char* c);
 extern char data_020a0e68[];
 }
 
-void ApproachLinear(short& v, short target, short step);
+int ApproachLinear(short& v, short target, short step);
 
 int MantaRay::Behavior()
 {
@@ -88,9 +85,9 @@ int MantaRay::Behavior()
         mVertSpeed = m2;
         unk_0ac = ac;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, &mdCcAcPos_c);
+    UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     func_ov090_02132b14(c);
-    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
-    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
     return 1;
 }

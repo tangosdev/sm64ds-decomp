@@ -27,11 +27,8 @@ struct BMD_File;
 struct dActor_c;
 
 extern "C" {
-BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& p);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& p);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, const Vector3& v, int b, int c, unsigned int d, unsigned int e);
-void func_ov090_02132ac4(unsigned char* c, void* p);
+int func_ov090_02132ac4(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov090_02134524;
 extern SharedFilePtr data_ov002_0210da10;
@@ -45,10 +42,10 @@ extern unsigned char data_0209f2d8;
 int MantaRay::InitResources()
 {
     unsigned char* thiz = (unsigned char*)this;
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134524), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da10);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_0213452c);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov090_02134524), 1, -1);
+    Model::LoadFile(data_ov002_0210da10);
+    Model::LoadFile(data_ov002_0210d9a8);
+    Animation::LoadFile(data_ov090_0213452c);
 
     unk_37c = param1 & 0xff;
     unk_388 = (*(unsigned int*)&param1 >> 0xc) & 0xf;

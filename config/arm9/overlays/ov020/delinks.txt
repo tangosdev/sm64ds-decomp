@@ -128,61 +128,9 @@ src/d_a_book_shoot_book.c:
     complete
     .text start:0x021128dc end:0x02112938
 
-src/_ZN12HauntedChairD1Ev.cpp:
+src/actors/daChair_c.cpp:
     complete
-    .text start:0x02112938 end:0x02112980
-
-src/_ZN12HauntedChairD0Ev.cpp:
-    complete
-    .text start:0x02112980 end:0x021129dc
-
-src/_ZN12HauntedChair6State3Ev.cpp:
-    complete
-    .text start:0x021129dc end:0x02112b00
-
-src/_ZN12HauntedChair6State2Ev.cpp:
-    complete
-    .text start:0x02112b00 end:0x02112e94
-
-src/_ZN12HauntedChair6State1Ev.cpp:
-    complete
-    .text start:0x02112e94 end:0x021130c8
-
-src/_ZN12HauntedChair6State0Ev.cpp:
-    complete
-    .text start:0x021130c8 end:0x02113148
-
-src/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp:
-    complete
-    .text start:0x02113148 end:0x021131f8
-
-src/_ZN12HauntedChair5BreakEv.cpp:
-    complete
-    .text start:0x021131f8 end:0x02113240
-
-src/_ZN12HauntedChair11UpdateModelEv.cpp:
-    complete
-    .text start:0x02113240 end:0x021132d8
-
-src/_ZN12HauntedChair16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021132d8 end:0x021132fc
-
-src/_ZN12HauntedChair6RenderEv.cpp:
-    complete
-    .text start:0x021132fc end:0x02113324
-
-src/_ZN12HauntedChair8BehaviorEv.cpp:
-    complete
-    .text start:0x02113324 end:0x021133b0
-
-src/_ZN12HauntedChair13InitResourcesEv.cpp:
-    complete
-    .text start:0x021133b0 end:0x02113494
-
-src/d_a_chair.c:
-    complete
-    .text start:0x02113494 end:0x021134e4
+    .text start:0x02112938 end:0x021134e4
 
 src/__sinit_ov020_02113674.c:
     complete

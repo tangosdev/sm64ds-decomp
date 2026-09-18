@@ -14,6 +14,8 @@
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* TWO WITNESSES, and they close on each other:
  *
  *   daWarpkun_c_classInit  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(), stores _ZTV11daWarpkun_c,
@@ -64,6 +66,12 @@ struct daWarpkun_c : dActor_c {
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
     virtual void  OnPendingDestroy();      /* slot 12 */
+
+    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
+       `return new daWarpkun_c()` then routes through the retail allocator. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -315,7 +315,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | ov020 |
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | ov070 |
 | `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | ov062 |
-| `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `Chuckya` | ov062 |
+| `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | ov062 |
 | `bhvHeaveHo` | → | `HeaveHo` | ov077 |
 | `bhvFlyGuy` | → | `FlyGuy` | ov070 |
 | `bhvSnufit` / `bhvSwoop` | → | `Snufit` / `Swoop` | ov065 |
@@ -323,7 +323,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvSpindrift` | → | `Spindrift` | ov081 |
 | `bhvWigglerHead`/`Body` | → | `Wiggler` | ov034 |
 | `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | ov084 |
-| `bhvEnemyLakitu` / camera Lakitu | → | `Lakitu` / `LakituBro` | ov077 / ov085 |
+| `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `LakituBro` | ov077 / ov085 |
 | `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | ov060 |
 | `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | ov030 |
 | (Eyerok boss) | → | `Eyerok` | ov066 |

@@ -49,7 +49,7 @@ struct daBrq_c : dActor_c {
        matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; UpdateModelTransform writes
        the position (>>3) at m[9]/m[10]/m[11] -- exactly the translation row --
        and passes &mMat4x3 as the matrix argument of DropShadowRadHeight. Same
-       role as Lakitu's 0x3f8 translation words. */
+       role as daJgm_c's 0x3f8 translation words. */
     Matrix4x3                 mMat4x3;                       /* 0x3d4 */
     Vector3                   mOrbitCenter;                  /* 0x404 */
     Vector3                   mCylinderOffset;               /* 0x410 */

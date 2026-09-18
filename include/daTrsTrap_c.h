@@ -1,10 +1,11 @@
-/* Seeded by tools/gen_header.py from matched-function evidence; the class name
- * and the five vtable slots below are ROM RTTI, not generated guesses.
- * daTrsTrap_c is shared by four actors -- MansionSteps, Bookshelf, MerryGoRound
- * and TrapDoor all store _ZTV11daTrsTrap_c @ 0x0211ea88 -- which is why the
- * one-actor spelling `MansionSteps` could never have been the class.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Big Boo's Haunt animated-furniture traps: the rising staircase (KAIDAN),
+ * the tilting trapdoor (TERESAPIT), the sliding bookshelf (BOOKSHELF) and the
+ * spinning merry-go-round (MERRYGOROUND). One class, four registry profiles --
+ * every factory allocates 852 = 0x354 and stores _ZTV11daTrsTrap_c
+ * (ov063:0x0211ea88), which is what proves a single class rather than four.
+ * mIndex (from the spawn profile's actor id) selects the resource row and the
+ * per-frame state body; the bodies themselves live in unnamed ov063 shards and
+ * are reached through the .bss dispatch table, not through this header. */
 #ifndef DATRSTRAP_C_H
 #define DATRSTRAP_C_H
 #include "types.h"
@@ -12,45 +13,72 @@
 #include "dBgW_KcMbg.h"
 #include "dActor_c.h"
 
-/* ROM RTTI and the destructor symbols authenticate daTrsTrap_c as the real
- * lifecycle type.  The extra word is evidenced by the first member beginning
- * at +0xd4 while dActor_c closes at +0xd0. */
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daTrsTrap_c : dActor_c {
-    u32 pad_0d0;
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    s32 unk_124;            /* 0x124 */
-    u8  pad_128[0x18];
-    s32 mIndex;            /* 0x140 */
-    u8  pad_144[0xc];
-    u8  mState;            /* 0x150 */
-    u8  pad_151[0x5];
-    u8  mVisible;            /* 0x156 */
-    u8  pad_157[0x5];
-    /* dBgW_KcMbg member, named by the class's own destructor calling
-       dBgW_KcMbg's D1 at +0x15c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11daTrsTrap_cD0Ev.cpp] */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x15c */
-    /* The collider's transform, the second half of the dBgW_KcMbg + Matrix4x3
-       pair this tree carries everywhere a moving mesh collider appears
-       (dBgActor_c 0x124/0x2ec, SpinningPlatform and TtcRotatingCube the same,
-       both of which hand `this + 0x2ec` to dBgW_KcMbg::SetFile as a
-       `const Matrix4x3 &`). 0x15c + 0x1c8 = 0x324, and 0x324 + 0x30 closes on
-       the 0x354 daTrsTrap_c_classInit_KAIDAN allocates. InitResources is now in the
-       tree and hands this member to dBgW_KcMbg::SetFile as that `const Matrix4x3 &`. */
-    Matrix4x3 mClsnMat;            /* 0x324 */
+    u32 pad_0d0;                 /* 0x0d0 -- dActor_c closes at 0xd0, mModel opens at 0xd4 */
+    Model mModel;                /* 0x0d4 */
+    /* Set by the mesh-collision callback (func_ov063_0211d270) while the player
+       (actor 0xbf) stands on the trapdoor; cleared every Behavior frame. The
+       trapdoor state steers off its position, the merry-go-round off nullness. */
+    dActor_c *mStandingActor;    /* 0x124 */
+    /* The KAIDAN step this step follows: the master holds 0 and each child the
+       master's uniqueID, resolved through dActor_c::FindWithID by the rise
+       state. */
+    u32 mParentUniqueID;         /* 0x128 */
+    s32 mHomePosX;               /* 0x12c -- placement snapshot; the rise/slide states move mPos* off it */
+    s32 mHomePosY;               /* 0x130 */
+    s32 mHomePosZ;               /* 0x134 */
+    s16 mAngVelX;                /* 0x138 -- per-frame tilt, added to mAngleX by the trapdoor state */
+    s16 mAngVelY;                /* 0x13a -- per-frame spin, added to mAngleY by the merry-go-round state */
+    s16 mAngVelZ;                /* 0x13c -- zeroed with the pair; no state reads it yet */
+    u8  pad_13e[0x2];
+    /* 0 KAIDAN, 1 TERESAPIT, 2 BOOKSHELF, 3 MERRYGOROUND. Indexes the model,
+       collision and CLPS rows and the Behavior dispatch table. */
+    s32 mIndex;                  /* 0x140 */
+    s32 mRiseProgress;           /* 0x144 -- KAIDAN rise counter, +8/frame toward the per-step limit */
+    u32 mSoundHandle;            /* 0x148 -- Sound::PlayLong in/out handle for the slide/spin loop */
+    u16 mStateTimer;             /* 0x14c -- frames in mState; Behavior bumps it, zeroes it on change */
+    u16 mSoundTimer;             /* 0x14e -- Sound::PlaySecretSound progress counter */
+    u8  mState;                  /* 0x150 */
+    /* (param1 >> 8) & 3: for KAIDAN the step index (0 master, 1-2 children),
+       selecting the rise limit; the secret-chime path is index 2. */
+    u8  mStepIndex;              /* 0x151 */
+    u8  mInitLatch;              /* 0x152 -- merry-go-round skips occupancy once, then latches this */
+    /* Merry-go-round occupancy: a rider stands on the mesh or the area is
+       showing. Written every frame; no reader recovered yet. */
+    u8  mOccupiedFlag;           /* 0x153 */
+    u8  pad_154;                 /* 0x154 -- zeroed by InitResources, no reader recovered */
+    /* KAIDAN release: the Boo's death path (ov063:0x02118b98) finds the master
+       step and raises this, and the rise state waits on it. */
+    u8  mTriggered;              /* 0x155 */
+    u8  mVisible;                /* 0x156 -- Render skips the model while clear */
+    /* Bookshelf trigger bits: low three ORed in by the book-switch callback
+       (func_ov063_0211cae8), bit 3 set once the player is behind the shelf.
+       All three switches (0x7) starts the slide. */
+    u8  mBookFlags;              /* 0x157 */
+    s8  mSavedAreaId;            /* 0x158 -- bookshelf parks mAreaId here while forcing -1 */
+    u8  pad_159[0x3];
+    dBgW_KcMbg mMovingMeshCollider; /* 0x15c */
+    Matrix4x3 mClsnMat;          /* 0x324 -- rebuilt from placement every frame, handed to SetFile/Transform */
 
     /* --- vtable ---
      * Overrides of fBase_c virtuals, so each takes the base's slot whatever the
      * order here; the destructor stays first-declared because it is the ABI key
-     * function and picks the TU that emits _ZTV11daTrsTrap_c. */
+     * function. It is defined out of line in the dtors file, so that TU -- not
+     * the merged method TU -- is the one whose object carries the vtable. */
     virtual ~daTrsTrap_c();          /* slots 16 (D1), 17 (D0) */
     virtual s32 InitResources();     /* slot  0 -- ov063:0x0211cf00 */
     virtual s32 CleanupResources();  /* slot  3 -- ov063:0x0211cdec */
     virtual s32 Behavior();          /* slot  6 -- ov063:0x0211ce74 */
     virtual s32 Render();            /* slot  9 -- ov063:0x0211ce34 */
     virtual void OnPendingDestroy(); /* slot 12 -- ov063:0x0211ce30 */
+
+    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
+       `return new daTrsTrap_c()` then routes through the retail allocator. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

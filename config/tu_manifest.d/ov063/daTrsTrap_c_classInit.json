@@ -1,0 +1,76 @@
+{
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "Hand-cut cleanup merge, not a tu_map cut: the four factories are the contiguous ROM run 0x0211d2a0..0x0211d3a0, bounded below by the collision-callback pair (0x0211d270..0x0211d2a0) and above by daObjTh_Fall_Block_c. Split from the method TU (entry ov063/daTrsTrap_c) by that callback gap; see its header comment.",
+    "All four bodies are the same construction sequence (operator new(852), dActor_c C2, vtable store, Model C1, dBgW_KcMbg C1) differing only in branch offsets, which is what proves four spawn profiles of the one ROM-_ZTS class daTrsTrap_c."
+  ],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor from `return new daTrsTrap_c()` over the Matrix4x3 member at 0x324 (same shape as ov070/daKpFr_c); no configured ROM symbol of that name exists in any module and no surviving reference reaches it",
+      "symbol": "_ZN9Matrix4x3D1Ev"
+    }
+  ],
+  "data": [],
+  "externalized_output": [],
+  "functions": [
+    {
+      "address": "0x0211d2a0",
+      "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_teresapit.c",
+      "ordinal": 0,
+      "size": "0x00000040",
+      "symbol": "daTrsTrap_c_classInit_TERESAPIT"
+    },
+    {
+      "address": "0x0211d2e0",
+      "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_merrygoround.c",
+      "ordinal": 1,
+      "size": "0x00000040",
+      "symbol": "daTrsTrap_c_classInit_MERRYGOROUND"
+    },
+    {
+      "address": "0x0211d320",
+      "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_bookshelf.c",
+      "ordinal": 2,
+      "size": "0x00000040",
+      "symbol": "daTrsTrap_c_classInit_BOOKSHELF"
+    },
+    {
+      "address": "0x0211d360",
+      "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_kaidan.c",
+      "ordinal": 3,
+      "size": "0x00000040",
+      "symbol": "daTrsTrap_c_classInit_KAIDAN"
+    }
+  ],
+  "id": "ov063/daTrsTrap_c_classInit",
+  "module": "ov063",
+  "notes": [
+    "Hand-merged deslop cleanup, not a tubuild create shadow: four legacy hand-rolled factories consolidated into d_a_trs_trap_classinits.cpp as `return new daTrsTrap_c()` each. The synthesized ctor reproduces the ROM sequence (operator new, dActor_c C2, vtable store, member C1s) exactly."
+  ],
+  "production_mode": "text-only",
+  "promoted_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+  "sections": [
+    {
+      "end": "0x0211d3a0",
+      "name": ".text",
+      "start": "0x0211d2a0"
+    }
+  ],
+  "source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp",
+  "status": "promoted",
+  "verification": {
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity), via tools/prepush_linkcheck.py --files",
+    "criteria": {
+      "every_declared_function_bytes_match": "PASS",
+      "every_declared_function_defined": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_declared": 4,
+    "functions_matched": 4,
+    "round": "tools/prepush_linkcheck.py --files src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp -- 4 checked, 4 verified, 0 warnings, 0 blocking",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe"
+  }
+}

@@ -22,7 +22,7 @@ struct daObjAbuku_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by the factory C1 and the destructor D1 at +0xd4. */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    /* Same float as WingFeather: mSwayAngle += 0x400 a frame,
+    /* Same float as daFeather_c: mSwayAngle += 0x400 a frame,
        (mSwayAngle >> 4) * 2 + 1 indexes data_02082214, times mDriftSpeed
        is mHorzSpeed. mDriftSpeed eases toward 0x6000. mLifeTimer starts
        at 0x12c and pops at 0; mParticle is the System::New handle. */

@@ -743,11 +743,22 @@
       ]
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    }
+  ],
   "notes": [
     "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Kurumajiku_c_classInit factory (historical alias RickshawBs_Spawn) and its profile data establish the corrected five-function boundary.",
     "This intact TU owns the contiguous data tail 0x02112258..0x02112320: resource descriptor, own type-name string, g_profile_KM3_KURUMAJIKU (historical alias RickshawBs_SpawnInfo), and vtable storage. The own typeinfo at 0x0211224c remains at its separately gap-owned canonical home and is exact-symbol externalized, as are inherited vague RTTI copies.",
-    "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; there is no compiler-only D2 body.",
+    "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order. return new also emits base D2 helpers; exact compiler-only policy deadstrips those.",
     "The compiler emits _ZTV at storage 0x02112298 while the repository names its public address point at 0x021122a0; whole-object linking must rebias the symbol and compensate every surviving +8 relocation, without inventing or recycling a storage-prefix alias.",
     "Older derived-object and partitioned scratch records were removed after the inline destructor changed D1/D0 ELF binding; the recorded ordinary intact-object linkcheck is the current promotion evidence."
   ],

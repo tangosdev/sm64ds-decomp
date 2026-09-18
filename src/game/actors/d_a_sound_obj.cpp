@@ -1,149 +1,119 @@
 //cpp
-/* A sound-emitting level object -- ov002/daSoundObj_c.
+/**
+ * The positional sound emitter (SOUND_OBJ), actor 0x167.
  *
- * A GENUINE TRANSLATION UNIT, ENROLLED AND CANONICAL. It is the whole of the
- * cartridge's contiguous linker run .text 0x020f934c..0x020f975c, seven
- * functions and nothing else, and the production build links this object rather
- * than seven per-function ones. The filename is tools/tu_names.py's:
- * candidate_stem('daSoundObj_c') is d_a_sound_obj.
+ * One actor per sub-sound: the spawn param (0-6) picks a row of the
+ * seven-entry sound table (sound ID, volume, counter limit, loop flag)
+ * and a starter callback from the runtime-filled table at
+ * data_ov002_0211110c. At most one instance runs: InitResources kills
+ * any other SOUND_OBJ while the current sub-sound is a managed one.
+ * Behavior re-runs the starter each frame; when it reports done, or
+ * the sub-sound moved on, the actor destroys itself and restarts the
+ * current sub-sound. While the music ducks below this sound's volume
+ * the counter is held at its limit (every param but 6).
  *
- * THE CLASS IS NAMED FROM THE CARTRIDGE, not coined. ov002 0x0210c048 is a
- * __si_class_type_info whose _ZTS at 0x0210c054 reads exactly `12daSoundObj_c`,
- * and whose one base, at subobject offset 0, is arm9 0x0208e390 -- _ZTI8dActor_c.
- * That is why the header says `struct daSoundObj_c : dActor_c` and why the RTTI
- * below has ROM homes to be compared against at all: a coined name is a
- * length-prefixed mangled string that matches nothing at any address, so it can
- * never be word-compared, and a class whose records cannot be compared cannot
- * have a key-function TU.
+ * Starter per param, from __sinit_ov002_02107f88's seven {ptr,0} pairs:
+ * 0 PlaySecretSound, 1 PlaySmallSecretSound, 2 func_0200f7f0,
+ * 3/5/6 func_ov002_020f9468, 4 func_ov002_020f93a8. Slot 7 is unfilled,
+ * and row 7 of the sound table is the _ZTV12daSoundObj_c header, so 7
+ * is not a real param even though InitResources only rejects above 7.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder.
+ * daSoundObj_c_classInit is reconstructed (RTTI daSoundObj_c, SOUND_OBJ
+ * registry). Retail does not store that spelling.
  *
- * NAMING THE CLASS PUTS ITS VAGUE-LINKAGE DATA IN THIS OBJECT, because this TU
- * defines the key function. Nine records come out; romdata_check compares each
- * against the cartridge with relocations applied before production isolation
- * discards it:
- *
- *   _ZTV12daSoundObj_c    ov002 0x0210c0dc  VERIFIED, 124 bytes = 31 slots
- *   _ZTI12daSoundObj_c    ov002 0x0210c048  VERIFIED
- *   _ZTI8dActor_c / _ZTI7dBase_c / _ZTI7fBase_c   arm9   VERIFIED
- *   the four _ZTS records                                PARTIAL
- *   nothing                                              DIFFERS
- *
- * THE VTABLE CLAIM IS SCOPED TO THE SLOTS, deliberately. A symbols.txt _ZTV
- * address is the ADDRESS POINT, eight bytes past the table's real start; the
- * {offset-to-top, _ZTI pointer} header word pair is emitted here and
- * word-compared by nothing, so the 31 slots are proved and those two words are
- * not. The four PARTIAL rows are the known dsd extent shortfall on _ZTS records
- * -- a range that stops short, not a disagreement about bytes.
+ * deslop
+ * Leftover: Sound::PlaySub stays mangled -- Fix12<int> by value (wall
+ *   6az); the namespace spelling homes an 8-byte stack slot (measured
+ *   in d_a_sld_mng.cpp). loop stays int: the row byte passes through
+ *   unconverted.
+ * Leftover: SoundObjectCallbackOwner stays a shadow: entries 0-2 of
+ *   the callback table are arm9 Sound:: starters, not daSoundObj_c
+ *   members, and the sinit fills the table as non-polymorphic {ptr,0}
+ *   pairs, so the owner cannot be the polymorphic leaf.
+ * Leftover: func_ov002_020f9468/020f93a8 keep their linker names; the
+ *   cartridge spells no member for them and both are table entries.
+ * Leftover: #pragma opt_loop_invariants off is load-bearing for the
+ *   FindWithActorID loop (file-global; dropping it un-matches
+ *   InitResources).
+ * Leftover: g_profile_SOUND_OBJ is ov002 gap data outside this TU
+ *   (S14), as are the sound table and the callback table.
+ * Leftover: the data_* externs keep their linker spellings.
+ *   data_0208e430 is the current sub-sound ID, owned by
+ *   Sound::PlaySub (no verified name); MUSIC_VOLUME_LSL_12 and
+ *   MESSAGE_SOUND_VOLUME_LSL_12 are in symbols/verified.tsv and
+ *   renaming is symbols.txt.
  */
 
-/* THE ONE PRAGMA, RESOLVED. The legacy sources carried a single directive,
- * `#pragma opt_loop_invariants off` on InitResources, and it is the FILE-GLOBAL
- * last-wins kind (like opt_propagation and optimize_for_size), not the
- * positional kind (`long_calls`, which does not appear in this TU). Bracketing
- * it around that one member had no effect whatever -- the closing `on` set the
- * whole file's effective state back -- so it is left unbracketed below; see the
- * note there for why an `off` setting is safe for the other six members.
- */
-
-/* Includes: the union of the seven legacy files', reconciled -- the class's own
- * header now carries the real base clause and the members, so nothing here
- * shadows it. */
 #include "daSoundObj_c.h"
-#include "decl_Actor.h"
-#include "decl_common.h"
 
-/* Local declarations that have no real header yet. The two typedefs are the
- * legacy files', confirmed byte-neutral against each other.
- *
- * TODO: SoundObjectCallbackOwner is very probably daSoundObj_c itself. The two
- * callbacks below take (self, u16 *) and read self+0xd4/0xd8/0xde/0xe0 -- the
- * four members this class declares -- and Behavior calls them with &mCounter,
- * which is this+0xdc. So they are two more members, and SoundObjectCallback is
- * plausibly `int (daSoundObj_c::*)(void *)` with the cast at its one use site
- * deleted. Not done here because it cannot be settled statically: the table at
- * data_ov002_0211110c lives in .bss (0x0210d9a0..0x021111a0), so it is
- * populated at runtime and its entries cannot be read out of the image. It is a
- * verify-cycle question -- change it and ask whether the seven functions still
- * byte-match -- not a change to make on the way to a merge. Until then the
- * shadow struct is a coined name, not a class the ROM spells. */
-/* shadow typedef 'Fix12i' */
-typedef int Fix12i;
+/* One row of the 0xc-stride sound table: the four members InitResources
+ * loads, in table order. */
+struct SoundObjRow {
+    s32 soundID;
+    s32 volume;
+    u16 counterLimit;
+    u8 loop;
+    u8 pad_0b;
+};
+typedef char SoundObjRow_size_must_be_0x0c[
+    sizeof(SoundObjRow) == 0x0c ? 1 : -1];
 
-/* shadow struct 'SoundObjectCallbackOwner' */
+/* The callback table's owner, kept a forward-declared shadow: the table's
+   entries are heterogeneous starters, not members of one class (see the
+   deslop Leftover above). */
 struct SoundObjectCallbackOwner;
 
-/* shadow typedef 'int' */
-typedef int (SoundObjectCallbackOwner::*SoundObjectCallback)(void *);
+typedef int (SoundObjectCallbackOwner::*SoundObjectCallback)(u16 *);
 
 extern "C" {
-extern int _ZTV12daSoundObj_c[];
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
+extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 soundID, u32 volume, u32 pan, Fix12i distance, int loop);
 extern SoundObjectCallback data_ov002_0211110c[];
-extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN8dActor_cC2Ev(void *);
-/* Both other legacy declarations of _ZN5Sound7PlaySubEjjj5Fix12IiEb (from the
- * files for ::Behavior and ::InitResources) had the same params under a
- * different spelling (bool vs int, Fix12i vs Fix12 -- both int) -- confirmed
- * byte-neutral, kept the one above. */
+extern SoundObjRow data_ov002_0210c080[];  /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
+extern int data_0208e430;                 /* current sub-sound ID, owned by Sound::PlaySub */
+extern int data_0209b490;                 /* MUSIC_VOLUME_LSL_12 */
+extern int data_0209b49c;                 /* MESSAGE_SOUND_VOLUME_LSL_12 */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daSoundObj_c_classInit, 0x020f972c, size 0x30 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-/* Reconstructed source-style name: SM64DS proves daSoundObj_c through RTTI,
- * allocation size, vtable identity, and the SOUND_OBJ registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: daSoundObj_c_Spawn. */
-int *daSoundObj_c_classInit(void)
+// @symbol daSoundObj_c_classInit
+extern "C" daSoundObj_c *daSoundObj_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(228);
-    if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV12daSoundObj_c + 2); }
-    return p;
-}
+    return new daSoundObj_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN12daSoundObj_c13InitResourcesEv, 0x020f95e0, size 0x14c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daSoundObj_c13InitResourcesEv
-/* opt_loop_invariants is FILE-GLOBAL last-wins (applies to the whole TU,
- * not just code textually after it -- unlike #pragma long_calls). Left
- * unbracketed: no other member in this TU has a loop, so an "off" setting
- * anywhere in the file is safe for all of them. */
+/* opt_loop_invariants is file-global last-wins: this off covers the
+   FindWithActorID loop below (dropping it un-matches InitResources),
+   and no other member has a loop. */
 #pragma opt_loop_invariants off
 int daSoundObj_c::InitResources()
 {
     dActor_c *actor;
-    int g;
+    int current;
 
     if (param1 > 7)
         return 0;
 
-    mSoundID = *(s32 *)((char *)data_ov002_0210c080 + param1 * 0xc);
-    mVolume = *(s32 *)((char *)data_ov002_0210c084 + param1 * 0xc);
-    mCounterLimit = *(u16 *)((char *)data_ov002_0210c088 + param1 * 0xc);
-    unk_0e0 = *(u8 *)((char *)data_ov002_0210c08a + param1 * 0xc);
+    mSoundID = data_ov002_0210c080[param1].soundID;
+    mVolume = data_ov002_0210c080[param1].volume;
+    mCounterLimit = data_ov002_0210c080[param1].counterLimit;
+    mLoop = data_ov002_0210c080[param1].loop;
 
     actor = 0;
-    g = data_0208e430;
+    current = data_0208e430;
 
-    if (g == 0x20 || g == 0x29 || g == 0x21 || g == 0x1e || g == 0x50 ||
-        (g >= 0x19 && g <= 0x1d) || g == 0x4f || g == 0x22 || g == 0x2a || g == 0x21)
-    {
-        while (1)
-        {
-            actor = FindWithActorID(0x167, actor);
-            if (actor == 0)
-                break;
-            if (actor != this)
-            {
-                actor->MarkForDestruction();
-                _ZN5Sound7PlaySubEjjj5Fix12IiEb(g, 0x7f, 0, 0x7f000, 0);
-            }
+    /* 0x21 is tested twice, first and last: both compares are in the ROM,
+       and dropping the duplicate un-matches InitResources. */
+    if (current == 0x20 || current == 0x29 || current == 0x21 || current == 0x1e || current == 0x50 ||
+        (current >= 0x19 && current <= 0x1d) || current == 0x4f || current == 0x22 || current == 0x2a || current == 0x21)
+    /* while(1)/break is the ROM's loop shape: for and
+       assignment-in-condition forms both un-match InitResources. */
+    while (1) {
+        actor = FindWithActorID(0x167, actor);
+        if (actor == 0)
+            break;
+        if (actor != this) {
+            actor->MarkForDestruction();
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(current, 0x7f, 0, 0x7f000, 0);
         }
     }
 
@@ -152,23 +122,18 @@ int daSoundObj_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN12daSoundObj_c8BehaviorEv, 0x020f94fc, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daSoundObj_c8BehaviorEv
 int daSoundObj_c::Behavior()
 {
     SoundObjectCallbackOwner *owner = (SoundObjectCallbackOwner *)this;
-    int result = (owner->*data_ov002_0211110c[param1])(&mCounter);
-    if (result == 0 && mSoundID == data_0208e430
-        && (mCounter <= 0xa || data_0209b49c > 0x7f)) {
-        goto skip;
+    int done = (owner->*data_ov002_0211110c[param1])(&mCounter);
+    if (done != 0 || mSoundID != data_0208e430
+        || (mCounter > 0xa && data_0209b49c <= 0x7f)) {
+        MarkForDestruction();
+        if (data_0208e430 != 0x22) {
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(data_0208e430, 0x7f, 0, 0x7f000, 0);
+        }
     }
-    MarkForDestruction();
-    if (data_0208e430 != 0x22) {
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(data_0208e430, 0x7f, 0, 0x7f000, 0);
-    }
-skip:
     if (param1 != 6) {
         if (data_0209b490 < mVolume)
             mCounter = mCounterLimit;
@@ -176,68 +141,42 @@ skip:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov002_020f9468, 0x020f9468, size 0x94 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* kPoolDist is the tree's existing spelling for this literal, not coined here:
    src/func_0200f7f0.c and the two Sound::Play*SecretSound files give the same
    0x8777 the same name. Its sibling 0xcb33 in func_ov002_020f93a8 has no such
    precedent and is left bare. */
 static const int kPoolDist = 0x8777;
-int func_ov002_020f9468(char* a, unsigned short* counter){
-  int ret = 0;
-  if ((int)*counter < (int)*(unsigned short*)(a+0xde) - 0xf) {
-    int v = *(int*)(a+0xd8);
-    _ZN5Sound7PlaySubEjjj5Fix12IiEb(*(unsigned int*)(a+0xd4), v, 0x7f, (0x7f - v)<<0xc, *(unsigned char*)(a+0xe0));
-    *counter += 1;
-    goto done;
-  }
-  if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(*(unsigned int*)(a+0xd4), 0x7f, 0, kPoolDist, *(unsigned char*)(a+0xe0)))
-    return 1;
+
+// @symbol func_ov002_020f9468
+extern "C" int func_ov002_020f9468(daSoundObj_c *self, u16 *counter)
+{
+    /* ret/goto done is this starter family's shape -- PlaySecretSound,
+       PlaySmallSecretSound and func_0200f7f0 all share it -- and early
+       returns un-match this function. */
+    int ret = 0;
+    if (*counter < self->mCounterLimit - 0xf) {
+        int vol = self->mVolume;
+        _ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, vol, 0x7f, (0x7f - vol) << 0xc, self->mLoop);
+        *counter += 1;
+        goto done;
+    }
+    if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, 0x7f, 0, kPoolDist, self->mLoop))
+        return 1;
 done:
-  return ret;
-}
+    return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov002_020f93a8, 0x020f93a8, size 0xc0 */
-/* -------------------------------------------------------------------------- */
-extern "C" {
-int func_ov002_020f93a8(char* c, unsigned short* p) {
-    if (p[0] < *(unsigned short*)(c+0xde)) {
-        int d8 = *(int*)(c+0xd8);
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(*(int*)(c+0xd4), d8, 0x7f, ((0x7f - d8) << 12) / 5, 1) != 0)
-            *(unsigned short*)(c+0xde) = 1;
-        p[0]++;
-    } else {
-        if (*(unsigned short*)(c+0xde) == 0) {
-            if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(*(int*)(c+0xd4), 0x7f, 0, 0xcb33, 1) != 0)
-                return 1;
-        }
+// @symbol func_ov002_020f93a8
+extern "C" int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter)
+{
+    if (counter[0] < self->mCounterLimit) {
+        int vol = self->mVolume;
+        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)
+            self->mCounterLimit = 1;
+        counter[0]++;
+    } else if (self->mCounterLimit == 0) {
+        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(self->mSoundID, 0x7f, 0, 0xcb33, 1) != 0)
+            return 1;
     }
     return 0;
 }
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN12daSoundObj_cD0Ev, 0x020f9370, size 0x38 */
-/* -------------------------------------------------------------------------- */
-/* _ZN12daSoundObj_cD0Ev (vtable slot 17, the deleting destructor) is NOT
- * hand-written here. A hand-written mangled D0 next to a real out-of-line D1
- * ICEs mwccarm 2004/b56 (ELFgen.c:483); the compiler synthesizes D0 itself
- * from D1 once D1 is a real destructor -- see EnemySwitchTag for the same
- * shape. */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12daSoundObj_cD1Ev, 0x020f934c, size 0x24 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN12daSoundObj_cD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body.
- * Vtable slot 16: one vtable store, then the tail into ~dActor_c.
- *
- * (no definition here: `virtual ~daSoundObj_c() {}` is in
- * include/daSoundObj_c.h, and that placement is load-bearing rather than
- * stylistic -- out of line, mwccarm emits D0 before D1 and adds a homeless D2,
- * and objisolate then refuses this whole TU. The header carries the reasoning
- * and the leaf measurement that makes it safe.) */

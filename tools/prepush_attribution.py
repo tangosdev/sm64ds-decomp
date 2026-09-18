@@ -295,10 +295,40 @@ def main():
     # rewrite-and-move in one commit still fails.
     projected, origin = project(before_by_name, steps)
 
+    missing = {name: old for name, old in projected.items() if name not in after_by_name}
+    moved = any(old_stem != after_by_name[name][0]
+                for name, (old_stem, _who) in projected.items() if name in after_by_name)
+    if missing or moved:
+        base_functions, base_ambiguous, base_symbols = function_ownership_at(args.base)
+        head_functions, head_ambiguous, _head_symbols = function_ownership_at(args.head)
+        ambiguous = base_ambiguous | head_ambiguous
+        by_stem, head_by_stem = {}, {}
+        for key, rec in base_functions.items():
+            by_stem.setdefault(rec["srcPath"].rsplit(".", 1)[0], []).append((key, rec))
+        for key, rec in head_functions.items():
+            head_by_stem.setdefault(rec["srcPath"].rsplit(".", 1)[0], []).append((key, rec))
+
+        # A promotion may keep the factory's filename, including its directory.
+        # That survivor now owns several functions: its file author cannot stand
+        # in for each member's explicit credit. Send it through the same strict
+        # address/size/override checks as the sources the TU absorbed. Ordinary
+        # single-function moves retain the file-lineage check below, and changes
+        # with no moved or missing paths avoid the full ownership scans.
+        for name, (old_stem, old_who) in projected.items():
+            if name not in after_by_name:
+                continue
+            new_stem = after_by_name[name][0]
+            owned = by_stem.get(old_stem, [])
+            dests = head_by_stem.get(new_stem, [])
+            if len(dests) > 1 and (old_stem != new_stem
+                                  or {key for key, _rec in owned}
+                                  != {key for key, _rec in dests}):
+                missing[name] = (old_stem, old_who)
+
     changed, lost, moved_ok, renamed_ok, consolidated_ok = [], [], [], [], []
     for name, (new_stem, new_who) in after_by_name.items():
-        if name not in projected:
-            continue                                   # genuinely new work
+        if name not in projected or name in missing:
+            continue                                   # new work or function-level check
         old_stem, old_who = projected[name]
         came_from = origin.get(name, name)
         if old_who != new_who:
@@ -307,14 +337,7 @@ def main():
             renamed_ok.append((came_from, name, old_stem, new_stem, old_who))
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
-    missing = {name: old for name, old in projected.items() if name not in after_by_name}
     if missing:
-        base_functions, base_ambiguous, base_symbols = function_ownership_at(args.base)
-        head_functions, head_ambiguous, _head_symbols = function_ownership_at(args.head)
-        ambiguous = base_ambiguous | head_ambiguous
-        by_stem = {}
-        for key, rec in base_functions.items():
-            by_stem.setdefault(rec["srcPath"].rsplit(".", 1)[0], []).append((key, rec))
         base_overrides = credit_overrides_at(args.base)
         head_overrides = credit_overrides_at(args.head)
         members = member_overrides_at(args.head)

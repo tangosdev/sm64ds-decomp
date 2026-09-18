@@ -1,304 +1,285 @@
 //cpp
-/* Genuine production translation unit for ov002/daTree_c (8 function(s)),
- * enrolled as one `complete` delinks span.
+/* TREE (actor 286) -- ov002/daTree_c.
  *
- * The file stem follows the snake_case scheme in
- * notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py):
- * daTree_c -> d_a_tree.
+ * The course trees. Spawn-param bits 4-6 select one of five variants; the
+ * first tree of a variant loads that variant's Model, and every tree
+ * appends a heap node {render pos, dCcPos_c, next} to its variant's list.
+ * Behavior ticks every list's collision, Render billboards each variant's
+ * Model at every node with distance-faded opacity, and CleanupResources
+ * frees the lists of the variants that loaded.
  *
- * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
- * `Tree`, a coined name. MEASURED in extracted/overlays/overlay_0002.bin
- * (ov002 base 0x020ad660, the `.text start:` on line 1 of
- * config/arm9/overlays/ov002/delinks.txt): the vtable object's preamble at
- * 0x0210abf8 is [offset-to-top 0, 0x0210abd0], and _ZTI8daTree_c at
- * 0x0210abd0 reads [0x0209a764, 0x0210abc4, 0x0208e390] --
- * _ZTVN3abi20__si_class_type_infoE (config/arm9/symbols.txt), a typeinfo name
- * at 0x0210abc4 whose bytes are the string "8daTree_c", and _ZTI8dActor_c, so
- * the ROM states the direct base too. tools/class_rename.py performed the
- * rename, and it is what makes this promotion honest: ov002's symbols.txt
- * already carried _ZTS8daTree_c and _ZTI8daTree_c at those addresses, so under
- * the coined name the compiler's own _ZTS4Tree/_ZTI4Tree reached no symbol
- * home and could never be word-compared against the cartridge
- * (tools/tubuild.py apply_compiler_only_policy).
+ * mwccarm emits ordinary function sections in reverse source order, so the
+ * factory is written first. InitResources is the key function, so this TU
+ * emits the _ZTV/_ZTI/_ZTS group; the inline destructor in daTree_c.h
+ * emits the retail D1/D0 pair and no D2.
  *
- * That is why this TU now emits and licenses the whole RTTI/vtable group
- * rather than importing it. The first promotion of this entry kept the
- * destructors as extern "C" mangled shims precisely to force the vtable
- * symbol -- `_ZTV4Tree` at the time, the class still being coined -- to stay
- * an UNDEFINED import, and the cost was measurable: the eight legacy
- * per-function objects between them PROVED `_ZTV4Tree` against the ROM,
- * the shimmed TU proved nothing, and the tree's romdata-verified count fell by
- * one -- which is what the merge validator rejected.
- *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
- *
- * Consolidates (and replaces) these legacy one-function sources, which this
- * promotion deletes (ROM address order):
- *   [0] 0x020ebf8c  src/_ZN4TreeD1Ev.cpp
- *   [1] 0x020ebfcc  src/_ZN4TreeD0Ev.cpp
- *   [2] 0x020ec020  src/_ZN4Tree16CleanupResourcesEv.cpp
- *   [3] 0x020ec0a0  src/_ZN4Tree16OnPendingDestroyEv.cpp
- *   [4] 0x020ec0a4  src/_ZN4Tree6RenderEv.cpp
- *   [5] 0x020ec1d8  src/_ZN4Tree8BehaviorEv.cpp
- *   [6] 0x020ec22c  src/_ZN4Tree13InitResourcesEv.cpp
- *   [7] 0x020ec32c  src/Tree_Spawn.cpp
+ * deslop leftovers:
+ * - dCcPos_c::Init 6az: two by-value Fix12<int> params; the header member
+ *   form homes them to the stack and size-DIFFs, so the TU-local wrapper
+ *   keeps scalar ints.
+ * - Clipper::Func_02015560 6az: the same wall on its Fix12<int> scale.
+ * - ModelBase::ApplyOpacity keeps its 3-word mangled extern: the call-site
+ *   census below measures a third argument register that include/ModelBase.h
+ *   does not spell. That is a declaration disagreement to settle tree-wide,
+ *   not a codegen wall -- see the extern's own comment.
+ * - dCcPos_c::C1 stays a mangled extern: a language limit, not a codegen
+ *   one. C++ has no syntax for a qualified constructor call on storage that
+ *   already exists, and the alternative -- placement new -- needs a leaf
+ *   `operator new(size_t, void *)` this tree has no precedent for.
+ * - _Znwj stays spelled: also a language limit. `::operator new` mangles
+ *   _Znwm here (sizeof is unsigned long), which has no ROM home; the
+ *   cartridge calls _Znwj.
+ * - *(const Vector3 *)&mPosX: dActor_c carries position as three scalars
+ *   with no Pos() accessor, so the Init call puns them TU-locally.
+ * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
+ *   bss/data owns them (S14); this TU's delinks span is .text-only.
+ * - data_0209f43c / data_0209b3ec: arm9 bss, the Clipper singleton and the
+ *   live view matrix it clips against (CopyToViewMat's object); read here,
+ *   owned elsewhere.
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daTree_c.h"
+#include "dCcPos_c.h"
+#include "Camera.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win.
- * Model/Vector3 shadow structs dropped: real definitions come from
- * daTree_c.h's own includes. dCcPos_c stays an incomplete forward
- * declaration -- Init() is called through the extern "C" mangled form
- * below, not the real member, because the real signature takes two
- * Fix12<int> by value and this call site only has literal ints (same
- * materialization-cost trap documented on daObjPathLift_c/#1719). */
-struct dCcPos_c;
-
-/* shadow struct 'ModelBase' -- a vtable-slot probe reaching past the real
- * ModelBase.h's own 3 slots into Model's own extension, renamed from
- * 'ModelBase' to avoid colliding with the real class daTree_c.h now pulls in
- * transitively via Model.h. */
-struct ModelBaseVProbe {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m(int arg);
+/* One tree instance's list node: the billboard/clip center in
+ * matrix-shifted units (>> 3, y lifted by kCanopyLift), its cylinder
+ * collision, and the list link. _Znwj allocates 0x4c = sizeof(this). */
+struct TreeNode {
+    Vector3 pos;      /* 0x00 */
+    dCcPos_c clsn;    /* 0x0c */
+    TreeNode *next;   /* 0x48 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+typedef char TreeNode_size_must_be_0x4c[sizeof(TreeNode) == 0x4c ? 1 : -1];
+#endif
+
+enum {
+    kNumVariants = 5,
+    kMaxVariant = 4,
+    /* The node-y lift, the clip scale, and the render restore are one
+     * value: nodes float kCanopyLift above the trunk base, and the matrix
+     * translation subtracts it back out. */
+    kCanopyLift = 0x1e000,
+    kClsnRadius = 0x35555,
+    kClsnHeight = 0x1f4000,
+    /* dCc_c bit table: char-projectile + char-body + player-interact +
+     * tree + handstand. */
+    kClsnFlags = 0x380000c,
+    kClipNear = 0x11000,
+    kClipFar = 0x578000,
+    kFadeDist = 0x2f000,
+    kFadeBase = 0x10000,
+    kOpacityFull = 0x1f,
+};
+
+/* Shared ABI seams, kept above the first `// @symbol` marker so no member
+ * is charged with their mangled spellings. */
 extern "C" {
-void _ZN8dCcPos_cD1Ev(void* c);
-void _ZN6Memory16operator_delete2EPv(void* p);
-extern char* data_ov002_02110a48[5];
-struct Vec3 { int x, y, z; };
-extern int data_0209f318;
-extern int data_0209f43c;
-extern int data_0209b3ec;
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *a, void *b, void *c, int d, void *e);
-extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
-extern "C" void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void *, const Vector3&, int, int, unsigned int, unsigned int);
-extern "C" void* _Znwj(unsigned int);
-extern "C" void _ZN8dCcPos_cC1Ev(void*);
-extern "C" void Vec3_AsrInPlace(void*, int);
-extern unsigned short data_ov002_0210abb8[];
+void _ZN8dCcPos_cC1Ev(void *clsn);
+void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
+    dCcPos_c *self, const Vector3 &pos, int radius, int height, u32 flags,
+    u32 vuln);
+int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
+    void *clipper, void *matrix, void *pos, int scale, void *result);
+void Matrix4x3_FromRotationY(Matrix4x3 *m, short ang);
+/* Spelled Vector3 * for the object actually passed. The definition in
+ * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
+ * file-local `struct Vec3 { int x, y, z; }` in src/func_ov060_02117db8.c --
+ * four spellings of the same three-word layout, none of them typedefs of each
+ * other. The disagreement is nominal, not a contract difference, and int * is
+ * the slop spelling this cleanup exists to retire. */
+int *Vec3_AsrInPlace(Vector3 *v, int shift);
+/* The global scalar operator new. Spelled, not `::operator new`:
+ * sizeof is unsigned long here, so the `new` expression mangles _Znwm,
+ * which has no ROM home; the cartridge calls _Znwj. */
+void *_Znwj(unsigned int size);
+/* ApplyOpacity takes a third argument its own body ignores, so the extern
+ * spells three words where include/ModelBase.h spells two. MEASURED over the
+ * whole cartridge (arm9 + all 104 overlays), not inferred from this call:
+ *
+ *  - 0x02016a9c is a four-instruction this-adjusting thunk -- `ldr ip,[pc,#4]`
+ *    / `add r0, r0, #8` / `bx ip` -- to 0x020461b4, forwarding r1..r3.
+ *  - 0x020461b4 genuinely never reads incoming r2: it sets r5 = 0 and then
+ *    overwrites r2 with r5 on every iteration. That test is one-way. A callee
+ *    that ignores an argument register is what an UNUSED parameter looks like,
+ *    so it cannot by itself decide the arity.
+ *  - What decides it is the caller side. There are exactly 25 `bl` sites to
+ *    0x02016a9c in the cartridge, and all 25 write r2 on the straight-line
+ *    path into the branch, inside the r0/r1/r2 setup run, with no call
+ *    between: 13 `mov r2,#0`, 10 `mov r2,#1`, and 2 that copy a register
+ *    (`mov r2,r1` at ov002:0x020b8034, `mov r2,r5` at ov002:0x020ec14c --
+ *    this TU's own Render). Both of those registers provably hold 0, so the
+ *    value census is 15 zero / 10 one; neither passes a live value.
+ *  - The control that makes 25/25 mean something: across all 47,746 `bl`
+ *    sites in the cartridge only 33.4% write r2 in the same 8-instruction
+ *    window, and only 76 of the 588 callees with 10+ sites reach 100%. Two
+ *    two-argument neighbours score 31/184 (17%) and 13/237 (5%); a known
+ *    multi-argument one scores 40/40. See
+ *    notes/experiments/batch3-2707-tree-applyopacity-census.md.
+ *  - Corroboration from the thunk's own family: the adjacent thunk 0x02016aac
+ *    targets 0x0204605c, which READS r2 as an element index (`mla r0, r2,
+ *    #0x30, r3`). Same three-register shape, consumed there, ignored here
+ *    because 0x020461b4 loops over every index instead of taking one.
+ *
+ * A register no caller needed would be left alone at some of 25 sites and
+ * would not carry two different values. The mangled name is the decomp's own
+ * coinage -- neither "ApplyOpacity" nor "9ModelBase" occurs anywhere in the
+ * ROM image -- so its single-`unsigned int` mangling is not the cartridge's
+ * word on arity either. Reconciling include/ModelBase.h with this measurement
+ * renames the symbol and touches all 17 files that already declare the
+ * three-word form; that is its own change, not this TU's. Until then the
+ * cross-TU extern is where the measurement is spelled. */
+void _ZN9ModelBase12ApplyOpacityEj(Model *self, u32 op, int unused);
+
+extern TreeNode *data_ov002_02110a48[kNumVariants];
+extern u16 data_ov002_0210abb8[];
+extern int data_0209f43c[];
+extern Matrix4x3 data_0209b3ec;
+extern Camera *data_0209f318;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daTree_c_classInit, 0x020ec32c, size 0x5c */
-/* -------------------------------------------------------------------------- */
-#include "daTree_c.h"
-extern "C" {
-extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN8dActor_cC2Ev(void*);
-extern void _ZN5ModelD1Ev(void*);
-extern void _ZN5ModelC1Ev(void*);
-extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
-extern void* _ZTV8daTree_c[];
-/* Reconstructed source-style name: SM64DS proves daTree_c through RTTI,
- * allocation size, vtable identity, and the TREE registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: Tree_Spawn. */
-int* daTree_c_classInit(void){
-  int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct daTree_c));
-  if(p){
-    _ZN8dActor_cC2Ev(p);
-    *(void***)p = (void**)&_ZTV8daTree_c[2]; /* +8: this TU defines the vtable */
-    __cxa_vec_ctor((char*)p+0xd4, 5, 0x50, _ZN5ModelC1Ev, _ZN5ModelD1Ev);
-  }
-  return p;
-}
+namespace Memory {
+void operator_delete2(void *p);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN8daTree_c13InitResourcesEv, 0x020ec22c, size 0x100 */
-/* -------------------------------------------------------------------------- */
+// @symbol daTree_c_classInit
+extern "C" daTree_c *daTree_c_classInit()
+{
+    return new daTree_c();
+}
+
 // @symbol _ZN8daTree_c13InitResourcesEv
-/* daTree_c::InitResources -- vtable slot 0, ov002 0x020ec22c.
- *
- * A REAL MEMBER ON PURPOSE, and it has to be. The destructor is defined
- * inline in include/daTree_c.h, so the class's key function is its first
- * DECLARED non-inline virtual -- this one (notes/, and the key-function rule:
- * first declared, not first slot). While this body was a hand-mangled
- * `extern "C"` free function, no TU anywhere defined the key function, so
- * mwccarm emitted neither the _ZTV/_ZTI/_ZTS group nor the inline
- * destructor's D1/D0 pair, and objisolate refused the whole TU with
- * `_ZN8daTree_cD1Ev has 0 defined symbols`. Written as a member it emits
- * both, and this entry's compiler_only_output licenses the RTTI group
- * record by record against the cartridge.
- *
- * Only the CALLEE declarations stay hand-spelled: dCcPos_c::Init's ROM name
- * carries by-value class parameters (Fix12<int>), which mwccarm passes
- * differently at the call site, so declaring the true types breaks the byte
- * match. See notes/mwccarm-codegen.md 6az. That exception is about the
- * callee signature, not daTree_c method ownership. */
-int daTree_c::InitResources() {
-    char* self = (char*)this;
-    int idx = ((unsigned int)*(int*)(self + 8) >> 4) & 7;
-    char** slot;
-    char* p;
-    if (idx >= 4) idx = 4;
-    slot = &data_ov002_02110a48[idx];
-    if (*slot == 0) {
-        ((Model*)(self + 0xd4 + idx * 0x50))->LoadAndSetFile(data_ov002_0210abb8[idx], 1, 1);
-    }
-    p = (char*)_Znwj(0x4c);
-    if (p) _ZN8dCcPos_cC1Ev(p + 0xc);
-    *(int*)(p + 0) = *(int*)(self + 0x5c);
-    *(int*)(p + 4) = *(int*)(self + 0x60);
-    *(int*)(p + 8) = *(int*)(self + 0x64);
-    Vec3_AsrInPlace(p, 3);
-    {
-        int* q = (int*)(((int)p + 4));
-        *q = *q + 0x1e000;
-    }
-    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj((dCcPos_c*)(p + 0xc), *(Vector3*)(self + 0x5c), 0x35555, 0x1f4000, 0x380000c, 0);
-    *(int*)(p + 0x48) = (int)*slot;
-    *slot = p;
-    if (*(int*)(p + 0x48) != 0) {
+/* First tree of a variant loads that variant's Model; every tree appends
+ * a node to its variant's list. Returns 1 when this tree was first. */
+int daTree_c::InitResources()
+{
+    int variant = (param1 >> 4) & 7;
+    TreeNode **slot;
+    TreeNode *node;
+
+    if (variant >= kMaxVariant)
+        variant = kMaxVariant;
+    slot = &data_ov002_02110a48[variant];
+    if (*slot == 0)
+        mModel[variant].LoadAndSetFile(data_ov002_0210abb8[variant], 1, 1);
+    node = (TreeNode *)_Znwj(sizeof(TreeNode));
+    if (node != 0)
+        _ZN8dCcPos_cC1Ev(&node->clsn);
+    node->pos.x = mPosX;
+    node->pos.y = mPosY;
+    node->pos.z = mPosZ;
+    Vec3_AsrInPlace(&node->pos, 3);
+    node->pos.y += kCanopyLift;
+    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
+        &node->clsn, *(const Vector3 *)&mPosX, kClsnRadius, kClsnHeight,
+        kClsnFlags, 0);
+    node->next = *slot;
+    *slot = node;
+    if (node->next != 0) {
         return 0;
     } else {
         return 1;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN8daTree_c8BehaviorEv, 0x020ec1d8, size 0x54 */
-/* -------------------------------------------------------------------------- */
-extern "C" {
-extern int _ZN5dCc_c5ClearEv(void*);
-extern int _ZN5dCc_c6UpdateEv(void*);
-extern char* data_ov002_02110a48[5];
-int _ZN8daTree_c8BehaviorEv(void){
-  char** pp = data_ov002_02110a48;
-  int i;
-  for(i=0;i<5;i++){
-    char* p = *pp;
-    while(p){
-      _ZN5dCc_c5ClearEv(p+0xc);
-      _ZN5dCc_c6UpdateEv(p+0xc);
-      p = *(char**)(p+0x48);
-    }
-    pp++;
-  }
-  return 1;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN8daTree_c6RenderEv, 0x020ec0a4, size 0x134 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN8daTree_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
-int daTree_c::Render()
+// @symbol _ZN8daTree_c8BehaviorEv
+int daTree_c::Behavior()
 {
-    char *base = (char *)data_0209f318;
-    char **iter = data_ov002_02110a48;
-    char *sl = ((char *)this) + 0xd4;
-    int i = 0;
-    int z5 = 0;
-    int z4 = 0;
-    int c1f = 0x1f;
-    int c1e000 = 0x1e000;
-    Vec3 buf;
-    int *sb;
-    char *r8;
-    char *r0;
+    TreeNode **slot = data_ov002_02110a48;
+    int i;
 
-    do {
-        r8 = sl + 0x1c;
-        Matrix4x3_FromRotationY(r8, *(short *)(base + 0x17c));
-        sb = (int *)*iter;
-        while (sb != 0) {
-            int v = _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-                        &data_0209f43c, &data_0209b3ec, sb, c1e000, &buf);
-            if (v > 0x11000 && v < 0x578000) {
-                int op = c1f;
-                if (v < 0x2f000) {
-                    op = ((v - 0x10000) >> 12) & 0xff;
-                }
-                _ZN9ModelBase12ApplyOpacityEj(sl, op, z5);
-                r0 = sl;
-                *(int *)(r8 + 0x24) = sb[0];
-                *(int *)(r8 + 0x28) = sb[1] - 0x1e000;
-                *(int *)(r8 + 0x2c) = sb[2];
-                ((ModelBaseVProbe *)r0)->m(z4);
-            }
-            sb = (int *)sb[0x12];
+    for (i = 0; i < kNumVariants; i++) {
+        TreeNode *node = *slot;
+        while (node != 0) {
+            node->clsn.Clear();
+            node->clsn.Update();
+            node = node->next;
         }
-        sl += 0x50;
-        i++;
-        iter++;
-    } while (i < 5);
+        slot++;
+    }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN8daTree_c16OnPendingDestroyEv, 0x020ec0a0, size 0x4 */
-/* -------------------------------------------------------------------------- */
+// @symbol _ZN8daTree_c6RenderEv
+int daTree_c::Render()
+{
+    Camera *cam = data_0209f318;
+    TreeNode **slot = data_ov002_02110a48;
+    Model *model = mModel;
+    int i;
+
+    for (i = 0; i < kNumVariants; i++) {
+        /* node before mat: the order selects retail's r8/sb assignment. */
+        TreeNode *node;
+        Matrix4x3 *mat = &model->mat4x3;
+
+        Matrix4x3_FromRotationY(mat, cam->mAngleY);
+        node = *slot;
+        while (node != 0) {
+            /* Leftover: out is int[3], not Vector3. This is an ownership
+             * dependency, not a codegen wall -- Render reproduces
+             * byte-for-byte either way. A stack Vector3 odr-uses the type, so
+             * mwccarm re-emits its trivial vague-linkage Vector3D1 (4 bytes)
+             * beside the licensed text, and production _isolate refuses it.
+             * This TU's manifest already carries compiler_only_output rows
+             * (the RTTI group); what it lacks is a deadstrip-duplicate row for
+             * that one symbol, exactly as ov002/da1up_c already licenses it.
+             * Deferred with completion: partial; see issue #2748. */
+            int out[3];
+            int dist =
+                _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
+                    data_0209f43c, &data_0209b3ec, &node->pos, kCanopyLift,
+                    (Vector3 *)out);
+            if (dist > kClipNear && dist < kClipFar) {
+                int opacity = kOpacityFull;
+                if (dist < kFadeDist)
+                    opacity = ((dist - kFadeBase) >> 12) & 0xff;
+                _ZN9ModelBase12ApplyOpacityEj(model, opacity, 0);
+                mat->t.x = node->pos.x;
+                mat->t.y = node->pos.y - kCanopyLift;
+                mat->t.z = node->pos.z;
+                model->Render(0);
+            }
+            node = node->next;
+        }
+        model++;
+        slot++;
+    }
+    return 1;
+}
+
 // @symbol _ZN8daTree_c16OnPendingDestroyEv
-/* daTree_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
- * override exists only to occupy the slot. */
+/* Empty in the ROM: the override exists only to occupy vtable slot 12. */
 void daTree_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN8daTree_c16CleanupResourcesEv, 0x020ec020, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daTree_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daTree_c::CleanupResources()
 {
-  char* r7 = ((char*)this) + 0xd4;
-  char** r6 = data_ov002_02110a48;
-  int i;
-  for (i = 0; i < 5; i++){
-    if (*(int*)(r7 + 0x4c) != 0){
-      while (*r6 != 0){
-        char* r4 = *r6;
-        *r6 = *(char**)(r4 + 0x48);
-        if (r4 != 0){
-          _ZN8dCcPos_cD1Ev(r4 + 0xc);
-          _ZN6Memory16operator_delete2EPv(r4);
-        }
-      }
-    }
-    r7 += 0x50;
-    r6 += 1;
-  }
-  return 1;
-}
+    Model *model = mModel;
+    TreeNode **slot = data_ov002_02110a48;
+    int i;
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- _ZN8daTree_cD1Ev 0x020ebf8c size 0x40 and          */
-/* _ZN8daTree_cD0Ev 0x020ebfcc size 0x54 -- are NOT written here.             */
-/*                                                                            */
-/* The destructor is defined INLINE in include/daTree_c.h. Written out-of-line*/
-/* here the real destructor makes mwccarm emit D0 BEFORE D1, the reverse of the*/
-/* cartridge's order, which objisolate refuses for the whole TU, and it emits a*/
-/* third D2 body with no ROM home. The inline definition gives the retail D1/D0*/
-/* pair in ROM order and no D2, and it replaces the two hand-written extern "C"*/
-/* mangled shims this file used to carry: those existed only to keep          */
-/* _ZTV8daTree_c an UNDEFINED import while the class still had its coined name,*/
-/* and they cost D0 and D1 their place in the CONVERTED tier. Both are real   */
-/* compiler-emitted C++ member bodies again, and the two entries in           */
-/* config/converted-backslide-exceptions.jsonl that recorded the loss are gone.*/
-/*                                                                            */
-/* This TU therefore emits the class's complete _ZTV/_ZTI/_ZTS group, which is*/
-/* the point: every record is licensed in this entry's compiler_only_output as*/
-/* `deadstrip-data` with a canonical module and address, so romdata_check     */
-/* word-compares each against the cartridge. Under the coined name _ZTS4Tree and*/
-/* _ZTI4Tree reached no symbol home and the group could not be licensed at all.*/
-/* -------------------------------------------------------------------------- */
+    for (i = 0; i < kNumVariants; i++) {
+        /* transformsBuf is allocated by DoSetFile, so it doubles as the
+         * "this variant loaded" flag guarding its list. */
+        if (model->transformsBuf != 0) {
+            while (*slot != 0) {
+                TreeNode *node = *slot;
+                *slot = node->next;
+                /* Redundant against the while, and retail keeps it: the
+                 * node test and the link store both survive in the ROM. */
+                if (node != 0) {
+                    node->clsn.dCcPos_c::~dCcPos_c();
+                    Memory::operator_delete2(node);
+                }
+            }
+        }
+        model++;
+        slot++;
+    }
+    return 1;
+}

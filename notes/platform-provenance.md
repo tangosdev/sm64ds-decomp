@@ -59,8 +59,8 @@ non-`dBgActor_c` vtable store each, so no intermediate — and each places a
 | header name | RTTI name | member at 0x320 |
 |---|---|---|
 | `PyramidTop`    | `daObjDlPyramid_c` | `Model` |
-| `BasementWater` | `daObjC0Water_c`   | `TextureTransformer` |
-| `TowerStep`     | `daObjBk_Lift_c`   | `ShadowModel` |
+| `daObjC0Water_c` | `daObjC0Water_c`   | `TextureTransformer` |
+| `daObjBk_Lift_c`     | `daObjBk_Lift_c`   | `ShadowModel` |
 | `WallSign`      | `daObjKanban_c`    | `dCcAcPos_c` |
 
 Each is read straight off that class's destructor, which destroys its own member
@@ -100,7 +100,7 @@ key function, so no translation unit that merely includes this header emits
 vtable this header emitted and the one in the cartridge.
 
 `_ZTV10dBgActor_c` is 0x84 at [ov002](../config/arm9/overlays/ov002/symbols.txt):0x0210ae38 — 33 words, one more than the 32 a
-`dActor_c`-shaped table needs — and `_ZTV8PoleLift`, one of the 70 subclasses, is
+`dActor_c`-shaped table needs — and `_ZTV18daObjKm2_Ami_Bou_c`, one of the 70 subclasses, is
 0x84 as well. `rtti_vtables` agrees from the other side: `dActor_c` has 31 slots
 and `dBgActor_c`'s own overrides are 16 (D1), 17 (D0) and 31, and 97 of its 101
 RTTI children have exactly 32 slots. Without this declaration every one of those
@@ -398,7 +398,7 @@ It overrides slots 0 and 3, which the base leaves null.
 as its `const Matrix4x3 &`. Was a `u8` marker plus its pad.
 
 `mShadowMat` at 0x350: `ShadowModel` + `Matrix4x3` is the same pair
-`HauntedChair` evidences by byte (a 48-byte identity block-copied over +0x14c,
+`daChair_c` evidences by byte (a 48-byte identity block-copied over +0x14c,
 which lands exactly on the next member), and 0x350 + 0x30 closes on the 0x380
 `SpinningPlatform_Spawn` allocates.
 

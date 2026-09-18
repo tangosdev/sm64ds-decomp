@@ -8,6 +8,17 @@
  * mwccarm emits ordinary function sections in reverse source order. Keep the
  * factory first. The inline destructor declared last in daSldMng_c emits the
  * retail D1/D0 pair first and emits no D2 body.
+ *
+ * deslop
+ * Leftover: Sound::PlaySub stays mangled (Fix12<int> by value, wall 6az;
+ *   this TU's Behavior measured 0xa4 -> 0xb4 in method form).
+ * Leftover: data_ov019_021135d8 keeps its ROM-address name (sinit-owned
+ *   Vector3 spawn position; nothing in the ROM names it).
+ * Leftover: g_profile_SLIDER_MANAGER (ov019 0x021133a8) stays outside this
+ *   TU (S14) -- defining it here would emit .data this entry is not
+ *   licensed to own.
+ * Leftover: unk_0d0 (header) has no observed meaning; pad_0d7 is never
+ *   dereferenced.
  */
 
 #include "daSldMng_c.h"

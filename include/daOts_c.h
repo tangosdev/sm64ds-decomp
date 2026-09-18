@@ -35,7 +35,7 @@
  *
  * The vtable is data_ov064_0211b768: the word before it is 0x021138bc, which is
  * _ZTI7daOts_c. (Reading that address out of the merged symbol table answers
- * `data_ov009_021138bc`, and the destructor answers `_ZN7ChuckyaD1Ev` -- ov062
+ * `data_ov009_021138bc`, and the destructor answers `_ZN10daHolhei_cD1Ev` -- ov062
  * through ov066 all load their .text at 0x02115ee0. Resolve inside ov064 or the
  * table will lie to you.)
  *

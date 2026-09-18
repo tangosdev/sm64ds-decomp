@@ -158,10 +158,10 @@ An illustrative entry:
 
 ```json
 {
-  "id": "ov062/Chuckya",
+  "id": "ov062/daHolhei_c",
   "module": "ov062",
-  "source": "src_tu/actors/Chuckya.cpp",
-  "promoted_source": "src/actors/Chuckya.cpp",
+  "source": "src/game/actors/d_a_holhei.cpp",
+  "promoted_source": "src/game/actors/d_a_holhei.cpp",
   "status": "shadow",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -178,17 +178,17 @@ An illustrative entry:
   ],
   "functions": [
     {
-      "symbol": "_ZN7Chuckya8BehaviorEv",
+      "symbol": "_ZN10daHolhei_c8BehaviorEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/_ZN7Chuckya8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/d_a_holhei.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN7Chuckya6RenderEv",
+      "symbol": "_ZN10daHolhei_c6RenderEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/_ZN7Chuckya6RenderEv.cpp",
+      "legacy_source": "src/game/actors/d_a_holhei.cpp",
       "ordinal": 1
     }
   ],
@@ -228,12 +228,12 @@ One entry point should orchestrate the existing lower-level tools rather than cr
 
 ```sh
 python tools/tubuild.py list
-python tools/tubuild.py inspect ov062/Chuckya
-python tools/tubuild.py create ov062/Chuckya
-python tools/tubuild.py compile ov062/Chuckya
-python tools/tubuild.py verify ov062/Chuckya
-python tools/tubuild.py linkcheck ov062/Chuckya
-python tools/tubuild.py promote ov062/Chuckya
+python tools/tubuild.py inspect ov062/daHolhei_c
+python tools/tubuild.py create ov062/daHolhei_c
+python tools/tubuild.py compile ov062/daHolhei_c
+python tools/tubuild.py verify ov062/daHolhei_c
+python tools/tubuild.py linkcheck ov062/daHolhei_c
+python tools/tubuild.py promote ov062/daHolhei_c
 ```
 
 ### 7.1 `list`
@@ -303,12 +303,12 @@ Reuse the existing `match.py`, `fdiff.py`, relocation, and ELF-parsing logic rat
 Example report:
 
 ```python
-TU ov062/Chuckya
+TU ov062/daHolhei_c
 
-MATCH  Chuckya::~Chuckya          0x021xxxxx  size 0x0xx
-MATCH  Chuckya::InitResources     0x021xxxxx  size 0x0xx
-MATCH  Chuckya::Behavior          0x021xxxxx  size 0x0xx
-DIFF   Chuckya::Render            0x021xxxxx  7 instructions differ
+MATCH  daHolhei_c::~daHolhei_c          0x021xxxxx  size 0x0xx
+MATCH  daHolhei_c::InitResources     0x021xxxxx  size 0x0xx
+MATCH  daHolhei_c::Behavior          0x021xxxxx  size 0x0xx
+DIFF   daHolhei_c::Render            0x021xxxxx  7 instructions differ
 EXTRA  .rodata                    size 0x14, not licensed
 
 Result: shadow only; promotion refused

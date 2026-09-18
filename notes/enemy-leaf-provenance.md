@@ -32,7 +32,7 @@ once, here, rather than per class.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x300 | `mState` (`State *`) | `src/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `Chuckya`, `ChiefChilly` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
+| 0x300 | `mState` (`State *`) | `src/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `ChiefChilly` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
 
 Left `unk_`:
 
@@ -145,7 +145,7 @@ the class and its members were renamed to the cartridge's own spelling.
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x394 | `mMatrix[12]` | `InitResources` does `*(Matrix4x3 *)unk_394 = IDENTITY_MATRIX4X3;` — a 0x30-byte copy of the identity matrix. Kept as twelve words rather than typed `Matrix4x3`: several includers of this header do not pull `common.h`. |
-| 0x3dc | `mState` | `Behavior` branches on it three times and only on equality — `!= 5` guards the whole main body, `== 4` selects the egg/Chuckya hand-off, `== 0` allows the wall bounce. |
+| 0x3dc | `mState` | `Behavior` branches on it three times and only on equality — `!= 5` guards the whole main body, `== 4` selects the egg/daHolhei_c hand-off, `== 0` allows the wall bounce. |
 | 0x3f0 | `mHomeAngleY` | `InitResources`' last statement, `unk_3f0 = mAngleY`, sitting beside the `mHomePosX/Y/Z = mPos*` snapshot a few lines up. |
 | 0x3f3 | `mShouldRender` | `Render` is `if (unk_3f3 != 0) { ...draw... }` and nothing else; `InitResources` sets it to 1. Same role and same spelling as `Goomboss::mShouldRender`. |
 | 0x3f5 | `mVariant` | `InitResources` sets it to `param1 & 7` and immediately switches on it: 2 starts inert (sets the collision volume's hit bit, clears `mFlags` bit 0), 4 starts clear, anything else starts live. This header's own prose already called it the variant. |

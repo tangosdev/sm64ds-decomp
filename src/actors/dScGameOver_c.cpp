@@ -1,113 +1,103 @@
 //cpp
-/* dScGameOver_c -- the game-over screen, one of dScene_c's ten direct
- * children.  Mario is out of lives; this scene drops the eight "GAME OVER"
- * glyphs in from off screen and then offers the yes/no continue prompt.
+/* dScGameOver_c -- the game-over screen, ov003.
  *
- * ov003, .text 0x020b0580 .. 0x020b117c, 10 functions.  See
- * include/dScGameOver_c.h for the class's own evidence trail -- where its
- * fields end, why the destructor is inline, and why InitResources rather
- * than the destructor is this TU's key function.
+ * Mario is out of lives: eight "GAME OVER" glyphs drop in from off screen,
+ * then a yes/no continue prompt (stylus or button; left is yes). 10
+ * functions, .text 0x020b0580..0x020b117c: the seven dScene_c slots every
+ * direct child overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new
+ * virtual), the two free helpers that share the TU, and the factory
+ * dScGameOver_c_classInit, which abuts InitResources at 0x020b1118 and ends
+ * at ov003's .text end. D1/D0 are not
+ * written here: the header's inline destructor plus the key function
+ * (InitResources) emits them, D1 first, the ROM's order.
  *
- * Seven of the 10 are this class's own members: vtable slots 0, 3, 6, 9, 12,
- * 16 and 17, exactly the seven dScene_c gives every direct child (the class
- * adds no new virtual).  Two more are the free helpers that shared the
- * translation unit with them -- the glyph drop-in animation step at
- * 0x020b060c and the sub-screen yes/no highlight repaint at 0x020b0730.
- * Both take this object's address as their first argument and are called only
- * from inside the class region, but the ROM gives neither a mangled name, so
- * neither was a class member with external linkage.  The tenth is the
- * factory, which abuts InitResources at 0x020b1118 and ends at ov003's
- * .text end.
+ * Source order is the reverse of the ROM's -- mwccarm emits .text in
+ * reverse source order. Do not reorder.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b0580  src/_ZN13dScGameOver_cD1Ev.cpp
- *   [1] 0x020b05bc  src/_ZN13dScGameOver_cD0Ev.cpp
- *   [2] 0x020b060c  src/func_ov003_020b060c.c
- *   [3] 0x020b0730  src/func_ov003_020b0730.c
- *   [4] 0x020b0810  src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp
- *   [5] 0x020b0814  src/_ZN13dScGameOver_c6RenderEv.cpp
- *   [6] 0x020b0894  src/_ZN13dScGameOver_c8BehaviorEv.cpp
- *   [7] 0x020b0b34  src/_ZN13dScGameOver_c16CleanupResourcesEv.cpp
- *   [8] 0x020b0b3c  src/_ZN13dScGameOver_c13InitResourcesEv.cpp
- *   [9] 0x020b1118  dScGameOver_c_classInit
+ * deslop leftovers:
+ * - The two func_ov003_* helpers are written free here, and that is a
+ *   reconstruction choice, not a deduction. The image preserves no original
+ *   linker symbol table, so `func_ov003_*` are address-derived analysis
+ *   labels, and RTTI supplies class identities, not function spellings
+ *   (notes/tu-promotion-conventions.md section 1 and
+ *   notes/symbol-name-provenance.md). Their absence from the reconstructed
+ *   mangled set is therefore evidence of nothing about the original
+ *   spelling. Both take the object and every call to them is inside this
+ *   class's region: that is evidence to narrow ownership on later -- call,
+ *   layout or codegen -- not proof that the original was free. Until it is
+ *   narrowed, the original ownership and form stay uncertain, and the free
+ *   form is only what this TU reproduces.
+ * - `#pragma opt_strength_reduction off` is file-global last-wins;
+ *   func_ov003_020b060c needs it (glyph-loop induction) and the other nine
+ *   members verify with it set, so it costs nothing. No narrower form.
+ *   Both halves are pinned under notes/experiments/ --
+ *   gameover-2711-strength-reduction-off.md (dropping it breaks 060c) and
+ *   gameover-2711-strength-pragma-bracket.md (bracketing it around the one
+ *   member is byte-identical to dropping it).
+ * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
+ *   Fix12<int> overloads (codegen wall, pinned in
+ *   notes/experiments/gameover-2711-oam-render-fix12.md). The G2/GX/Sound
+ *   decls below have no header; _ZN3G2S12GetBG1ScrPtrEv keeps the u16*
+ *   spelling for 0730's pointer arithmetic (typing ergonomics, not a codegen
+ *   wall -- void* compiles identically, see
+ *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
+ * - data_0209f5bc (the active scene) gates Behavior through a plain virtual
+ *   call on slot 5; the tree's spellings disagree with each other
+ *   (SceneVCall6, UnkObj, ...) and none has a ROM RTTI identity. The
+ *   TU-local shadow vtable this file used to spell out to slot 5 was
+ *   measured inert and dropped for the plain call, so it is no longer a
+ *   retained substitution
+ *   (notes/experiments/gameover-2711-scenegate-virtual-call.md).
+ * - unk_080[8]: zeroed by InitResources, never read back.
  */
 
 #include "dScGameOver_c.h"
-#include "decl_Stage.h"
+#include "Stage.h"
 #include "OamAttr.h"
 #include "decl_common.h"
 
-/* CARRIED, and it has to be at file scope.  src/func_ov003_020b060c.c had
- * `#pragma opt_strength_reduction off` and tubuild create left it out with a
- * [NOT carried -- review] note, on the grounds that a file-global pragma would
- * silently recompile every other member.  It IS file-global last-wins in
- * mwccarm 2004/b56 -- bracketing it around the one member does nothing,
- * because the trailing `on` wins for the whole file -- so there is no
- * narrower place to put it.  The blast radius was measured rather than
- * assumed: with it set here, all 10 members verify, so it costs the other
- * nine nothing.  0x020b060c is the one that needs it: it walks the eight
- * glyphs with an `i << 1` index into four s16 arrays and a second `ip`
- * induction variable, which is exactly the shape mwcc strength-reduces into
- * an extra register when the pragma is absent. */
+/* File scope is the only place this pragma works. 0x020b060c needs
+ * `#pragma opt_strength_reduction off`: it walks the eight glyphs with an
+ * `i << 1` index into s16 arrays plus a second `ip` induction variable,
+ * which is exactly the shape mwcc strength-reduces into an extra register
+ * when the pragma is absent. The pragma IS file-global last-wins in mwccarm
+ * 2004/b56 -- bracketing it around the one member does nothing, because the
+ * trailing `on` wins for the whole file -- so there is no narrower place to
+ * put it. The blast radius was measured rather than assumed: with it set
+ * here, all 10 members verify, so it costs the other nine nothing. */
 #pragma opt_strength_reduction off
 
-/* The global object at data_0209f5bc that gates Behavior.  Only its call
- * shape is proven -- a virtual call through slot 0x14 taking itself as the
- * receiver and returning a truth value -- so the vtable is spelt out to that
- * slot and no further, and neither type has a ROM RTTI identity to name it
- * with.  Same treatment as the sub-screen OAM entry in
- * src/actors/dScMgD3DBase_c.cpp.
- *
- * RENAMED from the legacy file's `VT`/`Obj`.  `VT` is a real ROM symbol --
- * include/decl_common.h:415 declares `extern int VT[];` -- and the merge is
- * what makes both visible at once.  A variable name hides a struct tag in
- * C++, so `VT *vt;` stops naming a type and mwcc reports `undefined
- * identifier 'VT'` on the struct that uses it, never on the header.  These
- * are file-local shadow types with no ROM identity, so renaming them costs
- * nothing. */
-struct GameOverGateVt { void *v0, *v1, *v2, *v3, *v4; int (*m_14)(void *); };
-struct GameOverGate { GameOverGateVt *vt; };
+/* The active scene at data_0209f5bc, which gates Behavior. Only its call
+ * shape is proven -- a virtual call through slot 5 taking itself as the
+ * receiver and returning a truth value -- so the class spells six virtuals
+ * and Behavior calls f05. It has no ROM RTTI identity to name it with. Same
+ * slot as d_s_mg_base.cpp's SceneVCall6. */
+struct SceneGate { virtual int f00(); virtual int f01(); virtual int f02(); virtual int f03(); virtual int f04(); virtual int f05(); };
 
 /* ROM symbols this TU references that no header in the tree declares yet.
-   Spelt by their exact final names under C linkage, the way decl_common.h
-   spells its own -- a bare `void Foo(int);` from C++ would emit _Z3Fooi,
-   which exists nowhere.  Everything else these functions call comes from
-   decl_common.h / decl_Stage.h and is deliberately NOT repeated here.  */
+ * Spelt by their exact final names under C linkage, the way decl_common.h
+ * spells its own. Everything else these functions call comes from Stage.h,
+ * OamAttr.h, or decl_common.h and is deliberately NOT repeated here. */
 extern "C" {
 extern short data_ov003_020b1774[];
 extern unsigned short data_ov003_020b174c[];
 extern OamAttr *data_ov003_020b1824[];
-extern GameOverGate *data_0209f5bc;
+extern SceneGate *data_0209f5bc;
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 extern int data_0208ee44;
-/* RECONCILED: the legacy sources spelt these two both as `unsigned char x[]`
-   (func_ov003_020b060c, which indexes [0]) and as `u8 x` (InitResources,
-   which assigns and shifts the scalar) -- an array against a scalar is a hard
-   conflict that tubuild's detector does not report, because it compares
-   spellings and not types.  The scalar wins: it is what the rest of the tree
-   uses for this pair (src/_ZN10dScEntry_c13InitResourcesEv.cpp,
-   src/_ZN10dScMgCup_c13InitResourcesEv.cpp, src/_ZN11dScMgBase_c*.cpp) and
-   what include/dScMgBase_c.h's prose describes -- these are the two BG-enable
-   bit registers, main and sub, not tables.  func_ov003_020b060c's `[0]`
-   subscripts were rewritten as plain scalar reads; the bytes are unchanged. */
+/* Scalars, not tables: the two BG-enable bit registers, main and sub --
+ * the spelling the rest of the tree uses for this pair. */
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern u8 data_0209f204;
-/* RESOLVED CONFLICT: func_ov003_020b0730 declared this `unsigned short *` and
-   InitResources declared it `void *`.  `unsigned short *` wins -- it is the
-   stronger of the two and the only one that types 0x020b0730's `p += ...`
-   and 16-bit stores; InitResources only hands the result to DecompressLZ16's
-   `void *` parameter, which the pointer converts to implicitly. */
+/* u16* spelling for 0730's `p += ...` and 16-bit stores, no cast needed.
+ * Ergonomics, not a constraint: the void* form compiles to identical bytes
+ * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
+ * Init passes the result to DecompressLZ16's void* param either way. */
 extern unsigned short *_ZN3G2S12GetBG1ScrPtrEv(void);
 void *_ZN2G213GetBG2CharPtrEv(void);
 void *_ZN2G212GetBG2ScrPtrEv(void);
@@ -125,7 +115,6 @@ void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
 s32 sub, OamAttr *data, s32 x, s32 y,
 s32 palette, s32 priority, Fix12i scaleX, Fix12i scaleY,
 s32 rotation, s32 mode);
-void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned short);
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
 int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);
@@ -148,15 +137,12 @@ extern "C" dScGameOver_c *dScGameOver_c_classInit(void)
     return new dScGameOver_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN13dScGameOver_c13InitResourcesEv, 0x020b0b3c, size 0x5dc */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN13dScGameOver_c13InitResourcesEv
-/* recovered: named members + real C++ method */
-/* dScGameOver_c::InitResources() -- vtable slot 0. Brings both engines up for
- * the game-over screen, loads the language-specific "GAME OVER" art (five
- * language variants on both screens), then zeroes the cursor FSM and lays the
- * eight glyphs out along unk_050/unk_060 with a fixed scale and no rotation. */
+/* [8] 0x020b0b3c -- vtable slot 0, KEY FUNCTION */
+ // @symbol _ZN13dScGameOver_c13InitResourcesEv
+/* Brings both engines up for the game-over screen, loads the
+ * language-specific "GAME OVER" art (five language variants on both
+ * screens), then zeroes the cursor FSM and lays the eight glyphs out along
+ * mGlyphX/mGlyphY with a fixed scale and no rotation. */
 s32 dScGameOver_c::InitResources()
 {
     int f;
@@ -281,15 +267,15 @@ s32 dScGameOver_c::InitResources()
     func_0201cebc(0x27d);
     func_ov003_020b0730(this, 1);
 
-    unk_090 = 0;
-    unk_091 = 0;
-    unk_092 = 0;
-    unk_093 = 0;
-    unk_094 = 0;
+    mCursorState = 0;
+    mSelection = 0;
+    mCommitTimer = 0;
+    mFlashTimer = 0;
+    mIntroPhase = 0;
     for (f = 0; f < 8; f++) {
-        unk_050[f] = data_ov003_020b1764[f];
-        unk_060[f] = 0x60;
-        unk_070[f] = 0x30;
+        mGlyphX[f] = data_ov003_020b1764[f];
+        mGlyphY[f] = 0x60;
+        mGlyphDelay[f] = 0x30;
         unk_080[f] = 0;
     }
 
@@ -303,41 +289,31 @@ s32 dScGameOver_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN13dScGameOver_c16CleanupResourcesEv, 0x020b0b34, size 0x8 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN13dScGameOver_c16CleanupResourcesEv
-/* recovered: real C++ method */
-/* dScGameOver_c::CleanupResources() -- vtable slot 3. The game-over scene owns
- * no allocation of its own: everything it draws is OAM data belonging to the
- * overlay, so there is nothing to release. */
+/* [7] 0x020b0b34 -- vtable slot 3. Owns no allocation: everything drawn is
+ * OAM data belonging to the overlay, so there is nothing to release. */
+ // @symbol _ZN13dScGameOver_c16CleanupResourcesEv
 s32 dScGameOver_c::CleanupResources()
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN13dScGameOver_c8BehaviorEv, 0x020b0894, size 0x2a0 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN13dScGameOver_c8BehaviorEv
-/* recovered: named members + real C++ method */
-/* dScGameOver_c::Behavior() -- vtable slot 6. A two-state cursor FSM over the
- * yes/no prompt: state 0 reads the stylus box and the button, state 1 runs the
- * two countdowns down and commits -- continue (func_0202ae74) on "yes", or a
- * scene fade back out on "no". unk_094 gates all of it until the intro is in. */
+/* [6] 0x020b0894 -- vtable slot 6. A two-state cursor FSM over the yes/no
+ * prompt: state 0 reads the stylus box and the button, state 1 runs the two
+ * countdowns down and commits -- continue (func_0202ae74) on "yes", or a
+ * scene fade back out on "no". mIntroPhase gates all of it until the intro
+ * is in. The goto skeleton is the ROM's own branch shape. */
+ // @symbol _ZN13dScGameOver_c8BehaviorEv
 s32 dScGameOver_c::Behavior()
 {
-    GameOverGate *o = data_0209f5bc;
-
-    if (o->vt->m_14(o) == 0)
+    if (data_0209f5bc->f05() == 0)
         goto end;
 
     func_ov003_020b060c(this);
 
-    if (unk_094 < 2)
+    if (mIntroPhase < 2)
         return 1;
 
-    switch (unk_090) {
+    switch (mCursorState) {
         case 0: goto state0;
         case 1: goto state1;
         default: goto end;
@@ -361,18 +337,18 @@ state0:
                     goto left;
             }
         }
-        if (unk_091 != 0)
+        if (mSelection != 0)
             goto right_check;
         if (!IsButtonInputValid())
             goto right_check;
     left:
-        if (unk_091 == 0)
-            unk_093 = (unsigned char)(data_0208ee44 << 3);
-        unk_091 = 0;
+        if (mSelection == 0)
+            mFlashTimer = (unsigned char)(data_0208ee44 << 3);
+        mSelection = 0;
         func_ov003_020b0730(this, 0);
-        unk_092 = (unsigned char)(data_0208ee44 << 4);
+        mCommitTimer = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9a);
-        unk_090 = 1;
+        mCursorState = 1;
         goto end;
 
     right_check:
@@ -383,33 +359,33 @@ state0:
                     goto right;
             }
         }
-        if (unk_091 != 1)
+        if (mSelection != 1)
             goto end;
         if (!IsButtonInputValid())
             goto end;
     right:
-        if (unk_091 == 1)
-            unk_093 = (unsigned char)(data_0208ee44 << 3);
-        unk_091 = 1;
+        if (mSelection == 1)
+            mFlashTimer = (unsigned char)(data_0208ee44 << 3);
+        mSelection = 1;
         func_ov003_020b0730(this, 0);
-        unk_092 = (unsigned char)(data_0208ee44 << 4);
+        mCommitTimer = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9b);
-        unk_090 = 1;
+        mCursorState = 1;
         goto end;
 
 state1:
-        if (unk_093 != 0) {
-            unk_093 -= data_0208ee44;
-            if (unk_093 == 0)
+        if (mFlashTimer != 0) {
+            mFlashTimer -= data_0208ee44;
+            if (mFlashTimer == 0)
                 func_ov003_020b0730(this, 0);
         }
-        if (unk_092 != 0) {
-            unk_092 -= data_0208ee44;
-            if (unk_092 == 0) {
-                if (unk_091 == 0)
+        if (mCommitTimer != 0) {
+            mCommitTimer -= data_0208ee44;
+            if (mCommitTimer == 0) {
+                if (mSelection == 0)
                     func_0202ae74();
                 else
-                    _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
+                    dScene_c::StartSceneFade(1, 0, 0);
                 _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             }
         }
@@ -418,54 +394,44 @@ end:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN13dScGameOver_c6RenderEv, 0x020b0814, size 0x80 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN13dScGameOver_c6RenderEv
-/* recovered: named members + real C++ method */
-/* dScGameOver_c::Render() -- vtable slot 9. Draws the eight "GAME OVER" glyph
- * sprites from the per-glyph x/y arrays InitResources laid out, then lets Stage
- * draw the yes/no bouncing arrows once the cursor is live. */
+/* [5] 0x020b0814 -- vtable slot 9. Draws the eight "GAME OVER" glyph
+ * sprites from the per-glyph x/y arrays InitResources laid out, then lets
+ * Stage draw the yes/no bouncing arrows once the cursor is live. */
+ // @symbol _ZN13dScGameOver_c6RenderEv
 s32 dScGameOver_c::Render()
 {
     int i;
     for (i = 0; i < 8; i++) {
         _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
             0, data_ov003_020b1824[i],
-            unk_050[i], unk_060[i],
+            mGlyphX[i], mGlyphY[i],
             -1, -1, 0x1000, 0x1000, 0, -1);
     }
-    if (unk_094 >= 2)
-        _ZN5Stage20RenderBouncingArrowsEv();
+    if (mIntroPhase >= 2)
+        Stage::RenderBouncingArrows();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN13dScGameOver_c16OnPendingDestroyEv, 0x020b0810, size 0x4 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN13dScGameOver_c16OnPendingDestroyEv
-/* recovered: real C++ method */
-/* dScGameOver_c::OnPendingDestroy() -- vtable slot 12. Nothing to unwind; the
- * slot exists only so dScene_c's teardown has something to call. */
+/* [4] 0x020b0810 -- vtable slot 12. Nothing to unwind; the slot exists only
+ * so dScene_c's teardown has something to call. */
+ // @symbol _ZN13dScGameOver_c16OnPendingDestroyEv
 void dScGameOver_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov003_020b0730, 0x020b0730, size 0xe0 */
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov003_020b0730
-/* Repaints the sub-screen BG1 palette bank over the two yes/no boxes: two
- * 0x20-by-4 rectangles whose screen-map origins come from
- * data_ov003_020b174c.  `arg` non-zero forces both back to the unselected
- * bank; zero picks the highlighted bank for whichever box unk_091 names,
- * and only while the unk_093 flash timer has run out.  Free helper -- it
- * takes the receiver but carries no mangled name; declared in
- * include/decl_common.h. */
+/* [3] 0x020b0730 -- repaints the sub-screen BG1 palette bank over the two
+ * yes/no boxes: two 0x20-by-4 rectangles whose screen-map origins come from
+ * data_ov003_020b174c. `arg` non-zero forces both back to the unselected
+ * bank; zero picks the highlighted bank for whichever box mSelection names,
+ * and only while the mFlashTimer has run out. Written free here as a
+ * reconstruction choice: it takes the receiver and every call to it is
+ * inside this class's region, which is evidence to narrow ownership on
+ * later, not proof that the original was free. */
+ // @symbol func_ov003_020b0730
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov003_020b0730(void *self, int arg)
 {
-  unsigned char *s = (unsigned char *) self;
+  dScGameOver_c *o = (dScGameOver_c *)self;
   int i;
   for (i = 0; i < 2; i++)
   {
@@ -480,7 +446,7 @@ void func_ov003_020b0730(void *self, int arg)
     else
     {
       unsigned int w;
-      if ((s[0x91] == i) && (s[0x93] == 0))
+      if ((o->mSelection == i) && (o->mFlashTimer == 0))
         w = 0x2000;
       else
         w = 0x1000;
@@ -498,32 +464,45 @@ void func_ov003_020b0730(void *self, int arg)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov003_020b060c, 0x020b060c, size 0x124 */
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov003_020b060c
-/* The glyph drop-in animation step, one frame per call, driven off the
- * unk_094 phase byte: phase 0 walks the eight glyphs, counting each one's
- * unk_070 delay down and then sliding its unk_050 x toward the target in
+/* [2] 0x020b060c -- the glyph drop-in step, one frame per call. */
+ // @symbol func_ov003_020b060c
+/* offsetof without <stddef.h>: the tree includes no system headers, and
+ * func_ov003_020b060c is the one member that needs field offsets as
+ * constants. dScGameOver_c's layout is pinned by the header's sizeof
+ * assert, so these cannot drift silently. */
+#define GO_OFF(m) ((int)&((dScGameOver_c *)0)->m)
+
+/* The glyph drop-in animation step, one frame per call, driven off
+ * mIntroPhase: phase 0 walks the eight glyphs, counting each one's
+ * mGlyphDelay down and then sliding its mGlyphX toward the target in
  * data_ov003_020b1774 -- the first four from the left, the last four from
  * the right -- and flips to phase 1 when the last one lands; phase 1 waits
- * out one more unk_070 tick, then reaches phase 2, which is what unblocks
+ * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
  * BG layers the prompt lives on.
  *
- * RECONCILED: the parameter is `void *`, not the legacy file's `char *`.
- * include/decl_common.h declares this function `extern void
- * func_ov003_020b060c(void*);` and a real header wins -- the two spellings
- * seen together are `illegal function overloading`, an error mwcc reports
- * against this definition line while saying nothing about the header.  The
- * `char *` view is kept as a local alias so the raw-offset accesses below
- * are spelt exactly as the legacy file spelt them (see the field-address
- * CSE note in notes/agents/roles/writer.md). */
+ * The `e` loop skeleton is load-bearing, not leftover. MEASURED and pinned
+ * in notes/experiments/gameover-2711-glyph-loop-skeleton.md: spelling the
+ * loop with member indexing (o->mGlyphX[i] / o->mGlyphDelay[i]) reschedules
+ * the whole member (69 words differ), and a surgical variant that changes
+ * only the addressing still breaks it (size 0x124 vs 0x128). An earlier
+ * in-place "costs 3 words" figure is NOT reproduced by either pinned
+ * spelling: the constraint holds, that number does not. The reading -- and
+ * it is a reading, not a second measurement -- is that the ROM computes
+ * e = base + (i << 1) once per iteration and reaches both rows as small
+ * constant offsets off e, while the member-index form makes mwccarm compute
+ * two separate base+i*2 addresses. GO_OFF names those offsets after their
+ * fields without changing the tree the compiler sees. The goto/case
+ * skeleton, the `short *q` re-reads, the (long long)(int) launders on the
+ * decrement, and case1's `(char *)o + GO_OFF` spelling (the member-index
+ * form perturbs the tail: 999 words differ, size 0x124 vs 0x11c, pinned in
+ * notes/experiments/gameover-2711-case1-gooff-spelling.md) are the ROM's own
+ * shape too. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov003_020b060c(void *self)
 {
-    char *c = (char *)self;
-    unsigned char s = *(unsigned char *)(c + 0x94);
+    dScGameOver_c *o = (dScGameOver_c *)self;
+    unsigned char s = o->mIntroPhase;
     int i;
     int ip;
     if (s == 0)
@@ -536,27 +515,27 @@ case0:
     i = 0;
     ip = 0xa;
     do {
-        char *e = c + (i << 1);
-        if (*(unsigned short *)(e + 0x70) != 0) {
-            *(unsigned short *)((long long)(int)(e + 0x70)) =
-                (unsigned short)(*(unsigned short *)((long long)(int)(e + 0x70)) - 1);
+        char *e = (char *)o + (i << 1);
+        if (*(unsigned short *)(e + GO_OFF(mGlyphDelay)) != 0) {
+            *(unsigned short *)((long long)(int)(e + GO_OFF(mGlyphDelay))) =
+                (unsigned short)(*(unsigned short *)((long long)(int)(e + GO_OFF(mGlyphDelay))) - 1);
         } else {
             short tgt = data_ov003_020b1774[i];
-            if (*(short *)(e + 0x50) != tgt) {
+            if (*(short *)(e + GO_OFF(mGlyphX)) != tgt) {
                 if (i < 4) {
-                    short *q = (short *)(e + 0x50);
+                    short *q = (short *)(e + GO_OFF(mGlyphX));
                     *q = (short)(*q + 0xc);
-                    if (*(short *)(e + 0x50) >= tgt) {
-                        *(short *)(e + 0x50) = tgt;
-                        *(unsigned short *)(e + 0x70) = (unsigned short)ip;
+                    if (*(short *)(e + GO_OFF(mGlyphX)) >= tgt) {
+                        *(short *)(e + GO_OFF(mGlyphX)) = tgt;
+                        *(unsigned short *)(e + GO_OFF(mGlyphDelay)) = (unsigned short)ip;
                     }
                 } else {
-                    short *q = (short *)(e + 0x50);
+                    short *q = (short *)(e + GO_OFF(mGlyphX));
                     *q = (short)(*q - 0xc);
-                    if (*(short *)(e + 0x50) <= tgt) {
-                        *(short *)(e + 0x50) = tgt;
-                        *(unsigned short *)(e + 0x70) = (unsigned short)ip;
-                        *(unsigned char *)(c + 0x94) = 1;
+                    if (*(short *)(e + GO_OFF(mGlyphX)) <= tgt) {
+                        *(short *)(e + GO_OFF(mGlyphX)) = tgt;
+                        *(unsigned short *)(e + GO_OFF(mGlyphDelay)) = (unsigned short)ip;
+                        o->mIntroPhase = 1;
                     }
                 }
             }
@@ -567,53 +546,22 @@ case0:
     return;
 
 case1:
-    if (*(unsigned short *)(c + 0x70) != 0) {
-        unsigned short *p = (unsigned short *)(c + 0x70);
+    if (*(unsigned short *)((char *)o + GO_OFF(mGlyphDelay)) != 0) {
+        unsigned short *p = (unsigned short *)((char *)o + GO_OFF(mGlyphDelay));
         *p = (unsigned short)(*p - 1);
         return;
     }
-    *(unsigned char *)(c + 0x94) = 2;
+    o->mIntroPhase = 2;
     data_0209d45c |= 1;
     data_0209d454 |= 3;
 }
 }
 
-/* --------------------------------------------------------------------------
- * ROM ordinals 1 and 0 -- _ZN13dScGameOver_cD0Ev at 0x020b05bc (0x50)
- *                     and _ZN13dScGameOver_cD1Ev at 0x020b0580 (0x3c).
- *
- * Neither is written out here, and neither needs a forcing helper.
- *
- * ~dScGameOver_c() is defined inline in the class body
- * (include/dScGameOver_c.h) and must stay there.  Out of line, mwccarm
- * 2004/b56 emits the pair as D2, D0, D1 -- D0 above D1, the opposite of the
- * cartridge, plus a _ZN13dScGameOver_cD2Ev that exists nowhere in the ROM.
- * Inline in class is the only admissible form that gives D1 then D0, and the
- * lever set is closed: a `delete p` scaffold, a `p->~dScGameOver_c()`
- * scaffold, and moving the declaration below the overrides all change
- * nothing.  The cartridge ordered these the reproducible way -- D1 at
- * 0x020b0580 below D0 at 0x020b05bc -- so the whole TU licenses in one run.
- *
- * What emits the out-of-line pair is this TU's KEY FUNCTION.  The first
- * DECLARED non-inline virtual of the class is InitResources (the inline
- * destructor is declared first but, being inline, cannot be the key
- * function), and this TU defines it -- so mwcc emits _ZTV13dScGameOver_c
- * right here.  Slots 16 and 17 of that table name D1 and D0, which odr-uses
- * both, and the compiler emits them out of line, D1 first.  That is exactly
- * the mechanism the retail ROM used, and it is why 0x020b0580 and 0x020b05bc
- * exist at all, in that order.
- *
- * The bodies are empty and still reproduce all 0x8c bytes.  D1's three vptr
- * stores are this class's own plus dScene_c's and dBase_c's, both of which
- * are inline in class one and two levels up and so inline into this one,
- * followed by the call to fBase_c::~fBase_c; every own field is a scalar, so
- * there is no member destruction to write.  D0 adds the operator delete this
- * class inherits from its immediate base dScene_c -- mwcc finds it there and
- * inlines it, which is why nothing here mentions a heap.
- *
- * The two legacy files src/_ZN13dScGameOver_cD1Ev.cpp and
- * src/_ZN13dScGameOver_cD0Ev.cpp each carried one out-of-line definition of
- * the same destructor, which is a redefinition once they are merged.  They
- * are deleted, not ported: they were two files with no key function to lean
- * on.  Same call as src/actors/dScMgD3DBase_c.cpp made in ov006.
- * -------------------------------------------------------------------------- */
+/* [1] [0] 0x020b05bc (D0) and 0x020b0580 (D1) -- neither is written here.
+ * The header's inline destructor is what emits the pair, D1 first, the ROM's
+ * order (out of line mwccarm emits D2, D0, D1 plus a D2 the ROM never
+ * carried). The key function is InitResources -- the first DECLARED
+ * non-inline virtual -- and defining it here emits the vtable whose slots
+ * 16/17 odr-use both halves. The empty bodies still reproduce all 0x8c
+ * bytes: three inlined vptr stores plus fBase_c::~fBase_c, and D0's
+ * inherited operator delete. See include/dScGameOver_c.h. */

@@ -33,6 +33,18 @@
  * group has a compiler-chosen order of its own; see the destructor comment in
  * the class header for what was measured on this TU.
  *
+ * deslop
+ * Leftover: BlendModelAnim::SetAnim / dCcAcPos_c::Init / dBgCh_Actr::Init /
+ *   DropShadowRadHeight stay mangled (Fix12-by-value, 6az; dBgCh Init header
+ *   Fix12i mangles as int -- this TU's InitResources call). dActor_c::Spawn
+ *   s8/s16 by-value (func_ov078_02125350). Player+8 param1 / +0x6ce talk flag
+ *   / +0xc8 mtx ptr belong on Player. Camera+0x114 / +0x154 belong on Camera.
+ *   data_ov078_* SharedFilePtr handles (Init LoadFile / Cleanup Release) and
+ *   state records (KingBobOmb_SetState). func_02035550 is the unnamed
+ *   dBgCh_Actr mFlags |= 0x4000 setter (no method on the header). S14 no
+ *   g_profile_BOMBKING. common.h first (M12
+ *   shadow/hold matrix copies at 0x434 and 0x4a4).
+ *
  * Folded from 52 one-function sources, each of which was its own file in src/
  * before this promotion and none of which is in the tree any more.  Listed by
  * the symbol assigned in the repository's symbols.txt, in ROM order:
@@ -98,21 +110,23 @@
  * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,
  * optimize_for_size) and is still left out: carried into a merged TU it
  * would silently recompile every other member. Decide those by hand:
- *   func_ov078_02125350: #pragma opt_strength_reduction off   [NOT carried -- review]
- *   func_ov078_02125350: #pragma opt_common_subs off   [NOT carried -- review]
+ *   func_ov078_02125448: opt_strength_reduction off / opt_common_subs off
+ *     carried, #pragma push/pop around the member (not 02125350).
+ *   InitResources: opt_strength_reduction off carried, push/pop.
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
-#include "daBombking_c.h"
-#include "types.h"
+/* common.h FIRST: daBombking_c.h reaches math/Matrix.h through BlendModelAnim.h,
+ * and that header spells Matrix4x3 as {Matrix3x3 r; Vector3 t;} where common.h
+ * spells it flat as s32 m[12]. Helpers whole-struct-assign the shadow/hold
+ * matrices through M12; only the flat spelling reproduces the block move. */
 #include "common.h"
+#include "daBombking_c.h"
+#include "daBmb_c.h"
+#include "SharedFilePtr.h"
+#include "dBgCh_Gnd.h"
 #include "decl_common.h"
 #include "decl_Animation.h"
 #include "decl_Message.h"
-#include "dBgCh_Gnd.h"
-#include "SharedFilePtr.h"
 
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
@@ -153,27 +167,6 @@ struct CView {
     int field_494;
 };
 
-typedef struct {
-    char pad0[0x98];
-    int f98;
-    int f9c;
-    char pad_a0[0x2c];
-    signed char fcc;
-    char pad_cd[0x1ff];
-    char anim[0x158];
-    int arr[29];
-    char pad498;
-    signed char f499;
-    char pad49a[2];
-    int f49c;
-    int f4a0;
-    char pad4a4[0x48];
-    int f4ec[3];
-    int f4f8;
-    int f4fc;
-} T;
-
-#define LAUNDER_ADDR(x) ((int)(x))
 
 extern "C" {
     extern int data_ov078_02126ee0[];
@@ -253,13 +246,8 @@ void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(vo
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
-extern unsigned char _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 }
 
 
@@ -277,7 +265,6 @@ extern unsigned char _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsig
 daBombking_c::~daBombking_c() {}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12daBombking_cD1Ev, 0x02123740, size 0x58 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
@@ -292,7 +279,6 @@ daBombking_c::~daBombking_c() {}
  * header. Both halves are load-bearing; see the block above the definition.
  */
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN12daBombking_cD0Ev, 0x02123798, size 0x6c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
@@ -309,7 +295,6 @@ daBombking_c::~daBombking_c() {}
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov078_02123804, 0x02123804, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123804
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -324,17 +309,16 @@ int func_ov078_02123804(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov078_02123864, 0x02123864, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123864
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov078_02123864(char* r7) {
   int i = 0;
   do {
-    char* a = (char*)_ZN8dActor_c10FindWithIDEj(((unsigned int*)(r7 + 0x424))[i]);
-    if (a) {
-      *(int*)(a + 0x3e0) = 0;
-      *(unsigned char*)(a + 0x3f6) = 1;
+    daBmb_c *bmb = (daBmb_c *)_ZN8dActor_c10FindWithIDEj(((unsigned int*)(r7 + 0x424))[i]);
+    if (bmb) {
+      bmb->unk_3e0 = 0;
+      bmb->unk_3f6 = 1;
     }
     i++;
   } while (i < 2);
@@ -342,7 +326,6 @@ void func_ov078_02123864(char* r7) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov078_021238ac, 0x021238ac, size 0x190 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021238ac
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -397,7 +380,6 @@ int func_ov078_021238ac(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov078_02123a3c, 0x02123a3c, size 0x64 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123a3c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -412,7 +394,6 @@ int func_ov078_02123a3c(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov078_02123aa0, 0x02123aa0, size 0x124 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123aa0
 /* recovered: shared common types, declarations from a shared header */
@@ -445,7 +426,6 @@ int func_ov078_02123aa0(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov078_02123bc4, 0x02123bc4, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123bc4
 /* This caller retains the reconstructed SetAnim ABI declaration above.
@@ -460,7 +440,6 @@ extern "C" int func_ov078_02123bc4(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov078_02123c20, 0x02123c20, size 0xd0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123c20
 extern "C" {
@@ -495,7 +474,6 @@ int func_ov078_02123c20(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov078_02123cf0, 0x02123cf0, size 0x4c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123cf0
 struct BCA_File;
@@ -506,7 +484,6 @@ int func_ov078_02123cf0(char* c){
 }}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov078_02123d3c, 0x02123d3c, size 0x17c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123d3c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -559,22 +536,21 @@ int func_ov078_02123d3c(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov078_02123eb8, 0x02123eb8, size 0x64 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123eb8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123eb8(int *t)
 {
-    t[0x27] = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)((char *)t + 0x2cc), (void*)(data_ov078_02126f28[1]), 0, 0, 0x1000, 0);
-    *(short *)((char *)t + 0x100) = 0x32;
-    t[0x26] = 0xa000;
+    daBombking_c *self = (daBombking_c *)t;
+    self->mVertAccel = -0x2000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&self->mBlendModelAnim, (void*)(data_ov078_02126f28[1]), 0, 0, 0x1000, 0);
+    self->mStateTimer = 0x32;
+    self->mHorzSpeed = 0xa000;
     return 1;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov078_02123f1c, 0x02123f1c, size 0x98 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123f1c
 extern "C" int func_ov078_02123f1c(CView* c)
@@ -598,7 +574,6 @@ L6c:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov078_02123fb4, 0x02123fb4, size 0x4c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123fb4
 extern "C" {
@@ -610,7 +585,6 @@ int func_ov078_02123fb4(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov078_02124000, 0x02124000, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124000
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -626,7 +600,6 @@ int func_ov078_02124000(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov078_02124060, 0x02124060, size 0x40 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124060
 extern "C" {
@@ -639,7 +612,6 @@ int func_ov078_02124060(char *c){
 #pragma push
 #pragma opt_propagation off
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov078_021240a0, 0x021240a0, size 0x320 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021240a0
 /* recovered: shared common types, declarations from a shared header */
@@ -705,7 +677,7 @@ int func_ov078_021240a0(char* c)
             else if (d > 0x4000)
                 d = lim;
             {
-                short* p = (short*)((unsigned long long)((int)c + 0x4fa) & 0xFFFFFFFFFFFFFFFFULL);
+                short *p = (short *)(c + 0x4fa);
                 *p = (short)(*p + d);
             }
         } else {
@@ -740,7 +712,6 @@ int func_ov078_021240a0(char* c)
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov078_021243c0, 0x021243c0, size 0xb0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021243c0
 extern "C" {
@@ -760,7 +731,6 @@ int func_ov078_021243c0(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov078_02124470, 0x02124470, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124470
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -776,7 +746,6 @@ int func_ov078_02124470(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov078_021244d0, 0x021244d0, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021244d0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -788,7 +757,6 @@ int func_ov078_021244d0(char *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov078_02124520, 0x02124520, size 0x258 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124520
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -870,7 +838,6 @@ int func_ov078_02124520(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov078_02124778, 0x02124778, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124778
 extern "C" {
@@ -881,7 +848,6 @@ int func_ov078_02124778(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov078_021247bc, 0x021247bc, size 0x384 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021247bc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -987,7 +953,6 @@ int func_ov078_021247bc(void *thiz)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov078_02124b40, 0x02124b40, size 0x84 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124b40
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1008,7 +973,6 @@ int func_ov078_02124b40(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov078_02124bc4, 0x02124bc4, size 0xd0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124bc4
 extern "C" {
@@ -1042,7 +1006,6 @@ int func_ov078_02124bc4(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov078_02124c94, 0x02124c94, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124c94
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1060,7 +1023,6 @@ int func_ov078_02124c94(char *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov078_02124cf4, 0x02124cf4, size 0x1a8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124cf4
 /* recovered: shared common types, declarations from a shared header */
@@ -1080,8 +1042,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
         func_ov078_02125c24((char*)thiz, 0x7d0000);
         func_0200fa8c((int*)thiz, 1);
         thiz[0x499] = 1;
-        int* p = (int*)((unsigned long long)((int)thiz + 0x500) & 0xFFFFFFFFFFFFFFFFULL);
-        *p = *p - 1;
+        ((daBombking_c *)thiz)->mHealth -= 1;
     }
     if (*(int*)(thiz + 0x500) > 0) {
         KingBobOmb_SetState(thiz, &data_ov078_021270ec);
@@ -1108,7 +1069,6 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov078_02124e9c, 0x02124e9c, size 0x8c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124e9c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1128,7 +1088,6 @@ int func_ov078_02124e9c(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov078_02124f28, 0x02124f28, size 0x1a8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124f28
 /* recovered: shared common types, declarations from a shared header */
@@ -1213,13 +1172,12 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov078_021250d0, 0x021250d0, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021250d0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021250d0(char *c)
 {
-    int *flags = (int *)LAUNDER_ADDR(c + 0x354);
+    int *flags = (int *)(c + 0x354);
     *flags |= 2;
     *(int *)(c + 0x9c) = 0;
     *(int *)(c + 0x98) = 0;
@@ -1229,7 +1187,6 @@ int func_ov078_021250d0(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov078_021250f8, 0x021250f8, size 0x258 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021250f8
 /* recovered: shared common types, declarations from a shared header */
@@ -1309,35 +1266,34 @@ int func_ov078_021250f8(char* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov078_02125350, 0x02125350, size 0xf8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125350
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02125350(int sl)
 {
-    T* t = (T*)sl;
+    daBombking_c *self = (daBombking_c *)sl;
     int i;
     int r;
 
-    t->f4fc = 1;
-    t->f9c = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(t->anim), (void*)(data_ov078_02126ef0[1]), 0, 0x40000000, 0x1000, 0);
+    self->mAnimSpeed = 1;
+    self->mVertAccel = -0x2000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&self->mBlendModelAnim, (void*)(data_ov078_02126ef0[1]), 0, 0x40000000, 0x1000, 0);
 
-    t->f98 = 0;
+    self->mHorzSpeed = 0;
 
-    for (i = 0; i < t->f4a0; i++) {
-        if (t->arr[i] == 0) {
+    for (i = 0; i < self->mPhase; i++) {
+        if (self->mSpawnedId[i] == 0) {
             r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xce, 2, t->f4ec, 0, t->fcc, -1);
+                0xce, 2, (Vector3 *)&self->mThrowPosX, 0, self->mAreaId, -1);
             if (r != 0) {
-                t->arr[i] = *(int*)(r + 4);
-                t->f49c = i;
+                self->mSpawnedId[i] = *(int*)(r + 4);
+                self->mSpawnSlot = i;
                 return 1;
             }
         }
     }
 
-    t->f499 = 0;
+    self->mActionStep = 0;
     return 1;
 }
 }
@@ -1346,7 +1302,6 @@ int func_ov078_02125350(int sl)
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov078_02125448, 0x02125448, size 0x2ec */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125448
 /* recovered: shared common types, declarations from a shared header */
@@ -1459,7 +1414,6 @@ int func_ov078_02125448(char* c)
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov078_02125734, 0x02125734, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125734
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1473,7 +1427,6 @@ int func_ov078_02125734(char *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- func_ov078_02125790, 0x02125790, size 0x154 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125790
 /* recovered: shared common types, declarations from a shared header */
@@ -1513,7 +1466,6 @@ extern "C" int func_ov078_02125790(char* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov078_021258e4, 0x021258e4, size 0x6c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021258e4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1530,7 +1482,6 @@ int func_ov078_021258e4(int *t)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov078_02125950, 0x02125950, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125950
 /* recovered: shared common types, declarations from a shared header */
@@ -1561,7 +1512,6 @@ extern "C" int func_ov078_02125950(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- func_ov078_021259e4, 0x021259e4, size 0x8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021259e4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1572,7 +1522,6 @@ int func_ov078_021259e4(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- func_ov078_021259ec, 0x021259ec, size 0x1dc */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021259ec
 /* recovered: shared common types, declarations from a shared header */
@@ -1645,7 +1594,6 @@ int func_ov078_021259ec(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- func_ov078_02125bc8, 0x02125bc8, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125bc8
 extern "C" int func_ov078_02125bc8(char* c) {
@@ -1658,7 +1606,6 @@ extern "C" int func_ov078_02125bc8(char* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- func_ov078_02125c24, 0x02125c24, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125c24
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -1668,7 +1615,6 @@ void func_ov078_02125c24(char* c, int strength) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- KingBobOmb_SetState, 0x02125c48, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol KingBobOmb_SetState
 extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
@@ -1681,7 +1627,6 @@ extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- func_ov078_02125c98, 0x02125c98, size 0x148 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125c98
 /* recovered: shared common types */
@@ -1719,7 +1664,6 @@ extern "C" void func_ov078_02125c98(void* cv) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- func_ov078_02125de0, 0x02125de0, size 0x1ac */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125de0
 /* recovered: shared common types */
@@ -1770,7 +1714,6 @@ void func_ov078_02125de0(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- func_ov078_02125f8c, 0x02125f8c, size 0x68 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125f8c
 /* recovered: shared common types, declarations from a shared header */
@@ -1793,29 +1736,27 @@ void func_ov078_02125f8c(void* c_){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- _ZN12daBombking_c16CleanupResourcesEv, 0x02125ff4, size 0xb4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16CleanupResourcesEv
 int daBombking_c::CleanupResources()
 {
-    ((SharedFilePtr*)data_ov078_02126f38)->Release();
-    ((SharedFilePtr*)data_ov078_02126f00)->Release();
-    ((SharedFilePtr*)data_ov078_02126f20)->Release();
-    ((SharedFilePtr*)data_ov078_02126f10)->Release();
-    ((SharedFilePtr*)data_ov078_02126f08)->Release();
-    ((SharedFilePtr*)data_ov078_02126f18)->Release();
-    ((SharedFilePtr*)data_ov078_02126ee0)->Release();
-    ((SharedFilePtr*)data_ov078_02126ef0)->Release();
-    ((SharedFilePtr*)data_ov078_02126f40)->Release();
-    ((SharedFilePtr*)data_ov078_02126f30)->Release();
-    ((SharedFilePtr*)data_ov078_02126ee8)->Release();
-    ((SharedFilePtr*)data_ov078_02126f28)->Release();
-    ((SharedFilePtr*)data_ov078_02126ef8)->Release();
+    ((SharedFilePtr *)data_ov078_02126f38)->Release();
+    ((SharedFilePtr *)data_ov078_02126f00)->Release();
+    ((SharedFilePtr *)data_ov078_02126f20)->Release();
+    ((SharedFilePtr *)data_ov078_02126f10)->Release();
+    ((SharedFilePtr *)data_ov078_02126f08)->Release();
+    ((SharedFilePtr *)data_ov078_02126f18)->Release();
+    ((SharedFilePtr *)data_ov078_02126ee0)->Release();
+    ((SharedFilePtr *)data_ov078_02126ef0)->Release();
+    ((SharedFilePtr *)data_ov078_02126f40)->Release();
+    ((SharedFilePtr *)data_ov078_02126f30)->Release();
+    ((SharedFilePtr *)data_ov078_02126ee8)->Release();
+    ((SharedFilePtr *)data_ov078_02126f28)->Release();
+    ((SharedFilePtr *)data_ov078_02126ef8)->Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- _ZN12daBombking_c16OnPendingDestroyEv, 0x021260a8, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnPendingDestroyEv
 void daBombking_c::OnPendingDestroy()
@@ -1823,20 +1764,19 @@ void daBombking_c::OnPendingDestroy()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- _ZN12daBombking_c6RenderEv, 0x021260ac, size 0x58 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daBombking_c::Render()
 {
-    void *r1 = (void*)*(int*)((char*)&mHeldActor);
+    void *r1 = mHeldActor;
     if (r1 != 0) {
-        int r0 = *(int*)((char*)&mFlags);
+        int r0 = mFlags;
         int flag = (r0 & 0x4000) ? 1 : 0;
         if (flag != 0) {
-            if (*(int*)((char*)r1 + 0xc8) != 0) {
-                func_ov078_02125f8c(((void *)this));
+            if (*(int *)((char *)r1 + 0xc8) != 0) {
+                func_ov078_02125f8c(this);
             }
         }
     }
@@ -1845,7 +1785,6 @@ int daBombking_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- _ZN12daBombking_c8BehaviorEv, 0x02126104, size 0x264 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -1853,25 +1792,15 @@ int daBombking_c::Render()
 
 
 extern "C" {
-extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *clsn);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wmc, unsigned int flags);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
-extern void _ZN5dCc_c5ClearEv(void *self);
-extern void _ZN5dCc_c6UpdateEv(void *self);
-
 }
 
 int daBombking_c::Behavior()
 {
     char *self = (char *)this;
 
-    if (_ZN8dActor_c13DistToCPlayerEv(this) < 0x1770000) {
+    if (DistToCPlayer() < 0x1770000) {
         *(daBombking_c **)((char *)data_0209f318 + 0x114) = this;
     }
 
@@ -1885,10 +1814,10 @@ int daBombking_c::Behavior()
     mBlendModelAnim.Advance();
 
     if ((char *)mState == (char *)data_ov078_0212707c) {
-        void *r1 = *(void **)(self + 0x494);
+        void *r1 = mHeldActor;
         int b;
         if (r1 != 0) {
-            b = (*(int *)(self + 0xb0) & 0x4000) != 0;
+            b = (mFlags & 0x4000) != 0;
             if (b != 0 && *(int *)((char *)r1 + 0xc8) != 0) {
                 goto skip_de0;
             }
@@ -1899,23 +1828,23 @@ int daBombking_c::Behavior()
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)(self + 0x100));
-    DecIfAbove0_Byte(&mTimer505);
-    DecIfAbove0_Byte(&mTimer504);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Byte(&unk_505);
+    DecIfAbove0_Byte(&unk_504);
 
     if ((char *)mState != (char *)data_ov078_021270bc) {
-        _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x33c);
+        UpdatePos(&mdCcAcPos_c);
     } else {
-        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(self, self + 0x33c);
+        UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     }
 
-    if ((char *)mState != (char *)data_ov078_021270bc || *(unsigned char *)(self + 0x499) == 1) {
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(self, self + 0x110, 0);
+    if ((char *)mState != (char *)data_ov078_021270bc || mActionStep == 1) {
+        UpdateWMClsn(mWithMeshClsn, 0);
     }
 
     if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
-        if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x110) != 0
-            || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x110) == 0
+        if (mWithMeshClsn.IsOnWall() != 0
+            || mWithMeshClsn.IsOnGround() == 0
             || (mArenaPosY - 0x28000) > mPosY) {
             KingBobOmb_SetState(self, data_ov078_021270bc);
         }
@@ -1926,19 +1855,19 @@ int daBombking_c::Behavior()
         v.x = data_ov078_02126e00.x;
         v.y = data_ov078_02126e00.y;
         v.z = data_ov078_02126e00.z;
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x33c, &v);
+        mdCcAcPos_c.SetPosRelativeToActor(v);
     }
     {
         Vector3 v;
         v.x = data_ov078_02126e00.x;
         v.y = data_ov078_02126e00.y;
         v.z = data_ov078_02126e00.z;
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x37c, &v);
+        mdCcAcPos_c2.SetPosRelativeToActor(v);
     }
-    _ZN5dCc_c5ClearEv(self + 0x33c);
-    _ZN5dCc_c6UpdateEv(self + 0x33c);
-    _ZN5dCc_c5ClearEv(self + 0x37c);
-    _ZN5dCc_c6UpdateEv(self + 0x37c);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
+    mdCcAcPos_c2.Clear();
+    mdCcAcPos_c2.Update();
 
     func_ov078_02125de0(self);
     func_ov078_02125c98(self);
@@ -1948,7 +1877,6 @@ int daBombking_c::Behavior()
 #pragma push
 #pragma opt_strength_reduction off
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 49 -- _ZN12daBombking_c13InitResourcesEv, 0x02126368, size 0x28c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -1957,35 +1885,35 @@ int daBombking_c::Behavior()
    below still use their existing ROM-backed data declarations. */
 int daBombking_c::InitResources()
 {
-    BMD_File* f;
+    BMD_File *f;
     Vector3 v0;
     Vector3 v1;
     int i;
-    f = _ZN5Model8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f38);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x2cc, f, 1, 1);
-    _ZN11ShadowModel12InitCylinderEv((char*)&(*(u8 *)&mShadowModel));
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f00);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f20);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f10);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f08);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f18);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126ee0);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126ef0);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f40);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f30);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126ee8);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126f28);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov078_02126ef8);
+    f = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov078_02126f38);
+    mBlendModelAnim.SetFile(f, 1, 1);
+    mShadowModel.InitCylinder();
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f00);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f20);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f10);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f08);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f18);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126ee0);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126ef0);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f40);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f30);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126ee8);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126f28);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov078_02126ef8);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     v0.x = data_ov078_02126e00.x;
     v0.y = data_ov078_02126e00.y;
     v0.z = data_ov078_02126e00.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x33c, (dActor_c*)((char*)this), &v0, 0x78000, 0xc8000, 0x200004, 0x206000);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v0, 0x78000, 0xc8000, 0x200004, 0x206000);
     v1.x = data_ov078_02126e00.x;
     v1.y = data_ov078_02126e00.y;
     v1.z = data_ov078_02126e00.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x37c, (dActor_c*)((char*)this), &v1, 0xc8000, 0xc8000, 0x200000, 0x207000);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c2, this, &v1, 0xc8000, 0xc8000, 0x200000, 0x207000);
     unk_498 = 0x1f;
     mHomePosX = mPosX;
     mHomePosY = mPosY;
@@ -1993,33 +1921,29 @@ int daBombking_c::InitResources()
     mArenaPosX = 0xb1d000;
     mArenaPosY = 0x1060000;
     mArenaPosZ = 0xfee15000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (dActor_c*)((char*)this), 0x190000, 0x190000, 0, 0);
-    func_02035550((char*)&(*(dBgCh_Actr *)&mWithMeshClsn));
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x190000, 0x190000, 0, 0);
+    func_02035550(&mWithMeshClsn);
     mAnimSpeed = 1;
     mHealth = 3;
-    mStarID = (*(s32 *)&param1) & 0xf;
-    mStarTracked = _ZN8dActor_c9TrackStarEjj(((char*)this), mStarID, 2);
+    mStarID = param1 & 0xf;
+    mStarTracked = TrackStar(mStarID, 2);
     {
     int z = 0;
     for (i = 0; i < 2; i++) {
-        *(int*)(((char*)this)+0x424+i*4) = z;
-        *(unsigned char*)(((char*)this)+0x42c+i) = (unsigned char)z;
+        mSpawnedId[i] = z;
+        mSpawnedThrown[i] = (unsigned char)z;
     }
     }
     mPhase = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
-    {
-        int *p = (int*)((char*)&mPhase);
-        *p = *p + 1;
-    }
+    mPhase = mPhase + 1;
     mInitAngleY = mAngleY;
-    KingBobOmb_SetState(((char*)this), &data_ov078_0212710c);
+    KingBobOmb_SetState(this, &data_ov078_0212710c);
     return 1;
 }
 
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- _ZN12daBombking_c16OnAimedAtWithEggEv, 0x021265f4, size 0x8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnAimedAtWithEggEv
 // recovered name: KingBobOmb_OnAimedAtWithEgg
@@ -2030,32 +1954,12 @@ s32 daBombking_c::OnAimedAtWithEgg() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- daBombking_c_classInit, 0x021265fc, size 0x64            */
 /* -------------------------------------------------------------------------- */
 /* The factory immediately follows ordinal 50 and ends at the .init boundary. */
 // @symbol daBombking_c_classInit
-extern "C" {
-extern void *_ZN7fBase_cnwEj(unsigned int size);
-extern void _ZN12dEnemyBase_cC2Ev(void *self);
-extern void _ZN10dBgCh_ActrC1Ev(void *self);
-extern void _ZN14BlendModelAnimC1Ev(void *self);
-extern void _ZN10dCcAcPos_cC1Ev(void *self);
-extern void _ZN11CommonModelC1Ev(void *self);
-extern void _ZN11ShadowModelC1Ev(void *self);
-
-int *daBombking_c_classInit(void)
+/* The registry factory behind the BOMBKING profile. `return new daBombking_c()`
+ * MATCHES (size 0x64); the synthesized ctor stores `_ZTV12daBombking_c + 2`. */
+extern "C" daBombking_c *daBombking_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(1292);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)&_ZTV12daBombking_c[2];
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x110);
-        _ZN14BlendModelAnimC1Ev((char *)p + 0x2cc);
-        _ZN10dCcAcPos_cC1Ev((char *)p + 0x33c);
-        _ZN10dCcAcPos_cC1Ev((char *)p + 0x37c);
-        _ZN11CommonModelC1Ev((char *)p + 0x3bc);
-        _ZN11ShadowModelC1Ev((char *)p + 0x3f8);
-    }
-    return p;
-}
+    return new daBombking_c();
 }

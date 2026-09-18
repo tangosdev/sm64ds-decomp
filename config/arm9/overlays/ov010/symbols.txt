@@ -15,13 +15,13 @@ _ZN14daObjC1_Trap_c13InitResourcesEv kind:function(arm,size=0x1f8) addr:0x021116
 _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c kind:function(arm,size=0x138) addr:0x0211184c
 func_ov010_02111984 kind:function(arm,size=0x14) addr:0x02111984
 daObjC1_Trap_c_classInit kind:function(arm,size=0x38) addr:0x02111998
-_ZN9LightBeamD1Ev kind:function(arm,size=0x38) addr:0x021119d0
-_ZN9LightBeamD0Ev kind:function(arm,size=0x4c) addr:0x02111a08
-func_ov010_02111a54 kind:function(arm,size=0x40) addr:0x02111a54
-_ZN9LightBeam16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111a94
-_ZN9LightBeam6RenderEv kind:function(arm,size=0x28) addr:0x02111ab8
-_ZN9LightBeam8BehaviorEv kind:function(arm,size=0x240) addr:0x02111ae0
-_ZN9LightBeam13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111d20
+_ZN15daObjC1Hikari_cD1Ev kind:function(arm,size=0x38) addr:0x021119d0
+_ZN15daObjC1Hikari_cD0Ev kind:function(arm,size=0x4c) addr:0x02111a08
+_ZN15daObjC1Hikari_c20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x02111a54
+_ZN15daObjC1Hikari_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111a94
+_ZN15daObjC1Hikari_c6RenderEv kind:function(arm,size=0x28) addr:0x02111ab8
+_ZN15daObjC1Hikari_c8BehaviorEv kind:function(arm,size=0x240) addr:0x02111ae0
+_ZN15daObjC1Hikari_c13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111d20
 daObjC1Hikari_c_classInit kind:function(arm,size=0x40) addr:0x02111dd0
 _ZN13PeachPaintingD1Ev kind:function(arm,size=0x30) addr:0x02111e10
 _ZN13PeachPaintingD0Ev kind:function(arm,size=0x44) addr:0x02111e40
@@ -123,7 +123,6 @@ data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 _ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
 _ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70
 g_profile_C1_HIKARI kind:data(any) addr:0x02112b84 ambiguous
-_ZTV9LightBeam kind:data(any) addr:0x02112ba8
 _ZTV15daObjC1Hikari_c kind:data(any) addr:0x02112ba8
 data_ov010_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov010_02112bec kind:data(any) addr:0x02112bec ambiguous

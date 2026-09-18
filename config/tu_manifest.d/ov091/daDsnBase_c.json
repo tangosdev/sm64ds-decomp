@@ -100,13 +100,14 @@
     "tubuild create warning: RAW: src/func_ov091_02132dc0.cpp (func_ov091_02132dc0) did not split (the definition is inside the extern \"C\" block opened on line 17, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov091_02132f04.cpp (func_ov091_02132f04) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov091_02133098.cpp (func_ov091_02133098) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov091_02132e64 and the one that held func_ov091_02132e98; kept the first, the other is commented out for review -- RESOLVED: the two spellings were int(char*) and int(void*). Every call site in the merged TU passes a char* plus 0x39e, so the kept char* spelling serves both; no real header declares this symbol (checked include/decl_*.h). The alternate marker has been deleted from the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov091_02132e64 and the one that held func_ov091_02132e98; kept the first, the other is commented out for review -- RESOLVED: the two legacy spellings were int(char*) and int(void*), and both were call-site guesses -- a call site cannot evidence a parameter or a return type. No header declares this symbol (checked include/decl_*.h), but its definition does: src/DecIfAbove0_Byte.c defines unsigned char DecIfAbove0_Byte(unsigned char*). The merged TU is spelled from that definition, u8 DecIfAbove0_Byte(u8*), and the three calls cast; byte-neutral, 9/9 MATCH. The alternate marker has been deleted from the merged source.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov091_02132e98 and the one that held func_ov091_02133020; kept the first, the other is commented out for review -- RESOLVED: the two spellings were int(void*) and int(int*), and the argument data_0209e650 was declared both as an array and as a scalar. Declared once as an array with RandomIntInternal taking void*, both call sites stand verbatim and resolve to the same address. The alternate marker has been deleted from the merged source.",
     "RECONCILED: src/func_ov091_02133098.cpp defined its parameter as void*, but include/decl_common.h:2858 already declares func_ov091_02133098 taking char*. The merge made both visible in one TU and mwccarm rejected it as 'illegal function overloading'; the real header wins, so the parameter is now char*. All seven auto-named shards here are declared in decl_common.h (lines 1586, 2853-2858) and the other six already agreed.",
     "RECONCILED: the shadow struct dActor_c (30 slots, f00-f29) and struct Sub that the shards carried were dropped for the real types now reachable through daDsnBase_c.h -- dActor_c::OnAimedAtWithEgg (slot 29) and Model::Render (slot 5). Bytes unchanged.",
     "RECONCILED: the two destructor shards' forcing scaffolds were DROPPED, not carried. This TU defines the key function, and that alone emits the vtable and both destructor variants; both come out byte-identical without any scaffold.",
     "INCLUDE ORDER IS LOAD-BEARING: daDsnBase_c.h reaches dBgActor_c.h, which includes common.h BEFORE Model.h. Matrix4x3 is guarded on MATRIX4X3_DEFINED and has two spellings, so this fixes it to common.h's flat s32 m[12] -- the spelling every shard compiled against. func_ov091_02133098 assigns a whole Matrix4x3; hoisting math/Matrix.h above this include would change its codegen.",
-    "Init (_ZN11daDsnBase_c4InitEv at 0x02133254) is a coined member name. Class ownership, inbound calls (Thwomp::InitResources, daDkk_c::InitResources both pass this), body and layout are proven; the exact original English name is not."
+    "Init (_ZN11daDsnBase_c4InitEv at 0x02133254) is a coined member name. Class ownership, inbound calls (Thwomp::InitResources, daDkk_c::InitResources both pass this), body and layout are proven; the exact original English name is not.",
+    "DESLOP: func_ov091_02132f04 now holds its two Vector3 locals directly instead of inside a file-local anonymous struct, so the _ZN25@class$488daDsnBase_c_cppD1Ev compiler_only row is deleted (no emitted symbol shares its shape; resync reports MANUAL). Bytes unchanged: 10/10 MATCH."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -120,13 +121,11 @@
       "requested": [
         "_ZN11daDsnBase_cD1Ev",
         "_ZN11daDsnBase_cD0Ev",
-        "_ZN7Vector3D1Ev",
-        "_ZN25@class$488daDsnBase_c_cppD1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN11daDsnBase_cD0Ev",
         "_ZN11daDsnBase_cD1Ev",
-        "_ZN25@class$488daDsnBase_c_cppD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -151,8 +150,7 @@
         23,
         24,
         25,
-        28,
-        35
+        28
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -360,11 +358,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because func_ov091_02132f04 takes two Vector3 locals. The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
-    },
-    {
-      "symbol": "_ZN25@class$488daDsnBase_c_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "The implicit destructor of the file-local anonymous struct that func_ov091_02132f04 declares to hold its two Vector3 locals. mwccarm names such a type after the translation unit, so this four-byte body exists only in this object and has no ROM home anywhere -- no symbols.txt in config/ names it. Nothing references it; production isolation deadstrips it."
     }
   ]
 }

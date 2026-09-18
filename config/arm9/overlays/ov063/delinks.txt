@@ -424,24 +424,9 @@ src/unnamed/ov063/func_ov063_0211cc18.c:
     complete
     .text start:0x0211cc18 end:0x0211cdec
 
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp:
+src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp:
     complete
-    .text start:0x0211cdec end:0x0211ce30
-
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0211ce30 end:0x0211ce34
-
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c6RenderEv.cpp:
-    complete
-    .text start:0x0211ce34 end:0x0211ce74
-
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211ce74 end:0x0211cf00
-
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c13InitResourcesEv.cpp:
-    .text start:0x0211cf00 end:0x0211d270
+    .text start:0x0211cdec end:0x0211d270
 
 src/unnamed/ov063/func_ov063_0211d270.cpp:
     complete
@@ -451,93 +436,25 @@ src/unnamed/ov063/func_ov063_0211d28c.c:
     complete
     .text start:0x0211d28c end:0x0211d2a0
 
-src/game/actors/daTrsTrap_c/d_a_trs_trap_teresapit.c:
+src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp:
     complete
-    .text start:0x0211d2a0 end:0x0211d2e0
-
-src/game/actors/daTrsTrap_c/d_a_trs_trap_merrygoround.c:
-    complete
-    .text start:0x0211d2e0 end:0x0211d320
-
-src/game/actors/daTrsTrap_c/d_a_trs_trap_bookshelf.c:
-    complete
-    .text start:0x0211d320 end:0x0211d360
-
-src/game/actors/daTrsTrap_c/d_a_trs_trap_kaidan.c:
-    complete
-    .text start:0x0211d360 end:0x0211d3a0
+    .text start:0x0211d2a0 end:0x0211d3a0
 
 src/game/actors/d_a_obj_th_fall_block.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d4b8
 
-src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp:
+src/game/actors/daPiano_c/_ZN9daPiano_cD1Ev.cpp:
     complete
     .text start:0x0211d4b8 end:0x0211d54c
 
-src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp:
+src/game/actors/daPiano_c/_ZN9daPiano_cD0Ev.cpp:
     complete
     .text start:0x0211d54c end:0x0211d5f4
 
-src/unnamed/ov063/func_ov063_0211d5f4.c:
-    complete
-    .text start:0x0211d5f4 end:0x0211d828
-
-src/unnamed/ov063/func_ov063_0211d828.cpp:
-    complete
-    .text start:0x0211d828 end:0x0211d88c
-
-src/unnamed/ov063/func_ov063_0211d88c.c:
-    complete
-    .text start:0x0211d88c end:0x0211d8cc
-
-src/unnamed/ov063/func_ov063_0211d8cc.cpp:
-    complete
-    .text start:0x0211d8cc end:0x0211dba4
-
-src/unnamed/ov063/func_ov063_0211dba4.c:
-    complete
-    .text start:0x0211dba4 end:0x0211dbb8
-
-src/unnamed/ov063/func_ov063_0211dbb8.c:
-    complete
-    .text start:0x0211dbb8 end:0x0211dd78
-
-src/unnamed/ov063/func_ov063_0211dd78.c:
-    complete
-    .text start:0x0211dd78 end:0x0211dd84
-
-src/unnamed/ov063/func_ov063_0211dd84.c:
-    complete
-    .text start:0x0211dd84 end:0x0211ddac
-
-src/unnamed/ov063/func_ov063_0211ddac.cpp:
-    complete
-    .text start:0x0211ddac end:0x0211ddf4
-
-src/unnamed/ov063/func_ov063_0211ddf4.cpp:
-    complete
-    .text start:0x0211ddf4 end:0x0211de3c
-
-src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211de3c end:0x0211de8c
-
-src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp:
-    complete
-    .text start:0x0211de8c end:0x0211deb8
-
-src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp:
-    complete
-    .text start:0x0211deb8 end:0x0211dfac
-
-src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211dfac end:0x0211e128
-
 src/game/actors/daPiano_c/d_a_piano.cpp:
     complete
-    .text start:0x0211e128 end:0x0211e1c0
+    .text start:0x0211d5f4 end:0x0211e1c0
 
 src/unnamed/ov063/__sinit_ov063_0211e29c.c:
     complete
