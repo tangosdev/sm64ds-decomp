@@ -157,7 +157,7 @@ class ToolchainTests(unittest.TestCase):
     def test_the_flags_are_the_builds_flags_not_the_sweeps(self):
         """build_pin.py exists because a check compiled with different flags than the
         link can bless a version the build then breaks on."""
-        src = REPO / "src_tu" / "actors" / "PoleLift.cpp"
+        src = REPO / "src_tu" / "actors" / "OneUpLogo.cpp"
         flags = BP.flags_for(src)
         self.assertEqual(flags, RB.CFLAGS.replace("-lang c99", "-lang c++"))
         self.assertNotEqual(flags, M.DEFAULT_FLAGS)
@@ -239,7 +239,7 @@ class TreeTests(unittest.TestCase):
         with Scratch() as s:
             out = s.dir / "report.json"
             r = subprocess.run([sys.executable, str(TOOLS / "check_src_tu_compiles.py"),
-                                "--id", "ov045/PoleLift", "--json", str(out)],
+                                "--id", "ov002/OneUpLogo", "--json", str(out)],
                                capture_output=True, text=True, cwd=REPO)
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             report = json.loads(out.read_text())

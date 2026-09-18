@@ -123,7 +123,7 @@ daFRing_c	DONE	include\BowserShockwaves.h  [alias: header uses pre-rename name]	
 daFeather_c	DONE	include\daFeather_c.h	dActor_c	0	ov002	6
 daFish_c	DONE	include\Fish.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7
 daGmch_c	DONE	include\daGmch_c.h	dActor_c	0	ov081	10
-daJgm_c	DONE	include\Lakitu.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
+daJgm_c	DONE	include\daJgm_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
 daKinopio_c	DONE	include\Toad.h  [alias: header uses pre-rename name]	dActor_c	0	ov085	14
 daKirai_c	DONE	include\SpikeBomb.h  [alias: header uses pre-rename name]	dActor_c	0	ov060	6
 daKpFr_c	DONE	include\daKpFr_c.h	dActor_c	0	ov070	8
@@ -271,7 +271,7 @@ daObjKi_Fune_c	DONE	include\ShipUp.h  [alias: header uses pre-rename name]	dBgAc
 daObjKi_Hasira_c	PARTIAL	include\daObjKi_Hasira_c.h	dBgActor_c	0	ov016	6
 daObjKm1_Ukishima_c	DONE	include\daObjKm1_Ukishima_c.h	dBgActor_c	0	ov043	6
 daObjKm2_Agaru_c	PARTIAL	include\daObjKm2_Agaru_c.h	dBgActor_c	0	ov045	0
-daObjKm2_Ami_Bou_c	DONE	include\PoleLift.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov045	6
+daObjKm2_Ami_Bou_c	DONE	include\daObjKm2_Ami_Bou_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov045	6
 daObjKsWater_c	DONE	include\daObjKsWater_c.h	dBgActor_c	0	ov017	6
 daObjMcWater_c	DONE	include\daObjMcWater_c.h	dBgActor_c	0	ov009	6
 daObjMc_Metalnet_c	DONE	include\daObjMc_Metalnet_c.h	dBgActor_c	0	ov009	7
@@ -321,7 +321,7 @@ daFPknBall_c	DONE	include\Fireball.h  [alias: header uses pre-rename name]	dEnem
 daFPkn_c	DONE	include\FirePiranhaPlantBig.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov084	9
 daGrock_c	DONE	include\RollingRock.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov021	7
 daHanachan_c	DONE	include\Wiggler.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov034	6
-daHolhei_c	DONE	include\Chuckya.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	8
+daHolhei_c	DONE	include\daHolhei_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	8
 daHuwa_c	DONE	include\Spindrift.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov081	9
 daHyuhyu_c	DONE	include\Fwoosh.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov091	10
 daIbl_c	DONE	include\RollingIronBall.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov100	7

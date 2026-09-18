@@ -1,0 +1,388 @@
+{
+  "id": "ov077/daJgm_c",
+  "module": "ov077",
+  "source": "src/game/actors/d_a_jgm.cpp",
+  "promoted_source": "src/game/actors/d_a_jgm.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2123740..0x2124b64, 32 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daJgm_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02123740",
+      "end": "0x02124b64"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daJgm_cD1Ev",
+      "address": "0x02123740",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN7daJgm_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daJgm_cD0Ev",
+      "address": "0x02123798",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN7daJgm_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7daJgm_c13OnYoshiTryEatEv",
+      "address": "0x02123804",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN7daJgm_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN7daJgm_c16OnAimedAtWithEggEv",
+      "address": "0x0212380c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN7daJgm_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN7daJgm_c14UpdateHoverBobEv",
+      "address": "0x02123814",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov077_02123814.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7daJgm_c12CountSpiniesEv",
+      "address": "0x02123880",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov077_02123880.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN7daJgm_c18TurnOffsetFromDistEi",
+      "address": "0x021238bc",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov077_021238bc.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN7daJgm_c12UpdateFlightEv",
+      "address": "0x0212390c",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov077_0212390c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7daJgm_c15DieAndDropCoinsEv",
+      "address": "0x02123a1c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov077_02123a1c.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7daJgm_c21HandlePlayerCollisionEv",
+      "address": "0x02123a74",
+      "size": "0x000001f8",
+      "legacy_source": "src/func_ov077_02123a74.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr",
+      "address": "0x02123c6c",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov077_02123c6c.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN7daJgm_c12UpdateModelsEv",
+      "address": "0x02123d40",
+      "size": "0x0000028c",
+      "legacy_source": "src/func_ov077_02123d40.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN7daJgm_c15UpdateFallStateEv",
+      "address": "0x02123fcc",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov077_02123fcc.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN7daJgm_c14EnterFallStateEv",
+      "address": "0x02124038",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov077_02124038.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN7daJgm_c15UpdateSpitStateEv",
+      "address": "0x02124118",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov077_02124118.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN7daJgm_c14EnterSpitStateEv",
+      "address": "0x021241ac",
+      "size": "0x00000144",
+      "legacy_source": "src/func_ov077_021241ac.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN7daJgm_c21UpdateYoshiMouthStateEv",
+      "address": "0x021242f0",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov077_021242f0.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN7daJgm_c20EnterYoshiMouthStateEv",
+      "address": "0x02124394",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov077_02124394.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7daJgm_c16UpdateThrowStateEv",
+      "address": "0x021243c0",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov077_021243c0.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN7daJgm_c15EnterThrowStateEv",
+      "address": "0x021244d4",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov077_021244d4.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7daJgm_c16UpdateHoverStateEv",
+      "address": "0x02124564",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov077_02124564.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN7daJgm_c15EnterHoverStateEv",
+      "address": "0x02124698",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov077_02124698.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN7daJgm_c11UpdateStateEv",
+      "address": "0x02124718",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov077_02124718.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN7daJgm_c10EnterStateEv",
+      "address": "0x02124754",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov077_02124754.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN7daJgm_c8SetStateEi",
+      "address": "0x0212478c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov077_0212478c.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN7daJgm_c16CleanupResourcesEv",
+      "address": "0x021247a8",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN7daJgm_c16CleanupResourcesEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN7daJgm_c16OnPendingDestroyEv",
+      "address": "0x02124824",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daJgm_c16OnPendingDestroyEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN7daJgm_c6RenderEv",
+      "address": "0x02124828",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN7daJgm_c6RenderEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN7daJgm_c8BehaviorEv",
+      "address": "0x021248b8",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN7daJgm_c8BehaviorEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN7daJgm_c13InitResourcesEv",
+      "address": "0x02124908",
+      "size": "0x0000019c",
+      "legacy_source": "src/_ZN7daJgm_c13InitResourcesEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN7daJgm_c13OnTurnIntoEggER6Player",
+      "address": "0x02124aa4",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN7daJgm_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "daJgm_c_classInit",
+      "address": "0x02124b04",
+      "size": "0x00000060",
+      "legacy_source": "src/d_a_jgm.c",
+      "ordinal": 31
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Genuine lifecycle source form: the real header defines the virtual destructor inline and the TU defines InitResources as the key function. mwccarm owns retail D1/D0 and class data with no D2, manual metadata or forcing output.",
+    "Private helper spellings (SetState, EnterState/UpdateState, the five state pairs, UpdateModels, UpdateWallAndWater, HandlePlayerCollision, DieAndDropCoins, UpdateFlight, TurnOffsetFromDist, CountSpinies, UpdateHoverBob) are truthful inferred aliases. Class ownership, inbound calls, bodies, layout, relocations and codegen are proven; the exact original English names are not. UpdateWallAndWater mangles as R10dBgCh_Actr (reference); a pointer (P10dBgCh_Actr) generates identical ARM. OnTurnIntoEgg mangles as R6Player for the same reason. SetState's signed `int` is a 32-bit register argument whose signedness the bytes cannot distinguish.",
+    "daJgm_c_classInit and g_profile_JUGEM are reconstructed source-style names: SM64DS proves the daJgm_c RTTI identity, JUGEM registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Lakitu_Spawn and Lakitu_SpawnInfo. The factory is return new daJgm_c(); leaf operator new(unsigned long) forwards fBase_c::operator new until #2570.",
+    "The retained __sinit_ov077_02127240, ctor table entry, resource BSS, and PMF state table remain separately enrolled and are not claimed by this class TU. Text-only: emitted _ZTV/_ZTI/_ZTS are licensed deadstrip-data (data objects cannot use deadstrip-duplicate); data: []."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov077-daJgm_c/d_a_jgm.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 32,
+    "functions_declared": 32,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS7daJgm_c",
+        "_ZTI7daJgm_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "g_profile_JUGEM",
+        "_ZTV7daJgm_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7daJgm_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daJgm_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daJgm_c",
+        "g_profile_JUGEM"
+      ]
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text isolation."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS7daJgm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov077",
+      "canonical_address": "0x02127830",
+      "reason": "InitResources naturally emits the ROM-proven class type-name string. Text-only: deadstripped, data: []."
+    },
+    {
+      "symbol": "_ZTI7daJgm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov077",
+      "canonical_address": "0x0212783c",
+      "reason": "InitResources naturally emits the class single-inheritance RTTI. Text-only: deadstripped, data: []."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the canonical arm9 object and relocations before text isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the canonical arm9 object and relocations before text isolation."
+    },
+    {
+      "symbol": "g_profile_JUGEM",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov077",
+      "canonical_address": "0x02127848",
+      "reason": "The typed actor descriptor naturally owns its factory relocation. Text-only: deadstripped, data: []."
+    },
+    {
+      "symbol": "_ZTV7daJgm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov077",
+      "canonical_address": "0x0212786c",
+      "reason": "InitResources naturally emits the complete class vtable; romdata_check applies the measured eight-byte public address-point bias. Text-only: deadstripped, data: []. The symbols.txt address point 0x0212786c is unchanged."
+    }
+  ]
+}

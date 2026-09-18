@@ -1,48 +1,64 @@
 //cpp
-/* Reconstructed ov064/daObjFl_Gura_c translation unit.
+/**
+ * Lethal Lava Land's tilting slab.
  *
- * tu_map identifies the RTTI-backed four-function class run at
- * 0x02118020..0x021180fc. The registry-backed factory immediately after it
- * allocates sizeof(daObjFl_Gura_c), constructs the direct base, installs the
- * class vptr, and ends at the next class's D1. That evidence supports testing
- * the combined five-function interval 0x02118020..0x02118138; tu_map alone
- * does not prove the factory join.
+ * No fields. InitResources / CleanupResources hand this overlay's
+ * model and collision files to daObjGuragura_c's shared ov002 helpers.
+ * func_ov002_020b6244 loads slot 0 with Model::LoadFile, slot 1 with
+ * dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile. ov064 sinit
+ * constructs those SharedFilePtrs as file IDs 1523 / 1524.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * factory first. The inline destructor declared last in daObjFl_Gura_c emits
- * the retail D1/D0 pair first and emits no leaf D2 body.
+ * daObjFl_Gura_c_classInit is reconstructed (RTTI daObjFl_Gura_c,
+ * FL_GURA registry). Retail does not store that spelling.
+ *
+ * deslop
+ * Leftover: func_ov002_020b6244 / func_ov002_020b60fc are still
+ *   linker names. Naming belongs in ov002.
+ * Leftover: data_ov064_0211adb0 is overlay .rodata this TU does not
+ *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
+ *   data_ov064_*.
  */
 
 #include "daObjFl_Gura_c.h"
+#include "SharedFilePtr.h"
 
-extern "C" int func_ov002_020b60fc(void *self, void *data);
-extern "C" int func_ov002_020b6244(void *self, void *data);
-extern "C" char data_ov064_0211adb0[];
+struct CLPS_Block;
 
-struct FlGuraProfile {
-    daObjFl_Gura_c *(*classInit)();
-    s16 profileID;
-    s16 groupFlags;
-    u32 actorFlags;
-    Fix12i cullRadiusX;
-    Fix12i cullRadiusY;
-    u32 executeOrder;
-    u32 drawOrder;
+struct ResourceDescriptor {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
 };
+typedef char ResourceDescriptor_size_must_be_0x0c[
+    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
-typedef char FlGuraProfile_size_must_be_0x1c[
-    sizeof(FlGuraProfile) == 0x1c ? 1 : -1];
+extern "C" {
+int func_ov002_020b6244(daObjFl_Gura_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020b60fc(daObjFl_Gura_c *self, ResourceDescriptor *descriptor);
+extern ResourceDescriptor data_ov064_0211adb0;
+}
 
-/* SM64DS directly preserves the class RTTI, FL_GURA ID, descriptor
- * relationship, and factory behavior. The profile struct name is local to
- * this reconstruction. */
+struct FlGuraSpawnInfo {
+    daObjFl_Gura_c *(*classInit)();
+    s16 executePriority; /* +4: also FL_GURA registry id 0x0048 = 72 */
+    s16 renderPriority;  /* +6 */
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+typedef char FlGuraSpawnInfo_size_must_be_0x1c[
+    sizeof(FlGuraSpawnInfo) == 0x1c ? 1 : -1];
+
 // @symbol daObjFl_Gura_c_classInit
 extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit()
 {
     return new daObjFl_Gura_c();
 }
 
-extern "C" FlGuraProfile g_profile_FL_GURA = {
+// @symbol g_profile_FL_GURA
+extern "C" FlGuraSpawnInfo g_profile_FL_GURA = {
     daObjFl_Gura_c_classInit,
     0x0048,
     0x0118,
@@ -54,17 +70,13 @@ extern "C" FlGuraProfile g_profile_FL_GURA = {
 };
 
 // @symbol _ZN14daObjFl_Gura_c13InitResourcesEv
-#pragma long_calls on
-int daObjFl_Gura_c::InitResources()
+s32 daObjFl_Gura_c::InitResources()
 {
-    return func_ov002_020b6244(this, data_ov064_0211adb0);
+    return func_ov002_020b6244(this, &data_ov064_0211adb0);
 }
-#pragma long_calls off
 
 // @symbol _ZN14daObjFl_Gura_c16CleanupResourcesEv
-#pragma long_calls on
-int daObjFl_Gura_c::CleanupResources()
+s32 daObjFl_Gura_c::CleanupResources()
 {
-    return func_ov002_020b60fc(this, data_ov064_0211adb0);
+    return func_ov002_020b60fc(this, &data_ov064_0211adb0);
 }
-#pragma long_calls off

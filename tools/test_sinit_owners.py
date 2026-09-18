@@ -12,7 +12,7 @@ class SinitOwnersTests(unittest.TestCase):
         evidence = SO.load_manifest_evidence()
         rows = evidence["__sinit_ov045_02112214"]
         self.assertEqual(len(rows), 1)
-        self.assertEqual(rows[0]["owner"], "ov045/PoleLift")
+        self.assertEqual(rows[0]["owner"], "ov045/daObjKm2_Ami_Bou_c")
         self.assertEqual(rows[0]["kind"], "curated-out-of-scope")
         self.assertFalse(rows[0]["proven"])
 

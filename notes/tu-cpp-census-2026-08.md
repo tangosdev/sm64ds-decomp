@@ -72,7 +72,7 @@ EMPIRICAL SIZE CLIFF: 80% of 1-4-member TUs compiled; **0 of 159 with >=10 membe
 Composition: 171/173 are mixed `.c`+`.cpp`, 2 all-`.cpp`, 0 all-`.c`. 811 `.c` + 1,194 `.cpp` members.
 - 155/173 contain a member wrapped in an `extern "C" { }` block — `tubuild.py create` REFUSES those ("scanned to end of file without finding a function body"); hand-assemble via `tubuild.build_manifest_entry`.
 - 106/173 have file-scope local struct definitions in MORE THAN ONE member (collision risk).
-- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (PoleLift, daObjKm2_Fall_Block_c, LevelObjects, Platform, [ov002](../config/arm9/overlays/ov002/symbols.txt)/Enemy) — dedupe against `config/tu_manifest.d/` first.
+- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (daObjKm2_Ami_Bou_c, daObjKm2_Fall_Block_c, LevelObjects, Platform, [ov002](../config/arm9/overlays/ov002/symbols.txt)/Enemy) — dedupe against `config/tu_manifest.d/` first.
 
 Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - `main` @0x20049f0 (2,927 files) — NOT a TU, it is the un-segmented remainder of arm9. Do not touch.
@@ -93,7 +93,7 @@ Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - **VTABLE / VAGUE LINKAGE**: mwcc anchors `_ZTV`/`_ZTI` to the TU that defines the destructor OUT OF LINE. Inline it and the anchor disappears; wrong TU = undefined or multiply-defined `_ZTV` link error. objisolate addend rule: a `_ZTV*` relocation's addend must LOSE 8 on rebinding — get it wrong and it links clean and corrupts 34 modules. Use `tubuild.py linkcheck`.
 - **SINIT ORDERING**: `.ctor` entry count == `__sinit_*` count across all 106 modules, zero exceptions, targets always ascending. Two merged TUs that each had a sinit must produce ONE. `tu_map --check` V2a/V2b; 37/74 modules are `corroborated:true` and will catch a miscount.
 - **"999 word(s) differ"** means SIZES differ (D0/D1/D2 variant collapse), not a type error.
-- **A byte MATCH that calls the WRONG function**: `match.compare` WILDCARDS every relocated word. [ov077](../config/arm9/overlays/ov077/symbols.txt) [func_ov077_02124118](../src_tu/actors/Lakitu.cpp)(ROM Ordinal 14 in `Lakitu.cpp`) called `ApproachLinear` where the ROM calls `ApproachLinear2` -> reported MATCH, cost a day. Require all three on the verify line: `byte comparison N/N MATCH`, `objisolate check: clean`, AND reloc-destinations clean.
+- **A byte MATCH that calls the WRONG function**: `match.compare` WILDCARDS every relocated word. [ov077](../config/arm9/overlays/ov077/symbols.txt) [`daJgm_c::UpdateSpitState` (0x02124118)](../src/game/actors/d_a_jgm.cpp) (ROM Ordinal 14 in that TU) called `ApproachLinear` where the ROM calls `ApproachLinear2` -> reported MATCH, cost a day. Require all three on the verify line: `byte comparison N/N MATCH`, `objisolate check: clean`, AND reloc-destinations clean.
 - **DATA-ONLY OBJECTS are invisible to the map** (built from `.text` runs). 260 delink entries tree-wide have no `.text`; zero mix `.text` with another section. Attribute non-`.text` only by "object k's contribution to every section precedes object k+1's"; discard any rule whose per-TU intervals are not ascending and disjoint. NEVER "TU k's code loads this address, so TU k owns it."
 - **`include/decl_common.h` is sometimes ACTIVELY WRONG** (declares a TU's own functions as data -> silent mismatch). Drop it and restate the 3-17 lines. Median distinct includes per safe TU is 7.
 

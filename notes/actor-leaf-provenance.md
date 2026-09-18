@@ -109,12 +109,12 @@ back, so a name like "mMotherPenguin" would be a claim the bytes do not make.
 Deliberately left `unk_`: 0x360 (zeroed, never read); 0x36c (set to 0x384 every
 frame the penguin is near the player, never read).
 
-## Lakitu -- include/Lakitu.h
+## daJgm_c -- include/daJgm_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `src/_ZN6Lakitu13InitResourcesEv.cpp`. The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
-| 0x3f4 | `mState` | `src/_ZN6Lakitu6RenderEv.cpp` draws the second `Model` only when this is 1. |
+| 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `daJgm_c::InitResources` (`src/game/actors/d_a_jgm.cpp`). The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
+| 0x3f4 | `mState` | `daJgm_c::Render` (`src/game/actors/d_a_jgm.cpp`) draws the second `Model` only when this is 1. |
 | 0x3f8 | `mSpawnPosX` | `InitResources` copies `this + 0x5c` (`mPosX`) in. |
 | 0x3fc | `mSpawnPosY` | same, `this + 0x60` (`mPosY`). |
 | 0x400 | `mSpawnPosZ` | same, `this + 0x64` (`mPosZ`); this is the only one of the three spelt as a member, the other two are raw `this + 0xNN` stores. |

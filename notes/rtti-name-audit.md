@@ -21,12 +21,12 @@ real name, at a different length, so no ROM symbol can license them. `tubuild` r
 
 | Symbol | Type | Section | Size |
 |---|---|---|---|
-| HOMELESS     _ZTS8PoleLift|  STB_LOPROC| .data size=0xa |
-| HOMELESS     _ZTI8PoleLift|  STB_LOPROC| .data size=0xc |
-| COLLIDES-GAP _ZTV8PoleLift|  STB_GLOBAL| .data size=0x84 already at [ov045](../config/arm9/overlays/ov045/symbols.txt):0x02112dbc |
+| HOMELESS     _ZTS18daObjKm2_Ami_Bou_c|  STB_LOPROC| .data size=0xa |
+| HOMELESS     _ZTI18daObjKm2_Ami_Bou_c|  STB_LOPROC| .data size=0xc |
+| COLLIDES-GAP _ZTV18daObjKm2_Ami_Bou_c|  STB_GLOBAL| .data size=0x84 already at [ov045](../config/arm9/overlays/ov045/symbols.txt):0x02112dbc |
 
 
-`PoleLift` is `daObjKm2_Ami_Bou_c` in the ROM. This was found the expensive way, on
+`daObjKm2_Ami_Bou_c` is `daObjKm2_Ami_Bou_c` in the ROM. This was found the expensive way, on
 [#2066](https://github.com/tangosdev/sm64ds-decomp/pull/2066): the destructor work was
 correct and landed, and the promotion it was meant to unlock could never have succeeded.
 No amount of TU-boundary evidence would have changed that.
@@ -49,7 +49,7 @@ pointer; a `__si_class_type_info` record is `[vptr][name ptr][base ptr]`, so wor
 to the `_ZTS` string. That string is length-prefixed, so a correct read verifies itself:
 
 ```sh
-_ZTV8PoleLift @ 0x02112dbc            (ov045, base 0x021111a0)
+_ZTV18daObjKm2_Ami_Bou_c @ 0x02112dbc            (ov045, base 0x021111a0)
   [V-8] offset-to-top = 0x00000000
   [V-4] typeinfo      = 0x02112d74
   TI[0] vptr          = 0x0209a764
@@ -107,7 +107,7 @@ The disagreements concentrate: [ov002](../config/arm9/overlays/ov002/symbols.txt
 ```sh
 python tools/rtti_name_audit.py                  # summary, first 25 disagreements
 python tools/rtti_name_audit.py --all            # every disagreement
-python tools/rtti_name_audit.py --class PoleLift # one class, with the chain
+python tools/rtti_name_audit.py --class daObjKm2_Ami_Bou_c # one class, with the chain
 python tools/rtti_name_audit.py --json out.json  # every row
 ```
 

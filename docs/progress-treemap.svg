@@ -35133,11 +35133,11 @@ matched: yes</title></rect><rect x="1227.69" y="394.31" width="10.15" height="7.
 module: ov060
 addr: 0x0211a428
 size: 148 bytes
-matched: yes</title></rect><rect x="1247.84" y="302.18" width="9.16" height="4.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7ChuckyaD1Ev
+matched: yes</title></rect><rect x="1247.84" y="302.18" width="9.16" height="4.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_cD1Ev
 module: ov062
 addr: 0x02115ee0
 size: 72 bytes
-matched: yes</title></rect><rect x="1247.84" y="306.19" width="9.16" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7ChuckyaD0Ev
+matched: yes</title></rect><rect x="1247.84" y="306.19" width="9.16" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_cD0Ev
 module: ov062
 addr: 0x02115f28
 size: 92 bytes
@@ -35229,7 +35229,7 @@ matched: yes</title></rect><rect x="1262.44" y="342.03" width="7.97" height="6.1
 module: ov062
 addr: 0x02116c78
 size: 96 bytes
-matched: yes</title></rect><rect x="1262.44" y="348.15" width="7.97" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Chuckya_ChangeState
+matched: yes</title></rect><rect x="1262.44" y="348.15" width="7.97" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daHolhei_c_ChangeState
 module: ov062
 addr: 0x02116cd8
 size: 80 bytes
@@ -35249,23 +35249,23 @@ matched: yes</title></rect><rect x="1262.44" y="381.10" width="7.97" height="14.
 module: ov062
 addr: 0x02116edc
 size: 228 bytes
-matched: yes</title></rect><rect x="1262.44" y="395.66" width="7.97" height="6.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Chuckya16CleanupResourcesEv
+matched: yes</title></rect><rect x="1262.44" y="395.66" width="7.97" height="6.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c16CleanupResourcesEv
 module: ov062
 addr: 0x02116fc0
 size: 96 bytes
-matched: yes</title></rect><rect x="1270.41" y="302.55" width="5.64" height="7.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Chuckya6RenderEv
+matched: yes</title></rect><rect x="1270.41" y="302.55" width="5.64" height="7.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c6RenderEv
 module: ov062
 addr: 0x02117024
 size: 88 bytes
-matched: yes</title></rect><rect x="1270.41" y="310.49" width="5.64" height="62.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Chuckya8BehaviorEv
+matched: yes</title></rect><rect x="1270.41" y="310.49" width="5.64" height="62.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c8BehaviorEv
 module: ov062
 addr: 0x0211707c
 size: 696 bytes
-matched: yes</title></rect><rect x="1270.41" y="373.28" width="5.64" height="28.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Chuckya13InitResourcesEv
+matched: yes</title></rect><rect x="1270.41" y="373.28" width="5.64" height="28.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c13InitResourcesEv
 module: ov062
 addr: 0x02117334
 size: 316 bytes
-matched: yes</title></rect><rect x="1276.06" y="302.18" width="6.73" height="0.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Chuckya16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1276.06" y="302.18" width="6.73" height="0.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c16OnAimedAtWithEggEv
 module: ov062
 addr: 0x02117470
 size: 8 bytes
@@ -39957,127 +39957,127 @@ matched: yes</title></rect><rect x="1327.45" y="608.73" width="2.21" height="31.
 module: ov075
 addr: 0x0211c51c
 size: 136 bytes
-matched: yes</title></rect><rect x="1339.66" y="543.66" width="8.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6LakituD1Ev
+matched: yes</title></rect><rect x="1339.66" y="543.66" width="8.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_cD1Ev
 module: ov077
 addr: 0x02123740
 size: 88 bytes
-matched: yes</title></rect><rect x="1348.45" y="543.66" width="10.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6LakituD0Ev
+matched: yes</title></rect><rect x="1348.45" y="543.66" width="10.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_cD0Ev
 module: ov077
 addr: 0x02123798
 size: 108 bytes
-matched: yes</title></rect><rect x="1359.24" y="543.66" width="0.80" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="1359.24" y="543.66" width="0.80" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c13OnYoshiTryEatEv
 module: ov077
 addr: 0x02123804
 size: 8 bytes
-matched: yes</title></rect><rect x="1360.04" y="543.66" width="0.80" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1360.04" y="543.66" width="0.80" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c16OnAimedAtWithEggEv
 module: ov077
 addr: 0x0212380c
 size: 8 bytes
-matched: yes</title></rect><rect x="1360.84" y="543.66" width="10.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123814
+matched: yes</title></rect><rect x="1360.84" y="543.66" width="10.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c14UpdateHoverBobEv
 module: ov077
 addr: 0x02123814
 size: 108 bytes
-matched: yes</title></rect><rect x="1371.64" y="543.66" width="6.00" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123880
+matched: yes</title></rect><rect x="1371.64" y="543.66" width="6.00" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c12CountSpiniesEv
 module: ov077
 addr: 0x02123880
 size: 60 bytes
-matched: yes</title></rect><rect x="1377.63" y="543.66" width="7.99" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_021238bc
+matched: yes</title></rect><rect x="1377.63" y="543.66" width="7.99" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c18TurnOffsetFromDistEi
 module: ov077
 addr: 0x021238bc
 size: 80 bytes
-matched: yes</title></rect><rect x="1385.62" y="543.66" width="27.18" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_0212390c
+matched: yes</title></rect><rect x="1385.62" y="543.66" width="27.18" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c12UpdateFlightEv
 module: ov077
 addr: 0x0212390c
 size: 272 bytes
-matched: yes</title></rect><rect x="1412.80" y="543.66" width="8.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123a1c
+matched: yes</title></rect><rect x="1412.80" y="543.66" width="8.79" height="4.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c15DieAndDropCoinsEv
 module: ov077
 addr: 0x02123a1c
 size: 88 bytes
-matched: yes</title></rect><rect x="1339.66" y="548.45" width="22.35" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123a74
+matched: yes</title></rect><rect x="1339.66" y="548.45" width="22.35" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c21HandlePlayerCollisionEv
 module: ov077
 addr: 0x02123a74
 size: 504 bytes
-matched: yes</title></rect><rect x="1362.01" y="548.45" width="9.40" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123c6c
+matched: yes</title></rect><rect x="1362.01" y="548.45" width="9.40" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr
 module: ov077
 addr: 0x02123c6c
 size: 212 bytes
-matched: yes</title></rect><rect x="1371.41" y="548.45" width="28.91" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123d40
+matched: yes</title></rect><rect x="1371.41" y="548.45" width="28.91" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c12UpdateModelsEv
 module: ov077
 addr: 0x02123d40
 size: 652 bytes
-matched: yes</title></rect><rect x="1400.31" y="548.45" width="4.79" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02123fcc
+matched: yes</title></rect><rect x="1400.31" y="548.45" width="4.79" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c15UpdateFallStateEv
 module: ov077
 addr: 0x02123fcc
 size: 108 bytes
-matched: yes</title></rect><rect x="1405.10" y="548.45" width="9.93" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124038
+matched: yes</title></rect><rect x="1405.10" y="548.45" width="9.93" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c14EnterFallStateEv
 module: ov077
 addr: 0x02124038
 size: 224 bytes
-matched: yes</title></rect><rect x="1415.03" y="548.45" width="6.56" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124118
+matched: yes</title></rect><rect x="1415.03" y="548.45" width="6.56" height="10.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c15UpdateSpitStateEv
 module: ov077
 addr: 0x02124118
 size: 148 bytes
-matched: yes</title></rect><rect x="1339.66" y="559.23" width="7.46" height="20.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_021241ac
+matched: yes</title></rect><rect x="1339.66" y="559.23" width="7.46" height="20.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c14EnterSpitStateEv
 module: ov077
 addr: 0x021241ac
 size: 324 bytes
-matched: yes</title></rect><rect x="1339.66" y="580.01" width="7.46" height="10.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_021242f0
+matched: yes</title></rect><rect x="1339.66" y="580.01" width="7.46" height="10.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c21UpdateYoshiMouthStateEv
 module: ov077
 addr: 0x021242f0
 size: 164 bytes
-matched: yes</title></rect><rect x="1339.66" y="590.52" width="7.46" height="2.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124394
+matched: yes</title></rect><rect x="1339.66" y="590.52" width="7.46" height="2.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c20EnterYoshiMouthStateEv
 module: ov077
 addr: 0x02124394
 size: 44 bytes
-matched: yes</title></rect><rect x="1339.66" y="593.34" width="7.46" height="17.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_021243c0
+matched: yes</title></rect><rect x="1339.66" y="593.34" width="7.46" height="17.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c16UpdateThrowStateEv
 module: ov077
 addr: 0x021243c0
 size: 276 bytes
-matched: yes</title></rect><rect x="1339.66" y="611.04" width="7.46" height="9.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_021244d4
+matched: yes</title></rect><rect x="1339.66" y="611.04" width="7.46" height="9.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c15EnterThrowStateEv
 module: ov077
 addr: 0x021244d4
 size: 144 bytes
-matched: yes</title></rect><rect x="1339.66" y="620.27" width="7.46" height="19.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124564
+matched: yes</title></rect><rect x="1339.66" y="620.27" width="7.46" height="19.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c16UpdateHoverStateEv
 module: ov077
 addr: 0x02124564
 size: 308 bytes
-matched: yes</title></rect><rect x="1347.12" y="559.23" width="17.52" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124698
+matched: yes</title></rect><rect x="1347.12" y="559.23" width="17.52" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c15EnterHoverStateEv
 module: ov077
 addr: 0x02124698
 size: 128 bytes
-matched: yes</title></rect><rect x="1364.64" y="559.23" width="8.21" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124718
+matched: yes</title></rect><rect x="1364.64" y="559.23" width="8.21" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c11UpdateStateEv
 module: ov077
 addr: 0x02124718
 size: 60 bytes
-matched: yes</title></rect><rect x="1372.86" y="559.23" width="7.67" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_02124754
+matched: yes</title></rect><rect x="1372.86" y="559.23" width="7.67" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c10EnterStateEv
 module: ov077
 addr: 0x02124754
 size: 56 bytes
-matched: yes</title></rect><rect x="1380.52" y="559.23" width="3.83" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov077_0212478c
+matched: yes</title></rect><rect x="1380.52" y="559.23" width="3.83" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c8SetStateEi
 module: ov077
 addr: 0x0212478c
 size: 28 bytes
-matched: yes</title></rect><rect x="1384.36" y="559.23" width="16.98" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu16CleanupResourcesEv
+matched: yes</title></rect><rect x="1384.36" y="559.23" width="16.98" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c16CleanupResourcesEv
 module: ov077
 addr: 0x021247a8
 size: 124 bytes
-matched: yes</title></rect><rect x="1401.33" y="559.23" width="0.55" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1401.33" y="559.23" width="0.55" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c16OnPendingDestroyEv
 module: ov077
 addr: 0x02124824
 size: 4 bytes
-matched: yes</title></rect><rect x="1401.88" y="559.23" width="19.71" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu6RenderEv
+matched: yes</title></rect><rect x="1401.88" y="559.23" width="19.71" height="3.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c6RenderEv
 module: ov077
 addr: 0x02124828
 size: 144 bytes
-matched: yes</title></rect><rect x="1347.12" y="562.73" width="6.90" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu8BehaviorEv
+matched: yes</title></rect><rect x="1347.12" y="562.73" width="6.90" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c8BehaviorEv
 module: ov077
 addr: 0x021248b8
 size: 80 bytes
-matched: yes</title></rect><rect x="1354.02" y="562.73" width="35.51" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu13InitResourcesEv
+matched: yes</title></rect><rect x="1354.02" y="562.73" width="35.51" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c13InitResourcesEv
 module: ov077
 addr: 0x02124908
 size: 412 bytes
-matched: yes</title></rect><rect x="1389.53" y="562.73" width="8.28" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Lakitu13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="1389.53" y="562.73" width="8.28" height="5.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daJgm_c13OnTurnIntoEggER6Player
 module: ov077
 addr: 0x02124aa4
 size: 96 bytes

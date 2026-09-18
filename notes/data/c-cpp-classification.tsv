@@ -935,9 +935,9 @@ src/_ZN6Eyerok16OnPendingDestroyEv.c	P1-vtable+mangled	ov066	daIwante_c	Eyerok/d
 src/_ZN6Goomba16OnPendingDestroyEv.c	P1-vtable+mangled	ov084	daKrb_c	Goomba/daKrb_c	vtable daKrb_c slot 12 @0x212b5b8 | _ZN6Goomba16OnPendingDestroyEv	1		True		-
 src/_ZN6GoombaD0Ev.c	DTOR-ONLY	ov084	daKrb_c	Goomba/daKrb_c	_ZN6GoombaD0Ev	1		True		-
 src/_ZN6GoombaD1Ev.c	DTOR-ONLY	ov084	daKrb_c	Goomba/daKrb_c	_ZN6GoombaD1Ev	1		True		-
-src/_ZN6Lakitu16CleanupResourcesEv.c	P1-vtable+mangled	ov077	daJgm_c	Lakitu/daJgm_c	vtable daJgm_c slot 3 @0x21247a8 | _ZN6Lakitu16CleanupResourcesEv	1		True		-
-src/_ZN6Lakitu16OnPendingDestroyEv.c	P1-vtable+mangled	ov077	daJgm_c	Lakitu/daJgm_c	vtable daJgm_c slot 12 @0x2124824 | _ZN6Lakitu16OnPendingDestroyEv	1		True		-
-src/_ZN6LakituD0Ev.c	DTOR-ONLY	ov077	daJgm_c	Lakitu/daJgm_c	_ZN6LakituD0Ev	1		True		-
+src/_ZN7daJgm_c16CleanupResourcesEv.c	P1-vtable+mangled	ov077	daJgm_c	daJgm_c/daJgm_c	vtable daJgm_c slot 3 @0x21247a8 | _ZN7daJgm_c16CleanupResourcesEv	1		True		-
+src/_ZN7daJgm_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov077	daJgm_c	daJgm_c/daJgm_c	vtable daJgm_c slot 12 @0x2124824 | _ZN7daJgm_c16OnPendingDestroyEv	1		True		-
+src/_ZN7daJgm_cD0Ev.c	DTOR-ONLY	ov077	daJgm_c	daJgm_c/daJgm_c	_ZN7daJgm_cD0Ev	1		True		-
 src/_ZN6Memory8AllocateEjiP4Heap.c	P3-mangled-method-only	arm9		Memory	_ZN6Memory8AllocateEjiP4Heap	1	active	False		no-header:Memory
 src/_ZN13daObjNumber_cD0Ev.c	DTOR-ONLY	ov002	daObjNumber_c	daObjNumber_c/daObjNumber_c	_ZN13daObjNumber_cD0Ev	1		True		-
 src/_ZN6ShipUpD0Ev.cpp	DTOR-ONLY	ov016	daObjKi_Fune_c	ShipUp/daObjKi_Fune_c	_ZN6ShipUpD0Ev	1		True	_ZTV10dBgActor_c/_ZTV6ShipUp	-

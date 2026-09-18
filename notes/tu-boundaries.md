@@ -25,7 +25,7 @@ about structure, and the map does not merge anything.
 
 ## The trap that makes the naive detector look correct
 
-Cut wherever the class name changes, and [ov062](../config/arm9/overlays/ov062/symbols.txt) scores 5/5. Chuckya, Koopa,
+Cut wherever the class name changes, and [ov062](../config/arm9/overlays/ov062/symbols.txt) scores 5/5. daHolhei_c, Koopa,
 KoopaTheQuick, KoopaFlag and Klepto really do sit in five contiguous runs.
 
 [ov062](../config/arm9/overlays/ov062/symbols.txt) is the lucky case. Where two classes share a file, mwcc emits their methods
@@ -51,7 +51,7 @@ Treat a class as an **interval**, not a block:
 
 Forced by the linker, not a heuristic: a TU is contiguous, so if two classes were
 separate objects one object's run would have to sit inside the other's. Union-find
-over that relation collapses MontyMole+MontyMoleRock automatically and leaves Chuckya
+over that relation collapses MontyMole+MontyMoleRock automatically and leaves daHolhei_c
 and Koopa apart, with no "how interleaved is too interleaved" threshold to tune.
 
 ## Two label sources, and why they are not equal

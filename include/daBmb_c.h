@@ -76,7 +76,7 @@ struct daBmb_c : dEnemyBase_c {
     /* 0214b53c: UpdateCarry offset; zeroed after the copy. Live pad. */
     s32                          unk_3d0[3];            /* 0x3d0 */
     /* Behavior's state selector: it branches on == 5 (skip almost everything),
-       == 4 (the egg/Chuckya hand-off) and == 0 (allow the wall bounce). */
+       == 4 (the egg/daHolhei_c hand-off) and == 0 (allow the wall bounce). */
     s32                          mState;                /* 0x3dc */
     s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; 0214ae1c Hurt damage */
     /* 0214b248 Sound::PlayLong recycled handle. Live pad. */

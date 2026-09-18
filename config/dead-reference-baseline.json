@@ -291,7 +291,7 @@
   },
   {
    "file": "notes/translation-unit-reconstruction-plan.md",
-   "ref": "src/actors/Chuckya.cpp"
+   "ref": "src/game/actors/d_a_holhei.cpp"
   },
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",
@@ -324,10 +324,6 @@
   {
    "file": "notes/tu-reconstruction-pilot-report.md",
    "ref": "include/Platform.h"
-  },
-  {
-   "file": "notes/tu-reconstruction-pilot-report.md",
-   "ref": "src/PoleLift_Spawn.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",

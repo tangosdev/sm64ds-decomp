@@ -264,7 +264,7 @@ GitHub warning annotation whenever it sees one, so it will not sit there silentl
 
 37 of the mangled-name prefixes have no `include/<Name>.h` **and no ctor/dtor**, which
 together mean they are namespaces rather than classes. Both halves matter: a missing
-header alone proves nothing, since `Chuckya` has a `D0`/`D1` and therefore a vtable and a
+header alone proves nothing, since `daHolhei_c` has a `D0`/`D1` and therefore a vtable and a
 layout whether a header exists or not. `langmode_audit.py` reports this set as
 `layout_free`; do not widen it by eye.
 
