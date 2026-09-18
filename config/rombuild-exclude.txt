@@ -73,3 +73,40 @@ func_020313d8
 #
 # No symbol names are listed below: a label can never be enrolled, so there is nothing for
 # enroll.py to exclude. This block is here so the reasoning is not lost.
+
+# --- itcm: func_01ffa440 branches into func_01ffa4bc's interior ---
+# Same shape as the 0x0206d9dc cluster at the top of this file, reached from the other
+# direction. func_01ffa440 (unsigned int -> float) is the twin of func_01ffa4bc (int ->
+# float) immediately below it, and the assembler laid its two out-of-line tails INSIDE
+# its twin's address range:
+#     0x01ffa488  bne 0x01ffa558   (func_01ffa4bc + 0x9c, the enabled-trap exit)
+#     0x01ffa4a0  bne 0x01ffa538   (func_01ffa4bc + 0x7c, the round-up tail)
+# Both are real - they are in the ROM, and neither is reachable from func_01ffa4bc's own
+# entry, because the word before each is a `bx lr`. They are one hand-written assembly
+# unit: the literal pool at 0x01ffa580 that closes func_01ffa4bc's range holds 0x40000308,
+# the exception code only func_01ffa440's tail loads.
+#
+# Neither target has a symbol, and none can be given one. src/func_01ffa4bc.c is enrolled
+# `complete`, so its compiled object - not a gap object - supplies 0x01ffa4bc..0x01ffa588,
+# and mwccarm 2004/b56 cannot export a second symbol from one asm block. Measured against
+# the pinned compiler, every spelling is rejected at the mnemonic:
+#     entry <decl>   .global <name>   export <name>   -- "unknown assembler instruction
+#                                                        mnemonic"
+#     <name>:        -- assembles, but emits no symbol at all; the label stays local
+#     bne <sym>+0x9c -- "end of line expected" / "illegal operand"
+# So a config/arm9/itcm/symbols.txt row for either address would be a name nothing in the
+# link defines - the shape the "rejected by mwldarm despite passing eligibility" block
+# above already records. Carving func_01ffa440 into its own object is what would need
+# those names, so it stays in the gap object, where the ROM build takes it from today.
+#
+# Nothing is lost by this and nothing else has to move. dsd records no relocation for
+# either branch (config/arm9/itcm/relocs.txt has entries only for the arm_calls out to
+# main), so _dsd_gap@itcm_2.o carries both as raw unrelocated words and the linker places
+# it at its ROM address; the branch into func_01ffa4bc.o's interior already resolves by
+# arithmetic. func_01ffa4bc therefore keeps its own enrollment - unlike the 0x0206d9dc
+# cluster, the target does NOT have to join the caller in the gap.
+#
+# src/func_01ffa440.c records the routine and declares the two targets as
+# func_01ffa538 / func_01ffa558, the same way src/func_0206cee0.c declares 0x0206d9dc and
+# 0x0206da28 for the cluster above.
+func_01ffa440

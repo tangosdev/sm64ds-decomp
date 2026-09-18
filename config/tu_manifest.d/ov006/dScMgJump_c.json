@@ -1,0 +1,397 @@
+{
+  "id": "ov006/dScMgJump_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgJump_c.cpp",
+  "promoted_source": "src/actors/dScMgJump_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020edec0..0x020eeafc, 18 function(s), from build/tu_map.json (tools/tu_map.py).",
+    "PARTIAL PROMOTION, CUT AT THE TOP. This entry licenses .text 0x020edec0-0x020ee994, 17 of those 18 functions. Ordinal 18, _ZN11dScMgJump_c13OnYoshiTryEatEi at 0x020ee994 size 0x168, is left enrolled as its own shard src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp: it still carries a NONMATCHING marker recording that the draft assembles to 0x164 against a target of 0x168, tools/enroll.py therefore keeps it out of the ROM build, and config/arm9/overlays/ov006/delinks.txt has no entry for it at all -- the file steps straight from .text 0x020ee8dc-0x020ee994 to src/d_s_mg_jump.cpp at 0x020eeafc. Because it sits at the TOP of the run and not in the middle, dropping it costs nothing: the remaining 17 are still one contiguous ROM-ascending span, so the whole-range link is unaffected. Folding it in would require closing a one-word floor that is already recorded as open; that is a matching problem, not a TU problem, and it is left where it can be worked on its own. When it lands, this entry's .text end moves from 0x020ee994 to 0x020eeafc and the shard is absorbed -- no other part of this manifest has to change.",
+    "dScMgJump_c_classInit at 0x020eeafc is NOT part of this unit and is not a candidate to be: tools/tu_map.py cuts it into a separate unit, and delinks.txt homes it in src/d_s_mg_jump.cpp, which is the factory translation unit. The ov006 convention keeps the class TU in src/actors/ and the factory elsewhere (cf. src/actors/dScMgHanachan_c.cpp against src/minigames/d_s_mg_hanachan.cpp), so the promoted path here is src/actors/dScMgJump_c.cpp. That also avoids a basename collision with the existing src/d_s_mg_jump.cpp.",
+    "class label(s): dScMgJump_c. The cartridge's own _ZTI11dScMgJump_c at 0x0213cb98 holds {0x0209a764, 0x0213cba4, 0x0213c5c8} -- __si_class_type_info, &_ZTS11dScMgJump_c, &_ZTI14dScMgD3DBase_c -- so the single public base at offset 0 is read off the ROM, and 0x0213cba4 spells the name 11dScMgJump_c, so the class name is transcribed and not coined.",
+    "DESTRUCTOR EMISSION ORDER decided the header shape. config/arm9/overlays/ov006/symbols.txt puts _ZN11dScMgJump_cD1Ev at 0x020edec0 and _ZN11dScMgJump_cD0Ev at 0x020edf54, D1 BELOW D0. An out-of-line member definition makes mwccarm 2004/b56 emit the group D0-then-D1 plus a homeless D2, which cannot be linked as one ROM-ascending range; defining the destructor in the class body emits D1 then D0 and no D2, and no _ZN11dScMgJump_cD2Ev exists anywhere in config/, src/ or include/, which is the cartridge agreeing. tools/rtti_extract.py reports no class deriving from dScMgJump_c (dScMgJump2_c derives from dScMgD3DBase_c, not from this class), so moving the body into the header cannot perturb a descendant that inlines the vptr store, and no already-promoted descendant needed re-verification.",
+    "BYTE-LEVEL LEVER, and the one thing that decided this TU: the eight-byte state pair at +0x5004 must be spelled as a struct whose sole member is an ARRAY, struct Pair { int w[2]; }, not as two named scalars struct Pair { int a; int b; }. Seven members assign it (func_ov006_020ee2c4, 020ee3bc, 020ee3ec, 020ee44c, 020ee4e0, 020ee598, 020ee658) and with the two-scalar spelling all seven and only those seven came back DIFF at exactly 2 words: mwccarm scalarises the copy member-by-member and emits ldr/str/ldr/str, where the cartridge hoists both loads -- ldr r2,[r1]; ldr r1,[r1,#4]; str r2,[r0,#4]; str r1,[r0,#8]. The array member makes the compiler copy the object as a unit and reproduces the ROM's schedule; changing that one declaration took the TU from 10/17 to 17/17. The already-promoted twin src/minigames/d_s_mg_jump2.cpp uses the same array spelling for the same +0x5004 construct and matches 29/29, so this is the ov006 house form and not a one-off. The legacy shards disagreed among themselves -- 020ee3bc, 020ee4e0 and 020ee598 used the two-scalar form, 020ee3ec, 020ee44c and 020ee658 the array form -- and each was a separate compilation unit, so each matched alone; unifying them is what exposed the difference. Merging shards can surface a lever that no shard could see.",
+    "PRAGMA MEASURED, NOT ASSUMED. The legacy shard src/func_ov006_020ee5b8.c carried #pragma optimize_for_size on. It was dropped rather than bracketed, and func_ov006_020ee5b8 still MATCHes, so the pragma is not load-bearing for this range and no push/pop bracket is needed -- the same result dScMgRoulette_c measured. This TU sets no pragmas at all.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step). This entry does not rest on it: the cut is decided by the tu_map run, the delinks gap above and the RTTI home, all of which are per-symbol."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020edec0",
+      "end": "0x020ee994"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN11dScMgJump_cD1Ev",
+      "address": "0x020edec0",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN11dScMgJump_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN11dScMgJump_cD0Ev",
+      "address": "0x020edf54",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN11dScMgJump_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN11dScMgJump_c16CleanupResourcesEv",
+      "address": "0x020edffc",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN11dScMgJump_c6RenderEv",
+      "address": "0x020ee034",
+      "size": "0x00000248",
+      "legacy_source": "src/_ZN11dScMgJump_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN11dScMgJump_c8BehaviorEv",
+      "address": "0x020ee27c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN11dScMgJump_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020ee2c0",
+      "address": "0x020ee2c0",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020ee2c0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020ee2c4",
+      "address": "0x020ee2c4",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov006_020ee2c4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020ee3bc",
+      "address": "0x020ee3bc",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov006_020ee3bc.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020ee3ec",
+      "address": "0x020ee3ec",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020ee3ec.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020ee44c",
+      "address": "0x020ee44c",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020ee44c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020ee4e0",
+      "address": "0x020ee4e0",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020ee4e0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020ee508",
+      "address": "0x020ee508",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_020ee508.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020ee598",
+      "address": "0x020ee598",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_020ee598.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020ee5b8",
+      "address": "0x020ee5b8",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_020ee5b8.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020ee658",
+      "address": "0x020ee658",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_020ee658.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN11dScMgJump_c13InitResourcesEv",
+      "address": "0x020ee690",
+      "size": "0x0000024c",
+      "legacy_source": "src/_ZN11dScMgJump_c13InitResourcesEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN11dScMgJump_c13OnTurnIntoEggEi",
+      "address": "0x020ee8dc",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN11dScMgJump_c13OnTurnIntoEggEi.cpp",
+      "ordinal": 16
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Merged by hand from 17 enrolled shards, in ROM-ascending order, over a skeleton from tools/tubuild.py create. The file is written highest-address-first because mwccarm emits one .text section per function in REVERSE source order; no defer_codegen pragma is used here.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b0a54' differs between the legacy file that used to hold func_ov006_020ee2c4 and the one that held func_ov006_020ee3ec; kept the first at create time. Settled against neither: include/decl_common.h already declares it taking int, so this TU declares it not at all and uses the shared one. The shard spelling void * was the guess.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Settled on the single spelling both call sites accept; both members MATCH with it.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Settled on one spelling; both members MATCH with it.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN11dScMgJump_c6RenderEv and the one that held _ZN11dScMgJump_c13InitResourcesEv; kept the first at create time. Render spelled it int, InitResources spelled it a 12-word matrix. A symbol has one type: it is declared int once and the matrix use casts at the site. Both members MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold func_ov006_020ee3bc and the one that held func_ov006_020ee4e0; kept the first at create time. Settled on the ARRAY-member form for every site. This was not cosmetic: see the byte-level lever in boundary_evidence -- the two-scalar form changes the instruction schedule of the copy and breaks seven members.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold func_ov006_020ee3bc and the one that held func_ov006_020ee598; kept the first at create time. The second half of the same warning, recorded separately because the reconciliation key is (kind, key, losing function). Settled on the ARRAY-member form here too, for the reason on the note above.",
+    "Also reconciled by hand, not flagged by the generator: _Z15ApproachLinear2Rsss appeared with two spellings, int(short*,short,short) and short(short&,short,short). The mangled Rs proves a reference, so the reference form is kept and the 0x020ee44c call site dereferences at the call. data_ov004_020beb68 is already declared void * by include/dScMgBase_c.h, so this TU does not redeclare it and casts at the use site."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgJump_c/dScMgJump_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 17,
+    "functions_declared": 17,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTI11dScMgJump_c",
+        "_ZTS11dScMgJump_c",
+        "_ZTV11dScMgJump_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI11dScMgJump_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS11dScMgJump_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV11dScMgJump_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgJump_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020edec0",
+        "end": "0x020ee994",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020edec0",
+          "end": "0x020ee994",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 17
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null,
+      "recordCurrency": "THIS RECORD PREDATES THE LAST SOURCE EDIT, AND CANNOT BE REFRESHED. It was taken immediately before promotion, which is the only window: once the promotion's single `complete` entry is in config/arm9/overlays/ov006/delinks.txt, tools/tubuild.py linkcheck routes the file through the intact-production path in tools/tu_production.py, which refuses a text-only TU with `intact production requires one .text claim and at least one non-text claim`. That refusal is structural, not a defect in this entry: the already-promoted, untouched ov006/dScMgJump2_c refuses identically on the same command, and flipping this entry's status back to text-verified does not change it, because the routing keys on the delinks entry rather than on the status. After this record was taken, three extern declarations in the source were settled against their definitions (func_ov006_020c4060, func_ov006_020c7300 and func_ov006_020c7418, each re-spelled to the zero-argument form its landed definition uses). Those edits are covered by evidence taken AFTER them: tools/tubuild.py verify still reports 17/17 MATCH with objisolate clean, and a full tools/rombuild.py run -- a real whole-tree mwldarm link through this same merged delinks entry -- reports module fidelity 106/106 exact and a ROM whose sha256 is d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, the stock hash this record's own `rom` block carries."
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086d70, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e60, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e54, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScene_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x020914d4, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScene_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x020914b0, in arm9's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov004:0x020bbf6c, in ov004's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov004:0x020bbf84, in ov004's .data, which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgD3DBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov006:0x0213c5c8, in ov006's .data (0x02133600-0x021402e0), which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5c8"
+    },
+    {
+      "symbol": "_ZTS14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgD3DBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov006:0x0213c5d4, in ov006's .data (0x02133600-0x021402e0), which no section this entry licenses (.text 0x020edec0-0x020ee994) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5d4"
+    },
+    {
+      "symbol": "_ZTI11dScMgJump_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cb98, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. The record is read directly: 0x0213cb98 holds the three words {0x0209a764, 0x0213cba4, 0x0213c5c8} -- the __si_class_type_info vtable, &_ZTS11dScMgJump_c, and &_ZTI14dScMgD3DBase_c -- so the cartridge itself states the single public base is dScMgD3DBase_c at offset 0, independently of build/rtti.json.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213cb98"
+    },
+    {
+      "symbol": "_ZTS11dScMgJump_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cba4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. The record is the ROM's own spelling of the name: 0x0213cba4 holds the NUL-terminated string 11dScMgJump_c, so the class name in include/dScMgJump_c.h is transcribed from the cartridge, not coined.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213cba4"
+    },
+    {
+      "symbol": "_ZTV11dScMgJump_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cbc8), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is data_ov006_0213cc74, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213cbe4"
+    }
+  ]
+}

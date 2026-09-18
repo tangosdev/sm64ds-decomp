@@ -27,6 +27,7 @@ extern void func_02042fe4(int a, int b, int c);
 extern fBase_c *func_02042ffc(u32 actorID, fBase_c *parent);
 }
 
+// @symbol _ZN7dBase_c18AfterInitResourcesEj
 void dBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess == 1)
@@ -34,11 +35,13 @@ void dBase_c::AfterInitResources(u32 vfSuccess)
     fBase_c::AfterInitResources(vfSuccess);
 }
 
+// @symbol _ZN7dBase_c5SpawnEjP7fBase_cii
 fBase_c *dBase_c::Spawn(u32 actorID, fBase_c *parent, int, int)
 {
     return func_02042ffc(actorID, parent);
 }
 
+// @symbol func_02013edc
 extern "C" void func_02013edc(int a, int b, int c)
 {
     func_02042fe4(a, b, c);

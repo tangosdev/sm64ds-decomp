@@ -32,13 +32,25 @@
 // matches how src/func_01ff9378.c and src/func_01ffa594.c are already carried -- byte-
 // matched sources that the ROM build takes from the gap object.
 //
-// The same two names are also why `tools/eligible.py` classifies this file
-// "unresolvable": its rule 5 requires every undefined reference to name a symbol that
-// config/**/symbols.txt defines, and neither address has a row, for the reason above.
-// What that rule is guarding against does not apply here -- `tools/linkcheck.py --name
-// func_01ffa440` resolves both branches by address and reports VERIFIED with 0 blind
-// words, so every byte of both targets is checked against the ROM. They are simply
-// unnamed, which is why the file records the routine rather than building it.
+// A symbols.txt row is not a way past `tools/eligible.py` either. Its rule 5 only asks
+// that every undefined reference name a symbol config/**/symbols.txt declares, so a row
+// would satisfy the rule while still naming nothing the LINK defines: mwccarm 2004/b56
+// cannot export a second symbol from one asm block, and it is src/func_01ffa4bc.c's
+// compiled object, not a gap object, that covers both addresses. `func_01ffa440` is
+// therefore listed in config/rombuild-exclude.txt, which is this tree's record of a
+// function that cannot be carved into its own delink object -- the compiler
+// measurements behind that entry are written out there, next to the 0x0206d9dc cluster
+// it shares its shape with. What rule 5 guards against does not apply to the branches
+// themselves: linkcheck resolves both by address and reports VERIFIED with 0 blind
+// words, so every byte of both targets is checked against the ROM:
+//
+//     tools/linkcheck.py --name func_01ffa440 --addr 0x01ffa440 --size 0x7c
+//         --module itcm --c src/func_01ffa440.c
+//
+// addr/size/module are spelt out because the bare `--name` form reads them from
+// progress/matched.jsonl, which is gitignored -- on a fresh clone that form fails with
+// FileNotFoundError before it checks anything. They are simply unnamed, which is why
+// this file records the routine rather than building it.
 //
 // The argument registers are pushed across the call as they are in every other routine in
 // this block, which is the tell that these are one hand-written assembly file.
