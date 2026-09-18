@@ -1,5 +1,14 @@
 # TU reconstruction pilot #2 — [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects`
 
+Historical snapshot: the measurements, names and transcripts below are preserved
+from the [pre-promotion report](https://github.com/tangosdev/sm64ds-decomp/blob/c67ec9fe1195e8594bae076451a2bbde670fa98e/notes/tu-reconstruction-pilot-2-report.md).
+That commit identifies the archived text, not a newly established measurement commit.
+`PoleLift` is now `daObjKm2_Ami_Bou_c`; the current text owner is
+[the promoted class TU](../src/game/actors/d_a_obj_km2_ami_bou.cpp), with
+[current evidence and remaining work](agents/handoffs/pr2745-repair-0918.md).
+PoleLift shadow/enrollment and compiler-output claims below describe their original
+experiments; those claims are superseded by the current reconstruction.
+
 **What this is:** the second read-only experiment described in
 [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md)
 §18. Pilot #1 ([`tu-reconstruction-pilot-report.md`](tu-reconstruction-pilot-report.md))
@@ -345,7 +354,7 @@ Six copies across five objects today; **two** in the merged object. Consolidatio
 *reduces* the surplus. No legacy object emits any `.data`/`.rodata`/`.bss`
 either, so the merged object's cleanliness there is inherited, not new.
 
-Contrast with pilot #1, where the unlicensed output was `_ZN18daObjKm2_Ami_Bou_cD2Ev` plus
+Contrast with pilot #1, where the unlicensed output was `_ZN8PoleLiftD2Ev` plus
 `Platform`'s two out-of-line destructors plus twelve RTTI/vtable `.data`
 sections — all consequences of owning a class. None of that shape is present
 here.
@@ -612,9 +621,9 @@ and appended an [ov045](../config/arm9/overlays/ov045/symbols.txt)/`FallBlockBfs
 
 This pilot's manifest entry was therefore **spliced in textually** ahead of the
 closing bracket rather than written by re-serialising the file, so that entry and
-the concurrent session's edit to the [ov045](../config/arm9/overlays/ov045/symbols.txt)/`daObjKm2_Ami_Bou_c` record are preserved
+the concurrent session's edit to the [ov045](../config/arm9/overlays/ov045/symbols.txt)/`PoleLift` record are preserved
 byte-for-byte. The result parses and carries three entries in order:
-[ov045](../config/arm9/overlays/ov045/symbols.txt)/`daObjKm2_Ami_Bou_c`, [ov045](../config/arm9/overlays/ov045/symbols.txt)/`FallBlockBfs`, [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects`.
+[ov045](../config/arm9/overlays/ov045/symbols.txt)/`PoleLift`, [ov045](../config/arm9/overlays/ov045/symbols.txt)/`FallBlockBfs`, [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects`.
 
 Nothing here was produced by or verified against `tools/tubuild.py`; every
 measurement above was made by hand against `match.py`, `objisolate.py`,

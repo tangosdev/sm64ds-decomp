@@ -1,9 +1,9 @@
 """Smoke test for tools/tubuild.py, run against the real committed pilot artifacts.
 
-Per the assignment this tool generalizes (notes/tu-reconstruction-pilot-report.md):
-if `tubuild.py verify` disagrees with pilot #1's hand-verified result for
-ov045/daObjKm2_Ami_Bou_c (7/7 MATCH, clean objisolate),
-the TOOL has a bug, not the pilot. This file is that check, automated.
+The original PoleLift pilot established seven matched functions and clean
+isolation. The promoted, RTTI-named daObjKm2_Ami_Bou_c is its current regression
+fixture; historical source forms and current emitted metadata are checked
+separately rather than treating the old transcript as a current measurement.
 
 Runs the real CLI via subprocess (not the internal functions) so it exercises
 exactly what a human would type. Skips itself when the pinned compiler or the
@@ -104,9 +104,18 @@ def test_inspect_polelift_reproduces_the_pilots_static_findings():
     code, out = _run("inspect", "ov045/daObjKm2_Ami_Bou_c")
     assert code == 0, out
     assert "classes           daObjKm2_Ami_Bou_c" in out
-    assert "boundary conf.    high" in out
-    # The pilot's report sec 4: D1/D0 are real, D2 is a compiler-only byproduct
-    # that only appears once the TU is actually compiled (verify/compile), not here.
+    assert "boundary conf.    medium  (left=medium, right=medium)" in out
+    assert "span (.text)      0x0211150c .. 0x02111808" in out
+    assert out.count("legacy source:") == 6
+    # The generated class run omits the reconstructed classInit name. The
+    # curated manifest owns that adjacent factory too; inspect reports the map.
+    code, factory = _run("inspect", "ov045/@02111808-02111840")
+    assert code == 0, factory
+    assert "span (.text)      0x02111808 .. 0x02111840" in factory
+    assert factory.count("legacy source:") == 1
+    assert "daObjKm2_Ami_Bou_c_classInit" in factory
+    # These six mapped members include the ROM's D1/D0 pair. The pilot's old
+    # out-of-line destructor also emitted D2; the current inline form must not.
     assert "_ZN18daObjKm2_Ami_Bou_cD1Ev" in out and "_ZN18daObjKm2_Ami_Bou_cD0Ev" in out
     assert "D0/D1/D2 destructor variants     : ['_ZN18daObjKm2_Ami_Bou_cD1Ev', '_ZN18daObjKm2_Ami_Bou_cD0Ev']" in out
     # The class TU emits the vtable because it defines the key function
@@ -134,6 +143,9 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     scratch = _scratch_manifest()
     try:
         code, out = _run("verify", "ov045/daObjKm2_Ami_Bou_c", manifest=scratch)
+        import tu_manifest as TUM
+        fresh_entry = next(e for e in TUM.load(scratch)["entries"]
+                           if e["id"] == "ov045/daObjKm2_Ami_Bou_c")
     finally:
         scratch.unlink(missing_ok=True)
     assert code == 0, out
@@ -169,13 +181,30 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     assert "NOT in ROM order" not in out, out
     assert "all 7 function(s) in the expected ROM-ascending section order" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    assert "_ZTV18daObjKm2_Ami_Bou_c" in out
-    assert "_ZN18daObjKm2_Ami_Bou_cD2Ev" not in out, "an out-of-line destructor is back"
+    # verify prints only unlicensed metadata. Prove the licensed records exist
+    # in the object and were handled by this CLI run's exact-symbol policy.
+    import tubuild as TB
+    obj_path = REPO / fresh_entry["verification"]["object"].split(" (", 1)[0]
+    inventory = TB.elf_inventory(obj_path.read_bytes())
+    emitted = {row["name"] for row in inventory["symbols"]
+               if isinstance(row["shndx"], int)}
+    metadata = {prefix + cls for prefix in ("_ZTI", "_ZTS")
+                for cls in ("7fBase_c", "7dBase_c", "8dActor_c",
+                            "10dBgActor_c", "18daObjKm2_Ami_Bou_c")}
+    metadata.add("_ZTV18daObjKm2_Ami_Bou_c")
+    assert metadata <= emitted, sorted(metadata - emitted)
+    policy = fresh_entry["verification"]["compilerOnlyOutput"]
+    assert set(policy["dataExternalized"]) == metadata
+    assert policy["deadstripped"] == ["_ZN10dBgActor_cD2Ev"]
+    assert "EXTRA    " not in out, out
+    assert "PROMOTION REFUSED" not in out, out
+    assert "_ZN18daObjKm2_Ami_Bou_cD2Ev" not in emitted, "an out-of-line destructor is back"
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
-    """35 sections, 7 .text, 11 .data, reproduced independently by tubuild.py's own
-    ELF walk.
+    """Current promoted fixture: 37 sections, 8 .text and 11 .data, reproduced by
+    tubuild.py's ELF walk. Its factory now uses return new, adding the explicitly
+    licensed base-object destructor; the leaf D2 must remain absent.
 
     These numbers have now gone stale TWICE, both times because a vague-linkage
     symbol stopped being emitted here, and each time the section count fell by two

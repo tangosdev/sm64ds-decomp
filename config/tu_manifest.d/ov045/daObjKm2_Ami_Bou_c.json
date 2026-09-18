@@ -4,13 +4,12 @@
   "source": "src/game/actors/d_a_obj_km2_ami_bou.cpp",
   "promoted_source": "src/game/actors/d_a_obj_km2_ami_bou.cpp",
   "status": "promoted",
-  "boundary_confidence": "high",
+  "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
-    "single class label over the whole run (daObjKm2_Ami_Bou_c, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17ExtendingPlatformD1Ev begins at 0x02111840)",
-    "sinit count corroboration: build/tu_map.json records ov045 as 41 functions in 6 candidate TUs with 6 static initialisers and 6 .ctor entries, sinit_vs_tu 'ok', corroborated true, all 5 internal boundaries high",
-    "static-initialiser attribution: __sinit_ov045_02112214 is the only one of the six that touches this TU's two .bss SharedFilePtr statics (0x021131a8, 0x021131b0)",
-    "build/tu_map.json unit record lists exactly these seven symbols for the span"
+    "Freshly generated build/tu_map.json on repair input 2d62a40d89c759f66cbd7759831bcff027a8b24e separates the six class members at 0x0211150c..0x02111808 from the adjacent anonymous factory run at 0x02111808..0x02111840; both boundaries are medium. tools/tubuild.py inspect reports the six-member run, while this curated manifest also includes the adjacent factory.",
+    "The combined text claim remains seven contiguous functions at 0x0211150c..0x02111840 with no foreign function in the span. The adjacent daObjKm2_Ami_Bou_c_classInit allocates this RTTI-backed class and installs its vtable through return new; its membership is explicit reconstruction, not an inferred seven-member tu_map label.",
+    "The freshly generated ov045 map has 6 static initializers and 6 .ctor entries, sinit_vs_tu ok, corroborated false. The original high/corroborated pilot readings are retained only under historical_evidence, without asserting a new measurement commit.",
+    "Static-initializer attribution remains separate evidence: __sinit_ov045_02112214 references this class's two SharedFilePtr statics at 0x021131a8 and 0x021131b0; this text-only entry does not claim initializer or data enrollment."
   ],
   "sections": [
     {
@@ -465,7 +464,15 @@
       "state": "partial-link-verified",
       "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
       "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
-    }
+    },
+    "boundary_confidence": "high",
+    "boundary_evidence": [
+      "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
+      "single class label over the whole run (PoleLift, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17ExtendingPlatformD1Ev begins at 0x02111840)",
+      "sinit count corroboration: build/tu_map.json records ov045 as 41 functions in 6 candidate TUs with 6 static initialisers and 6 .ctor entries, sinit_vs_tu 'ok', corroborated true, all 5 internal boundaries high",
+      "static-initialiser attribution: __sinit_ov045_02112214 is the only one of the six that touches this TU's two .bss SharedFilePtr statics (0x021131a8, 0x021131b0)",
+      "build/tu_map.json unit record lists exactly these seven symbols for the span"
+    ]
   },
   "legacy_sources_snapshot": {
     "commit": "c67ec9fe1195e8594bae076451a2bbde670fa98e",

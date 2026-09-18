@@ -1,5 +1,14 @@
 {
  "meta": {
+  "snapshot_reference": "https://github.com/tangosdev/sm64ds-decomp/blob/c67ec9fe1195e8594bae076451a2bbde670fa98e/notes/data/tu-merge-candidates.json",
+  "snapshot_note": "Historical census restored without renaming its seven PoleLift source identities; this is not a current inventory or a new measurement.",
+  "current_name_mappings": {
+   "PoleLift": {
+    "class": "daObjKm2_Ami_Bou_c",
+    "source": "src/game/actors/d_a_obj_km2_ami_bou.cpp",
+    "note": "Seven historical files were folded into this one promoted text owner."
+   }
+  },
   "modules": 74,
   "total_tus": 524,
   "total_functions": 11096,
@@ -6377,17 +6386,17 @@
    "start": "0x211150c",
    "end": "0x2111840",
    "classes": [
-    "daObjKm2_Ami_Bou_c"
+    "PoleLift"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp",
-    "src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp",
-    "src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp",
-    "src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp",
-    "src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp",
-    "src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp",
+    "src/_ZN8PoleLiftD1Ev.cpp",
+    "src/_ZN8PoleLiftD0Ev.cpp",
+    "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
+    "src/_ZN8PoleLift6RenderEv.cpp",
+    "src/_ZN8PoleLift8BehaviorEv.cpp",
+    "src/_ZN8PoleLift13InitResourcesEv.cpp",
     "src/d_a_obj_km2_ami_bou.c"
    ],
    "ext_mix": {
