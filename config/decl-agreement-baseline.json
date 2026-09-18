@@ -476,9 +476,9 @@
    "src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c": ["return:void"],
    "src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["param:#1 Matrix4x3 *", "param:#2 const Matrix4x3 *", "return:void"],
+   "src/actors/daObjGuragura_c.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/func_0200f4f4.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/func_02044efc.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
-   "src/func_ov002_020b62cc.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/func_ov007_020bfbdc.c": ["param:#2 Mtx43 *", "return:void"],
    "src/func_ov007_020bfe4c.c": ["return:void"],
    "src/func_ov021_02112024.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
@@ -808,8 +808,8 @@
    "src/_ZN11ShadowModel9RenderAllEv.cpp": ["param:#1 const Matrix4x3 *", "param:#2 const Matrix4x3 *", "param:#3 Matrix4x3 *"],
    "src/_ZN5Model6RenderEPK7Vector3.cpp": ["param:#1 const Matrix4x3 *", "param:#2 const Matrix4x3 *", "param:#3 Matrix4x3 *"],
    "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "param:#3 Matrix4x3 *"],
+   "src/actors/daObjGuragura_c.cpp": ["param:#1 Matrix4x3 *"],
    "src/func_02044534.c": ["param:#1 Mtx43 *", "param:#2 Mtx43 *", "param:#3 Mtx43 *"],
-   "src/func_ov002_020b6074.cpp": ["param:#1 Matrix4x3 *"],
    "src/func_ov006_020ce988.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "param:#3 Matrix4x3 *"],
    "src/func_ov007_020c39f8.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "param:#3 Matrix4x3 *"],
    "src/func_ov065_02118838.cpp": ["param:#1 const Matrix4x3 *", "param:#2 const Matrix4x3 *", "param:#3 Matrix4x3 *"],
@@ -1155,6 +1155,7 @@
   },
   "Quaternion_FromVector3": {
    "include/decl_common.h": ["param:#1 int *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/actors/daObjGuragura_c.cpp": ["param:#1 int *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/func_ov006_020c3754.c": ["param:#3 int *"],
    "src/func_ov006_020cd9b0.c": ["param:#1 int *"],
    "src/func_ov006_020cdd08.c": ["param:#1 int *"],
@@ -1163,7 +1164,7 @@
    "src/func_ov021_02112024.cpp": ["param:#2 Vector3 *", "param:#3 Vector3 *"]
   },
   "Quaternion_SLerp": {
-   "src/_ZN15daObjGuragura_c8BehaviorEv.cpp": ["param:#1 char *", "param:#2 char *", "param:#4 char *"]
+   "src/actors/daObjGuragura_c.cpp": ["param:#1 char *", "param:#2 char *", "param:#4 char *"]
   },
   "RandomIntInternal": {
    "src/_ZN16SpinningPlatform8BehaviorEv.cpp": ["param:#1 char *"],
@@ -1666,12 +1667,12 @@
    "src/actors/Goomboss.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/dBgActor_c.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daBgSnmBdy_c.cpp": ["param:#2 const void *"],
+   "src/actors/daObjGuragura_c.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daObjMarioCap_c.cpp": ["param:#1 int *"],
    "src/actors/daPkn_c.cpp": ["param:#1 PknVec3 *", "param:#2 PknVec3 *"],
    "src/actors/daSanbo_c.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daYurei_Mucho_c.cpp": ["param:#2 const void *"],
    "src/func_ov002_020ad660.cpp": ["param:#2 const void *"],
-   "src/func_ov002_020b6074.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/func_ov002_020bafc0.c": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/func_ov002_020d8944.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/func_ov002_020e84ec.c": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
@@ -2365,7 +2366,7 @@
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["return:int"],
-   "src/func_ov002_020b6244.c": ["return:int"],
+   "src/actors/daObjGuragura_c.cpp": ["return:int"],
    "src/func_ov002_020b6584.c": ["return:int"],
    "src/func_ov002_020b6958.c": ["return:int"],
    "src/func_ov002_020bad10.c": ["return:int"]
@@ -2390,7 +2391,7 @@
    "src/_ZN15daObjFl_UkiKi_c13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["return:int"],
-   "src/func_ov002_020b6244.c": ["return:int"],
+   "src/actors/daObjGuragura_c.cpp": ["return:int"],
    "src/func_ov002_020b6584.c": ["return:int"],
    "src/func_ov002_020b6958.c": ["return:int"],
    "src/func_ov002_020bad10.c": ["return:int"]
@@ -2532,7 +2533,7 @@
    "src/actors/daObjCtMecha03_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/actors/daObjCtMecha04_c.cpp": ["param:#3 const Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/actors/daObjFl_London_c.cpp": ["param:#3 Matrix4x3 *"],
-   "src/func_ov002_020b6244.c": ["return:int"],
+   "src/actors/daObjGuragura_c.cpp": ["return:int"],
    "src/func_ov002_020b6584.c": ["return:int"],
    "src/func_ov002_020b676c.cpp": ["param:#3 Matrix4x3 &", "param:#6 CLPS_Block &"],
    "src/func_ov002_020b6958.c": ["return:int"],
@@ -4113,10 +4114,9 @@
   },
   "_ZN4dBgW7DisableEv": {
    "include/decl_common.h": ["return:void"],
-   "src/_ZN15daObjGuragura_c8BehaviorEv.cpp": ["return:void"],
    "src/_ZN8SignPost8BehaviorEv.cpp": ["return:void"],
    "src/actors/Eyerok.cpp": ["return:void"],
-   "src/func_ov002_020b60fc.c": ["return:void"],
+   "src/actors/daObjGuragura_c.cpp": ["return:void"],
    "src/func_ov002_020b6424.c": ["return:void"],
    "src/func_ov002_020b66a8.c": ["return:void"],
    "src/func_ov002_020bae9c.c": ["return:void"],
@@ -4286,9 +4286,9 @@
    "src/actors/Scuttlebug.cpp": ["arity:1"],
    "src/actors/daGmch_c.cpp": ["arity:1"],
    "src/actors/daMip_c.cpp": ["arity:1"],
+   "src/actors/daObjGuragura_c.cpp": ["arity:1"],
    "src/func_020179b4.c": ["arity:1", "return:BMD_File *"],
    "src/func_ov002_020b5e58.cpp": ["arity:1", "return:BMD_File *"],
-   "src/func_ov002_020b6244.c": ["arity:1"],
    "src/func_ov002_020b6584.c": ["arity:1"],
    "src/func_ov002_020b676c.cpp": ["arity:1", "return:BMD_File *"],
    "src/func_ov002_020b6958.c": ["arity:1"],
@@ -5433,8 +5433,8 @@
    "src/_ZN9Submarine13InitResourcesEv.cpp": ["arity:1", "return:int"],
    "src/_ZN9TinyCover13InitResourcesEv.cpp": ["arity:1", "return:void *"],
    "src/_ZN9TinyWater13InitResourcesEv.cpp": ["arity:1", "return:void *"],
+   "src/actors/daObjGuragura_c.cpp": ["arity:1", "return:void *"],
    "src/func_ov002_020b5e58.cpp": ["arity:1", "return:KCL_File *"],
-   "src/func_ov002_020b6244.c": ["arity:1", "return:void *"],
    "src/func_ov002_020b6584.c": ["arity:1", "return:void *"],
    "src/func_ov002_020b676c.cpp": ["arity:1", "return:KCL_File *"],
    "src/func_ov002_020b6958.c": ["arity:1", "return:void *"],
@@ -15538,8 +15538,8 @@
    "src/_ZN8CccArena13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/actors/daObjCtMecha04_c.cpp": ["param:#2 void *"],
+   "src/actors/daObjGuragura_c.cpp": ["param:#2 void *", "return:int"],
    "src/func_ov002_020b5e58.cpp": ["param:#2 void *"],
-   "src/func_ov002_020b6244.c": ["param:#2 void *", "return:int"],
    "src/func_ov002_020efaf0.cpp": ["param:#1 char *"],
    "src/func_ov066_021166c8.cpp": ["param:#2 void *"],
    "src/func_ov066_02116db0.c": ["param:#2 void *"],
@@ -17847,9 +17847,6 @@
   "func_ov002_020b6244": {
    "src/game/actors/d_a_obj_fl_gura.cpp": ["param:#2 ResourceDescriptor *"],
    "src/game/actors/d_a_obj_km2_gura.cpp": ["param:#2 ResourceDescriptor *"]
-  },
-  "func_ov002_020b6374": {
-   "src/func_ov002_020b6244.c": ["arity:0", "return:int"]
   },
   "func_ov002_020b6424": {
    "src/game/actors/d_a_obj_km2_ukishima.cpp": ["param:#1 daObjKm2_Ukishima_c *", "param:#2 ResourceDescriptor *"]
