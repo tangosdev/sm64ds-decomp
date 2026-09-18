@@ -3,41 +3,9 @@
     .ctor       start:0x020b1350 end:0x020b1350 kind:rodata align:4
     .data       start:0x020b1360 end:0x020b18a0 kind:data align:32
     .bss        start:0x020b18a0 end:0x020b18a0 kind:bss align:32
-src/_ZN10dScTitle_cD1Ev.cpp:
+src/actors/dScTitle_c.cpp:
     complete
-    .text start:0x020ad660 end:0x020ad69c
-
-src/_ZN10dScTitle_cD0Ev.cpp:
-    complete
-    .text start:0x020ad69c end:0x020ad6ec
-
-src/func_ov003_020ad6ec.c:
-    complete
-    .text start:0x020ad6ec end:0x020ad7a0
-
-src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020ad7a0 end:0x020ad7a4
-
-src/_ZN10dScTitle_c6RenderEv.cpp:
-    complete
-    .text start:0x020ad7a4 end:0x020ad814
-
-src/_ZN10dScTitle_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020ad814 end:0x020ada80
-
-src/_ZN10dScTitle_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020ada80 end:0x020ada9c
-
-src/_ZN10dScTitle_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020ada9c end:0x020adc10
-
-src/d_s_title.cpp:
-    complete
-    .text start:0x020adc10 end:0x020adc74
+    .text start:0x020ad660 end:0x020adc74
 
 src/func_ov003_020adc74.cpp:
     complete

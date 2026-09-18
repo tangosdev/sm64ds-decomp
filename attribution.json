@@ -3626,6 +3626,15 @@
     "src/actors/dCapIcon_c.cpp#_ZN10dCapIcon_cD0Ev": "andrewboudreau",
     "src/actors/dCapIcon_c.cpp#_ZN10dCapIcon_cD1Ev": "andrewboudreau",
     "src/actors/dCapIcon_c.cpp#_ZN10dCapIcon_cC1Ev": "andrewboudreau",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_cD1Ev": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_cD0Ev": "tangosdev",
+    "src/actors/dScTitle_c.cpp#func_ov003_020ad6ec": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c16OnPendingDestroyEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c6RenderEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c8BehaviorEv": "ruspecial",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#_ZN10dScTitle_c13InitResourcesEv": "tangosdev",
+    "src/actors/dScTitle_c.cpp#dScTitle_c_classInit": "ruspecial",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD1Ev": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD0Ev": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#func_ov026_02111234": "tangosdev",
@@ -3634,6 +3643,14 @@
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD1Ev": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD0Ev": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#func_ov030_0211124c": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "andrewboudreau",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "tangosdev",
+    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev"
   }
 }
