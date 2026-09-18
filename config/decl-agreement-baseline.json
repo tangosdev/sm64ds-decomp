@@ -959,6 +959,7 @@
    "src/_ZN7dScMB_c13InitResourcesEv.cpp": ["param:#1 unsigned short"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#1 unsigned short"],
    "src/actors/dScMgPanel_c.cpp": ["param:#1 unsigned short"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 int"],
    "src/func_0201cd08.cpp": ["param:#1 int", "param:#2 int"],
    "src/func_0201cebc.c": ["param:#1 unsigned short"],
    "src/func_0201d850.c": ["param:#1 unsigned short"],
@@ -995,7 +996,6 @@
    "src/func_ov006_02102718.c": ["param:#1 unsigned short"],
    "src/func_ov006_02102864.c": ["param:#1 unsigned short"],
    "src/func_ov006_0210eca4.c": ["param:#1 unsigned short"],
-   "src/func_ov006_02126b4c.c": ["param:#1 int"],
    "src/func_ov007_020b88c0.c": ["param:#1 unsigned short", "param:#2 short *"],
    "src/func_ov007_020c02d8.c": ["param:#1 unsigned short", "param:#3 unsigned int"],
    "src/func_ov007_020c0638.c": ["param:#1 unsigned short"],
@@ -1113,12 +1113,11 @@
    "src/_ZN13dScMgFlower_c13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp": ["arity:1"],
    "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp": ["arity:1"],
-   "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp": ["arity:1"],
-   "src/_ZN15dScMgSnowball_c16CleanupResourcesEv.cpp": ["arity:1"],
    "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp": ["arity:1"],
    "src/actors/dScMgD3DBase_c.cpp": ["arity:1"],
    "src/actors/dScMgLuigi_c.cpp": ["arity:1"],
    "src/actors/dScMgRoulette_c.cpp": ["arity:1"],
+   "src/actors/dScMgSnowball_c.cpp": ["arity:1"],
    "src/func_ov006_02115b0c.c": ["arity:1"],
    "src/minigames/d_s_mg_single3_d_base.cpp": ["arity:1"]
   },
@@ -1159,7 +1158,6 @@
    "src/func_ov006_020cd9b0.c": ["param:#1 int *"],
    "src/func_ov006_020cdd08.c": ["param:#1 int *"],
    "src/func_ov006_020ceabc.c": ["param:#1 int *"],
-   "src/func_ov006_021279b0.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
    "src/func_ov021_02112024.cpp": ["param:#2 Vector3 *", "param:#3 Vector3 *"]
   },
   "Quaternion_SLerp": {
@@ -1196,7 +1194,7 @@
   },
   "RenderOamBothScreens": {
    "src/_ZN25cMgSmartball_pushswitch_c6UpdateEv.cpp": ["param:#1 int", "param:#6 int"],
-   "src/func_ov006_02125804.c": ["param:#1 int", "param:#6 int"]
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 int", "param:#6 int"]
   },
   "RenderOamMainScreen": {
    "src/actors/dScMgTeresa_c.cpp": ["param:#1 void *"],
@@ -1605,17 +1603,16 @@
   "Vec2_Len": {
    "src/_ZN12dScMgAmida_c8BehaviorEv.cpp": ["param:#1 int *"],
    "src/_ZN13dScMgFlower_c8BehaviorEv.cpp": ["param:#1 V2 *"],
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["param:#1 int *"],
    "src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp": ["param:#1 V2 *"],
    "src/_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv.cpp": ["param:#1 const void *"],
    "src/_ZN21cMgSmartball_pakkun_c12SaveSnapshotEv.cpp": ["param:#1 const void *"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 int *"],
    "src/func_0203d480.c": ["param:#1 int *"],
    "src/func_ov006_020d0c38.c": ["param:#1 int *"],
    "src/func_ov006_0210e120.c": ["param:#1 Vec2 *"],
    "src/func_ov006_02111b90.c": ["param:#1 int *"],
    "src/func_ov006_02112ad8.c": ["param:#1 V2 *"],
-   "src/func_ov006_02115150.c": ["param:#1 const void *"],
-   "src/func_ov006_02125f68.cpp": ["param:#1 int *"]
+   "src/func_ov006_02115150.c": ["param:#1 const void *"]
   },
   "Vec2_Sub": {
    "src/_ZN13dScMgFlower_c8BehaviorEv.cpp": ["param:#1 V2 *", "param:#2 V2 *", "param:#3 V2 *"],
@@ -3346,10 +3343,10 @@
    "src/_ZN5Stage14LoadGraphics2DEbi.cpp": ["return:char *"],
    "src/actors/dScMgLuigi_c.cpp": ["return:char *"],
    "src/actors/dScMgPanel_c.cpp": ["return:char *"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:char *"],
    "src/func_02033bb8.c": ["return:int"],
    "src/func_ov004_020af2f8.cpp": ["return:int"],
    "src/func_ov006_02115b0c.c": ["return:unsigned short *"],
-   "src/func_ov006_02126b4c.c": ["return:char *"],
    "src/minigames/d_s_mg_trampoline2.cpp": ["return:char *"]
   },
   "_ZN2G212GetBG3ScrPtrEv": {
@@ -3475,12 +3472,12 @@
    "src/actors/dScMgCup_c.cpp": ["return:int"],
    "src/actors/dScMgPanel_c.cpp": ["return:char *"],
    "src/actors/dScMgRoulette_c.cpp": ["return:int"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:char *"],
    "src/func_0200f220.c": ["return:char *"],
    "src/func_02056374.c": ["return:void *"],
    "src/func_ov004_020af2f8.cpp": ["return:int"],
    "src/func_ov005_020c16e4.c": ["return:void *"],
    "src/func_ov006_02115b0c.c": ["return:unsigned short *"],
-   "src/func_ov006_02126b4c.c": ["return:char *"],
    "src/func_ov075_02116ad4.c": ["return:void *"],
    "src/func_ov075_0211705c.c": ["return:unsigned short *"],
    "src/func_ov075_0211919c.c": ["return:unsigned short *"]
@@ -3489,9 +3486,9 @@
    "src/_ZN12dScMgAmida_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp": ["return:char *"],
    "src/_ZN13dScMgFlower_c13InitResourcesEv.cpp": ["return:char *"],
-   "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN7Minimap13InitResourcesEv.cpp": ["return:void *"],
    "src/actors/dScMgLuigi_c.cpp": ["return:char *"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:void *"],
    "src/func_0200f220.c": ["return:char *"],
    "src/func_020562b4.c": ["return:void *"],
    "src/func_ov004_020af2f8.cpp": ["return:int"],
@@ -3922,10 +3919,10 @@
   "_ZN4CP1527FlushAndInvalidateDataCacheEjj": {
    "src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp": ["param:#1 void *"],
    "src/_ZN11dScMgBase_c9Virtual84Ev.cpp": ["param:#1 void *"],
-   "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/actors/dScMgD3DBase_c.cpp": ["param:#1 void *"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#1 void *"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 void *"],
    "src/func_02040c34.c": ["param:#1 int", "param:#2 int"],
    "src/func_020499bc.c": ["param:#1 void *"],
    "src/func_020503a4.c": ["param:#1 int", "param:#2 int"],
@@ -3998,12 +3995,12 @@
    "src/func_ov089_02130fb4.c": ["return:unsigned int"]
   },
   "_ZN4cstd5atan2E5Fix12IiES1_": {
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["return:int"],
    "src/_ZN6Player14St_Cannon_MainEv.cpp": ["return:int"],
    "src/_ZN6Player14St_Thrown_MainEv.cpp": ["return:int"],
    "src/_ZN6Player19St_CrazedCrate_MainEv.cpp": ["return:int"],
    "src/_ZN6Player20St_StomachSlide_MainEv.cpp": ["return:int"],
    "src/actors/dScMgCurling2_c.cpp": ["return:int"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:int"],
    "src/actors/daBombking_c.cpp": ["return:int"],
    "src/actors/daOts_c.cpp": ["return:int"],
    "src/func_02008cb4.c": ["return:int"],
@@ -4017,7 +4014,6 @@
    "src/func_ov006_020e1dc8.cpp": ["return:int"],
    "src/func_ov006_020e91a0.c": ["return:int"],
    "src/func_ov006_02100bac.c": ["return:int"],
-   "src/func_ov006_02125f68.cpp": ["return:int"],
    "src/func_ov020_02111b28.cpp": ["return:int"],
    "src/func_ov021_02112544.cpp": ["return:int"],
    "src/func_ov062_02119af0.cpp": ["return:int"],
@@ -4159,8 +4155,8 @@
    "src/func_ov007_020bc47c.cpp": ["arity:1"]
   },
   "_ZN5Model17UpdateFileOffsetsER8BMD_File": {
-   "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp": ["arity:1"],
    "src/actors/dScMgRoulette_c.cpp": ["arity:1"],
+   "src/actors/dScMgSnowball_c.cpp": ["arity:1"],
    "src/func_02016ff4.cpp": ["arity:1"],
    "src/func_0201787c.c": ["arity:1"],
    "src/func_ov007_020b3f20.c": ["arity:1"]
@@ -5341,6 +5337,7 @@
    "src/__sinit_ov085_0212f5ec.c": ["return:void"],
    "src/__sinit_ov085_0212fa40.c": ["return:void"],
    "src/__sinit_ov102_0214de70.c": ["kind:data"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:void"],
    "src/d_a_dp_lift.cpp": ["return:void"],
    "src/d_a_hanachan.c": ["arity:1", "return:int"],
    "src/d_a_iwante.cpp": ["return:void"],
@@ -5362,7 +5359,6 @@
    "src/func_ov006_020cdaec.c": ["return:void"],
    "src/func_ov006_020cdd08.c": ["return:int"],
    "src/func_ov006_020ceabc.c": ["return:void"],
-   "src/func_ov006_021279b0.cpp": ["return:void"],
    "src/func_ov100_02144a38.c": ["return:void"],
    "src/func_ov100_021451c4.cpp": ["return:void"],
    "src/game/actors/d_a_wanwan.cpp": ["return:void"],
@@ -5481,10 +5477,9 @@
    "src/func_ov062_02117724.c": ["param:#1 int"]
   },
   "_ZN8Particle6System12FromUniqueIDEj": {
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["arity:1", "return:int *"],
    "src/_ZN8IceBlock8BehaviorEv.cpp": ["arity:1", "return:void *"],
+   "src/actors/dScMgSnowball_c.cpp": ["arity:1", "return:int *"],
    "src/actors/daSanbo_c.cpp": ["arity:1", "return:void *"],
-   "src/func_ov006_02125f68.cpp": ["arity:1", "return:int *"],
    "src/func_ov060_02116518.c": ["arity:1", "return:void *"],
    "src/func_ov062_021175c0.c": ["arity:1", "return:void *"],
    "src/func_ov062_02117724.c": ["arity:1", "return:char *"],
@@ -5511,7 +5506,6 @@
    "src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp": ["param:#6 const void *", "return:void *"],
    "src/_ZN15RotatingFirebar8BehaviorEv.cpp": ["param:#6 int", "param:#7 int", "return:unsigned int"],
    "src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp": ["param:#6 const void *", "return:void *"],
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["param:#6 const void *"],
    "src/_ZN21SnowmanBreathParticle6RenderEv.cpp": ["param:#6 const void *", "return:unsigned int"],
    "src/_ZN3Key8BehaviorEv.cpp": ["param:#6 const void *", "return:void *"],
    "src/_ZN5Crate8BehaviorEv.cpp": ["param:#6 const void *", "return:void *"],
@@ -5531,6 +5525,7 @@
    "src/_ZN9Whirlpool8BehaviorEv.cpp": ["param:#6 int", "param:#7 int", "return:void *"],
    "src/actors/Eyerok.cpp": ["param:#6 const void *", "return:unsigned int"],
    "src/actors/Player.cpp": ["param:#6 const void *", "return:void"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#6 const void *", "return:unsigned int"],
    "src/actors/daDgr_c.cpp": ["param:#6 const void *", "return:unsigned int"],
    "src/actors/daMip_c.cpp": ["return:void *"],
    "src/actors/daOts_c.cpp": ["param:#6 const Vector3_16f *", "return:void *"],
@@ -5570,7 +5565,6 @@
    "src/func_ov006_020c94e0.cpp": ["param:#6 const void *", "return:void *"],
    "src/func_ov006_020cb030.cpp": ["param:#6 const Vector3_16f *", "return:System *"],
    "src/func_ov006_020cbaec.cpp": ["param:#6 const void *", "return:void *"],
-   "src/func_ov006_02125f68.cpp": ["param:#6 const void *", "return:unsigned int"],
    "src/func_ov021_02112544.cpp": ["return:void *"],
    "src/func_ov060_02112ee0.cpp": ["return:void *"],
    "src/func_ov060_02113d8c.cpp": ["param:#6 const void *", "return:unsigned int"],
@@ -8755,7 +8749,6 @@
   "data_020a0e40": {
    "src/_ZN12dScMgAmida_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN13dScMgFlower_c8BehaviorEv.cpp": ["return:unsigned char []"],
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN5Stage9LC_UpdateEv.cpp": ["return:volatile unsigned char"],
    "src/_ZN5Stage9PS_UpdateEv.cpp": ["return:volatile unsigned char"],
    "src/_ZN5Stage9VE_UpdateEv.cpp": ["return:unsigned char []"],
@@ -8765,6 +8758,7 @@
    "src/_ZN6Player17St_SweepKick_MainEv.cpp": ["return:unsigned char []"],
    "src/actors/dScMgCup_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgHanachan_c.cpp": ["return:unsigned char []"],
+   "src/actors/dScMgSnowball_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgSound_c.cpp": ["return:unsigned char []"],
    "src/func_02008a70.c": ["return:int"],
    "src/func_02008abc.c": ["return:int"],
@@ -10510,7 +10504,7 @@
    "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp": ["return:OamAttr * []"]
   },
   "data_ov006_02139c6c": {
-   "src/func_ov006_02129690.c": ["return:void * []"]
+   "src/actors/dScMgSnowball_c.cpp": ["return:int []"]
   },
   "data_ov006_0213ae00": {
    "src/func_ov006_020c23a8.cpp": ["return:int"]
@@ -14195,7 +14189,6 @@
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN13TreasureChest6State0Ev.cpp": ["return:void"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["param:#1 int", "return:void"],
-   "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN3HUD13UpdateVsTimerEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN3HUD17UpdateHealthMeterEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN5Stage8BehaviorEv.cpp": ["param:#1 int", "return:void"],
@@ -14213,6 +14206,7 @@
    "src/actors/dScMgLuigi_c.cpp": ["param:#1 int", "return:void"],
    "src/actors/dScMgMemory2_c.cpp": ["param:#1 int", "return:void"],
    "src/actors/dScMgRoulette_c.cpp": ["param:#1 int", "return:void"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 int", "return:void"],
    "src/actors/dScMgSound_c.cpp": ["param:#1 int", "return:void"],
    "src/actors/dScTitle_c.cpp": ["param:#1 int", "return:void"],
    "src/actors/daMip_c.cpp": ["param:#1 int", "return:void"],
@@ -15720,8 +15714,7 @@
    "src/func_ov006_020c5928.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"],
    "src/func_ov006_020c5d28.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"],
    "src/func_ov006_020cd9b0.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"],
-   "src/func_ov006_020cdd08.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"],
-   "src/func_ov006_021279b0.cpp": ["param:#1 int *", "param:#2 int *"]
+   "src/func_ov006_020cdd08.c": ["param:#1 Vec3 *", "param:#2 Vec3 *"]
   },
   "func_0203cebc": {
    "src/Quaternion_FromVector3.c": ["param:#1 Vec3 *", "param:#2 Vec3 *", "param:#3 Vec3 *", "param:#4 Vec3 *"]
@@ -17717,9 +17710,9 @@
    "src/__sinit_ov095_0213722c.c": ["param:#1 void *", "param:#2 void *"],
    "src/__sinit_ov102_0214d908.c": ["param:#1 void *", "param:#2 void *"],
    "src/__sinit_ov102_0214de70.c": ["param:#1 void *", "param:#2 void *"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 void *", "param:#2 void *"],
    "src/func_ov004_020b484c.c": ["param:#1 void *", "param:#2 void *"],
    "src/func_ov006_020c3754.c": ["param:#1 void * *", "param:#3 int"],
-   "src/func_ov006_021279b0.cpp": ["param:#1 void *", "param:#2 void *"],
    "src/func_ov100_021451c4.cpp": ["param:#1 void *", "param:#2 void *"],
    "src/unnamed/ov063/func_ov063_0211ab68.c": ["param:#1 Vec3 *", "param:#2 void (*)(void)"]
   },
@@ -18334,9 +18327,9 @@
    "src/_ZN13dScMgFlower_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp": ["param:#1 void *", "return:char *"],
    "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp": ["param:#1 void *", "return:char *"],
-   "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#1 void *", "return:int"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#1 void *", "return:void *"],
    "src/func_ov006_02115b0c.c": ["param:#1 void *", "return:void *"]
   },
   "func_ov004_020adf2c": {
@@ -18484,10 +18477,10 @@
    "src/minigames/d_s_mg_memory.cpp": ["arity:4"]
   },
   "func_ov004_020b2220": {
-   "src/_ZN15dScMgSnowball_c6RenderEv.cpp": ["param:#7 int"],
    "src/actors/dScMgHanachan_c.cpp": ["param:#3 void *", "param:#7 int"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#7 int"],
    "src/actors/dScMgRoulette_c.cpp": ["param:#7 int"],
+   "src/actors/dScMgSnowball_c.cpp": ["param:#7 int"],
    "src/actors/dScMgTeresa_c.cpp": ["param:#7 int"],
    "src/func_ov006_020e1554.c": ["param:#7 int"]
   },
@@ -19251,18 +19244,6 @@
   },
   "func_ov006_02125800": {
    "src/func_ov006_021295ac.cpp": ["arity:1"]
-  },
-  "func_ov006_021259d8": {
-   "src/func_ov006_02125f68.cpp": ["param:#1 dScMgSnowball_c *"]
-  },
-  "func_ov006_02125bbc": {
-   "src/func_ov006_02125f68.cpp": ["param:#1 dScMgSnowball_c *"]
-  },
-  "func_ov006_02125cdc": {
-   "src/func_ov006_02125f68.cpp": ["param:#1 dScMgSnowball_c *"]
-  },
-  "func_ov006_02125f68": {
-   "include/decl_common.h": ["param:#1 char *"]
   },
   "func_ov006_0212968c": {
    "src/func_ov006_021295ac.cpp": ["arity:1"]
