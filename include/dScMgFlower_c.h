@@ -33,10 +33,49 @@
  * slice's own siblings -- so the width and signedness in dScMgBase_c.h are
  * taken from that class's OWN render path instead. See its note.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN13dScMgFlower_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one.
+ * THE DESTRUCTOR STAYS DECLARED OUT OF LINE, AND THE MEASUREMENT THAT SETTLES
+ * IT IS NOT THE ONE THE SIBLING CLASSES RECORD. ov006 puts D1 at 0x0212a554
+ * BELOW D0 at 0x0212a5c8 and carries no D2 anywhere. include/dScMgRoulette_c.h
+ * reports that only an INLINE, in-class destructor reaches that order, because
+ * an out-of-line one emits D2, D0, D1. That holds under mwccarm's default
+ * deferred code generation, which is the regime every one of those siblings
+ * compiles in. This file's translation unit does not: it needs
+ * `#pragma defer_codegen off` for an optimisation bracket to bind to a single
+ * member (see src/actors/dScMgFlower_c.cpp), and with deferral off the variant
+ * group emits D1, D0, D2 instead. Four verify rounds, each the whole TU:
+ *   (a) inline destructor, deferred, members in descending ROM order
+ *                          -> 8/9, section order correct, Behavior cannot match
+ *   (b) inline destructor, deferral off, ascending order
+ *                          -> 9/9 bytes, but D1/D0 emit LAST, after the vtable,
+ *                             so the linked range cannot be reproduced
+ *   (c) out-of-line destructor, deferral off, ascending order
+ *                          -> 9/9 bytes AND all nine in ROM-ascending section
+ *                             order; D1 and D0 lead the object, exactly as the
+ *                             cartridge has them
+ *   (d) the same as (c) but with the bracket removed
+ *                          -> the bracketed member regresses, so the bracket,
+ *                             and therefore `defer_codegen off`, is load-bearing
+ * (c) is what ships. The two legacy shards each carried an out-of-line copy of
+ * the same body; both are absorbed into src/actors/dScMgFlower_c.cpp and the
+ * single definition lives there.
+ *
+ * THE D2 THE ROM DOES NOT HAVE IS NOT A CONTRADICTION -- IT IS THE REASON.
+ * mwccarm emits _ZN13dScMgFlower_cD2Ev, but D1 and D0 reproduce the cartridge
+ * with the body inlined rather than chained, so nothing references it, and
+ * no module's configured symbol table gives that spelling a home.
+ * An unreferenced variant is what a linker drops; the cartridge having D1 and
+ * D0 but no D2 is that drop, already performed. The TU licenses it as a plain
+ * deadstrip in its manifest's compiler_only_output block, and objisolate proves
+ * no retained section depends on it before removing it.
+ *
+ * Declared first and out of line, the destructor is this class's KEY FUNCTION,
+ * so the TU that DEFINES it emits _ZTV/_ZTI/_ZTS plus the whole ancestor chain's
+ * typeinfo. That is src/actors/dScMgFlower_c.cpp, which licenses all thirteen
+ * records in the same block; each has a cartridge home outside this TU's
+ * licensed .text range, so dsd delinks them independently.
+ *
+ * No separate operator delete is needed -- dScMgBase_c, two levels up,
+ * already provides one.
  *
  * SM64DS RTTI names the implementation dScMgFlower_c. The reconstructed factory
  * dScMgFlower_c_classInit (historical alias func_ov006_0212b7f8) installs this class's
@@ -65,6 +104,13 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         ~Vec2() {}
     };
 
+    /* Declared first and defined out of line, in src/actors/dScMgFlower_c.cpp:
+       see the file banner for the four rounds that settled the form. Its body's
+       two explicit calls are the ROM's own order -- the 0x51f8 object, then
+       mArray -- the reverse of the factory's construction order. Everything
+       after them in the emitted body (the own-vtable store, mSysTracker's
+       destruction and the chain to ~dScMgBase_c) is the compiler's own inlining
+       of dScMgSingle3DBase_c's already-inline destructor. */
     virtual ~dScMgFlower_c();
 
     /* THIS CLASS'S OWN OVERRIDES ARE SLOTS 0, 6 AND 9 -- AND ONLY THOSE. Four
@@ -78,13 +124,13 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        and include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
        ancestor already declares is implicitly virtual either way, so each reuses
        an existing slot and adds no field, and the 0x5ff8 assert below still
-       holds. The destructor above is declared first and out of line, so it stays
-       this class's KEY FUNCTION and none of these translation units emits
-       _ZTV13dScMgFlower_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN13dScMgFlower_c13InitResourcesEv.cpp */
+       holds. The destructor above is declared first and out of line, so it is
+       this class's KEY FUNCTION and the TU that DEFINES it -- and only that one
+       -- emits _ZTV13dScMgFlower_c. See the banner. */
+    s32 InitResources();   /* slot  0 */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgFlower_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN13dScMgFlower_c6RenderEv.cpp */
+    s32 Behavior();        /* slot  6 */
+    s32 Render();          /* slot  9 */
 
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650.
                               One 0x20-byte petal record, as func_ov006_0212a764
@@ -117,7 +163,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 mWinStreak;        /* 0x5fdc -- consecutive "loves me" petals; at 3 the
                               payout is 3 points instead of 1 */
     s32 mLoseStreak;       /* 0x5fe0 -- the mirror count, pays nothing */
-    s32 mHoldTimer;        /* 0x5fe4 -- src/func_ov006_0212aa74.c counts it up to
+    s32 mHoldTimer;        /* 0x5fe4 -- OnYoshiTryEat counts it up to
                               0x15 and resets; above 0x14 means "held" */
     s32 mState;            /* 0x5fe8 -- 0 playing, 1 over */
     s32 mFaceSprite;       /* 0x5fec -- index into data_ov006_0213ab94, the
