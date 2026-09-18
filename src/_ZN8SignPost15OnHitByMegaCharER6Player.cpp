@@ -10,7 +10,7 @@
  * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual void
  * OnHitByMegaChar(Player &player)` -- `int` until Stump::OnHitByMegaChar
  * proved it wrong tree-wide (36bc6d1df). Same body shape
- * src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp records for its own
+ * src/game/actors/d_a_obj_maruta.cpp records for its own
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified
  * call is already the direct `bl` the ROM has. mAngleY = mPrevAngleY is
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */

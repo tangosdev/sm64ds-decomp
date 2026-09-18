@@ -312,37 +312,9 @@ src/_ZN13daObjMaruta_cD1Ev.cpp:
     complete
     .text start:0x02127014 end:0x02127058
 
-src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp:
+src/game/actors/d_a_obj_maruta.cpp:
     complete
-    .text start:0x02127058 end:0x02127094
-
-src/func_ov080_02127094.c:
-    complete
-    .text start:0x02127094 end:0x021270dc
-
-src/func_ov080_021270dc.c:
-    complete
-    .text start:0x021270dc end:0x02127124
-
-src/_ZN13daObjMaruta_c6RenderEv.cpp:
-    complete
-    .text start:0x02127124 end:0x0212714c
-
-src/func_ov080_0212714c.c:
-    complete
-    .text start:0x0212714c end:0x021274ac
-
-src/func_ov080_021274ac.c:
-    complete
-    .text start:0x021274ac end:0x0212758c
-
-src/func_ov080_0212758c.c:
-    complete
-    .text start:0x0212758c end:0x02127658
-
-src/func_ov080_02127658.c:
-    complete
-    .text start:0x02127658 end:0x0212766c
+    .text start:0x02127058 end:0x0212766c
 
 src/__sinit_ov080_021278c0.c:
     complete
