@@ -530,21 +530,9 @@ src/_ZN14daObjUkiyuka_cD1Ev.cpp:
     complete
     .text start:0x020b63e0 end:0x020b6424
 
-src/func_ov002_020b6424.c:
+src/actors/daObjUkiyuka_c.cpp:
     complete
-    .text start:0x020b6424 end:0x020b646c
-
-src/_ZN14daObjUkiyuka_c6RenderEv.cpp:
-    complete
-    .text start:0x020b646c end:0x020b6494
-
-src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b6494 end:0x020b6584
-
-src/func_ov002_020b6584.c:
-    complete
-    .text start:0x020b6584 end:0x020b660c
+    .text start:0x020b6424 end:0x020b660c
 
 src/_ZN16daObjKaitendai_cD0Ev.cpp:
     complete

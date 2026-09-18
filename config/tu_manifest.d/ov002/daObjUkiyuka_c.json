@@ -1,0 +1,313 @@
+{
+  "id": "ov002/daObjUkiyuka_c",
+  "module": "ov002",
+  "source": "src/actors/daObjUkiyuka_c.cpp",
+  "promoted_source": "src/actors/daObjUkiyuka_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020b6388..0x020b660c, 6 function(s). build/tu_map.json (tools/tu_map.py) segments this as 0x020b6388..0x020b6584, 5 functions, because func_ov002_020b6584 carries no mangled name and no vtable slot, so no label bounds it on the right. The span is EXTENDED BY HAND to take it in, and the licensed range is then TRIMMED on the left to exclude the destructor pair; the census and the destructor measurement below are the reasons for each move.",
+    "class label(s): daObjUkiyuka_c",
+    "CALL-SITE CENSUS over every config/**/relocs.txt in the tree, filtered on the relocation's TARGET MODULE, which matters here: ov000 and ov002 overlap in address space, so a census keyed on the address alone reports ov000 words at 0x020be5bc and 0x020bed48 as referrers of this class's destructors when in fact they name ov000's own code. daObjUkiyuka_c has exactly two descendants -- daObjFl_Ukiyuka_c (ov022, _ZTI at 0x021140b4) and daObjKm2_Ukishima_c (ov045, _ZTI at 0x02112efc), which is the whole child set build/rtti.json's edge list returns for base ov002:0x02109104. Two addresses are referenced from EXACTLY that two-module set and from nowhere else in the image: func_ov002_020b6424 (ov022 0x0211203c, ov045 0x02111bd4) and func_ov002_020b6584 (ov022 0x021120a4 as a direct arm_call, ov045 0x02111bec as a literal-pool load). _ZN14daObjUkiyuka_c6RenderEv and _ZN14daObjUkiyuka_c8BehaviorEv are members of this class by vtable slot (9 and 6), so they are the positive control; their referrer set is the same two overlays plus ov002 itself, the extra word being the class's own vtable.",
+    "BASE-RATE CONTROL, which is what makes the census discriminating rather than merely consistent: the same census run over the neighbouring classes in this overlay returns DIFFERENT referrer sets, each matching that class's own descendant set. daObjGuragura_c's helpers func_ov002_020b60fc and func_ov002_020b6244 return {ov045, ov064}; daObjKaitendai_c's func_ov002_020b66a8 and func_ov002_020b676c return {ov015, ov022, ov029, ov036, ov047}; daObjFloatBoard_c's func_ov002_020b5e58 returns {ov016, ov029}. Four classes in one stretch of one overlay, four distinct referrer sets, and the measurement plainly CAN return a set other than this class's -- it does so for every neighbour tested.",
+    "THE RUN'S LEFT EDGE IS NOT BELOW 0x020b6388, and the two unlabelled functions that sit there are refuted. func_ov002_020b62cc (size 0xa8) and func_ov002_020b6374 (size 0x14) fill the gap between daObjGuragura_c's setup helper and this class's D0, and their sizes make them plausible siblings of a setup/teardown pair. The census answers otherwise: neither is named from ov022 or ov045 at all. Each is named by EXACTLY ONE word in the whole image, and the two words form a chain rooted inside daObjGuragura_c's own run -- ov002:0x020b62c8, the last word of func_ov002_020b6244 (daObjGuragura_c's setup helper, 0x020b6244..0x020b62cc), loads func_ov002_020b6374; and ov002:0x020b6384, the last word of func_ov002_020b6374, loads func_ov002_020b62cc. Nothing outside ov002 reaches either one. They belong to the run below this one, not to this TU.",
+    "SIZE CORROBORATION FROM THE OTHER SIDE, for the right edge. func_ov002_020b6584 stores to this+0x320 (at 0x020b65f8) and this+0x324 (at 0x020b65fc). sizeof(daObjUkiyuka_c) is 0x32c -- daObjKm2_Ukishima_c_classInit passes 812 = 0x32c to fBase_c::operator new and adds no field of its own, recorded in include/daObjUkiyuka_c.h -- so both stores land inside this class, on mRestY and mBobAmplitude. They land PAST THE END of the class whose run begins at 0x020b660c: sizeof(daObjKaitendai_c) is exactly 0x320. This is the same fact PR #2774 used from the far side to refuse 0x020b6584 as ITS left edge.",
+    "SEMANTIC CORROBORATION: the two fields func_ov002_020b6584 seeds, 0x320 and 0x324, are two of the four this TU's own _ZN14daObjUkiyuka_c8BehaviorEv reads. The setup half and the consumer half of the same bob cycle sit in one run with Render between them.",
+    "SHAPE, repeated four times in this stretch of ov002: [D0, D1, teardown helper, Render, Behavior, setup helper] is daObjUkiyuka_c (0x020b6388..0x020b660c), daObjKaitendai_c (0x020b660c..0x020b6814) and daObjKuruma_c (0x020b6814..0x020b69e4); daObjGuragura_c and daObjKurumajiku_c are the same with extra TU-local helpers. Under mwccarm's reverse-source-order .text emission that is the source order [setup, Behavior, Render, teardown, <implicit destructors>], which is an ordinary C++ file.",
+    "RTTI edge, read out of extracted/dsd/arm9_overlays/ov002.bin at load address 0x020ad660: ov002:0x02109104 _ZTI14daObjUkiyuka_c -> __si_class_type_info (0x0209a764), name pointer 0x02109110 holding '14daObjUkiyuka_c', base pointer ov002:0x021089ec _ZTI10dBgActor_c.",
+    "vtable ov002 storage 0x02109124, address point 0x0210912c, 32 slots (0x80) ending at 0x021091ac, where _ZTI16daObjKaitendai_c opens the next class's data run -- so the data run 0x02109104..0x021091ac is closed by this class with nothing between. Read slot by slot from the ROM: slots 0 (InitResources) and 3 (CleanupResources) are BARE ZERO WORDS with no relocation -- the class is abstract, which is why neither func_ov002_ helper occupies a slot and why both are reached by an ordinary call from each leaf instead. The overrides are exactly slot 6 (0x020b6494 Behavior), slot 9 (0x020b646c Render), slot 16 (0x020b63e0 D1) and slot 17 (0x020b6388 D0); every other slot holds the base's word.",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020b6424..0x020b660c (4 functions) inside the 0x020b6388..0x020b660c object the evidence above establishes. The cartridge places _ZN14daObjUkiyuka_cD0Ev at 0x020b6388 BELOW _ZN14daObjUkiyuka_cD1Ev at 0x020b63e0. The lever grid was RE-MEASURED ON THIS TU rather than carried over from the sibling, because a sibling's recorded rule describes its own regime and can invert in the other: {inline, out-of-line destructor} x {default deferred codegen, 'pragma defer_codegen off'}, plus the source-order permutation each cell admits -- six compiles, each read off the emitted object's .text section order. (1) inline + deferred + reverse-ROM source: [D1, D0, func_020b6424, Render, Behavior, func_020b6584]. (2) inline + pragma before the members: [func_020b6584, Behavior, Render, func_020b6424, D1, D0] -- the four real members reverse and the pair moves to the tail. (3) inline + the same pragma placed AFTER the members: no effect at all, the identical section order as (1). (4) inline + pragma + the whole file rewritten in ROM-ascending order: [func_020b6424, Render, Behavior, func_020b6584, D1, D0]. (5) OUT-OF-LINE destructor + deferred: [func_020b6424, Render, Behavior, func_020b6584, D2, D0, D1]. (6) out-of-line + pragma: [D1, D0, D2, func_020b6584, Behavior, Render, func_020b6424]. THE PAIR NEVER COMES OUT D0-THEN-D1 WITHOUT A D2 BESIDE IT. Every inline form emits D1 first; the only forms that emit D0 before D1 are the out-of-line ones, and those emit a D2 as well. NOTE FOR THE FAMILY: forms (5) and (6) are a real finding and not a restatement of the sibling's -- PR #2774 measured four forms on the inline axis only and recorded D1-then-D0 in all of them, which is reproduced here, but the out-of-line axis does put D0 ahead of D1, so the order rule is a property of the INLINE regime, not of the class.",
+    "THE OUT-OF-LINE FORM IS REFUTED BY THE CARTRIDGE, independently of the order it produces. It emits _ZN14daObjUkiyuka_cD2Ev, size 0x44, which the image does not contain: the function immediately below D0 is func_ov002_020b6374 at 0x020b6374, size 0x14, and nothing of size 0x44 abuts the pair on either side. It is ruled out a second way by the relocation census: _ZN14daObjUkiyuka_cD0Ev is named by EXACTLY ONE word in the whole image, ov002:0x02109170, and _ZN14daObjUkiyuka_cD1Ev by exactly one, ov002:0x0210916c. Those are slots 17 and 16 of _ZTV14daObjUkiyuka_c (address point 0x0210912c; 0x0210916c - 0x0210912c = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor, and both descendants inline this destructor's vptr store instead. An out-of-line definition here would make daObjFl_Ukiyuka_c and daObjKm2_Ukishima_c emit a call the cartridge does not have and break their already-matched TUs.",
+    "THE INLINE FORM IS RIGHT AND ONLY ITS ORDER IS WRONG, which is measured and not inferred. The D0 and D1 sections this TU emits under form (1) are 0x58 and 0x44 bytes, the ROM's sizes exactly, and comparing them against extracted/dsd/arm9_overlays/ov002.bin at 0x020b6388 and 0x020b63e0 leaves 24 and 17 differing bytes -- every single one of them inside a word the object carries a relocation for (D0 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x4c, 0x50, 0x54; D1 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x40). ZERO differing bytes fall outside a relocated word. So the exclusion is about emission order and nothing else. This is the same disposition already taken by ov002/daObjFloatBoard_c and ov002/daObjKaitendai_c, whose destructor pairs sit in the identical D0-below-D1 arrangement."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b6424",
+      "end": "0x020b660c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov002_020b6424",
+      "address": "0x020b6424",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020b6424.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_c6RenderEv",
+      "address": "0x020b646c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN14daObjUkiyuka_c6RenderEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_c8BehaviorEv",
+      "address": "0x020b6494",
+      "size": "0x000000f0",
+      "legacy_source": "src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b6584",
+      "address": "0x020b6584",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov002_020b6584.c",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b660c, refutes func_ov002_020b62cc and func_ov002_020b6374 on the left, and excludes the destructor pair from the licensed range.",
+    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carry a scaffold (a delete-expression, an explicit destructor call) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV14daObjUkiyuka_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN14daObjUkiyuka_cD0Ev.cpp and src/_ZN14daObjUkiyuka_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b6424 and func_ov002_020b6584 are this class's shared teardown and setup halves, reached by an ordinary call from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
+    "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the two leaves supplies its own. There is no factory and no g_profile row -- both leaves' factories live in their own overlays (daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L / _FL_UKIYUKA at ov022 0x021120b8 and 0x021120f4, daObjKm2_Ukishima_c_classInit at ov045 0x02111bf4) and neither abuts this run -- which is why the entry claims no data, no ctor and no BSS.",
+    "func_ov002_020b6424 and func_ov002_020b6584 keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",
+    "func_ov002_020b6584's local typedef of int to the name Fix12 had to be renamed to Fix12Word when the body moved into a TU that includes the class header, because Fix12 is a class template there. The typedef names a parameter of an extern \"C\" declaration, so it reaches no mangled name and no codegen; the four members still byte-match and config/decl-agreement-baseline.json records the same disagreement set for the folded path that it recorded for src/func_ov002_020b6584.c.",
+    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. Control: running the same command against ov002/daObjKaitendai_c -- landed on main as PR #2774, promoted and byte-matched -- produces the identical refusal, so the message is a property of the command's intact path and not of either TU. The proof of record for this entry is therefore the pre-promotion scratch link below, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the other promoted text-only entries."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjUkiyuka_c/daObjUkiyuka_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN14daObjUkiyuka_cD1Ev",
+        "_ZN14daObjUkiyuka_cD0Ev"
+      ],
+      "deadstripped": [
+        "_ZN14daObjUkiyuka_cD0Ev",
+        "_ZN14daObjUkiyuka_cD1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "data": [
+        "_ZTV14daObjUkiyuka_c",
+        "_ZTI14daObjUkiyuka_c",
+        "_ZTS14daObjUkiyuka_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI14daObjUkiyuka_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS14daObjUkiyuka_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daObjUkiyuka_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-daObjUkiyuka_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b6424",
+        "end": "0x020b660c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b6424",
+          "end": "0x020b660c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 4
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN14daObjUkiyuka_cD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020b63e0",
+      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjUkiyuka_c is defined inline in include/daObjUkiyuka_c.h. The cartridge owns it at ov002:0x020b63e0 and src/_ZN14daObjUkiyuka_cD1Ev.cpp still holds that delinks entry, so this object's copy is a duplicate -- byte-identical outside its relocated words, measured -- that production isolation discards. It is outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020b6388",
+      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b6388, BELOW D1 -- see this entry's boundary_evidence for the six source forms measured against that order and for why every form that emits D0 first also emits a D2 the ROM does not contain. src/_ZN14daObjUkiyuka_cD0Ev.cpp keeps that delinks entry and this object's copy is discarded."
+    },
+    {
+      "symbol": "_ZTV14daObjUkiyuka_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210912c",
+      "reason": "This TU defines Behavior (vtable slot 6), the first out-of-line virtual the class declares and therefore its key function -- the destructor is inline in the class body -- so mwcc anchors the complete 0x88-byte vtable storage here. The cartridge keeps it at ov002:0x0210912c (storage 0x02109124) in .data, which no section this entry licenses (.text 0x020b6424-0x020b660c) reaches, so dsd supplies those bytes independently and production isolation discards the emitted duplicate."
+    },
+    {
+      "symbol": "_ZTI14daObjUkiyuka_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109104",
+      "reason": "This class's own __si_class_type_info record, emitted alongside the vtable by the key function. Canonical home ov002:0x02109104 is outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTS14daObjUkiyuka_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109110",
+      "reason": "This class's own type-name string \"14daObjUkiyuka_c\", emitted alongside the vtable by the key function. Canonical home ov002:0x02109110 is outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI: naming daObjUkiyuka_c's typeinfo drags its direct base's record in. Canonical copy ov002:0x021089ec, outside this entry's licensed range; it is the ROM word this class's own _ZTI carries at +8."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string for the direct base. Canonical copy ov002:0x02108a04, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI, one link further up the fBase_c -> dBase_c -> dActor_c -> dBgActor_c chain. Canonical copy arm9:0x0208e390, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string for dActor_c. Canonical copy arm9:0x0208e384, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string for dBase_c. Canonical copy arm9:0x02086e54, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI for the root of the chain. Canonical copy arm9:0x02086d70, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string for fBase_c. Canonical copy arm9:0x02086e60, outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+    }
+  ]
+}
