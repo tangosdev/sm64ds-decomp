@@ -50,6 +50,21 @@
  *   [26] 0x020e759c  src/func_ov006_020e759c.c
  */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  24 func_ov004_* + 19 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  14 _ZN..E member call(s)      already declared -- needs the
+ *                                scope-qualified spelling on a real `this`.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  14 _ZN..E call(s)             no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  6 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~6 *(T *)(p + 0x..)           class layout does not name these offsets.
+ *  2 VirtualNN, 4 unk_NN         slot/field name not evidenced.
+ */
+
 #include "dScMgD3DBase_c.h"
 #include "decl_common.h"
 #include "decl_Particle.h"

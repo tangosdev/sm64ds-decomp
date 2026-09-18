@@ -130,6 +130,20 @@
 
 #pragma defer_codegen off
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  72 func_ov006_* + 60 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  1 _ZN..E member call(s)       already declared -- needs the
+ *                                scope-qualified spelling on a real `this`.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  7 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  3 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~217 *(T *)(p + 0x..)         class layout does not name these offsets.
+ */
+
 #include "types.h"
 #include "private/ov006_ec4dc_obj.h"
 #include "dScMgHanachan_c.h"

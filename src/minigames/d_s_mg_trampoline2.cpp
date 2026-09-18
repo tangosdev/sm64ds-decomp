@@ -66,6 +66,26 @@
  * with it. Other generator conflict notes below record historical inputs. */
 
 /* Includes retained from the verified production TU. */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  85 func_ov006_* + 51 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  6 _ZN..E member call(s)       already declared -- needs the
+ *                                scope-qualified spelling on a real `this`.
+ *  3 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  9 _ZN..E call(s)              no include/<class>.h yet, so there is
+ *                                no member to call.
+ *  7 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  3 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ *  7 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~111 *(T *)(p + 0x..)         class layout does not name these offsets.
+ *  9 shadow struct(s)            fake interfaces for the real classes:
+ *                                B4, BMD_File, C, Obj, P2, S2, SharedFilePtr,...
+ *  1 VirtualNN, 1 unk_NN         slot/field name not evidenced.
+ */
+
 #include "common.h"
 #include "types.h"
 #include "dScMgTrampoline2_c.h"

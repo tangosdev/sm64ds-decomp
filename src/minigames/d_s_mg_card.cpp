@@ -62,6 +62,19 @@
 
 /* The union of what the 34 legacy sources included, first-seen in
  * ROM-ascending order. */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  31 func_ov006_* + 29 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  7 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  4 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ *  2 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  4 shadow struct(s)            fake interfaces for the real classes:
+ *                                C, Obj, Src, VObj
+ *  13 unk_NN                     slot/field name not evidenced.
+ */
+
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
