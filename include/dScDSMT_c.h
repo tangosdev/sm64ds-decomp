@@ -76,11 +76,18 @@ struct dScDSMT_c : dScene_c {
                                     it is this type and not an inlined base.
                                     Behavior passes &fader to SetFaders. */
 
-    /* Declared first -- key function; see the family convention discussed
-       in dScene_c.h. Never defined as a real method in any TU: both D1 and
-       D0 are plain functions carrying their literal mangled name
-       (src/_ZN9dScDSMT_cD1Ev.cpp, src/_ZN9dScDSMT_cD0Ev.c). */
-    virtual ~dScDSMT_c();                                /* slots 16 (D1), 17 (D0) */
+    /* Declared first and DEFINED INLINE, both deliberately -- the same form
+       dScene_c.h and dBase_c.h use one and two levels up, and the form
+       include/dScGameOver_c.h settled on for this family. Inline-in-class is
+       what makes mwccarm emit D1 before D0, and the cartridge puts D1 at
+       ov007:0x020cc028 below D0 at 0x020cc070. An inline virtual cannot be
+       the key function, so InitResources -- the first DECLARED non-inline
+       virtual -- is, and defining it in the promoted TU is what emits this
+       class's vtable and, through slots 16/17, the destructor pair. The
+       empty body still reproduces all 0xa4 bytes of the pair: the inlined
+       vptr stores, ~dFdDummy_c on `fader` at +0x54, fBase_c's own teardown,
+       and D0's inherited operator delete. */
+    virtual ~dScDSMT_c() {}                              /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */

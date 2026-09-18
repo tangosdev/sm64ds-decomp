@@ -1,0 +1,293 @@
+{
+  "id": "ov007/dScDSMT_c",
+  "module": "ov007",
+  "source": "src_tu/actors/dScDSMT_c.cpp",
+  "promoted_source": "src/actors/dScDSMT_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020cc028..0x020cc600, 13 function(s), from build/tu_map.json (tools/tu_map.py).",
+    "Upper boundary 0x020cc600: the next function is func_ov007_020cc600, first of a run of six unattributed functions (0x020cc600..0x020ccad0) reached through the dispatch table at ov007:0x02103290 (data_ov007_02103290 -- six words: 0x020ccab4, 0x020cca98, 0x020cca80, 0x020cca74, 0x020cca68, 0x020cc600). That table belongs to those six, not to this class, and no dScDSMT_c symbol appears in the run.",
+    "dScDSMT_c_classInit (ov007:0x020ccad0, src/d_s_dsmt.c) is therefore NOT adjacent to this run and is deliberately excluded: the six functions above sit between it and this TU. This TU consequently contains no factory and no operator new -- unlike the dScGameOver_c promotion in the same family, where classInit does abut the member run and was folded in.",
+    "Lower boundary 0x020cc028: the preceding function is func_ov007_020cbfd4, which no dScDSMT_c member references and which carries no dScDSMT_c RTTI; 0x020cc028 is _ZN9dScDSMT_cD1Ev, which mwccarm emits from the LAST declaration in source order (.text is one section per function, emitted in reverse source order).",
+    "The four unattributed helpers inside the run (func_ov007_020cc0cc, _020cc0e4, _020cc118, _020cc168) are included: they sit strictly between dScDSMT_c members in the same contiguous run.",
+    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2).",
+    "tools/tu_map.py reports ov007 as UNDER-SEGMENTED overall (548 functions resolving to only three runs: 0x020ad660..0x020cc028 with 528 unattributed functions, this 13-function run, and the 7-function tail 0x020cc600..0x020ccb54). The under-segmentation is entirely inside the 528-function head; it touches neither boundary of this run, both of which are pinned above."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020cc028",
+      "end": "0x020cc600"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9dScDSMT_cD1Ev",
+      "address": "0x020cc028",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN9dScDSMT_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9dScDSMT_cD0Ev",
+      "address": "0x020cc070",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN9dScDSMT_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020cc0cc",
+      "address": "0x020cc0cc",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov007_020cc0cc.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020cc0e4",
+      "address": "0x020cc0e4",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov007_020cc0e4.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev",
+      "address": "0x020cc0f4",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev",
+      "address": "0x020cc110",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov007_020cc118",
+      "address": "0x020cc118",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov007_020cc118.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov007_020cc168",
+      "address": "0x020cc168",
+      "size": "0x00000144",
+      "legacy_source": "src/func_ov007_020cc168.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c16OnPendingDestroyEv",
+      "address": "0x020cc2ac",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9dScDSMT_c16OnPendingDestroyEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c6RenderEv",
+      "address": "0x020cc2b0",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN9dScDSMT_c6RenderEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c8BehaviorEv",
+      "address": "0x020cc2cc",
+      "size": "0x00000190",
+      "legacy_source": "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c16CleanupResourcesEv",
+      "address": "0x020cc45c",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN9dScDSMT_c16CleanupResourcesEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN9dScDSMT_c13InitResourcesEv",
+      "address": "0x020cc4c0",
+      "size": "0x00000140",
+      "legacy_source": "src/_ZN9dScDSMT_c13InitResourcesEv.cpp",
+      "ordinal": 12
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "STATUS. Every one of the thirteen functions byte-matches the cartridge, but this entry cannot be promoted today and deliberately stays text-verified. Two independent tree-level defects block it, both recorded below; neither is a property of this reconstruction and neither was worked around.",
+    "Destructor form. The cartridge emits _ZN9dScDSMT_cD1Ev at ov007:0x020cc028 BELOW _ZN9dScDSMT_cD0Ev at 0x020cc070. Under the pinned mwccarm 2004/b56 with default (deferred) codegen that order is reproduced by defining the destructor INLINE IN CLASS (virtual ~dScDSMT_c() {} in include/dScDSMT_c.h); the out-of-line form emits D0 ahead of D1 and adds a homeless D2. The header was changed from the out-of-line declaration to the inline definition as part of this work, and tubuild verify confirms the result: \"all 13 function(s) in the expected ROM-ascending section order\".",
+    "Key function. Because the destructor is inline it cannot be the key function; _ZN9dScDSMT_c13InitResourcesEv -- the first declared non-inline virtual -- is, and defining it here is what emits _ZTV9dScDSMT_c and, through slots 16/17, the D1/D0 pair. It therefore cannot be dropped from this TU: without it the destructor pair is not emitted at all.",
+    "BLOCKER 1 -- _ZTVN9dScDSMT_c15graphCallback_cE has no configured ROM home. The object emits the nested class's 0x18-byte vtable (its key function, GraphCallback0, is defined here), and the symbol resolves to nothing in any config/**/symbols.txt. It can therefore take neither compiler-only disposition: deadstrip-data is refused for want of a home, and a plain deadstrip is refused outright for an _ZTI/_ZTS/_ZTV record. The cartridge DOES hold the record -- ov007:0x021032a8 storage, 0x021032b0 address point -- proved by the RTTI word at 0x021032ac being 0x02103284 == _ZTIN9dScDSMT_c15graphCallback_cE, and by the 0x18 span 0x021032a8..0x021032c0 matching the emitted symbol's size exactly. config/arm9/overlays/ov007/symbols.txt carries it only under the placeholder name data_ov007_021032b0. This entry consequently has 13 of the 14 compiler_only_output rows it needs and tubuild verify ends in PROMOTION REFUSED.",
+    "BLOCKER 2 -- overlay_100 / overlay_102 do not link. Behavior and InitResources each pass an overlay id as (int)&overlay_100 / (int)&overlay_102. The spelling is load-bearing: the cartridge loads both from the literal pool (ldr r0,[pc,#0x74] -> 0x020cc450 = 0x64 and ldr r0,[pc,#0x70] -> 0x020cc454 = 0x66), and writing the plain constants instead compiles to mov and loses eight bytes (0x188 against the cartridge's 0x190 -- measured with tools/match.py, MATCHING VERSIONS: none). But config/arm9/symbols.txt puts overlay_100 and overlay_102 at 0x00000064 and 0x00000066, addresses that fall outside every module's sections, so no delinked gap object defines them: `dsd check symbols` already reports both as \"not found in linked binary\" on a stock tree, and marking either function `complete` makes mwldarm fail the link outright -- \"Undefined : overlay_100 ... Referenced from dScDSMT_c::InitResources() / dScDSMT_c::Behavior()\" (measured: tubuild linkcheck --baseline --module ov007 with the two entries enrolled). tools/eligible.py calls both functions ELIGIBLE, which is the known case of rule 5 greenlighting a link mwldarm refuses. This is why the queue row shows unmatched:2, and it is not fixable in source.",
+    "Why there is no partial promotion. Behavior is ordinal 10 and InitResources ordinal 12 of 13 in ROM-ascending order, with CleanupResources between them, so no contiguous sub-range can drop them and keep the rest. Dropping InitResources also removes the key function, and with it the emission of ordinals 0 and 1 (D1/D0). The next sub-range down that emits no key function at all is 0x020cc118..0x020cc2cc -- four functions, two of them unattributed helpers -- which is not worth a boundary. The legacy spelling in this TU is the defined one (overlay_100 / overlay_102, the names config/arm9/symbols.txt actually carries and the ones the legacy InitResources already used), not the overlay_64 / overlay_66 that the legacy Behavior used and that nothing defines.",
+    "Generated originally by tools/tubuild.py create; the source was then rewritten by hand. See the TU's own header comment for every declaration reconciliation, including the three tubuild create CONFLICT warnings (data_0209b33c, func_ov007_020b7090), resolved in favour of the spellings that byte-match."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov007-dScDSMT_c/dScDSMT_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 13,
+    "functions_declared": 13,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        23,
+        24,
+        25,
+        26
+      ],
+      "data": [
+        "_ZTS9dScDSMT_c",
+        "_ZTI9dScDSMT_c",
+        "_ZTV9dScDSMT_c",
+        "_ZTSN9dScDSMT_c15graphCallback_cE",
+        "_ZTIN9dScDSMT_c15graphCallback_cE",
+        "_ZTS8dScene_c",
+        "_ZTI8dScene_c",
+        "_ZTS7dBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7fBase_c",
+        "_ZTSN8dGraph_c10callback_cE",
+        "_ZTIN8dGraph_c10callback_cE"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI9dScDSMT_c",
+        "_ZTIN8dGraph_c10callback_cE",
+        "_ZTIN9dScDSMT_c15graphCallback_cE",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTS9dScDSMT_c",
+        "_ZTSN8dGraph_c10callback_cE",
+        "_ZTSN9dScDSMT_c15graphCallback_cE",
+        "_ZTV9dScDSMT_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTS9dScDSMT_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov007",
+      "canonical_address": "0x0210326c",
+      "reason": "Vague-linkage RTTI passenger: this class's own type-name string. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is ov007:0x0210326c, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTI9dScDSMT_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov007",
+      "canonical_address": "0x02103278",
+      "reason": "Vague-linkage RTTI passenger: this class's own __si_class_type_info record. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is ov007:0x02103278, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTV9dScDSMT_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov007",
+      "canonical_address": "0x021032e8",
+      "reason": "Vague-linkage RTTI passenger: this class's own vtable (18 slots; the configured symbol is the address point, storage starts eight bytes earlier at 0x021032e0). mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is ov007:0x021032e8, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTSN9dScDSMT_c15graphCallback_cE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov007",
+      "canonical_address": "0x021032c0",
+      "reason": "Vague-linkage RTTI passenger: the nested dScDSMT_c::graphCallback_c type-name string. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is ov007:0x021032c0, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTIN9dScDSMT_c15graphCallback_cE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov007",
+      "canonical_address": "0x02103284",
+      "reason": "Vague-linkage RTTI passenger: the nested dScDSMT_c::graphCallback_c __si_class_type_info record. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is ov007:0x02103284, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "Vague-linkage RTTI passenger: the base class dScene_c's type-name string, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x020914b0, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "Vague-linkage RTTI passenger: the base class dScene_c's __si_class_type_info record, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x020914d4, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage RTTI passenger: the grandparent dBase_c's type-name string, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x02086e54, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage RTTI passenger: the grandparent dBase_c's __si_class_type_info record, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x02086e78, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage RTTI passenger: the root fBase_c's type-name string, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x02086e60, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage RTTI passenger: the root fBase_c's __class_type_info record, reached through this class's RTTI chain. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x02086d70, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTSN8dGraph_c10callback_cE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ee24",
+      "reason": "Vague-linkage RTTI passenger: the nested class's base dGraph_c::callback_c type-name string. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x0208ee24, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    },
+    {
+      "symbol": "_ZTIN8dGraph_c10callback_cE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ee04",
+      "reason": "Vague-linkage RTTI passenger: the nested class's base dGraph_c::callback_c __class_type_info record. mwccarm emits it because this TU defines the key function _ZN9dScDSMT_c13InitResourcesEv (the first declared non-inline virtual; the destructor is inline in include/dScDSMT_c.h and so cannot be key). Its cartridge home is arm9:0x0208ee04, outside this entry's only claimed range (.text 0x020cc028-0x020cc600), so dsd delinks those bytes from the cartridge whatever this object does and discarding the object copy cannot cost the image a byte; rombuild compares the copy word-for-word against that home, with relocations applied, before dropping it."
+    }
+  ]
+}
