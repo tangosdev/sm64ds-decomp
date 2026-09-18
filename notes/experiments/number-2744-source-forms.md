@@ -10,6 +10,9 @@ contract corrections. Source SHA-256: `763981f98c3dfc2c1b61ee4ce9f3a36db3dd28190
 header SHA-256: `92df30c6d1acb1928b9ae932a1191cf834ff82007eb5d50a74d2abe4ee2db0e7` (UTF-8 files with LF line endings).
 Compiler: `tools/mwccarm/2004/b56/mwccarm.exe`; flags:
 `-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off`.
+The recipe uses `swarm.CPP_FLAGS`, which additionally passes `-w illpragmas`.
+Independent review of `39de013c631077cbc8023bfff46fdfae013fba3a` reproduced all
+six complete objects with and without that warning suppression and found them identical.
 
 ## Adopted ordinary forms
 
@@ -55,9 +58,11 @@ No member-call impossibility is claimed for that untested shared reconstruction.
 The two position views remain a source compromise because dActor_c still exposes
 three scalar members. SharedFilePtr+4 reads remain because its header exposes no
 loaded-file field. PowerStar's halfword at 0x496 remains inside unrecovered padding;
-the named 0x43c field is already used. These are the only deferred source findings
-in this repair. Next owner is `codex-integrator-0918`; a bounded issue draft is
-pending publication approval. No accepted issue-backed deferral is claimed.
+the named 0x43c field is already used. These are the remaining reconstruction
+findings in this partial repair. [Issue #2769](https://github.com/tangosdev/sm64ds-decomp/issues/2769)
+records the bounded continuation, with `codex-integrator-0918` as next owner.
+The proposed deferral still requires independent acceptance; the issue alone
+does not establish it.
 
 ## Reproduction
 
