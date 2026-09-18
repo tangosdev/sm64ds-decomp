@@ -54,17 +54,25 @@ struct daObjKuruma_c : dBgActor_c {
        first non-inline virtual declared in the class -- is whichever of these two
        comes first, and the key function's translation unit is the one that emits
        _ZTV13daObjKuruma_c. That symbol is already delinked data (ov002 0x02109278,
-       config/arm9/overlays/ov002/symbols.txt), and tools/eligible.py drops any file
-       whose object carries a section other than .text, so a TU that emitted it
-       would be silently dropped from the build and the function it defines would
-       stop being compiled at all. Render's definition (func_ov002_020b68f8) is not
-       migrated yet, so naming it here parks the key function on a TU that does not
-       exist and no file emits the vtable -- which is the tree's state today, and
-       the same mechanism include/dBgActor_c.h's own destructor comment relies on.
-       Measured: with Behavior first the object came out with eleven .data sections
-       and five .text; with Render first, one .text of 0x38. Whoever migrates
-       Render will have to place the vtable deliberately. */
-    s32 Render();                      /* slot  9 -- see above; not yet migrated */
+       config/arm9/overlays/ov002/symbols.txt).
+
+       RENDER IS NOW DEFINED, in src/actors/daObjKuruma_c.cpp, together with the
+       other three functions of this class's linker run -- so that intact TU is the
+       key function's TU and it is the one that emits the vtable. That is expected
+       and licensed rather than a problem: the emitted vtable and the RTTI triple
+       are compiler-only output, recorded as deadstrip-data in that TU's
+       config/tu_manifest.d entry, and production isolation drops them because the
+       entry claims .text alone. The earlier concern here -- that tools/eligible.py
+       drops any file whose object carries a section other than .text, so a
+       one-function TU emitting the vtable would silently stop being compiled --
+       applied to the ONE-FUNCTION shard this class used to have, not to an intact
+       TU, which eligible.py reaches through its delinks entry instead.
+
+       The declaration ORDER below is unchanged and still load-bearing: it is what
+       decides which TU anchors the vtable. Measured before the fold, on the
+       one-function shard: with Behavior first the object came out with eleven .data
+       sections and five .text; with Render first, one .text of 0x38. */
+    s32 Render();                      /* slot  9 -- key function; see above */
     s32 Behavior();                    /* slot  6 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
