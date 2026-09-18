@@ -494,33 +494,9 @@ src/_ZN15daObjGuragura_cD1Ev.cpp:
     complete
     .text start:0x020b6030 end:0x020b6074
 
-src/func_ov002_020b6074.cpp:
+src/actors/daObjGuragura_c.cpp:
     complete
-    .text start:0x020b6074 end:0x020b60fc
-
-src/func_ov002_020b60fc.c:
-    complete
-    .text start:0x020b60fc end:0x020b6144
-
-src/_ZN15daObjGuragura_c6RenderEv.cpp:
-    complete
-    .text start:0x020b6144 end:0x020b616c
-
-src/_ZN15daObjGuragura_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b616c end:0x020b6244
-
-src/func_ov002_020b6244.c:
-    complete
-    .text start:0x020b6244 end:0x020b62cc
-
-src/func_ov002_020b62cc.c:
-    complete
-    .text start:0x020b62cc end:0x020b6374
-
-src/func_ov002_020b6374.c:
-    complete
-    .text start:0x020b6374 end:0x020b6388
+    .text start:0x020b6074 end:0x020b6388
 
 src/_ZN14daObjUkiyuka_cD0Ev.cpp:
     complete
@@ -530,21 +506,9 @@ src/_ZN14daObjUkiyuka_cD1Ev.cpp:
     complete
     .text start:0x020b63e0 end:0x020b6424
 
-src/func_ov002_020b6424.c:
+src/actors/daObjUkiyuka_c.cpp:
     complete
-    .text start:0x020b6424 end:0x020b646c
-
-src/_ZN14daObjUkiyuka_c6RenderEv.cpp:
-    complete
-    .text start:0x020b646c end:0x020b6494
-
-src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b6494 end:0x020b6584
-
-src/func_ov002_020b6584.c:
-    complete
-    .text start:0x020b6584 end:0x020b660c
+    .text start:0x020b6424 end:0x020b660c
 
 src/_ZN16daObjKaitendai_cD0Ev.cpp:
     complete
