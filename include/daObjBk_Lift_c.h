@@ -34,7 +34,10 @@ struct daObjBk_Lift_c : dBgActor_c {
     u8 mMove;                       /* 0x392 */
 
     /* --- vtable --- */
-    virtual ~daObjBk_Lift_c();
+    /* Inline empty dtor: mwccarm emits D1 then D0 and no D2, which is the
+       order the cartridge has -- D1 at 0x02112290, D0 at 0x021122dc. Same
+       form as include/daObjBk_Rotebar_c.h in this overlay. */
+    virtual ~daObjBk_Lift_c() {}
 
     int InitResources();
     int CleanupResources();
