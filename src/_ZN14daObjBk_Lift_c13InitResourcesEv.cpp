@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN9TowerStep13InitResourcesEv
-#include "TowerStep.h"
+// @symbol _ZN14daObjBk_Lift_c13InitResourcesEv
+#include "daObjBk_Lift_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
@@ -19,11 +19,11 @@ void func_020393d4(dBgW *collider, void *callback);
 void func_020393c4(dBgW *collider, void *callback);
 void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 void func_ov015_021128f8();
-void func_ov015_021123c8(TowerStep *step);
+void func_ov015_021123c8(daObjBk_Lift_c *step);
 int IsStarCollectedInCurLevel(int starID);
 }
 
-int TowerStep::InitResources()
+int daObjBk_Lift_c::InitResources()
 {
     mModel.SetFile((BMD_File *)Model::LoadFile(data_ov015_02114a64), 1, -1);
     mShadowModel.InitCuboid();
