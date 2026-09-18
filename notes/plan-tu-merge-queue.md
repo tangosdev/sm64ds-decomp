@@ -207,7 +207,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |----|---------|-------|-------------|--------|
 |[ov009](../config/arm9/overlays/ov009/symbols.txt)| 0x2111a70|  n=8|   `daObjMcWater_c`|      CONF1|
 |[ov009](../config/arm9/overlays/ov009/symbols.txt)| 0x2111dc4|  n=8|   `daObjMc_Metalnet_c`|         CONF2 pcov=2|
-|[ov010](../config/arm9/overlays/ov010/symbols.txt)| 0x21119d0|  n=8|   `LightBeam`|        CONF1 pcov=3|
+|[ov010](../config/arm9/overlays/ov010/symbols.txt)| 0x21119d0|  n=8|   `daObjC1Hikari_c`|        CONF1 pcov=3|
 |[ov010](../config/arm9/overlays/ov010/symbols.txt)| 0x2111e10|  n=8|   `PeachPainting`|    CONF1 pcov=3|
 |[ov012](../config/arm9/overlays/ov012/symbols.txt)| 0x2111450|  n=7|   `daObjC0Water_c`|    CONF2|
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)| 0x2112944|  n=7|   `daObjBk_Rotebar_c`|   CONF2|

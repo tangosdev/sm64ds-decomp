@@ -3775,18 +3775,18 @@
    "start": "0x21119d0",
    "end": "0x2111e10",
    "classes": [
-    "LightBeam"
+    "daObjC1Hikari_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9LightBeamD1Ev.cpp",
-    "src/_ZN9LightBeamD0Ev.c",
+    "src/_ZN15daObjC1Hikari_cD1Ev.cpp",
+    "src/_ZN15daObjC1Hikari_cD0Ev.c",
     "src/func_ov010_02111a54.c",
-    "src/_ZN9LightBeam16CleanupResourcesEv.c",
-    "src/_ZN9LightBeam6RenderEv.cpp",
-    "src/_ZN9LightBeam8BehaviorEv.cpp",
-    "src/_ZN9LightBeam13InitResourcesEv.cpp",
+    "src/_ZN15daObjC1Hikari_c16CleanupResourcesEv.c",
+    "src/_ZN15daObjC1Hikari_c6RenderEv.cpp",
+    "src/_ZN15daObjC1Hikari_c8BehaviorEv.cpp",
+    "src/_ZN15daObjC1Hikari_c13InitResourcesEv.cpp",
     "src/d_a_obj_c1_hikari.c"
    ],
    "ext_mix": {

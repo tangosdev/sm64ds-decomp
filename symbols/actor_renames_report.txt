@@ -74,13 +74,13 @@ SKIP daObjC0Water_c: ov012:0x2111540 already claimed by daObjC0_Switch_c (vtable
 SKIP daObjC0Water_c: ov012:0x2111450 already claimed by daObjC0_Switch_c (vtable slot 16)
 SKIP daObjC0Water_c: ov012:0x211149c already claimed by daObjC0_Switch_c (vtable slot 17)
 AMBIG actor 36 TRAP: ['ov010', 'ov035'] -> ov010
-SKIP LightBeam: ov010:0x2112ba8 already claimed by daObjC1_Trap_c (vtable alloc=0x16c)
-SKIP LightBeam: ov010:0x2111d20 already claimed by daObjC1_Trap_c (vtable slot 0)
-SKIP LightBeam: ov010:0x2111a94 already claimed by daObjC1_Trap_c (vtable slot 3)
-SKIP LightBeam: ov010:0x2111ae0 already claimed by daObjC1_Trap_c (vtable slot 6)
-SKIP LightBeam: ov010:0x2111ab8 already claimed by daObjC1_Trap_c (vtable slot 9)
-SKIP LightBeam: ov010:0x21119d0 already claimed by daObjC1_Trap_c (vtable slot 16)
-SKIP LightBeam: ov010:0x2111a08 already claimed by daObjC1_Trap_c (vtable slot 17)
+SKIP daObjC1Hikari_c: ov010:0x2112ba8 already claimed by daObjC1_Trap_c (vtable alloc=0x16c)
+SKIP daObjC1Hikari_c: ov010:0x2111d20 already claimed by daObjC1_Trap_c (vtable slot 0)
+SKIP daObjC1Hikari_c: ov010:0x2111a94 already claimed by daObjC1_Trap_c (vtable slot 3)
+SKIP daObjC1Hikari_c: ov010:0x2111ae0 already claimed by daObjC1_Trap_c (vtable slot 6)
+SKIP daObjC1Hikari_c: ov010:0x2111ab8 already claimed by daObjC1_Trap_c (vtable slot 9)
+SKIP daObjC1Hikari_c: ov010:0x21119d0 already claimed by daObjC1_Trap_c (vtable slot 16)
+SKIP daObjC1Hikari_c: ov010:0x2111a08 already claimed by daObjC1_Trap_c (vtable slot 17)
 AMBIG actor 40 SHUTTER_BOB: ['ov014', 'ov015'] -> ov014
 AMBIG actor 41 CHAIN_CHOMP_FENCE: ['ov014', 'ov021'] -> ov014
 NOVTABLE actor 43 BillBlaster (alloc=0x324)

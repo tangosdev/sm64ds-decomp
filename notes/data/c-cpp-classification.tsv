@@ -1041,8 +1041,8 @@ src/_ZN9DorrieCapD1Ev.c	DTOR-ONLY	ov065	daDossyCap_c	DorrieCap/daDossyCap_c	_ZN9
 src/_ZN13daObjTdFuta_cD0Ev.c	DTOR-ONLY	ov032	daObjTdFuta_c	daObjTdFuta_c/daObjTdFuta_c	_ZN13daObjTdFuta_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjTdFuta_c	-
 src/_ZN9KoopaFlag16CleanupResourcesEv.c	P1-vtable+mangled	ov062	daRFlag_c	KoopaFlag/daRFlag_c	vtable daRFlag_c slot 3 @0x211b000 | _ZN9KoopaFlag16CleanupResourcesEv	1		True		-
 src/_ZN9KoopaFlagD0Ev.c	DTOR-ONLY	ov062	daRFlag_c	KoopaFlag/daRFlag_c	_ZN9KoopaFlagD0Ev	1		True		-
-src/_ZN9LightBeam16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Hikari_c	LightBeam/daObjC1Hikari_c	vtable daObjC1Hikari_c slot 3 @0x2111a94 | _ZN9LightBeam16CleanupResourcesEv	1		True		-
-src/_ZN9LightBeamD0Ev.c	DTOR-ONLY	ov010	daObjC1Hikari_c	LightBeam/daObjC1Hikari_c	_ZN9LightBeamD0Ev	1		True		-
+src/_ZN15daObjC1Hikari_c16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Hikari_c	daObjC1Hikari_c/daObjC1Hikari_c	vtable daObjC1Hikari_c slot 3 @0x2111a94 | _ZN15daObjC1Hikari_c16CleanupResourcesEv	1		True		-
+src/_ZN15daObjC1Hikari_cD0Ev.c	DTOR-ONLY	ov010	daObjC1Hikari_c	daObjC1Hikari_c/daObjC1Hikari_c	_ZN15daObjC1Hikari_cD0Ev	1		True		-
 src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj	1		True		by-value-class-param
 src/_ZN9ModelAnimC1Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC1Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelAnimC2Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC2Ev	1		True	_ZTV9ModelAnim	-

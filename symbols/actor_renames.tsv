@@ -632,14 +632,15 @@ ov009	0x02113b7c	daMcFlag_c_SpawnInfo	g_profile_MC_FLAG	reconstructed profile gl
 ov009	0x02113ba0	data_ov009_02113ba0	_ZTV10daMcFlag_c	vtable alloc=? (was _ZTV8DockPole, then _ZTV4Flag)
 ov010	0x02111998	func_ov010_02111998	Trap_Spawn	spawnfunc
 ov010	0x02111998	Trap_Spawn	daObjC1_Trap_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov010	0x021119d0	func_ov010_021119d0	_ZN9LightBeamD1Ev	vtable slot 16 (was _ZN14daObjC1_Trap_cD1Ev)
-ov010	0x02111a08	func_ov010_02111a08	_ZN9LightBeamD0Ev	vtable slot 17 (was _ZN14daObjC1_Trap_cD0Ev)
-ov010	0x02111a94	func_ov010_02111a94	_ZN9LightBeam16CleanupResourcesEv	vtable slot 3 (was _ZN14daObjC1_Trap_c16CleanupResourcesEv)
-ov010	0x02111ab8	func_ov010_02111ab8	_ZN9LightBeam6RenderEv	vtable slot 9 (was _ZN14daObjC1_Trap_c6RenderEv)
-ov010	0x02111ae0	func_ov010_02111ae0	_ZN9LightBeam8BehaviorEv	vtable slot 6 (was _ZN14daObjC1_Trap_c8BehaviorEv)
-ov010	0x02111d20	func_ov010_02111d20	_ZN9LightBeam13InitResourcesEv	vtable slot 0 (was _ZN14daObjC1_Trap_c13InitResourcesEv)
-ov010	0x02111dd0	func_ov010_02111dd0	LightBeam_Spawn	spawnfunc
-ov010	0x02111dd0	LightBeam_Spawn	daObjC1Hikari_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov010	0x021119d0	func_ov010_021119d0	_ZN15daObjC1Hikari_cD1Ev	vtable slot 16 (was _ZN14daObjC1_Trap_cD1Ev)
+ov010	0x02111a08	func_ov010_02111a08	_ZN15daObjC1Hikari_cD0Ev	vtable slot 17 (was _ZN14daObjC1_Trap_cD0Ev)
+ov010	0x02111a54	func_ov010_02111a54	_ZN15daObjC1Hikari_c20UpdateModelTransformEv	inferred private helper on ROM-proven class; writes mModel.mat4x3 from mAngleY and mPos; original English spelling is not preserved
+ov010	0x02111a94	func_ov010_02111a94	_ZN15daObjC1Hikari_c16CleanupResourcesEv	vtable slot 3 (was _ZN14daObjC1_Trap_c16CleanupResourcesEv)
+ov010	0x02111ab8	func_ov010_02111ab8	_ZN15daObjC1Hikari_c6RenderEv	vtable slot 9 (was _ZN14daObjC1_Trap_c6RenderEv)
+ov010	0x02111ae0	func_ov010_02111ae0	_ZN15daObjC1Hikari_c8BehaviorEv	vtable slot 6 (was _ZN14daObjC1_Trap_c8BehaviorEv)
+ov010	0x02111d20	func_ov010_02111d20	_ZN15daObjC1Hikari_c13InitResourcesEv	vtable slot 0 (was _ZN14daObjC1_Trap_c13InitResourcesEv)
+ov010	0x02111dd0	func_ov010_02111dd0	daObjC1Hikari_c_Spawn	spawnfunc
+ov010	0x02111dd0	daObjC1Hikari_c_Spawn	daObjC1Hikari_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov010	0x02111e10	func_ov010_02111e10	_ZN13PeachPaintingD1Ev	vtable slot 16
 ov010	0x02111e40	func_ov010_02111e40	_ZN13PeachPaintingD0Ev	vtable slot 17
 ov010	0x02111ec4	func_ov010_02111ec4	_ZN13PeachPainting16CleanupResourcesEv	vtable slot 3
@@ -650,9 +651,9 @@ ov010	0x02112004	func_ov010_02112004	PeachPainting_Spawn	spawnfunc
 ov010	0x02112004	PeachPainting_Spawn	daObjC1Peach_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov010	0x02112ac0	data_ov010_02112ac0	Trap_SpawnInfo	spawninfo
 ov010	0x02112ac0	Trap_SpawnInfo	g_profile_C1_TRAP	reconstructed profile global; literal ROM ID C1_TRAP+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov010	0x02112b84	data_ov010_02112b84	LightBeam_SpawnInfo	spawninfo
-ov010	0x02112b84	LightBeam_SpawnInfo	g_profile_C1_HIKARI	reconstructed profile global; literal ROM ID C1_HIKARI+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov010	0x02112ba8	data_ov010_02112ba8	_ZTV9LightBeam	vtable alloc=? (was _ZTV14daObjC1_Trap_c)
+ov010	0x02112b84	data_ov010_02112b84	daObjC1Hikari_c_SpawnInfo	spawninfo
+ov010	0x02112b84	daObjC1Hikari_c_SpawnInfo	g_profile_C1_HIKARI	reconstructed profile global; literal ROM ID C1_HIKARI+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov010	0x02112ba8	data_ov010_02112ba8	_ZTV15daObjC1Hikari_c	vtable alloc=? (was _ZTV14daObjC1_Trap_c)
 ov010	0x02112c44	data_ov010_02112c44	PeachPainting_SpawnInfo	spawninfo
 ov010	0x02112c44	PeachPainting_SpawnInfo	g_profile_C1_PEACH	reconstructed profile global; literal ROM ID C1_PEACH+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov010	0x02112c68	data_ov010_02112c68	_ZTV13PeachPainting	vtable alloc=0x128

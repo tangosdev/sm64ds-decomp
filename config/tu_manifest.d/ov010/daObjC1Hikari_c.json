@@ -1,0 +1,209 @@
+{
+  "id": "ov010/daObjC1Hikari_c",
+  "module": "ov010",
+  "source": "src/game/actors/d_a_obj_c1_hikari.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_c1_hikari.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21119d0..0x2111e10, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjC1Hikari_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021119d0",
+      "end": "0x02111e10"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObjC1Hikari_cD1Ev",
+      "address": "0x021119d0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15daObjC1Hikari_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_cD0Ev",
+      "address": "0x02111a08",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN15daObjC1Hikari_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_c20UpdateModelTransformEv",
+      "address": "0x02111a54",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov010_02111a54.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_c16CleanupResourcesEv",
+      "address": "0x02111a94",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15daObjC1Hikari_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_c6RenderEv",
+      "address": "0x02111ab8",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN15daObjC1Hikari_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_c8BehaviorEv",
+      "address": "0x02111ae0",
+      "size": "0x00000240",
+      "legacy_source": "src/_ZN15daObjC1Hikari_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN15daObjC1Hikari_c13InitResourcesEv",
+      "address": "0x02111d20",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN15daObjC1Hikari_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjC1Hikari_c_classInit",
+      "address": "0x02111dd0",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_c1_hikari.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check proves the exact copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits fBase_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits dBase_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits dActor_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check proves the exact canonical arm9 record."
+    },
+    {
+      "symbol": "_ZTI15daObjC1Hikari_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112b64",
+      "reason": "InitResources naturally owns the class's single-inheritance typeinfo; romdata_check proves its ABI kind, name relocation, and dActor_c base relocation at the canonical ov010 home."
+    },
+    {
+      "symbol": "_ZTS15daObjC1Hikari_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112b70",
+      "reason": "The genuine class declaration naturally emits the exact ROM type-name string at its canonical ov010 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check proves the exact canonical arm9 record."
+    },
+    {
+      "symbol": "_ZTV15daObjC1Hikari_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112ba8",
+      "reason": "InitResources owns the complete 0x84-byte vtable storage. romdata_check applies the eight-byte public-address-point bias and proves the preamble plus every retail slot before isolation discards the copy. symbols.txt address 0x02112ba8 is unchanged."
+    }
+  ],
+  "notes": [
+    "UpdateModelTransform is an inferred class-anchored alias: the class identity, InitResources call, mModel.mat4x3 / mAngleY / mPos relocations, and codegen are proven; the original private English spelling is not. No extra parameter types are encoded in the mangled name.",
+    "The inline virtual destructor plus out-of-line InitResources key function emits retail's D1 then D0 pair with no D2 and no forcing or dummy output. HikariVec3 POD locals avoid introducing Vector3's unrelated vague-linkage destructor helper.",
+    "daObjC1Hikari_c_classInit (historical alias LightBeam_Spawn) retains C ABI linkage. The factory is `return new daObjC1Hikari_c()`; fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj. The emitting TU stores &_ZTV15daObjC1Hikari_c[2] inside that new.",
+    "The SharedFilePtr at data_ov010_02112d50, g_profile_C1_HIKARI, and the ov010 sinit/ctor/bss remain externally owned. This promotion claims only the 0x021119d0..0x02111e10 .text run."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov010-daObjC1Hikari_c/d_a_obj_c1_hikari.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI15daObjC1Hikari_c",
+        "_ZTS15daObjC1Hikari_c",
+        "_ZTI8dActor_c",
+        "_ZTV15daObjC1Hikari_c"
+      ],
+      "dataExternalized": [
+        "_ZTI15daObjC1Hikari_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS15daObjC1Hikari_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjC1Hikari_c"
+      ]
+    }
+  }
+}

@@ -29953,31 +29953,31 @@ matched: yes</title></rect><rect x="1161.74" y="82.91" width="3.02" height="4.29
 module: ov010
 addr: 0x02111998
 size: 56 bytes
-matched: yes</title></rect><rect x="1161.74" y="87.20" width="3.02" height="4.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeamD1Ev
+matched: yes</title></rect><rect x="1161.74" y="87.20" width="3.02" height="4.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_cD1Ev
 module: ov010
 addr: 0x021119d0
 size: 56 bytes
-matched: yes</title></rect><rect x="1161.74" y="91.49" width="3.02" height="5.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeamD0Ev
+matched: yes</title></rect><rect x="1161.74" y="91.49" width="3.02" height="5.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_cD0Ev
 module: ov010
 addr: 0x02111a08
 size: 76 bytes
-matched: yes</title></rect><rect x="1161.74" y="97.31" width="3.02" height="4.90" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov010_02111a54
+matched: yes</title></rect><rect x="1161.74" y="97.31" width="3.02" height="4.90" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_c20UpdateModelTransformEv
 module: ov010
 addr: 0x02111a54
 size: 64 bytes
-matched: yes</title></rect><rect x="1164.76" y="81.37" width="1.10" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeam16CleanupResourcesEv
+matched: yes</title></rect><rect x="1164.76" y="81.37" width="1.10" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_c16CleanupResourcesEv
 module: ov010
 addr: 0x02111a94
 size: 36 bytes
-matched: yes</title></rect><rect x="1165.86" y="81.37" width="1.22" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeam6RenderEv
+matched: yes</title></rect><rect x="1165.86" y="81.37" width="1.22" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_c6RenderEv
 module: ov010
 addr: 0x02111ab8
 size: 40 bytes
-matched: yes</title></rect><rect x="1167.09" y="81.37" width="17.63" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeam8BehaviorEv
+matched: yes</title></rect><rect x="1167.09" y="81.37" width="17.63" height="7.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_c8BehaviorEv
 module: ov010
 addr: 0x02111ae0
 size: 576 bytes
-matched: yes</title></rect><rect x="1164.76" y="88.92" width="5.01" height="8.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9LightBeam13InitResourcesEv
+matched: yes</title></rect><rect x="1164.76" y="88.92" width="5.01" height="8.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjC1Hikari_c13InitResourcesEv
 module: ov010
 addr: 0x02111d20
 size: 176 bytes
@@ -36137,11 +36137,11 @@ matched: yes</title></rect><rect x="1551.73" y="353.04" width="6.91" height="4.4
 module: ov063
 addr: 0x0211d47c
 size: 60 bytes
-matched: yes</title></rect><rect x="1558.63" y="353.04" width="17.03" height="4.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPianoD1Ev
+matched: yes</title></rect><rect x="1558.63" y="353.04" width="17.03" height="4.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_cD1Ev
 module: ov063
 addr: 0x0211d4b8
 size: 148 bytes
-matched: yes</title></rect><rect x="1575.67" y="353.04" width="19.33" height="4.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPianoD0Ev
+matched: yes</title></rect><rect x="1575.67" y="353.04" width="19.33" height="4.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_cD0Ev
 module: ov063
 addr: 0x0211d54c
 size: 168 bytes
@@ -36185,19 +36185,19 @@ matched: yes</title></rect><rect x="1577.06" y="366.94" width="8.50" height="4.3
 module: ov063
 addr: 0x0211ddf4
 size: 72 bytes
-matched: yes</title></rect><rect x="1585.56" y="366.94" width="9.44" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPiano16CleanupResourcesEv
+matched: yes</title></rect><rect x="1585.56" y="366.94" width="9.44" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_c16CleanupResourcesEv
 module: ov063
 addr: 0x0211de3c
 size: 80 bytes
-matched: yes</title></rect><rect x="1562.42" y="371.28" width="4.84" height="4.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPiano6RenderEv
+matched: yes</title></rect><rect x="1562.42" y="371.28" width="4.84" height="4.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_c6RenderEv
 module: ov063
 addr: 0x0211de8c
 size: 44 bytes
-matched: yes</title></rect><rect x="1562.42" y="375.94" width="4.84" height="25.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPiano8BehaviorEv
+matched: yes</title></rect><rect x="1562.42" y="375.94" width="4.84" height="25.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_c8BehaviorEv
 module: ov063
 addr: 0x0211deb8
 size: 244 bytes
-matched: yes</title></rect><rect x="1567.26" y="371.28" width="19.82" height="9.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MadPiano13InitResourcesEv
+matched: yes</title></rect><rect x="1567.26" y="371.28" width="19.82" height="9.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPiano_c13InitResourcesEv
 module: ov063
 addr: 0x0211dfac
 size: 380 bytes
