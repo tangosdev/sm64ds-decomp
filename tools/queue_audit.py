@@ -82,6 +82,11 @@ PRAGMA_RE = re.compile(r"^\s*#pragma\s+\w+")
 BASE_RE = re.compile(
     r"^\s*(?:class|struct)\s+([A-Za-z_]\w*)\s*:\s*"
     r"(?:public\s+|private\s+|protected\s+|virtual\s+)*([A-Za-z_][\w:]*)\s*(?:,|\{|$)")
+# A class a header DEFINES. The brace is required, so `struct C;` -- which
+# declares nothing a TU can be compiled against -- does not count. Matching the
+# looser form would retire a real blocker, which is the expensive direction.
+DEFN_RE = re.compile(r"^\s*(?:class|struct)\s+([A-Za-z_]\w*)\s*(?::[^;{]*)?\{")
+NO_HEADER_RE = re.compile(r"classif:no-header:([A-Za-z_]\w*)$")
 
 
 def split_blockers(s):
@@ -136,11 +141,15 @@ class Graph:
         self.rtti_names = {v["name"] for v in rt["records"].values()}
 
         self.hdr_parent = collections.defaultdict(set)
+        self.hdr_defines = set()
         for f in glob.glob(str(REPO / "include" / "**" / "*.h"), recursive=True):
             for line in open(f, encoding="utf-8", errors="replace"):
                 m = BASE_RE.match(line)
                 if m and m.group(1) != m.group(2).split("::")[-1]:
                     self.hdr_parent[m.group(1)].add(m.group(2).split("::")[-1])
+                d = DEFN_RE.match(line)
+                if d:
+                    self.hdr_defines.add(d.group(1))
 
     def ancestors(self, cls, seen=frozenset()):
         """({cls} | ancestors, provenance) -- 'rtti', 'header' or 'unknown'."""
@@ -422,6 +431,19 @@ def run(write, check):
                 if cell != b:
                     changed["compiler-only"] += 1
                 out.append(cell)
+                continue
+            # Everything the loop below does not recognise falls through its
+            # `else` and is copied verbatim, so a `classif:` token written once
+            # can never be retired -- which is how `classif:no-header:<C>`
+            # survives on rows whose own has_header column reads yes. Retire it
+            # when a tracked header defines the class. The probe is keyed on the
+            # DEFINITION and not on a `<Class>.h` filename, because five of the
+            # nine it currently clears are defined in a header named after a
+            # different class: dScMgCard_c.h, dScMgMCarlo_c.h, dScMgMCarlo2_c.h
+            # and CapIcon.h.
+            d = NO_HEADER_RE.match(b)
+            if d and d.group(1) in graph.hdr_defines:
+                changed["classif:no-header"] += 1
                 continue
             for key, field in (("no-legacy-source", "no_legacy_source"),
                                ("unmatched", "unmatched")):
