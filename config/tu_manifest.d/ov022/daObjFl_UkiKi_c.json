@@ -1,0 +1,313 @@
+{
+  "id": "ov022/daObjFl_UkiKi_c",
+  "module": "ov022",
+  "source": "src/actors/daObjFl_UkiKi_c.cpp",
+  "promoted_source": "src/actors/daObjFl_UkiKi_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2112130..0x2112380, 7 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
+    "MEASURED: the run's edges are labelled on both sides with zero gap, so nothing unlabelled sits inside or beside it. ov022's preceding function is daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA at 0x021120f4 size 0x3c, ending exactly at 0x02112130, and it belongs to a different class; the following function is _ZN20daObjFl_Fall_Block_cD1Ev at 0x02112380. Every one of the seven addresses in between carries a daObjFl_UkiKi_c name in config/arm9/overlays/ov022/symbols.txt.",
+    "MEASURED: daObjFl_UkiKi_c_classInit at 0x02112350 is this class's factory, not a neighbour's. Disassembled from extracted/overlays/overlay_0022.bin at load base 0x021111a0: it moves 0x328 into r0 -- sizeof(daObjFl_UkiKi_c) -- calls _ZN7fBase_cnwEj (arm9 0x02043444), calls _ZN10dBgActor_cC2Ev (ov002 0x020eea50) when the allocation succeeds, and stores the literal at 0x0211237c, 0x021141f0, which is the _ZTV15daObjFl_UkiKi_c address point. That is what `new daObjFl_UkiKi_c()` compiles to.",
+    "class label(s): daObjFl_UkiKi_c -- the cartridge's own RTTI spelling. _ZTS at ov022 0x021141b8 reads '15daObjFl_UkiKi_c'; _ZTI at 0x021141ac points at that string and at _ZTI10dBgActor_c, so the ROM states the direct base too.",
+    "MEASURED: the destructor is this class's key function, so the source defining _ZN15daObjFl_UkiKi_cD1Ev/_ZN15daObjFl_UkiKi_cD0Ev also emits _ZTV15daObjFl_UkiKi_c, _ZTI15daObjFl_UkiKi_c and _ZTS15daObjFl_UkiKi_c as vague linkage, plus the four inherited bases' records. All eleven have configured ROM homes -- verified row by row against config/arm9/symbols.txt and the ov002/ov022 overlay tables -- so each licenses as deadstrip-data and objisolate reduces the seven-function object cleanly.",
+    "MEASURED: the empty inline destructor in the class header is what emits D1 ahead of D0, the cartridge's own order, and emits no D2 at all. Written out of line mwccarm emits the synthesized D0 first, which objisolate refuses, and adds a homeless D2.",
+    "HISTORY: an earlier entry licensed only the upper 4-function sub-range 0x21121cc..0x2112350 and left the D1/D0 pair below it as one-function sources. That was not a boundary finding: the 6-function merge already compiled 6/6 MATCH then. The class was carrying a coined English name at the time, so _ZTI/_ZTS had no configured home under that spelling and the object could not be isolated. Renaming the class to its ROM RTTI name removed the blocker and this entry licenses the full run. The factory was never part of that earlier entry at all: it sat in the legacy C file src/d_a_obj_fl_uki_ki.c, which this promotion absorbs, so that PR would have needed a second one to register it.",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02112130",
+      "end": "0x02112380"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_cD1Ev",
+      "address": "0x02112130",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_cD0Ev",
+      "address": "0x02112174",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_c16CleanupResourcesEv",
+      "address": "0x021121cc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_c6RenderEv",
+      "address": "0x02112210",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_c8BehaviorEv",
+      "address": "0x02112238",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN15daObjFl_UkiKi_c13InitResourcesEv",
+      "address": "0x021122ac",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN15daObjFl_UkiKi_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "daObjFl_UkiKi_c_classInit",
+      "address": "0x02112350",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_fl_uki_ki.c",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from the 7 legacy sources -- the 6 one-function C++ members and the C factory src/d_a_obj_fl_uki_ki.c; see the file's own header comment for the reconciliation.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN15daObjFl_UkiKi_c8BehaviorEv and the one that held _ZN15daObjFl_UkiKi_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH local declarations rather than keeping either: the Behavior source spelled it void(void*) and the InitResources source int(void*), and neither is needed -- dBgActor_c.h already declares it as a real member and the merged TU calls it that way, which is the spelling src/game/actors/d_a_obj_km1_ukishima.cpp proves. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN15daObjFl_UkiKi_c8BehaviorEv and the one that held _ZN15daObjFl_UkiKi_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH local declarations rather than keeping either: the Behavior source spelled it void(void*) and the InitResources source int(void*), and neither is needed -- dBgActor_c.h already declares it as a real member and the merged TU calls it that way, which is the spelling src/game/actors/d_a_obj_km1_ukishima.cpp proves. No TUBUILD CONFLICT marker survives in the merged source.",
+    "The two SharedFilePtr handles are declared here under their named ov022 rows, FloatingFloorLllBig_ModelFile (0x02114620) and FloatingFloorLllBig_ClsnFile (0x02114618), rather than their data_ov022_* address aliases. include/decl_common.h declares the aliases as `char[]`, which blocks the SharedFilePtr member calls this TU needs; the named rows are declared nowhere else once this promotion deletes the two legacy sources that used them, so the TU is their only declarer and contradicts nothing.",
+    "STYLE ORACLES: src/game/actors/daObjFl_Fall_Block_c.cpp (same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing) and src/game/actors/d_a_obj_km1_ukishima.cpp (same class shape member for member)."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-emitted base-object destructor helper for the direct base. `new daObjFl_UkiKi_c()` in the factory instantiates the class, so mwccarm emits dBgActor_c's D2 as vague linkage alongside this class's own D1/D0. It has no configured ROM symbol -- all_symbol_homes() resolves _ZN10dBgActor_cD1Ev and _ZN10dBgActor_cD0Ev in ov002 but nothing for D2 -- and no inbound relocation survives once the licensed leaf D1/D0 pair is retained, so it takes a plain deadstrip. Same row, same reason, as config/tu_manifest.d/ov022/daObjFl_Fall_Block_c.json, whose factory has the identical shape."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI15daObjFl_UkiKi_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x021141ac",
+      "reason": "the class's own __si_class_type_info record -- ABI kind word, name relocation and single-base relocation, all three read out of the cartridge and reproduced here. MEASURED: the cartridge carries this record under this exact name at ov022:0x021141ac -- daObjFl_UkiKi_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS15daObjFl_UkiKi_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x021141b8",
+      "reason": "the class's own length-prefixed type-name string. MEASURED: the cartridge carries this record under this exact name at ov022:0x021141b8 -- daObjFl_UkiKi_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    },
+    {
+      "symbol": "_ZTV15daObjFl_UkiKi_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x021141f0",
+      "reason": "the class's own vtable storage. The destructor is this class's key function and is defined inline in the class header, so mwcc emits the table as vague linkage. MEASURED: the cartridge carries this record under this exact name at ov022:0x021141f0 -- daObjFl_UkiKi_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov022-daObjFl_UkiKi_c/daObjFl_UkiKi_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        35,
+        36
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI15daObjFl_UkiKi_c",
+        "_ZTS15daObjFl_UkiKi_c",
+        "_ZTV15daObjFl_UkiKi_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI15daObjFl_UkiKi_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS15daObjFl_UkiKi_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjFl_UkiKi_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov022-daObjFl_UkiKi_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02112130",
+        "end": "0x02112380",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02112130",
+          "end": "0x02112380",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 7
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
