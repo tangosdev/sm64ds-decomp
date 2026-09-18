@@ -1,7 +1,7 @@
 {
  "meta": {
   "snapshot_reference": "https://github.com/tangosdev/sm64ds-decomp/blob/c67ec9fe1195e8594bae076451a2bbde670fa98e/notes/data/tu-merge-candidates.json",
-  "snapshot_note": "Historical census restored without renaming its seven PoleLift source identities; this is not a current inventory or a new measurement.",
+  "snapshot_note": "The PoleLift row preserves the seven historical source identities at snapshot_reference. Other rows retain separately maintained main-branch entries; this is not a fresh whole-tree inventory or a new measurement.",
   "current_name_mappings": {
    "PoleLift": {
     "class": "daObjKm2_Ami_Bou_c",

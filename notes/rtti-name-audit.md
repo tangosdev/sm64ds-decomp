@@ -1,6 +1,6 @@
 # The cartridge disagrees with 259 of our class names, and that gates promotion
 
-Historical snapshot: the measurements, names and transcripts below are preserved
+PoleLift historical evidence: its measurements, names and transcripts are preserved
 from the [pre-promotion report](https://github.com/tangosdev/sm64ds-decomp/blob/c67ec9fe1195e8594bae076451a2bbde670fa98e/notes/rtti-name-audit.md).
 That commit identifies the archived text, not a newly established measurement commit.
 `PoleLift` is now `daObjKm2_Ami_Bou_c`; the current text owner is
