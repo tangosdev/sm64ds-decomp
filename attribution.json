@@ -3619,6 +3619,10 @@
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c16OnPendingDestroyEv": "andrewboudreau",
     "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c6RenderEv": "tangosdev",
-    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev"
+    "src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp#_ZN11daTrsTrap_c8BehaviorEv": "tangosdev",
+    "src/actors/LavaPlank.cpp#_ZN9LavaPlank16CleanupResourcesEv": "tangosdev",
+    "src/actors/LavaPlank.cpp#_ZN9LavaPlank6RenderEv": "tangosdev",
+    "src/actors/LavaPlank.cpp#_ZN9LavaPlank8BehaviorEv": "tangosdev",
+    "src/actors/LavaPlank.cpp#_ZN9LavaPlank13InitResourcesEv": "tangosdev"
   }
 }
