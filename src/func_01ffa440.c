@@ -41,10 +41,16 @@
 // function that cannot be carved into its own delink object -- the compiler
 // measurements behind that entry are written out there, next to the 0x0206d9dc cluster
 // it shares its shape with. What rule 5 guards against does not apply to the branches
-// themselves: `tools/linkcheck.py --name func_01ffa440` resolves both by address and
-// reports VERIFIED with 0 blind words, so every byte of both targets is checked against
-// the ROM. They are simply unnamed, which is why this file records the routine rather
-// than building it.
+// themselves: linkcheck resolves both by address and reports VERIFIED with 0 blind
+// words, so every byte of both targets is checked against the ROM:
+//
+//     tools/linkcheck.py --name func_01ffa440 --addr 0x01ffa440 --size 0x7c
+//         --module itcm --c src/func_01ffa440.c
+//
+// addr/size/module are spelt out because the bare `--name` form reads them from
+// progress/matched.jsonl, which is gitignored -- on a fresh clone that form fails with
+// FileNotFoundError before it checks anything. They are simply unnamed, which is why
+// this file records the routine rather than building it.
 //
 // The argument registers are pushed across the call as they are in every other routine in
 // this block, which is the tell that these are one hand-written assembly file.
