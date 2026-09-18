@@ -16,11 +16,11 @@
  * reproduce D0 out of line. `delete p` asks for the deleting half by name
  * and brings it back.
  *
- * UNLIKE ITS SEVEN SIBLINGS IN THIS SERIES, daObjSwdoor_c has no other
- * out-of-line virtual and so no key function elsewhere either -- see
- * src/_ZN13daObjSwdoor_cD1Ev.cpp. This TU is expected to define
- * _ZTV13daObjSwdoor_c and _ZTI13daObjSwdoor_c too, alongside D1, as
- * vague-linkage data; objisolate reduces the object to the declared D0
+ * THIS TU NO LONGER DEFINES _ZTV13daObjSwdoor_c OR _ZTI13daObjSwdoor_c. It
+ * did while the class had no out-of-line virtual anywhere -- see
+ * src/_ZN13daObjSwdoor_cD1Ev.cpp. Render (slot 9) is now defined in
+ * src/actors/daObjSwdoor_c.cpp, which is therefore the key-function TU and
+ * carries that data; objisolate reduces this object to the declared D0
  * function before eligible.py and rombuild.py judge it.
  *
  * D0 is the deleting half: destroy through daObjSwdoor_c and dBgActor_c,
