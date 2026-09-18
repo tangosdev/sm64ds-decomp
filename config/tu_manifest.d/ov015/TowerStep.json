@@ -1,0 +1,257 @@
+{
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2112290..0x21128e8, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): TowerStep",
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "canonical_address": "0x020072c0",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-duplicate",
+      "reason": "InitResources holds a Vector3 local (probePos), and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9:0x020072c0; this copy is a duplicate and is discarded by text-only isolation.",
+      "symbol": "_ZN7Vector3D1Ev"
+    },
+    {
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper. The cartridge's run 0x02112290..0x021128e8 holds only D1 and D0, symbols.txt configures no D2 at any address, and nothing in this object relocates to it once the licensed leaf D1/D0 pair is retained. It exists only because include/TowerStep.h still declares the destructor out of line; the inline `~TowerStep() {}` form drops it (see this entry's notes).",
+      "symbol": "_ZN9TowerStepD2Ev"
+    },
+    {
+      "canonical_address": "0x02086d70",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTI7fBase_c"
+    },
+    {
+      "canonical_address": "0x02086e60",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTS7fBase_c"
+    },
+    {
+      "canonical_address": "0x02086e78",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTI7dBase_c"
+    },
+    {
+      "canonical_address": "0x02086e54",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTS7dBase_c"
+    },
+    {
+      "canonical_address": "0x0208e390",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTI8dActor_c"
+    },
+    {
+      "canonical_address": "0x0208e384",
+      "canonical_module": "arm9",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTS8dActor_c"
+    },
+    {
+      "canonical_address": "0x021089ec",
+      "canonical_module": "ov002",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTI10dBgActor_c"
+    },
+    {
+      "canonical_address": "0x02108a04",
+      "canonical_module": "ov002",
+      "disposition": "deadstrip-data",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them.",
+      "symbol": "_ZTS10dBgActor_c"
+    },
+    {
+      "canonical_address": "0x0211460c",
+      "canonical_module": "ov015",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names its RTTI. MEASURED in extracted/overlays/overlay_0015.bin (load base 0x021111a0): the three words at 0x0211460c are 0x0209a764 (__si_class_type_info vtable), 0x02114618 (&_ZTS) and 0x021089ec (&_ZTI10dBgActor_c), so the record names dBgActor_c as the DIRECT base, exactly as include/TowerStep.h declares. The cartridge's copy is outside the .text run this entry claims, so dsd delinks it whatever this object does.",
+      "symbol": "_ZTI9TowerStep"
+    },
+    {
+      "canonical_address": "0x02114618",
+      "canonical_module": "ov015",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own type-name string. MEASURED in extracted/overlays/overlay_0015.bin: the bytes at 0x02114618 spell \"14daObjBk_Lift_c\", NOT \"9TowerStep\" -- TowerStep is a coined name and the cartridge names this class daObjBk_Lift_c.",
+      "symbol": "_ZTS9TowerStep"
+    },
+    {
+      "canonical_address": "0x02114650",
+      "canonical_module": "ov015",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own vtable, vague-linkage and emitted here because this TU defines every virtual the class declares. MEASURED in extracted/overlays/overlay_0015.bin: 0x02114650 IS the address point -- 0x02114648 is the offset-to-top word 0 and 0x0211464c is 0x0211460c (&_ZTI). Slot 0 at 0x02114650 is 0x0211269c (InitResources), slot 3 at 0x0211465c is 0x02112464 (CleanupResources), slot 6 at 0x02114668 is 0x021124d0 (Behavior), slot 9 at 0x02114674 is 0x021124a8 (Render), slots 16/17 at 0x02114690/0x02114694 are 0x02112290/0x021122dc (D1 then D0), slot 27 at 0x021146bc is 0x021123a0 (OnHitByMegaChar) and slot 31 at 0x021146cc is 0x0211233c (Kill), matching the header. Every other slot holds dBgActor_c's own word and is inherited. The table is 32 slots and ends at 0x021146d0, outside the .text run this entry claims.",
+      "symbol": "_ZTV9TowerStep"
+    }
+  ],
+  "data": [],
+  "functions": [
+    {
+      "address": "0x02112290",
+      "legacy_source": "src/_ZN9TowerStepD1Ev.cpp",
+      "ordinal": 0,
+      "size": "0x0000004c",
+      "symbol": "_ZN9TowerStepD1Ev"
+    },
+    {
+      "address": "0x021122dc",
+      "legacy_source": "src/_ZN9TowerStepD0Ev.cpp",
+      "ordinal": 1,
+      "size": "0x00000060",
+      "symbol": "_ZN9TowerStepD0Ev"
+    },
+    {
+      "address": "0x0211233c",
+      "legacy_source": "src/_ZN9TowerStep4KillEv.cpp",
+      "ordinal": 2,
+      "size": "0x00000064",
+      "symbol": "_ZN9TowerStep4KillEv"
+    },
+    {
+      "address": "0x021123a0",
+      "legacy_source": "src/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 3,
+      "size": "0x00000028",
+      "symbol": "_ZN9TowerStep15OnHitByMegaCharER6Player"
+    },
+    {
+      "address": "0x021123c8",
+      "legacy_source": "src/func_ov015_021123c8.cpp",
+      "ordinal": 4,
+      "size": "0x0000009c",
+      "symbol": "func_ov015_021123c8"
+    },
+    {
+      "address": "0x02112464",
+      "legacy_source": "src/_ZN9TowerStep16CleanupResourcesEv.cpp",
+      "ordinal": 5,
+      "size": "0x00000044",
+      "symbol": "_ZN9TowerStep16CleanupResourcesEv"
+    },
+    {
+      "address": "0x021124a8",
+      "legacy_source": "src/_ZN9TowerStep6RenderEv.cpp",
+      "ordinal": 6,
+      "size": "0x00000028",
+      "symbol": "_ZN9TowerStep6RenderEv"
+    },
+    {
+      "address": "0x021124d0",
+      "legacy_source": "src/_ZN9TowerStep8BehaviorEv.cpp",
+      "ordinal": 7,
+      "size": "0x000001cc",
+      "symbol": "_ZN9TowerStep8BehaviorEv"
+    },
+    {
+      "address": "0x0211269c",
+      "legacy_source": "src/_ZN9TowerStep13InitResourcesEv.cpp",
+      "ordinal": 8,
+      "size": "0x0000024c",
+      "symbol": "_ZN9TowerStep13InitResourcesEv"
+    }
+  ],
+  "id": "ov015/TowerStep",
+  "module": "ov015",
+  "notes": [
+    "Generated by tools/tubuild.py create, then reconciled by hand. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what the generator does and does not resolve automatically.",
+    "tubuild create warning (RESOLVED): RAW -- src/func_ov015_021123c8.cpp did not split, because its definition sat inside the extern \"C\" block the file opens on line 5. RECONCILED: the production TU defines it once as `extern \"C\" void func_ov015_021123c8(TowerStep *step)` at its ROM ordinal, the same shape src/game/actors/d_a_obj_bk_billboard.cpp uses for func_ov015_02111214.",
+    "tubuild create warning (RESOLVED): CONFLICT -- extern declaration 'func_ov015_021123c8' differed between the legacy Behavior file (void *) and the legacy InitResources file (TowerStep *). RECONCILED to the more complete observation, TowerStep *; Behavior now passes `this` where it passed its own char * alias.",
+    "RECONCILED: the legacy CleanupResources reached this overlay's two SharedFilePtr handles as `extern int MovingBarSmall_ClsnFile[]` / `MovingBarSmall_ModelFile[]` while the legacy InitResources reached the same two addresses as `SharedFilePtr data_ov015_02114a5c` / `data_ov015_02114a64`. symbols.txt carries both spellings on both addresses; MovingBarSmall is this class's retired coined name. The TU keeps one spelling, the address-true one, as src/game/actors/d_a_obj_bk_rotebar.cpp does.",
+    "RECONCILED: the legacy Render reached Model::Render through a local `struct Base`/`struct Derived` shadow pair placed at 0xd4. The TU calls mModel.Render(0) through the real include/Model.h declaration -- Render is slot 5 there, which is the slot the shadow's sixth virtual reached. Byte-identical. Same for CleanupResources, which reached dBgW::IsEnabled/Disable through a cast chain and now calls them on mMeshCollider.",
+    "MEASURED lever: common.h MUST be included ahead of TowerStep.h. TowerStep.h reaches math/Matrix.h through dBgW_KcMbg.h, Matrix4x3 has two guarded spellings over the same 0x30 bytes, and whichever a TU sees first stands. With math/Matrix.h's structured spelling the flat Matrix4x3 copy in func_ov015_021123c8 compiles to 0xb4 against the ROM's 0x9c; with common.h's flat spelling it is 0x9c and MATCHes. The other eight members are unaffected either way.",
+    "MEASURED, NOT APPLIED: include/TowerStep.h still declares the destructor out of line, so this object carries a compiler-emitted _ZN9TowerStepD2Ev the cartridge does not have (banked deadstrip) and the D1/D0 pair comes out in the compiler's own order rather than source order. Declaring it inline as `virtual ~TowerStep() {}` ahead of the other virtuals -- the form include/daObjBk_Rotebar_c.h and include/daObjBk_Dossunbar_c.h use -- was measured here and gives the same 9/9 MATCH with NO D2 and a clean ROM-ascending emission order. It is not applied because the nine legacy shards are still enrolled `complete`, and src/_ZN9TowerStepD1Ev.cpp / src/_ZN9TowerStepD0Ev.cpp define the destructor out of line: an inline body in the class makes both a redefinition and reds the ROM build. Make that header change in the same change that deletes the shards.",
+    "PROMOTION IS BLOCKED ON THE CLASS NAME, not on the source. This TU is text-verified (9/9 MATCH, objisolate clean, reloc-destinations clean) but tools/tubuild.py verify and linkcheck both refuse it at the licensing audit: `_ZTI9TowerStep` and `_ZTS9TowerStep` are declared compiler-only data with no configured ROM home. They have none because TowerStep is a COINED name. The cartridge names this class outright -- _ZTS at ov015:0x02114618 spells \"14daObjBk_Lift_c\", the _ZTI record at 0x0211460c points at it and at &_ZTI10dBgActor_c, and config/arm9/overlays/ov015/symbols.txt already carries _ZTI14daObjBk_Lift_c and _ZTS14daObjBk_Lift_c on exactly those two addresses. apply_compiler_only_policy in tools/tubuild.py states the remedy in its own docstring: rename the class to the cartridge's RTTI spelling so the rows resolve as deadstrip-data and are compared. Renaming TowerStep to daObjBk_Lift_c is therefore a PREREQUISITE of this promotion, not a follow-up.",
+    "REFUTED here: moving the destructor declaration to the end of the class does not suppress the vtable/RTTI group. This TU defines every virtual the class declares, so it is the key-function TU under any declaration order; the emitted set is the same 11 data symbols either way.",
+    "SCOPE: this entry claims 0x02112290..0x021128e8 only. The two small helpers at 0x021128e8 / 0x021128f8 and the registry factory at 0x0211290c (src/d_a_obj_bk_lift.c, the BK_LIFT01 classInit) stay separate delinks entries. The sibling precedents fold the factory in -- daObjBk_Rotebar_c did on 2026-09-04 and daObjBk_Dossunbar_c folded two -- so a later pass should re-derive the right boundary over 0x02112290..0x02112944 rather than treat this cut as settled."
+  ],
+  "production_mode": "text-only",
+  "promoted_source": "src/actors/TowerStep.cpp",
+  "sections": [
+    {
+      "end": "0x021128e8",
+      "name": ".text",
+      "start": "0x02112290"
+    }
+  ],
+  "source": "src_tu/actors/TowerStep.cpp",
+  "status": "text-verified",
+  "verification": {
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9TowerStepD2Ev"
+      ],
+      "unhandled": [],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI9TowerStep",
+        "_ZTS9TowerStep",
+        "_ZTV9TowerStep"
+      ]
+    },
+    "criteria": {
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "every_declared_function_bytes_match": "PASS",
+      "every_declared_function_defined": "PASS",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    },
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_declared": 9,
+    "functions_matched": 9,
+    "linkcheck": {
+      "linkedStorageAliases": null,
+      "linkerOutput": null,
+      "moduleSetSha256": null,
+      "nontextSectionOrder": {
+        "errors": null,
+        "groups": [],
+        "objisolate": null
+      },
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "phases": {
+        "compile": true,
+        "delink": true,
+        "lcf": true
+      },
+      "result": "policy-refused",
+      "rom": null,
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "scratch": "build/tu/ov015-TowerStep/link (gitignored)",
+      "symbolCheckBaselineErrors": null,
+      "symbolCheckErrors": null,
+      "symbolCheckNewVsBaseline": null,
+      "tuRange": null,
+      "tuRanges": null
+    },
+    "object": "build/tu/ov015-TowerStep/TowerStep.o (gitignored)",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe"
+  }
+}
