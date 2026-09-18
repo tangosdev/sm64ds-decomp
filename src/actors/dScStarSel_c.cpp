@@ -143,8 +143,12 @@ extern u8 data_020a0de8[][4];
 extern u8 data_020a0de9[][4];
 extern u16 data_020a0e58[];
 extern u8 data_0209caa0[0x50];
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8SaveData19IsCharacterUnlockedEj, from the legacy file for func_ov003_020ae358, NOT applied: extern int _ZN8SaveData19IsCharacterUnlockedEj(unsigned int i); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8SaveData19IsCharacterUnlockedEj, from the legacy file for _ZN12dScStarSel_c6RenderEv, NOT applied: u32 _ZN8SaveData19IsCharacterUnlockedEj(u32); */
+/* SaveData::IsCharacterUnlocked was declared three ways across the legacy
+ * shards -- `int (unsigned int)`, the same with the parameter named, and
+ * `u32 (u32)`. u32 IS unsigned int here, so the parameter type never
+ * actually differed; only the return spelling did, and every call site in
+ * this file consumes it as `!= 0`. The declaration above is the one they
+ * all already held. */
 }
 
 /* -------------------------------------------------------------------------- */
