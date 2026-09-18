@@ -3628,6 +3628,8 @@
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "tangosdev",
     "src/game/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "tangosdev",
+    "src/actors/dThIcon_c.cpp#_ZN9dThIcon_c6RenderEv": "tangosdev",
+    "src/actors/dThIcon_c.cpp#_ZN9dThIcon_c8BehaviorEv": "tangosdev"
   }
 }
