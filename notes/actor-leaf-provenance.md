@@ -159,15 +159,15 @@ that launder is measured and per-site, and the existing note in
 | 0x3c0 | `mState` | `src/_ZN11PowerFlower6RenderEv.cpp` switches on it: 0 draws `mModel1`, 1 and 2 draw `mModel2`. |
 | 0x3ca | `mLifeTimer` | seeded 0xb4 (180 frames) in `InitResources`; `Render` skips drawing on odd values once it is below 0x2d, so the flower blinks through its last 45 frames. |
 
-## Number -- include/Number.h
+## daObjNumber_c -- include/daObjNumber_c.h
 
 The floating score popup, actor 0x14a -- `dActor_c::SpawnNumber` is what puts
 one up, and its parameter list is half the evidence here.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x138 | `mOwnerUniqueID` | `src/_ZN6Number8BehaviorEv.cpp` resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
-| 0x13c | `mStartPosX` | copied from `mPosX` in `src/_ZN6Number13InitResourcesEv.cpp`, alongside the already-named `mStartPosY` at 0x140. |
+| 0x138 | `mOwnerUniqueID` | `src/game/actors/d_a_obj_number.cpp` Behavior resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
+| 0x13c | `mStartPosX` | copied from `mPosX` in `src/game/actors/d_a_obj_number.cpp` InitResources, alongside the already-named `mStartPosY` at 0x140. |
 | 0x144 | `mStartPosZ` | same, `mPosZ`. |
 | 0x148 | `mFollowOffsetY` | added to `mPosY - mStartPosY` -- how far the popup has risen -- when the position is taken from the owner. |
 | 0x14c | `mDelay` | the `delay` argument of `SpawnNumber`: while nonzero `Behavior` returns immediately and `Render` decrements it and draws nothing. |

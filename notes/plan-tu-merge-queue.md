@@ -197,7 +197,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b09b0|  n=9|   `daChScene_c`|                   CONF1|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b46a0|  n=8|   `MegaMushroomCreateTag`|  CONF1 pcov=5|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20bc5e0|  n=8|   `HealingHeart`|          CONF1 pcov=4|
-|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f0894|  n=8|   `Number`|                 CONF1|
+|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f0894|  n=8|   `daObjNumber_c`|                 CONF1|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f11b0|  n=9|   `daObjBC_Switch_c`|         CONF2|
 |[ov006](../config/arm9/overlays/ov006/symbols.txt)| 0x212471c|  n=2|   `MgTrampolineTerror`|     CONF1|
 

@@ -7021,19 +7021,12 @@
    "start": "0x20f0894",
    "end": "0x20f0dd0",
    "classes": [
-    "Number"
+    "daObjNumber_c"
    ],
    "n_functions_map": 8,
-   "n_files": 8,
+   "n_files": 1,
    "files": [
-    "src/_ZN6NumberD1Ev.cpp",
-    "src/_ZN6NumberD0Ev.c",
-    "src/func_ov002_020f0918.c",
-    "src/_ZN6Number16CleanupResourcesEv.cpp",
-    "src/_ZN6Number6RenderEv.cpp",
-    "src/_ZN6Number8BehaviorEv.cpp",
-    "src/_ZN6Number13InitResourcesEv.cpp",
-    "src/d_a_obj_number.c"
+    "src/game/actors/d_a_obj_number.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
