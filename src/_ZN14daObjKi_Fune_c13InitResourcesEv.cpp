@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN6ShipUp13InitResourcesEv
+// @symbol _ZN14daObjKi_Fune_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ShipUp.h"
+#include "daObjKi_Fune_c.h"
 #include "dBgW.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -17,7 +17,7 @@ extern int IsStarCollected(int a, int b);
 extern void* _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
 
-int ShipUp::InitResources()
+int daObjKi_Fune_c::InitResources()
 {
     void* sp8[2];
     unsigned int idx;
