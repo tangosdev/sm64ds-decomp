@@ -428,29 +428,9 @@ src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
     .text start:0x020b46a0 end:0x020b4a70
 
-src/_ZN13daObjDorifu_cD0Ev.cpp:
+src/actors/daObjDorifu_c.cpp:
     complete
-    .text start:0x020b4a70 end:0x020b4af8
-
-src/_ZN13daObjDorifu_cD1Ev.cpp:
-    complete
-    .text start:0x020b4af8 end:0x020b4b6c
-
-src/_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources.cpp:
-    complete
-    .text start:0x020b4b6c end:0x020b4bc4
-
-src/_ZN13daObjDorifu_c6RenderEv.cpp:
-    complete
-    .text start:0x020b4bc4 end:0x020b4bfc
-
-src/_ZN13daObjDorifu_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b4bfc end:0x020b4d58
-
-src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp:
-    complete
-    .text start:0x020b4d58 end:0x020b4ed8
+    .text start:0x020b4a70 end:0x020b4ed8
 
 src/game/actors/d_a_obj_hatena_switch.cpp:
     complete

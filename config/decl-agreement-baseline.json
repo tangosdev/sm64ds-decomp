@@ -1198,10 +1198,10 @@
    "src/func_ov006_02125804.c": ["param:#1 int", "param:#6 int"]
   },
   "RenderOamMainScreen": {
+   "src/actors/dScMgSlot1_c.cpp": ["param:#1 void *"],
    "src/actors/dScMgTeresa_c.cpp": ["param:#1 void *"],
    "src/func_ov006_020d5ab0.cpp": ["param:#1 void *"],
    "src/func_ov006_020d5e5c.c": ["return:int"],
-   "src/func_ov006_0210c234.c": ["param:#1 void *"],
    "src/minigames/d_s_mg_card.cpp": ["return:int"],
    "src/minigames/d_s_mg_m_carlo2.cpp": ["return:int"],
    "src/minigames/d_s_mg_trampoline.cpp": ["return:int"]
@@ -4243,7 +4243,6 @@
   },
   "_ZN5Sound12PlayBank2_2DEj": {
    "include/decl_common.h": ["return:void"],
-   "src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp": ["return:void"],
    "src/actors/dMgJump3DMario_c.cpp": ["return:void"],
    "src/actors/dScMgCoin_c.cpp": ["return:void"],
    "src/actors/dScMgCup_c.cpp": ["return:void"],
@@ -4251,6 +4250,7 @@
    "src/actors/dScMgLuigi_c.cpp": ["return:void"],
    "src/actors/dScMgMemory2_c.cpp": ["return:void"],
    "src/actors/dScMgPanel_c.cpp": ["return:void"],
+   "src/actors/dScMgSlot1_c.cpp": ["return:void"],
    "src/actors/dScMgSound_c.cpp": ["return:void"],
    "src/func_ov004_020b4aa4.c": ["return:void"],
    "src/func_ov004_020b4e78.c": ["return:void"],
@@ -4301,7 +4301,6 @@
    "src/func_ov006_02102c3c.c": ["return:void"],
    "src/func_ov006_02103ac0.c": ["return:void"],
    "src/func_ov006_0210af64.c": ["return:void"],
-   "src/func_ov006_0210c2d4.c": ["return:void"],
    "src/func_ov006_0210d8bc.c": ["return:void"],
    "src/func_ov006_0210e1fc.c": ["return:void"],
    "src/func_ov006_0210ef48.c": ["return:void"],
@@ -10077,6 +10076,7 @@
    "include/dScMgBase_c.h": ["return:void *"],
    "src/DrawOamSprite.cpp": ["return:Base *"],
    "src/actors/dScMgCoin_c.cpp": ["return:int *"],
+   "src/actors/dScMgSlot1_c.cpp": ["return:void *"],
    "src/func_ov004_020ad79c.c": ["return:int"],
    "src/func_ov004_020ad878.c": ["return:int *"],
    "src/func_ov004_020ad8b8.c": ["return:int"],
@@ -10121,7 +10121,6 @@
    "src/func_ov006_020c14bc.cpp": ["return:V *"],
    "src/func_ov006_020dd0e0.c": ["return:void *"],
    "src/func_ov006_020de440.cpp": ["return:void *"],
-   "src/func_ov006_0210c2d4.c": ["return:void *"],
    "src/minigames/d_s_mg_card.cpp": ["return:void *"]
   },
   "data_ov004_020beb6c": {
@@ -18192,8 +18191,8 @@
    "src/func_ov004_020b5108.c": ["param:#1 int"]
   },
   "func_ov004_020b1b40": {
-   "src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp": ["param:#1 int"],
    "src/actors/dScMgRoulette_c.cpp": ["param:#1 int"],
+   "src/actors/dScMgSlot1_c.cpp": ["param:#1 int"],
    "src/func_ov004_020b4c30.c": ["param:#1 int"],
    "src/func_ov004_020b51f0.c": ["param:#1 int"]
   },
