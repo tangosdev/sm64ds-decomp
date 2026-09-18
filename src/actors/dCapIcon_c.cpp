@@ -78,6 +78,7 @@ extern void func_ov001_020aa6cc(int character);
 /* -------------------------------------------------------------------------- */
 /* ordinal 0 -- 0x020ab110  _ZN10dCapIcon_c6UnlinkEv                          */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN10dCapIcon_c6UnlinkEv
 /* Unlinks this cap icon from its per-character list and restores the detached
  * defaults. The role is ROM-proven; the member spelling `Unlink` is inferred. */
 void dCapIcon_c::Unlink()
@@ -119,6 +120,7 @@ void dCapIcon_c::Unlink()
 /* -------------------------------------------------------------------------- */
 /* ordinal 1 -- 0x020ab228  func_ov001_020ab228                               */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov001_020ab228
 /* Links an icon into the list for one character. The cartridge loads the list
  * head at 0x020ab248 and again at 0x020ab254, across the store that puts the
  * first load into the node, which is why this one member is generated with
@@ -157,6 +159,7 @@ extern "C" void func_ov001_020ab228(char* c, char* a1, int idx, int a3, unsigned
 /* -------------------------------------------------------------------------- */
 /* ordinal 5 -- 0x020ab3c4  _ZN10dCapIcon_cC1Ev                               */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN10dCapIcon_cC1Ev
 /* The compiler supplies the dCapIcon_c vptr store. The constructor body clears
  * the intrusive links and marks the icon as not linked, exactly as in ROM. */
 dCapIcon_c::dCapIcon_c()
@@ -170,6 +173,8 @@ dCapIcon_c::dCapIcon_c()
 /* ordinals 4 and 3 -- 0x020ab3a0 _ZN10dCapIcon_cD1Ev,                        */
 /*                     0x020ab374 _ZN10dCapIcon_cD0Ev                         */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN10dCapIcon_cD1Ev
+// @symbol _ZN10dCapIcon_cD0Ev
 /* The compiler supplies the vptr store around the one class-specific action:
  * unlinking the icon. The deleting variant's Memory::operator_delete2 tail
  * comes from the inline operator delete in the header. */
@@ -181,6 +186,7 @@ dCapIcon_c::~dCapIcon_c()
 /* -------------------------------------------------------------------------- */
 /* ordinal 2 -- 0x020ab2e4  func_ov001_020ab2e4                               */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov001_020ab2e4
 /* Resets all three per-character lists, re-reading the save file for which
  * characters are unlocked. */
 extern "C" void func_ov001_020ab2e4(void)
