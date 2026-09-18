@@ -517,7 +517,7 @@ into it by raw offset).
 | 0x5fd8 | `mPetalsLeft` | Decremented once per pull, gates every "still playing" branch on `>= 1`, and is the bound of the loop that finishes off the remaining petals when the round times out. |
 | 0x5fdc | `mWinStreak` | Incremented on the `mPetalToggle == 1` outcome and zeroed by the other; at 3 it swaps in banner 0x12 and adds 3 to `mScore` instead of 1. |
 | 0x5fe0 | `mLoseStreak` | The mirror counter on the other outcome; at 3 it swaps in banner 0x11. It never touches the score. |
-| 0x5fe4 | `mHoldTimer` | src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
+| 0x5fe4 | `mHoldTimer` | `dScMgFlower_c::OnYoshiTryEat` (src/actors/dScMgFlower_c.cpp) increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
 | 0x5fe8 | `mState` | Behavior's `switch`: 0 plays, 1 is over (it stops the prompt and only ticks the 0x51f8 object). |
 | 0x5fec | `mFaceSprite` | Render's only use is [data_ov006_0213ab94](../config/arm9/overlays/ov006/symbols.txt)`[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
 | 0x5ff0 | `mScore` | Incremented by 1 or 3 per winning pull and clamped to 0x270f -- the same 9999 cap dScMgAmida_c and dScMgSnowball_c use. |

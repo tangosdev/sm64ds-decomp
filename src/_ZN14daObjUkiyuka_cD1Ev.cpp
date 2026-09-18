@@ -20,7 +20,7 @@
  * 0x124 and Model at 0xd4, the same as _ZN10dBgActor_cD1Ev.
  *
  * This class's key function is Behavior (already out of line, in
- * src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp -- see include/daObjUkiyuka_c.h),
+ * src/actors/daObjUkiyuka_c.cpp -- see include/daObjUkiyuka_c.h),
  * so this file does not carry _ZTV14daObjUkiyuka_c / _ZTI14daObjUkiyuka_c.
  */
 #include "daObjUkiyuka_c.h"
