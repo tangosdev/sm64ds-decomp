@@ -20,12 +20,12 @@
    mangled spellings; without extern "C" a .cpp re-mangles them into phantoms
    no module defines. */
 extern "C" {
-unsigned short *_ZN3G2S12GetBG2ScrPtrEv();
+unsigned int _ZN3G2S12GetBG2ScrPtrEv();
 void DecompressLZ16(void *, void *);
 void Deallocate(void *);
 
 int _Z15ApproachLinear2Rsss(short *, short, short);
-extern unsigned char data_0209b2e4[];
+extern unsigned char data_0209b2e4;
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void *oam, int b, int c, int d, int e, int f, int g, int h, int i);
 extern void _ZN3OAM9RenderSubEP7OamAttrii(void *oam, int x, int y);
@@ -86,7 +86,7 @@ int dScEntry_c::graphCallback_c::GraphCallback2()
     *reg = value | (bg2Priority << 8);
 
     if (compressedBg2Screen != 0) {
-        unsigned short *screen = _ZN3G2S12GetBG2ScrPtrEv();
+        unsigned short *screen = (unsigned short *)_ZN3G2S12GetBG2ScrPtrEv();
         DecompressLZ16(compressedBg2Screen, screen);
         Deallocate(compressedBg2Screen);
         compressedBg2Screen = 0;
@@ -153,11 +153,11 @@ void func_ov075_02115e8c(char* self, int a, int b, short c, short e)
 void dScEntry_c::icon_c::Behavior()
 {
     if (unk_01c == 0xd) {
-        if (unk_020 == data_0209b2e4[0]) {
+        if (unk_020 == data_0209b2e4) {
             _Z15ApproachLinear2Rsss(&unk_006, 0x14, 8);
         } else {
             if (_Z15ApproachLinear2Rsss(&unk_006, -0x24, 8) != 0)
-                unk_020 = data_0209b2e4[0];
+                unk_020 = data_0209b2e4;
         }
     }
     dThIcon_c::Behavior();
@@ -220,7 +220,7 @@ void dScEntry_c::icon_c::Render()
         mask = (unk_010 != 0) ? 0x2000 : 0x1000;
     fill:
         w = unk_008;
-        p = _ZN3G2S12GetBG2ScrPtrEv();
+        p = (u16 *)_ZN3G2S12GetBG2ScrPtrEv();
         x = unk_004;
         h = unk_00a;
         x -= w;
