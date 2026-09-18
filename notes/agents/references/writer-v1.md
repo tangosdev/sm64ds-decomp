@@ -516,8 +516,7 @@ committed in this tree as though they were repo notes. Naming the slugs alone,
 because spelling them the way the source does would trip the dead-reference gate
 in this very file: `actor-class-names-off-by-one` in `include/daObjHmBskt_c.h`,
 `key-function-tu-vptr-store-blocker` in
-`src/game/actors/d_a_obj_km3_dorifu.cpp` and twice in
-`src_tu/actors/TTC_MovingBar.cpp`, `phantom-references` in
+`src/game/actors/d_a_obj_km3_dorifu.cpp`, `phantom-references` in
 `include/nitro/hw/registers.h`, and `stale-tu-map-overcut-ov006` in two
 `config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings — each written
 there with a `notes/` prefix and a `.md` suffix. Those files live

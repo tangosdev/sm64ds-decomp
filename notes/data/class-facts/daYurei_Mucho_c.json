@@ -91,7 +91,7 @@
       {"slot": 28, "target": "0x0201012c", "symbol": "arm9 _ZN8dActor_c19OnHitFromUnderneathERS_"},
       {"slot": 30, "target": "0x020100dc", "symbol": "arm9 _ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
     ],
-    "duplicate_symbol_hazard": "config/arm9/overlays/ov065/symbols.txt declares TWO names at 0x0211cba4: `_ZTV6Snufit` and `_ZTV15daYurei_Mucho_c`. This is the module-wide pattern for coined-name classes in ov065 (_ZTV5Swoop / _ZTV12daBasabasa_c both at 0x0211cca0; _ZTV13TTC_MovingBar / _ZTV18daObjCtKaitendai_c both at 0x0211d3b4; _ZTV15TtcRotatingCube / _ZTV20daObjCtRotateBlock_c both at 0x0211d028; _ZTV14TTC_MovingBeam / _ZTV16daObjCtMecha09_c both at 0x0211d568). The oracle daObjCtMecha05_c has no such alias, so its manifest is NOT a precedent for this. The writer must expect the compiled TU to emit only `_ZTV6Snufit` (the C++ class is spelled Snufit) and should check what objisolate/romdata_check do with the second name before assuming the Mecha05 compiler_only_output block copies over unchanged."
+    "duplicate_symbol_hazard": "config/arm9/overlays/ov065/symbols.txt declares TWO names at 0x0211cba4: `_ZTV6Snufit` and `_ZTV15daYurei_Mucho_c`. This is the module-wide pattern for coined-name classes in ov065 (_ZTV5Swoop / _ZTV12daBasabasa_c both at 0x0211cca0; _ZTV18daObjCtKaitendai_c / _ZTV18daObjCtKaitendai_c both at 0x0211d3b4; _ZTV15TtcRotatingCube / _ZTV20daObjCtRotateBlock_c both at 0x0211d028; _ZTV14TTC_MovingBeam / _ZTV16daObjCtMecha09_c both at 0x0211d568). The oracle daObjCtMecha05_c has no such alias, so its manifest is NOT a precedent for this. The writer must expect the compiled TU to emit only `_ZTV6Snufit` (the C++ class is spelled Snufit) and should check what objisolate/romdata_check do with the second name before assuming the Mecha05 compiler_only_output block copies over unchanged."
   },
   "destructors": {
     "variants_present": ["D1", "D0"],
@@ -100,7 +100,7 @@
     "D0": {"address": "0x02115f28", "size": "0x5c", "vtable_slot": 17},
     "order_in_rom": "D1 at 0x02115ee0 immediately precedes D0 at 0x02115f28, and D1 is the first byte of ov065's whole .text section.",
     "evidence": "Read from the cartridge. D1 stores the vptr 0x0211cba4, then destroys +0x364 (arm9 _ZN11ShadowModelD1Ev), +0x300 (_ZN9ModelAnimD1Ev), +0x144 (_ZN10dBgCh_ActrD1Ev), +0x110 (_ZN7dCcAc_cD1Ev) and tails into ov002 _ZN12dEnemyBase_cD2Ev. D0 repeats that same body verbatim (it does NOT call D1) and then loads arm9 GAME_HEAP_PTR (0x020a0eac) and calls arm9 _ZN6Memory10DeallocateEPvP4Heap (0x0203c1e8). No _ZN6SnufitD2Ev or _ZN15daYurei_Mucho_cD2Ev exists in ANY symbols.txt in config/arm9 (searched arm9 + all 103 overlay files, case-sensitive, pattern 'Snufit|Yurei'; the 16 rows returned are listed under `symbols_txt_rows`).",
-    "lever_note_from_oracle": "INFERRED FROM THE ORACLE, not from the ROM: daObjCtMecha05_c's manifest states that one INLINE genuine destructor makes mwccarm 2004/b56 emit the retail D1-then-D0 pair with no D2. The ROM shape here is identical, so the same lever is the starting hypothesis. The nearby TTC_MovingBar TU (same overlay, same shape) is only `text-verified` and its manifest records an unhandled `_ZN13TTC_MovingBarD2Ev` -- i.e. the out-of-line form there produced a homeless D2. Take the inline form."
+    "lever_note_from_oracle": "INFERRED FROM THE ORACLE, not from the ROM: daObjCtMecha05_c's manifest states that one INLINE genuine destructor makes mwccarm 2004/b56 emit the retail D1-then-D0 pair with no D2. The ROM shape here is identical, so the same lever is the starting hypothesis. The nearby daObjCtKaitendai_c TU (same overlay, same shape) is only `text-verified` and its manifest records an unhandled `_ZN18daObjCtKaitendai_cD2Ev` -- i.e. the out-of-line form there produced a homeless D2. Take the inline form."
   },
   "text_span": {
     "start": "0x02115ee0",
@@ -145,7 +145,7 @@
     "address": "0x02116f48",
     "size": "0x50",
     "shard": "src/d_a_yurei_mucho.c",
-    "reason": "tu_map.py makes 0x2116f48..0x2116f98 its own one-function unit. The oracle daObjCtMecha05_c took exactly this decision for daObjCtMecha05_c_classInit ('remains a separately enrolled C ABI factory because there is no independent evidence that it belonged to the class TU') and reached `promoted`. TTC_MovingBar, in the same overlay, folded its two classInits IN and is still only `text-verified` with a FAIL-BY-DESIGN unlicensed-symbol criterion. Follow Mecha05: leave d_a_yurei_mucho.c alone."
+    "reason": "tu_map.py makes 0x2116f48..0x2116f98 its own one-function unit. The oracle daObjCtMecha05_c took exactly this decision for daObjCtMecha05_c_classInit ('remains a separately enrolled C ABI factory because there is no independent evidence that it belonged to the class TU') and reached `promoted`. daObjCtKaitendai_c, in the same overlay, folded its two classInits IN and is still only `text-verified` with a FAIL-BY-DESIGN unlicensed-symbol criterion. Follow Mecha05: leave d_a_yurei_mucho.c alone."
   },
   "size": {
     "value": "0x3e4",
@@ -265,7 +265,7 @@
     "output_path": "src/actors/Snufit.cpp -- this is the live convention. The two most recent promotions at this base, ov071/Scuttlebug and ov006/dScMgLuigi_c, both use src/actors/<Class>.cpp for `source` and `promoted_source`. The oracle daObjCtMecha05_c uses the older src/game/actors/ path; do not copy that field from it.",
     "ov065_siblings_at_this_base": {
       "promoted": ["daObjCtMecha03_c", "daObjCtMecha04_c", "daObjCtMecha05_c"],
-      "text-verified": ["TTC_MovingBar"],
+      "text-verified": ["daObjCtKaitendai_c"],
       "no_manifest": ["Snufit", "Swoop", "Dorrie", "DorriePlatform", "daDossyCap_c", "TtcRotatingCube", "TtcRotatingGear", "TTC_MovingBeam", "daObjCtRotateBlock_c", "daObjCtKaitendai_c", "daObjCtMecha08_c", "daObjCtMecha09_c"],
       "measured_from": "config/tu_manifest.d/ov065/ at a81adfa37 -- four files only"
     },
@@ -277,7 +277,7 @@
     "A class member function cannot sit inside an `extern \"C\" { }` region. Whatever free functions survive must be gathered after the last member.",
     "Two names are declared at the vtable address 0x0211cba4 (_ZTV6Snufit and _ZTV15daYurei_Mucho_c). The oracle daObjCtMecha05_c has no alias, so its compiler_only_output entry for _ZTV cannot simply be copied; check what objisolate.plan()/romdata_check make of the second name before assuming a clean deadstrip-data disposition.",
     "The queue's blocker field says `compiler-only:>=11` -- at least eleven vague-linkage symbols (inherited _ZTI/_ZTS up the four-deep chain, plus this class's own _ZTI/_ZTS/_ZTV and the profile) will be emitted and must be externalized. The Mecha05 manifest's compiler_only_output list is the right shape to start from; its dBgActor_c entries do not apply (this chain goes through dEnemyBase_c in ov002 instead).",
-    "Do NOT fold daYurei_Mucho_c_classInit (src/d_a_yurei_mucho.c) into the TU. Mecha05 kept it out and reached `promoted`; TTC_MovingBar folded its classInits in and is stuck at `text-verified` with an unlicensed-symbol FAIL-BY-DESIGN.",
+    "Do NOT fold daYurei_Mucho_c_classInit (src/d_a_yurei_mucho.c) into the TU. Mecha05 kept it out and reached `promoted`; daObjCtKaitendai_c folded its classInits in and is stuck at `text-verified` with an unlicensed-symbol FAIL-BY-DESIGN.",
     "The four State objects and four file handles in ov065 .bss, and the eight PMF records in ov065 .data, must stay unowned extern references. Defining them would make mwccarm emit a static initializer the text-only isolation then has to strip."
   ],
   "unproven": [

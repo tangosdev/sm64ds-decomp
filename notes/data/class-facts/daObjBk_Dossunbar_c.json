@@ -34,7 +34,7 @@
       "CARTRIDGE. Exactly one vtable covers the run. Every word in the whole ov015 image that points into 0x02111ba0..0x02112290 was enumerated (full 4-byte-aligned sweep of the 0x37c0-byte image): 24 such words, and the only vtable among them is _ZTV at 0x0211458c. There is no second _ZTV and no second _ZTI in or adjacent to this band -- the ov015 RTTI record list is daObjBkBillboard_c 0x02114318, daObjBk_Botaosi_c 0x021143dc, daObjBk_Dossunbar_c 0x02114510, daObjBk_Lift_c 0x0211460c, daObjBk_Rotebar_c 0x021146d0, daObjBk_Ukisima_c 0x02114798, daObjBk_Fall_Block_c 0x02114868, and nothing else lands between 0x02114510 and 0x0211460c.",
       "CARTRIDGE. Both factories allocate the SAME size (0x338) and store the SAME vptr (0x0211458c). Two spawn-info variants of one actor, not two classes.",
       "CARTRIDGE. The 14 unnamed helpers are not a second class's methods: all 14 are the targets of this class's own pointer-to-member state tables and are invoked through a this-pointer on this object.",
-      "DISAMBIGUATION. TTC_MovingBar is a DIFFERENT class in a DIFFERENT overlay -- ov065, text 0x0211b360.., vtable _ZTV13TTC_MovingBar at ov065:0x0211d3b4, and symbols/actor_renames.tsv rows 2015-2016 identify it as daObjCtMecha05_c / profile CT_MECHA05. It shares only the coined word. It is NOT part of this TU and must not be folded in."
+      "DISAMBIGUATION. daObjCtKaitendai_c is a DIFFERENT class in a DIFFERENT overlay -- ov065, text 0x0211b360.., vtable _ZTV18daObjCtKaitendai_c at ov065:0x0211d3b4, and symbols/actor_renames.tsv rows 2015-2016 identify it as daObjCtMecha05_c / profile CT_MECHA05. It shares only the coined word. It is NOT part of this TU and must not be folded in."
     ]
   },
   "vtable": {

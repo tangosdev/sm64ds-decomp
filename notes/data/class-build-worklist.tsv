@@ -236,7 +236,7 @@ daObjC0_Switch_c	DONE	include\daObjC0_Switch_c.h	dBgActor_c	0	ov012	7
 daObjC1_Trap_c	DONE	include\daObjC1_Trap_c.h	dBgActor_c	0	ov010	15
 daObjCannonShutter_c	DONE	include\daObjCannonShutter_c.h	dBgActor_c	0	ov002	6
 daObjCasket_c	DONE	include\Coffin.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov071	6
-daObjCtKaitendai_c	DONE	include\TTC_MovingBar.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	6
+daObjCtKaitendai_c	DONE	include\daObjCtKaitendai_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	6
 daObjCtMecha03_c	DONE	include\daObjCtMecha03_c.h	dBgActor_c	0	ov065	6
 daObjCtMecha04_c	DONE	include\daObjCtMecha04_c.h	dBgActor_c	0	ov065	9
 daObjCtMecha05_c	DONE	include\daObjCtMecha05_c.h	dBgActor_c	0	ov065	6
