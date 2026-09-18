@@ -295,7 +295,9 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 > `actors/d_a_i_donketu.cpp`. The paths and symbols below are left as the pilot spelled
 > them, so none of them is in the tree any more.
 
-Why not the 4-byte `src/_ZN9dThIcon_c6RenderEv.cpp` (an empty `bx lr`): a stub is
+Why not the 4-byte `dThIcon_c::Render` (an empty `bx lr`), which had its own
+per-function source directly under `src/` when this was written and is now a
+member of `src/actors/dThIcon_c.cpp`: a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
 is the smallest candidate that puts **real code** through the C→C++ front end while
 holding every other variable fixed:
