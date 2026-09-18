@@ -1,5 +1,5 @@
-#ifndef MAD_PIANO_RESOURCES_H
-#define MAD_PIANO_RESOURCES_H
+#ifndef DAPIANO_C_RESOURCES_H
+#define DAPIANO_C_RESOURCES_H
 
 #include "types.h"
 
@@ -40,7 +40,12 @@ typedef char SharedFilePtrLayout_SizeIs8[
     sizeof(SharedFilePtrLayout) == 8 ? 1 : -1
 ];
 
-/* Readable aliases retain the current linker symbols until a verified rename. */
+/* Readable aliases for the three ov063 BSS handles. config/arm9/overlays/ov063/
+ * symbols.txt now also carries daPiano_c_ModelFile, daPiano_c_ClsnFile and
+ * daPiano_c_AnimFile at these same three addresses, and d_a_piano.cpp declares
+ * both spellings; retiring this macro layer in favour of the configured names
+ * changes which symbol the relocations name, so it needs its own byte proof and
+ * is deliberately not part of this rename. */
 #define gPianoModelFile             data_ov063_0211ef80
 #define gPianoCollisionFile         data_ov063_0211ef88
 #define gPianoAttackAnimationFile   data_ov063_0211ef90

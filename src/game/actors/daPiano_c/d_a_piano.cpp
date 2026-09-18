@@ -58,7 +58,7 @@
  * - func_0201267c (sound 0x106) is unmatched; called by address.
  */
 #include "daPiano_c.h"
-#include "MadPianoResources.h"
+#include "daPiano_c_resources.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 
