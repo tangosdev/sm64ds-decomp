@@ -636,10 +636,12 @@ def main():
                 if nomatch:
                     rec["noMatch"] = nomatch
                 if matched:
-                    # Priority: manual override > whoever FINISHED the match (turned the
-                    # NONMATCHING draft byte-identical) > whoever first added the file.
-                    a = (overrides.get(src_path) or finishers.get(src_path)
-                         or firstmatch.get(src_path))
+                    # A promoted TU can contain several contributors' functions.
+                    # Match the validator: member override > path override > whoever
+                    # FINISHED the draft > whoever first added the file. Canonicalize
+                    # the selected identity once, after applying that priority.
+                    a = (overrides.get(f"{src_path}#{name}") or overrides.get(src_path)
+                         or finishers.get(src_path) or firstmatch.get(src_path))
                     if a:
                         rec["author"] = canon(a)
             if matched:

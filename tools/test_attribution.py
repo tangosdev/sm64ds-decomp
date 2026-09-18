@@ -566,5 +566,162 @@ class RenameReplay(GitFixture):
         self.assertEqual(self.check_gate()[0], 1)
 
 
+    def same_basename_promotion(self, factory_author="alice", path_author="fallback",
+                                inplace=False, factory_size=4, alias=False):
+        old_path = "src/d_a_actor.cpp" if inplace else "src/d_a_actor.c"
+        new_path = "src/d_a_actor.cpp" if inplace else "src/game/d_a_actor.cpp"
+        config = "config/arm9/overlays/ov078"
+        self.write(old_path, "//cpp\nint Actor_classInit() { return 1; }\n")
+        self.commit("alice", "match factory")
+        self.write("src/Actor_update.cpp", "//cpp\nint Actor_update() { return 2; }\n")
+        self.write(f"{config}/symbols.txt",
+                   "Actor_classInit kind:function(arm,size=0x4) addr:0x021260a8\n"
+                   "Actor_update kind:function(arm,size=0x4) addr:0x021260ac\n")
+        self.write(f"{config}/delinks.txt",
+                   "    .text start:0x021260a8 end:0x021260b0 kind:code\n\n"
+                   f"{old_path}:\n    complete\n"
+                   "    .text start:0x021260a8 end:0x021260ac\n\n"
+                   "src/Actor_update.cpp:\n    complete\n"
+                   "    .text start:0x021260ac end:0x021260b0\n")
+        self.commit("bob", "match behavior")
+        self.git("branch", "before_configured")
+        if old_path != new_path:
+            (self.repo / old_path).unlink()
+        (self.repo / "src/Actor_update.cpp").unlink()
+        self.write(new_path,
+                   "//cpp\nint Actor_classInit() { return 1; }\n"
+                   "int Actor_update() { return 2; }\n")
+        self.write(f"{config}/delinks.txt",
+                   "    .text start:0x021260a8 end:0x021260b0 kind:code\n\n"
+                   f"{new_path}:\n    complete\n"
+                   "    .text start:0x021260a8 end:0x021260b0\n")
+        self.write(f"{config}/symbols.txt",
+                   f"Actor_classInit kind:function(arm,size=0x{factory_size:x}) addr:0x021260a8\n"
+                   "Actor_update kind:function(arm,size=0x4) addr:0x021260ac\n"
+                   + ("OtherFactory kind:function(arm,size=0x4) addr:0x021260a8\n"
+                      if alias else ""))
+        overrides = {new_path: path_author, f"{new_path}#Actor_update": "bob"}
+        if factory_author:
+            overrides[f"{new_path}#Actor_classInit"] = factory_author
+        self.write("attribution.json", json.dumps({"overrides": overrides}))
+        self.commit("promoter", "promote behind the surviving factory filename")
+        return new_path
+
+    def test_same_basename_promotion_preserves_mixed_function_authors(self):
+        self.same_basename_promotion()
+        status, report = self.check_gate()
+        self.assertEqual(status, 0, report)
+        self.assertEqual({row[0]: row[-1] for row in report["consolidated_ok"]},
+                         {"Actor_classInit": "alice", "Actor_update": "bob"})
+
+    def test_in_place_promotion_also_uses_function_ownership(self):
+        self.same_basename_promotion(inplace=True)
+        status, report = self.check_gate()
+        self.assertEqual(status, 0, report)
+        self.assertEqual(len(report["consolidated_ok"]), 2)
+
+    def test_surviving_factory_requires_explicit_member_credit(self):
+        self.same_basename_promotion(factory_author=None, path_author="alice")
+        status, report = self.check_gate()
+        self.assertEqual(status, 1, report)
+        self.assertEqual([row[0] for row in report["lost"]], ["Actor_classInit"])
+
+    def test_surviving_factory_wrong_member_credit_is_not_hidden_by_path(self):
+        self.same_basename_promotion(factory_author="thief", path_author="alice")
+        status, report = self.check_gate()
+        self.assertEqual(status, 1, report)
+        self.assertEqual(report["changed"][0][-2:], ["alice", "thief"])
+
+    def test_surviving_factory_changed_extent_cannot_rescue_credit(self):
+        self.same_basename_promotion(path_author="alice", factory_size=8)
+        status, report = self.check_gate()
+        self.assertEqual(status, 1, report)
+        self.assertEqual([row[0] for row in report["lost"]], ["Actor_classInit"])
+
+    def test_surviving_factory_ambiguous_address_cannot_rescue_credit(self):
+        self.same_basename_promotion(path_author="alice", alias=True)
+        status, report = self.check_gate()
+        self.assertEqual(status, 1, report)
+        self.assertEqual([row[0] for row in report["lost"]], ["Actor_classInit"])
+
+    def test_ordinary_single_function_move_needs_no_member_override(self):
+        self.configured_base(symbol="Actor_classInit", path="src/d_a_actor.c")
+        self.move("src/d_a_actor.c", "src/game/d_a_actor.c")
+        self.configure_function("ov078", "Actor_classInit", "src/game/d_a_actor.c")
+        self.commit("mover", "move without promoting")
+        status, report = self.check_gate()
+        self.assertEqual(status, 0, report)
+        self.assertEqual(len(report["moved_ok"]), 1)
+        self.assertEqual(report["consolidated_ok"], [])
+
+    def test_unchanged_source_paths_do_not_load_function_snapshots(self):
+        self.configured_base()
+        self.write("note.txt", "unrelated change\n")
+        self.commit("writer", "documentation only")
+        with mock.patch.object(self.PA, "function_ownership_at",
+                               side_effect=AssertionError("unexpected full scan")):
+            self.assertEqual(self.check_gate()[0], 0)
+
+
+class GeneratedAttribution(GitFixture):
+    """Exercise the real records and chart written by chaos_db_ci.main()."""
+
+    def test_generated_records_preserve_member_path_and_history_credit(self):
+        self.write("src/Actor.cpp", "//cpp\nint first() { return 1; }\n"
+                   "int second() { return 2; }\nint third() { return 3; }\n")
+        self.write("src/First.cpp", "//cpp\nint First() { return 4; }\n")
+        self.write("src/Finished.cpp", DRAFT)
+        self.write("src/Draft.cpp", DRAFT)
+        self.commit("firstalias", "land source and drafts")
+        self.write("src/Finished.cpp", "//cpp\nint Finished() { return 5; }\n")
+        self.commit("finishalias", "finish draft")
+        symbols = self.repo / "config/arm9/overlays/ov078/symbols.txt"
+        config = symbols.parent.relative_to(self.repo).as_posix()
+        records = [("first", "src/Actor.cpp"), ("second", "src/Actor.cpp"),
+                   ("third", "src/Actor.cpp"), ("First", "src/First.cpp"),
+                   ("Finished", "src/Finished.cpp"), ("Draft", "src/Draft.cpp")]
+        self.write(f"{config}/symbols.txt", "".join(
+            f"{name} kind:function(arm,size=0x4) addr:0x{0x021260a8 + i * 4:08x}\n"
+            for i, (name, _path) in enumerate(records)))
+        self.write(f"{config}/delinks.txt",
+                   "    .text start:0x021260a8 end:0x021260c0 kind:code\n\n"
+                   "src/Actor.cpp:\n    complete\n"
+                   "    .text start:0x021260a8 end:0x021260b4\n")
+        self.write("attribution.json", json.dumps({
+            "aliases": {"memberalias": "member", "member": "do_not_apply_twice",
+                        "pathalias": "path", "finishalias": "finished",
+                        "firstalias": "first"},
+            "overrides": {"src/Actor.cpp": "PATHALIAS",
+                          "src/Actor.cpp#first": "MEMBERALIAS",
+                          "src/Actor.cpp#second": "bob",
+                          "src/Draft.cpp#Draft": "should_not_get_credit"}}))
+        self.commit("promoter", "record mixed member ownership")
+
+        out = self.repo / "chaos-db.json"
+        saved = CDB.SP.set_root(self.repo)
+        try:
+            # Only unrelated coverage/tier inputs are bounded here. Git history,
+            # attribution policy, symbol/enrollment resolution and both actual
+            # serialized outputs run through the production consumer.
+            with mock.patch.object(sys, "argv", ["chaos_db_ci.py", "--out", str(out)]), \
+                    mock.patch.object(CDB.RL, "module_universe", return_value=[(symbols, "ov078")]), \
+                    mock.patch.object(CDB.LYC, "delinks_paths", return_value={p for _n, p in records}), \
+                    mock.patch.object(CDB.BG, "excluded_paths", return_value=set()), \
+                    mock.patch.object(CDB.BG, "stale_rows", return_value=[]), \
+                    mock.patch.object(CDB, "tier_stats", return_value={}), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                CDB.main()
+        finally:
+            CDB.SP.set_root(saved[0])
+        db = json.loads(out.read_text(encoding="utf-8"))
+        authors = {row["name"]: row.get("author") for row in db["functions"]}
+        self.assertEqual(authors, {"first": "member", "second": "bob", "third": "path",
+                                   "First": "first", "Finished": "finished", "Draft": None})
+        chart = json.loads((self.repo / "contributions.json").read_text(encoding="utf-8"))
+        self.assertEqual(chart["totalMatched"], 5)
+        self.assertEqual({row["login"]: row["matched"] for row in chart["contributors"]},
+                         {"member": 1, "bob": 1, "path": 1, "first": 1, "finished": 1})
+
+
 if __name__ == "__main__":
     unittest.main()
