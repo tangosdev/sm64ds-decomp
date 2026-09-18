@@ -62,7 +62,19 @@ extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern unsigned char data_0209f2d8;
 extern int data_ov002_0211094c;
-extern void *func_02132894[];
+/* ov089's key-model file table, not a function. It used to be spelt
+   `func_02132894`, a name nothing in the tree defines, which made this a call to
+   a callee that does not exist. config/arm9/overlays/ov100/relocs.txt records the
+   reference as `from:0x0214587c kind:load to:0x02132894 module:overlays(6,89)`
+   -- a literal-pool LOAD, not an arm_call -- and ov089 names 0x02132894
+   `data_ov089_02132894`, sitting in that overlay's .rodata between
+   data_ov089_02132880 and data_ov089_021328b4, so it is 0x20 bytes: the eight
+   SharedFilePtr* entries src/LoadKeyModels.cpp bounds-checks with `idx >= 8`.
+   That is the table LoadKeyModels loads into, which is why the call on the line
+   below is handed the very same index this is then subscripted by, and
+   src/UnloadKeyModels.cpp and src/_ZN3Key13InitResourcesEv.cpp already declare
+   and subscript it under this name with this element type. */
+extern void *data_ov089_02132894[];
 extern void LoadKeyModels(int idx);
 extern int data_ov089_02132c50;
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
@@ -142,7 +154,7 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
             if (t >= 9 && t <= 0xd) {
                 self->mKeyModelIdx = (signed char)(t - 8);
                 LoadKeyModels(self->mKeyModelIdx + 1);
-                self->mKeyFile = func_02132894[self->mKeyModelIdx + 1];
+                self->mKeyFile = data_ov089_02132894[self->mKeyModelIdx + 1];
                 if (self->base.param1 == 0xc)
                     self->mKeyModelIdx = 0;
             } else {
