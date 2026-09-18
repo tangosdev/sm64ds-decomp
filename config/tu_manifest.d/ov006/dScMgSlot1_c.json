@@ -1,0 +1,317 @@
+{
+  "id": "ov006/dScMgSlot1_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgSlot1_c.cpp",
+  "promoted_source": "src/actors/dScMgSlot1_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "SUB-RANGE OF A LARGER TU, DISCLOSED. The ROM's own translation unit is 0x0210a8c0..0x0210d6b8, 41 functions, holding dScMgSlot1_c and dScMgSlot3_c together. tools/tu_map.py derives that same span and label independently (candidate ov006/dScMgSlot1_c+dScMgSlot3_c). This entry claims only 0x0210c180..0x0210c6c0, the largest contiguous run inside it in which every function byte-matches; see the LICENSING CAP entry below.",
+    "Upper/lower bounds of the enclosing TU are hard: 0x0210a8c0 is exactly where the already-promoted src/minigames/d_s_mg_single3_d_base.cpp complete range ends, and 0x0210d740 is where _ZN16dScMgSmartball_cD1Ev starts a 130-function run that config/tu_manifest.d/ov006/MgBingoBallSlotsShot.json already documents.",
+    "TWO CLASSES, ONE UNIT: dScMgSlot1_c's destructors (0x0210a8c0, 0x0210a900) and dScMgSlot1_c's method body (0x0210c374..0x0210d6b8) sandwich the entire dScMgSlot3_c group (0x0210a954..0x0210c180). A linker lays each translation unit out contiguously, so the two classes cannot be separate units; they share one. This is what the promotion queue's own row 'dScMgSlot1_c+dScMgSlot3_c' (41 shards) encodes.",
+    "REFERRER CENSUS, keyed on TARGET ADDRESS ALONE across all 104 reloc files (91656 relocations; keying on (module,target) returns zero because inter-overlay relocations spell the module 'overlays(0,6)').",
+    "POSITIVE CONTROL PASSED: every vtable-pinned member of dScMgSlot1_c came back with this class's own _ZTV at the exact expected slot -- InitResources->_ZTV12dScMgSlot1_c[0], Behavior[6], Render[9], D1[16], D0[17], OnYoshiTryEat[18], OnHitByMegaChar[27], OnHitFromUnderneath[28]; betIcon_c::Behavior->_ZTVN12dScMgSlot1_c9betIcon_cE[0] and betIcon_c::Render[1]. These agree independently with a direct read of the vtable words out of extracted/overlays/overlay_0006.bin at load base 0x020bfec0.",
+    "BASE-RATE CONTROL PASSED (the census discriminates, it is not just returning the overlay): the same census over dScMgSlot3_c returns a DIFFERENT vtable, _ZTV12dScMgSlot3_c at 0x0213eaa8, at its own slots (InitResources[0], Behavior[6], Render[9], D1[16], D0[17], OnYoshiTryEat[18], OnAimedAtWithEgg[29], OnAimedAtWithEggReturnVec[30], Virtual80[32]); and over dScMgSingle3DBase_c likewise. The unlabelled func_ov006_* members return NO vtable at all and are reached only by ordinary calls.",
+    "REFUTATION THAT FAILED TO DISCRIMINATE, disclosed: the abstract-slot test. Slots 0 and 3 of _ZTV12dScMgSlot1_c were checked directly in the overlay image for bare zero words with no relocation, which would have meant an abstract class with helpers hidden at the TU edges. Both are relocated (slot 0 -> 0x0210d1fc InitResources, slot 3 -> 0x02043bf0 in main), and no slot in 0..36 is a bare zero. This class is not abstract, so that test says nothing about the boundary here and none of the boundary rests on it.",
+    "The 13 unlabelled func_ov006_* members of this claim are pinned by the census to IN-RUN callers only: each is reached by 1-3 calls from inside 0x0210a8c0..0x0210d6b8 and by no vtable. func_ov006_0210c208 and func_ov006_0210c278 additionally take one call each from func_ov006_020fbd38/func_ov006_020fd17c elsewhere in ov006, which is ordinary cross-TU calling and does not move the boundary.",
+    "LICENSING CAP -- why the full 41-function range is NOT claimed. The whole unit was reconstructed, compiled and verified: 35 of 41 functions byte-match. The six that do not are func_ov006_0210af64 (ordinal 13), dScMgSlot3_c::OnYoshiTryEat (15), dScMgSlot3_c::Render (16), dScMgSlot3_c_classInit (19), dScMgSlot1_c::Render (38) and dScMgSlot1_c::Behavior (39). Ordinals 20..37 are the largest contiguous all-matching run inside the unit and are what this entry claims.",
+    "MEASURED, NOT ASSUMED -- the pragma question. The legacy one-function shards for ordinals 13, 15 and 16 each carry #pragma opt_strength_reduction off (13 also opt_loop_invariants off). In mwccarm 2004/b56 these are FILE-GLOBAL LAST-WINS, not positional: three configurations were measured on the full 41-function TU and a global 'off' flips ordinals 15, 16 and 38 to MATCH while flipping 12, 30 and 35 to DIFF, with the totals staying 35/41 either way. Bracketing off/on around individual members, and wrapping them in #pragma push/#pragma pop, each produced byte-identical output to having no pragma at all -- so neither can scope these pragmas per function. Both groups therefore cannot be satisfied in one file by pragma, which means the shards' pragmas are a per-shard crutch and those six members' recovered source is not yet the ROM's. This claim is compiled with NO optimization pragma at all."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210c180",
+      "end": "0x0210c6c0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov006_0210c180",
+      "address": "0x0210c180",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_0210c180.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov006_0210c1a8",
+      "address": "0x0210c1a8",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_0210c1a8.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_0210c208",
+      "address": "0x0210c208",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_0210c208.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_0210c218",
+      "address": "0x0210c218",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_0210c218.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_0210c234",
+      "address": "0x0210c234",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov006_0210c234.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_0210c278",
+      "address": "0x0210c278",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_0210c278.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_0210c2b0",
+      "address": "0x0210c2b0",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_0210c2b0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_0210c2c0",
+      "address": "0x0210c2c0",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_0210c2c0.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_0210c2d4",
+      "address": "0x0210c2d4",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_0210c2d4.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_0210c354",
+      "address": "0x0210c354",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_0210c354.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c6RenderEv",
+      "address": "0x0210c374",
+      "size": "0x0000009c",
+      "legacy_source": "src/_ZN12dScMgSlot1_c9betIcon_c6RenderEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv",
+      "address": "0x0210c410",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_0210c478",
+      "address": "0x0210c478",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_0210c478.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c19OnHitFromUnderneathEv",
+      "address": "0x0210c4b8",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12dScMgSlot1_c19OnHitFromUnderneathEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c15OnHitByMegaCharEv",
+      "address": "0x0210c4dc",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12dScMgSlot1_c15OnHitByMegaCharEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_0210c500",
+      "address": "0x0210c500",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov006_0210c500.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_0210c638",
+      "address": "0x0210c638",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_0210c638.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c13OnYoshiTryEatEi",
+      "address": "0x0210c674",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN12dScMgSlot1_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 17
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-built manifest entry (tools.build_manifest_entry's schema, not its code path), the same route config/tu_manifest.d/ov006/MgBingoBallSlotsShot.json took: tools/tubuild.py create emits one entry per whole tu_map candidate, and this claim is deliberately a sub-range of that candidate.",
+    "dScMgSlot1_c_classInit (0x0210d6b8) is NOT part of this claim; it is already promoted on its own as src/minigames/d_s_mg_slot1.cpp.",
+    "Deferred-conflict markers: NONE, audited rather than assumed. tools/tubuild.py create emitted 28 alternate-declaration markers when it generated the enclosing 41-function candidate, and the first draft of this sub-range inherited all 28. Each was checked against the 18 legacy sources this entry actually folds, recovered from git: 11 of the 15 extern keys and all 4 local-declaration bodies appear in NONE of them (they describe files outside this claim); GetGameLanguage appears in exactly one, so nothing disagreed with it; data_0209d454's two holders spell it identically; and _ZN5Sound12PlayBank2_2DEj's two holders differ only by a leading 'extern', which one declaration compatible with both settles. No arbitrary unreviewed choice survives in this file, so all 28 markers were removed and no note claims one. tools/check_tubuild_conflicts.py agrees: 0 markers, 0 records."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSlot1_c/dScMgSlot1_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 18,
+    "functions_declared": 18,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "data": [
+        "_ZTVN12dScMgSlot1_c9betIcon_cE",
+        "_ZTIN12dScMgSlot1_c9betIcon_cE",
+        "_ZTSN12dScMgSlot1_c9betIcon_cE",
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c"
+      ],
+      "dataExternalized": [
+        "_ZTI9dThIcon_c",
+        "_ZTIN12dScMgSlot1_c9betIcon_cE",
+        "_ZTS9dThIcon_c",
+        "_ZTSN12dScMgSlot1_c9betIcon_cE",
+        "_ZTVN12dScMgSlot1_c9betIcon_cE"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgSlot1_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0210c180",
+        "end": "0x0210c6c0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0210c180",
+          "end": "0x0210c6c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 18
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTVN12dScMgSlot1_c9betIcon_cE",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines dScMgSlot1_c::betIcon_c's key function -- it defines BOTH of that nested class's virtuals, Render at 0x0210c374 and Behavior at 0x0210c410 -- so mwccarm emits that class's vtable as vague linkage. The cartridge's canonical copy is at ov006:0x0213e5d4, outside this entry's only claimed range (.text 0x0210c180-0x0210c6c0); this entry claims no data and no bss at all, so dsd goes on delinking those words from the cartridge independently and discarding this object's copy cannot cost the image a byte. DISCLOSED: the ROM's own enclosing translation unit (0x0210a8c0-0x0210d6b8, 41 functions, dScMgSlot1_c and dScMgSlot3_c together) is what originally emitted this record; because this entry is a text-only SUB-RANGE of it, that record stays the cartridge's to supply. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e5d4"
+    },
+    {
+      "symbol": "_ZTIN12dScMgSlot1_c9betIcon_cE",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines dScMgSlot1_c::betIcon_c's key function -- it defines BOTH of that nested class's virtuals, Render at 0x0210c374 and Behavior at 0x0210c410 -- so mwccarm emits that class's typeinfo record as vague linkage. The cartridge's canonical copy is at ov006:0x0213e594, outside this entry's only claimed range (.text 0x0210c180-0x0210c6c0); this entry claims no data and no bss at all, so dsd goes on delinking those words from the cartridge independently and discarding this object's copy cannot cost the image a byte. DISCLOSED: the ROM's own enclosing translation unit (0x0210a8c0-0x0210d6b8, 41 functions, dScMgSlot1_c and dScMgSlot3_c together) is what originally emitted this record; because this entry is a text-only SUB-RANGE of it, that record stays the cartridge's to supply. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e594"
+    },
+    {
+      "symbol": "_ZTSN12dScMgSlot1_c9betIcon_cE",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines dScMgSlot1_c::betIcon_c's key function -- it defines BOTH of that nested class's virtuals, Render at 0x0210c374 and Behavior at 0x0210c410 -- so mwccarm emits that class's typeinfo name as vague linkage. The cartridge's canonical copy is at ov006:0x0213e66c, outside this entry's only claimed range (.text 0x0210c180-0x0210c6c0); this entry claims no data and no bss at all, so dsd goes on delinking those words from the cartridge independently and discarding this object's copy cannot cost the image a byte. DISCLOSED: the ROM's own enclosing translation unit (0x0210a8c0-0x0210d6b8, 41 functions, dScMgSlot1_c and dScMgSlot3_c together) is what originally emitted this record; because this entry is a text-only SUB-RANGE of it, that record stays the cartridge's to supply. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e66c"
+    },
+    {
+      "symbol": "_ZTI9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "reason": "dScMgSlot1_c::betIcon_c derives from dThIcon_c (include/dScMgSlot1_c.h:146), so defining betIcon_c's key function drags the base's typeinfo record out as vague linkage too. The cartridge's canonical copy is at ov001:0x020ad478, outside this entry's only claimed range (.text 0x0210c180-0x0210c6c0); this entry claims no data and no bss at all, so dsd goes on delinking those words from the cartridge independently and discarding this object's copy cannot cost the image a byte. DISCLOSED: the ROM's own enclosing translation unit (0x0210a8c0-0x0210d6b8, 41 functions, dScMgSlot1_c and dScMgSlot3_c together) is what originally emitted this record; because this entry is a text-only SUB-RANGE of it, that record stays the cartridge's to supply. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad478"
+    },
+    {
+      "symbol": "_ZTS9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "reason": "dScMgSlot1_c::betIcon_c derives from dThIcon_c (include/dScMgSlot1_c.h:146), so defining betIcon_c's key function drags the base's typeinfo name out as vague linkage too. The cartridge's canonical copy is at ov001:0x020ad480, outside this entry's only claimed range (.text 0x0210c180-0x0210c6c0); this entry claims no data and no bss at all, so dsd goes on delinking those words from the cartridge independently and discarding this object's copy cannot cost the image a byte. DISCLOSED: the ROM's own enclosing translation unit (0x0210a8c0-0x0210d6b8, 41 functions, dScMgSlot1_c and dScMgSlot3_c together) is what originally emitted this record; because this entry is a text-only SUB-RANGE of it, that record stays the cartridge's to supply. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov001",
+      "canonical_address": "0x020ad480"
+    }
+  ],
+  "externalized_output": []
+}
