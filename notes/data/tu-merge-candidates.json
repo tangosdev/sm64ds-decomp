@@ -7213,20 +7213,20 @@
    "start": "0x2112290",
    "end": "0x2112944",
    "classes": [
-    "TowerStep"
+    "daObjBk_Lift_c"
    ],
    "n_functions_map": 12,
    "n_files": 12,
    "files": [
-    "src/_ZN9TowerStepD1Ev.cpp",
-    "src/_ZN9TowerStepD0Ev.cpp",
-    "src/_ZN9TowerStep4KillEv.cpp",
-    "src/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN14daObjBk_Lift_cD1Ev.cpp",
+    "src/_ZN14daObjBk_Lift_cD0Ev.cpp",
+    "src/_ZN14daObjBk_Lift_c4KillEv.cpp",
+    "src/_ZN14daObjBk_Lift_c15OnHitByMegaCharER6Player.cpp",
     "src/func_ov015_021123c8.cpp",
-    "src/_ZN9TowerStep16CleanupResourcesEv.cpp",
-    "src/_ZN9TowerStep6RenderEv.cpp",
-    "src/_ZN9TowerStep8BehaviorEv.cpp",
-    "src/_ZN9TowerStep13InitResourcesEv.cpp",
+    "src/_ZN14daObjBk_Lift_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjBk_Lift_c6RenderEv.cpp",
+    "src/_ZN14daObjBk_Lift_c8BehaviorEv.cpp",
+    "src/_ZN14daObjBk_Lift_c13InitResourcesEv.cpp",
     "src/func_ov015_021128e8.c",
     "src/func_ov015_021128f8.c",
     "src/d_a_obj_bk_lift.c"

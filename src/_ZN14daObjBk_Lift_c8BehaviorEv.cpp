@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9TowerStep8BehaviorEv
+// @symbol _ZN14daObjBk_Lift_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "TowerStep.h"
+#include "daObjBk_Lift_c.h"
 
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
@@ -14,7 +14,7 @@ void func_02039394(void *p, int v);
 void func_ov015_021123c8(void *self);
 }
 
-int TowerStep::Behavior()
+int daObjBk_Lift_c::Behavior()
 {
     char *self = (char *)this;
     int kind = param1 & 0xff;

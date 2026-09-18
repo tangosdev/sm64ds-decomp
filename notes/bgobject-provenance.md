@@ -750,7 +750,7 @@ same offsets:
   `mDeathTableID` (0x0ce).
 * `include/daObjC1_Trap_c.h` — its production class TU uses inherited `mPosX/Y/Z`
   (0x05c), `mAngleY` (0x08e), and `mAreaId` (0x0cc) directly through `dActor_c`.
-* `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
+* `include/daObjBk_Lift_c.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
 * `include/daObjMc_Metalnet_c.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
 * `include/daObjKm2_Ami_Bou_c.h` — `param1`, `mAngleY`.
 * `include/daObjIceBoard_c.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`

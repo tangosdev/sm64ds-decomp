@@ -53,6 +53,10 @@
  * adds no new virtual). The destructor pair is at slots 16/17, the
  * fBase_c/actor-family convention, matching every other actor and scene
  * class recovered so far -- not the Fader family's 0/1.
+ *
+ * Every member of this class is defined in one translation unit,
+ * src/game/actors/d_a_obj_wl_polelift.cpp, which owns the whole
+ * 0x021111a0..0x021116c8 linker run.
  */
 struct daObjWlPolelift_c : dActor_c {
     u8   pad_0d0[0x4];              /* 0x0d0 -- unobserved */
@@ -69,11 +73,15 @@ struct daObjWlPolelift_c : dActor_c {
     struct Matrix4x3 dropShadowMtx;  /* 0x1b0 */
     s32  groundY;                    /* 0x1e0 */
 
-    /* Declared first -- key function; see the family convention discussed in
-       dActor_c.h. The D1 and D0 translation units both define this real empty
-       method; CodeWarrior generates their complete-object/member teardown and
-       objisolate retains the enrolled variant from each object. */
-    virtual ~daObjWlPolelift_c();                        /* slots 16 (D1), 17 (D0) */
+    /* Declared first -- the family convention discussed in dActor_c.h.
+       Inline is load-bearing: written out of line mwccarm emits the
+       synthesized D0 ahead of the written D1, the reverse of the cartridge's
+       0x021111a0/0x021111e0 pair, and adds a homeless D2. Inline emits D1
+       then D0 and no D2, and moves the key function to the first non-inline
+       virtual, InitResources. Body is empty: destroying the ShadowModel,
+       dCcAcPos_c and Model subobjects and running dActor_c's own destructor
+       all follow from the declarations above. */
+    virtual ~daObjWlPolelift_c() {}                      /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dActor_c/_ZTV7fBase_c order. --- */
     virtual s32 InitResources();                         /* slot  0 */

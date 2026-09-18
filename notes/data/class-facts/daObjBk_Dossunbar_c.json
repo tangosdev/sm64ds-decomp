@@ -25,7 +25,7 @@
     "start": "0x02111ba0",
     "end": "0x02112290",
     "functions": 25,
-    "evidence": "CARTRIDGE + delinks. 25 consecutive delink entries in config/arm9/overlays/ov015/delinks.txt tile 0x02111ba0..0x02112290 with no gap and no overlap. The run is bounded below by daObjBk_Botaosi_c_classInit (0x02111b68, the previous class's factory) and above by _ZN9TowerStepD1Ev (0x02112290).",
+    "evidence": "CARTRIDGE + delinks. 25 consecutive delink entries in config/arm9/overlays/ov015/delinks.txt tile 0x02111ba0..0x02112290 with no gap and no overlap. The run is bounded below by daObjBk_Botaosi_c_classInit (0x02111b68, the previous class's factory) and above by _ZN14daObjBk_Lift_cD1Ev (0x02112290).",
     "tu_map_disagreement": "build/tu_map.json (regenerated at this revision; 691 TUs / 333 with a class, which is the CORRECT non-degraded figure -- 692/332 would mean rtti_vtables.json was missing) segments this as 0x2111ba0..0x2112230 with 23 functions PLUS a separate 2-function unit 0x2112230..0x2112290 holding the two factories. That split is the known unhandled-_classInit segmentation defect, and it is the same split tu_map made for the sibling oracle daObjBkBillboard_c (0x21111a0..0x21112dc + 0x21112dc..0x2111314). The oracle's 'FOLD 2026-09-04' manifest note explicitly folded its factory back in, saying it 'was always part of this TU'. Do the same here: the TU is 25 functions, not 23. The queue row's shard_count of 23 is tu_map's pre-fold figure."
   },
   "one_class_not_a_family": {
@@ -228,8 +228,8 @@
   "naming_defect_found": {
     "symbols": ["MovingBarSmall_ClsnFile (ov015:0x02114a5c)", "MovingBarSmall_ModelFile (ov015:0x02114a64)"],
     "finding": "These two .bss symbols carry a daObjBk_Dossunbar_c-flavoured coined name but do NOT belong to this class. Do not use them.",
-    "evidence": "CARTRIDGE. Every overlay(15)-destined relocation targeting 0x02114a5c and 0x02114a64 was enumerated: 3 references each, and all six come from TowerStep's code and its sinit -- 0x021124a0/0x021124a4 (literal pool of _ZN9TowerStep16CleanupResourcesEv), 0x021128c0/0x021128c4 (literal pool of _ZN9TowerStep13InitResourcesEv) and 0x021132b0/0x021132c0 (__sinit_ov015_02113264, which is one of the six sinits with ZERO references into this class's band). This class's own four SharedFilePtrs are 0x0211499c / 0x021149a4 / 0x021149ac / 0x021149b4, reached through the resource table at 0x02114534.",
-    "corroboration": "symbols/actor_renames.tsv rows 762-767 record that the functions once called _ZN14MovingBarSmall* were renamed to _ZN9TowerStep*, and rows 752-757 that the ones once called _ZN14KnockDownPlank* became _ZN19daObjBk_Dossunbar_c*. The two .bss names are leftovers from that earlier, wrong attribution and were never moved."
+    "evidence": "CARTRIDGE. Every overlay(15)-destined relocation targeting 0x02114a5c and 0x02114a64 was enumerated: 3 references each, and all six come from daObjBk_Lift_c's code and its sinit -- 0x021124a0/0x021124a4 (literal pool of _ZN14daObjBk_Lift_c16CleanupResourcesEv), 0x021128c0/0x021128c4 (literal pool of _ZN14daObjBk_Lift_c13InitResourcesEv) and 0x021132b0/0x021132c0 (__sinit_ov015_02113264, which is one of the six sinits with ZERO references into this class's band). This class's own four SharedFilePtrs are 0x0211499c / 0x021149a4 / 0x021149ac / 0x021149b4, reached through the resource table at 0x02114534.",
+    "corroboration": "symbols/actor_renames.tsv rows 762-767 record that the functions once called _ZN14MovingBarSmall* were renamed to _ZN14daObjBk_Lift_c*, and rows 752-757 that the ones once called _ZN14KnockDownPlank* became _ZN19daObjBk_Dossunbar_c*. The two .bss names are leftovers from that earlier, wrong attribution and were never moved."
   },
   "expected_compiler_only_output": {
     "count": 11,
@@ -274,7 +274,7 @@
   "blockers_for_the_writer": [
     "TEXT-ONLY IS A HARD CONSTRAINT, not a preference. No delink entry in ov015 owns .data or .bss. The vtable, both RTTI records, the 14 PMF constants, the 2 state tables and the 4 SharedFilePtrs must all be declared extern and never defined, or mwcc emits .data/.init that this TU is not allowed to own.",
     "DO NOT rename any of the 14 state functions without putting the new symbol into config/arm9/overlays/ov015/symbols.txt in the SAME commit. Each is the target of a pointer-to-member record in unowned .data, which dsd resolves by NAME; a stale func_* spelling there links as 0x00000000 and no stage-2 or stage-3 byte gate catches it.",
-    "The two .bss symbols MovingBarSmall_ClsnFile / MovingBarSmall_ModelFile are misattributed and belong to TowerStep. Do not reference them from this TU.",
+    "The two .bss symbols MovingBarSmall_ClsnFile / MovingBarSmall_ModelFile are misattributed and belong to daObjBk_Lift_c. Do not reference them from this TU.",
     "Fold BOTH factories (25 functions, 0x02111ba0..0x02112290). tu_map's 23 is the known _classInit segmentation defect; the queue row inherits it.",
     "Emit in reverse ROM order -- highest address first -- or rombuild refuses the object outright."
   ],
