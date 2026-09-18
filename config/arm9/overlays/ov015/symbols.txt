@@ -43,15 +43,15 @@ _ZN19daObjBk_Dossunbar_c8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
 _ZN19daObjBk_Dossunbar_c13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
 daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L kind:function(arm,size=0x30) addr:0x02112230
 daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S kind:function(arm,size=0x30) addr:0x02112260
-_ZN9TowerStepD1Ev kind:function(arm,size=0x4c) addr:0x02112290
-_ZN9TowerStepD0Ev kind:function(arm,size=0x60) addr:0x021122dc
-_ZN9TowerStep4KillEv kind:function(arm,size=0x64) addr:0x0211233c
-_ZN9TowerStep15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x021123a0
+_ZN14daObjBk_Lift_cD1Ev kind:function(arm,size=0x4c) addr:0x02112290
+_ZN14daObjBk_Lift_cD0Ev kind:function(arm,size=0x60) addr:0x021122dc
+_ZN14daObjBk_Lift_c4KillEv kind:function(arm,size=0x64) addr:0x0211233c
+_ZN14daObjBk_Lift_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x021123a0
 func_ov015_021123c8 kind:function(arm,size=0x9c) addr:0x021123c8
-_ZN9TowerStep16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
-_ZN9TowerStep6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
-_ZN9TowerStep8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
-_ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
+_ZN14daObjBk_Lift_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
+_ZN14daObjBk_Lift_c6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
+_ZN14daObjBk_Lift_c8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
+_ZN14daObjBk_Lift_c13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
 func_ov015_021128e8 kind:function(arm,size=0x10) addr:0x021128e8
 func_ov015_021128f8 kind:function(arm,size=0x14) addr:0x021128f8
 daObjBk_Lift_c_classInit kind:function(arm,size=0x38) addr:0x0211290c
@@ -235,7 +235,6 @@ data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous
 _ZTI14daObjBk_Lift_c kind:data(any) addr:0x0211460c
 _ZTS14daObjBk_Lift_c kind:data(any) addr:0x02114618
 g_profile_BK_LIFT01 kind:data(any) addr:0x0211462c ambiguous
-_ZTV9TowerStep kind:data(any) addr:0x02114650
 _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
 _ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
 _ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
