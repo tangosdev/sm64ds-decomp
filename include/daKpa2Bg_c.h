@@ -16,13 +16,18 @@
  * vtable is gone, and so is the coined `_ZTV18BowserFireSeaArena` line that named
  * 0x0211a8b0 in ov060's symbols.txt.
  *
- * A curated single-TU form of this class is written and byte-verified
- * (src_tu is not carrying it yet): see config/tu_manifest.d/ov060 in a later
- * change. It cannot be promoted until the CLPS block InitResources passes to
- * dBgW_KcMbg::SetFile is settled -- ov060/relocs.txt records that site as an
- * ambiguous cross-overlay load with twenty candidate modules, and ov060 makes no
- * unambiguous call to any of them, so the reference stays the phantom
- * `func_021115bc`.
+ * This class is a PARTIAL promotion: src/actors/daKpa2Bg_c.cpp is the merged
+ * translation unit and licenses the contiguous run 0x02117980..0x02117c30,
+ * eight of its ten functions. InitResources (0x02117c30) and
+ * daKpa2Bg_c_classInit (0x02117cdc) keep their own enrolled shards and are not
+ * written in the merged source, though both were shown to reproduce their ROM
+ * bytes from it. The obstacle is one relocation, not a byte: the CLPS block
+ * InitResources passes to dBgW_KcMbg::SetFile is loaded from 0x021115bc, which
+ * ov060/relocs.txt records as an ambiguous cross-overlay load with twenty
+ * candidate modules, and ov060 makes no unambiguous call to any of them, so the
+ * reference stays the phantom `func_021115bc` and no symbols.txt defines it.
+ * The factory sits ABOVE that hole, so no contiguous complete span reaches it
+ * either. See config/tu_manifest.d/ov060/daKpa2Bg_c.json for the measurements.
  *
  * SM64DS RTTI names the implementation daKpa2Bg_c. The reconstructed factory
  * daKpa2Bg_c_classInit (historical alias daKpa2Bg_c_classInit)
@@ -77,13 +82,23 @@ struct daKpa2Bg_c : dBgActor_c {
     s32 unk_56c;            /* 0x56c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~daKpa2Bg_c();      /* slots 16 (D1), 17 (D0) */
+    /* MEASURED -- INLINE ON PURPOSE. The cartridge orders the pair D1
+       0x02117980 then D0 0x021179d4, and an in-class body is the form that
+       emits them in that order and emits no D2. An out-of-line definition
+       emits D0 ahead of the written D1 plus a homeless D2, and the licensed
+       run cannot carry either. Keep the opening brace on the signature line:
+       tools/check_header_offsets.py only arms its body skip when it is there. */
+    virtual ~daKpa2Bg_c() {}    /* slots 16 (D1), 17 (D0) */
 
-    /* --- non-virtual --- */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
+    /* --- overrides of inherited fBase_c slots; each takes its base's index,
+           so the order here adds nothing to the table. It decides only which
+           member is this class's key function, and with the destructor inline
+           that is Behavior -- the TU that defines it emits _ZTV10daKpa2Bg_c
+           and both destructor variants. --- */
+    virtual int Behavior();             /* slot  6 */
+    virtual int CleanupResources();     /* slot  3 */
+    virtual int InitResources();        /* slot  0 */
+    virtual int Render();               /* slot  9 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -102,7 +117,7 @@ struct daKpa2Bg_c {
     u8  pad_090[0x44];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10daKpa2Bg_cD1Ev.c] */
+       checks. Was a u8 marker. [src/actors/daKpa2Bg_c.cpp] */
     Model mModel1;            /* 0x0d4 */
     dBgW_KcMbg mMovingMeshCollider1;    /* 0x124 */
     u8  pad_2ec[0x32];
