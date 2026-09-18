@@ -691,7 +691,7 @@ extern int _ZTV6Cannon[];
 extern int _ZTV6Coffin[];
 extern int _ZTV6Eyerok[];
 extern int _ZTV6Klepto[];
-extern int _ZTV6ShipUp[];
+extern int _ZTV14daObjKi_Fune_c[];
 extern int _ZTV6dMap_c[];
 extern int _ZTV7HeaveHo[];
 extern int _ZTV12HealingHeart[];

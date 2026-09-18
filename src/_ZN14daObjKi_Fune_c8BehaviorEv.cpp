@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN6ShipUp8BehaviorEv
+// @symbol _ZN14daObjKi_Fune_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ShipUp.h"
+#include "daObjKi_Fune_c.h"
 #include "dBgW.h"
 extern "C" {
 extern void func_020393a4(int* p, int v);
@@ -13,7 +13,7 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* a);
 }
 extern short data_02082214[];
 
-int ShipUp::Behavior()
+int daObjKi_Fune_c::Behavior()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0){
     ((dBgW *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
