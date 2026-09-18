@@ -114,6 +114,18 @@ and nothing else does. Without that, every correct flat extern of a member would
 for an arity disagreement -- 1,451 of them, across the 1,216 member definitions the tree
 holds. It still catches the case that matters, a `this` declared `int`.
 
+A STATIC MEMBER HAS NO `this`, AND ITS DEFINITION CANNOT SAY SO. C++ forbids repeating
+`static` on an out-of-line definition, so `fBase_c *dBase_c::Spawn(u32, fBase_c *, int,
+int)` is character-for-character what a non-static member's definition looks like, and the
+keyword survives only in the class body. Reading the qualified name alone and prepending a
+`this` invents a fifth parameter and bills three correct four-argument declarations for an
+arity disagreement -- which is exactly what `dBase_c::Spawn` did the day it gained an
+`@symbol` marker and became visible at all. `static_member_index()` therefore scans every
+header's class bodies for the keyword and keys the answer on (class, method). Headers only,
+because a class body re-declared inside one shard is that shard's private reconstruction;
+and when the index disagrees with itself about a pair, the definition states no arity at
+all rather than pick a side.
+
 TYPEDEF ALIASES ARE NOT DISAGREEMENTS. `include/types.h` is parsed for its scalar typedefs
 and they are resolved transitively before comparison, so `u32` and `unsigned int` and
 `unsigned` are one type, `Fix12i` and `s32` and `signed int` and `int` are one type, and a
@@ -544,11 +556,15 @@ def parse_params(text, aliases, cxx):
 
 
 def parse_declarator(text, aliases, cxx=True):
-    """(name, return_type, params, is_function) for one declarator, or None.
+    """(name, return_type, params, is_function, is_member, owner) or None.
 
     `text` is a single declaration with its leading specifiers already stripped:
     `void *_ZN7fBase_cnwEj(unsigned int size)`, `SharedFilePtr data_ov102_0214e9c0`,
     `int _ZTV7daBmb_c[]`.
+
+    `owner` is the innermost class an out-of-line `Class::method` names, or `None`.
+    It is the key the static-member index is read with, and it is separate from
+    `is_member` because a bare `::f` qualifier is a member of nothing.
     """
     text = " ".join(text.split())
     if not text:
@@ -573,7 +589,7 @@ def parse_declarator(text, aliases, cxx=True):
         typ = "%s (%s%s)(%s)" % (
             normalise_type(fp.group("pre"), aliases, decay_arrays=False),
             fp.group("stars"), fp.group("arr"), shown)
-        return fp.group("name"), " ".join(typ.split()), None, False, False
+        return fp.group("name"), " ".join(typ.split()), None, False, False, None
     # Trailing cv-qualifiers, exception specifications and attributes. `__attribute__`
     # is stripped repeatedly because the tree writes `((long_call, target(...)))` and
     # the inner parentheses survive the string blanking as `target( )`.
@@ -625,7 +641,14 @@ def parse_declarator(text, aliases, cxx=True):
         # returning `int daBmb_c::` and disagree with every flat declaration of it.
         lead = head[:m.start()].rstrip()
         member = lead.endswith("::")
+        owner = None
         if member:
+            # The innermost qualifier, which is what an out-of-line definition of a
+            # nested class spells: `A::B::f` is a member of `B`. A bare `::f` names
+            # no class, so it has no owner and the index cannot be asked about it.
+            qual = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*::\s*$", lead)
+            if qual:
+                owner = qual.group(1)
             lead = re.sub(r"[A-Za-z_][A-Za-z0-9_]*\s*::\s*$", "", lead)
         ret = normalise_type(lead, aliases, decay_arrays=False)
         if not ret:
@@ -633,7 +656,7 @@ def parse_declarator(text, aliases, cxx=True):
         params, ok = parse_params(params_text, aliases, cxx)
         if not ok:
             return None
-        return name, ret, params, True, member
+        return name, ret, params, True, member, owner
 
     # Data. Strip an array bound before hunting for the identifier.
     stripped = re.sub(r"(\[[^\[\]]*\])+\s*$", "", text).strip()
@@ -650,7 +673,7 @@ def parse_declarator(text, aliases, cxx=True):
     typ = normalise_type(before + suffix, aliases, decay_arrays=False)
     if not typ:
         return None
-    return name, typ, None, False, False
+    return name, typ, None, False, False, None
 
 
 # ------------------------------------------------------------------- unit walk
@@ -803,11 +826,19 @@ def _strip_specifiers(text):
 class Record(object):
     """One declaration or definition, reduced to what the linker would see.
 
-    `is_member` marks an out-of-line member definition (`int daBmb_c::Behavior()`).
-    The tree declares those flat, with the `this` pointer written out as an explicit
-    first parameter, so a member's declared arity is one MORE than its definition's.
-    Recording the fact instead of guessing is what keeps 3,000 correct flat externs
-    out of the report.
+    `is_member` marks an out-of-line member definition that HAS a `this`
+    (`int daBmb_c::Behavior()`). The tree declares those flat, with the `this`
+    pointer written out as an explicit first parameter, so such a member's declared
+    arity is one MORE than its definition's. Recording the fact instead of guessing
+    is what keeps 3,000 correct flat externs out of the report.
+
+    A STATIC member function is out-of-line member syntax with no `this`, and C++
+    forbids repeating the `static` keyword on the definition, so the text in front of
+    the tool cannot tell the two apart. `static_member_index()` reads the keyword off
+    the class body instead; a definition it calls static gets `is_member=False` and
+    is compared exactly like a free function. `this_unknown` is the third answer: the
+    index contradicts itself about this `(class, method)` pair, so `flat_params()`
+    declines to state an arity at all rather than guess one.
 
     `raw_types` is every identifier the declaration SPELLS, before any alias is
     resolved, plus the words of its file's own typedefs. It is what answers "does this
@@ -819,10 +850,12 @@ class Record(object):
     """
 
     __slots__ = ("symbol", "file", "line", "ret", "params", "is_function",
-                 "linkage", "is_definition", "is_member", "raw_types")
+                 "linkage", "is_definition", "is_member", "raw_types",
+                 "this_unknown")
 
     def __init__(self, symbol, file, line, ret, params, is_function, linkage,
-                 is_definition, is_member=False, raw_types=()):
+                 is_definition, is_member=False, raw_types=(),
+                 this_unknown=False):
         self.symbol = symbol
         self.file = file
         self.line = line
@@ -833,6 +866,7 @@ class Record(object):
         self.is_definition = is_definition
         self.is_member = is_member
         self.raw_types = frozenset(raw_types)
+        self.this_unknown = this_unknown
 
     def flat_params(self):
         """The parameter list a FLAT declaration of this symbol would carry.
@@ -840,8 +874,14 @@ class Record(object):
         `None` when unspecified. A member gets its implicit `this` back, spelled as
         a wildcard: the tree writes it `void *`, `char *` and `<Class> *` in roughly
         equal thirds, and none of those three is more right than the others.
+
+        `None` again when `this_unknown`: the class body disagrees with itself about
+        whether this member is static, so BOTH arities are defensible and stating
+        either would bill an honest declaration for the tool's guess. The comparison
+        already treats an unspecified list as claiming nothing, which is what an
+        answer nobody can give should look like.
         """
-        if self.params is UNSPECIFIED:
+        if self.params is UNSPECIFIED or self.this_unknown:
             return UNSPECIFIED
         if self.is_member:
             return ("<this>",) + tuple(self.params)
@@ -852,6 +892,9 @@ class Record(object):
             return self.ret
         params = self.flat_params()
         if params is UNSPECIFIED:
+            if self.this_unknown and self.params is not UNSPECIFIED:
+                return "%s (%s)" % (
+                    self.ret, ", ".join(("<this?>",) + tuple(self.params)))
             return "%s (unspecified)" % self.ret
         return "%s (%s)" % (self.ret, ", ".join(params) if params else "void")
 
@@ -1053,8 +1096,150 @@ def _raw_types(text, name):
     return {t for t in IDENT.findall(text) if t != name and t not in TYPE_KEYWORDS}
 
 
-def parse_file(rel, text, aliases):
-    """(declarations, definitions, unparsed_count) found in one file."""
+# --------------------------------------------------------- static member index
+
+# The verdicts `static_member_index` returns. A pair it has never seen is absent,
+# which is a fourth state and deliberately not one of these: "no class body in any
+# header declares this" is not the same claim as "the class bodies disagree".
+STATIC_MEMBER = "static"
+INSTANCE_MEMBER = "instance"
+AMBIGUOUS_MEMBER = "ambiguous"
+
+# The head in front of a class body's `{`: `struct dBase_c : fBase_c`,
+# `class Heap`, `struct SceneNode`. Anchored at the end so the name is the one the
+# brace opens, and `$`-anchored after an optional base-clause. A head ending in `)`
+# is a function, not a class, even when it spells one of these keywords in a
+# parameter list.
+CLASS_BODY_HEAD = re.compile(
+    r"\b(?:class|struct|union)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?::[^;{]*)?$")
+# `public:` and friends carry no `;`, so without this they glue themselves to the
+# front of the next member and `_strip_specifiers` stops before the `static`.
+ACCESS_LABEL = re.compile(r"^\s*(?:public|private|protected)\s*:\s*")
+
+
+def class_body_statements(code):
+    """Yield (class_name, statement) for every statement a CLASS BODY declares.
+
+    SCOPE IS THE WHOLE POINT. `static` means three different things in C++ and only
+    one of them is a static member: at file scope it is internal linkage, inside a
+    function body it is a local with static storage, and inside a class body it is
+    "no `this`". So this walks braces with a stack and reports a statement only when
+    the INNERMOST open brace is a class/struct/union body -- a `static` in a member
+    function's body sits one scope deeper and is never yielded.
+
+    The class name is the innermost one: `struct A { struct B { ... }; };` reports
+    `B` for B's members, which is what an out-of-line `A::B::f` definition spells.
+    An anonymous body has no name to key on, so it pushes a scope that yields
+    nothing rather than lending its members to the class around it.
+
+    A member function DEFINED in the class body terminates with `}` and not `;`, so
+    its head is yielded when its brace opens and the body is then skipped as an
+    unnamed scope.
+    """
+    i = 0
+    n = len(code)
+    start = 0
+    paren = 0
+    stack = []
+    while i < n:
+        ch = code[i]
+        if ch in "([":
+            paren += 1
+        elif ch in ")]":
+            paren -= 1
+        elif paren <= 0 and ch == ";":
+            if stack and stack[-1]:
+                yield stack[-1], code[start:i]
+            start = i + 1
+        elif paren <= 0 and ch == "{":
+            head = " ".join(code[start:i].split())
+            m = CLASS_BODY_HEAD.search(head)
+            if m and not head.endswith(")"):
+                stack.append(m.group(1))
+            else:
+                if stack and stack[-1]:
+                    yield stack[-1], head
+                stack.append(None)
+            start = i + 1
+        elif paren <= 0 and ch == "}":
+            if stack:
+                stack.pop()
+            start = i + 1
+        i += 1
+
+
+def static_member_index(root=REPO, files=None):
+    """{(class, method): STATIC_MEMBER | INSTANCE_MEMBER | AMBIGUOUS_MEMBER}.
+
+    C++ forbids repeating `static` on an out-of-line definition, so `fBase_c
+    *dBase_c::Spawn(u32, fBase_c *, int, int)` is character-for-character what a
+    NON-static member's definition looks like. The keyword exists only in the class
+    body, and this is the pass that goes and reads it.
+
+    HEADERS ONLY, and that is a judgement rather than a shortcut. A header is the
+    interface the tree shares; a class body re-declared inside one `.c` shard is that
+    shard's private reconstruction, exactly as likely to be a guess as the flat
+    `extern` this tool is judging it against, and letting one shard's guess decide
+    would silence findings tree-wide. Measured on this tree the two populations do
+    not even agree: the 504 headers produce 3,141 pairs with ZERO self-disagreements,
+    while folding in the 8,662 sources adds three -- `Message::Update`,
+    `Stage::CheckInput` and `Stage::UpdateMessage`, each one a shard contradicting a
+    header or another shard.
+
+    AMBIGUITY CLAIMS NOTHING. Two classes can each declare a `Spawn`, one static and
+    one not, a class can be declared in more than one header, and an overload set can
+    hold both kinds under one name; this index is keyed on the NAME and cannot tell
+    those apart. When the pairs disagree the verdict is AMBIGUOUS_MEMBER and the
+    caller stops stating an arity for that definition at all -- neither reading is
+    privileged, and inventing a `this` for an honest declaration is the defect this
+    whole pass exists to remove.
+    """
+    index = {}
+    targets = files if files is not None else scan_targets(root)
+    for rel in targets:
+        if not rel.endswith(HEADER_SUFFIXES):
+            continue
+        path = pathlib.Path(root) / rel
+        if not path.exists():
+            continue
+        code, _marks = scrub(path.read_text(encoding="utf-8", errors="replace"))
+        for cls, stmt in class_body_statements(code):
+            body = " ".join(stmt.split())
+            while True:
+                shorter = ACCESS_LABEL.sub("", body)
+                if shorter == body:
+                    break
+                body = shorter
+            if not body or re.match(r"^(typedef|using|template|friend)\b", body):
+                continue
+            rest, _extern, saw_static, _override = _strip_specifiers(body)
+            if not rest:
+                continue
+            parsed = parse_declarator(rest, {}, True)
+            if parsed is None:
+                continue
+            name, _ret, _params, is_fn, member, _owner = parsed
+            # Data members are not asked about: an out-of-line static data member
+            # definition never gets a `this` in the first place.
+            if not is_fn or member:
+                continue
+            verdict = STATIC_MEMBER if saw_static else INSTANCE_MEMBER
+            previous = index.get((cls, name))
+            if previous is None:
+                index[(cls, name)] = verdict
+            elif previous != verdict:
+                index[(cls, name)] = AMBIGUOUS_MEMBER
+    return index
+
+
+def parse_file(rel, text, aliases, statics=None):
+    """(declarations, definitions, unparsed_count) found in one file.
+
+    `statics` is `static_member_index()`'s answer, consulted for every out-of-line
+    member DEFINITION so a static member is not billed an implicit `this` it does
+    not have. `None` means "no index was built", which is the pre-index behaviour:
+    every out-of-line member is read as an instance member.
+    """
     code, marks = scrub(text)
     orphans = []
     newlines = line_index(text)
@@ -1121,9 +1306,21 @@ def parse_file(rel, text, aliases):
             parsed = parse_declarator(rest, aliases, cxx)
             if parsed is None:
                 continue
-            name, ret, params, is_fn, member = parsed
+            name, ret, params, is_fn, member, owner = parsed
             if not is_fn:
                 continue
+            # Does this out-of-line member have a `this`? The definition cannot say
+            # -- C++ forbids repeating `static` here -- so the class body is asked.
+            # An owner the index has never heard of keeps the old reading, which is
+            # the common case and the right one: nearly every member is an instance
+            # member, and this pass may only ever REMOVE a phantom, never add one.
+            this_unknown = False
+            if member and owner and statics:
+                verdict = statics.get((owner, name))
+                if verdict == STATIC_MEMBER:
+                    member = False
+                elif verdict == AMBIGUOUS_MEMBER:
+                    this_unknown = True
             marked = [s for idx, s in marks if start <= idx < decl_start]
             symbol = marked[-1] if marked else name
             if ("::" in rest or mangled_scope) and not marked:
@@ -1134,11 +1331,11 @@ def parse_file(rel, text, aliases):
                 # definition, in which case the mark names it. See the adoption
                 # pass at the end of this function.
                 orphans.append((symbol, rel, line, ret, params, linkage, member,
-                                _raw_types(rest, name) | file_types))
+                                _raw_types(rest, name) | file_types, this_unknown))
                 continue
             defs.append(Record(symbol, rel, line, ret, params, True,
                                "C" if linkage == "C" else linkage, True, member,
-                               _raw_types(rest, name) | file_types))
+                               _raw_types(rest, name) | file_types, this_unknown))
             continue
 
         if saw_static and not saw_extern:
@@ -1157,7 +1354,7 @@ def parse_file(rel, text, aliases):
                 if reaches_decls and not IDENT.fullmatch(piece.strip()):
                     unparsed += 1
                 continue
-            name, ret, params, is_fn, _member = parsed
+            name, ret, params, is_fn, _member, _owner = parsed
             if has_init and is_fn:
                 # A parenthesised head with an initialiser is a constructor call or a
                 # parse this tool should not guess at. Claim nothing.
@@ -1216,10 +1413,11 @@ def parse_file(rel, text, aliases):
     if len(marks) == 1 and len(orphans) == 1:
         symbol = marks[0][1]
         if not any(d.symbol == symbol for d in defs):
-            _, o_rel, o_line, o_ret, o_params, o_linkage, o_member, o_types = orphans[0]
+            (_, o_rel, o_line, o_ret, o_params, o_linkage, o_member, o_types,
+             o_unknown) = orphans[0]
             defs.append(Record(symbol, o_rel, o_line, o_ret, o_params, True,
                                "C" if o_linkage == "C" else o_linkage, True,
-                               o_member, o_types))
+                               o_member, o_types, o_unknown))
     return decls, defs, unparsed
 
 
@@ -1353,6 +1551,12 @@ def demangled_arity(symbol, root=REPO):
 def collect(root=REPO, files=None):
     aliases = scalar_typedefs(root)
     targets = list(files) if files is not None else scan_targets(root)
+    # EVERY header, never `targets`. `--changed` narrows what is compared, but a
+    # class body is not a declaration of anything this tool collects, so no scope
+    # rule would ever fold `include/dBase_c.h` in for a branch that only touched the
+    # file defining `dBase_c::Spawn` -- and the phantom `this` would come straight
+    # back in the narrowed run. It is 504 files and half a second.
+    statics = static_member_index(root)
     decls, defs = [], []
     unparsed = 0
     for rel in targets:
@@ -1360,7 +1564,7 @@ def collect(root=REPO, files=None):
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        d, f, u = parse_file(rel, text, aliases)
+        d, f, u = parse_file(rel, text, aliases, statics)
         decls.extend(d)
         defs.extend(f)
         unparsed += u
