@@ -3651,6 +3651,15 @@
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "andrewboudreau",
     "src/game/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020adec0": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020adf50": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020adfc8": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020ae0b0": "andrewboudreau",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020ae1a4": "andrewboudreau",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020ae238": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#func_ov003_020ae358": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#_ZN12dScStarSel_c16OnPendingDestroyEv": "tangosdev",
+    "src/actors/dScStarSel_c.cpp#_ZN12dScStarSel_c6RenderEv": "tangosdev"
   }
 }
