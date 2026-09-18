@@ -110,6 +110,16 @@
 
 #pragma defer_codegen off
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  50 func_ov004_* + 18 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  2 _ZN..E member call(s)       already declared -- needs the
+ *                                scope-qualified spelling on a real `this`.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  ~222 *(T *)(p + 0x..)         class layout does not name these offsets.
+ */
+
 #include "types.h"
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"

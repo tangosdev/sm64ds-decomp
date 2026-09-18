@@ -65,6 +65,15 @@
  * opt_strength_reduction pair above, both REVIEWED and carried
  * file-global at the top. There is no long_calls carrier in this TU. */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  27 func_ov004_* + 14 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  3 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ *  3 unk_NN                      slot/field name not evidenced.
+ */
+
 #include "dScMgBSC_c.h"
 #include "types.h"
 #include "decl_common.h"

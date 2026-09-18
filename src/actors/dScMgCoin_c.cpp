@@ -66,6 +66,16 @@
  *              incremented in exactly one place (func_ov006_020dc5c4)
  */
 
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  41 func_ov006_* + 22 data_*   unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  1 _ZN..E call(s)              class header exists, member not yet
+ *                                declared in it.
+ *  1 `(void *)this` launder(s)   bisect before removing -- some are free,
+ *                                some hold the register allocation.
+ *  ~124 *(T *)(p + 0x..)         class layout does not name these offsets.
+ */
+
 #include "types.h"
 #include "decl_common.h"
 

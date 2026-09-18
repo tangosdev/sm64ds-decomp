@@ -3,6 +3,14 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
+/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
+ *  2 func_ov006_*                unnamed in config symbols.txt; each needs a
+ *                                coined, behaviour-justified name.
+ *  2 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
+ *                                in C++ source; only a real ctor emits it.
+ *  3 _ZTV vptr store(s)          stands in for the ctor that would emit it.
+ */
+
 #include "dScMgSlot1_c.h"
 
 extern "C" {
