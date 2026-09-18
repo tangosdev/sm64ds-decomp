@@ -13,7 +13,7 @@ extern int func_0203da3c(void);
 extern void func_02030aa4(int arg);
 extern void func_ov075_0211a194(void *p, const void *data);
 extern void func_ov075_02116e00(void *p);
-extern void *_ZN7dBase_c5SpawnEjP7fBase_cii(u32 a, void *b, int c, int d);
+extern struct fBase_c *_ZN7dBase_c5SpawnEjP7fBase_cii(u32 a, void *b, int c, int d);
 
 extern void *data_0208a0e4[];
 extern int data_ov075_0211c9a4[];
