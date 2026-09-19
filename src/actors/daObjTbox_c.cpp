@@ -47,23 +47,26 @@
  * - data_ov064_0211c98c, the three PMF pairs, and the four SharedFilePtr
  *   handles are overlay data this TU consumes and does not own.
  *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [ 0] 0x0211a200  src/_ZN11daObjTbox_cD1Ev.cpp
- *   [ 1] 0x0211a238  src/_ZN11daObjTbox_cD0Ev.cpp
- *   [ 2] 0x0211a284  src/_ZN11daObjTbox_c20UpdateModelTransformEv.cpp
- *   [ 3] 0x0211a2c4  src/_ZN11daObjTbox_c6State2Ev.cpp
- *   [ 4] 0x0211a380  src/_ZN11daObjTbox_c10InitState2Ev.cpp
- *   [ 5] 0x0211a39c  src/_ZN11daObjTbox_c6State1Ev.cpp
- *   [ 6] 0x0211a49c  src/_ZN11daObjTbox_c10InitState1Ev.cpp
- *   [ 7] 0x0211a4c4  src/_ZN11daObjTbox_c6State0Ev.cpp
- *   [ 8] 0x0211a6e0  src/_ZN11daObjTbox_c10InitState0Ev.cpp
- *   [ 9] 0x0211a6ec  src/_ZN11daObjTbox_c8SetStateEi.cpp
- *   [10] 0x0211a734  src/_ZN11daObjTbox_c17CallStateBehaviorEv.cpp
- *   [11] 0x0211a77c  src/_ZN11daObjTbox_c16CleanupResourcesEv.cpp
- *   [12] 0x0211a7c4  src/_ZN11daObjTbox_c6RenderEv.cpp
- *   [13] 0x0211a7ec  src/_ZN11daObjTbox_c8BehaviorEv.cpp
- *   [14] 0x0211a814  src/_ZN11daObjTbox_c13InitResourcesEv.cpp
- *   [15] 0x0211a8f0  src/d_a_obj_tbox.c
+ * Consolidated from sixteen one-function sources, one per symbol below.
+ * Their retired paths are recorded per function in this TU's manifest
+ * entry; naming them here would leave the comment pointing at files the
+ * fold deletes. ROM address order:
+ *   [ 0] 0x0211a200  _ZN11daObjTbox_cD1Ev
+ *   [ 1] 0x0211a238  _ZN11daObjTbox_cD0Ev
+ *   [ 2] 0x0211a284  _ZN11daObjTbox_c20UpdateModelTransformEv
+ *   [ 3] 0x0211a2c4  _ZN11daObjTbox_c6State2Ev
+ *   [ 4] 0x0211a380  _ZN11daObjTbox_c10InitState2Ev
+ *   [ 5] 0x0211a39c  _ZN11daObjTbox_c6State1Ev
+ *   [ 6] 0x0211a49c  _ZN11daObjTbox_c10InitState1Ev
+ *   [ 7] 0x0211a4c4  _ZN11daObjTbox_c6State0Ev
+ *   [ 8] 0x0211a6e0  _ZN11daObjTbox_c10InitState0Ev
+ *   [ 9] 0x0211a6ec  _ZN11daObjTbox_c8SetStateEi
+ *   [10] 0x0211a734  _ZN11daObjTbox_c17CallStateBehaviorEv
+ *   [11] 0x0211a77c  _ZN11daObjTbox_c16CleanupResourcesEv
+ *   [12] 0x0211a7c4  _ZN11daObjTbox_c6RenderEv
+ *   [13] 0x0211a7ec  _ZN11daObjTbox_c8BehaviorEv
+ *   [14] 0x0211a814  _ZN11daObjTbox_c13InitResourcesEv
+ *   [15] 0x0211a8f0  daObjTbox_c_classInit
  */
 
 #include "daObjTbox_c.h"
