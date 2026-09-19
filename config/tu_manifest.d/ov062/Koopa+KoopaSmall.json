@@ -2,7 +2,7 @@
   "id": "ov062/Koopa+KoopaSmall",
   "module": "ov062",
   "source": "src_tu/actors/Koopa+KoopaSmall.cpp",
-  "promoted_source": "src/actors/Koopa+KoopaSmall.cpp",
+  "promoted_source": "src/game/actors/d_a_nknk.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
