@@ -48,7 +48,7 @@ typedef struct Vector3 {
     Fix12i x, y, z;
 #ifdef __cplusplus
     /* DECLARED, AND EMPTY, BECAUSE THE ROM DESTROYS ARRAYS OF IT. A POD array
-       needs no cleanup, so ChiefChilly's
+       needs no cleanup, so daKing_Donketu_c's
        `__cxa_vec_cleanup(this + 0x3e8, 8, 0xc, func_020072c0)` can only exist if
        the element type declares a destructor -- and 0x020072c0 is four bytes,
        `bx lr`, an empty one. config/arm9/symbols.txt names it
@@ -63,7 +63,7 @@ typedef struct Vector3 {
 } Vector3;
 
 #ifdef __cplusplus
-/* 0xc, and the ROM agrees twice over: ChiefChilly's arrays stride by 0xc and
+/* 0xc, and the ROM agrees twice over: daKing_Donketu_c's arrays stride by 0xc and
    its __cxa_vec_cleanup calls pass 0xc as the element size. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

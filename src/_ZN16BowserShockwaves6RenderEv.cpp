@@ -12,7 +12,7 @@
  * six stand-in structs at the top of this file were standing in for.
  *
  * THE TWO DRAW CALLS ARE VIRTUAL HERE, and that is the opposite of ov085.
- * Toad::Render and PrincessPeach::Render call Model::Render through a direct
+ * daKinopio_c::Render and daPeach_c::Render call Model::Render through a direct
  * `bl` and need `mModelAnim.Model::Render(0)` to suppress the dispatch; this
  * one genuinely dispatches -- `ldr r,[r]` / `ldr r,[r,#0x14]` / `blx`, slot 5
  * of _ZTV5Model -- so the plain unqualified call is what matches, and

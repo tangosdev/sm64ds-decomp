@@ -38885,11 +38885,11 @@ matched: yes</title></rect><rect x="1122.80" y="721.30" width="15.77" height="21
 module: ov072
 addr: 0x02122414
 size: 756 bytes
-matched: yes</title></rect><rect x="1058.35" y="775.03" width="7.80" height="9.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChillyD1Ev
+matched: yes</title></rect><rect x="1058.35" y="775.03" width="7.80" height="9.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_cD1Ev
 module: ov073
 addr: 0x0211f000
 size: 152 bytes
-matched: yes</title></rect><rect x="1066.14" y="775.03" width="8.82" height="9.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChillyD0Ev
+matched: yes</title></rect><rect x="1066.14" y="775.03" width="8.82" height="9.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_cD0Ev
 module: ov073
 addr: 0x0211f098
 size: 172 bytes
@@ -39045,23 +39045,23 @@ matched: yes</title></rect><rect x="1082.91" y="815.49" width="44.06" height="5.
 module: ov073
 addr: 0x021215cc
 size: 532 bytes
-matched: yes</title></rect><rect x="1126.97" y="815.49" width="11.59" height="5.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChilly16CleanupResourcesEv
+matched: yes</title></rect><rect x="1126.97" y="815.49" width="11.59" height="5.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_c16CleanupResourcesEv
 module: ov073
 addr: 0x021217e0
 size: 140 bytes
-matched: yes</title></rect><rect x="1082.91" y="821.43" width="10.69" height="2.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChilly6RenderEv
+matched: yes</title></rect><rect x="1082.91" y="821.43" width="10.69" height="2.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_c6RenderEv
 module: ov073
 addr: 0x02121870
 size: 48 bytes
-matched: yes</title></rect><rect x="1082.91" y="823.57" width="10.69" height="47.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChilly8BehaviorEv
+matched: yes</title></rect><rect x="1082.91" y="823.57" width="10.69" height="47.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_c8BehaviorEv
 module: ov073
 addr: 0x021218a0
 size: 1068 bytes
-matched: yes</title></rect><rect x="1093.60" y="821.25" width="44.26" height="5.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChilly13InitResourcesEv
+matched: yes</title></rect><rect x="1093.60" y="821.25" width="44.26" height="5.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_c13InitResourcesEv
 module: ov073
 addr: 0x02121ccc
 size: 500 bytes
-matched: yes</title></rect><rect x="1137.86" y="821.25" width="0.71" height="5.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11ChiefChilly16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1137.86" y="821.25" width="0.71" height="5.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daKing_Donketu_c16OnAimedAtWithEggEv
 module: ov073
 addr: 0x02121ec0
 size: 8 bytes

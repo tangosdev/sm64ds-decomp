@@ -14,7 +14,7 @@
     "tooling_corroboration": "tools/rtti_extract.py at this revision writes build/rtti.json with 429 records, 413 edges, 0 unresolved, 19 components. Its record for this class is {module: ov085, addr: 0x021300c8, kind: si, mangled: 7daMip_c, name: daMip_c, name_addr: 0x021300bc, vtable: 0x021300f8, vtable_module: ov085}. `python tools/rtti_vtables.py --own daMip_c` prints the override set below and exits 0; `--own Rabbit` prints 'no vtable for Rabbit' and exits 1 -- the ROM-derived database has never heard the name.",
     "symbols_txt_asymmetry": "config/arm9/overlays/ov085/symbols.txt aliases the VTABLE under both spellings at one address (`_ZTV6Rabbit` and `_ZTV7daMip_c`, both addr:0x021300f8) but names _ZTS and _ZTI under the daMip_c spelling ONLY. A TU compiled as `struct Rabbit` therefore emits _ZTS6Rabbit and _ZTI6Rabbit, neither of which has a home in the cartridge. That is survivable on the queue's declared text-only route (RTTI is externalized/deadstripped) and FATAL on an intact-object route. Do not attempt intact-object under the coined spelling. Independently, `_ZTV6Rabbit`/`_ZTV7daMip_c` is a multi-name data object at one address, which blocks the intact-object route on its own.",
     "keep_the_coined_spelling": "All eight already-mangled member symbols in symbols.txt use the 6-character length prefix -- _ZN6RabbitD1Ev, _ZN6RabbitD0Ev, _ZN6Rabbit16CleanupResourcesEv, _ZN6Rabbit16OnPendingDestroyEv, _ZN6Rabbit6RenderEv, _ZN6Rabbit8BehaviorEv, _ZN6Rabbit13InitResourcesEv, _ZN6Rabbit13OnYoshiTryEatEv. There is NO _ZN7daMip_c* member alias anywhere in the tree (measured: grep -i mip over config/arm9/symbols.txt plus every config/arm9/overlays/*/symbols.txt returns exactly 10 rows, all listed in this file, none of them a member function). Renaming the class to daMip_c would therefore invalidate all eight enrolled symbol rows at once. include/Rabbit.h already exists and already records the daMip_c identity in its header comment.",
-    "sibling_naming_pattern": "Every one of ov085's six classes carries a coined tree name aliased onto the ROM name in symbols.txt: Toad=daKinopio_c, PrincessPeach=daPeach_c, Rabbit=daMip_c, RabbitKey=daObj_Mip_Key_c, LakituBro=daC_Jugem_c, WallSign=daObjKanban_c. None of the six is promoted."
+    "sibling_naming_pattern": "All six of ov085's classes now carry their ROM RTTI name. Five were renamed off a coined tree name (Toad->daKinopio_c, PrincessPeach->daPeach_c, RabbitKey->daObj_Mip_Key_c, LakituBro->daC_Jugem_c, WallSign->daObjKanban_c) and Rabbit->daMip_c earlier; the coined vtable aliases in symbols.txt are retired. None of the six is promoted."
   },
 
   "overlay": "ov085",
@@ -39,7 +39,7 @@
     "total_lines_in_queue_row": 1694,
     "total_lines_note": "1,723 is `wc -l` summed over the 32 shard files at a81adfa37; the queue's 1,694 is 29 lines short, consistent with its 31-shard count omitting src/d_a_mip.c (29 lines).",
     "shard_count_discrepancy": "The queue row notes/data/tu-promotion-queue.tsv says 31; I measured 32 by parsing config/arm9/overlays/ov085/delinks.txt for every `.text start:` inside [0x0212a6d4,0x0212cc88) and collecting distinct filenames. The 32nd is src/d_a_mip.c (daMip_c_classInit, 0x0212cc2c-0x0212cc88), which is neither `func_ov085_*` nor `_ZN6Rabbit*` and is the likely omission. Trust 32.",
-    "boundaries_are_clean": "Below: _ZN13PrincessPeach13InitResourcesEv ends at exactly 0x0212a6d4. Above: daMip_c_classInit is size 0x5c and 0x0212cc2c+0x5c = 0x0212cc88 = _ZN9RabbitKeyD1Ev. No gap, no straddle."
+    "boundaries_are_clean": "Below: _ZN9daPeach_c13InitResourcesEv ends at exactly 0x0212a6d4. Above: daMip_c_classInit is size 0x5c and 0x0212cc2c+0x5c = 0x0212cc88 = _ZN15daObj_Mip_Key_cD1Ev. No gap, no straddle."
   },
 
   "one_class_not_two": {
@@ -157,7 +157,7 @@
     "count": 24,
     "pointer_to_member_targets": {
       "count": 16,
-      "why_this_proves_member_ness": "A pointer-to-member-function record can only point at a member function. Sixteen 8-byte {u32 fnptr, u32 delta} records occupy 0x0213003c-0x021300bc, and their fnptr words carry `module:overlay(85)` relocations to these sixteen addresses. Alignment was checked: the word at 0x02130038 is 0x020100dc, the last slot of PrincessPeach's vtable, so the band genuinely begins at 0x0213003c and not four bytes either side. Every delta is 0.",
+      "why_this_proves_member_ness": "A pointer-to-member-function record can only point at a member function. Sixteen 8-byte {u32 fnptr, u32 delta} records occupy 0x0213003c-0x021300bc, and their fnptr words carry `module:overlay(85)` relocations to these sixteen addresses. Alignment was checked: the word at 0x02130038 is 0x020100dc, the last slot of daPeach_c's vtable, so the band genuinely begins at 0x0213003c and not four bytes either side. Every delta is 0.",
       "records": [
         {"record": "0x0213003c", "target": "0x0212b4b4", "shard": "src/func_ov085_0212b4b4.c"},
         {"record": "0x02130044", "target": "0x0212b8dc", "shard": "src/func_ov085_0212b8dc.cpp"},
@@ -207,7 +207,7 @@
       {"range": "0x021300f0 - 0x021300f8", "what": "_ZTV7daMip_c header: offset-to-top 0x00000000, RTTI pointer 0x021300c8"},
       {"range": "0x021300f8 - 0x02130174", "what": "_ZTV7daMip_c, 31 slots"}
     ],
-    "neighbours": "Below: 0x0213003c is the first byte after PrincessPeach's 31-slot vtable, which ends there. Above: 0x02130174 is daObj_Mip_Key_c's first pointer-to-member record. The band is exactly closed on both sides."
+    "neighbours": "Below: 0x0213003c is the first byte after daPeach_c's 31-slot vtable, which ends there. Above: 0x02130174 is daObj_Mip_Key_c's first pointer-to-member record. The band is exactly closed on both sides."
   },
 
   "bss_band": {

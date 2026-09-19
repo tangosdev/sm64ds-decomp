@@ -149,9 +149,9 @@ either way; only the narration was wrong.
   | `daGmch_c` | 1119 | **1120** | `src/actors/daGmch_c.cpp` | 1119 → 1120 |
 
   Each row delta matches its file delta exactly, so these three are this
-  branch's to move. `ChiefChilly` (1992 → **1993**) and `Player`
+  branch's to move. `daKing_Donketu_c` (1992 → **1993**) and `Player`
   (26798 → **26799**) genuinely are pre-existing: `main`'s own `b3342da8f`
-  edited `include/ChiefChilly.h` and `include/Player.h` without refreshing the
+  edited `include/daKing_Donketu_c.h` and `include/Player.h` without refreshing the
   queue file, and they are the two rows base already disagrees on. All five
   were refreshed by one `python tools/queue_audit.py --write` pass, which
   rewrote only the derived columns of `notes/data/tu-promotion-queue.tsv` and

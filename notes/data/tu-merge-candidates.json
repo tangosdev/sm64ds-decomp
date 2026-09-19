@@ -2324,13 +2324,13 @@
    "start": "0x212cc88",
    "end": "0x212d528",
    "classes": [
-    "RabbitKey"
+    "daObj_Mip_Key_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN9RabbitKeyD1Ev.cpp",
-    "src/_ZN9RabbitKeyD0Ev.cpp",
+    "src/_ZN15daObj_Mip_Key_cD1Ev.cpp",
+    "src/_ZN15daObj_Mip_Key_cD0Ev.cpp",
     "src/func_ov085_0212cd0c.cpp",
     "src/func_ov085_0212cd80.c",
     "src/func_ov085_0212d038.c",
@@ -2338,11 +2338,11 @@
     "src/func_ov085_0212d24c.c",
     "src/func_ov085_0212d268.cpp",
     "src/func_ov085_0212d2b8.cpp",
-    "src/_ZN9RabbitKey16CleanupResourcesEv.cpp",
-    "src/_ZN9RabbitKey16OnPendingDestroyEv.cpp",
-    "src/_ZN9RabbitKey6RenderEv.cpp",
-    "src/_ZN9RabbitKey8BehaviorEv.cpp",
-    "src/_ZN9RabbitKey13InitResourcesEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c16OnPendingDestroyEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c6RenderEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c8BehaviorEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c13InitResourcesEv.cpp",
     "src/d_a_obj_mip_key.c"
    ],
    "ext_mix": {
@@ -6493,17 +6493,17 @@
    "start": "0x212edac",
    "end": "0x212f27c",
    "classes": [
-    "WallSign"
+    "daObjKanban_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN8WallSignD1Ev.cpp",
-    "src/_ZN8WallSignD0Ev.cpp",
-    "src/_ZN8WallSign16CleanupResourcesEv.cpp",
-    "src/_ZN8WallSign6RenderEv.cpp",
-    "src/_ZN8WallSign8BehaviorEv.cpp",
-    "src/_ZN8WallSign13InitResourcesEv.cpp",
+    "src/_ZN13daObjKanban_cD1Ev.cpp",
+    "src/_ZN13daObjKanban_cD0Ev.cpp",
+    "src/_ZN13daObjKanban_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjKanban_c6RenderEv.cpp",
+    "src/_ZN13daObjKanban_c8BehaviorEv.cpp",
+    "src/_ZN13daObjKanban_c13InitResourcesEv.cpp",
     "src/d_a_obj_kanban.c"
    ],
    "ext_mix": {
@@ -27858,13 +27858,13 @@
    "start": "0x211f000",
    "end": "0x2121f90",
    "classes": [
-    "ChiefChilly"
+    "daKing_Donketu_c"
    ],
    "n_functions_map": 47,
    "n_files": 47,
    "files": [
-    "src/_ZN11ChiefChillyD1Ev.cpp",
-    "src/_ZN11ChiefChillyD0Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD1Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD0Ev.cpp",
     "src/func_ov073_0211f144.c",
     "src/func_ov073_0211f2c0.c",
     "src/func_ov073_0211f494.c",
@@ -27903,12 +27903,12 @@
     "src/func_ov073_02121538.cpp",
     "src/ChiefChilly_ChangeState.cpp",
     "src/func_ov073_021215cc.c",
-    "src/_ZN11ChiefChilly16CleanupResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp",
-    "src/_ZN11ChiefChilly6RenderEv.cpp",
-    "src/_ZN11ChiefChilly8BehaviorEv.cpp",
-    "src/_ZN11ChiefChilly13InitResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp",
+    "src/_ZN16daKing_Donketu_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnPendingDestroyEv.cpp",
+    "src/_ZN16daKing_Donketu_c6RenderEv.cpp",
+    "src/_ZN16daKing_Donketu_c8BehaviorEv.cpp",
+    "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnAimedAtWithEggEv.cpp",
     "src/daKing_Donketu_c_classInit.cpp"
    ],
    "ext_mix": {
@@ -29247,13 +29247,13 @@
    "start": "0x2129020",
    "end": "0x2129d18",
    "classes": [
-    "Toad"
+    "daKinopio_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN4ToadD1Ev.cpp",
-    "src/_ZN4ToadD0Ev.c",
+    "src/_ZN11daKinopio_cD1Ev.cpp",
+    "src/_ZN11daKinopio_cD0Ev.c",
     "src/func_ov085_021290b4.c",
     "src/func_ov085_021291ac.c",
     "src/func_ov085_0212943c.cpp",
@@ -29262,10 +29262,10 @@
     "src/func_ov085_02129524.cpp",
     "src/func_ov085_02129570.cpp",
     "src/func_ov085_021295bc.c",
-    "src/_ZN4Toad16CleanupResourcesEv.cpp",
-    "src/_ZN4Toad6RenderEv.cpp",
-    "src/_ZN4Toad8BehaviorEv.cpp",
-    "src/_ZN4Toad13InitResourcesEv.cpp",
+    "src/_ZN11daKinopio_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daKinopio_c6RenderEv.cpp",
+    "src/_ZN11daKinopio_c8BehaviorEv.cpp",
+    "src/_ZN11daKinopio_c13InitResourcesEv.cpp",
     "src/d_a_kinopio.c"
    ],
    "ext_mix": {
@@ -29314,13 +29314,13 @@
    "start": "0x2129d18",
    "end": "0x212a6d4",
    "classes": [
-    "PrincessPeach"
+    "daPeach_c"
    ],
    "n_functions_map": 25,
    "n_files": 25,
    "files": [
-    "src/_ZN13PrincessPeachD1Ev.cpp",
-    "src/_ZN13PrincessPeachD0Ev.c",
+    "src/_ZN9daPeach_cD1Ev.cpp",
+    "src/_ZN9daPeach_cD0Ev.c",
     "src/func_ov085_02129dbc.cpp",
     "src/func_ov085_02129ebc.cpp",
     "src/func_ov085_02129f8c.c",
@@ -29338,11 +29338,11 @@
     "src/func_ov085_0212a430.cpp",
     "src/func_ov085_0212a46c.cpp",
     "src/func_ov085_0212a4a4.c",
-    "src/_ZN13PrincessPeach16CleanupResourcesEv.cpp",
-    "src/_ZN13PrincessPeach16OnPendingDestroyEv.cpp",
-    "src/_ZN13PrincessPeach6RenderEv.cpp",
-    "src/_ZN13PrincessPeach8BehaviorEv.cpp",
-    "src/_ZN13PrincessPeach13InitResourcesEv.cpp",
+    "src/_ZN9daPeach_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daPeach_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daPeach_c6RenderEv.cpp",
+    "src/_ZN9daPeach_c8BehaviorEv.cpp",
+    "src/_ZN9daPeach_c13InitResourcesEv.cpp",
     "src/d_a_peach.c"
    ],
    "ext_mix": {
@@ -29387,13 +29387,13 @@
    "start": "0x212d528",
    "end": "0x212edac",
    "classes": [
-    "LakituBro"
+    "daC_Jugem_c"
    ],
    "n_functions_map": 33,
    "n_files": 33,
    "files": [
-    "src/_ZN9LakituBroD1Ev.cpp",
-    "src/_ZN9LakituBroD0Ev.cpp",
+    "src/_ZN11daC_Jugem_cD1Ev.cpp",
+    "src/_ZN11daC_Jugem_cD0Ev.cpp",
     "src/func_ov085_0212d5dc.cpp",
     "src/func_ov085_0212d724.c",
     "src/func_ov085_0212d73c.c",
@@ -29419,11 +29419,11 @@
     "src/func_ov085_0212e728.cpp",
     "src/func_ov085_0212e778.cpp",
     "src/func_ov085_0212e858.c",
-    "src/_ZN9LakituBro16CleanupResourcesEv.cpp",
-    "src/_ZN9LakituBro16OnPendingDestroyEv.cpp",
-    "src/_ZN9LakituBro6RenderEv.cpp",
-    "src/_ZN9LakituBro8BehaviorEv.cpp",
-    "src/_ZN9LakituBro13InitResourcesEv.cpp",
+    "src/_ZN11daC_Jugem_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daC_Jugem_c16OnPendingDestroyEv.cpp",
+    "src/_ZN11daC_Jugem_c6RenderEv.cpp",
+    "src/_ZN11daC_Jugem_c8BehaviorEv.cpp",
+    "src/_ZN11daC_Jugem_c13InitResourcesEv.cpp",
     "src/d_a_c_jugem.c"
    ],
    "ext_mix": {

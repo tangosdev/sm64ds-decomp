@@ -698,7 +698,7 @@ src/_ZN13OneUpMushroomD0Ev.c	DTOR-ONLY	ov002	da1up_c	OneUpMushroom/da1up_c	_ZN13
 src/_ZN13PeachPainting16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Peach_c	PeachPainting/daObjC1Peach_c	vtable daObjC1Peach_c slot 3 @0x2111ec4 | _ZN13PeachPainting16CleanupResourcesEv	1		True		-
 src/_ZN13PeachPaintingD0Ev.c	DTOR-ONLY	ov010	daObjC1Peach_c	PeachPainting/daObjC1Peach_c	_ZN13PeachPaintingD0Ev	1		True		-
 src/_ZN18daObjBkBillboard_cD0Ev.c	DTOR-ONLY	ov015	daObjBkBillboard_c	daObjBkBillboard_c/daObjBkBillboard_c	_ZN18daObjBkBillboard_cD0Ev	1		True	_ZTV18daObjBkBillboard_c	-
-src/_ZN13PrincessPeachD0Ev.c	DTOR-ONLY	ov085	daPeach_c	PrincessPeach/daPeach_c	_ZN13PrincessPeachD0Ev	1		True		-
+src/_ZN9daPeach_cD0Ev.c	DTOR-ONLY	ov085	daPeach_c	daPeach_c/daPeach_c	_ZN9daPeach_cD0Ev	1		True		-
 src/_ZN18daObjHatenaBlock_c13InitResourcesEv.c	P1-vtable+mangled	ov102	daObjHatenaBlock_c	daObjHatenaBlock_c/daObjHatenaBlock_c	vtable daObjHatenaBlock_c slot 0 @0x214a4a4 | _ZN18daObjHatenaBlock_c13InitResourcesEv	1		True		-
 src/_ZN10daPgRcer_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov019	daPgRcer_c	daPgRcer_c/daPgRcer_c	vtable daPgRcer_c slot 12 @0x211235c | _ZN10daPgRcer_c16OnPendingDestroyEv	1		True		-
 src/_ZN10daPgRcer_cD0Ev.c	DTOR-ONLY	ov019	daPgRcer_c	daPgRcer_c/daPgRcer_c	_ZN10daPgRcer_cD0Ev	1		True		-
@@ -892,7 +892,7 @@ src/_ZN4HeapC1EPvjP4Heap.c	P3-mangled-method-only	arm9		Heap	_ZN4HeapC1EPvjP4Hea
 src/_ZN4HeapD0Ev.c	DTOR-ONLY	arm9	mHeap::Heap_t	Heap/mHeap	_ZN4HeapD0Ev	1		True		-
 src/_ZN4HeapD1Ev.c	DTOR-ONLY	arm9	mHeap::Heap_t	Heap/mHeap	_ZN4HeapD1Ev	1		True		-
 src/_ZN4HeapD2Ev.c	DTOR-ONLY	arm9		Heap	_ZN4HeapD2Ev	1		True		-
-src/_ZN4ToadD0Ev.c	DTOR-ONLY	ov085	daKinopio_c	Toad/daKinopio_c	_ZN4ToadD0Ev	1		True		-
+src/_ZN11daKinopio_cD0Ev.c	DTOR-ONLY	ov085	daKinopio_c	daKinopio_c/daKinopio_c	_ZN11daKinopio_cD0Ev	1		True		-
 src/_ZN14daObjC1_Trap_c13InitResourcesEv.c	P1-vtable+mangled	ov010	daObjC1_Trap_c	daObjC1_Trap_c/daObjC1_Trap_c	vtable daObjC1_Trap_c slot 0 @0x2111654 | _ZN14daObjC1_Trap_c13InitResourcesEv	1		True		-
 src/_ZN4Tree16OnPendingDestroyEv.c	P1-vtable+mangled	ov002	daTree_c	Tree/daTree_c	vtable daTree_c slot 12 @0x20ec0a0 | _ZN4Tree16OnPendingDestroyEv	1		True		-
 src/_ZN4View6RenderEv.c	P1-vtable+mangled	arm9	dView_c	View/dView_c	vtable dView_c slot 9 @0x202fd0c | _ZN4View6RenderEv	1		False		no-header:View/dView_c

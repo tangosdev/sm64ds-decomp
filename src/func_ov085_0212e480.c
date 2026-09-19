@@ -1,5 +1,5 @@
 // @symbol func_ov085_0212e480
-// recovered name: RabbitKey_Kill
+// recovered name: daObj_Mip_Key_c_Kill
 /* recovered: renamed to Class_Method */
 /* daObj_Mip_Key_c::Kill - recovered from vtable slot identity */
 int func_ov085_0212e480(char *p)

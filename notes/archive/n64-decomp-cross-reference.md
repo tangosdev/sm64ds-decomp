@@ -323,7 +323,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvSpindrift` | → | `Spindrift` | ov081 |
 | `bhvWigglerHead`/`Body` | → | `Wiggler` | ov034 |
 | `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | ov084 |
-| `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `LakituBro` | ov077 / ov085 |
+| `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `daC_Jugem_c` | ov077 / ov085 |
 | `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | ov060 |
 | `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | ov030 |
 | (Eyerok boss) | → | `Eyerok` | ov066 |
@@ -342,8 +342,8 @@ Combined with N64's field vocabulary (`oPosX`/`oAction`/…) and the hitbox cons
 `sm64/src/game/behaviors/*.inc.c`, this is directly usable when drafting DS `Behavior()` /
 `InitResources()` or renaming `func_ov###_########` placeholders for these actors.
 
-DS-only / EAD additions, not chased: `KoopaTheQuick`, `daIDonketu_c` (then called `ChillBully` here)/`ChiefChilly` (Snowman's Land
-reskins — N64 doesn't reuse Bully there), `Toad`, `daDossy_c` (then called `Dorrie` here).
+DS-only / EAD additions, not chased: `KoopaTheQuick`, `daIDonketu_c` (then called `ChillBully` here)/`daKing_Donketu_c` (Snowman's Land
+reskins — N64 doesn't reuse Bully there), `daKinopio_c`, `daDossy_c` (then called `Dorrie` here).
 
 ---
 
