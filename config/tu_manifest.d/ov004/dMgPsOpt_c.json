@@ -98,6 +98,38 @@
   ],
   "data": [],
   "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dMgPsOpt_c11TouchIcon_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "dMgPsOpt_c::TouchIcon_c::TouchIcon_c() is defined once and mwccarm emits the C1/C2 pair from it. The eight TouchIcon_c elements the ROM constructs are the complete objects of dMgPsOpt_c's mIcons[8] array, never base subobjects of anything, so the retail link kept only the complete-object variant, _ZN10dMgPsOpt_c11TouchIcon_cC1Ev at ov004:0x020b9430 (0x1c bytes, licensed and byte-matched by this entry). The C2 emitted here is the same 0x1c-byte body under a second name. Home count 0: the nested spelling -- the one the cartridge itself uses, as _ZTIN10dMgPsOpt_c11TouchIcon_cE at ov004:0x020bca68 shows -- was looked up in tools/relocs.py load_symbol_homes() across all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102) and matches no symbol, while the sibling C1 under the identical nested spelling does match. That paired result is what rules out a flat-probe miss and licenses the plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10dMgPsOpt_c11TouchIcon_cD0Ev",
+      "disposition": "deadstrip",
+      "reason": "The deleting destructor for the nested touch icon. TouchIcon_c's destructor is nonvirtual: the cartridge's _ZTVN10dMgPsOpt_c11TouchIcon_cE is a two-slot table -- the object runs ov004:0x020bca74..0x020bca84 between _ZTIN10dMgPsOpt_c11TouchIcon_cE (0x020bca68, 0xc bytes) and _ZTSN10dMgPsOpt_c11TouchIcon_cE (0x020bca84), with symbols.txt naming slot 0 at 0x020bca7c -- and its two slots are Behavior and Render, with no destructor slot. Nothing in the ROM can therefore call a deleting destructor for this class, and the retail link discarded it; mwccarm emits it anyway because the class is polymorphic through its dThIcon_c base. Home count 0 under the cartridge's own nested spelling (checked with tools/relocs.py load_symbol_homes() across all 106 checked-in symbols.txt files -- arm9, itcm, dtcm and ov000-ov102 -- where the sibling D1 under the identical nested spelling does match), so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10dMgPsOpt_c11TouchIcon_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "dMgPsOpt_c::TouchIcon_c::~TouchIcon_c() is defined once and mwccarm emits the D0/D1/D2 triple from it. The eight TouchIcon_c elements the ROM destroys are complete objects in dMgPsOpt_c's mIcons[8] array, never base subobjects, so the retail link kept only _ZN10dMgPsOpt_c11TouchIcon_cD1Ev at ov004:0x020b9280 (0x1c bytes, licensed and byte-matched by this entry). The D2 emitted here is the same 0x1c-byte body under a second name. Home count 0 under the cartridge's own nested spelling (checked with tools/relocs.py load_symbol_homes() across all 106 checked-in symbols.txt files -- arm9, itcm, dtcm and ov000-ov102 -- where the sibling D1 under the identical nested spelling does match), so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10dMgPsOpt_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "dMgPsOpt_c::dMgPsOpt_c() is defined once and mwccarm emits the C1/C2 pair from it. dMgPsOpt_c has no base class and is embedded in dScMgBase_c as the member include/dScMgBase_c.h names `dMgPsOpt_c mTouchOptions` at self+0xf4, so it is only ever constructed as a complete object and the retail link kept only _ZN10dMgPsOpt_cC1Ev at ov004:0x020b92c4 (0x16c bytes, licensed and byte-matched by this entry). The C2 emitted here is the same 0x16c-byte body under a second name; tools/relocs.py load_symbol_homes() over all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102) finds C1 under this exact spelling and no C2, so a home count of 0 selects the plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10dMgPsOpt_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "dMgPsOpt_c::~dMgPsOpt_c() is defined once and mwccarm emits the D0/D1/D2 triple from it. dMgPsOpt_c has no base class and is destroyed only as the complete dScMgBase_c member at self+0xf4, so the retail link kept only _ZN10dMgPsOpt_cD1Ev at ov004:0x020b929c (0x28 bytes, licensed and byte-matched by this entry). The D2 emitted here is the same 0x28-byte body under a second name; tools/relocs.py load_symbol_homes() over all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102) finds D1 under this exact spelling and no D2, so a home count of 0 selects the plain deadstrip."
+    },
+    {
+      "symbol": "_ZN9dThIcon_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "include/dThIcon_c.h defines ~dThIcon_c() {} inline, so any TU that destroys a dThIcon_c subobject re-emits it as vague linkage -- here STB_LOPROC, 0x10 bytes. dMgPsOpt_c::TouchIcon_c derives from dThIcon_c, so ~TouchIcon_c runs the base-object variant and mwccarm materialises it in this object. Unlike Vector3's inline destructor, this one has no ROM home at all: tools/relocs.py load_symbol_homes() over all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102) finds no dThIcon_c destructor of any variant, only _ZN9dThIcon_c6RenderEv and _ZN9dThIcon_c8BehaviorEv in ov001 plus the class's RTTI and vtable records. A home count of 0 means there is no cartridge body to compare against, so this is a plain deadstrip and specifically not a deadstrip-duplicate."
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetSoundMode' differs between the legacy file that used to hold func_ov004_020b8f78 and the one that held _ZN10dMgPsOpt_cC1Ev; kept the first, the other is commented out for review -- RESOLVED: the two spellings were `int GetSoundMode(void)` and `int GetSoundMode()`, which declare the same function in C++. The first is kept and the alternate is dropped, not commented out.",
@@ -113,8 +145,7 @@
     "functions_matched": 11,
     "functions_declared": 11,
     "compilerOnlyOutput": {
-      "requested": [],
-      "unhandled": [
+      "requested": [
         "_ZN10dMgPsOpt_c11TouchIcon_cC2Ev",
         "_ZN10dMgPsOpt_c11TouchIcon_cD0Ev",
         "_ZN10dMgPsOpt_c11TouchIcon_cD2Ev",
@@ -122,7 +153,30 @@
         "_ZN10dMgPsOpt_cD2Ev",
         "_ZN9dThIcon_cD2Ev"
       ],
-      "data": []
+      "deadstripped": [
+        "_ZN10dMgPsOpt_c11TouchIcon_cC2Ev",
+        "_ZN10dMgPsOpt_c11TouchIcon_cD0Ev",
+        "_ZN10dMgPsOpt_c11TouchIcon_cD2Ev",
+        "_ZN10dMgPsOpt_cC2Ev",
+        "_ZN10dMgPsOpt_cD2Ev",
+        "_ZN9dThIcon_cD2Ev"
+      ],
+      "droppedSections": [
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        37,
+        38,
+        41,
+        42,
+        43,
+        44
+      ],
+      "data": [],
+      "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
