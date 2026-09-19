@@ -33,11 +33,11 @@
  * (func_ov006_0212968c / func_ov006_02125800).
  *
  * THE 0xb0d8..0xb5d8 REGION IS FOUR PARALLEL ARRAYS, not padding, and they
- * tile the 0x500 exactly: Snowball's own Render (src/func_ov006_02127d10.c)
+ * tile the 0x500 exactly: Snowball's own Render (src/actors/dScMgSnowball_c.cpp)
  * indexes 0xb0d8 as `*(int*)(c + i*4 + ...)`, 0xb2d8 and 0xb358 as
  * `*(u8*)(c + i + ...)`, and 0xb3d8 as `*(int*)(c + i*4 + ...)`; 0x80
  * elements each gives 0x200 + 0x80 + 0x80 + 0x200 = 0x500, landing on
- * mArray2. src/func_ov006_02125bbc.c writes the first two the same way.
+ * mArray2. the same file writes the first two the same way.
  *
  * 0xbe94..0xc59c IS A FIFTH ARRAY, and it is why this class has NO trailing
  * slack at all: src/func_ov006_02129690.c already carries the full element
@@ -53,11 +53,11 @@
  *
  * mMenuOpen, which the old auto-generated header declared, is dScMgBase_c's
  * own and is already declared there; it is dropped from this file, not
- * lost. src/_ZN15dScMgSnowball_c8OnKickedEv.c reads it through this class
+ * lost. OnKicked, in src/actors/dScMgSnowball_c.cpp, reads it through this class
  * and keeps working because it inherits it.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN15dScMgSnowball_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/actors/dScMgSnowball_c.cpp's destructor; the deleting variant
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one.
  *
@@ -154,7 +154,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                Render indexes as i*8 + 0 / i*8 + 4 */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
                                 table, anything else the static one */
-    u8    mArray1Hit[0x80]; /* 0xb2d8 -- src/func_ov006_02125bbc.c sets it on
+    u8    mArray1Hit[0x80]; /* 0xb2d8 -- func_ov006_02125bbc sets it on
                                contact; Render then offsets the frame by 8 */
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to

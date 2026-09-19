@@ -569,11 +569,11 @@ def build_vtable_alias_map(addr_names, known_classes):
     """Canonical class name per vtable *name*, and per `data_*` literal.
 
     Within one module, several _ZTV names can share an address -- the tree's
-    name and the ROM's original one (`_ZTV13QuestionBlock` and
-    `_ZTV18daObjHatenaBlock_c` are both ov0xx:0x0214e47c; see
-    notes/model-rtti-names.md).  Without collapsing those, QuestionBlock appears
-    to inherit from itself under another name.  Preference: a name that has an
-    include/*.h, then a name that is not the `*_c` ROM spelling, then sorted.
+    coined name and the ROM's own one (`_ZTV10KoopaShell` and `_ZTV7daShl_c`
+    are both ov102:0x0214e650; see notes/model-rtti-names.md).  Without
+    collapsing those, KoopaShell appears to inherit from itself under another
+    name.  Preference: a name that has an include/*.h, then a name that is not
+    the `*_c` ROM spelling, then sorted.
     """
     alias = {}
     data_alias = {}

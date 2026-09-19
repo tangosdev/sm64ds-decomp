@@ -503,7 +503,6 @@ extern int _ZTV13KoopaTheQuick[];
 extern int _ZTV13MontyMoleRock[];
 extern int _ZTV13PeachPainting[];
 extern int _ZTV14KnockDownPlank[];
-extern int _ZTV13QuestionBlock[];
 extern int _ZTV21daObj_volcanoCannon_c[];
 extern int _ZTV7daMky_c[];
 extern int _ZTV13TreasureChest[];
