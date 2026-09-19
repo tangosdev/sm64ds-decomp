@@ -8,7 +8,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 extern int data_ov064_0211b768[];
-extern int _ZTV8BigBully[];
+extern int _ZTV12daBDonketu_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov064_0211b768 */
 /* Reconstructed source-style name: SM64DS proves daBDonketu_c through RTTI,
@@ -25,7 +25,7 @@ int *daBDonketu_c_classInit(void)
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x174);
         _ZN7dCcAc_cC1Ev((char *)p + 0x33c);
         _ZN11ShadowModelC1Ev((char *)p + 0x370);
-        p[0] = (int)_ZTV8BigBully;
+        p[0] = (int)_ZTV12daBDonketu_c;
     }
     return p;
 }

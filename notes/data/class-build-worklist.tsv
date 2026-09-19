@@ -157,8 +157,8 @@ daObjLava_c	DONE	include\daObjLava_c.h	dActor_c	0	ov002	3
 daObjNumber_c	DONE	include\daObjNumber_c.h	dActor_c	0	ov002	6
 daObjPowerUpItem_c	DONE	include\PowerFlower.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	7
 daObjRc_Hane_c	DONE	include\daObjRc_Hane_c.h	dActor_c	0	ov036	6
-daObjShell_c	DONE	include\Clam.h  [alias: header uses pre-rename name]	dActor_c	0	ov064	6
-daObjTbox_c	DONE	include\TreasureChest.h  [alias: header uses pre-rename name]	dActor_c	0	ov064	15
+daObjShell_c	DONE	include\daObjShell_c.h	dActor_c	0	ov064	6
+daObjTbox_c	DONE	include\daObjTbox_c.h	dActor_c	0	ov064	15
 daObjWakame_c	DONE	include\daObjWakame_c.h	dActor_c	0	ov002	6
 daObjWaterfall_c	DONE	include\daObjWaterfall_c.h	dActor_c	0	ov002	4
 daObjWc_Obj03_c	DONE	include\daObjWc_Obj03_c.h	dActor_c	0	ov029	9
@@ -310,7 +310,7 @@ dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
 da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
 daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
-daBbl_c	DONE	include\LavaBubble.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	8
+daBbl_c	DONE	include\daBbl_c.h	dEnemyBase_c	0	ov064	8
 daBmb_c	DONE	include\daBmb_c.h	dEnemyBase_c	0	ov102	9
 daBombking_c	DONE	include\daBombking_c.h	dEnemyBase_c	0	ov078	8
 daBook_c	DONE	include\BookShot.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov020	8
@@ -354,7 +354,7 @@ daTBasket_c	DONE	include\daTBasket_c.h	dEnemyBase_c	0	ov063	6
 daWanwan2_c	DONE	include\UnchainedChomp.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov100	8
 daWanwan_c	DONE	include\daWanwan_c.h	dEnemyBase_c	0	ov014	6
 daWater_Hakidasi_c	DONE	include\JetStream.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	7
-daWater_Ring_c	DONE	include\WaterRing.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	7
+daWater_Ring_c	DONE	include\daWater_Ring_c.h	dEnemyBase_c	0	ov064	7
 daWater_Suikomi_c	DONE	include\WaterSuction.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov026	7
 daWater_Tatumaki_c	DONE	include\Whirlpool.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov026	7
 daWbm_c	DONE	include\WaterBomb.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov098	6
@@ -406,8 +406,8 @@ daObjBSwdoor_c	DONE	include\daObjBSwdoor_c.h	daObjSwdoor_c	0	ov014	5
 daObjCvShutter_c	DONE	include\daObjCvShutter_c.h	daObjSwdoor_c	0	ov021	5
 daObjFl_Ukiyuka_c	DONE	include\FloatingFloorLllSmall.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov022	4
 daObjKm2_Ukishima_c	DONE	include\daObjKm2_Ukishima_c.h	daObjUkiyuka_c	0	ov045	4
-daBDonketu_c	DONE	include\BigBully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	7
-daDonketu_c	DONE	include\Bully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	10
+daBDonketu_c	DONE	include\daBDonketu_c.h	daOts_c	0	ov064	7
+daDonketu_c	DONE	include\daDonketu_c.h	daOts_c	0	ov064	10
 daIDonketu_c	DONE	include\daIDonketu_c.h	daOts_c	0	ov027	6
 daKrb_c	DONE	include\daKrb_c.h	dCapEnemy_c	0	ov084	9
 daTrs_c	DONE	include\daTrs_c.h	dCapEnemy_c	0	ov063	9

@@ -1,0 +1,49 @@
+#ifndef DADONKETU_C_H
+#define DADONKETU_C_H
+
+#include "types.h"
+#include "daOts_c.h"
+
+/* daDonketu_c in the ROM's RTTI. Derives from daOts_c, which owns every member this
+ * header used to restate -- the ModelAnim, the dBgCh_Actr, the file table, the
+ * dCcAc_c and the ShadowModel are all the base's, and daDonketu_c_classInit proves
+ * it by constructing them between the two vtable stores.
+ *
+ * SIZE 0x400, which is the literal in daDonketu_c_classInit's fBase_c::operator new. The base
+ * ends at 0x398, so everything below is daDonketu_c's own.
+ *
+ * SM64DS RTTI names the implementation daDonketu_c. The reconstructed
+ * factory daDonketu_c_classInit (historical alias
+ * Bully_Spawn) constructs it for the DONKETU
+ * registry profile.
+ */
+struct daDonketu_c : daOts_c {
+    u8  pad_398[0x64];
+    /* An actor unique ID, not a count: Behavior passes it to dActor_c::FindWithID and
+       increments the byte at +0x3fe of whatever comes back; InitResources zeroes it.
+       Left unnamed because that is as far as the bytes go -- daBDonketu_c's u8 at the
+       same offset is a different field with a different use, so the offset is no
+       guide. */
+    s32 mBigBullyID;                    /* 0x3fc */
+
+    virtual ~daDonketu_c();
+
+    /* methods */
+    int Behavior();
+    int CleanupResources();
+    int Render();
+    int InitResources();
+    virtual int UpdateRunState();
+    virtual void UpdateDeathState();
+    virtual void PlayStepSound();
+    virtual void PlayHitSound();
+    virtual void PlayShellHitSound();
+    virtual void PlayDeathSound();
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daDonketu_c_size_must_be_0x400[sizeof(daDonketu_c) == 0x400 ? 1 : -1];
+#endif
+
+#endif /* DADONKETU_C_H */

@@ -13,7 +13,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *
  * SIZE 0x114 is the factory's own literal; mParticle at 0x110 closes on it.
  * dActor_c ends at 0x0d0. pad_0d0 is unevidenced (not read in this TU);
- * dCcAc_c sits at 0x0d4. The old "Bubble" alias also names LavaBubble.
+ * dCcAc_c sits at 0x0d4. The old "Bubble" alias also names daBbl_c.
  *
  * Vtable vs _ZTV8dActor_c: only slot 0 (InitResources) and slot 6 (Behavior)
  * differ. InitResources is the key function.

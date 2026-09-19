@@ -199,6 +199,7 @@ int daIDonketu_c::UpdateRunState()
 /* dBgCh_Actr 0x174 and ModelAnim 0x110 in reverse declaration order, then     */
 /* dEnemyBase_c. daIDonketu_c adds no member with a destructor of its own,     */
 /* only two bytes. D0 is that plus the inherited inline `operator delete`;     */
-/* slot 17 is the deleting variant. Byte-for-byte the same shape as Bully's    */
-/* and BigBully's, which is what three siblings sharing a base look like.      */
+/* slot 17 is the deleting variant. Byte-for-byte the same shape as            */
+/* daDonketu_c's and daBDonketu_c's, which is what three siblings sharing a    */
+/* base look like.                                                             */
 /* -------------------------------------------------------------------------- */

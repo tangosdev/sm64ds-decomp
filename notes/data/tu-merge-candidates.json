@@ -2872,13 +2872,13 @@
    "start": "0x211a200",
    "end": "0x211a930",
    "classes": [
-    "TreasureChest"
+    "daObjTbox_c"
    ],
    "n_functions_map": 16,
    "n_files": 16,
    "files": [
-    "src/_ZN13TreasureChestD1Ev.cpp",
-    "src/_ZN13TreasureChestD0Ev.c",
+    "src/_ZN11daObjTbox_cD1Ev.cpp",
+    "src/_ZN11daObjTbox_cD0Ev.c",
     "src/func_ov064_0211a284.c",
     "src/func_ov064_0211a2c4.cpp",
     "src/func_ov064_0211a380.c",
@@ -2888,10 +2888,10 @@
     "src/func_ov064_0211a6e0.c",
     "src/func_ov064_0211a6ec.cpp",
     "src/func_ov064_0211a734.cpp",
-    "src/_ZN13TreasureChest16CleanupResourcesEv.cpp",
-    "src/_ZN13TreasureChest6RenderEv.cpp",
-    "src/_ZN13TreasureChest8BehaviorEv.cpp",
-    "src/_ZN13TreasureChest13InitResourcesEv.cpp",
+    "src/_ZN11daObjTbox_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daObjTbox_c6RenderEv.cpp",
+    "src/_ZN11daObjTbox_c8BehaviorEv.cpp",
+    "src/_ZN11daObjTbox_c13InitResourcesEv.cpp",
     "src/d_a_obj_tbox.c"
    ],
    "ext_mix": {
@@ -3893,13 +3893,13 @@
    "start": "0x2119a58",
    "end": "0x211a200",
    "classes": [
-    "WaterRing"
+    "daWater_Ring_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN9WaterRingD1Ev.cpp",
-    "src/_ZN9WaterRingD0Ev.cpp",
+    "src/_ZN14daWater_Ring_cD1Ev.cpp",
+    "src/_ZN14daWater_Ring_cD0Ev.cpp",
     "src/func_ov064_02119afc.cpp",
     "src/func_ov064_02119c60.c",
     "src/func_ov064_02119ce4.c",
@@ -3907,11 +3907,11 @@
     "src/func_ov064_02119ea0.c",
     "src/func_ov064_02119ecc.cpp",
     "src/func_ov064_02119f1c.cpp",
-    "src/_ZN9WaterRing16CleanupResourcesEv.cpp",
-    "src/_ZN9WaterRing16OnPendingDestroyEv.cpp",
-    "src/_ZN9WaterRing6RenderEv.cpp",
-    "src/_ZN9WaterRing8BehaviorEv.cpp",
-    "src/_ZN9WaterRing13InitResourcesEv.cpp",
+    "src/_ZN14daWater_Ring_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daWater_Ring_c16OnPendingDestroyEv.cpp",
+    "src/_ZN14daWater_Ring_c6RenderEv.cpp",
+    "src/_ZN14daWater_Ring_c8BehaviorEv.cpp",
+    "src/_ZN14daWater_Ring_c13InitResourcesEv.cpp",
     "src/daWater_Ring_c_classInit.c"
    ],
    "ext_mix": {
@@ -4532,24 +4532,24 @@
    "start": "0x21185c0",
    "end": "0x2118b50",
    "classes": [
-    "LavaBubble"
+    "daBbl_c"
    ],
    "n_functions_map": 14,
    "n_files": 14,
    "files": [
-    "src/_ZN10LavaBubbleD1Ev.cpp",
-    "src/_ZN10LavaBubbleD0Ev.cpp",
+    "src/_ZN7daBbl_cD1Ev.cpp",
+    "src/_ZN7daBbl_cD0Ev.cpp",
     "src/func_ov064_02118644.c",
     "src/func_ov064_0211873c.c",
     "src/func_ov064_02118760.c",
     "src/func_ov064_021187d0.c",
     "src/func_ov064_021187ec.cpp",
-    "src/_ZN10LavaBubble16CleanupResourcesEv.cpp",
-    "src/_ZN10LavaBubble16OnPendingDestroyEv.cpp",
-    "src/_ZN10LavaBubble6RenderEv.cpp",
-    "src/_ZN10LavaBubble8BehaviorEv.cpp",
-    "src/_ZN10LavaBubble13InitResourcesEv.cpp",
-    "src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp",
+    "src/_ZN7daBbl_c16CleanupResourcesEv.cpp",
+    "src/_ZN7daBbl_c16OnPendingDestroyEv.cpp",
+    "src/_ZN7daBbl_c6RenderEv.cpp",
+    "src/_ZN7daBbl_c8BehaviorEv.cpp",
+    "src/_ZN7daBbl_c13InitResourcesEv.cpp",
+    "src/_ZN7daBbl_c13OnYoshiTryEatEv.cpp",
     "src/daBbl_c_classInit.c"
    ],
    "ext_mix": {
@@ -5516,18 +5516,18 @@
    "start": "0x211a930",
    "end": "0x211adb0",
    "classes": [
-    "Clam"
+    "daObjShell_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN4ClamD1Ev.cpp",
-    "src/_ZN4ClamD0Ev.cpp",
+    "src/_ZN12daObjShell_cD1Ev.cpp",
+    "src/_ZN12daObjShell_cD0Ev.cpp",
     "src/func_ov064_0211a9b4.c",
-    "src/_ZN4Clam16CleanupResourcesEv.cpp",
-    "src/_ZN4Clam6RenderEv.cpp",
-    "src/_ZN4Clam8BehaviorEv.cpp",
-    "src/_ZN4Clam13InitResourcesEv.cpp",
+    "src/_ZN12daObjShell_c16CleanupResourcesEv.cpp",
+    "src/_ZN12daObjShell_c6RenderEv.cpp",
+    "src/_ZN12daObjShell_c8BehaviorEv.cpp",
+    "src/_ZN12daObjShell_c13InitResourcesEv.cpp",
     "src/daObjShell_c_classInit.cpp"
    ],
    "ext_mix": {
@@ -6904,18 +6904,18 @@
    "start": "0x21174a0",
    "end": "0x2117978",
    "classes": [
-    "BigBully"
+    "daBDonketu_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN8BigBullyD1Ev.cpp",
-    "src/_ZN8BigBullyD0Ev.c",
+    "src/_ZN12daBDonketu_cD1Ev.cpp",
+    "src/_ZN12daBDonketu_cD0Ev.c",
     "src/func_ov064_0211755c.c",
     "src/func_ov064_021175cc.cpp",
-    "src/_ZN8BigBully6RenderEv.cpp",
-    "src/_ZN8BigBully8BehaviorEv.cpp",
-    "src/_ZN8BigBully13InitResourcesEv.cpp",
+    "src/_ZN12daBDonketu_c6RenderEv.cpp",
+    "src/_ZN12daBDonketu_c8BehaviorEv.cpp",
+    "src/_ZN12daBDonketu_c13InitResourcesEv.cpp",
     "src/daBDonketu_c_classInit.c"
    ],
    "ext_mix": {
@@ -26950,22 +26950,22 @@
    "start": "0x2117070",
    "end": "0x21174a0",
    "classes": [
-    "Bully",
+    "daDonketu_c",
     "daDonketu_c"
    ],
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
-    "src/_ZN5BullyD1Ev.cpp",
-    "src/_ZN5BullyD0Ev.c",
+    "src/_ZN11daDonketu_cD1Ev.cpp",
+    "src/_ZN11daDonketu_cD0Ev.c",
     "src/func_ov064_0211712c.c",
     "src/func_ov064_02117140.c",
     "src/func_ov064_02117154.c",
     "src/func_ov064_02117168.c",
     "src/func_ov064_021171b0.c",
     "src/func_ov064_02117220.cpp",
-    "src/_ZN5Bully8BehaviorEv.cpp",
-    "src/_ZN5Bully13InitResourcesEv.cpp",
+    "src/_ZN11daDonketu_c8BehaviorEv.cpp",
+    "src/_ZN11daDonketu_c13InitResourcesEv.cpp",
     "src/daDonketu_c_classInit.c"
    ],
    "ext_mix": {

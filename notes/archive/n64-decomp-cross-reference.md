@@ -293,7 +293,7 @@ than a cylinder (N64 `LOAD_COLLISION_DATA(whomp_seg6_collision_...)`; DS `MeshCo
 `MovingMeshCollider::SetFile`), and both encode regular-vs-King as **one class with a flag**, not
 two behaviors (N64 `oBhvParams2ndByte != WHOMP_BP_SMALL`; DS `mIsKing`).
 
-**Bully** — not recoverable; DS logic is behind unmatched `func_ov064_02116ec0`. N64 ground truth
+**daDonketu_c** — not recoverable; DS logic is behind unmatched `func_ov064_02116ec0`. N64 ground truth
 for future comparison (`bully.inc.c:3-52`): small 73/123/63/113, gravity 4.0, friction 0.91;
 big 115/235/105/225, gravity 5.0, friction 0.93.
 
@@ -307,7 +307,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvGoomba` | → | `Goomba` | ov084 |
 | `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `BobOmbBuddy` | ov102 / ov078 / ov084 |
 | `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | ov014 |
-| `bhvSmallBully` / `bhvBigBully` | → | `Bully` / `BigBully` | ov064 |
+| `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | ov064 |
 | `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | ov079 |
 | `bhvThwomp` | → | `Thwomp` | ov091 |
 | `bhvBoo` | → | `Boo` / `BigBoo` | ov063 |
