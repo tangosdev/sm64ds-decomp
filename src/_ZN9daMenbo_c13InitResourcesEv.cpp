@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN7Skeeter13InitResourcesEv
+// @symbol _ZN9daMenbo_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Loads the model and four animations, builds both collision volumes, and then
@@ -24,7 +24,7 @@
  * by-value Fix12<int> signatures, which mwccarm passes differently -- the 6az
  * wall, notes/mwccarm-codegen.md.
  */
-#include "Skeeter.h"
+#include "daMenbo_c.h"
 #include "dBgCh_Gnd.h"
 typedef int LocFix12;
 typedef struct { int w[2]; } LocSharedFilePtr;
@@ -59,7 +59,7 @@ extern int data_0209e650;
 extern PMF data_ov090_021344e4;
 }
 
-int Skeeter::InitResources()
+int daMenbo_c::InitResources()
 {
     char* c = (char*)this;
     BMD_File* f;

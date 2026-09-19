@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN7Skeeter16OnPendingDestroyEv
+// @symbol _ZN9daMenbo_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * Empty in the ROM -- a single `bx lr`. The override exists to suppress the
  * base's behaviour.
  */
-#include "Skeeter.h"
+#include "daMenbo_c.h"
 
-void Skeeter::OnPendingDestroy()
+void daMenbo_c::OnPendingDestroy()
 {
 }

@@ -3963,6 +3963,10 @@
     "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c6RenderEv": "andrewboudreau",
     "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c8BehaviorEv": "andrewboudreau",
     "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c13InitResourcesEv": "tangosdev",
-    "src/actors/daObjTbox_c.cpp#daObjTbox_c_classInit": "tangosdev"
+    "src/actors/daObjTbox_c.cpp#daObjTbox_c_classInit": "tangosdev",
+    "src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp": "tangosdev",
+    "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp#_ZN9daMenbo_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp#_ZN12daPukupuku_c16OnPendingDestroyEv": "tangosdev",
+    "src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp#_ZN9daMenbo_c16OnAimedAtWithEggEv": "tangosdev"
   }
 }

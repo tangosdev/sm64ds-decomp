@@ -42657,11 +42657,11 @@ matched: yes</title></rect><rect x="1500.21" y="726.73" width="10.24" height="21
 module: ov089
 addr: 0x021328d4
 size: 544 bytes
-matched: yes</title></rect><rect x="1520.45" y="672.02" width="2.86" height="9.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7SkeeterD1Ev
+matched: yes</title></rect><rect x="1520.45" y="672.02" width="2.86" height="9.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_cD1Ev
 module: ov090
 addr: 0x02130f00
 size: 64 bytes
-matched: yes</title></rect><rect x="1523.31" y="672.02" width="3.75" height="9.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7SkeeterD0Ev
+matched: yes</title></rect><rect x="1523.31" y="672.02" width="3.75" height="9.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_cD0Ev
 module: ov090
 addr: 0x02130f40
 size: 84 bytes
@@ -42721,31 +42721,31 @@ matched: yes</title></rect><rect x="1579.46" y="681.94" width="9.71" height="6.3
 module: ov090
 addr: 0x02131e50
 size: 140 bytes
-matched: yes</title></rect><rect x="1589.17" y="681.94" width="5.83" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter16CleanupResourcesEv
+matched: yes</title></rect><rect x="1589.17" y="681.94" width="5.83" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c16CleanupResourcesEv
 module: ov090
 addr: 0x02131edc
 size: 84 bytes
-matched: yes</title></rect><rect x="1530.90" y="688.55" width="7.96" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter6RenderEv
+matched: yes</title></rect><rect x="1530.90" y="688.55" width="7.96" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c6RenderEv
 module: ov090
 addr: 0x02131f34
 size: 84 bytes
-matched: yes</title></rect><rect x="1530.90" y="693.22" width="7.96" height="54.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter8BehaviorEv
+matched: yes</title></rect><rect x="1530.90" y="693.22" width="7.96" height="54.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c8BehaviorEv
 module: ov090
 addr: 0x02131f88
 size: 980 bytes
-matched: yes</title></rect><rect x="1538.86" y="688.32" width="55.50" height="5.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter13InitResourcesEv
+matched: yes</title></rect><rect x="1538.86" y="688.32" width="55.50" height="5.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c13InitResourcesEv
 module: ov090
 addr: 0x0213235c
 size: 700 bytes
-matched: yes</title></rect><rect x="1594.37" y="688.32" width="0.63" height="5.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1594.37" y="688.32" width="0.63" height="5.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c16OnAimedAtWithEggEv
 module: ov090
 addr: 0x02132618
 size: 8 bytes
-matched: yes</title></rect><rect x="1538.86" y="693.91" width="3.72" height="5.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="1538.86" y="693.91" width="3.72" height="5.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c13OnTurnIntoEggER6Player
 module: ov090
 addr: 0x02132620
 size: 44 bytes
-matched: yes</title></rect><rect x="1538.86" y="699.15" width="3.72" height="0.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7Skeeter13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="1538.86" y="699.15" width="3.72" height="0.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daMenbo_c13OnYoshiTryEatEv
 module: ov090
 addr: 0x0213264c
 size: 8 bytes
@@ -42801,11 +42801,11 @@ matched: yes</title></rect><rect x="1547.29" y="725.90" width="8.60" height="3.9
 module: ov090
 addr: 0x02132fe8
 size: 76 bytes
-matched: yes</title></rect><rect x="1547.29" y="729.82" width="8.60" height="3.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheepD1Ev
+matched: yes</title></rect><rect x="1547.29" y="729.82" width="8.60" height="3.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_cD1Ev
 module: ov090
 addr: 0x02133034
 size: 64 bytes
-matched: yes</title></rect><rect x="1547.29" y="733.11" width="8.60" height="4.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheepD0Ev
+matched: yes</title></rect><rect x="1547.29" y="733.11" width="8.60" height="4.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_cD0Ev
 module: ov090
 addr: 0x02133074
 size: 84 bytes
@@ -42837,19 +42837,19 @@ matched: yes</title></rect><rect x="1586.60" y="703.65" width="8.40" height="6.1
 module: ov090
 addr: 0x02133338
 size: 116 bytes
-matched: yes</title></rect><rect x="1555.89" y="709.77" width="4.53" height="4.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheep16CleanupResourcesEv
+matched: yes</title></rect><rect x="1555.89" y="709.77" width="4.53" height="4.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_c16CleanupResourcesEv
 module: ov090
 addr: 0x021333ac
 size: 48 bytes
-matched: yes</title></rect><rect x="1555.89" y="714.86" width="4.53" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheep6RenderEv
+matched: yes</title></rect><rect x="1555.89" y="714.86" width="4.53" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_c6RenderEv
 module: ov090
 addr: 0x021333e0
 size: 80 bytes
-matched: yes</title></rect><rect x="1555.89" y="722.69" width="4.53" height="25.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheep8BehaviorEv
+matched: yes</title></rect><rect x="1555.89" y="722.69" width="4.53" height="25.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_c8BehaviorEv
 module: ov090
 addr: 0x02133430
 size: 256 bytes
-matched: yes</title></rect><rect x="1560.42" y="709.77" width="18.73" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10CheepCheep13InitResourcesEv
+matched: yes</title></rect><rect x="1560.42" y="709.77" width="18.73" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daPukupuku_c13InitResourcesEv
 module: ov090
 addr: 0x02133530
 size: 260 bytes
