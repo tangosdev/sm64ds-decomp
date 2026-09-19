@@ -2,7 +2,7 @@
   "id": "arm9/Actor",
   "module": "arm9",
   "source": "src_tu/actors/Actor.cpp",
-  "promoted_source": "src/actors/Actor.cpp",
+  "promoted_source": "src/actors/dActor_c.cpp",
   "status": "link-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [

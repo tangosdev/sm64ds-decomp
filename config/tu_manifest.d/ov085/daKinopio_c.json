@@ -2,7 +2,7 @@
   "id": "ov085/daKinopio_c",
   "module": "ov085",
   "source": "src_tu/actors/daKinopio_c.cpp",
-  "promoted_source": "src/actors/daKinopio_c.cpp",
+  "promoted_source": "src/game/actors/d_a_kinopio.cpp",
   "status": "text-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [

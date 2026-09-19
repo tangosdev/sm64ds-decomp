@@ -264,11 +264,13 @@
             "name": ".data",
             "size": 132
           }
-        ]
+        ],
+        "staleVerdictNote": "RE-SCORED 2026-09-19 BY STATIC SYMBOL LOOKUP ONLY -- the link was not re-run and no count above was re-measured. 10 of the 11 rows audited HOMELESS have a configured ROM home today, so that count is a dated artefact of the pre-rename round rather than a live finding. The banked _ZTS sizes are what date it: an _ZTS record holds the length-prefixed Itanium type-name string, so its size must be len(str(n)) + n + 1. _ZTS18daObjKm2_Ami_Bou_c must be 0x15 and 0xa is banked -- 0xa is the size under the retired 8-character coinage this class carried; _ZTS10dBgActor_c must be 0xd and 0xa is banked, again an 8-character coinage; _ZTS8dActor_c must be 0xa and 0x7 is banked; _ZTS7fBase_c must be 0x9 and 0xb is banked; _ZTS7dBase_c must be 0x9 and 0xf is banked. The spellings were swept to the cartridge's names; the numbers never were. HOMES CONFIRMED TODAY: _ZTS8dActor_c arm9:0x0208e384, _ZTI8dActor_c arm9:0x0208e390, _ZTI7fBase_c arm9:0x02086d70, _ZTS7fBase_c arm9:0x02086e60, _ZTI7dBase_c arm9:0x02086e78, _ZTS7dBase_c arm9:0x02086e54, _ZTI10dBgActor_c ov002:0x021089ec, _ZTS10dBgActor_c ov002:0x02108a04, _ZTI18daObjKm2_Ami_Bou_c ov045:0x02112d74, _ZTS18daObjKm2_Ami_Bou_c ov045:0x02112d80. THE ONE SURVIVING HOMELESS ROW IS _ZN18daObjKm2_Ami_Bou_cD2Ev, and it is genuine: it has no entry in any config/**/symbols.txt, and neither does the retired coinage's D2, so it was never homed under either spelling. mwccarm emits D1, D0 and D2 from one definition while the cartridge here carries only D1 (ov045:0x0211150c) and D0 (ov045:0x02111558); the base-object variant has no ROM address to be attributed to. THE FOUR COLLISION ROWS ALL STILL VERIFY at their exact banked addresses: _ZTV18daObjKm2_Ami_Bou_c ov045:0x02112dbc, _ZTV10dBgActor_c ov002:0x0210ae38, _ZN10dBgActor_cD0Ev ov002:0x020ee464 (size 0x4c, as banked) and _ZN10dBgActor_cD1Ev ov002:0x020ee42c (size 0x38, as banked). LOOKUP CONTROLS, so a zero cannot be read as a finding: the search covered all 106 config/**/symbols.txt; the retired spellings _ZTS8PoleLift, _ZTV8PoleLift, _ZTS8Platform and _ZTV8Platform return zero hits each, while every name listed as confirmed above returns exactly one."
       },
       "symbolCheckNewVsBaseline": null,
       "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for daObjKm2_Ami_Bou_c\" in daObjKm2_Ami_Bou_c.o\nmwldarm.exe: Previously defined in _dsd_gap@ov045_3.o\nmwldarm.exe: Multiply-defined: \"virtual table for Platform\" in daObjKm2_Ami_Bou_c.o\nmwldarm.exe: Previously defined in _dsd_gap@ov002_13.o\n\nErrors caused tool to abort.",
-      "supersededBy": "This round predates the in-class destructor. Its 'Multiply-defined: virtual table for Platform' half came from dBgActor_c's vague-linkage copy, which is no longer emitted. Not re-run; promotion is blocked earlier, at the isolator."
+      "supersededBy": "This round predates the in-class destructor. Its 'Multiply-defined: virtual table for Platform' half came from dBgActor_c's vague-linkage copy, which is no longer emitted. Not re-run; promotion is blocked earlier, at the isolator. SUPERSEDED AGAIN, AND RECORDED AS SUCH ON 2026-09-19. This entry's status is `promoted`: config/arm9/overlays/ov045/delinks.txt enrolls src/game/actors/d_a_obj_km2_ami_bou.cpp `complete` over .text 0x0211150c..0x02111840, the exact span this manifest claims, so the TU is built by the production ROM build. A banked `link-failed` from a scratch whole-range link therefore no longer describes the state of this entry, and the objectAudit beneath it is a dated artefact of that same round, not a live verdict -- see objectAudit.staleVerdictNote. NOTHING WAS RE-RUN TO WRITE THIS: no link, no compile, no byte comparison. The only new work is static symbol lookup, and it is reported as such.",
+      "linkerOutputNote": "READ THIS BLOB AS HALF-SWEPT PROSE, NOT AS A FAITHFUL TRANSCRIPT. It is a captured mwldarm transcript from the pre-rename round, and a later class-rename sweep rewrote the demangled names inside it unevenly: one line now reads 'virtual table for daObjKm2_Ami_Bou_c' (this class's cartridge name) while the other still reads 'virtual table for Platform', the retired coinage for dBgActor_c. mwldarm never printed those two spellings in one run. The two lines name _ZTV18daObjKm2_Ami_Bou_c and _ZTV10dBgActor_c, whose gap objects are the ones the objectAudit records as COLLIDES-GAP at ov045:0x02112dbc and ov002:0x0210ae38. The text is left as captured rather than rewritten, because editing a recorded transcript to agree with today's names would turn a dated artefact into a false measurement."
     },
     "compilerOnlyOutput": {
       "requested": [
@@ -389,15 +391,15 @@
         "symbol": "_ZTI18daObjKm2_Ami_Bou_c",
         "size": "0xc",
         "binding": "STB_LOPROC",
-        "rom_home": null,
-        "note": "HOMELESS UNDER THE COINED NAME. The cartridge's record is _ZTI18daObjKm2_Ami_Bou_c at ov045:0x02112d74; the vtable's own typeinfo word at 0x02112db8 reads 0x02112d74, and that record's base pointer is 0x021089ec = _ZTI10dBgActor_c, which is the base this header already declares."
+        "rom_home": "ov045:0x02112d74",
+        "note": "HOMED. The row previously read HOMELESS UNDER THE COINED NAME, from the round when the class was still a coinage, even while naming the cartridge's address itself. config/arm9/overlays/ov045/symbols.txt carries _ZTI18daObjKm2_Ami_Bou_c at 0x02112d74 (static lookup, 2026-09-19; the retired coinage's _ZTI returns zero hits). The vtable's own typeinfo word at 0x02112db8 reads 0x02112d74, and that record's base pointer is 0x021089ec = _ZTI10dBgActor_c, which is the base this header already declares. The size 0xc beside it is the round's own measurement and is left untouched."
       },
       {
         "symbol": "_ZTS18daObjKm2_Ami_Bou_c",
         "size": "0xa",
         "binding": "STB_LOPROC",
-        "rom_home": null,
-        "note": "HOMELESS UNDER THE COINED NAME. The cartridge holds the ASCII '18daObjKm2_Ami_Bou_c' at ov045:0x02112d80. An _ZTS record is a length-prefixed mangled string, so a coined name misses on both the prefix and the body and can never byte-match."
+        "rom_home": "ov045:0x02112d80",
+        "note": "HOMED, AND THE SIZE BESIDE IT IS STALE. config/arm9/overlays/ov045/symbols.txt carries _ZTS18daObjKm2_Ami_Bou_c at 0x02112d80 (static lookup, 2026-09-19; the retired coinage's _ZTS returns zero hits). The recorded size 0xa cannot belong to this spelling: an _ZTS record holds the length-prefixed type-name string, so '18daObjKm2_Ami_Bou_c' plus its terminator is 0x15 bytes. 0xa is the size the record had under the 8-character coinage the class carried when this inventory was taken. The size is left as measured rather than recomputed, because nothing here re-compiled the TU; treat it as dating the row, not describing today's object."
       }
     ],
     "bss": [],
