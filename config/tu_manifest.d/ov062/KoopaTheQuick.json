@@ -1,9 +1,9 @@
 {
   "id": "ov062/KoopaTheQuick",
   "module": "ov062",
-  "source": "src_tu/actors/KoopaTheQuick.cpp",
+  "source": "src/actors/KoopaTheQuick.cpp",
   "promoted_source": "src/actors/KoopaTheQuick.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x211975c..0x211af38, 18 function(s), from build/tu_map.json (tools/tu_map.py)",

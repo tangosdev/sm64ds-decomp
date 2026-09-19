@@ -164,109 +164,13 @@ src/d_a_nknk_nokonoko.c:
     complete
     .text start:0x0211970c end:0x0211975c
 
-src/_ZN13KoopaTheQuickD1Ev.cpp:
+src/actors/KoopaTheQuick.cpp:
     complete
-    .text start:0x0211975c end:0x021197a4
+    .text start:0x0211975c end:0x0211af38
 
-src/_ZN13KoopaTheQuickD0Ev.cpp:
+src/actors/KoopaFlag.cpp:
     complete
-    .text start:0x021197a4 end:0x02119800
-
-src/func_ov062_02119800.cpp:
-    complete
-    .text start:0x02119800 end:0x02119954
-
-src/func_ov062_02119954.c:
-    complete
-    .text start:0x02119954 end:0x021199ac
-
-src/func_ov062_021199ac.c:
-    complete
-    .text start:0x021199ac end:0x02119af0
-
-src/func_ov062_02119af0.cpp:
-    complete
-    .text start:0x02119af0 end:0x02119be0
-
-src/func_ov062_02119be0.c:
-    complete
-    .text start:0x02119be0 end:0x0211a0f0
-
-src/func_ov062_0211a0f0.c:
-    complete
-    .text start:0x0211a0f0 end:0x0211a168
-
-src/func_ov062_0211a168.c:
-    complete
-    .text start:0x0211a168 end:0x0211a1f4
-
-src/func_ov062_0211a1f4.c:
-    complete
-    .text start:0x0211a1f4 end:0x0211a740
-
-src/func_ov062_0211a740.cpp:
-    complete
-    .text start:0x0211a740 end:0x0211a9c4
-
-src/func_ov062_0211a9c4.c:
-    complete
-    .text start:0x0211a9c4 end:0x0211aac0
-
-src/func_ov062_0211aac0.c:
-    complete
-    .text start:0x0211aac0 end:0x0211ab50
-
-src/_ZN13KoopaTheQuick6RenderEv.cpp:
-    complete
-    .text start:0x0211ab50 end:0x0211ab88
-
-src/_ZN13KoopaTheQuick8BehaviorEv.cpp:
-    complete
-    .text start:0x0211ab88 end:0x0211ac10
-
-src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211ac10 end:0x0211ac94
-
-src/_ZN13KoopaTheQuick13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211ac94 end:0x0211aee0
-
-src/d_a_r_nk.c:
-    complete
-    .text start:0x0211aee0 end:0x0211af38
-
-src/_ZN9KoopaFlagD1Ev.cpp:
-    complete
-    .text start:0x0211af38 end:0x0211af70
-
-src/_ZN9KoopaFlagD0Ev.cpp:
-    complete
-    .text start:0x0211af70 end:0x0211afbc
-
-src/func_ov062_0211afbc.c:
-    complete
-    .text start:0x0211afbc end:0x0211b000
-
-src/_ZN9KoopaFlag16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211b000 end:0x0211b030
-
-src/_ZN9KoopaFlag6RenderEv.cpp:
-    complete
-    .text start:0x0211b030 end:0x0211b05c
-
-src/_ZN9KoopaFlag8BehaviorEv.cpp:
-    complete
-    .text start:0x0211b05c end:0x0211b168
-
-src/_ZN9KoopaFlag13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211b168 end:0x0211b208
-
-src/d_a_r_flag.c:
-    complete
-    .text start:0x0211b208 end:0x0211b248
+    .text start:0x0211af38 end:0x0211b248
 
 src/_ZN6KleptoD1Ev.cpp:
     complete
