@@ -3935,6 +3935,9 @@
     "src/actors/dScMgCurling_c.cpp#func_ov006_020e1854": "tangosdev",
     "src/actors/dScMgCurling_c.cpp#func_ov006_020e1b54": "tangosdev",
     "src/actors/dScMgCurling_c.cpp#func_ov006_020e1c68": "andrewboudreau",
-    "src/actors/dScMgCurling_c.cpp#func_ov006_020e1dc8": "tangosdev"
+    "src/actors/dScMgCurling_c.cpp#func_ov006_020e1dc8": "tangosdev",
+    "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp#_ZN9daMenbo_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp#_ZN12daPukupuku_c16OnPendingDestroyEv": "tangosdev",
+    "src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp#_ZN9daMenbo_c16OnAimedAtWithEggEv": "tangosdev"
   }
 }
