@@ -158,30 +158,31 @@ The committed delinks settle it with no tool at all:
 
 | address | function |
 |---|---|
-| 0x02118d80 | `_ZN6Dorrie6RenderEv` |
+| 0x02118d80 | `_ZN9daDossy_c6RenderEv` |
 | 0x02118da8 | `_ZN12daDossyCap_c6RenderEv` |
-| 0x02118df0 | `_ZN6Dorrie8BehaviorEv` |
+| 0x02118df0 | `_ZN9daDossy_c8BehaviorEv` |
 | 0x021190a8 | `_ZN12daDossyCap_c8BehaviorEv` |
-| 0x02119228 | `_ZN6Dorrie13InitResourcesEv` |
+| 0x02119228 | `_ZN9daDossy_c13InitResourcesEv` |
 | 0x021194e8 | `_ZN12daDossyCap_c13InitResourcesEv` |
 
-Every `daDossyCap_c` member sits strictly between two `Dorrie` members, with no gap on either
-side. For `daDossyCap_c` to be its own object the linker would have had to split `Dorrie`'s
+Every `daDossyCap_c` member sits strictly between two `daDossy_c` members, with no gap on either
+side. For `daDossyCap_c` to be its own object the linker would have had to split `daDossy_c`'s
 `.text` in half around it — the one thing the contiguity rule this whole map rests on says
 never happens. The two `classInit` bodies interleave the same way (`daDossyCap_c_classInit`
 0x021195ec, then `daDossy_c_classInit` 0x02119634, then `_ZN14DorriePlatformC1Ev` 0x021196bc),
 so `daDossyCap_c_classInit` is inside the unit but so is a second class's.
 
 The unit is 0x02117f40..0x021196d8 — 29 functions, 3 classes — which is what
-`notes/data/tu-promotion-queue.tsv` already calls `Dorrie+DorriePlatform+daDossyCap_c`.
+`notes/data/tu-promotion-queue.tsv` already calls `daDossy_c+DorriePlatform+daDossyCap_c`.
 
 Two blockers on that unit, independent of each other:
 
-* **`Dorrie` is a coined name.** The ROM's own RTTI spells the class `daDossy_c`
-  (`_ZTS9daDossy_c` 0x0211cd34, `_ZTI9daDossy_c` 0x0211cd40, vtable 0x0211ce48), but the tree
-  still spells the vtable `_ZTV6Dorrie` and `notes/data/class-build-worklist.tsv` records the
-  header as a pre-rename alias. `DorriePlatform` has no RTTI at all. The rename to the ROM
-  spelling is a prerequisite and belongs in its own change, before any fold.
+* **`DorriePlatform` is still a coined name.** The ROM's own RTTI spells the main class
+  `daDossy_c` (`_ZTS9daDossy_c` 0x0211cd34, `_ZTI9daDossy_c` 0x0211cd40, vtable 0x0211ce48),
+  and that rename has since landed: the overlay's symbols and
+  `notes/data/tu-promotion-queue.tsv` both spell it `daDossy_c` now, so it is no longer a
+  prerequisite. `DorriePlatform` has no RTTI at all, so there is no ROM spelling to rename
+  it to, and it still blocks the fold.
 * **The generated shadow does not compile.** `tubuild create` on the real candidate emits 17
   human-review items — 16 conflicting `extern` declarations plus one body it cannot split at
   all, because `src/func_ov065_021182e4.cpp` defines it inside an `extern "C"` block — and the
