@@ -1,0 +1,465 @@
+{
+  "id": "ov006/dScMgSnowball_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgSnowball_c.cpp",
+  "promoted_source": "src/actors/dScMgSnowball_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x212568c..0x21295ac, 23 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgSnowball_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0212568c",
+      "end": "0x021295ac"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15dScMgSnowball_cD1Ev",
+      "address": "0x0212568c",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN15dScMgSnowball_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_cD0Ev",
+      "address": "0x0212573c",
+      "size": "0x000000c4",
+      "legacy_source": "src/_ZN15dScMgSnowball_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_02125800",
+      "address": "0x02125800",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02125800.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_02125804",
+      "address": "0x02125804",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov006_02125804.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_02125890",
+      "address": "0x02125890",
+      "size": "0x00000104",
+      "legacy_source": "src/func_ov006_02125890.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_02125994",
+      "address": "0x02125994",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov006_02125994.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_021259d8",
+      "address": "0x021259d8",
+      "size": "0x000001e4",
+      "legacy_source": "src/func_ov006_021259d8.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_02125bbc",
+      "address": "0x02125bbc",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov006_02125bbc.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_02125cdc",
+      "address": "0x02125cdc",
+      "size": "0x0000028c",
+      "legacy_source": "src/func_ov006_02125cdc.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_02125f68",
+      "address": "0x02125f68",
+      "size": "0x000009e0",
+      "legacy_source": "src/func_ov006_02125f68.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_02126948",
+      "address": "0x02126948",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov006_02126948.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_02126a98",
+      "address": "0x02126a98",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov006_02126a98.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_02126b4c",
+      "address": "0x02126b4c",
+      "size": "0x00000398",
+      "legacy_source": "src/func_ov006_02126b4c.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_02126ee4",
+      "address": "0x02126ee4",
+      "size": "0x00000acc",
+      "legacy_source": "src/func_ov006_02126ee4.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_021279b0",
+      "address": "0x021279b0",
+      "size": "0x00000360",
+      "legacy_source": "src/func_ov006_021279b0.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c6RenderEv",
+      "address": "0x02127d10",
+      "size": "0x00000694",
+      "legacy_source": "src/_ZN15dScMgSnowball_c6RenderEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c8BehaviorEv",
+      "address": "0x021283a4",
+      "size": "0x00000c14",
+      "legacy_source": "src/_ZN15dScMgSnowball_c8BehaviorEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c8OnKickedEv",
+      "address": "0x02128fb8",
+      "size": "0x000001f8",
+      "legacy_source": "src/_ZN15dScMgSnowball_c8OnKickedEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c8OnPushedEv",
+      "address": "0x021291b0",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dScMgSnowball_c8OnPushedEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c11OnAttacked2Ev",
+      "address": "0x021291d4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dScMgSnowball_c11OnAttacked2Ev.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c16CleanupResourcesEv",
+      "address": "0x021291f8",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dScMgSnowball_c16CleanupResourcesEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c13OnYoshiTryEatEi",
+      "address": "0x0212921c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN15dScMgSnowball_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c13InitResourcesEv",
+      "address": "0x02129268",
+      "size": "0x00000344",
+      "legacy_source": "src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp",
+      "ordinal": 22
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Reconstructed by tools/tubuild.py create and then reconciled by hand, then enrolled by tools/tu_promote.py. The file's own header comment records the load-bearing decisions: `#pragma defer_codegen off` at file scope (which both makes the five bracketed optimiser pragmas bind per-function instead of file-global last-wins, and switches .text emission from reverse to source order, so the file is written ROM-ascending), the flat M4x3Flat view that keeps one Matrix4x3 copy a block move, and the signed HS halfword macro.",
+    "tubuild create warning: RAW: src/_ZN15dScMgSnowball_c8OnKickedEv.cpp (_ZN15dScMgSnowball_c8OnKickedEv) did not split (the definition is inside the extern \"C\" block opened on line 10, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block -- RESOLVED: the block is carried verbatim in the promoted TU, its repeated #include lines dropped (all six are in the TU preamble), its `V` scroll macro #undef'd at the end of the block, and its duplicated `// @symbol` marker reduced to the single one above the definition. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'AT' differs between the legacy file that used to hold func_ov006_021279b0 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the promoted TU keeps one file-scope spelling of each of these four offset macros, the one from the member that used to live in src/func_ov006_021279b0.cpp. AT, I and B are the same type either way, so dropping the Behavior file's alternates costs nothing. H is not: the helpers spelled it `unsigned short` and Behavior spelled it `short`. The cartridge settles that one per site -- the three angle carries at the top of Behavior are `ldrsh` at 0x021283d8/0x021283e0/0x021283e8, every other halfword access in the TU is a store where both spellings emit the same `strh` -- so a second macro HS was added for the signed read and used at exactly those three sites. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'I' differs between the legacy file that used to hold func_ov006_021279b0 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the promoted TU keeps one file-scope spelling of each of these four offset macros, the one from the member that used to live in src/func_ov006_021279b0.cpp. AT, I and B are the same type either way, so dropping the Behavior file's alternates costs nothing. H is not: the helpers spelled it `unsigned short` and Behavior spelled it `short`. The cartridge settles that one per site -- the three angle carries at the top of Behavior are `ldrsh` at 0x021283d8/0x021283e0/0x021283e8, every other halfword access in the TU is a store where both spellings emit the same `strh` -- so a second macro HS was added for the signed read and used at exactly those three sites. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'H' differs between the legacy file that used to hold func_ov006_021279b0 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the promoted TU keeps one file-scope spelling of each of these four offset macros, the one from the member that used to live in src/func_ov006_021279b0.cpp. AT, I and B are the same type either way, so dropping the Behavior file's alternates costs nothing. H is not: the helpers spelled it `unsigned short` and Behavior spelled it `short`. The cartridge settles that one per site -- the three angle carries at the top of Behavior are `ldrsh` at 0x021283d8/0x021283e0/0x021283e8, every other halfword access in the TU is a store where both spellings emit the same `strh` -- so a second macro HS was added for the signed read and used at exactly those three sites. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'B' differs between the legacy file that used to hold func_ov006_021279b0 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the promoted TU keeps one file-scope spelling of each of these four offset macros, the one from the member that used to live in src/func_ov006_021279b0.cpp. AT, I and B are the same type either way, so dropping the Behavior file's alternates costs nothing. H is not: the helpers spelled it `unsigned short` and Behavior spelled it `short`. The cartridge settles that one per site -- the three angle carries at the top of Behavior are `ldrsh` at 0x021283d8/0x021283e0/0x021283e8, every other halfword access in the TU is a store where both spellings emit the same `strh` -- so a second macro HS was added for the signed read and used at exactly those three sites. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec2_Len' differs between the legacy file that used to hold func_ov006_02125f68 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the file-scope declaration keeps the more complete of the two observations and any call site that needed the other view takes an explicit cast, which is codegen-neutral here. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN4cstd5atan2E5Fix12IiES1_' differs between the legacy file that used to hold func_ov006_02125f68 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the file-scope declaration keeps the more complete of the two observations and any call site that needed the other view takes an explicit cast, which is codegen-neutral here. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE' differs between the legacy file that used to hold func_ov006_02125f68 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the file-scope declaration keeps the more complete of the two observations and any call site that needed the other view takes an explicit cast, which is codegen-neutral here. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System12FromUniqueIDEj' differs between the legacy file that used to hold func_ov006_02125f68 and the one that held _ZN15dScMgSnowball_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the file-scope declaration keeps the more complete of the two observations and any call site that needed the other view takes an explicit cast, which is codegen-neutral here. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02126a98' differs between the legacy file that used to hold _ZN15dScMgSnowball_c6RenderEv and the one that held _ZN15dScMgSnowball_c13OnYoshiTryEatEi; kept the first, the other is commented out for review -- RESOLVED: kept `void func_ov006_02126a98(char *)`, the typed view; the call sites in OnYoshiTryEat and InitResources, which had declared it `void *`, take an explicit (char *) cast. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Ov004_Deallocate' differs between the legacy file that used to hold _ZN15dScMgSnowball_c16CleanupResourcesEv and the one that held _ZN15dScMgSnowball_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: kept `void Ov004_Deallocate(void *)`, the spelling both call sites in this TU need; it contradicts the one-function definition in src/Ov004_Deallocate.c, which spells it `void (void)`, and that disagreement is banked in config/decl-agreement-baseline.json rather than papered over. Verified: 23/23 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02126a98' differs between the legacy file that used to hold _ZN15dScMgSnowball_c6RenderEv and the one that held _ZN15dScMgSnowball_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: kept `void func_ov006_02126a98(char *)`, the typed view; the call sites in OnYoshiTryEat and InitResources, which had declared it `void *`, take an explicit (char *) cast. Verified: 23/23 MATCH."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSnowball_c/dScMgSnowball_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 23,
+    "functions_declared": 23,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN15dScMgSnowball_cD2Ev",
+        "_ZN15dScMgSnowball_c4Vec2D1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN15dScMgSnowball_c4Vec2D1Ev",
+        "_ZN15dScMgSnowball_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        22,
+        23,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69
+      ],
+      "data": [
+        "_ZTV15dScMgSnowball_c",
+        "_ZTI15dScMgSnowball_c",
+        "_ZTS15dScMgSnowball_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI15dScMgSnowball_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS15dScMgSnowball_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV15dScMgSnowball_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgSnowball_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212568c",
+        "end": "0x021295ac",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212568c",
+          "end": "0x021295ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 23
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV15dScMgSnowball_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0214000c",
+      "reason": "The vtable this TU is the key function for. dScMgSnowball_c declares its destructor out of line and this file is the only definition, so mwccarm anchors the vague-linkage group here. ROM home ov006:0x0214000c (config/arm9/overlays/ov006/symbols.txt); the next configured symbol is data_ov006_0214009c, so the cartridge copy is 0x90 while this object emits 0x98 -- the two extra words are the trailing null slots the cartridge table drops. D1/D0 and the class's own overrides odr-use this copy for their vptr stores; production isolation rebinds those relocations to the ROM home and deadstrips the duplicate."
+    },
+    {
+      "symbol": "_ZTI15dScMgSnowball_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213ffd0",
+      "reason": "This class's own __si_class_type_info, emitted beside the vtable. ROM home ov006:0x0213ffd0, 0xc bytes up to _ZTS15dScMgSnowball_c at 0x0213ffdc -- the record that proves the class name this TU spells."
+    },
+    {
+      "symbol": "_ZTS15dScMgSnowball_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213ffdc",
+      "reason": "Type-name string `15dScMgSnowball_c\u0000`, 0x12 bytes, which is exactly the size verify reports for the copy in this object. ROM home ov006:0x0213ffdc."
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64",
+      "reason": "The direct base's type_info, dragged in as the __si_class_type_info base pointer of _ZTI15dScMgSnowball_c. ROM home ov006:0x0213bc64; dScMgSingle3DBase_c's own TU (src/minigames/d_s_mg_single3_d_base.cpp) owns it."
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00",
+      "reason": "Type-name string for the direct base, reached through the base type_info above. ROM home ov006:0x0213bd00."
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c",
+      "reason": "Grandparent type_info, reached transitively up the single-inheritance RTTI chain. ROM home ov004:0x020bbf6c -- a different overlay, so nothing in ov006 can own it."
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84",
+      "reason": "Grandparent type-name string, reached through the type_info above. ROM home ov004:0x020bbf84."
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "dScene_c type_info, next link up the chain. ROM home arm9:0x020914d4."
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "dScene_c type-name string. ROM home arm9:0x020914b0."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "dBase_c type_info, next link up the chain. ROM home arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "dBase_c type-name string. ROM home arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "fBase_c type_info -- the root of the chain, a __class_type_info with no base pointer, which is why it is 8 bytes and not 0xc. ROM home arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "fBase_c type-name string. ROM home arm9:0x02086e60."
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor definition makes mwccarm emit three variants; the cartridge carries only D1 (ov006:0x0212568c, 0xb0) and D0 (ov006:0x0212573c, 0xc4). config/arm9/overlays/ov006/symbols.txt has no D2 row for this class and no address anywhere in config/ names one, so it has no ROM home: plain deadstrip, not deadstrip-duplicate. Its presence does not disturb the licensed run -- verify reports all 23 licensed functions in the expected ROM-ascending section order with it emitted."
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_c4Vec2D1Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless, and necessarily so: Vec2 is a nested type COINED in include/dScMgSnowball_c.h, so no cartridge symbol can spell it. Its user-declared empty destructor is the SROA-defeating lever that gives a local of that type a stack home in func_ov006_02125f68's frame; the 4-byte `bx lr` body it emits is never called and never reaches the ROM."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "Vector3's empty destructor from include/types.h. Unlike the two above this one HAS a ROM home -- arm9:0x020072c0, kind:function(arm,size=0x4) in config/arm9/symbols.txt -- owned by another source, so this object's copy is a vague-linkage duplicate rather than compiler-only output. rombuild proves the body against the cartridge before discarding it."
+    }
+  ]
+}

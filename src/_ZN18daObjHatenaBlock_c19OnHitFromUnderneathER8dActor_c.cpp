@@ -1,18 +1,18 @@
 //cpp
-// @symbol _ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c
-#include "QuestionBlock.h"
+// @symbol _ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c
+#include "daObjHatenaBlock_c.h"
 #include "dActor_c.h"
 
 extern "C" int func_ov102_02149078(void *self);
 extern "C" void func_ov102_02149da8(void *self, int state);
 
-/* QuestionBlock::OnHitFromUnderneath -- vtable slot 28, ov102 0x021496a4.
+/* daObjHatenaBlock_c::OnHitFromUnderneath -- vtable slot 28, ov102 0x021496a4.
  * include/dActor_c.h's own slot 28 supplies the signature.
  *
  * mVertAccel/mVertSpeed are dActor_c's own fields (include/dActor_c.h),
  * already named there -- this override resets the block's own vertical
  * physics to a fixed pop before running the shared combat-callback body
- * (see src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp for the
+ * (see src/_ZN18daObjHatenaBlock_c15OnGroundPoundedER8dActor_c.cpp for the
  * mState/mHitterParam/helper notes). */
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -22,7 +22,7 @@ extern "C" void func_ov102_02149da8(void *self, int state);
    brace with nothing to return, which is what the host already accepts for the
    rest of this family. Byte-identical under 2004/b56: the compiled object is
    unchanged. */
-int QuestionBlock::OnHitFromUnderneath(dActor_c &other)
+int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 {
     if (mState != 1) {
         mVertAccel = -0x8000;

@@ -37081,11 +37081,11 @@ matched: yes</title></rect><rect x="1255.27" y="433.79" width="7.67" height="5.4
 module: ov065
 addr: 0x02117ee8
 size: 88 bytes
-matched: yes</title></rect><rect x="1255.27" y="439.28" width="7.67" height="6.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6DorrieD1Ev
+matched: yes</title></rect><rect x="1255.27" y="439.28" width="7.67" height="6.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_cD1Ev
 module: ov065
 addr: 0x02117f40
 size: 104 bytes
-matched: yes</title></rect><rect x="1255.27" y="445.77" width="7.67" height="7.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6DorrieD0Ev
+matched: yes</title></rect><rect x="1255.27" y="445.77" width="7.67" height="7.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_cD0Ev
 module: ov065
 addr: 0x02117fa8
 size: 124 bytes
@@ -37133,11 +37133,11 @@ matched: yes</title></rect><rect x="1276.33" y="440.12" width="9.07" height="3.3
 module: ov065
 addr: 0x02118cc4
 size: 64 bytes
-matched: yes</title></rect><rect x="1276.33" y="443.49" width="9.07" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dorrie16CleanupResourcesEv
+matched: yes</title></rect><rect x="1276.33" y="443.49" width="9.07" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_c16CleanupResourcesEv
 module: ov065
 addr: 0x02118d04
 size: 124 bytes
-matched: yes</title></rect><rect x="1276.33" y="450.04" width="9.07" height="2.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dorrie6RenderEv
+matched: yes</title></rect><rect x="1276.33" y="450.04" width="9.07" height="2.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_c6RenderEv
 module: ov065
 addr: 0x02118d80
 size: 40 bytes
@@ -37145,7 +37145,7 @@ matched: yes</title></rect><rect x="1276.33" y="452.15" width="9.07" height="3.8
 module: ov065
 addr: 0x02118da8
 size: 72 bytes
-matched: yes</title></rect><rect x="1276.33" y="455.95" width="9.07" height="36.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dorrie8BehaviorEv
+matched: yes</title></rect><rect x="1276.33" y="455.95" width="9.07" height="36.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_c8BehaviorEv
 module: ov065
 addr: 0x02118df0
 size: 696 bytes
@@ -37157,7 +37157,7 @@ matched: yes</title></rect><rect x="1285.40" y="433.79" width="6.02" height="1.9
 module: ov065
 addr: 0x02119210
 size: 24 bytes
-matched: yes</title></rect><rect x="1285.40" y="435.69" width="6.02" height="55.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dorrie13InitResourcesEv
+matched: yes</title></rect><rect x="1285.40" y="435.69" width="6.02" height="55.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daDossy_c13InitResourcesEv
 module: ov065
 addr: 0x02119228
 size: 704 bytes

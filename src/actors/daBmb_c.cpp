@@ -1101,7 +1101,7 @@ void func_ov102_0214b3b8(void *c)
 /* ==========================================================================
  *
  * CALLED FROM OUTSIDE THIS TU: ov078 0x0212519c, and ov102's own
- * QuestionBlock run at 0x02149278.  It keeps external linkage.
+ * daObjHatenaBlock_c run at 0x02149278.  It keeps external linkage.
  * ======================================================================== */
 
 extern "C" {
@@ -1377,7 +1377,7 @@ void func_ov102_0214ad40(void *cv)
 /* ==========================================================================
  *
  * CALLED FROM OUTSIDE THIS TU: ov002 0x020f1740, ov078 0x02125284, and
- * ov102's own QuestionBlock run at 0x0214926c.  It keeps external linkage.
+ * ov102's own daObjHatenaBlock_c run at 0x0214926c.  It keeps external linkage.
  * ======================================================================== */
 
 extern "C" {
