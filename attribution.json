@@ -4010,6 +4010,13 @@
     "src/actors/daKing_Donketu_c.cpp#func_ov073_021215cc": "tangosdev",
     "src/actors/daKing_Donketu_c.cpp#_ZN16daKing_Donketu_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daKing_Donketu_c.cpp#_ZN16daKing_Donketu_c16OnPendingDestroyEv": "tangosdev",
-    "src/actors/daKing_Donketu_c.cpp#_ZN16daKing_Donketu_c6RenderEv": "tangosdev"
+    "src/actors/daKing_Donketu_c.cpp#_ZN16daKing_Donketu_c6RenderEv": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_cD1Ev": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_cD0Ev": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c6RenderEv": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c8BehaviorEv": "lunavyqo",
+    "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#daObjKanban_c_classInit": "tangosdev"
   }
 }

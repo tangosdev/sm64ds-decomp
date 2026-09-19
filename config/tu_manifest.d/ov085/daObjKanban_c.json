@@ -1,9 +1,9 @@
 {
   "id": "ov085/daObjKanban_c",
   "module": "ov085",
-  "source": "src_tu/actors/daObjKanban_c.cpp",
+  "source": "src/actors/daObjKanban_c.cpp",
   "promoted_source": "src/actors/daObjKanban_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x212edac..0x212f244, 6 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212f27c to take in daObjKanban_c_classInit at 0x212f244, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN13daObjKanban_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x368 and installs this class's vtable), and 0x212f27c is where this overlay's .text section ends. The sibling TUs ov085/daMip_c and ov085/daC_Jugem_c took in their own classInit on the same grounds; daMip_c is promoted.",
@@ -82,20 +82,242 @@
     "functions_matched": 7,
     "functions_declared": 7,
     "compilerOnlyOutput": {
-      "requested": [],
-      "unhandled": [
+      "requested": [
+        "_ZN13daObjKanban_cD2Ev",
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
         "_ZN10dBgActor_cD2Ev",
         "_ZN13daObjKanban_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
-      "data": []
+      "droppedSections": [
+        9,
+        10,
+        16,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "data": [
+        "_ZTV13daObjKanban_c",
+        "_ZTI13daObjKanban_c",
+        "_ZTS13daObjKanban_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjKanban_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjKanban_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjKanban_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 3 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov085-daObjKanban_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212edac",
+        "end": "0x0212f27c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212edac",
+          "end": "0x0212f27c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 7
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13daObjKanban_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits all three destructor variants from the single out-of-line `daObjKanban_c::~daObjKanban_c()` this TU defines, so the base-object variant comes out beside the licensed D1/D0 pair. The cartridge has no D2 for this class: ov085 runs D1 at 0x0212edac into D0 at 0x0212edf8, and 0x0212edf8 + 0x60 lands exactly on CleanupResources at 0x0212ee58, so the licensed run leaves no gap a third variant could occupy, and no symbols.txt in the tree names one. Homeless, and no surviving relocation reaches it."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "`~dBgActor_c()` is defined inline in the class body at include/dBgActor_c.h:43, so it has vague linkage, and this TU destroys a dBgActor_c base subobject in two places -- `daObjKanban_c::~daObjKanban_c()` and the `new daObjKanban_c()` in daObjKanban_c_classInit -- which makes mwccarm emit the base's out-of-line base-object copy here as well as inlining it. The cartridge carries only dBgActor_c's complete and deleting variants, D1 at ov002:0x020ee42c and D0 at ov002:0x020ee464, and no D2 anywhere, so this 0x38-byte body has no configured home."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "This TU declares five Vector3 locals: `mine`, `pos` and `tpos` at the top of Behavior, `opos` in Behavior's no-target branch, and `v` in InitResources, which copies data_ov085_0212f29c out before handing it to dCcAcPos_c::Init. Each is a class-type automatic, so mwccarm re-emits Vector3's vague-linkage complete destructor alongside this TU's own text. The cartridge keeps exactly one copy, the four-byte `bx lr` (1e ff 2f e1) at arm9:0x020072c0, and the enrolled complete entry src/_ZN7Vector3D1Ev.cpp already owns those bytes; rombuild byte-compares this object's body against the cartridge and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTV13daObjKanban_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130400",
+      "reason": "This TU owns daObjKanban_c's key function -- ~daObjKanban_c is the first virtual the class declares and its body is out of line here -- so mwcc emits the complete 0x88-byte class vtable storage with its two-word ABI preamble. The cartridge's public address point is ov085:0x02130400, eight bytes above the start of storage at 0x021303f8 (where the offset-to-top word reads 0 and the typeinfo word reads 0x021303c0) and outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so dsd supplies that ROM data independently. Slot 0 at the address point reads 0x0212f1b0, this TU's own InitResources. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI13daObjKanban_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021303c0",
+      "reason": "This class's own RTTI record, dragged in by the vtable this TU emits: the vtable's typeinfo word points straight at it. The canonical cartridge copy at ov085:0x021303c0 lies in this overlay's .data and outside this text-only entry's licensed range, so it stays ROM-gap owned. Its three words read 0x0209a764 (the __si_class_type_info vtable), 0x021303cc (the name) and 0x021089ec (_ZTI10dBgActor_c), which is the second independent witness that dBgActor_c is the base."
+    },
+    {
+      "symbol": "_ZTS13daObjKanban_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021303cc",
+      "reason": "This class's RTTI name string, emitted with the record above. The canonical cartridge copy is ov085:0x021303cc, sixteen bytes reading 31 33 64 61 4f 62 6a 4b 61 6e 62 61 6e 5f 63 00 -- the length-prefixed mangled string \"13daObjKanban_c\". That is why the class is spelled daObjKanban_c and why no part of this name is coined; the row resolves as deadstrip-data rather than the never-compared plain deadstrip precisely because the spelling reaches symbols.txt."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the immediate base's RTTI record. The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at ov002:0x021089ec is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the immediate base's RTTI name string (\"10dBgActor_c\"). The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at ov002:0x02108a04 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the grandparent's RTTI record. The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x0208e390 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the grandparent's RTTI name string (\"8dActor_c\"). The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x0208e384 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the great-grandparent's RTTI record. The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e78 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the great-grandparent's RTTI name string (\"7dBase_c\"). The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e54 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the root's RTTI record, a two-word __class_type_info rather than __si_class_type_info because fBase_c derives from nothing. The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086d70 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the root's RTTI name string (\"7fBase_c\"). The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e60 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
+    }
+  ]
 }
