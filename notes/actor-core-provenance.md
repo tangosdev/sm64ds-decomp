@@ -224,7 +224,7 @@ read nor set -- measured by building both, not assumed.
 * slot 20 `Virtual50` -- still `int`; untested.
 * slot 21 `OnGroundPounded` -- `Stump::OnGroundPounded` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x02133648`)
   compares two class fields and returns early on either. See `include/Stump.h`.
-  `BigBrickBlock`'s and `QuestionBlock`'s overrides happened not to trigger the
+  `BigBrickBlock`'s and `daObjHatenaBlock_c`'s overrides happened not to trigger the
   difference under `int` and were re-verified under `void`, so the correction is
   free there.
 * slot 24 `OnKicked` -- `BigBrickBlock::OnKicked` ([ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020b36dc`) has two

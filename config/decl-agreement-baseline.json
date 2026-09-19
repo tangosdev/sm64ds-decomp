@@ -4116,7 +4116,6 @@
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN13PrincessPeach13InitResourcesEv.cpp": ["param:#1 void *"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -4132,6 +4131,7 @@
    "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": ["return:BMD_File *"],
    "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -5255,7 +5255,6 @@
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["return:KCL_File *"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
@@ -5267,6 +5266,7 @@
    "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": ["return:KCL_File *"],
    "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
@@ -5861,7 +5861,7 @@
   },
   "_ZN8dActor_c11UntrackStarERa": {
    "src/_ZN11RollingRock8BehaviorEv.cpp": ["param:#2 signed char *"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["param:#2 void *"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN9PowerStar16CleanupResourcesEv.cpp": ["param:#2 signed char *"],
    "src/func_ov002_020e6d88.c": ["param:#2 signed char *", "return:int"],
    "src/func_ov002_020e8618.c": ["param:#2 signed char *"],
@@ -6265,7 +6265,7 @@
   "_ZN8dActor_c9TrackStarEjj": {
    "src/_ZN11RollingRock13InitResourcesEv.cpp": ["return:unsigned char"],
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["return:unsigned char"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:unsigned char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:unsigned char"],
    "src/_ZN3MrI13InitResourcesEv.cpp": ["return:unsigned char"],
    "src/_ZN5Whomp13InitResourcesEv.cpp": ["return:unsigned char"],
    "src/_ZN6Eyerok13InitResourcesEv.cpp": ["return:unsigned char"],
@@ -6330,11 +6330,11 @@
    "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["return:BCA_File *"],
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN13PrincessPeach13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN3Key13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN3MrI13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN4Door13InitResourcesEv.c": ["param:#1 void *", "return:void *"],
@@ -6397,12 +6397,12 @@
    "src/_ZN13PrincessPeach6State0Ev.cpp": ["param:#1 char *", "param:#5 unsigned int", "return:int"],
    "src/_ZN13PrincessPeach6State1Ev.cpp": ["param:#5 unsigned int"],
    "src/_ZN13PrincessPeach6State4Ev.cpp": ["param:#1 char *", "param:#5 unsigned int"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN13TreasureChest13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN14UnknownVsEntry13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": ["param:#1 char *", "param:#2 int", "param:#5 unsigned int"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN3Key13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN3MrI13InitResourcesEv.cpp": ["param:#5 unsigned int"],
@@ -6648,7 +6648,6 @@
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 int"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:void"],
@@ -6662,6 +6661,7 @@
    "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN4Door13InitResourcesEv.c": ["return:void"],
@@ -7584,7 +7584,7 @@
    "src/_ZN12dScStarSel_c13InitResourcesEv.cpp": ["return:unsigned char []"],
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["return:char []"],
-   "src/_ZN13QuestionBlock6RenderEv.cpp": ["return:int"],
+   "src/_ZN18daObjHatenaBlock_c6RenderEv.cpp": ["return:int"],
    "src/_ZN3HUD13InitResourcesEv.cpp": ["return:CAA0"],
    "src/_ZN6Player13InitResourcesEv.cpp": ["return:CAA0"],
    "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp": ["return:unsigned int []"],
@@ -9196,9 +9196,9 @@
    "src/game/actors/d_a_obj_hatena_switch.cpp": ["return:CLPS_Block"]
   },
   "data_ov002_0210d9a0": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN4Toad16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
@@ -9221,9 +9221,9 @@
    "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0210d9c0": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN4Toad16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
@@ -9238,16 +9238,16 @@
   "data_ov002_0210d9d8": {
    "src/_ZN10BrickBlock13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN10BrickBlock16CleanupResourcesEv.cpp": ["return:char []"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210d9e0": {
    "src/_ZN12EnemySpawner13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN12EnemySpawner16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210d9e8": {
@@ -9274,7 +9274,7 @@
   },
   "data_ov002_0210da18": {
    "src/_ZN10BrickBlock13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210da28": {
@@ -9286,9 +9286,12 @@
    "src/_ZN10BrickBlock16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN11ChiefChilly13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN11ChiefChilly16CleanupResourcesEv.cpp": ["return:void *"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN8Goomboss13InitResourcesEv.cpp": ["return:void *"],
+   "src/_ZN8Goomboss16CleanupResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov002_02100560.c": ["return:void *"],
+   "src/actors/Goomboss.cpp": ["return:char"],
    "src/game/actors/d_a_obj_kinoko_tag.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0210da38": {
@@ -9300,9 +9303,9 @@
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210da40": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN4Toad16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
@@ -9311,8 +9314,8 @@
    "src/func_ov002_020e5948.c": ["return:int []"]
   },
   "data_ov002_0210da58": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/game/actors/daFeather_c/daFeather_c.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0210dc70": {
@@ -13353,35 +13356,35 @@
    "src/_ZN13FortressTower16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "data_ov102_0214e7d0": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "data_ov102_0214e7d8": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov102_0214d908.c": ["return:void *"]
   },
   "data_ov102_0214e7e0": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov102_0214d908.c": ["return:void *"]
   },
   "data_ov102_0214e7e8": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov102_0214d908.c": ["return:void *"]
   },
   "data_ov102_0214e7f0": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "data_ov102_0214e7f8": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "data_ov102_0214e800": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov102_0214d908.c": ["return:void *"]
   },
   "data_ov102_0214e808": {
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
    "src/__sinit_ov102_0214d908.c": ["return:void *"]
   },
   "data_ov102_0214e870": {
@@ -20522,14 +20525,14 @@
   "gPFlowerCloseModelFile": {
    "src/_ZN11PowerFlower13InitResourcesEv.cpp": ["return:void * []"],
    "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "gPFlowerOpenModelFile": {
    "src/_ZN11PowerFlower13InitResourcesEv.cpp": ["return:void * []"],
    "src/_ZN11PowerFlower16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
-   "src/_ZN13QuestionBlock13InitResourcesEv.cpp": ["return:char"],
-   "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp": ["return:char"],
+   "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "gPianoAttackAnimationFile": {
    "src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c": ["return:SharedFilePtrLayout"]

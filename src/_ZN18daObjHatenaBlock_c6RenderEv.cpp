@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13QuestionBlock6RenderEv
+// @symbol _ZN18daObjHatenaBlock_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "QuestionBlock.h"
+#include "daObjHatenaBlock_c.h"
 extern "C" { extern int data_0209caa0; }
 
 struct Sub {
@@ -15,7 +15,7 @@ struct Sub {
 
 #pragma optimize_for_size on
 
-int QuestionBlock::Render()
+int daObjHatenaBlock_c::Render()
 {
     if (mState == 2)
         goto done;
