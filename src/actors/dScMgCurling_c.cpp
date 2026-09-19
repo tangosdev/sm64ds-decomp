@@ -7,7 +7,7 @@
  *
  * WHY THIS IS A SUB-RANGE: a non-matching member splits the run.  ROM ordinal
  * 27, func_ov006_020e20bc (0x020e20bc, size 0x5e0), has a source file but it
- * is an honest NONMATCHING draft -- 299 divergent words of 376 -- and so it
+ * is an honest non-matching draft -- 299 divergent words of 376 -- and so it
  * carries NO entry in config/arm9/overlays/ov006/delinks.txt at all (the
  * blocks jump from 0x020e1dc8-0x020e20bc straight to 0x020e269c) and
  * tools/enroll.py leaves it out of the ROM build, which keeps the cartridge's
