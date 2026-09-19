@@ -169,7 +169,7 @@
       "symbol": "daPopoi_c_classInit",
       "address": "0x021271d4",
       "size": "0x0000005c",
-      "legacy_source": "src/daPopoi_c_classInit.c",
+      "legacy_source": "src/d_a_popoi.c",
       "ordinal": 21
     }
   ],
@@ -194,6 +194,36 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "policy-refused",
+      "scratch": "build/tu/ov077-HeaveHo/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null
     }
   }
 }
