@@ -6,29 +6,31 @@
  * of source order). Conflicting declarations were reconciled by hand; see
  * the manifest notes.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0212624c  src/_ZN9daPopoi_cD1Ev.cpp
- *   [1] 0x0212629c  src/_ZN9daPopoi_cD0Ev.cpp
- *   [2] 0x02126300  src/func_ov077_02126300.c
- *   [3] 0x02126528  src/func_ov077_02126528.cpp
- *   [4] 0x02126640  src/func_ov077_02126640.cpp
- *   [5] 0x02126758  src/func_ov077_02126758.cpp
- *   [6] 0x0212679c  src/func_ov077_0212679c.c
- *   [7] 0x02126930  src/func_ov077_02126930.cpp
- *   [8] 0x021269a8  src/func_ov077_021269a8.cpp
- *   [9] 0x02126a04  src/func_ov077_02126a04.c
- *   [10] 0x02126a50  src/func_ov077_02126a50.c
- *   [11] 0x02126a84  src/func_ov077_02126a84.c
- *   [12] 0x02126ad0  src/func_ov077_02126ad0.c
- *   [13] 0x02126cd4  src/func_ov077_02126cd4.cpp
- *   [14] 0x02126d5c  src/func_ov077_02126d5c.cpp
- *   [15] 0x02126dac  src/func_ov077_02126dac.c
- *   [16] 0x02126dec  src/_ZN9daPopoi_c16CleanupResourcesEv.cpp
- *   [17] 0x02126e34  src/_ZN9daPopoi_c16OnPendingDestroyEv.cpp
- *   [18] 0x02126e38  src/_ZN9daPopoi_c6RenderEv.cpp
- *   [19] 0x02126e88  src/_ZN9daPopoi_c8BehaviorEv.cpp
- *   [20] 0x0212706c  src/_ZN9daPopoi_c13InitResourcesEv.cpp
- *   [21] 0x021271d4  src/d_a_popoi.c
+ * Absorbed functions, in ROM address order. Each arrived as its own
+ * per-symbol legacy shard; promotion consolidated all 22 into this file,
+ * so the shard paths are gone and the symbol is the live name:
+ *   [0] 0x0212624c  _ZN9daPopoi_cD1Ev
+ *   [1] 0x0212629c  _ZN9daPopoi_cD0Ev
+ *   [2] 0x02126300  func_ov077_02126300
+ *   [3] 0x02126528  func_ov077_02126528
+ *   [4] 0x02126640  func_ov077_02126640
+ *   [5] 0x02126758  func_ov077_02126758
+ *   [6] 0x0212679c  func_ov077_0212679c
+ *   [7] 0x02126930  func_ov077_02126930
+ *   [8] 0x021269a8  func_ov077_021269a8
+ *   [9] 0x02126a04  func_ov077_02126a04
+ *   [10] 0x02126a50  func_ov077_02126a50
+ *   [11] 0x02126a84  func_ov077_02126a84
+ *   [12] 0x02126ad0  func_ov077_02126ad0
+ *   [13] 0x02126cd4  func_ov077_02126cd4
+ *   [14] 0x02126d5c  func_ov077_02126d5c
+ *   [15] 0x02126dac  func_ov077_02126dac
+ *   [16] 0x02126dec  _ZN9daPopoi_c16CleanupResourcesEv
+ *   [17] 0x02126e34  _ZN9daPopoi_c16OnPendingDestroyEv
+ *   [18] 0x02126e38  _ZN9daPopoi_c6RenderEv
+ *   [19] 0x02126e88  _ZN9daPopoi_c8BehaviorEv
+ *   [20] 0x0212706c  _ZN9daPopoi_c13InitResourcesEv
+ *   [21] 0x021271d4  daPopoi_c_classInit
  */
 
 /* -------------------------------------------------------------------------- */
