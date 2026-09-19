@@ -433,7 +433,7 @@ def cluster(fns, vt_for_module, factory_for_module, blind):
     that boundary, and a naive union merged them into one. The sinit count settles
     it: ov081 has five named classes and five sinits, so five TUs is right and the
     merge was wrong. ov090 fails identically (`daMenbo_c` bridging daManta_c and
-    Skeeter; four classes, four sinits).
+    daMenbo_c; four classes, four sinits).
 
     The reason RTTI can lie here and symbols cannot: a mangled name is direct
     evidence about the function that carries it, whereas an RTTI span is inferred

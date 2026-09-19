@@ -419,7 +419,7 @@ src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBo
 src/d_a_obj_tatefuda.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_block_item_tag_blk_slvstar_tag.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_star_silver_star.c	WEAK-refs-only	ov002				1		None		-
-src/d_a_menbo.c	S1-stores-rom-vptr	ov090			stores _ZTV7Skeeter	1		None	_ZTV7Skeeter	-
+src/d_a_menbo.c	S1-stores-rom-vptr	ov090			stores _ZTV9daMenbo_c	1		None	_ZTV9daMenbo_c	-
 src/d_a_obj_sm_lift.c	S1-stores-rom-vptr	ov018			stores _ZTV7SkiLift	1		None	_ZTV7SkiLift	-
 src/d_a_obj_hs_billboard_hs_b_star.c	WEAK-refs-only	ov031				1		None		-
 src/d_a_obj_hs_billboard_hs_y_star.c	WEAK-refs-only	ov031				1		None		-

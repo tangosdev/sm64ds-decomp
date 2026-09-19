@@ -331,7 +331,7 @@ daKlr_c	DONE	include\BulletBill.h  [alias: header uses pre-rename name]	dEnemyBa
 daKpaFire_c	DONE	include\BowserFire.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov060	6
 daKuriKing_c	DONE	include\Goomboss.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov074	6
 daManta_c	DONE	include\daManta_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
-daMenbo_c	DONE	include\Skeeter.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	10
+daMenbo_c	DONE	include\daMenbo_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	10
 daMip_c	DONE	include\daMip_c.h	dEnemyBase_c	0	ov085	8
 daMoray_c	DONE	include\Unagi.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov016	7
 daNknk_c	DONE	include\Koopa.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	10
@@ -343,7 +343,7 @@ daPkn_c	DONE	include\daPkn_c.h	dEnemyBase_c	0	ov084	8
 daPopoi_c	DONE	include\HeaveHo.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov077	7
 daPropeller_Heyho_Fire_c	DONE	include\Bullet.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	7
 daPropeller_Heyho_c	DONE	include\daPropeller_Heyho_c.h	dEnemyBase_c	0	ov070	10
-daPukupuku_c	DONE	include\CheepCheep.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
+daPukupuku_c	DONE	include\daPukupuku_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
 daRNk_c	DONE	include\KoopaTheQuick.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	6
 daShark_c	DONE	include\daShark_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
 daShl_c	DONE	include\KoopaShell.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov102	8

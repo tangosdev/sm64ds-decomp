@@ -3,11 +3,11 @@
     .ctor       start:0x021340c4 end:0x021340d4 kind:rodata align:4
     .data       start:0x021340e0 end:0x02134480 kind:data align:32
     .bss        start:0x02134480 end:0x021345e0 kind:bss align:32
-src/_ZN7SkeeterD1Ev.cpp:
+src/_ZN9daMenbo_cD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f40
 
-src/_ZN7SkeeterD0Ev.cpp:
+src/_ZN9daMenbo_cD0Ev.cpp:
     complete
     .text start:0x02130f40 end:0x02130f94
 
@@ -67,35 +67,35 @@ src/func_ov090_02131e50.c:
     complete
     .text start:0x02131e50 end:0x02131edc
 
-src/_ZN7Skeeter16CleanupResourcesEv.cpp:
+src/_ZN9daMenbo_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02131edc end:0x02131f30
 
-src/_ZN7Skeeter16OnPendingDestroyEv.cpp:
+src/_ZN9daMenbo_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02131f30 end:0x02131f34
 
-src/_ZN7Skeeter6RenderEv.cpp:
+src/_ZN9daMenbo_c6RenderEv.cpp:
     complete
     .text start:0x02131f34 end:0x02131f88
 
-src/_ZN7Skeeter8BehaviorEv.cpp:
+src/_ZN9daMenbo_c8BehaviorEv.cpp:
     complete
     .text start:0x02131f88 end:0x0213235c
 
-src/_ZN7Skeeter13InitResourcesEv.cpp:
+src/_ZN9daMenbo_c13InitResourcesEv.cpp:
     complete
     .text start:0x0213235c end:0x02132618
 
-src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp:
+src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132618 end:0x02132620
 
-src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp:
+src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02132620 end:0x0213264c
 
-src/_ZN7Skeeter13OnYoshiTryEatEv.cpp:
+src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0213264c end:0x02132654
 
@@ -155,11 +155,11 @@ src/d_a_manta.c:
     complete
     .text start:0x02132fe8 end:0x02133034
 
-src/_ZN10CheepCheepD1Ev.cpp:
+src/_ZN12daPukupuku_cD1Ev.cpp:
     complete
     .text start:0x02133034 end:0x02133074
 
-src/_ZN10CheepCheepD0Ev.cpp:
+src/_ZN12daPukupuku_cD0Ev.cpp:
     complete
     .text start:0x02133074 end:0x021330c8
 
@@ -191,23 +191,23 @@ src/func_ov090_02133338.c:
     complete
     .text start:0x02133338 end:0x021333ac
 
-src/_ZN10CheepCheep16CleanupResourcesEv.cpp:
+src/_ZN12daPukupuku_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021333ac end:0x021333dc
 
-src/_ZN10CheepCheep16OnPendingDestroyEv.cpp:
+src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021333dc end:0x021333e0
 
-src/_ZN10CheepCheep6RenderEv.cpp:
+src/_ZN12daPukupuku_c6RenderEv.cpp:
     complete
     .text start:0x021333e0 end:0x02133430
 
-src/_ZN10CheepCheep8BehaviorEv.cpp:
+src/_ZN12daPukupuku_c8BehaviorEv.cpp:
     complete
     .text start:0x02133430 end:0x02133530
 
-src/_ZN10CheepCheep13InitResourcesEv.cpp:
+src/_ZN12daPukupuku_c13InitResourcesEv.cpp:
     complete
     .text start:0x02133530 end:0x02133634
 

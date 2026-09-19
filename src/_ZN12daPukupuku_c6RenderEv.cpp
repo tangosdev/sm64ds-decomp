@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN10CheepCheep6RenderEv
+// @symbol _ZN12daPukupuku_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "CheepCheep.h"
+#include "daPukupuku_c.h"
 struct Obj {
     virtual void m0();
     virtual void m1();
@@ -11,7 +11,7 @@ struct Obj {
     virtual void Target(int);
 };
 
-int CheepCheep::Render()
+int daPukupuku_c::Render()
 {
     int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;

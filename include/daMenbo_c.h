@@ -1,12 +1,12 @@
-#ifndef SKEETER_H
-#define SKEETER_H
+#ifndef DAMENBO_C_H
+#define DAMENBO_C_H
 
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN7SkeeterD1Ev` destroys each member, and
+ * the class's own destructor `_ZN9daMenbo_cD1Ev` destroys each member, and
  * `Skeeter_Spawn` constructs the same types at the same offsets before
- * storing `_ZTV7Skeeter`. Everything this header used to restate below
+ * storing `_ZTV9daMenbo_c`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
@@ -36,7 +36,7 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
-struct Skeeter : dEnemyBase_c {
+struct daMenbo_c : dEnemyBase_c {
     dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim;            /* 0x30c */
@@ -58,7 +58,7 @@ struct Skeeter : dEnemyBase_c {
     s32                          unk_3ac;               /* 0x3ac */
 
     /* --- vtable --- */
-    virtual ~Skeeter();
+    virtual ~daMenbo_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -73,7 +73,7 @@ struct Skeeter : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Skeeter_size_must_be_0x3b0[sizeof(Skeeter) == 0x3b0 ? 1 : -1];
+typedef char daMenbo_c_size_must_be_0x3b0[sizeof(daMenbo_c) == 0x3b0 ? 1 : -1];
 #endif
 
-#endif /* SKEETER_H */
+#endif /* DAMENBO_C_H */

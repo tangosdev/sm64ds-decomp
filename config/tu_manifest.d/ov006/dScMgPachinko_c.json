@@ -1,0 +1,575 @@
+{
+  "id": "ov006/dScMgPachinko_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgPachinko_c.cpp",
+  "promoted_source": "src/actors/dScMgPachinko_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20fa75c..0x20ff3ec, 45 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgPachinko_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020fa75c",
+      "end": "0x020fc8c0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15dScMgPachinko_cD1Ev",
+      "address": "0x020fa75c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dScMgPachinko_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15dScMgPachinko_cD0Ev",
+      "address": "0x020fa780",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15dScMgPachinko_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020fa7b8",
+      "address": "0x020fa7b8",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov006_020fa7b8.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020fa844",
+      "address": "0x020fa844",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov006_020fa844.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020fa924",
+      "address": "0x020fa924",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_020fa924.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020fa9a0",
+      "address": "0x020fa9a0",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020fa9a0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020fa9c8",
+      "address": "0x020fa9c8",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov006_020fa9c8.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020faac8",
+      "address": "0x020faac8",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_020faac8.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020fab70",
+      "address": "0x020fab70",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov006_020fab70.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020fac48",
+      "address": "0x020fac48",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov006_020fac48.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020fad34",
+      "address": "0x020fad34",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_020fad34.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020fad90",
+      "address": "0x020fad90",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020fad90.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020fadfc",
+      "address": "0x020fadfc",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov006_020fadfc.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020fae20",
+      "address": "0x020fae20",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020fae20.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020fae90",
+      "address": "0x020fae90",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_020fae90.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020faeec",
+      "address": "0x020faeec",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020faeec.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020faf14",
+      "address": "0x020faf14",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_020faf14.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020faf6c",
+      "address": "0x020faf6c",
+      "size": "0x00000190",
+      "legacy_source": "src/func_ov006_020faf6c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_020fb0fc",
+      "address": "0x020fb0fc",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov006_020fb0fc.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020fb1c4",
+      "address": "0x020fb1c4",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020fb1c4.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020fb230",
+      "address": "0x020fb230",
+      "size": "0x0000022c",
+      "legacy_source": "src/func_ov006_020fb230.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020fb45c",
+      "address": "0x020fb45c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_020fb45c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020fb4e0",
+      "address": "0x020fb4e0",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_020fb4e0.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020fb60c",
+      "address": "0x020fb60c",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov006_020fb60c.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020fb670",
+      "address": "0x020fb670",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov006_020fb670.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020fb74c",
+      "address": "0x020fb74c",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020fb74c.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_020fb7e0",
+      "address": "0x020fb7e0",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov006_020fb7e0.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_020fb8fc",
+      "address": "0x020fb8fc",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020fb8fc.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_020fb97c",
+      "address": "0x020fb97c",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov006_020fb97c.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020fba28",
+      "address": "0x020fba28",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_020fba28.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_020fba48",
+      "address": "0x020fba48",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_020fba48.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020fba64",
+      "address": "0x020fba64",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020fba64.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_020fbad4",
+      "address": "0x020fbad4",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_020fbad4.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_020fbb2c",
+      "address": "0x020fbb2c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_020fbb2c.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_020fbbe8",
+      "address": "0x020fbbe8",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov006_020fbbe8.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_020fbcb8",
+      "address": "0x020fbcb8",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020fbcb8.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_020fbd38",
+      "address": "0x020fbd38",
+      "size": "0x0000040c",
+      "legacy_source": "src/func_ov006_020fbd38.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_020fc144",
+      "address": "0x020fc144",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020fc144.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov006_020fc1b4",
+      "address": "0x020fc1b4",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov006_020fc1b4.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_ov006_020fc1f8",
+      "address": "0x020fc1f8",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov006_020fc1f8.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "func_ov006_020fc2ec",
+      "address": "0x020fc2ec",
+      "size": "0x00000214",
+      "legacy_source": "src/func_ov006_020fc2ec.c",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_ov006_020fc500",
+      "address": "0x020fc500",
+      "size": "0x00000218",
+      "legacy_source": "src/func_ov006_020fc500.c",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_ov006_020fc718",
+      "address": "0x020fc718",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov006_020fc718.c",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov006_020fc7d0",
+      "address": "0x020fc7d0",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_020fc7d0.cpp",
+      "ordinal": 43
+    },
+    {
+      "symbol": "func_ov006_020fc844",
+      "address": "0x020fc844",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_020fc844.c",
+      "ordinal": 44
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled from the 45 legacy one-function sources of ROM ordinals 0..44. tools/tubuild.py create cannot be used on this TU: three of the shards (func_ov006_020fa7b8, func_ov006_020fba28, func_ov006_020fc7d0) wrap their bodies in an extern \"C\" block, which its splitter refuses by design.",
+    "PARTIAL BY MEASUREMENT, NOT BY CHOICE. The class's linker run is 0x020fa75c..0x020ff420, 76 address-adjacent functions with no gaps, and an ADDRESS-SORTED census of config/arm9/overlays/ov006/symbols.txt shows no other class interleaves into it: the only named symbols inside are this class's own D1, D0, OnYoshiTryEat, Render, Behavior, InitResources and dScMgPachinko_c_classInit, everything else being an unlabelled func_ov006_*. Both ends are pinned by a different class -- _ZN19dMgMCarlo2CardObj_cC1Ev immediately below, _ZN16dScMgPachinko2_cD1Ev immediately above. Three of the 76 are NOT enrolled and each splits the run, because no delinks.txt entry anywhere in this tree expresses more than one .text claim: ordinal 45 func_ov006_020fc8c0 (an honest non-matching draft, 6 divergent words of 60, with NO delinks entry at all), ordinal 48 func_ov006_020fcb4c (delinks entry present for 0x020fcb4c-0x020fcd8c but carrying no `complete` marker, so dsd serves cartridge bytes), and ordinal 58 func_ov006_020fdaf0 (again no delinks entry). The four surviving contiguous stretches are ordinals 0..44 (45 fn, 8548 bytes), 46..47 (2 fn, 412 bytes), 49..57 (9 fn, 3428 bytes) and 59..75 (17 fn, 5856 bytes). This TU takes the first: the largest by both function count and bytes, and the one holding the class's key function. tools/tubuild.py list independently reports the unit as 72/75 with unmatched:3, the same three holes. The promotion queue's shard_count of 74 is an upper bound on the unit, not a count of anything this TU licenses.",
+    "BANKED AS text-verified, NOT PROMOTED, AND THE REASON IS THE GATE RATHER THAN THE TU. tools/tubuild.py linkcheck reports SCRATCH-LINK-VERIFIED: the whole licensed .text range reproduces from one object, all 106 modules are byte-exact, dsd check symbols --fail shows 0 NEW errors against the baseline control's 9 pre-existing ones, and the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, identical to stock. `tubuild promote` nevertheless has no mutating path at all -- only --dry-run is implemented -- and its readiness gate refuses this state: it requires status in (link-verified, data-verified) AND linkcheck.result == status, while classify_link_result() prefixes the result with `scratch-` for every TU whose compiler-only policy rewrites the object before the link, which is every TU that emits its own _ZTV/_ZTI/_ZTS. Setting status to link-verified fails the equality test; setting it to scratch-link-verified fails the membership test. The status is therefore left at exactly what the tooling reported and NOT hand-edited to clear the gate; the 45 legacy shards keep their own delinks.txt entries and the ROM build is unchanged by this commit.",
+    "DECLARATION RECONCILIATION, all of it codegen-free and all of it settled by the 45/45 byte match rather than by argument. Where two shards spelled one interface differently the more complete observation was kept and the narrower call site took the implicit conversion, and where the tree already had a dominant spelling that one was taken so the fold does not flip a plurality. func_ov004_020afdd0 takes void* first and returns void (17 sites in src/ against 7 for the int-first spelling); three shards had spelled it int-first, one of those also declaring an int return whose result it discarded, so those three call sites now cast. _ZN3G2S13GetBG2CharPtrEv returns unsigned (15 sites); the one shard that had declared it char* now casts at its assignment. MultiStore16 takes char* (33 sites); the one void* call site now spells its cast char*. func_02012468's eighth parameter is short (11 sites against 5); both call sites here pass a literal 0. func_ov006_020fa844, func_ov006_020faf6c and func_ov006_020fb230 keep their own definitions' char* parameter and the three shadow-class call sites that had re-declared them with a local struct pointer now cast. func_ov006_020fbcb8's first parameter is spelled void* rather than the definition's int: it is never read, so this is codegen-free and it keeps ordinal 36's eight call sites passing their char* unchanged instead of each taking an (int) cast.",
+    "TWO SHIM-CLASS RENAMES, AND THEY ARE THE ONLY RENAMES IN THE MERGE. Ordinals 10 and 23 each dispatch through an ov006 pointer-to-member table and each legacy shard had called its receiver `struct C`, but the two spellings place their fields at DIFFERENT offsets (0x5c0e/0x5c0f against 0x5bc6/0x5bc8), so they are two different shadow classes that happened to share a name; the second is now C2 with its own PMF2. Ordinals 21 and 43 had likewise both named a local record `Ent` with different layouts; the second is now Ent7d0. In both pointer-to-member cases the typedef is still formed while the class is INCOMPLETE, which is load-bearing -- mwccarm 2004/b56 picks its pointer-to-member representation from the completeness of the class at the point the type is formed. Every call expression is otherwise textually what it was.",
+    "PRAGMAS. Eight optimisation pragmas inherited from the legacy shards are carried as five positional push/off/pop brackets -- opt_common_subs on ordinals 17, 22, 36 and 42, opt_loop_invariants on ordinals 35 and 36 -- which is what #pragma defer_codegen off makes bind per-bracket instead of leaking file-wide. defer_codegen off also forces the ROM-ASCENDING source order: with codegen deferred mwccarm emits one .text section per function in the REVERSE of source order, and verify confirms all 45 land in the expected ROM-ascending section order."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgPachinko_c/dScMgPachinko_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 45,
+    "functions_declared": 45,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN15dScMgPachinko_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN15dScMgPachinko_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106
+      ],
+      "data": [
+        "_ZTV15dScMgPachinko_c",
+        "_ZTI15dScMgPachinko_c",
+        "_ZTS15dScMgPachinko_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI15dScMgPachinko_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS15dScMgPachinko_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV15dScMgPachinko_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgPachinko_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020fa75c",
+        "end": "0x020fc8c0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020fa75c",
+          "end": "0x020fc8c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 45
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN15dScMgPachinko_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. mwcc emits three destructor variants from the one out-of-line definition -- D1, D0, D2 -- but the cartridge carries only D1 (0x020fa75c) and D0 (0x020fa780), which are adjacent: 0x020fa780 - 0x020fa75c = 0x24, exactly D1's size, so the image has no room for a D2 between them. dScMgPachinko_c is a confirmed leaf -- include/dScMgPachinko_c.h records that tools/rtti_extract.py finds no RTTI record naming it as a base -- so its own D2 is never odr-used. _ZN15dScMgPachinko_cD2Ev appears in no symbols.txt anywhere in the tree (arm9, itcm/dtcm and every overlay were searched) and in no delinks.txt, so it has no ROM home at all -- plain deadstrip rather than deadstrip-duplicate, and production isolation discards it. tubuild verify reports it as EXTRA .text size=0x24; it is emitted after ordinal 44 and does not disturb the licensed run's ROM-ascending emission order, which verify reports as all 45 function(s) in the expected order."
+    },
+    {
+      "symbol": "_ZTV15dScMgPachinko_c",
+      "disposition": "deadstrip-data",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated two ways that agree: (a) the address point in config/arm9/overlays/ov006/symbols.txt is 0x0213d9cc and the next data symbol is data_ov006_0213da5c at 0x0213da5c, giving symbol extent 0x90 = 36 slots and STORAGE 0x0213d9c4..0x0213da5c = 0x98 once the 8-byte offset-to-top/typeinfo preamble is counted; (b) tubuild verify reports the emitted .data section for this symbol as exactly size=0x98. tools/rtti_vtables.py --own reports 39 slots, and the three beyond 36 are SPURIOUS -- include/dScMgPachinko_c.h already records that its slot 36 and slot 38 readings (func_ov006_021019e0 and dScMgPachinko2_c_classInit) belong to the neighbouring g_profile_MG_TAMAIRE spawn descriptor at 0x0213da64, not to this class; the address-gap math above is what settles it, and the emitted size is the independent second witness. The cartridge keeps its canonical copy at the address point ov006:0x0213d9cc, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d9cc"
+    },
+    {
+      "symbol": "_ZTI15dScMgPachinko_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213d948, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d948"
+    },
+    {
+      "symbol": "_ZTS15dScMgPachinko_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213d960, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d960"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko_c's key function -- the destructor, which include/dScMgPachinko_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x020fa75c-0x020fc8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    }
+  ]
+}
