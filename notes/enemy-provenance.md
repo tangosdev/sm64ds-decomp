@@ -223,7 +223,7 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x110 | `mCapBank` | `src/_ZN11dCapEnemy_c6AddCapEj.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp` picks marker bit 3 vs bit 7 of `mCapId` by it, and `src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp` re-binds the model only for bank 0. |
-| 0x111 | `mIsDormant` | `src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `src/_ZN7daKrb_c6RenderEv.cpp` draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
+| 0x111 | `mIsDormant` | `src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `daKrb_c::Render`, in `src/actors/daKrb_c.cpp`, draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
 | 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of [func_ov001_020ab228](../src/actors/dCapIcon_c.cpp), the cap-icon setup. |
 
 ---
@@ -232,7 +232,7 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x410 | `Vector3 mSafePos` | `src/_ZN7daKrb_c8BehaviorEv.cpp`: when `dEnemyBase_c::IsGoingOffCliff` reports true the actor's position is restored from it, and otherwise the current position is written into it. The last position known not to be over a ledge. |
+| 0x410 | `Vector3 mSafePos` | `daKrb_c::Behavior`, in `src/actors/daKrb_c.cpp`: when `dEnemyBase_c::IsGoingOffCliff` reports true the actor's position is restored from it, and otherwise the current position is written into it. The last position known not to be over a ledge. |
 | 0x41c | `Vector3 mHomePos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it on both respawn paths — after `UpdateKillByInvincibleChar` returns 2, and after the stuck timer expires — each immediately before `dCapEnemy_c::RespawnIfHasCap`. |
 | 0x428 | `Vector3 mStuckCheckPos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` compares `Vec3_Dist(&mPosX, &mStuckCheckPos) < 0xa000` and, while the enemy stays inside that radius, ticks the already-named `mStuckTimer`; the moment it leaves, the timer is zeroed and this field is re-recorded from the current position. |
 | 0x44c | `mSavedParam` | last statement of `InitResources`: a copy of `param1`, taken *after* the earlier `param1 &= 0xf0ff` masking. Named for what it holds; no matched body reads it back. |
@@ -244,20 +244,20 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 Left `unk_`:
 
-- **0x468** — `mSoundLatchFlags`. [func_ov084_0212934c](../src/func_ov084_0212934c.c) reads bit 1 of it through a
+- **0x468** — `mSoundLatchFlags`. [func_ov084_0212934c](../src/actors/daKrb_c.cpp) reads bit 1 of it through a
   two-bit bitfield, plays sound 0xd0 only when that bit is clear, sets it, and clears
   it again as soon as the surface type underfoot leaves the matching range -- a latch
   that stops the sound retriggering every frame.
 - **0x43c** — `mTargetUniqueID`. `daKrb_c::CleanupResources` already read it as an
-  `unsigned int id`, and [func_ov084_0212af74](../src/func_ov084_0212af74.c) hands the same word to
+  `unsigned int id`, and [func_ov084_0212af74](../src/actors/daKrb_c.cpp) hands the same word to
   `dActor_c::FindWithID` and bails to state 1 when it is 0.
-- **0x450** — `mHeadingHoldTimer`. [func_ov084_0212abd4](../src/func_ov084_0212abd4.c) seeds it (0x19 when the
+- **0x450** — `mHeadingHoldTimer`. [func_ov084_0212abd4](../src/actors/daKrb_c.cpp) seeds it (0x19 when the
   player is out of range, 0x64 after a fresh heading) and counts it down; only at 0
   does it pick a new target heading into 0x45c.
-- **0x454** — `mWanderRerollTimer`. [func_ov084_0212af74](../src/func_ov084_0212af74.c) runs it through
+- **0x454** — `mWanderRerollTimer`. [func_ov084_0212af74](../src/actors/daKrb_c.cpp) runs it through
   `DecIfAbove0_Short` and, at 0, reseeds it to `(rand >> 0x1b) + 0x1e` -- 30 to 61
   frames -- while writing a fresh random heading into 0x45a.
-- **0x440** — `mDistToPlayer`. [func_ov084_0212abd4](../src/func_ov084_0212abd4.c) tests it against 0x61a8000, the
+- **0x440** — `mDistToPlayer`. [func_ov084_0212abd4](../src/actors/daKrb_c.cpp) tests it against 0x61a8000, the
   sentinel the same overlay stores when there is no reachable player.
 - **0x438, 0x467** — still no reader. Both are only ASSIGNED in the ov084 handlers
   that mention them, which is not the same as being read.
@@ -267,7 +267,8 @@ Left `unk_`:
   `UpdateWMClsn` flag 3 over flag 2. Naming it would mean naming the table, and nothing
   in a matched body says what the table holds.
 
-Note: `src/_ZN7daKrb_c13InitResourcesEv.cpp` is a NONMATCHING `extern "C"` free function
-working raw `char *c` offsets (916 bytes against the ROM's 912 — a pre-existing four-byte
-near-miss, documented at the top of the file). It names no fields, so the renames above do
-not reach it; every citation to it above is a citation to a raw offset in that file.
+Note: `daKrb_c::InitResources`, now a real method in `src/actors/daKrb_c.cpp`, works raw
+`char *c` offsets rather than named fields. It stood as a four-byte near-miss (916 bytes
+against the ROM's 912) until the field-address CSE was spelled apart, and it matches as
+written. It still names no fields, so the renames above do not reach it; every citation to
+it above is a citation to a raw offset in that body.
