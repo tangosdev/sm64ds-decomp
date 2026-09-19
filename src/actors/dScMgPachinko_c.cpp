@@ -673,7 +673,7 @@ void func_ov006_020faeec(char *p)
 /* ROM ordinal 16 -- func_ov006_020faf14, 0x020faf14, size 0x58 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020faf14
-void func_ov006_020faf14(char*c){
+void func_ov006_020faf14(char* c){
   if(*(unsigned char*)(c+0x5000+0xbc7)==0) return;
   int x=*(int*)(c+0x5000+0xbb0);
   int y=*(int*)(c+0x5000+0xbb4);

@@ -50,8 +50,8 @@ extern "C" ResourceDescriptor data_ov047_02112408 = {
 #include "daObjKm3_Kuruma_c.h"
 
 extern "C" {
-s32 func_ov002_020b6958(daObjKm3_Kuruma_c *self, ResourceDescriptor *descriptor);
-s32 func_ov002_020b68b0(daObjKm3_Kuruma_c *self, ResourceDescriptor *descriptor);
+s32 func_ov002_020b6958(daObjKuruma_c *self, ResourceDescriptor *descriptor);
+s32 func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 }
 
 struct KurumaSpawnInfo {

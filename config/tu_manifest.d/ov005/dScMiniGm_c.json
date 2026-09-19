@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20bfec0..0x20c21ec, 25 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "contiguous linker run: 0x20bfec0..0x20c2250, 26 function(s), from build/tu_map.json (tools/tu_map.py) plus the immediately following factory",
     "class label(s): dScMiniGm_c",
     "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x020bfec0",
-      "end": "0x020c21ec"
+      "end": "0x020c2250"
     }
   ],
   "functions": [
@@ -192,11 +192,28 @@
       "size": "0x000007cc",
       "legacy_source": "src/_ZN11dScMiniGm_c13InitResourcesEv.cpp",
       "ordinal": 24
+    },
+    {
+      "symbol": "dScMiniGm_c_classInit",
+      "address": "0x020c21ec",
+      "size": "0x00000064",
+      "legacy_source": "src/d_s_mini_gm.c",
+      "ordinal": 25
     }
   ],
   "data": [],
   "bss": [],
   "compiler_only_output": [
+    {
+      "symbol": "_ZN8dScene_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new dScMiniGm_c() instantiates the class, so mwccarm emits dScene_c D2 as a compiler-only .text helper after classInit. The cartridge inlines ~dScene_c into subclass D1/D0 and has no D2 symbol."
+    },
+    {
+      "symbol": "_ZN7dBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Same leftover factory: mwccarm emits dBase_c D2 as a compiler-only .text helper after classInit. The cartridge inlines ~dBase_c into ~dScene_c and has no D2 symbol."
+    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
@@ -244,7 +261,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov005",
       "canonical_address": "0x020c2448",
-      "reason": "This class's own __si_class_type_info. ROM home ov005:0x020c2448 holds 0x0209a764, 0x020c2454 (its type-name string) and 0x020914d4 (_ZTI8dScene_c). That third word is the cartridge's own statement that dScMiniGm_c derives directly from dScene_c, and it is the record that pins the class name used by this TU. 0xc bytes. The home lies in ov005's .data (0x020c2440..0x020c3020), outside this entry's only claimed range (.text 0x020bfec0..0x020c21ec), so it is discardable rather than a range this source must build."
+      "reason": "This class's own __si_class_type_info. ROM home ov005:0x020c2448 holds 0x0209a764, 0x020c2454 (its type-name string) and 0x020914d4 (_ZTI8dScene_c). That third word is the cartridge's own statement that dScMiniGm_c derives directly from dScene_c, and it is the record that pins the class name used by this TU. 0xc bytes. The home lies in ov005's .data (0x020c2440..0x020c3020), outside this entry's only claimed range (.text 0x020bfec0..0x020c2250), so it is discardable rather than a range this source must build."
     },
     {
       "symbol": "_ZTS11dScMiniGm_c",
@@ -258,10 +275,11 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov005",
       "canonical_address": "0x020c2490",
-      "reason": "The vtable this TU is the key function for. Storage runs ov005:0x020c2488..0x020c24d8 -- 0x50 bytes, the size verify's EXTRA line independently reports -- laid out as the two-word RTTI prologue (0x00000000 offset-to-top, then 0x020c2448 = _ZTI11dScMiniGm_c) followed by 18 dispatch slots. config/arm9/overlays/ov005/symbols.txt names the symbol at the ADDRESS POINT 0x020c2490, i.e. storage+8, which is the same convention the landed ov002/da1up_c entry uses (_ZTV7da1up_c at 0x021083c8 with storage at 0x021083c0). Slots 0, 3, 6, 9, 12, 16 and 17 relocate into this TU's own text (InitResources 0x020c1a20, CleanupResources 0x020c1654, Behavior 0x020c14a0, Render 0x020c0b04, OnPendingDestroy 0x020c0b00, D1 0x020bfec0, D0 0x020bfefc); the rest inherit from dScene_c/dBase_c in arm9. The folded factory in src/d_s_mini_gm.c odr-uses this copy; production isolation rebinds its vptr store to the ROM home and deadstrips the duplicate."
+      "reason": "The vtable this TU is the key function for. Storage runs ov005:0x020c2488..0x020c24d8 -- 0x50 bytes, the size verify's EXTRA line independently reports -- laid out as the two-word RTTI prologue (0x00000000 offset-to-top, then 0x020c2448 = _ZTI11dScMiniGm_c) followed by 18 dispatch slots. config/arm9/overlays/ov005/symbols.txt names the symbol at the ADDRESS POINT 0x020c2490, i.e. storage+8, which is the same convention the landed ov002/da1up_c entry uses (_ZTV7da1up_c at 0x021083c8 with storage at 0x021083c0). Slots 0, 3, 6, 9, 12, 16 and 17 relocate into this TU's own text (InitResources 0x020c1a20, CleanupResources 0x020c1654, Behavior 0x020c14a0, Render 0x020c0b04, OnPendingDestroy 0x020c0b00, D1 0x020bfec0, D0 0x020bfefc); the rest inherit from dScene_c/dBase_c in arm9. This TU's leftover factory odr-uses this copy; production isolation rebinds its vptr store to the ROM home and deadstrips the duplicate."
     }
   ],
   "notes": [
+    "Leftover cleanup folds dScMiniGm_c_classInit into this TU (0x020bfec0..0x020c2250). Factory is leftover return new dScMiniGm_c() via fBase_c::operator new(unsigned long). return new also emits dScene_c D2 and dBase_c D2 as compiler-only .text after classInit; they are deadstrip.",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov005_020c0140.cpp (func_ov005_020c0140) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov005_020c0250.cpp (func_ov005_020c0250) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
@@ -296,11 +314,17 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov005-dScMiniGm_c/dScMiniGm_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 25,
-    "functions_declared": 25,
+    "functions_matched": 26,
+    "functions_declared": 26,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN8dScene_cD2Ev",
+        "_ZN7dBase_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN7dBase_cD2Ev",
+        "_ZN8dScene_cD2Ev"
+      ],
       "droppedSections": [
         5,
         6,
@@ -315,7 +339,11 @@
         15,
         16,
         17,
-        18
+        18,
+        70,
+        71,
+        72,
+        73
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -362,7 +390,7 @@
       },
       "tuRange": {
         "start": "0x020bfec0",
-        "end": "0x020c21ec",
+        "end": "0x020c2250",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -370,14 +398,14 @@
         {
           "section": ".text",
           "start": "0x020bfec0",
-          "end": "0x020c21ec",
+          "end": "0x020c2250",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 25
+          "LICENSED": 26
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],

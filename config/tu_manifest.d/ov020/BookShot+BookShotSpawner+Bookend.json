@@ -2,7 +2,7 @@
   "id": "ov020/BookShot+BookShotSpawner+Bookend",
   "module": "ov020",
   "source": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp",
-  "promoted_source": "src/actors/BookShot+BookShotSpawner+Bookend.cpp",
+  "promoted_source": "src/game/actors/d_a_book.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [

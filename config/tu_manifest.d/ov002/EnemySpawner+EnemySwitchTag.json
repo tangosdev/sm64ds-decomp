@@ -2,7 +2,7 @@
   "id": "ov002/EnemySpawner+EnemySwitchTag",
   "module": "ov002",
   "source": "src_tu/actors/EnemySpawner+EnemySwitchTag.cpp",
-  "promoted_source": "src/actors/EnemySpawner+EnemySwitchTag.cpp",
+  "promoted_source": "src/game/actors/d_a_e_switch.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [

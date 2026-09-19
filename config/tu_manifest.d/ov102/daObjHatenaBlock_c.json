@@ -333,9 +333,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149da8' differs between the legacy file that used to hold _ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c and the one that held func_ov102_02149878; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov102_02149078 and the one that held func_ov102_02149ccc; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149da8' differs between the legacy file that used to hold _ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c and the one that held _ZN18daObjHatenaBlock_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_0214953c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_0214953c; kept the first, the other is commented out for review. Reconciled: the two legacy spellings were `typedef struct { int x, y, z; } Vector3;` (func_ov102_02149100) and `typedef struct Vector3 { int x, y, z; } Vector3;` (func_ov102_0214953c) -- the same three 32-bit fields, differing only in whether the struct tag is named. Neither survives in the fold: both shadow typedefs were dropped and every use resolves to the real Vector3 in include/types.h (Fix12i x, y, z, and Fix12i is s32), which is layout-identical to both, so this TU declares no local Vector3 for the two files to disagree about. The commented-out alternate body was the last trace of the disagreement and is now gone from src/actors/daObjHatenaBlock_c.cpp; tools/tubuild.py verify still reports 41/41 MATCH with objisolate clean.",
     "promotion: executed by hand. tools/tubuild.py promote has no mutating path (it prints \"only --dry-run is implemented\"), so the three promotion edits were made directly: the shadow source moved from src_tu/actors/ to src/actors/, the 41 legacy one-function sources were removed, and the 41 per-function config/arm9/overlays/ov102/delinks.txt entries collapsed into the single complete .text claim 0x02148fbc..0x0214a96c. The linkcheck record above is the pre-promotion scratch-splice run, which is the only form available to a text-only TU: once delinks.txt holds the intact-object complete entry, tools/tu_production.py prepare_intact_object requires one .text claim AND at least one non-text claim, so re-running linkcheck after the collapse is refused structurally rather than on any defect in this TU. ov102/daBmb_c, promoted earlier, sits in the same state.",
-    "Reconciliation evidence for the 15 conflict records rewritten as RESOLVED. (1) _ZN8dActor_c13ClosestPlayerEv and _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as: the legacy sources carried nine mutually contradictory mangled free-function spellings between them (return types dActor_c*, struct dActor_c*, int, char*, void*). The fold declares neither name; every call now goes through the real members dActor_c::Spawn and dActor_c::ClosestPlayer in include/dActor_c.h, so the disagreement has no surviving spelling to be about. (2) func_ov102_02149684: the legacy spellings differed in return type (int vs void) and parameter types (Vector3*, int*, void*). No legacy call site consumed the return value -- every one stands in statement position -- so the single surviving declaration `void func_ov102_02149684(int *dst, int *src)` loses nothing, and all six callers byte-match against it. (3) func_ov102_02149da8: it is defined in this unit at ROM ordinal 26, so no extern spelling survives. The legacy `extern int` view is refuted rather than merely dropped: the ROM tail of func_ov102_02149878 sets no return value, which is why that function byte-matches with the void spelling. The sixteenth record, the typedef Vector3 disagreement, is NOT resolved -- its marker is still in the source and its note is still open."
+    "Reconciliation evidence for the 16 conflict records rewritten as RESOLVED. (1) _ZN8dActor_c13ClosestPlayerEv and _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as: the legacy sources carried nine mutually contradictory mangled free-function spellings between them (return types dActor_c*, struct dActor_c*, int, char*, void*). The fold declares neither name; every call now goes through the real members dActor_c::Spawn and dActor_c::ClosestPlayer in include/dActor_c.h, so the disagreement has no surviving spelling to be about. (2) func_ov102_02149684: the legacy spellings differed in return type (int vs void) and parameter types (Vector3*, int*, void*). No legacy call site consumed the return value -- every one stands in statement position -- so the single surviving declaration `void func_ov102_02149684(int *dst, int *src)` loses nothing, and all six callers byte-match against it. (3) func_ov102_02149da8: it is defined in this unit at ROM ordinal 26, so no extern spelling survives. The legacy `extern int` view is refuted rather than merely dropped: the ROM tail of func_ov102_02149878 sets no return value, which is why that function byte-matches with the void spelling. (4) The sixteenth record, the typedef Vector3 disagreement, is resolved as well: the two legacy shadow typedefs were the same three 32-bit fields and differed only in whether the struct tag was named, and the fold dropped both in favour of the real Vector3 in include/types.h, which is layout-identical to each. Its own note carries the full evidence."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -347,10 +347,12 @@
     "functions_declared": 41,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN12HbSpawnFrameD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN12HbSpawnFrameD1Ev",
         "_ZN7Vector3D1Ev"
       ],
@@ -373,7 +375,9 @@
         20,
         21,
         32,
-        49
+        49,
+        93,
+        94
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -484,6 +488,11 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjHatenaBlock_c() instantiates the class, so mwccarm emits the base-object destructor helper. No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
+    },
     {
       "symbol": "_ZN12HbSpawnFrameD1Ev",
       "disposition": "deadstrip",

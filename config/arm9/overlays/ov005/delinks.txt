@@ -5,8 +5,4 @@
     .bss        start:0x020c3020 end:0x020c3020 kind:bss align:32
 src/actors/dScMiniGm_c.cpp:
     complete
-    .text start:0x020bfec0 end:0x020c21ec
-
-src/d_s_mini_gm.c:
-    complete
-    .text start:0x020c21ec end:0x020c2250
+    .text start:0x020bfec0 end:0x020c2250

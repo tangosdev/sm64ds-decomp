@@ -1,158 +1,81 @@
 //cpp
-/* daKing_Donketu_c -- the King Donketu boss, ov073.
+/**
+ * Chief Chilly (KING_DONKETU 218) -- ov073/daKing_Donketu_c.
  *
- * Reconstructed translation unit: ROM ordinals 0..42 of the linker run
- * 0x0211f000..0x02121f90, i.e. .text 0x0211f000..0x021218a0, 43 functions.
- * Assembled from the 43 one-function legacy sources, then reconciled by hand.
+ * Snowman's Land's ice-bully boss. Twelve file-scope state records;
+ * ChiefChilly_ChangeState stores the pointer and dispatches. Three
+ * knock-downs, two waypoint sets, a ground-ray arena guard.
  *
- * THE UNIT IS 47 FUNCTIONS AND THIS FILE IS THE LOWER 43. tools/tu_map.py and
- * `tubuild inspect` both report 46, because the boundary they draw stops at the
- * last MANGLED member (OnAimedAtWithEgg, 0x02121ec0) and does not carry on over
- * daKing_Donketu_c_classInit at 0x02121ec8, which is named but unmangled and
- * sits in no vtable slot. The relocation census below puts classInit inside the
- * run, so 46 is that tool's floor, not the unit's size.
+ * daKing_Donketu_c_classInit is reconstructed (RTTI daKing_Donketu_c,
+ * KING_DONKETU registry). Retail does not store that spelling.
+ * Historical alias: ChiefChilly_Spawn.
  *
- * WHY THIS IS A SUB-RANGE: ROM ordinal 43, daKing_Donketu_c::Behavior
- * (0x021218a0, size 0x42c), is a member this TU cannot yet reproduce. Its
- * legacy shard matches the cartridge on its own, but only under a file-scope
- * `#pragma opt_propagation off`, and that pragma is file-global last-wins: set
- * anywhere in a merged TU it recompiles every other member. Measured on this
- * TU, carrying it turns 45 matching members into 38 -- it buys Behavior and
- * costs eight. So Behavior keeps its own shard and its own delinks.txt entry,
- * and with it the three members above it (InitResources, OnAimedAtWithEgg and
- * classInit), because nothing in this tree can express a .text claim with a
- * hole in it -- no file entry in any delinks.txt anywhere carries two .text
- * claims -- and 43 below the split beats 3 above it.
+ * This TU is 43 of 47. Behavior / InitResources / OnAimedAtWithEgg /
+ * classInit stay in their own shards -- file-global opt_propagation off
+ * on Behavior recompiles eight other members (this TU).
  *
- * That pragma's scope was MEASURED, not assumed, on four cells: file-global
- * `opt_propagation off` (38/46), a bracketed off/on pair around Behavior alone
- * (45/46, Behavior still differing), the same bracket under
- * `#pragma defer_codegen off` (45/46, unchanged), and both pragmas file-global
- * under defer_codegen off (38/46). The bracket does NOT bind for
- * opt_propagation on this TU even with codegen undeferred -- the pragma is
- * file-global in both regimes -- so there is no arrangement of it that keeps
- * Behavior without paying the other eight.
- *
- * `#pragma opt_loop_invariants off` IS carried, at file scope. It comes from
- * the func_ov073_0211f61c shard, and on this TU it is free: it buys that
- * member (53 divergent words -> match) and moves no other member at all.
- *
- * THE RUN'S TWO BOUNDARIES ARE MEASURED, NOT ASSUMED. A ROM-wide relocation
- * census -- every relocs.txt in the tree, filtered to targets whose module SET
- * contains 73, with each referring word resolved back to its containing
- * function or data symbol through ov073's own symbols.txt -- gives every member
- * of 0x0211f000..0x02121f90 a referrer set drawn from exactly three places:
- * this class's own _ZTV16daKing_Donketu_c, its factory record
- * g_profile_KING_DONKETU, and a direct call from another member of this same
- * run. No word outside the run refers into it. The low edge is the section's
- * own start; _ZN16daKing_Donketu_cD1Ev at 0x0211f000 is referenced only by its
- * own vtable. The high edge is _ZN8CccArenaD1Ev at 0x02121f90, referenced only
- * by _ZTV8CccArena. The census discriminates rather than answering the same
- * thing everywhere: run the same filter over the claim window and it resolves
- * to {daKing_Donketu_c: 3, ChiefChilly: 22} with zero CccArena referrers; run
- * it over the CccArena window directly above and it resolves to {CccArena: 2}
- * with zero daKing_Donketu referrers.
- *
- * THE ONE SHARD IN THE RANGE NOT NAMED FOR THIS CLASS IS THE SAME CLASS.
- * ChiefChilly_ChangeState (0x0212157c, ROM ordinal 38, folded into this file
- * from the shard that used to be its own source) carries the boss's English
- * gloss, not a foreign class: include/daKing_Donketu_c.h records that
- * _ZTV11ChiefChilly was this type's historical vtable spelling and that
- * ChiefChilly_Spawn was an alias for daKing_Donketu_c_classInit. The census
- * agrees -- that function has 22 referrers across 17 functions, every one of
- * them inside this run and none outside it.
- *
- * VTABLE, MEASURED OUT OF extracted/dsd/arm9_overlays/ov073.bin.
- * _ZTV16daKing_Donketu_c is 0x7c bytes, 31 slots, the symbol sitting at the
- * address point 0x02123090; the next symbols.txt row is data_ov073_0212310c,
- * and the relocated run in relocs.txt is unbroken from the preamble's typeinfo
- * word at 0x0212308c through 0x02123108 with the first unrelocated word at
- * 0x02123110. All three readings agree. Eight slots pin members by name --
- * slot 0 InitResources, slot 3 CleanupResources, slot 6 Behavior, slot 9
- * Render, slot 12 OnPendingDestroy, slot 16 this file's D1, slot 17 its D0,
- * slot 29 OnAimedAtWithEgg -- and that is the positive control for the census
- * above. The 31-word length is what proves the base is an actor rather than a
- * dBgActor_c, whose vtables run 32.
- *
- * SLOTS 0 AND 3 ARE NOT ABSTRACT HERE, AND THAT HYPOTHESIS IS REFUTED, NOT
- * DROPPED. Both carry live relocated words, so the "abstract slot 0/3 hides
- * unlabelled helpers at the TU edges" reading buys nothing on this class. The
- * unlabelled helpers in this run are unlabelled for the ordinary reason: they
- * are non-virtual file-local members reached by direct call, and the census is
- * what attaches them to the class.
- *
- * FUNCTION ORDER IS THE ROM'S OWN, LOWEST ADDRESS FIRST, and that is one
- * decision with `#pragma defer_codegen off` below. With codegen deferred (the
- * default) mwccarm 2004/b56 emits one .text section per function in the REVERSE
- * of source order; generating at parse time emits them in source order. Do not
- * reorder.
- *
- * THE DESTRUCTOR IS OUT OF LINE AND THE CARTRIDGE ORDERS IT D1 (0x0211f000)
- * BELOW D0 (0x0211f098), adjacent, with no room between them for a D2 -- and
- * there is no _ZN16daKing_Donketu_cD2Ev anywhere in the image. One out-of-line
- * definition, written FIRST, produces D1 then D0 and nothing in between, but
- * only in the undeferred regime: with codegen deferred the same definition
- * emits the variant cluster in the other order (D2, Vector3's D1, D0, D1), and
- * the licensed run then starts D0-before-D1. That was measured both ways.
- *
- * Because the destructor is out of line and this TU owns the class's key
- * function, mwcc emits the whole inheritance chain's vtable and typeinfo as
- * vague-linkage passengers, plus Vector3's own destructor, which types.h
- * declares deliberately -- see the manifest's compiler_only_output block. The
- * cartridge's copies of all of them live outside this claim: the class's own
- * _ZTV/_ZTI/_ZTS sit in ov073's unclaimed .data gap, and the base chain's
- * records are owned by arm9 and ov002.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211f000  the legacy D1 shard
- *   [1] 0x0211f098  the legacy D0 shard
- *   [2] 0x0211f144  the legacy func_ov073_0211f144 shard
- *   [3] 0x0211f2c0  the legacy func_ov073_0211f2c0 shard
- *   [4] 0x0211f494  the legacy func_ov073_0211f494 shard
- *   [5] 0x0211f61c  the legacy func_ov073_0211f61c shard
- *   [6] 0x0211fa74  the legacy func_ov073_0211fa74 shard
- *   [7] 0x0211fbec  the legacy func_ov073_0211fbec shard
- *   [8] 0x0211fbf4  the legacy func_ov073_0211fbf4 shard
- *   [9] 0x0211fc70  the legacy func_ov073_0211fc70 shard
- *  [10] 0x0211fc78  the legacy func_ov073_0211fc78 shard
- *  [11] 0x0211fe84  the legacy func_ov073_0211fe84 shard
- *  [12] 0x0211fe8c  the legacy func_ov073_0211fe8c shard
- *  [13] 0x0212000c  the legacy func_ov073_0212000c shard
- *  [14] 0x0212005c  the legacy func_ov073_0212005c shard
- *  [15] 0x02120098  the legacy func_ov073_02120098 shard
- *  [16] 0x021200e0  the legacy func_ov073_021200e0 shard
- *  [17] 0x02120390  the legacy func_ov073_02120390 shard
- *  [18] 0x021203ac  the legacy func_ov073_021203ac shard
- *  [19] 0x021205f0  the legacy func_ov073_021205f0 shard
- *  [20] 0x02120610  the legacy func_ov073_02120610 shard
- *  [21] 0x0212081c  the legacy func_ov073_0212081c shard
- *  [22] 0x02120844  the legacy func_ov073_02120844 shard
- *  [23] 0x021208e4  the legacy func_ov073_021208e4 shard
- *  [24] 0x02120910  the legacy func_ov073_02120910 shard
- *  [25] 0x02120ad8  the legacy func_ov073_02120ad8 shard
- *  [26] 0x02120b78  the legacy func_ov073_02120b78 shard
- *  [27] 0x02120c08  the legacy func_ov073_02120c08 shard
- *  [28] 0x02120c7c  the legacy func_ov073_02120c7c shard
- *  [29] 0x02120d80  the legacy func_ov073_02120d80 shard
- *  [30] 0x02120dec  the legacy func_ov073_02120dec shard
- *  [31] 0x02120e60  the legacy func_ov073_02120e60 shard
- *  [32] 0x02120ed0  the legacy func_ov073_02120ed0 shard
- *  [33] 0x0212122c  the legacy func_ov073_0212122c shard
- *  [34] 0x0212128c  the legacy func_ov073_0212128c shard
- *  [35] 0x02121378  the legacy func_ov073_02121378 shard
- *  [36] 0x02121388  the legacy func_ov073_02121388 shard
- *  [37] 0x02121538  the legacy func_ov073_02121538 shard
- *  [38] 0x0212157c  the legacy ChiefChilly_ChangeState shard
- *  [39] 0x021215cc  the legacy func_ov073_021215cc shard
- *  [40] 0x021217e0  the legacy CleanupResources shard
- *  [41] 0x0212186c  the legacy OnPendingDestroy shard
- *  [42] 0x02121870  the legacy Render shard
- *
- * NOT folded, and still carrying their own shards and delinks.txt entries:
- *  [43] 0x021218a0  Behavior          -- the pragma split described above
- *  [44] 0x02121ccc  InitResources     -- above the split
- *  [45] 0x02121ec0  OnAimedAtWithEgg  -- above the split
- *  [46] 0x02121ec8  daKing_Donketu_c_classInit (src/d_a_king_donketu.cpp)
+ * deslop
+ * Leftover: BlendModelAnim::SetAnim / Particle::System::New /
+ *   Particle::System::NewSimple / Particle::RunningSlidingDustAt /
+ *   Player::Hurt / Sound::ChangeMusicVolume / DropShadowRadHeight
+ *   stay mangled in this TU -- Fix12<int> by value (wall 6az); a
+ *   method call homes the argument. Particle.h has no System::NewSimple.
+ *   Particle::System::FromUniqueID is on Particle__System.h but this
+ *   TU pokes sys+0x44 after the call. Callers: func_ov073_0211f144 /
+ *   0211f2c0 / 0211f494 / 0211f61c / 0211fa74 / 0211fe8c / 0212000c /
+ *   021200e0 / 021203ac / 02120610 / 02120ad8 / 02120c08 / 02120c7c /
+ *   02120ed0 / 0212122c / 02121538 / 021215cc.
+ * Leftover: dActor_c::FindWithID / ClosestPlayer / HorzAngleToCPlayer /
+ *   DistToCPlayer / Spawn / PoofDustAt / HugeLandingDustAt /
+ *   JumpedOnByPlayer / FindWithActorID stay mangled -- helpers are
+ *   C-linkage offset soup (`char *this`). Named members already call
+ *   CleanupResources / Render / OnPendingDestroy.
+ * Leftover: Camera::SetLookAt / SetPos stay mangled (void *cam, offset
+ *   soup). Camera::SetFlag_3 is a real method but is not on Camera.h;
+ *   this TU's talk/cutscene helpers.
+ * Leftover: fBase_c::MarkForDestruction / Animation::Finished /
+ *   Animation::WillHitFrame / dBgCh_Actr::IsOnGround stay mangled
+ *   (this+0x35c / this+0x150). Player::StartTalk / ShowMessage /
+ *   GetTalkState / GetHurtState / Unk_020c6a10 stay mangled. Sound::PlayLong
+ *   is on Sound.h but Layer3 Load/Stop is not. Message::EndTalk /
+ *   PrepareTalk stay mangled. SaveData::IsCharacterUnlocked stays mangled.
+ *   cstd::atan2 stays mangled (Fix12-by-value). func_ov073_0211f494.
+ * Leftover: func_ov073_* helpers stay linker names (offset soup, PMF
+ *   dispatch through data_ov073_021233*). Not coined except
+ *   ChiefChilly_ChangeState, the English gloss for this class's
+ *   dispatcher. struct C is complete here: mwccarm 2004/b56 picks
+ *   pointer-to-member from completeness (this TU).
+ * Leftover: data_ov073_02123280..b8 stay BCA_File*[2] so [1] is the
+ *   BCA SetAnim reads; CleanupResources puns each to SharedFilePtr
+ *   for Release. ov073 sinit constructs them; this TU does not own
+ *   .bss. data_ov002_0210da30 is ov002; Cleanup Release. Naming
+ *   belongs in ov002.
+ * Leftover: data_ov073_02123330 / 350 / 360 / 370 / 3b0 / 3c0 / 3f0
+ *   and decl_common's 021233e0 / 02123410 are sinit-owned state
+ *   records this TU does not own.
+ * Leftover: data_02082214 is the NitroSDK FX_SinCosTable_;
+ *   func_ov073_0211f494 indexes it. Naming belongs with the SDK table.
+ * Leftover: data_0209f318 camera / data_020a0e68 scratch matrix /
+ *   data_0209e650 RNG seed are arm9 globals. func_02012694 (sound) /
+ *   func_0200d8c8 (camera shake) / func_0200fa8c / func_02011cfc.
+ * Leftover: Vec3_HorzAngle / VertAngle / HorzLen / Sub / Lsl / Asr /
+ *   Matrix4x3_FromRotationY / FromTranslation /
+ *   ApplyInPlaceToRotationX / ApplyInPlaceToRotationXYZExt /
+ *   MulVec3Mat4x3 / MulMat4x3Mat4x3 / ApproachLinear: no shared
+ *   header this TU can take without a campaign.
+ * Leftover: g_profile_KING_DONKETU lives outside this TU (S14).
+ * Leftover: no return new -- classInit stays in src/d_a_king_donketu.cpp
+ *   (one of the four unabsorbed members).
+ * Leftover: reverse order is not used. `#pragma defer_codegen off` is
+ *   load-bearing: out-of-line D1 then D0 then homeless D2 matches the
+ *   cartridge (deferred codegen emits D2, D0, D1).
+ * Leftover: sizeof wrap in the header (0x504).
+ * Leftover: `#pragma opt_loop_invariants off` is file-global and
+ *   load-bearing for func_ov073_0211f61c (this TU).
+ * Leftover: struct C / CB / V3 / Vec3 / Mtx43 / Mat4x3 / Base / Bool
+ *   shadows are load-bearing (PMF dispatch, Render vcall, POD triples).
+ * Leftover: common.h first -- BlendModelAnim.h's nested Matrix4x3
+ *   would win and size-DIFF the 12-word copies (this TU).
  */
 
 #pragma defer_codegen off
@@ -164,41 +87,11 @@
 #include "decl_Message.h"
 #include "types.h"
 #include "SharedFilePtr.h"
-#include "dBgCh_Lin.h"
 
-/* ---------------------------------------------------------------------------
- * Shadow types, reconciled across the forty-seven merged shards.
- *
- * Where a real project header already declares a name the shards spelled
- * locally, the HEADER WINS and the local copy is gone: Vector3, Fix12i,
- * s8/s16/s32/u8/u16/u32/s64 (types.h), Animation (Animation.h), BMD_File,
- * BCA_File, dActor_c and fBase_c. Fourteen of the shards already compiled
- * against those headers; four spelled a private POD `Vector3` instead, and
- * types.h's is non-POD (it has a declared destructor, deliberately). Those
- * four members are individually byte-verified below under the header's
- * spelling -- see the per-member notes.
- *
- * What remains is what no header declares.
- * ------------------------------------------------------------------------- */
-
-/* THE STATE MACHINE'S RECEIVER. `mState` (0x37c in the class header) holds a
- * pointer to one of the twelve file-scope state objects; ChiefChilly_ChangeState
- * stores that pointer and immediately dispatches through it, and Behavior
- * compares it by ADDRESS against those objects to gate five separate things.
- *
- * `struct C` is COMPLETE here because both shards that form the pointer-to-member
- * type spelled it complete, and mwccarm 2004/b56 picks its pointer-to-member
- * representation from the completeness of the class -- leaving it incomplete
- * would change the codegen of every dispatch through it. */
 struct C;
 typedef int (C::*PMF)();
 struct C { char pad[0x37c]; PMF *pp; };
 
-/* func_ov073_02120c7c reaches the SAME object through a field view rather than
- * the pad view above. Two layouts cannot share one name in a merged TU, so that
- * shard's view keeps the offsets it had under a distinct name, and its two
- * ChiefChilly_ChangeState call sites take the (codegen-free) pointer conversion
- * -- the merge rule is that the more complete observation keeps the shared name. */
 struct CB {
     char pad0[0x8e];
     short field_8e;
@@ -216,47 +109,18 @@ struct CB {
     int field_4d4, field_4d8, field_4dc;
 };
 
-/* NO local `Fix12` typedef. types.h says a private `typedef s32 Fix12;` is
- * allowed in a single src/ file, but include/math/Fix12.h declares Fix12 as a
- * class TEMPLATE and this TU reaches it through types.h, so the four shards
- * that spelled a parameter `Fix12` take `Fix12i` here instead. Both are s32;
- * the mangled names those declarations carry are unchanged. */
-
-/* Three POD point/vector spellings the shards used where they did NOT want
- * types.h's Vector3. Kept under their own names so the layouts stay distinct. */
 struct V3 { int x; int y; int z; };
 typedef struct { int x, y, z; } Vec3;
-typedef struct { int a, b; } P2;
 
 enum Bool { FALSE, TRUE };
 
-/* Matrix spellings: the ROM's 4x3 matrix has two views in these shards, a
- * row-vector one and a flat twelve-word one, and different members use each. */
 typedef struct Mtx43 { Vec3 r0, r1, r2, t; } Mtx43;
 struct Mat4x3 { int m[12]; };
 
-/* The ground-ray parameter block, as Behavior spells it (types.h Vector3). */
-struct RayParams { Vector3 start, end, in, out; };
-
-/* A minimal virtual-dispatch view used by one member to reach slot 5 of an
- * object whose real class is not recovered. */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void M(void*); };
 
 extern "C" {
 
-/* THE STATE TABLE. Sixteen file-scope state objects, all in this overlay's
-   .bss and all filled by __sinit_ov073_02122d48. Across the shards they were
-   spelled `char[]`, `void *`, `int[]` and `PMF`; a merged TU can carry only one
-   spelling each, and every ChiefChilly_ChangeState call site takes the
-   codegen-free `(PMF *)`.
-
-   NINE of the sixteen already come from include/decl_common.h and are NOT
-   redeclared here. That header is not self-consistent about them -- it spells
-   seven as `char[]` (which decay to the address the state pointer wants) and
-   data_ov073_021233e0 / _02123410 as `void *` OBJECTS (whose address must be
-   taken explicitly). Both spellings are honoured at the call sites rather than
-   overridden, because overriding one would silently turn an address-of into a
-   pointer LOAD. The seven decl_common does not declare are below. */
 extern char data_ov073_02123330[];
 extern char data_ov073_02123350[];
 extern char data_ov073_02123360[];
@@ -265,27 +129,8 @@ extern char data_ov073_021233b0[];
 extern char data_ov073_021233c0[];
 extern char data_ov073_021233f0[];
 
-/* The state-machine entry point, declared with the signature its own
-   DEFINITION below carries (ROM ordinal 38). Sixteen shards had re-declared it
-   with `void *` for one or both parameters, and under C linkage only one
-   prototype can exist; the definition's is the complete observation, so every
-   call site converts instead. */
 int ChiefChilly_ChangeState(C *c, PMF *p);
 
-/* THE SHARED FILE HANDLES. Nine SharedFilePtr objects, eight in this overlay
-   and one borrowed from ov002. Every shard agreed on the two things done with
-   them -- hand the OBJECT to Animation::LoadFile / Model::LoadFile and to
-   Release, and read the BCA_File* in the SECOND word -- but not on how to
-   spell that: `void *[]`, `void **`, `int *`, `P2 {int a,b;}`, a local
-   `struct G {int a; BCA_File *b;}` and `SharedFilePtr` all appear, and each
-   shard's indexing was sized to its own spelling.
-
-   include/SharedFilePtr.h declares the class with NO FIELDS, deliberately --
-   the layout is not recovered and committing to one there would change every
-   other file's indexing. So the merged TU takes the one view that serves both
-   uses without inventing a layout: a two-element array of BCA_File*, whose
-   name decays to the object's address for the method calls and whose [1] is
-   the same +4 load every shard was already doing. */
 extern struct BCA_File *data_ov073_02123280[2];
 extern struct BCA_File *data_ov073_02123288[2];
 extern struct BCA_File *data_ov073_02123290[2];
@@ -306,11 +151,6 @@ extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, void *v, int b);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void *data_0209f318;
-/* The shared scratch matrix. Five shards spelled it five ways -- int[],
-   int, Mat4x3, Mtx43 and struct Matrix4x3. common.h's Matrix4x3 is
-   `s32 m[12]`, byte-identical to the local Mat4x3 and Mtx43 views, so the
-   project type keeps the name and the narrower uses take a codegen-free
-   cast or address-of. */
 extern struct Matrix4x3 data_020a0e68;
 extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x);
@@ -348,8 +188,8 @@ extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern void func_ov073_0211f2c0(void *self, int strength);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern int func_ov073_0211f61c(void *c);
-extern "C" void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
-extern "C" int _ZN9Animation8FinishedEv(void* anim);
+extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
+extern int _ZN9Animation8FinishedEv(void* anim);
 extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern int _ZN6Player12GetHurtStateEv(void *self);
 extern int _ZNK9Animation12WillHitFrameEi(void *self, int f);
@@ -359,183 +199,17 @@ extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
 extern void UnloadKeyModels(int i);
-extern Vector3 data_ov073_02123040;
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *clsn);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wmc, unsigned int flags);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
-extern void _ZN5dCc_c5ClearEv(void *self);
-extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void func_ov073_021215cc(void *self);
-extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
-extern void LoadKeyModels(int idx);
-extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov073_0211f2c0, NOT applied: extern void Matrix4x3_FromRotationY(void *m, short angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_0211f2c0, NOT applied: extern void MulVec3Mat4x3(void *in, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_, from the legacy file for func_ov073_0211f494, NOT applied: extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12 x, Fix12 y, Fix12 z); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_, from the legacy file for func_ov073_0211f61c, NOT applied: extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12 x, Fix12 y, Fix12 z); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, from the legacy file for func_ov073_0211fa74, NOT applied: extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_0211fa74, NOT applied: extern void func_02012694(int a, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov073_0211fa74, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_0211fc78, NOT applied: extern void MulVec3Mat4x3(void* in, void* m, void* out); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_0211fc78, NOT applied: extern void func_02012694(int a, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_0211fc78, NOT applied: extern int ChiefChilly_ChangeState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov073_0211fc78, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player9StartTalkER7fBase_cb, from the legacy file for func_ov073_0211fe8c, NOT applied: extern void _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov073_0211fe8c, NOT applied: extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* actor); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_0211fe8c, NOT applied: extern void MulVec3Mat4x3(void* a, void* m, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_0211fe8c, NOT applied: extern int ChiefChilly_ChangeState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov073_0211fe8c, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_0212000c, NOT applied: extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(char*,struct BCA_File&,int,int,int,unsigned short); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_0212005c, NOT applied: extern "C" int ChiefChilly_ChangeState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_021200e0, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* self, void* f, int a, int b, int fix, u32 j); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_021200e0, NOT applied: extern void func_02012694(int a, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_021200e0, NOT applied: extern s16 Vec3_HorzAngle(const void* a, const void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov073_021200e0, NOT applied: extern void Matrix4x3_FromRotationY(void* m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_021200e0, NOT applied: extern void MulVec3Mat4x3(void* a, void* b, void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_021200e0, NOT applied: extern void ChiefChilly_ChangeState(void* self, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_021203ac, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_021203ac, NOT applied: extern void _Z14ApproachLinearRsss(short *p, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_021203ac, NOT applied: extern short Vec3_HorzAngle(void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov073_021203ac, NOT applied: extern short Vec3_VertAngle(void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov073_021203ac, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_021203ac, NOT applied: extern void MulVec3Mat4x3(void *in, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov073_021203ac, NOT applied: extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f2c0, from the legacy file for func_ov073_021203ac, NOT applied: extern void func_ov073_0211f2c0(void *self, int v); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_021203ac, NOT applied: extern int func_02012694(int a, void *pos); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_021203ac, NOT applied: extern void ChiefChilly_ChangeState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov073_021203ac, NOT applied: extern int data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_02120610, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02120610, NOT applied: extern void _Z14ApproachLinearRsss(short *p, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_02120610, NOT applied: extern short Vec3_HorzAngle(void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov073_02120610, NOT applied: extern short Vec3_VertAngle(void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov073_02120610, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_02120610, NOT applied: extern void MulVec3Mat4x3(void *in, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov073_02120610, NOT applied: extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f2c0, from the legacy file for func_ov073_02120610, NOT applied: extern void func_ov073_0211f2c0(void *self, int v); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_02120610, NOT applied: extern int func_02012694(int a, void *pos); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120610, NOT applied: extern void ChiefChilly_ChangeState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov073_02120610, NOT applied: extern int data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02120844, NOT applied: extern int _Z14ApproachLinearRsss(); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound8PlayLongEjjjRK7Vector3s, from the legacy file for func_ov073_02120844, NOT applied: extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov073_02120844, NOT applied: extern int _ZNK10dBgCh_Actr10IsOnGroundEv(); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f2c0, from the legacy file for func_ov073_02120844, NOT applied: extern int func_ov073_0211f2c0(); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_02120844, NOT applied: extern int func_02012694(); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120844, NOT applied: extern int ChiefChilly_ChangeState(); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound8PlayLongEjjjRK7Vector3s, from the legacy file for func_ov073_02120910, NOT applied: extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, const Vector3 *, unsigned int); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov073_02120910, NOT applied: extern void Matrix4x3_FromRotationY(void *m, short ang); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov073_02120910, NOT applied: extern void MulVec3Mat4x3(void *v, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_02120910, NOT applied: extern short Vec3_HorzAngle(const void *v0, const void *v1); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02120910, NOT applied: extern void _Z14ApproachLinearRsss(short *, short, short); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120910, NOT applied: extern int ChiefChilly_ChangeState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_02120ad8, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov073_02120b78, NOT applied: extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f2c0, from the legacy file for func_ov073_02120b78, NOT applied: extern void func_ov073_0211f2c0(void* c, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_02120b78, NOT applied: extern short Vec3_HorzAngle(const void* v0, const void* v1); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_02120c08, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123288, from the legacy file for func_ov073_02120c08, NOT applied: extern P2 data_ov073_02123288; */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120c7c, NOT applied: extern "C" void ChiefChilly_ChangeState(void* c, PMF* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov073_02120c7c, NOT applied: extern "C" void _Z14ApproachLinearRiii(int& v, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021233c0, from the legacy file for func_ov073_02120c7c, NOT applied: extern PMF data_ov073_021233c0; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021233d0, from the legacy file for func_ov073_02120c7c, NOT applied: extern PMF data_ov073_021233d0; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123360, from the legacy file for func_ov073_02120c7c, NOT applied: extern PMF data_ov073_02123360; */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02120dec, NOT applied: extern void _Z14ApproachLinearRsss(short *, short, short); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120dec, NOT applied: extern int ChiefChilly_ChangeState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02120ed0, NOT applied: extern void ChiefChilly_ChangeState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov073_02120ed0, NOT applied: extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of AngleDiff, from the legacy file for func_ov073_02120ed0, NOT applied: extern int AngleDiff(int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_02120ed0, NOT applied: extern void func_02012694(int a, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov073_02120ed0, NOT applied: extern void _Z14ApproachLinearRiii(int *p, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov073_02120ed0, NOT applied: extern unsigned int RandomIntInternal(void *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02120ed0, NOT applied: extern void _Z14ApproachLinearRsss(s16 *p, s16 a, s16 b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_, from the legacy file for func_ov073_02120ed0, NOT applied: extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int cc); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov073_02120ed0, NOT applied: extern void *_ZN8dActor_c13ClosestPlayerEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_02120ed0, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_02120ed0, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int frame, u16 flags); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f2c0, from the legacy file for func_ov073_02120ed0, NOT applied: extern void func_ov073_0211f2c0(void *c, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov073_02120ed0, NOT applied: extern void *data_0209e650; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov073_0212122c, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123288, from the legacy file for func_ov073_0212122c, NOT applied: extern P2 data_ov073_02123288; */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_0212128c, NOT applied: extern int ChiefChilly_ChangeState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov073_0212128c, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123360, from the legacy file for func_ov073_0212128c, NOT applied: extern void* data_ov073_02123360; */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov073_02121388, NOT applied: extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov073_02121388, NOT applied: extern void _Z14ApproachLinearRsss(short* p, short a, short b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov073_02121388, NOT applied: extern void func_02012694(int a, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for func_ov073_02121388, NOT applied: extern int ChiefChilly_ChangeState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov073_02121388, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Lsl, from the legacy file for func_ov073_021215cc, NOT applied: extern void Vec3_Lsl(Vec3* d, Vec3* s, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of MulMat4x3Mat4x3, from the legacy file for func_ov073_021215cc, NOT applied: extern void MulMat4x3Mat4x3(void* a, void* b, void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov073_021215cc, NOT applied: extern Mtx43 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123280, from the legacy file for _ZN16daKing_Donketu_c16CleanupResourcesEv, NOT applied: extern void* data_ov073_02123280; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123288, from the legacy file for _ZN16daKing_Donketu_c16CleanupResourcesEv, NOT applied: extern void* data_ov073_02123288; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021232a8, from the legacy file for _ZN16daKing_Donketu_c16CleanupResourcesEv, NOT applied: extern void* data_ov073_021232a8; */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern Mat4x3 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of DecIfAbove0_Short, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern unsigned short DecIfAbove0_Short(unsigned short *p); */
-/* TUBUILD CONFLICT -- alternate declaration of MulMat4x3Mat4x3, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void MulMat4x3Mat4x3(void *d, void *a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Lsl, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void func_02012694(int a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c17HugeLandingDustAtER7Vector3b, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, Vector3 *v, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void MulVec3Mat4x3(void *a, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov073_0211f61c, from the legacy file for _ZN16daKing_Donketu_c8BehaviorEv, NOT applied: extern void func_ov073_0211f61c(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123280, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_02123280; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021232a0, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_021232a0; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123288, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_02123288; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021232a8, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_021232a8; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123290, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_02123290; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021232b0, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_021232b0; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_021232b8, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_021232b8; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov002_0210da30, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov002_0210da30; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov073_02123298, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov073_02123298; */
-/* TUBUILD CONFLICT -- alternate declaration of ChiefChilly_ChangeState, from the legacy file for _ZN16daKing_Donketu_c13InitResourcesEv, NOT applied: extern int ChiefChilly_ChangeState(void* c, PMF* p); */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN16daKing_Donketu_cD1Ev, 0x0211f000, size 0x98 */
-/* ROM ordinal 1 -- _ZN16daKing_Donketu_cD0Ev, 0x0211f098, size 0xac */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daKing_Donketu_cD1Ev
 // @symbol _ZN16daKing_Donketu_cD0Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * Three array cleanups, four member destructors and the chain into dEnemyBase_c, all
- * of it reverse declaration order out of daKing_Donketu_c.h. Nothing here is
- * written by hand.
- *
- * The arrays are what took the longest to name. The ROM destroys them with
- * __cxa_vec_cleanup(this + 0x3e8, 8, 0xc, _ZN7Vector3D1Ev), and a POD array needs no
- * cleanup at all -- so the element type had to be a 0xc class with a declared
- * destructor. It is Vector3: InitResources fills each element as x/y/z from
- * the actor's position, and 0x020072c0 is four bytes of `bx lr`, an empty
- * destructor, now named _ZN7Vector3D1Ev in config/arm9/symbols.txt.
- * 0x0207328c carried the invented name __destroy_arr until it was renamed to the
- * compiler's own spelling __cxa_vec_cleanup (PR #1353 identified them as the same
- * entry), which is what the compiler emits here.
- *
- * D0 HAS NO SOURCE OF ITS OWN. ROM ordinal 1 is the DELETING destructor:
- * destroy through this class and its bases -- which is why more than one vptr
- * store appears -- then return the object to its heap, through an inlined
- * operator delete, which is why nothing below mentions one. Nobody writes that
- * separately. mwccarm 2004/b56 emits D1 and D0 from this ONE definition, so
- * ordinal 1's `@symbol` marker is parked here at its ROM ordinal rather than on
- * a second body, and the two legacy shards that each carried an identical empty
- * destructor are both retired by this fold.
- */
 daKing_Donketu_c::~daKing_Donketu_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov073_0211f144, 0x0211f144, size 0x17c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211f144
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov073_0211f144(void* self) {
     char* c = (char*)self;
 
@@ -568,12 +242,8 @@ void func_ov073_0211f144(void* self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov073_0211f2c0, 0x0211f2c0, size 0x1d4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211f2c0
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov073_0211f2c0(void *self, int strength)
 {
   char *c = (char *)self;
@@ -665,11 +335,8 @@ void func_ov073_0211f2c0(void *self, int strength)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov073_0211f494, 0x0211f494, size 0x188 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211f494
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov073_0211f494(void *pa, void *pb)
 {
     char *a = (char *)pa;
@@ -718,9 +385,6 @@ void func_ov073_0211f494(void *pa, void *pb)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov073_0211f61c, 0x0211f61c, size 0x458 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211f61c
 extern "C" s32 func_ov073_0211f61c(void* self)
 {
@@ -869,13 +533,8 @@ done0:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov073_0211fa74, 0x0211fa74, size 0x178 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fa74
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fa74(char* c) {
     void* cam;
     void* spawned;
@@ -929,20 +588,14 @@ end:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov073_0211fbec, 0x0211fbec, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fbec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fbec(void)
 {
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov073_0211fbf4, 0x0211fbf4, size 0x7c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fbf4
 extern "C" {
 extern void func_ov073_0211f144(void*);
@@ -958,24 +611,16 @@ int func_ov073_0211fbf4(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov073_0211fc70, 0x0211fc70, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fc70
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fc70(void)
 {
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov073_0211fc78, 0x0211fc78, size 0x20c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fc78
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fc78(char* c) {
     struct Vector3 msgpos[2];
     struct Vector3 la, ps, in, out;
@@ -1042,24 +687,16 @@ int func_ov073_0211fc78(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov073_0211fe84, 0x0211fe84, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fe84
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fe84(void)
 {
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov073_0211fe8c, 0x0211fe8c, size 0x180 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0211fe8c
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0211fe8c(char* c) {
     struct Vector3 look, pos, in, out;
     void* player;
@@ -1112,9 +749,6 @@ int func_ov073_0211fe8c(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov073_0212000c, 0x0212000c, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0212000c
 extern "C" short func_ov073_0212000c(char *c){
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c+0x30c, data_ov073_02123280[1], 4, 0, 0x1000, 0);
@@ -1122,9 +756,6 @@ extern "C" short func_ov073_0212000c(char *c){
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov073_0212005c, 0x0212005c, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0212005c
 extern "C" int func_ov073_0212005c(char* c){
   if(((Animation*)(c+0x35c))->Finished()){
@@ -1134,9 +765,6 @@ extern "C" int func_ov073_0212005c(char* c){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov073_02120098, 0x02120098, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120098
 struct BCA_File;
 extern "C" {
@@ -1147,11 +775,8 @@ int func_ov073_02120098(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov073_021200e0, 0x021200e0, size 0x2b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_021200e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_021200e0(u8* thiz)
 {
     u16 state = *(u16*)(thiz + 0x100);
@@ -1235,11 +860,8 @@ int func_ov073_021200e0(u8* thiz)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov073_02120390, 0x02120390, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120390
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120390(char *p)
 {
     *(int *)(p + 0x4b4) = 0;
@@ -1248,11 +870,8 @@ int func_ov073_02120390(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov073_021203ac, 0x021203ac, size 0x244 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_021203ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_021203ac(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
@@ -1328,11 +947,8 @@ mainblock:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov073_021205f0, 0x021205f0, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_021205f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_021205f0(char *p)
 {
     *(int *)(p + 0x368) = 0;
@@ -1342,11 +958,8 @@ int func_ov073_021205f0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov073_02120610, 0x02120610, size 0x20c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120610
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
     int func_ov073_02120610(void *thiz)
     {
         unsigned char *c = (unsigned char *)thiz;
@@ -1410,11 +1023,8 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov073_0212081c, 0x0212081c, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0212081c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0212081c(char* self)
 {
     *(unsigned short*)(self + 0x100) = 0xa;
@@ -1425,11 +1035,8 @@ int func_ov073_0212081c(char* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov073_02120844, 0x02120844, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120844
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120844(int *t)
 {
     _Z14ApproachLinearRsss((short *)((char*)t + 0x8c), -0x4000, 0x400);
@@ -1444,11 +1051,8 @@ int func_ov073_02120844(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov073_021208e4, 0x021208e4, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_021208e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_021208e4(char *r0) {
     *(int *)(r0 + 0x98) = 0x14000;
     *(int *)(r0 + 0xa8) = 0x1e000;
@@ -1458,11 +1062,8 @@ int func_ov073_021208e4(char *r0) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov073_02120910, 0x02120910, size 0x1c8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120910
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120910(char *c)
 {
     Vector3 in;
@@ -1510,11 +1111,8 @@ int func_ov073_02120910(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov073_02120ad8, 0x02120ad8, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120ad8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120ad8(int *t)
 {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((char *)t + 0x30c, data_ov073_02123288[1], 4, 0, 0x1000, 0);
@@ -1536,11 +1134,8 @@ int func_ov073_02120ad8(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov073_02120b78, 0x02120b78, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120b78
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120b78(char* c){
     _Z14ApproachLinearRsss((short*)(c+0x8c), -0x4000, 0x400);
     if(*(int*)(c+0x3dc) > *(int*)(c+0x60)){
@@ -1557,11 +1152,8 @@ int func_ov073_02120b78(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov073_02120c08, 0x02120c08, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120c08
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120c08(int *t)
 {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((char *)t + 0x30c, data_ov073_02123288[1], 4, 0, 0x1000, 0);
@@ -1575,9 +1167,6 @@ int func_ov073_02120c08(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov073_02120c7c, 0x02120c7c, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120c7c
 extern "C" int func_ov073_02120c7c(CB* c)
 {
@@ -1611,9 +1200,6 @@ extern "C" int func_ov073_02120c7c(CB* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov073_02120d80, 0x02120d80, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120d80
 extern "C" {
 
@@ -1635,11 +1221,8 @@ int func_ov073_02120d80(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov073_02120dec, 0x02120dec, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120dec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120dec(char *c) {
     _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x4c6), 0x500);
     if (AngleDiff(*(short *)(c + 0x4c6), *(short *)(c + 0x8e)) < 0x100) {
@@ -1653,9 +1236,6 @@ int func_ov073_02120dec(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov073_02120e60, 0x02120e60, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120e60
 extern "C" {
 int func_ov073_02120e60(char* c){
@@ -1668,11 +1248,8 @@ int func_ov073_02120e60(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov073_02120ed0, 0x02120ed0, size 0x35c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02120ed0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02120ed0(void *self)
 {
     u8 *c = (u8 *)self;
@@ -1789,11 +1366,8 @@ hz:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov073_0212122c, 0x0212122c, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0212122c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0212122c(int *t)
 {
     *(short *)((char *)t + 0x100) = 0;
@@ -1805,13 +1379,8 @@ int func_ov073_0212122c(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- func_ov073_0212128c, 0x0212128c, size 0xec */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_0212128c
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_0212128c(char* c)
 {
     struct Vector3 la;
@@ -1848,24 +1417,16 @@ int func_ov073_0212128c(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov073_02121378, 0x02121378, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02121378
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02121378(char *p)
 {
     p[1224] = 0; return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov073_02121388, 0x02121388, size 0x1b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02121388
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov073_02121388(char* c) {
     struct Vector3 vplayer;
     struct Vector3 vmsg;
@@ -1928,9 +1489,6 @@ int func_ov073_02121388(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- func_ov073_02121538, 0x02121538, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_02121538
 extern "C" {
 int func_ov073_02121538(char *c){
@@ -1940,19 +1498,11 @@ int func_ov073_02121538(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- ChiefChilly_ChangeState, 0x0212157c, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol ChiefChilly_ChangeState
-/* `struct C` and PMF are the reconciled ones declared at the top of this TU;
-   this shard's own identical copy is gone with the merge. */
 extern "C" int ChiefChilly_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- func_ov073_021215cc, 0x021215cc, size 0x214 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov073_021215cc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov073_021215cc(void* self)
 {
     char* c = (char*)self;
@@ -2003,20 +1553,7 @@ void func_ov073_021215cc(void* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- _ZN16daKing_Donketu_c16CleanupResourcesEv, 0x021217e0, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daKing_Donketu_c16CleanupResourcesEv
-/* recovered: shared header, real C++ method
- *
- * Releases NINE shared files and unloads the key models -- by far the largest
- * claim of any class migrated so far, and one of the nine (data_ov002_0210da30)
- * lives in ov002 rather than this overlay, borrowed from the shared pool and
- * still released here.
- *
- * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
- * one and ignores it, which measured byte-free.
- */
 int daKing_Donketu_c::CleanupResources(){
   UnloadKeyModels(4);
   ((SharedFilePtr *)data_ov073_02123280)->Release();
@@ -2031,24 +1568,12 @@ int daKing_Donketu_c::CleanupResources(){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- _ZN16daKing_Donketu_c16OnPendingDestroyEv, 0x0212186c, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daKing_Donketu_c16OnPendingDestroyEv
-/* recovered: shared header, real C++ method
- *
- * Empty in the ROM -- a single `bx lr`, an override that exists to suppress
- * the base's behaviour.
- */
 void daKing_Donketu_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- _ZN16daKing_Donketu_c6RenderEv, 0x02121870, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daKing_Donketu_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daKing_Donketu_c::Render()
 {
   ((Base *)&mBlendModelAnim)->M((char*)&mScaleX);

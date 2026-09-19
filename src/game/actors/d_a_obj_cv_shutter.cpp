@@ -35,9 +35,9 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-int func_ov002_020bad10(daObjCvShutter_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020baba8(daObjCvShutter_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020bac18(daObjCvShutter_c *self);
+int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020bac18(daObjSwdoor_c *self);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern ResourceDescriptor data_ov021_021148d0;
 }

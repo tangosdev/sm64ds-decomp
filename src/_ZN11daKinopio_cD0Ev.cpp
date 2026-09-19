@@ -1,9 +1,18 @@
 //cpp
 // @symbol _ZN11daKinopio_cD0Ev
-/* A delete expression forces the compiler-spelled deleting destructor. */
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body
+ *
+ * D0 is the DELETING destructor: destroy through this class and its bases, then
+ * return the object to its heap. Nobody writes that; declaring `~daKinopio_c()`
+ * is enough, because mwcc emits D2, D0 and D1 together and objisolate keeps the
+ * one this file is bound to.
+ *
+ * The deallocation is an inline operator delete -- dActor_c's, reached because
+ * dActor_c is this class's IMMEDIATE base -- which is why nothing below mentions
+ * a heap.
+ */
 #include "daKinopio_c.h"
 
-void daKinopio_c_EmitDeletingDestructor(daKinopio_c *toad)
+daKinopio_c::~daKinopio_c()
 {
-    delete toad;
 }

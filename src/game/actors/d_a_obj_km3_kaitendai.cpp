@@ -54,9 +54,9 @@ extern "C" ResourceDescriptor data_ov047_02112334 = {
 #include "daObjKm3_Kaitendai_c.h"
 
 extern "C" {
-s32 func_ov002_020b676c(daObjKm3_Kaitendai_c *self, ResourceDescriptor *descriptor,
+s32 func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
                         s16 angle);
-s32 func_ov002_020b66a8(daObjKm3_Kaitendai_c *self, ResourceDescriptor *descriptor);
+s32 func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 extern s16 data_ov047_02112320;
 extern s16 data_ov047_02112324;
 }

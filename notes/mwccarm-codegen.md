@@ -5230,7 +5230,8 @@ every C spelling computes the select before those stores, so the flag is short-l
 callee-saved registers suffice. The stored row's source is also the more admissible problem:
 it fabricates an eighth parameter for `OAM::Render` and passes `(OamAttr *)0x1000`, where the
 seed calls `_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii` with the parameter shape a matched
-sibling on main already uses (`src/func_ov006_020fa7b8.cpp`). Admissibility is not what
+sibling on main already uses (`func_ov006_020fa7b8`, since promoted into the folded TU
+`src/actors/dScMgPachinko_c.cpp`). Admissibility is not what
 `closeness` ranks on, so the DB keeps the worse-shaped source. That is a known cost of the
 metric, not an argument for forcing the ingest.
 

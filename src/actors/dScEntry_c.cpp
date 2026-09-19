@@ -1,24 +1,57 @@
 //cpp
-/* dScEntry_c -- the "entry" scene (course / minigame currently loaded).
+/**
+ * Course-entry / results scene.
  *
- * This file licenses the ROM-ascending prefix 0x02115ab8..0x02116128 of the
- * ov075 translation unit the linker shows as OamAnimation+dScEntry_c
- * (0x02115ab8..0x0211a854, 82 functions -- build/tu_map.json,
- * tools/tu_map.py). The rest of that run stays in its own enrolled shards;
- * config/tu_manifest.d/ov075/dScEntry_c.json records why.
+ * ov075 hosts ENTRY(6) and RESULT(7); both spawn dScEntry_c. Nested
+ * icon_c (nine dThIcon_c leaves) and graphCallback_c (dGraph_c::callback_c
+ * leaf). GraphCallback2 writes sub BG2 priority, decompresses the screen,
+ * then steps every live icon through Render. icon_c::Behavior bobs the
+ * selected character; icon_c::Render draws course, arrow and character
+ * OAM.
  *
- * mwccarm 2004/b56 emits one .text section per function in the REVERSE of
- * source order, so the definitions below run from the HIGHEST cartridge
- * address to the lowest.
+ * dScEntry_c_classInit_ENTRY / RESULT are reconstructed (RTTI dScEntry_c,
+ * ENTRY/RESULT registry). They sit past the hole and are not in this TU.
+ * Retail does not store those spellings.
+ *
+ * deslop
+ * Leftover: helpers stay func_ov075_*. This TU's GraphCallback2 calls
+ *   021160dc; 02115e8c / 0211601c / 02116028 / 02116030 are the icon
+ *   and graphCallback writers. Naming belongs with recovered members,
+ *   not coined here.
+ * Leftover: func_ov001_020ab5b0 is still the linker name of the ov001
+ *   dThIcon field writer (kind, x, y, w, h). This TU's 02115e8c calls
+ *   it. Naming belongs in ov001.
+ * Leftover: func_0200f0bc is still the linker name of the arm9 language
+ *   mapper (GetOwnerLanguage, then 2..5 -> 1..4). This TU's 02115e8c
+ *   indexes the width/height pairs with it.
+ * Leftover: func_0203d974 is still the arm9 vs/region gate
+ *   (0x27ffc40 == 2, else data_020a0f10). This TU's icon_c::Render
+ *   case 13. Naming belongs in arm9.
+ * Leftover: ApproachLinear2 stays mangled. No header. This TU's
+ *   icon_c::Behavior.
+ * Leftover: G2S::GetBG2ScrPtr stays mangled. No header. GraphCallback2
+ *   and icon_c::Render.
+ * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
+ *   This TU's icon_c::Render.
+ * Leftover: OAM::RenderSub stays mangled. OAM.h has the method; this
+ *   TU's icon_c::Render still uses the linker name.
+ * Leftover: data_ov075_0211cb64 / 0211c720 / 0211c730 / 0211c954 are
+ *   OAM. 0211d72c / 0211d72e / 0211d740 / 0211d742 / 0211d754 /
+ *   0211d756 / 0211d948 / 0211d94a are language- or type-indexed
+ *   width/height pairs (4-byte stride). Overlay .data/.bss this TU
+ *   does not own.
+ * Leftover: data_0209b2e4 is still the linker name of the selected
+ *   character. This TU's icon_c::Behavior. Naming belongs in arm9.
+ * Leftover: g_profile_ENTRY / g_profile_RESULT live outside this TU
+ *   (S14). leftover return new belongs with the factories past the
+ *   hole.
+ * Leftover: dScEntry_c D1/D0 stay in their own shards (out-of-line
+ *   emits D0 before D1; inline needs the factories this prefix cannot
+ *   reach).
  */
+
 #include "dScEntry_c.h"
 
-/* The one file-scope extern "C" region, above the first @symbol marker so that
-   no banked fragment absorbs a mangled _Z spelling. A fragment runs from its
-   marker to the next one, so a declaration block placed between two markers is
-   scored as part of the member above it. These names are already the ROM's
-   mangled spellings; without extern "C" a .cpp re-mangles them into phantoms
-   no module defines. */
 extern "C" {
 unsigned int _ZN3G2S12GetBG2ScrPtrEv();
 void DecompressLZ16(void *, void *);
@@ -50,9 +83,7 @@ extern short data_ov075_0211d94a[];
 
 #define SH(base,i) (*(short*)((char*)(base) + (i)*4))
 
-/* Steps every icon in the 9-entry array at 0x70 through its second virtual
-   slot. Written against a minimal polymorphic view rather than icon_c so the
-   0x24 stride and the slot index stay explicit. */
+/* Local overlay of icon_c Render (slot 1). 0x24 stride. */
 struct Base {
     virtual void method0();
     virtual void method1();
@@ -276,11 +307,3 @@ OamAnimation::~OamAnimation()
 dScEntry_c::icon_c::~icon_c()
 {
 }
-
-/* dScEntry_c's own destructor pair (D1 0x02115ab8, D0 0x02115b28) is NOT in this
-   file and NOT in the claimed range. mwccarm orders a D0/D1 group by source form,
-   and the only form that emits D1 first requires the TU to INSTANTIATE the class
-   (decomp-cpp-class-form). dScEntry_c is instantiated only by its two factories at
-   0x0211a740 and 0x0211a854, which sit above the unenrolled 0x02116128..0x021165b0
-   hole and cannot be reached from this prefix. Both variants therefore keep their
-   own enrolled shards; see config/tu_manifest.d/ov075/dScEntry_c.json. */

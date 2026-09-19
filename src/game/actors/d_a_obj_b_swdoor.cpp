@@ -35,9 +35,9 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-int func_ov002_020bad10(daObjBSwdoor_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020baba8(daObjBSwdoor_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020bac18(daObjBSwdoor_c *self);
+int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020bac18(daObjSwdoor_c *self);
 extern ResourceDescriptor data_ov014_021145c4;
 }
 

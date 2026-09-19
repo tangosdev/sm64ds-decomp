@@ -49,8 +49,8 @@ extern "C" ResourceDescriptor data_ov045_02112fdc = {
 };
 
 extern "C" {
-int func_ov002_020b6244(daObjKm2_Gura_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020b60fc(daObjKm2_Gura_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020b6244(daObjGuragura_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020b60fc(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 }
 
 struct GuraSpawnInfo {

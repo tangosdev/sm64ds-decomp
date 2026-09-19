@@ -359,33 +359,9 @@ src/d_a_c_jugem.c:
     complete
     .text start:0x0212ed54 end:0x0212edac
 
-src/_ZN13daObjKanban_cD1Ev.cpp:
+src/actors/daObjKanban_c.cpp:
     complete
-    .text start:0x0212edac end:0x0212edf8
-
-src/_ZN13daObjKanban_cD0Ev.cpp:
-    complete
-    .text start:0x0212edf8 end:0x0212ee58
-
-src/_ZN13daObjKanban_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0212ee58 end:0x0212ee7c
-
-src/_ZN13daObjKanban_c6RenderEv.cpp:
-    complete
-    .text start:0x0212ee7c end:0x0212eea4
-
-src/_ZN13daObjKanban_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0212eea4 end:0x0212f1b0
-
-src/_ZN13daObjKanban_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212f1b0 end:0x0212f244
-
-src/d_a_obj_kanban.c:
-    complete
-    .text start:0x0212f244 end:0x0212f27c
+    .text start:0x0212edac end:0x0212f27c
 
 src/__sinit_ov085_0212f2a8.c:
     complete

@@ -2,41 +2,33 @@
 #define DSCMINIGM_C_H
 #include "dScene_c.h"
 
-/* The minigame-select menu scene. Four rows of minigame icons on the top
- * screen; the sub screen scrolls sideways by mSubBgScrollX to reveal the
- * second page. See notes/minigame-provenance.md for how the layout below was
- * recovered. */
+/* The minigame-select menu scene. Four character tabs of nine icons
+ * on the top screen; the sub screen scrolls by mSubBgScrollX onto the
+ * second page. */
 struct dScMiniGm_c : dScene_c {
     s32 mSubBgScrollX;           /* 0x050 */
     u8  mPageFlipped;            /* 0x054 */
     u8  pad_055[0x3];
     s32 mGroupBase;              /* 0x058 */
-    s32 unk_05c;                 /* 0x05c */
-    s32 unk_060;                 /* 0x060 */
-    s32 unk_064;                 /* 0x064 */
-    u8  pad_068[0x24];  /* 0x068 -- opaque; untouched by any slot fn */
+    s32 unk_05c;                 /* 0x05c -- InitResources zeroes; 020c0378 copies into the selected entry */
+    s32 unk_060;                 /* 0x060 -- InitResources zeroes */
+    s32 mGfxSlot;                /* 0x064 -- 020c16e4 walks 0..9 for char/palette dest */
+    s32 mGfxSlots[9];            /* 0x068 -- 020c16e4 writes, 020c1688 reads as palette dest */
     s32 mArrowBobPhase;          /* 0x08c */
     s32 mPrevPageTimer;          /* 0x090 */
     s32 mNextPageTimer;          /* 0x094 */
     s32 mExitTimer;              /* 0x098 */
     s32 mIconBlinkPhase;         /* 0x09c */
     s32 mScrollDelay;            /* 0x0a0 */
-    s32 unk_0a4;                 /* 0x0a4 */
-    s32 unk_0a8;                 /* 0x0a8 */
+    s32 unk_0a4;                 /* 0x0a4 -- InitResources zeroes */
+    s32 unk_0a8;                 /* 0x0a8 -- InitResources zeroes */
     u8  mExiting;                /* 0x0ac */
     u8  pad_0ad[0x3];
 
-    /* Defined inline, and that is load-bearing rather than a style choice.
-       The cartridge puts D1 (0x020bfec0) BELOW D0 (0x020bfefc); under mwccarm's
-       default deferred codegen an inline body emits exactly that pair in that
-       order and no D2, whereas an out-of-line definition emits D0 ahead of D1
-       plus a homeless D2 that has no address anywhere in config/. The body is
-       empty because dScMiniGm_c adds only scalars over dScene_c, so the vptr
-       store and the ~dScene_c chain follow from the base clause alone.
-       Declared first so this class's key function is its destructor. */
+    /* Inline is load-bearing: out-of-line emits D0 before D1 plus a
+       homeless D2. Empty because this class adds only scalars. */
     virtual ~dScMiniGm_c() {}                            /* slots 16 (D1), 17 (D0) */
 
-    /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */
     virtual s32  CleanupResources();                     /* slot  3 */
     virtual s32  Behavior();                              /* slot  6 */

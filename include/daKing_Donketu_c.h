@@ -3,46 +3,6 @@
 
 #include "types.h"
 
-/* The Chief Chilly boss. Its destructor is the layout, and every member closes
- * exactly on the next one:
- *
- *     dEnemyBase_c                      ends 0x110
- *     dCcAcPos_c  0x110 + 0x040 = 0x150
- *     dBgCh_Actr               0x150 + 0x1bc = 0x30c
- *     BlendModelAnim             0x30c + 0x070 = 0x37c   -> mState
- *     ShadowModel                0x380 + 0x028 = 0x3a8
- *     Vector3[8]                 0x3e8 + 0x060 = 0x448   -> the next array
- *     Vector3[8]                 0x448 + 0x060 = 0x4a8
- *     Vector3[2]                 0x4d4 + 0x018 = 0x4ec   -> unk_4ec
- *
- * Eight boundaries, each from a size another header asserts independently.
- *
- * THE THREE ARRAYS ARE Vector3, and that is what named func_020072c0. The ROM
- * destroys them with __cxa_vec_cleanup(ptr, N, 0xc, ...), which a POD array would
- * never need, and InitResources fills each element as x/y/z from the actor's
- * position. See the note on Vector3 in include/types.h.
- *
- * 0x3d8/3dc/3e0 (mSpawnPos*) are NOT a Vector3 despite looking like one: the
- * destructor does not touch 0x3d8, and a Vector3 member would be destroyed there.
- *
- * Field provenance: notes/enemy-leaf-provenance.md.
- *
- * NAME: daKing_Donketu_c is the cartridge's own RTTI spelling, not a coined one.
- * extracted/overlays/overlay_0073.bin at file offset 0x4058 -- address 0x02123058,
- * module load base 0x0211f000 -- holds the length-prefixed Itanium type-name
- * string "16daKing_Donketu_c" (31 36 64 61 4b 69 6e 67 5f 44 6f 6e 6b 65 74 75
- * 5f 63 00). That string is the payload of _ZTI16daKing_Donketu_c at 0x0212304c,
- * a three-word __si_class_type_info: 0x0209a764 (_ZTVN3abi20__si_class_type_infoE),
- * 0x02123058 (the type-name payload above), 0x021081c0 (_ZTI12dEnemyBase_c).
- * The vtable's address point is 0x02123090, and the type-info word four bytes
- * below it, at 0x0212308c, reads 0x0212304c -- that same record. So the vtable
- * this tree used to spell _ZTV11ChiefChilly belongs to this type, and the base
- * the RTTI record names is the base this header already declared.
- *
- * The reconstructed factory daKing_Donketu_c_classInit (historical alias
- * ChiefChilly_Spawn) constructs it for the KING_DONKETU registry profile.
- */
-
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
@@ -51,9 +11,20 @@
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
+/* Chief Chilly (KING_DONKETU 218) -- ov073/daKing_Donketu_c.
+ *
+ * RTTI ov073:0x02123058 is the length-prefixed string 16daKing_Donketu_c;
+ * _ZTI16daKing_Donketu_c at 0x0212304c points its name word there and its
+ * base at dEnemyBase_c. The tree used to carry this class under the coined
+ * English name ChiefChilly. Factory allocates 0x504.
+ *
+ * daKing_Donketu_c_classInit is reconstructed (RTTI daKing_Donketu_c,
+ * KING_DONKETU registry). Retail does not store that spelling.
+ * Historical alias: ChiefChilly_Spawn. */
+
 struct daKing_Donketu_c : dEnemyBase_c {
-    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
-    dBgCh_Actr mWithMeshClsn;                            /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;                                /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;                              /* 0x150 */
     BlendModelAnim mBlendModelAnim;                        /* 0x30c */
     void *mState;                                          /* 0x37c */
     ShadowModel mShadowModel;                              /* 0x380 */
@@ -99,6 +70,8 @@ struct daKing_Donketu_c : dEnemyBase_c {
     /* trailing extent the ROM's `new daKing_Donketu_c` literal proves; see tools/opnew_sizes.py */
     u8 pad_4f8[0xc];
 
+    /* OUT OF LINE, DECLARED FIRST. `#pragma defer_codegen off` in the TU
+       emits D1 then D0 then homeless D2, the cartridge's order. */
     virtual ~daKing_Donketu_c();
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
@@ -112,7 +85,8 @@ struct daKing_Donketu_c : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daKing_Donketu_c_size_must_be_0x504[sizeof(struct daKing_Donketu_c) == 0x504 ? 1 : -1];
+typedef char daKing_Donketu_c_size_must_be_0x504[
+    sizeof(daKing_Donketu_c) == 0x504 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

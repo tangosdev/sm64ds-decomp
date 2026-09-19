@@ -2,7 +2,7 @@
   "id": "ov022/daObjFlMaruta_c+daObj_volcanoCannon_c",
   "module": "ov022",
   "source": "src_tu/actors/daObjFlMaruta_c+daObj_volcanoCannon_c.cpp",
-  "promoted_source": "src/actors/daObjFlMaruta_c+daObj_volcanoCannon_c.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fl_maruta.cpp",
   "status": "text-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [

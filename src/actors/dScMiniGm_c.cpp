@@ -1,72 +1,66 @@
 //cpp
-/* dScMiniGm_c -- the ov005 minigame-select scene, as one intact translation
- * unit covering 0x020bfec0..0x020c21ec.
+/**
+ * Minigame-select scene.
  *
- * This file is the canonical source for that whole span. It replaces the 25
- * one-function sources that used to cover it; they were folded in and removed,
- * and their shared-global declarations were reconciled into the single block
- * below (the manifest records each of those reconciliations as RESOLVED).
- * config/tu_manifest.d/ov005/dScMiniGm_c.json licenses the range and records
- * the compiler-only output the TU emits; config/arm9/overlays/ov005/delinks.txt
- * claims the span as one .text entry.
+ * Four character tabs of nine icons on the top screen; the sub screen
+ * scrolls by mSubBgScrollX onto the second page. InitResources loads
+ * the menu art and seeds unlock state from the minigame table.
+ * Behavior runs page and exit timers plus the tap handlers; Render
+ * draws tabs, new-game marks, page arrows and scores.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order). The
- * two destructor variants are not written here at all -- see the tail comment.
+ * dScMiniGm_c_classInit is reconstructed (RTTI dScMiniGm_c, MINIGAME
+ * registry). Retail does not store that spelling.
  *
- * The 25 licensed functions, by ROM address and linker name (ascending, i.e.
- * the reverse of the order they appear in below):
- *   [0] 0x020bfec0  _ZN11dScMiniGm_cD1Ev
- *   [1] 0x020bfefc  _ZN11dScMiniGm_cD0Ev
- *   [2] 0x020bff4c  func_ov005_020bff4c
- *   [3] 0x020bffc8  func_ov005_020bffc8
- *   [4] 0x020bfff4  func_ov005_020bfff4
- *   [5] 0x020c0010  func_ov005_020c0010
- *   [6] 0x020c0030  func_ov005_020c0030
- *   [7] 0x020c007c  func_ov005_020c007c
- *   [8] 0x020c00b4  func_ov005_020c00b4
- *   [9] 0x020c00e4  func_ov005_020c00e4
- *   [10] 0x020c0140  func_ov005_020c0140
- *   [11] 0x020c0250  func_ov005_020c0250
- *   [12] 0x020c0378  func_ov005_020c0378
- *   [13] 0x020c06cc  func_ov005_020c06cc
- *   [14] 0x020c0878  func_ov005_020c0878
- *   [15] 0x020c0b00  _ZN11dScMiniGm_c16OnPendingDestroyEv
- *   [16] 0x020c0b04  _ZN11dScMiniGm_c6RenderEv
- *   [17] 0x020c0f38  func_ov005_020c0f38
- *   [18] 0x020c1030  func_ov005_020c1030
- *   [19] 0x020c1130  func_ov005_020c1130
- *   [20] 0x020c14a0  _ZN11dScMiniGm_c8BehaviorEv
- *   [21] 0x020c1654  _ZN11dScMiniGm_c16CleanupResourcesEv
- *   [22] 0x020c1688  func_ov005_020c1688
- *   [23] 0x020c16e4  func_ov005_020c16e4
- *   [24] 0x020c1a20  _ZN11dScMiniGm_c13InitResourcesEv
+ * deslop
+ * Leftover: helpers stay func_ov005_* offset soup. This TU's Behavior
+ *   and Render call them. Naming belongs with recovered members, not
+ *   coined here.
+ * Leftover: func_02013568 / func_02013580 / func_02013598 /
+ *   func_020135d0 / func_02013638 are arm9 save-table helpers. This
+ *   TU's InitResources, func_ov005_020c00b4, func_ov005_020c007c,
+ *   func_ov005_020c0030, func_ov005_020bfff4, func_ov005_020bffc8
+ *   call them; func_ov005_020c0010 reads the table's save-slot byte
+ *   and hands it over. Naming belongs in arm9.
+ * Leftover: func_02012790 is still the linker name of Sound::Play2D(2,
+ *   id). This TU's Behavior and tap handlers (func_ov005_020c0378 /
+ *   func_ov005_020c06cc / func_ov005_020c0250 / func_ov005_020c0878)
+ *   call it. Naming belongs in arm9.
+ * Leftover: func_0202ec9c is the brightness-fader start helper. This
+ *   TU's func_ov005_020c0378 hands it data_0209f61c.
+ * Leftover: func_02019028 / func_020233f4 are arm9 graphics-setup
+ *   tails. This TU's InitResources calls them.
+ * Leftover: data_ov005_020c2250 group-base table,
+ *   data_ov005_020c2260 / data_ov005_020c2310 / data_ov005_020c23a0
+ *   file-id tables, data_ov005_020c2280 / data_ov005_020c22c8 icon
+ *   positions, data_ov005_020c2464 screen-offset table,
+ *   data_ov005_020c24d8 minigame entries, data_ov005_020c2c28 /
+ *   data_ov005_020c2ea4 / data_ov005_020c2e88 / data_ov005_020c2efc /
+ *   data_ov005_020c2f4c / data_ov005_020c2f60 / data_ov005_020c2f88 /
+ *   data_ov005_020c2fcc OAM. Overlay .rodata/.data this TU does not
+ *   own.
+ * Leftover: g_profile_MINIGAME lives outside this TU (S14).
+ * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
+ *   This TU's Render.
+ * Leftover: GX / G2 / G2S / GXS / G3X / CP15 stay mangled. No recovered
+ *   members in headers this TU includes. InitResources /
+ *   func_ov005_020c16e4 / func_ov005_020c1688 are the callers.
+ * Leftover: Sound::LoadGroupAndSetBank / LoadAndSetMusic_Layer1 and
+ *   dScene_c::SetFaders / StartSceneFade / SetAndStopColorFader stay
+ *   mangled -- decl_common.h / decl_Scene.h already declare the
+ *   extern "C" names this TU includes.
+ * Leftover: TouchOwner is a local overlay of data_0209f5bc. Slot 5 is
+ *   IsActive. func_ov005_020c0378 / func_ov005_020bff4c call the named
+ *   method; the other tap helpers still dispatch vt[5] by hand.
+ * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
+ *   homeless D2).
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "dScMiniGm_c.h"
 #include "types.h"
 #include "Sound.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
 
-/* Reconciled shadow declarations.
- *
- * The 25 one-function files each invented their own view of the shared
- * globals: data_0209b300 was a scalar in five files and a one-element array in
- * a sixth, data_0209f5bc had five different pointee types, and the minigame
- * table was spelled `Entry`, `MgEntry` and `const MgEntry`. A TU can declare
- * each symbol only once, so the better-evidenced spelling is kept here and the
- * members that needed another view cast at the point of use.
- *
- * Everything include/decl_common.h already declares is deliberately absent
- * below and the definitions in this file are spelled to agree with it.
- */
 
 struct MinigameSaveData;
 struct OamAttr;
@@ -86,6 +80,7 @@ struct MgEntry {
     MgMid mid;
     s32 unk28, unk2c, unk30;
 };
+typedef char MgEntry_size_must_be_0x34[sizeof(MgEntry) == 0x34 ? 1 : -1];
 typedef struct Entry {
     int pad0;
     int unk4;
@@ -179,15 +174,13 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN11dScMiniGm_c13InitResourcesEv, 0x020c1a20, size 0x7cc */
-/* -------------------------------------------------------------------------- */
+// @symbol dScMiniGm_c_classInit
+extern "C" dScMiniGm_c *dScMiniGm_c_classInit()
+{
+    return new dScMiniGm_c();
+}
+
 // @symbol _ZN11dScMiniGm_c13InitResourcesEv
-/* recovered: named members + real C++ method */
-/* dScMiniGm_c::InitResources() -- vtable slot 0. Builds the minigame menu:
- * loads the per-language art onto both engines, walks the two minigame tables
- * to seed each entry's unlock state, then zeroes the whole
- * mPageFlipped..mExiting field block Behavior() and Render() drive. */
 s32 dScMiniGm_c::InitResources()
 {
     int i, j;
@@ -249,7 +242,7 @@ s32 dScMiniGm_c::InitResources()
     } else {
         mSubBgScrollX = 0;
     }
-    unk_064 = 0;
+    mGfxSlot = 0;
 
     _ZN2GX15DisableAllBanksEv();
     *(volatile u16 *)0x4000304 |= 0x8000;
@@ -406,11 +399,8 @@ s32 dScMiniGm_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov005_020c16e4, 0x020c16e4, size 0x33c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c16e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov005_020c16e4(void *selfv)
 {
     char *self = (char *)selfv;
@@ -553,28 +543,19 @@ void func_ov005_020c16e4(void *selfv)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov005_020c1688, 0x020c1688, size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c1688
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov005_020c1688(char* r6, int r5){
-  char* r4 = LoadFile(data_ov005_020c2310[r5]);
-  _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)r4, 0x200);
-  u32 v = *(u32*)(r6 + (r5/4)*4 + 0x68);
-  _ZN3GXS10LoadBGPlttEPKvjj(r4+0x20, v << 5, 0x20);
-  Deallocate(r4);
+extern "C" {
+void func_ov005_020c1688(char *self, int index)
+{
+    char *file = LoadFile(data_ov005_020c2310[index]);
+    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)file, 0x200);
+    u32 slot = *(u32 *)(self + (index / 4) * 4 + 0x68);
+    _ZN3GXS10LoadBGPlttEPKvjj(file + 0x20, slot << 5, 0x20);
+    Deallocate(file);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN11dScMiniGm_c16CleanupResourcesEv, 0x020c1654, size 0x34 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMiniGm_c16CleanupResourcesEv
-/* recovered: real C++ method */
-/* dScMiniGm_c::CleanupResources() -- vtable slot 3. Tears the running minigame
- * down only if one was actually selected (data_0208a174[0] >= 0), then drops
- * the voice group. */
 s32 dScMiniGm_c::CleanupResources()
 {
     if (data_0208a174[0] >= 0) {
@@ -584,17 +565,7 @@ s32 dScMiniGm_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN11dScMiniGm_c8BehaviorEv, 0x020c14a0, size 0x1b4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMiniGm_c8BehaviorEv
-/* recovered: named members + real C++ method */
-/* dScMiniGm_c::Behavior() -- vtable slot 6. Runs the minigame-menu frame: a
- * touch anywhere plays the click, an active minigame (data_0209b300 == 1)
- * takes the whole frame, and otherwise three countdowns run in priority
- * order -- mPrevPageTimer and mNextPageTimer each flip the page when they
- * expire, mExitTimer closes the menu. With none pending, mArrowBobPhase and
- * mIconBlinkPhase free-run as 0..0x3f animation phases. */
 s32 dScMiniGm_c::Behavior()
 {
     if ((data_020a0e5a[data_020a0e40 << 1] & 0xfff) != 0) {
@@ -642,14 +613,11 @@ s32 dScMiniGm_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov005_020c1130, 0x020c1130, size 0x370 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c1130
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov005_020c1130(void *slv)
+extern "C" {
+void func_ov005_020c1130(void *selfv)
 {
-    char *sl = (char *)slv;
+    char *self = (char *)selfv;
     int end;
     int i;
     int r8;
@@ -663,7 +631,7 @@ void func_ov005_020c1130(void *slv)
     unsigned int rem;
     unsigned int pct;
 
-    if (*(u8 *)(sl + 0x54) == 1)
+    if (*(u8 *)(self + 0x54) == 1)
         return;
 
     if (data_0209b304 == 1) {
@@ -680,52 +648,52 @@ void func_ov005_020c1130(void *slv)
     neg1 = -1;
     r8 = i * 4;
     do {
-        if (func_ov005_020c00b4(sl, data_0208a170 + r8) != 0) {
+        if (func_ov005_020c00b4(self, data_0208a170 + r8) != 0) {
             type = ((Entry *)data_ov005_020c24d8)[data_0208a170 + r8].unk8;
             if (type != 0) {
                 if (type == 1) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
                     _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[0], x - 0x10, y, neg1, zero);
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
-                    func_ov005_020c1030(sl, x - 4, y, val);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
+                    func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 2) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
                     _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[1], x - 0x10, y, neg1, zero);
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
-                    func_ov005_020c1030(sl, x - 4, y, val);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
+                    func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 4) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
                     _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[2], x - 0x10, y, neg1, zero);
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
-                    func_ov005_020c1030(sl, x - 4, y, val);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
+                    func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 3) {
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     x = data_ov005_020c2280[i].x;
                     y = data_ov005_020c2280[i].y;
-                    func_ov005_020c1030(sl, x - 0x14, y, val);
+                    func_ov005_020c1030(self, x - 0x14, y, val);
                 } else if (type == 5) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
                     major = u / 60u;
-                    func_ov005_020c1030(sl, x - 0x10, y, (int)major);
+                    func_ov005_020c1030(self, x - 0x10, y, (int)major);
                     _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[4], x, y - 8, neg1, zero);
 
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u;
-                    func_ov005_020c1030(sl, x + 8, y, (int)(pct / 600u));
+                    func_ov005_020c1030(self, x + 8, y, (int)(pct / 600u));
 
-                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
+                    val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
-                    func_ov005_020c1030(sl, x + 0x10, y, (int)(pct % 10u));
+                    func_ov005_020c1030(self, x + 0x10, y, (int)(pct % 10u));
                 }
             }
         }
@@ -735,9 +703,6 @@ void func_ov005_020c1130(void *slv)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov005_020c1030, 0x020c1030, size 0x100 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c1030
 extern "C" {
 
@@ -765,52 +730,35 @@ void func_ov005_020c1030(void *a0, int x, int y, int val){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov005_020c0f38, 0x020c0f38, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0f38
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov005_020c0f38(void* slv){
-  char* sl = (char*)slv;
-  int g = (*(int*)(sl+0x9c) >= 0x20) ? 1 : 0;
-  int start, end;
-  if(data_0209b304 == 1){ start = 6; end = 8; }
-  else { start = 0; end = 5; }
-  if(*(unsigned char*)(sl+0x54) == 1) return;
-  int i;
-  for(i = start; i <= end; i++){
-    if(func_ov005_020c00b4(sl, data_0208a170 + i*4) == 0) continue;
-    if(func_ov005_020c007c(sl, data_0208a170 + i*4) == 0) continue;
-    _ZN3OAM9RenderSubEP7OamAttriiii((void*)data_ov005_020c2f60[g],
-        data_ov005_020c22c8[i].x, data_ov005_020c22c8[i].y + 0x30, -1, 0);
-  }
+extern "C" {
+void func_ov005_020c0f38(void *selfv)
+{
+    char *self = (char *)selfv;
+    int g = (*(int *)(self + 0x9c) >= 0x20) ? 1 : 0;
+    int start, end;
+    if (data_0209b304 == 1) {
+        start = 6;
+        end = 8;
+    } else {
+        start = 0;
+        end = 5;
+    }
+    if (*(unsigned char *)(self + 0x54) == 1)
+        return;
+    int i;
+    for (i = start; i <= end; i++) {
+        if (func_ov005_020c00b4(self, data_0208a170 + i * 4) == 0)
+            continue;
+        if (func_ov005_020c007c(self, data_0208a170 + i * 4) == 0)
+            continue;
+        _ZN3OAM9RenderSubEP7OamAttriiii((void *)data_ov005_020c2f60[g],
+            data_ov005_020c22c8[i].x, data_ov005_020c22c8[i].y + 0x30, -1, 0);
+    }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN11dScMiniGm_c6RenderEv, 0x020c0b04, size 0x434 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMiniGm_c6RenderEv
-/* recovered: real C++ method against include/dScMiniGm_c.h.
-
-   dScMiniGm_c::Render -- vtable slot 9, ov005 0x020c0b04, 0x434 bytes. The minigame
-   select screen: the character tabs down the left, a "new game" icon per tab whose
-   nine games (ids base + 4*j) has one both unlocked and unseen, the page arrows and
-   the exit button with their bounce scales.
-
-   Rewritten from the disassembly. Credit for the earlier unmatched draft that sat here
-   before stays with it: it came in with the minigame class wave (#1741), and its
-   extern set and slot identification are what this rewrite started from.
-   The flat draft forced the inner loop's two induction registers by hand; they
-   fall out of the real source once the tab table is declared what the ROM says it
-   is: data_ov005_020c2250 is the first word of ov005's .rodata, so it is `const`,
-   and with a const table the compiler keeps ONE load of data_ov005_020c2250[i]
-   across the two calls (an anonymous temp, r4) while strength reduction still
-   gives the two textual `+ j * 4` uses their own induction registers (r6 for the
-   first, r5 + r4 for the second). A named `base` local instead unifies both uses
-   into one induction and colours r7. The
-   second call spells `j * 4 + table[i]` because the cartridge adds the induction
-   temp first. y1 is declared before y0 so y1 keeps fp and y0 spills. */
 s32 dScMiniGm_c::Render()
 {
     int i;
@@ -890,48 +838,40 @@ s32 dScMiniGm_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN11dScMiniGm_c16OnPendingDestroyEv, 0x020c0b00, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMiniGm_c16OnPendingDestroyEv
-/* recovered: real C++ method */
-/* dScMiniGm_c::OnPendingDestroy() -- vtable slot 12. Empty override. */
 void dScMiniGm_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov005_020c0878, 0x020c0878, size 0x288 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0878
 extern "C" {
 
-void func_ov005_020c0878(char* sl)
+void func_ov005_020c0878(char *self)
 {
     void* g = (void*)data_0209f5bc;
     int (**vt)(void*) = *(int(***)(void*))g;
     if (vt[5](g) == 0)
         return;
-    if (*(unsigned char*)(sl + 0xac) != 0)
+    if (*(unsigned char*)(self + 0xac) != 0)
         return;
-    if (*(unsigned char*)(sl + 0x54) == 1)
+    if (*(unsigned char*)(self + 0x54) == 1)
         return;
-    if (*(int*)(sl + 0x90) > 0)
+    if (*(int*)(self + 0x90) > 0)
         return;
-    if (*(int*)(sl + 0x94) > 0)
+    if (*(int*)(self + 0x94) > 0)
         return;
-    if (*(int*)(sl + 0x98) > 0)
+    if (*(int*)(self + 0x98) > 0)
         return;
 
-    if (*(int*)(sl + 0xa0) > 0) {
-        int* pa0 = (int*)((int)sl + 0xa0);
+    if (*(int*)(self + 0xa0) > 0) {
+        int* pa0 = (int*)((int)self + 0xa0);
         *pa0 = *pa0 - 1;
-        if (*(int*)(sl + 0xa0) == 0) {
-            int f58 = *(int*)(sl + 0x58);
+        if (*(int*)(self + 0xa0) == 0) {
+            int f58 = *(int*)(self + 0x58);
             if (f58 != data_0208a170) {
                 data_0208a170 = f58;
-                func_ov005_020c16e4(sl);
-                *(int*)(sl + 0xa0) = 0x1e;
+                func_ov005_020c16e4(self);
+                *(int*)(self + 0xa0) = 0x1e;
             }
         }
     }
@@ -944,7 +884,7 @@ void func_ov005_020c0878(char* sl)
             if (data_020a0de9[idx * 4] != 0)
                 flag = 1;
         }
-        if (flag != 0 || (*(int*)(sl + 0xa0) <= 0 && v != 0)) {
+        if (flag != 0 || (*(int*)(self + 0xa0) <= 0 && v != 0)) {
             int i = 0;
             int lo = 2;
             int hi = 0x2e;
@@ -957,10 +897,10 @@ void func_ov005_020c0878(char* sl)
                     unsigned char* p = (unsigned char*)data_020a0de8 + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         data_0208a170 = e;
-                        *(int*)(sl + 0x58) = e;
+                        *(int*)(self + 0x58) = e;
                         func_02012790(z);
-                        func_ov005_020c16e4(sl);
-                        *(int*)(sl + 0xa0) = t;
+                        func_ov005_020c16e4(self);
+                        *(int*)(self + 0xa0) = t;
                     }
                 }
                 i++;
@@ -970,7 +910,7 @@ void func_ov005_020c0878(char* sl)
             return;
         }
 
-        if (*(int*)(sl + 0xa0) <= 0)
+        if (*(int*)(self + 0xa0) <= 0)
             return;
         if (v == 0)
             return;
@@ -982,13 +922,13 @@ void func_ov005_020c0878(char* sl)
             int t = 0x1e;
             do {
                 int e = data_ov005_020c2250[i];
-                if (*(int*)(sl + 0x58) != e) {
+                if (*(int*)(self + 0x58) != e) {
                     unsigned char ix = data_020a0e40;
                     unsigned char* p = (unsigned char*)data_020a0de8 + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
-                        *(int*)(sl + 0x58) = e;
+                        *(int*)(self + 0x58) = e;
                         func_02012790(z);
-                        *(int*)(sl + 0xa0) = t;
+                        *(int*)(self + 0xa0) = t;
                     }
                 }
                 i++;
@@ -1000,23 +940,20 @@ void func_ov005_020c0878(char* sl)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov005_020c06cc, 0x020c06cc, size 0x1ac */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c06cc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov005_020c06cc(char *c)
+extern "C" {
+void func_ov005_020c06cc(char *self)
 {
     int (**vt)(void*);
     void *obj = (void*)data_0209f5bc;
     vt = *(int(***)(void*))obj;
     if (vt[5](obj) == 0) return;
-    if (*(u8*)(c+0xac) != 0) return;
-    if (*(u8*)(c+0x54) == 1) return;
-    if (*(int*)(c+0x90) > 0) return;
-    if (*(int*)(c+0x94) > 0) return;
-    if (*(int*)(c+0x98) > 0) return;
-    if (func_ov005_020c00e4(c) == 0) return;
+    if (*(u8*)(self+0xac) != 0) return;
+    if (*(u8*)(self+0x54) == 1) return;
+    if (*(int*)(self+0x90) > 0) return;
+    if (*(int*)(self+0x94) > 0) return;
+    if (*(int*)(self+0x98) > 0) return;
+    if (func_ov005_020c00e4(self) == 0) return;
 
     {
         u8 idx = data_020a0e40;
@@ -1033,7 +970,7 @@ void func_ov005_020c06cc(char *c)
             if (data_020a0deb[idx*4] < 0x40) return;
             if (data_020a0deb[idx*4] > 0x80) return;
             func_02012790(0);
-            *(int*)(c+0x94) = 0x12;
+            *(int*)(self+0x94) = 0x12;
             return;
         } else {
             u8 v = data_020a0dea[idx*4];
@@ -1042,38 +979,14 @@ void func_ov005_020c06cc(char *c)
             if (data_020a0deb[idx*4] < 0x40) return;
             if (data_020a0deb[idx*4] > 0x80) return;
             func_02012790(0);
-            *(int*)(c+0x90) = 0x12;
+            *(int*)(self+0x90) = 0x12;
             return;
         }
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov005_020c0378, 0x020c0378, size 0x354 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0378
-/* recovered: real types against include/dScMiniGm_c.h.
-
-   func_ov005_020c0378 -- ov005 0x020c0378, 0x354 bytes. The minigame select
-   screen's tap handler: when the touch slot data_020a0e40 is pressed and held,
-   find which icon cell it lands in (a 2x3 grid on the main page, a single row of
-   three on the other), and if that game is unlocked copy its 0x34-byte entry into
-   data_0209b308, fade the scene out and start it.
-
-   Rewritten from the disassembly against the register assignment the cartridge
-   shows, which pins three things about the source:
-     * the touch slot index is not held in a local: data_020a0de8[data_020a0e40]
-       is spelled out at every use, and the compiler keeps the one load in r5. A
-       named `idx` local colours scratch (r2) and pushes the page base into r5.
-     * the page base data_0208a170 is read inside the loops, hoisted by the compiler
-       into lr / r3; naming it moves it to a callee-saved register.
-     * each loop has its own counter (`int col` per loop). Reusing the 2x3 grid's
-       column counter for the single-row loop colours it scratch (r2) instead of
-       r8, and the whole row of inductions shifts down by one.
-   The hit flag is an int, not a bool: as a bool the compiler folds it into the
-   branch structure and the `mov r2, #0 / movne r2, #1` materialisation is lost. */
-
 extern "C" {
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
 
@@ -1142,21 +1055,18 @@ void func_ov005_020c0378(char *selfc)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov005_020c0250, 0x020c0250, size 0x128 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0250
 extern "C" {
 
-void func_ov005_020c0250(char* c) {
+void func_ov005_020c0250(char *self) {
     void* g = (void*)data_0209f5bc;
     int (**vt)(void*) = *(int(***)(void*))g;
     if (vt[5](g) == 0) return;
-    if (*(unsigned char*)(c+0xac) != 0) return;
-    if (*(unsigned char*)(c+0x54) == 1) return;
-    if (*(int*)(c+0x90) > 0) return;
-    if (*(int*)(c+0x94) > 0) return;
-    if (*(int*)(c+0x98) > 0) return;
+    if (*(unsigned char*)(self+0xac) != 0) return;
+    if (*(unsigned char*)(self+0x54) == 1) return;
+    if (*(int*)(self+0x90) > 0) return;
+    if (*(int*)(self+0x94) > 0) return;
+    if (*(int*)(self+0x98) > 0) return;
     unsigned int i = data_020a0e40;
     bool ok = false;
     if (data_020a0de8[i].pressed != 0) {
@@ -1170,50 +1080,44 @@ void func_ov005_020c0250(char* c) {
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);
-    *(int*)(c+0x98) = 0x1c;
+    *(int*)(self+0x98) = 0x1c;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov005_020c0140, 0x020c0140, size 0x110 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0140
 extern "C" {
 
-void func_ov005_020c0140(char* c) {
+void func_ov005_020c0140(char *self) {
     int* g = (int*)data_0209f5bc;
     if ((*(int(***)(int*))g)[0x14/4](g) == 0) return;
-    if (*(unsigned char*)(c + 0xac) != 0) return;
-    if (*(int*)(c + 0x90) > 0) return;
-    if (*(int*)(c + 0x94) > 0) return;
-    if (*(int*)(c + 0x98) > 0) return;
+    if (*(unsigned char*)(self + 0xac) != 0) return;
+    if (*(int*)(self + 0x90) > 0) return;
+    if (*(int*)(self + 0x94) > 0) return;
+    if (*(int*)(self + 0x98) > 0) return;
     if (data_0209b304 == 0) {
-        if (*(int*)(c + 0x50) >= 0) {
-            *(int*)((int)c + 0x50) -= 8;
-            if (*(int*)(c + 0x50) <= 0) {
-                *(int*)(c + 0x50) = 0;
-                *(unsigned char*)(c + 0x54) = 0;
+        if (*(int*)(self + 0x50) >= 0) {
+            *(int*)((int)self + 0x50) -= 8;
+            if (*(int*)(self + 0x50) <= 0) {
+                *(int*)(self + 0x50) = 0;
+                *(unsigned char*)(self + 0x54) = 0;
             }
         }
     } else {
-        if (*(int*)(c + 0x50) <= 0xb0) {
-            *(int*)((int)c + 0x50) += 8;
-            if (*(int*)(c + 0x50) >= 0xb0) {
-                *(int*)(c + 0x50) = 0xb0;
-                *(unsigned char*)(c + 0x54) = 0;
+        if (*(int*)(self + 0x50) <= 0xb0) {
+            *(int*)((int)self + 0x50) += 8;
+            if (*(int*)(self + 0x50) >= 0xb0) {
+                *(int*)(self + 0x50) = 0xb0;
+                *(unsigned char*)(self + 0x54) = 0;
             }
         }
     }
-    data_0209d494[0] = (short)*(int*)(c + 0x50);
-    data_0209d474[0] = (short)*(int*)(c + 0x50);
+    data_0209d494[0] = (short)*(int*)(self + 0x50);
+    data_0209d474[0] = (short)*(int*)(self + 0x50);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov005_020c00e4, 0x020c00e4, size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c00e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov005_020c00e4(void *self){
   int i, j;
   for(i=0;i<4;i++){
@@ -1227,12 +1131,9 @@ int func_ov005_020c00e4(void *self){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov005_020c00b4, 0x020c00b4, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c00b4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov005_020c00b4(void *r0, int n) {
+extern "C" {
+int func_ov005_020c00b4(void *self, int n) {
     if (n < 8) {
         return 1;
     }
@@ -1240,61 +1141,50 @@ int func_ov005_020c00b4(void *r0, int n) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov005_020c007c, 0x020c007c, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c007c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov005_020c007c(void *r0, int r1) {
-    if (r1 < 8) {
-        return func_020135d0(r1 + 0x1c);
+extern "C" {
+int func_ov005_020c007c(void *self, int n) {
+    if (n < 8) {
+        return func_020135d0(n + 0x1c);
     } else {
-        return func_020135d0(r1 - 8);
+        return func_020135d0(n - 8);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov005_020c0030, 0x020c0030, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0030
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov005_020c0030(void *c, int r4){
-  int r=func_ov005_020c007c(c, r4);
-  if(r==0) return;
-  if(r4<8) func_02013598(r4+0x1c);
-  else func_02013598(r4-8);
-  data_0209b300=1;
+extern "C" {
+void func_ov005_020c0030(void *self, int n)
+{
+    int seen = func_ov005_020c007c(self, n);
+    if (seen == 0)
+        return;
+    if (n < 8)
+        func_02013598(n + 0x1c);
+    else
+        func_02013598(n - 8);
+    data_0209b300 = 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov005_020c0010, 0x020c0010, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020c0010
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov005_020c0010(void *a, int i) {
     int offset = i * 0x34;
     return (*(unsigned int*)((char*)data_ov005_020c24dc + offset) >> 8) & 0xff;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov005_020bfff4, 0x020bfff4, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020bfff4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov005_020bfff4(void *a, int b, int c) {
     int res = func_ov005_020c0010(a, b);
     return func_02013580(res, c);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov005_020bffc8, 0x020bffc8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020bffc8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov005_020bffc8(void *a0, int a1, int r2, int r3) {
     int r5 = r2;
     int r4 = r3;
@@ -1303,9 +1193,6 @@ void func_ov005_020bffc8(void *a0, int a1, int r2, int r3) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov005_020bff4c, 0x020bff4c, size 0x7c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov005_020bff4c
 extern "C" void func_ov005_020bff4c(char *self)
 {
@@ -1316,29 +1203,4 @@ extern "C" void func_ov005_020bff4c(char *self)
     data_0209f1d8 = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN11dScMiniGm_cD1Ev, 0x020bfec0, size 0x3c                */
-/* ROM ordinal 0 -- _ZN11dScMiniGm_cD0Ev, 0x020bfefc, size 0x50                */
-/* -------------------------------------------------------------------------- */
-/* _ZN11dScMiniGm_cD1Ev and _ZN11dScMiniGm_cD0Ev are NOT written here on
- * purpose, and carry no @symbol marker: the inline destructor in
- * include/dScMiniGm_c.h emits D1 then D0 -- the cartridge's order, D1 at
- * 0x020bfec0 below D0 at 0x020bfefc -- and no D2. tools/tiers.py scores both
- * through that inline definition.
- *
- * Splitting this class across 25 one-function files had forced the destructor
- * to be written out twice, once per variant. Written out of line in a single
- * TU the compiler emits the group D0, D1, D2: D0 lands below D1, which is not
- * the cartridge's order, and the homeless D2 has no ROM address at all.
- *
- * D1, the complete-object destructor, stores this class's vtable over the one
- * the base constructor left, destroys the members in reverse declaration order
- * and then runs ~dScene_c. dScMiniGm_c adds only scalars, so there is nothing
- * to destroy and the body stays empty -- the chain follows from
- * `struct dScMiniGm_c : dScene_c` and the member types alone.
- *
- * D0, the deleting destructor, inlines that same teardown -- which is why more
- * than one vptr store appears -- and then returns the object to its heap
- * through an inlined operator delete, which is why nothing here mentions a
- * heap.
- */
+

@@ -1,40 +1,97 @@
 //cpp
-/* Genuine production translation unit for ov077/daJgm_c (Lakitu, JUGEM 265).
+/**
+ * Lakitu (`jgm`, JUGEM 265).
  *
- * daJgm_c_classInit and g_profile_JUGEM are reconstructed source-style names.
- * SM64DS proves the daJgm_c RTTI identity, JUGEM registry ID, descriptor/
- * factory relationship, and object shape; later EAD lineage supplies the
- * spelling prior. Exact original SM64DS symbols are not preserved.
- * Historical project aliases: Lakitu_Spawn and Lakitu_SpawnInfo. Private
- * helper spellings are inferred; their class ownership, bodies, calls, PMF
- * layout, and ordering are proven.
+ * Hovers on a cloud and throws Spinies (actor 0x104). Five states:
+ * hover, throw, yoshi-mouth, spit, fall. ov077 is mixed
+ * (HEAVE_HO 238 / SPINY 260 / LAKITU 265). Not daC_Jugem_c
+ * (C_JUGEM 235, ov085).
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * ROM-high factory first and OnYoshiTryEat last. InitResources is the key
- * function; together with the inline destructor in the real header this
- * naturally emits retail D1 then D0 and the class RTTI/vtable, without D2.
+ * daJgm_c_classInit is reconstructed (RTTI daJgm_c, JUGEM registry).
+ * Retail does not store that spelling. Historical aliases:
+ * Lakitu_Spawn and Lakitu_SpawnInfo.
  *
- * leftovers:
- * - dCcAcPos_c::Init / dBgCh_Actr::Init / ModelAnim::SetAnim /
- *   TextureSequence::SetFile / DropShadowRadHeight / SpawnCoins /
- *   Player::Bounce / Player::Hurt / IsTooFarAwayFromPlayer / Particle::System
- *   ::NewSimple stay mangled: Fix12<int> by value is wall 6az. dBgCh_Actr::Init
- *   header Fix12i mangles as i.
- * - dBgCh_Actr_UpdateDiscreteNoLava_veneer: the named UpdateDiscreteNoLava
- *   method is WRONG-DEST (ROM 0x02038420).
- * - SharedFilePtr +4 BMD/BCA/BTP (SetFile/Prepare; header has no fields).
- * - data_ov077_* resource handles, PMF state table, and collision offset.
- *   The sinit at 0x02127240 stays separately enrolled.
- * - data_02082214 sine table.
- * - common.h first: Matrix4x3 is s32 m[12], so translation stays m[9..11].
- * - DaJgmVector3Words: a local Vector3 would emit vague-linkage ~Vector3.
- * - *(Vector3 *)&mPosX / mSpawnPosX addressing shape (a Vector3 member at
- *   those addresses is a dActor_c campaign, not this leaf).
- * - OnTurnIntoEgg R6Player / UpdateWallAndWater R10dBgCh_Actr: a pointer
- *   would generate identical ARM.
- * - SetState `int`: signedness is not distinguishable from other 32-bit forms.
- * - func_0201267c throw sound; no named method in this TU.
- * - S14: g_profile_JUGEM stays outside the licensed .text.
+ * deslop
+ * Leftover: factory stays `return new daJgm_c()` (MATCHES 0x60).
+ *   Leaf unsigned-long operator new forwards `_ZN7fBase_cnwEj`.
+ * Leftover: ordinary .text is reverse source order. Keep the
+ *   ROM-high factory first and OnYoshiTryEat last. Inline dtor
+ *   in the header emits retail D1 then D0, no D2.
+ * Leftover: sizeof wraps on DaJgmStateHandlers / daJgm_c /
+ *   DaJgmSpawnInfo / DaJgmVector3Words stay.
+ * Leftover: dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled --
+ *   Fix12<int> by value (wall 6az). This TU's InitResources.
+ *   dBgCh Init header Fix12i mangles as i; ROM is 5Fix12IiE.
+ * Leftover: ModelAnim::SetAnim / TextureSequence::SetFile stay
+ *   mangled -- Fix12<int> by value (wall 6az). EnterHoverState /
+ *   EnterThrowState / EnterFallState.
+ * Leftover: dActor_c::DropShadowRadHeight / SpawnCoins stay
+ *   mangled -- Fix12<int> by value (wall 6az). UpdateModels /
+ *   DieAndDropCoins.
+ * Leftover: Player::Bounce / Hurt stay mangled -- Fix12<int> by
+ *   value (wall 6az). HandlePlayerCollision. Player.h has neither.
+ * Leftover: dActor_c::IsTooFarAwayFromPlayer stays mangled -- not
+ *   on dActor_c.h. This TU's Behavior.
+ * Leftover: Particle::System::NewSimple stays mangled --
+ *   Fix12<int> by value (wall 6az); Particle__System.h has no
+ *   NewSimple. EnterFallState.
+ * Leftover: dBgCh_Actr_UpdateDiscreteNoLava_veneer is the retail
+ *   call (UpdateFallState / UpdateWallAndWater). Named
+ *   UpdateDiscreteNoLava is WRONG-DEST (ROM 0x02038420).
+ * Leftover: dBgCh_Actr::GetWallResult stays mangled -- not on
+ *   dBgCh_Actr.h. UpdateWallAndWater.
+ * Leftover: Sound::PlayLong / PlayBank0 stay mangled. PlayLong's
+ *   header takes Vector3 & + s16; this TU passes a pointer +
+ *   unsigned (UpdateHoverState / UpdateThrowState). PlayBank0
+ *   puns mCamSpacePosX (S18); a Vector3 local emits D1 (S3/S23).
+ *   EnterFallState / HandlePlayerCollision.
+ * Leftover: SharedFilePtr has no recovered fields. SetAnim /
+ *   SetFile / Prepare read [1] as the loaded pointer
+ *   (EnterHoverState / EnterThrowState / InitResources Prepare).
+ * Leftover: data_ov077_02127b50 / 7b48 / 7b38 / 7b28 / 7b40 /
+ *   7b20 / 7b30 are overlay BSS SharedFilePtr handles this TU
+ *   LoadFile/SetFile/Release. sinit 0x02127240 constructs them
+ *   (file IDs 0x34c / 0x429 / 0x42a / 0x34f / 0x34d / 0x350 /
+ *   0x34e). Naming belongs with that sinit. This TU claims
+ *   .text only.
+ * Leftover: data_ov077_02127238[] / 02127230[] are BCA/BTP
+ *   pointer tables this TU Init LoadFile / Cleanup Release.
+ * Leftover: data_ov077_02127bc4 is the PMF state table SetState
+ *   indexes. sinit copies ten ROM PMF constants into it.
+ * Leftover: data_ov077_02127b88 is the collision-offset Vector3
+ *   InitResources / UpdateHoverState / UpdateThrowState feed
+ *   dCcAcPos_c. sinit constructs it.
+ * Leftover: data_02082214 is the NitroSDK sin/cos table.
+ *   EnterSpitState / UpdateHoverBob index it. Naming belongs
+ *   with the SDK table.
+ * Leftover: data_020a0e68 is the arm9 scratch Matrix4x3
+ *   UpdateModels writes.
+ * Leftover: common.h must be first. Nested Matrix.h spelling
+ *   scalarizes the 12-word mat4x3 copies; UpdateModels writes
+ *   translation as m[9..11].
+ * Leftover: DaJgmVector3Words -- a local Vector3 emits
+ *   vague-linkage ~Vector3 into this text-only TU (S3/S23).
+ *   UpdateHoverState / UpdateThrowState / UpdateWallAndWater /
+ *   HandlePlayerCollision / DieAndDropCoins.
+ * Leftover: *(Vector3 *)&mPosX / mSpawnPosX -- dActor_c has no
+ *   Pos() on this tree (S18). UpdateHoverState / UpdateFlight /
+ *   HandlePlayerCollision.
+ * Leftover: OnTurnIntoEgg R6Player / UpdateWallAndWater
+ *   R10dBgCh_Actr -- a pointer generates identical ARM.
+ * Leftover: SetState `int` -- signedness is not distinguishable
+ *   from other 32-bit forms.
+ * Leftover: func_0201267c throw SFX 0xd2 at +0x74
+ *   (mCamSpacePosX). UpdateThrowState. No named method in this
+ *   TU.
+ * Leftover: ApproachLinear2 is C++ linkage leftover
+ *   (_Z15ApproachLinear2Rsss). UpdateSpitState.
+ * Leftover: one_arg_setstate so InitResources's SetState call
+ *   keeps r1=0 from the caller.
+ * Leftover: InitResources / UpdateThrowState keep
+ *   `char *c = (char *)this` offset soup and the 64-bit launder
+ *   on the spawn-pos stores (named fields CSE).
+ * Leftover: S14: g_profile_JUGEM stays outside the licensed
+ *   .text (deadstrip-data).
  */
 
 #include "common.h"

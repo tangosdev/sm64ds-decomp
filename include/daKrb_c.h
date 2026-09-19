@@ -8,91 +8,25 @@
 #include "ShadowModel.h"
 #include "MaterialChanger.h"
 
-/* The ROM's RTTI names this class daKrb_c and derives it from dCapEnemy_c, not from
- * dEnemyBase_c directly -- the tree used to believe `Goomba : Enemy`, which skipped the
- * whole cap-wearing layer (see notes/rtti-reconciliation.md and the old handoff note
- * this header replaces). rtti_reconcile.py's alias vote (build/rtti_reconcile.json)
- * corroborates dCapEnemy_c's identity with a margin of 2: this class and daTrs_c (once coined Boo)
- * both derive from it per their own destructor chains, so neither alone made the
- * pairing circular.
+/* Goomba (KURIBO 200 / KURIBO_S 201 / KURIBO_L 202) -- ov084/daKrb_c.
  *
- *   _ZTI7daKrb_c   ov084 0x021308e0
- *   _ZTS7daKrb_c   ov084 0x021308d4   "7daKrb_c"
- *   vtable         ov084 0x02130948, same address _ZTV7daKrb_c already names --
- *                  symbols.txt carries both today; the class itself is not yet
- *                  renamed daKrb_c, so the compiler still emits _ZTV7daKrb_c.
+ * RTTI ov084:0x021308d4 is the length-prefixed string 7daKrb_c;
+ * _ZTI7daKrb_c at 0x021308e0 points its name word there and its base
+ * at dCapEnemy_c. The tree used to carry this class under the coined
+ * English name Goomba.
  *
- * DERIVES FROM dCapEnemy_c. _ZN7daKrb_cD1Ev tears down its own five members and then
- * chains to _ZN11dCapEnemy_cD2Ev (ov002 0x020aedbc), dCapEnemy_c's out-of-line
- * base-object destructor -- see include/daTrs_c.h for why that address carried the
- * placeholder name func_ov002_020aedbc until 2026-08-27. Goomba_Spawn
- * (and GoombaSmall_Spawn, GoombaLarge_Spawn -- all three build the identical class,
- * differing only in spawn param) call _ZN11dCapEnemy_cC2Ev(p) before storing this
- * class's own vtable, the same forward/backward pair CapEnemy's own header documents.
+ * Factories daKrb_c_classInit_KURIBO / _S / _L allocate 0x478 bytes;
+ * that is this class's size. Member NAMES below are from this TU's
+ * own methods.
  *
- * SIZE 0x478 (1144 decimal), the literal all three factories pass to
- * fBase_c::operator new.
- *
- * OWN MEMBERS start at 0x180, where dCapEnemy_c ends -- a derived member cannot start
- * inside its base, so this is both floor and ceiling, same argument dCapEnemy_c.h makes
- * one level up. Five spans are typed sub-objects, evidenced by both witnesses:
- * Goomba_Spawn constructs them forward (dCcAc_c, dBgCh_Actr, ModelAnim,
- * ShadowModel, MaterialChanger) and _ZN7daKrb_cD1Ev tears them down in the opposite
- * order at the same offsets, before chaining to the base. They stay untyped, one
- * placeholder byte per span plus the sub-fields already evidenced inside them, rather
- * than named typed members: every existing consumer already reaches them through the
- * free C1/D1 functions on raw offsets (`_ZN7dCcAc_cC1Ev((char*)p + 0x180)`),
- * not through member access, so typing the whole span is a follow-on with no byte-shape
- * payoff yet and its own risk of silently mis-offsetting a nested field.
- *
- * VTABLE. Three slots resolve from the census worklist against dActor_c's own vtable
- * (include/dActor_c.h), all previously blocked because this class was a flat struct
- * with no base to diff against. All three are named here:
- *
- *   slot 18  OnYoshiTryEat()              ov084 0x0212bfc0  -- named, byte-verified
- *   slot 19  OnTurnIntoEgg(Player &)      ov084 0x0212b344  -- named, byte-verified
- *   slot 29  OnAimedAtWithEgg()           ov084 0x0212b30c  -- named, byte-verified
- *
- * SLOT 19 WAS NAMED LAST, and enrolling the translation unit is what forced it. While
- * the hook stayed a free function this class declared no override, so the compiler
- * filled slot 19 with dActor_c's inherited word (arm9 0x02010154) where the cartridge's
- * own vtable at ov084 0x02130948 holds 0x0212b344 -- one wrong word in thirty-one, in
- * a table every reader of this class believed. Nothing in the tree compared the two
- * until src/actors/daKrb_c.cpp became the enrolled owner of the run: an enrolled source
- * carries a checked-in compiler-only-output policy for _ZTV7daKrb_c, and rombuild
- * links the vtable this TU emits and compares it against the cartridge word by word
- * before discarding it. Declaring the override and defining it as the method makes all
- * thirty-one words agree, and the body still matches at 0x1cc -- `char *self =
- * (char *)this` and one cast of the reference parameter are the whole cost.
- *
- * An older note here recorded a four-byte divergence on this function and treated it as
- * a reason to leave the slot unnamed. That experiment recompiled the free function with
- * an `int` return; the divergence was the return type, not the method conversion. The
- * void signature this slot shares with every other named override carries no such cost,
- * which the byte gate now states directly.
- *
- * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
- *
- * SM64DS proves this class as daKrb_c through RTTI, allocation size and
- * vtable identity. The factory and profile spellings below are reconstructed
- * source-style names -- evidence-bounded proposals, not recovered SM64DS
- * symbols.
- *
- * daKrb_c_classInit_KURIBO at 0x0212c0b0 (historical alias Goomba_Spawn)
- * allocates 0x478 and installs this class's cartridge vtable. It backs the
- * KURIBO registry profile, whose descriptor at 0x021308ec is reconstructed
- * as g_profile_KURIBO.
- *
- * daKrb_c_classInit_KURIBO_S at 0x0212c054 (historical alias
- * GoombaSmall_Spawn) allocates 0x478 and installs this class's cartridge
- * vtable. It backs the KURIBO_S registry profile, whose descriptor at
- * 0x02130908 is reconstructed as g_profile_KURIBO_S.
- *
- * daKrb_c_classInit_KURIBO_L at 0x0212bff8 (historical alias
- * GoombaLarge_Spawn) allocates 0x478 and installs this class's cartridge
- * vtable. It backs the KURIBO_L registry profile, whose descriptor at
- * 0x02130924 is reconstructed as g_profile_KURIBO_L.
+ * SM64DS RTTI names the implementation daKrb_c. The reconstructed
+ * factories daKrb_c_classInit_KURIBO / _S / _L (historical aliases
+ * Goomba_Spawn / GoombaSmall_Spawn / GoombaLarge_Spawn) install this
+ * class's cartridge vtable; the reconstructed profile globals
+ * g_profile_KURIBO / _S / _L are the registry descriptors. Exact
+ * original SM64DS member spellings are not preserved.
  */
+
 struct daKrb_c : dCapEnemy_c {
     dCcAc_c mdCcAc_c;         /* 0x180 */
     dBgCh_Actr mWithMeshClsn; /* 0x1b4 */
@@ -124,20 +58,16 @@ struct daKrb_c : dCapEnemy_c {
     u8  mSoundLatchFlags;   /* 0x468 */
     u8  pad_469[0xf];
 
+    /* OUT OF LINE, DECLARED FIRST. `#pragma defer_codegen off` in the TU
+       emits D1 then D0 then homeless D2, the cartridge's order. */
     virtual ~daKrb_c();
 
-    /* methods */
     int Behavior();
     int CleanupResources();
-    /* Declared here so daKrb_c::InitResources, in src/actors/daKrb_c.cpp, can be a
-       real method rather than an extern "C" free function under the mangled name. ~daKrb_c is
-       still the first virtual DECLARED, so the key function -- and with it
-       _ZTV7daKrb_c -- stays where it already was. */
     int InitResources();
     void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 
-    /* --- vtable, resolved from the census worklist against dActor_c --- */
     int OnYoshiTryEat();                        /* slot 18 */
     void OnTurnIntoEgg(Player &player);          /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
