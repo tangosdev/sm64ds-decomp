@@ -42753,11 +42753,11 @@ matched: yes</title></rect><rect x="1538.86" y="700.10" width="3.72" height="8.5
 module: ov090
 addr: 0x02132654
 size: 72 bytes
-matched: yes</title></rect><rect x="1538.86" y="708.68" width="3.72" height="7.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRayD1Ev
+matched: yes</title></rect><rect x="1538.86" y="708.68" width="3.72" height="7.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_cD1Ev
 module: ov090
 addr: 0x0213269c
 size: 64 bytes
-matched: yes</title></rect><rect x="1538.86" y="716.30" width="3.72" height="10.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRayD0Ev
+matched: yes</title></rect><rect x="1538.86" y="716.30" width="3.72" height="10.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_cD0Ev
 module: ov090
 addr: 0x021326dc
 size: 84 bytes
@@ -42781,19 +42781,19 @@ matched: yes</title></rect><rect x="1579.71" y="693.91" width="12.01" height="9.
 module: ov090
 addr: 0x02132b14
 size: 264 bytes
-matched: yes</title></rect><rect x="1591.72" y="693.91" width="3.28" height="9.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRay16CleanupResourcesEv
+matched: yes</title></rect><rect x="1591.72" y="693.91" width="3.28" height="9.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_c16CleanupResourcesEv
 module: ov090
 addr: 0x02132c1c
 size: 72 bytes
-matched: yes</title></rect><rect x="1542.58" y="704.03" width="4.70" height="4.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRay6RenderEv
+matched: yes</title></rect><rect x="1542.58" y="704.03" width="4.70" height="4.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_c6RenderEv
 module: ov090
 addr: 0x02132c68
 size: 44 bytes
-matched: yes</title></rect><rect x="1542.58" y="708.17" width="4.70" height="39.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRay8BehaviorEv
+matched: yes</title></rect><rect x="1542.58" y="708.17" width="4.70" height="39.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_c8BehaviorEv
 module: ov090
 addr: 0x02132c94
 size: 420 bytes
-matched: yes</title></rect><rect x="1547.29" y="703.65" width="8.60" height="22.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MantaRay13InitResourcesEv
+matched: yes</title></rect><rect x="1547.29" y="703.65" width="8.60" height="22.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daManta_c13InitResourcesEv
 module: ov090
 addr: 0x02132e38
 size: 432 bytes
@@ -42857,11 +42857,11 @@ matched: yes</title></rect><rect x="1579.15" y="709.77" width="5.19" height="6.1
 module: ov090
 addr: 0x02133634
 size: 72 bytes
-matched: yes</title></rect><rect x="1584.34" y="709.77" width="4.61" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5SharkD1Ev
+matched: yes</title></rect><rect x="1584.34" y="709.77" width="4.61" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_cD1Ev
 module: ov090
 addr: 0x0213367c
 size: 64 bytes
-matched: yes</title></rect><rect x="1588.95" y="709.77" width="6.05" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5SharkD0Ev
+matched: yes</title></rect><rect x="1588.95" y="709.77" width="6.05" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_cD0Ev
 module: ov090
 addr: 0x021336bc
 size: 84 bytes
@@ -42885,23 +42885,23 @@ matched: yes</title></rect><rect x="1567.38" y="715.92" width="15.11" height="3.
 module: ov090
 addr: 0x02133904
 size: 116 bytes
-matched: yes</title></rect><rect x="1582.49" y="715.92" width="6.25" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Shark16CleanupResourcesEv
+matched: yes</title></rect><rect x="1582.49" y="715.92" width="6.25" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_c16CleanupResourcesEv
 module: ov090
 addr: 0x02133978
 size: 48 bytes
-matched: yes</title></rect><rect x="1588.75" y="715.92" width="0.52" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Shark16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1588.75" y="715.92" width="0.52" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_c16OnPendingDestroyEv
 module: ov090
 addr: 0x021339a8
 size: 4 bytes
-matched: yes</title></rect><rect x="1589.27" y="715.92" width="5.73" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Shark6RenderEv
+matched: yes</title></rect><rect x="1589.27" y="715.92" width="5.73" height="3.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_c6RenderEv
 module: ov090
 addr: 0x021339ac
 size: 44 bytes
-matched: yes</title></rect><rect x="1567.38" y="719.32" width="17.38" height="11.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Shark8BehaviorEv
+matched: yes</title></rect><rect x="1567.38" y="719.32" width="17.38" height="11.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_c8BehaviorEv
 module: ov090
 addr: 0x021339d8
 size: 448 bytes
-matched: yes</title></rect><rect x="1584.76" y="719.32" width="10.24" height="11.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Shark13InitResourcesEv
+matched: yes</title></rect><rect x="1584.76" y="719.32" width="10.24" height="11.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daShark_c13InitResourcesEv
 module: ov090
 addr: 0x02133b98
 size: 264 bytes
