@@ -169,7 +169,7 @@
       "symbol": "daPopoi_c_classInit",
       "address": "0x021271d4",
       "size": "0x0000005c",
-      "legacy_source": "src/daPopoi_c_classInit.c",
+      "legacy_source": "src/d_a_popoi.c",
       "ordinal": 21
     }
   ],
@@ -194,6 +194,111 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "object-audit-refused",
+      "scratch": "build/tu/ov077-HeaveHo/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": {
+          "COLLIDES-GAP": 9,
+          "HOMELESS": 2,
+          "LICENSED": 22
+        },
+        "emittedTextOrderIsRomAscending": false,
+        "nonLicensedSymbols": [
+          "COLLIDES-GAP _ZTI7fBase_c STB_LOPROC .data size=0x8 already at arm9:0x02086d70",
+          "COLLIDES-GAP _ZTS7fBase_c STB_LOPROC .data size=0x9 already at arm9:0x02086e60",
+          "COLLIDES-GAP _ZTS7dBase_c STB_LOPROC .data size=0x9 already at arm9:0x02086e54",
+          "HOMELESS _ZTS7HeaveHo STB_LOPROC .data size=0x9",
+          "COLLIDES-GAP _ZTS8dActor_c STB_LOPROC .data size=0xa already at arm9:0x0208e384",
+          "COLLIDES-GAP _ZTI12dEnemyBase_c STB_LOPROC .data size=0xc already at ov002:0x021081c0",
+          "COLLIDES-GAP _ZTS12dEnemyBase_c STB_LOPROC .data size=0xf already at ov002:0x021081cc",
+          "COLLIDES-GAP _ZTI8dActor_c STB_LOPROC .data size=0xc already at arm9:0x0208e390",
+          "COLLIDES-GAP _ZTI7dBase_c STB_LOPROC .data size=0xc already at arm9:0x02086e78",
+          "HOMELESS _ZTI7HeaveHo STB_LOPROC .data size=0xc",
+          "COLLIDES-GAP _ZTV7HeaveHo STB_GLOBAL .data size=0x84 already at ov077:0x02127a98"
+        ],
+        "unlicensedSections": [
+          {
+            "name": ".data",
+            "size": 8
+          },
+          {
+            "name": ".data",
+            "size": 9
+          },
+          {
+            "name": ".data",
+            "size": 9
+          },
+          {
+            "name": ".data",
+            "size": 9
+          },
+          {
+            "name": ".data",
+            "size": 10
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 15
+          },
+          {
+            "name": ".data",
+            "size": 132
+          }
+        ]
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7HeaveHoD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. src_tu/actors/HeaveHo.cpp carries a single out-of-line `HeaveHo::~HeaveHo()` and mwccarm emits the whole variant set from that one definition, but the cartridge carries only D1 (ov077:0x0212624c, size 0x50) and D0 (ov077:0x0212629c, size 0x64) -- both licensed by this manifest as ordinals 0 and 1. Nothing in config/ names a D2 for this class: config/arm9/overlays/ov077/symbols.txt holds _ZN7HeaveHoD1Ev and _ZN7HeaveHoD0Ev rows and no third, and rombuild's symbol-home index resolves _ZN7HeaveHoD2Ev to no home at all. With no ROM home there are no cartridge bytes to compare it against, so this is a plain `deadstrip` and NOT a `deadstrip-duplicate`; production isolation discards the body. It is emitted beside the two licensed variants and does not disturb the licensed run."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h declares Vector3 a deliberately empty inline destructor (`~Vector3() {}`), which makes the type non-POD everywhere, so every TU that gives a Vector3 automatic storage re-emits that destructor as vague linkage. In this TU _ZN7HeaveHo8BehaviorEv, func_ov077_0212679c, func_ov077_02126ad0 and func_ov077_02126640 (three locals of its own) declare block-scope Vector3s that are passed by reference to SurfaceInfo::CopyNormalTo, Sound::PlayLong, dCcAcPos_c::SetPosRelativeToActor and dBgCh_Lin::SetObjAndLine. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), delinked to src/_ZN7Vector3D1Ev.cpp, which owns it; this object's copy is the identical 4-byte `bx lr` body. rombuild compares it against those cartridge bytes and refuses anything but byte-identical vague-linkage output before the duplicate is discarded, so the address cannot be lost -- the owning source still supplies it."
+    }
+  ]
 }
