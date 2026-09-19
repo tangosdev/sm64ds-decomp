@@ -8524,21 +8524,21 @@
    "start": "0x2137be0",
    "end": "0x2138008",
    "classes": [
-    "ArrowSignRight"
+    "daObjYajirusi_c"
    ],
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
-    "src/_ZN14ArrowSignRightD1Ev.cpp",
-    "src/_ZN14ArrowSignRightD0Ev.cpp",
+    "src/_ZN15daObjYajirusi_cD1Ev.cpp",
+    "src/_ZN15daObjYajirusi_cD0Ev.cpp",
     "src/func_ov098_02137c8c.c",
-    "src/_ZN14ArrowSignRight4KillEv.cpp",
-    "src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp",
-    "src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
-    "src/_ZN14ArrowSignRight6RenderEv.cpp",
-    "src/_ZN14ArrowSignRight8BehaviorEv.cpp",
-    "src/_ZN14ArrowSignRight13InitResourcesEv.cpp",
+    "src/_ZN15daObjYajirusi_c4KillEv.cpp",
+    "src/_ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c.cpp",
+    "src/_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN15daObjYajirusi_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjYajirusi_c6RenderEv.cpp",
+    "src/_ZN15daObjYajirusi_c8BehaviorEv.cpp",
+    "src/_ZN15daObjYajirusi_c13InitResourcesEv.cpp",
     "src/daObjYajirusi_c_classInit_YAJIRUSI_R.c"
    ],
    "ext_mix": {

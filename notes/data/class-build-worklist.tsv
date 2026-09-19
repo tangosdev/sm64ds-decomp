@@ -299,7 +299,7 @@ daObjWc_Obj04_c	DONE	include\daObjWc_Obj04_c.h	dBgActor_c	0	ov029	6
 daObjWc_Obj05_c	DONE	include\daObjWc_Obj05_c.h	dBgActor_c	0	ov029	6
 daObjWlKoopaShutter_c	DONE	include\BowserShutter.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov026	6
 daObjWlSubmarine_c	DONE	include\Submarine.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov026	5
-daObjYajirusi_c	DONE	include\ArrowSignRight.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov098	9
+daObjYajirusi_c	DONE	include\daObjYajirusi_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov098	9
 daOnms_c	DONE	include\ToxBox.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov092	6
 daPgDfdr_c	DONE	include\daPgDfdr_c.h	dBgActor_c	0	ov027	7
 daPiano_c	DONE	include\daPiano_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov063	6

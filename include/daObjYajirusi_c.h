@@ -1,5 +1,5 @@
-#ifndef ARROWSIGNRIGHT_H
-#define ARROWSIGNRIGHT_H
+#ifndef DAOBJYAJIRUSI_C_H
+#define DAOBJYAJIRUSI_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -35,15 +35,15 @@ struct Player;
    daObjYajirusi_c_classInit_YAJIRUSI_R allocates exactly 0x380. The port supplies its vtable
    manually, so use a flat host view with every exercised field pinned to the
    ROM offset. The matching build below retains the real inheritance. */
-struct ArrowSignRight {
+struct daObjYajirusi_c {
     void *vtable;                      /* 0x000 */
     u8  pad_004[0x8];
     u16 actorID;                       /* 0x00c */
     u8  pad_00e[0x4e];
-    /* dActor_c's position and camera-space position, at dActor_c's own offsets
-       (include/dActor_c.h lines 59-65). The flat view drops the inheritance but
-       src/_ZN14ArrowSignRight4KillEv.cpp still reads these four fields by name,
-       so they are pinned here rather than buried in padding. */
+     /* dActor_c's position and camera-space position, at dActor_c's own offsets
+        (include/dActor_c.h lines 59-65). The flat view drops the inheritance but
+        src/actors/daObjYajirusi_c.cpp (Kill) still reads these four fields by
+        name, so they are pinned here rather than buried in padding. */
     s32 mPosX;                         /* 0x05c */
     s32 mPosY;                         /* 0x060 */
     s32 mPosZ;                         /* 0x064 */
@@ -62,7 +62,7 @@ struct ArrowSignRight {
     u8 mVariant;                        /* 0x37c */
     u8  pad_37d[0x3];
 
-    ~ArrowSignRight();
+    ~daObjYajirusi_c();
     int Behavior();
     int CleanupResources();
     int InitResources();
@@ -83,23 +83,23 @@ struct ArrowSignRight {
     void MarkForDestruction();
 };
 
-static_assert(offsetof(ArrowSignRight, actorID) == 0x00c, "ArrowSignRight actorID");
-static_assert(offsetof(ArrowSignRight, mPosX) == 0x05c, "ArrowSignRight mPosX");
-static_assert(offsetof(ArrowSignRight, mCamSpacePosX) == 0x074, "ArrowSignRight mCamSpacePosX");
-static_assert(offsetof(ArrowSignRight, mAngleY) == 0x08e, "ArrowSignRight mAngleY");
-static_assert(offsetof(ArrowSignRight, mModel) == 0x0d4, "ArrowSignRight mModel");
-static_assert(offsetof(ArrowSignRight, mMeshCollider) == 0x124, "ArrowSignRight collider");
-static_assert(offsetof(ArrowSignRight, mClsnMat) == 0x2ec, "ArrowSignRight matrix");
-static_assert(offsetof(ArrowSignRight, mShadowModel) == 0x320, "ArrowSignRight shadow");
-static_assert(offsetof(ArrowSignRight, mShadowMat) == 0x348, "ArrowSignRight +0x348");
-static_assert(offsetof(ArrowSignRight, mVariant) == 0x37c, "ArrowSignRight +0x37c");
-static_assert(sizeof(ArrowSignRight) == 0x380, "ArrowSignRight host size");
+static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
+static_assert(offsetof(daObjYajirusi_c, mPosX) == 0x05c, "daObjYajirusi_c mPosX");
+static_assert(offsetof(daObjYajirusi_c, mCamSpacePosX) == 0x074, "daObjYajirusi_c mCamSpacePosX");
+static_assert(offsetof(daObjYajirusi_c, mAngleY) == 0x08e, "daObjYajirusi_c mAngleY");
+static_assert(offsetof(daObjYajirusi_c, mModel) == 0x0d4, "daObjYajirusi_c mModel");
+static_assert(offsetof(daObjYajirusi_c, mMeshCollider) == 0x124, "daObjYajirusi_c collider");
+static_assert(offsetof(daObjYajirusi_c, mClsnMat) == 0x2ec, "daObjYajirusi_c matrix");
+static_assert(offsetof(daObjYajirusi_c, mShadowModel) == 0x320, "daObjYajirusi_c shadow");
+static_assert(offsetof(daObjYajirusi_c, mShadowMat) == 0x348, "daObjYajirusi_c +0x348");
+static_assert(offsetof(daObjYajirusi_c, mVariant) == 0x37c, "daObjYajirusi_c +0x37c");
+static_assert(sizeof(daObjYajirusi_c) == 0x380, "daObjYajirusi_c host size");
 
 #else
 
 #include "dBgActor_c.h"
 
-struct ArrowSignRight : dBgActor_c {
+struct daObjYajirusi_c : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     /* Behavior passes `&mShadowMat' as the `Matrix4x3 &' argument of
@@ -111,15 +111,19 @@ struct ArrowSignRight : dBgActor_c {
     u8  mVariant;                     /* 0x37c -- 0/1 from actorID; indexes all three ov098 resource columns */
 
     /* --- vtable --- */
-    virtual ~ArrowSignRight();
+    virtual ~daObjYajirusi_c();
 
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+    /* Reference spellings below are coined guesses: a reference and a pointer
+       mangle differently but generate identical ARM for these bodies, so the
+       bytes cannot distinguish them. Class ownership, slot identity, bodies
+       and relocations are proven; the exact original spelling is not. */
     virtual int  OnAttacked1(dActor_c &other);      /* slot 22 */
     virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
-    /* THE VTABLE SAYS SO. _ZTV14ArrowSignRight is ov098 0x0213c3d8 and the word
+    /* THE VTABLE SAYS SO. _ZTV15daObjYajirusi_c is ov098 0x0213c3d8 and the word
        at +0x7c relocates to ov098 0x02137ccc, while _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own
        override of dBgActor_c's Kill, not a new virtual. Slot 30 (+0x78) is still
@@ -129,7 +133,7 @@ struct ArrowSignRight : dBgActor_c {
     virtual void Kill();                            /* slot 31 */
 };
 
-typedef char ArrowSignRight_size_must_be_0x380[sizeof(ArrowSignRight) == 0x380 ? 1 : -1];
+typedef char daObjYajirusi_c_size_must_be_0x380[sizeof(daObjYajirusi_c) == 0x380 ? 1 : -1];
 
 #endif /* SM64DS_PLATFORM_PC && _MSC_VER */
 
@@ -138,7 +142,7 @@ typedef char ArrowSignRight_size_must_be_0x380[sizeof(ArrowSignRight) == 0x380 ?
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct ArrowSignRight {
+struct daObjYajirusi_c {
     u8  pad_000[0xc];
     u16 actorID;            /* 0x00c */
     u8  pad_00e[0x80];
@@ -147,14 +151,14 @@ struct ArrowSignRight {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~ArrowSignRight calls _ZN10dBgW_KcMbgD1Ev
+    /* dBgW_KcMbg member. The cartridge's own ~daObjYajirusi_c calls _ZN10dBgW_KcMbgD1Ev
        at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN14ArrowSignRightD1Ev.c] */
+       checks. Was a u8 marker. [_ZN15daObjYajirusi_cD1Ev.c] */
     ShadowModel mShadowModel;            /* 0x320 */
     u8  mShadowMat;         /* 0x348 */
     u8  pad_349[0x33];
@@ -163,4 +167,4 @@ struct ArrowSignRight {
 
 #endif /* __cplusplus */
 
-#endif /* ARROWSIGNRIGHT_H */
+#endif /* DAOBJYAJIRUSI_C_H */

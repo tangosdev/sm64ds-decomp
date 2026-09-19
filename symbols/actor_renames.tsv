@@ -2891,12 +2891,15 @@ ov096	0x021379d8	data_ov096_021379d8	_ZTV9daSanbo_c	vtable alloc=0x3b0
 ov096	0x02137a6c	data_ov096_02137a6c	Tornado_SpawnInfo	spawninfo
 ov096	0x02137a6c	Tornado_SpawnInfo	g_profile_TORNADO	reconstructed profile global; literal ROM ID TORNADO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov096	0x02137a90	data_ov096_02137a90	_ZTV7Tornado	vtable alloc=0x370
-ov098	0x02137be0	func_ov098_02137be0	_ZN14ArrowSignRightD1Ev	vtable slot 16
-ov098	0x02137c2c	func_ov098_02137c2c	_ZN14ArrowSignRightD0Ev	vtable slot 17
-ov098	0x02137dbc	func_ov098_02137dbc	_ZN14ArrowSignRight16CleanupResourcesEv	vtable slot 3
-ov098	0x02137e20	func_ov098_02137e20	_ZN14ArrowSignRight6RenderEv	vtable slot 9
-ov098	0x02137e48	func_ov098_02137e48	_ZN14ArrowSignRight8BehaviorEv	vtable slot 6
-ov098	0x02137eec	func_ov098_02137eec	_ZN14ArrowSignRight13InitResourcesEv	vtable slot 0
+ov098	0x02137be0	func_ov098_02137be0	_ZN15daObjYajirusi_cD1Ev	vtable slot 16
+ov098	0x02137c2c	func_ov098_02137c2c	_ZN15daObjYajirusi_cD0Ev	vtable slot 17
+ov098	0x02137ccc	_ZN14ArrowSignRight4KillEv	_ZN15daObjYajirusi_c4KillEv	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 31)
+ov098	0x02137d40	_ZN14ArrowSignRight11OnAttacked1ER8dActor_c	_ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 22); the R8dActor_c reference spelling is a coined guess the bytes cannot distinguish from a pointer
+ov098	0x02137d80	_ZN14ArrowSignRight15OnHitByMegaCharER6Player	_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 27); the R6Player reference spelling is a coined guess the bytes cannot distinguish from a pointer
+ov098	0x02137dbc	func_ov098_02137dbc	_ZN15daObjYajirusi_c16CleanupResourcesEv	vtable slot 3
+ov098	0x02137e20	func_ov098_02137e20	_ZN15daObjYajirusi_c6RenderEv	vtable slot 9
+ov098	0x02137e48	func_ov098_02137e48	_ZN15daObjYajirusi_c8BehaviorEv	vtable slot 6
+ov098	0x02137eec	func_ov098_02137eec	_ZN15daObjYajirusi_c13InitResourcesEv	vtable slot 0
 ov098	0x02137fd0	func_ov098_02137fd0	ArrowSignRight_Spawn	spawnfunc
 ov098	0x02137fd0	ArrowSignRight_Spawn	daObjYajirusi_c_classInit_YAJIRUSI_R	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x02138008	func_ov098_02138008	ArrowSignLeft_Spawn	spawnfunc
@@ -2932,7 +2935,7 @@ ov098	0x0213c398	data_ov098_0213c398	ArrowSignLeft_SpawnInfo	spawninfo
 ov098	0x0213c398	ArrowSignLeft_SpawnInfo	g_profile_YAJIRUSI_L	reconstructed profile global; literal ROM ID YAJIRUSI_L+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213c3b4	data_ov098_0213c3b4	ArrowSignRight_SpawnInfo	spawninfo
 ov098	0x0213c3b4	ArrowSignRight_SpawnInfo	g_profile_YAJIRUSI_R	reconstructed profile global; literal ROM ID YAJIRUSI_R+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov098	0x0213c3d8	data_ov098_0213c3d8	_ZTV14ArrowSignRight	vtable alloc=0x380
+ov098	0x0213c3d8	data_ov098_0213c3d8	_ZTV15daObjYajirusi_c	vtable alloc=0x380
 ov098	0x0213c434	data_ov098_0213c434	MgShellSmash_SpawnInfo	spawninfo
 ov098	0x0213c510	data_ov098_0213c510	Crate_SpawnInfo	spawninfo
 ov098	0x0213c510	Crate_SpawnInfo	g_profile_BLOCK_S	reconstructed profile global; literal ROM ID BLOCK_S+registry role+later EAD lineage; exact SM64DS spelling not preserved

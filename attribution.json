@@ -4080,6 +4080,18 @@
     "src/stage/LevelObjects.cpp#_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
     "src/stage/LevelObjects.cpp#_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
     "src/stage/LevelObjects.cpp#_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
-    "src/stage/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev"
+    "src/stage/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#func_ov098_02137c8c": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#daObjYajirusi_c_classInit_YAJIRUSI_R": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#daObjYajirusi_c_classInit_YAJIRUSI_L": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_cD1Ev": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_cD0Ev": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c4KillEv": "andrewboudreau",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c6RenderEv": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjYajirusi_c.cpp#_ZN15daObjYajirusi_c13InitResourcesEv": "tangosdev"
   }
 }

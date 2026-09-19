@@ -2299,7 +2299,7 @@
   },
   "_ZN10dBgActor_c14KillByMegaCharER6Player": {
    "include/decl_Platform.h": ["param:#2 void *"],
-   "src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp": ["param:#2 void *"],
+   "src/_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player.cpp": ["param:#2 void *"],
    "src/_ZN25RotatingUpDownPlatformUtm15OnHitByMegaCharER6Player.cpp": ["param:#2 Player *"]
   },
   "_ZN10dBgActor_c19UpdateClsnPosAndRotEv": {
@@ -2320,7 +2320,7 @@
   "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE": {
    "include/decl_Platform.h": ["param:#5 int"],
    "src/_ZN11BillBlaster8BehaviorEv.cpp": ["param:#5 int"],
-   "src/_ZN14ArrowSignRight8BehaviorEv.cpp": ["param:#5 int"],
+   "src/_ZN15daObjYajirusi_c8BehaviorEv.cpp": ["param:#5 int"],
    "src/_ZN7SkiLift8BehaviorEv.cpp": ["param:#5 int"],
    "src/_ZN8SignPost8BehaviorEv.cpp": ["param:#5 int"],
    "src/game/actors/d_a_obj_maruta.cpp": ["param:#5 int"]
@@ -4046,7 +4046,7 @@
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
-   "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["param:#1 void *"],
+   "src/_ZN15daObjYajirusi_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN14daWater_Ring_c13InitResourcesEv.cpp": ["param:#1 void *", "return:BMD_File *"],
@@ -5171,7 +5171,7 @@
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["return:KCL_File *"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
-   "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
+   "src/_ZN15daObjYajirusi_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
@@ -5395,7 +5395,7 @@
    "src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE.cpp": ["return:void"],
    "src/_ZN12daObjShell_c8BehaviorEv.cpp": ["return:int"],
    "src/_ZN13BigBrickBlock4KillEv.cpp": ["return:void"],
-   "src/_ZN14ArrowSignRight4KillEv.cpp": ["return:void"],
+   "src/_ZN15daObjYajirusi_c4KillEv.cpp": ["return:void"],
    "src/_ZN21SnowmanBreathParticle12CheckSnowmanEv.cpp": ["return:void"],
    "src/_ZN21SnowmanBreathParticle9HitPlayerEv.cpp": ["return:void"],
    "src/_ZN25RotatingUpDownPlatformUtm4KillEv.cpp": ["return:System *"],
@@ -5897,7 +5897,7 @@
    "src/func_ov062_021199ac.c": ["return:void *"]
   },
   "_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j": {
-   "src/_ZN14ArrowSignRight8BehaviorEv.cpp": ["param:#7 unsigned int"],
+   "src/_ZN15daObjYajirusi_c8BehaviorEv.cpp": ["param:#7 unsigned int"],
    "src/_ZN15TtcRotatingCube12UpdateShadowEv.cpp": ["param:#7 unsigned int", "return:int"],
    "src/_ZN16SpinningPlatform12UpdateShadowEv.cpp": ["param:#7 unsigned int", "return:int"],
    "src/_ZN8SignPost8BehaviorEv.cpp": ["param:#7 unsigned int"],
@@ -6527,7 +6527,7 @@
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
    "src/_ZN13FortressTower13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 int"],
-   "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["return:void"],
+   "src/_ZN15daObjYajirusi_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14SquarePathLift13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
@@ -13049,10 +13049,10 @@
    "src/_ZN7Tornado16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov098_0213c380": {
-   "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp": ["return:char []"]
+   "src/_ZN15daObjYajirusi_c16CleanupResourcesEv.cpp": ["return:char []"]
   },
   "data_ov098_0213c384": {
-   "src/_ZN14ArrowSignRight13InitResourcesEv.cpp": ["return:ArrowSignFileColumn []"]
+   "src/_ZN15daObjYajirusi_c13InitResourcesEv.cpp": ["return:ArrowSignFileColumn []"]
   },
   "data_ov098_0213c4c8": {
    "src/_ZN5Crate16CleanupResourcesEv.cpp": ["return:int []"]
@@ -13532,7 +13532,7 @@
    "src/_ZN10StarMarker7CollectEv.cpp": ["param:#1 int"],
    "src/_ZN11BobOmbBuddy8BehaviorEv.cpp": ["param:#1 int"],
    "src/_ZN11RollingRock8BehaviorEv.cpp": ["param:#1 int"],
-   "src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp": ["param:#1 int", "return:int"],
+   "src/_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player.cpp": ["param:#1 int", "return:int"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 int"],
    "src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp": ["param:#1 int"],
    "src/_ZN16daKing_Donketu_c8BehaviorEv.cpp": ["param:#1 int"],

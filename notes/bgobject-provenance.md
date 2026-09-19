@@ -700,14 +700,14 @@ In the C twin, `0x074` becomes `mCamSpacePosX`.
 
 ---
 
-## ArrowSignRight (`include/ArrowSignRight.h`, [ov098](../config/arm9/overlays/ov098/symbols.txt), size 0x380)
+## daObjYajirusi_c (`include/daObjYajirusi_c.h`, [ov098](../config/arm9/overlays/ov098/symbols.txt), size 0x380)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x348 | `mShadowMat` | `Behavior` passes `&mShadowMat` as the `Matrix4x3 &` argument of `dActor_c::DropShadowScaleXYZ(ShadowModel &, Matrix4x3 &, ...)`, with `mShadowModel` as the argument before it. `0x348 + 0x30 = 0x378`. The same shape `SignPost` and `daObjHatenaBlock_c` already carry. |
 | 0x37c | `mVariant` | `InitResources` sets `0`/`1` from actorID and uses it as the row index into all three ov098 resource columns `data_ov098_0213c380/384/388`. |
 
-The rename carried into `src_tu/actors/ArrowSignRight.cpp` as well as `src/`.
+The rename carried into `src/actors/daObjYajirusi_c.cpp` (promoted from `src_tu/`) as well as `src/`.
 In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 
 ---

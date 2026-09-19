@@ -1,13 +1,13 @@
-_ZN14ArrowSignRightD1Ev kind:function(arm,size=0x4c) addr:0x02137be0
-_ZN14ArrowSignRightD0Ev kind:function(arm,size=0x60) addr:0x02137c2c
+_ZN15daObjYajirusi_cD1Ev kind:function(arm,size=0x4c) addr:0x02137be0
+_ZN15daObjYajirusi_cD0Ev kind:function(arm,size=0x60) addr:0x02137c2c
 func_ov098_02137c8c kind:function(arm,size=0x40) addr:0x02137c8c
-_ZN14ArrowSignRight4KillEv kind:function(arm,size=0x74) addr:0x02137ccc
-_ZN14ArrowSignRight11OnAttacked1ER8dActor_c kind:function(arm,size=0x40) addr:0x02137d40
-_ZN14ArrowSignRight15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x02137d80
-_ZN14ArrowSignRight16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02137dbc
-_ZN14ArrowSignRight6RenderEv kind:function(arm,size=0x28) addr:0x02137e20
-_ZN14ArrowSignRight8BehaviorEv kind:function(arm,size=0xa4) addr:0x02137e48
-_ZN14ArrowSignRight13InitResourcesEv kind:function(arm,size=0xe4) addr:0x02137eec
+_ZN15daObjYajirusi_c4KillEv kind:function(arm,size=0x74) addr:0x02137ccc
+_ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c kind:function(arm,size=0x40) addr:0x02137d40
+_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x02137d80
+_ZN15daObjYajirusi_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02137dbc
+_ZN15daObjYajirusi_c6RenderEv kind:function(arm,size=0x28) addr:0x02137e20
+_ZN15daObjYajirusi_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02137e48
+_ZN15daObjYajirusi_c13InitResourcesEv kind:function(arm,size=0xe4) addr:0x02137eec
 daObjYajirusi_c_classInit_YAJIRUSI_R kind:function(arm,size=0x38) addr:0x02137fd0
 daObjYajirusi_c_classInit_YAJIRUSI_L kind:function(arm,size=0x38) addr:0x02138008
 _ZN5CrateD1Ev kind:function(arm,size=0x7c) addr:0x02138040
@@ -108,7 +108,6 @@ data_ov098_0213c384 kind:data(any) addr:0x0213c384
 data_ov098_0213c388 kind:data(any) addr:0x0213c388
 g_profile_YAJIRUSI_L kind:data(any) addr:0x0213c398 ambiguous
 g_profile_YAJIRUSI_R kind:data(any) addr:0x0213c3b4 ambiguous
-_ZTV14ArrowSignRight kind:data(any) addr:0x0213c3d8
 _ZTV15daObjYajirusi_c kind:data(any) addr:0x0213c3d8
 MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
 data_ov098_0213c458 kind:data(any) addr:0x0213c458
