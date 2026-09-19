@@ -784,6 +784,46 @@ def _merge_field(ord_rows, parsed, getter, name_of, kind_label, warnings):
     return live, dead
 
 
+def _conflict_body(text):
+    r"""Legacy text carried INSIDE a `/* TUBUILD CONFLICT -- ... */` marker.
+
+    The marker wraps source that is itself commented C++, so a `*/` anywhere in
+    the carried text closes the outer block early and everything after it becomes
+    code again. Measured on ov006 dScMgSlot1_c+dScMgSlot3_c: 20 of 23 blocks
+    became syntax errors this way and had to be repaired by hand.
+
+    The terminator is neutralised rather than the text dropped. The whole point of
+    the marker is that a human can still read exactly what was not applied, and
+    `*\/` reads as `*/` while closing nothing -- a backslash is only special
+    before a newline, so it never reaches the comment lexer as a terminator.
+    """
+    return text.replace("*/", "*\\/")
+
+
+def _promoted_member_fragment(path, text, name):
+    """One member's text sliced out of an ALREADY-PROMOTED multi-symbol TU.
+
+    `srcpath.path_for` answers with the file the linker actually reads, which for
+    a symbol that has already been folded is the whole promoted TU. But
+    `split_legacy_source` documents that it assumes the ONE-function legacy file
+    AGENTS.md guarantees, so it hands that whole file back as `function_text` and
+    `create` pastes every function in it once per ROM ordinal -- 18 byte-identical
+    copies and about 40 redefinition errors on the fold that found this. 180 files
+    in the tree own more than one symbol today and that number only grows, so this
+    is on the path of every future fold that reaches an already-folded neighbour.
+
+    Returns (fragment, owned_count), where `fragment` is None when the member
+    cannot be sliced unambiguously -- which the caller must REPORT rather than
+    guess past. Returns None when `path` is an ordinary one-function legacy file,
+    which is the common case and must behave exactly as it always did.
+    """
+    owned = SP.symbols_for(path)
+    if len(owned) <= 1:
+        return None
+    import tiers as TI
+    return TI._marked_member_fragment(text, name), len(owned)
+
+
 def assemble_shadow_source(tu_id, ord_rows, parsed):
     warnings = []
     cpp_needed = any(parsed[name]["cpp"] for _o, name, _a, _s in ord_rows)
@@ -864,7 +904,7 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
             kind, dname, text = item
             out.append(f"/* TUBUILD CONFLICT -- alternate body of {kind} {dname!r}, from the "
                        f"legacy file for {name}, NOT applied:")
-            out.append(text)
+            out.append(_conflict_body(text))
             out.append("*/")
             out.append("")
 
@@ -873,7 +913,7 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
             out.append(line)
         for key, line, name in dead_macros:
             out.append(f"/* TUBUILD CONFLICT -- alternate #define of {key}, from the legacy "
-                       f"file for {name}, NOT applied: {line} */")
+                       f"file for {name}, NOT applied: {_conflict_body(line)} */")
         out.append("")
 
     if live_externs or dead_externs:
@@ -883,7 +923,7 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
             out.append(line)
         for key, line, name in dead_externs:
             out.append(f"/* TUBUILD CONFLICT -- alternate declaration of {key}, from the "
-                       f"legacy file for {name}, NOT applied: {line} */")
+                       f"legacy file for {name}, NOT applied: {_conflict_body(line)} */")
         if cpp_needed:
             out.append("}")
         out.append("")
@@ -1026,6 +1066,30 @@ def cmd_create(args):
                             "legacy_path": f"<none for {name}>"}
             continue
         text = legacy.read_text(encoding="utf-8", errors="ignore")
+        promoted = _promoted_member_fragment(legacy, text, name)
+        if promoted is not None:
+            fragment, owned = promoted
+            rel = legacy.relative_to(REPO).as_posix()
+            if fragment is None:
+                pre_warnings.append(
+                    f"PROMOTED-UNSLICEABLE: {name} already lives in {rel}, which owns "
+                    f"{owned} symbols, and no single marker there names it; a banner "
+                    f"marks its slot and verify will report the member MISSING")
+                parsed[name] = {"error": None, "cpp": False, "missing": True,
+                                "includes": [], "pragmas": [], "macros": [],
+                                "externs": [], "shadow_decls": [], "notes": [],
+                                "function_text": "", "legacy_path": rel}
+                continue
+            pre_warnings.append(
+                f"PROMOTED: {name} already lives in {rel}, which owns {owned} symbols; "
+                f"only its own marked member text is carried here. That TU's includes, "
+                f"macros and declarations are NOT carried -- decide what this TU has to "
+                f"declare for the member itself")
+            parsed[name] = {"error": None, "cpp": legacy.suffix == ".cpp",
+                            "includes": [], "pragmas": [], "macros": [], "externs": [],
+                            "shadow_decls": [], "notes": [],
+                            "function_text": fragment.strip(), "legacy_path": rel}
+            continue
         p = split_legacy_source(text)
         p["legacy_path"] = legacy.relative_to(REPO).as_posix()
         if p["error"]:
