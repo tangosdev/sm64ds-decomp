@@ -436,69 +436,9 @@ src/d_a_water_ring.c:
     complete
     .text start:0x0211a1b0 end:0x0211a200
 
-src/_ZN11daObjTbox_cD1Ev.cpp:
+src/actors/daObjTbox_c.cpp:
     complete
-    .text start:0x0211a200 end:0x0211a238
-
-src/_ZN11daObjTbox_cD0Ev.cpp:
-    complete
-    .text start:0x0211a238 end:0x0211a284
-
-src/_ZN11daObjTbox_c20UpdateModelTransformEv.cpp:
-    complete
-    .text start:0x0211a284 end:0x0211a2c4
-
-src/_ZN11daObjTbox_c6State2Ev.cpp:
-    complete
-    .text start:0x0211a2c4 end:0x0211a380
-
-src/_ZN11daObjTbox_c10InitState2Ev.cpp:
-    complete
-    .text start:0x0211a380 end:0x0211a39c
-
-src/_ZN11daObjTbox_c6State1Ev.cpp:
-    complete
-    .text start:0x0211a39c end:0x0211a49c
-
-src/_ZN11daObjTbox_c10InitState1Ev.cpp:
-    complete
-    .text start:0x0211a49c end:0x0211a4c4
-
-src/_ZN11daObjTbox_c6State0Ev.cpp:
-    complete
-    .text start:0x0211a4c4 end:0x0211a6e0
-
-src/_ZN11daObjTbox_c10InitState0Ev.cpp:
-    complete
-    .text start:0x0211a6e0 end:0x0211a6ec
-
-src/_ZN11daObjTbox_c8SetStateEi.cpp:
-    complete
-    .text start:0x0211a6ec end:0x0211a734
-
-src/_ZN11daObjTbox_c17CallStateBehaviorEv.cpp:
-    complete
-    .text start:0x0211a734 end:0x0211a77c
-
-src/_ZN11daObjTbox_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211a77c end:0x0211a7c4
-
-src/_ZN11daObjTbox_c6RenderEv.cpp:
-    complete
-    .text start:0x0211a7c4 end:0x0211a7ec
-
-src/_ZN11daObjTbox_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211a7ec end:0x0211a814
-
-src/_ZN11daObjTbox_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211a814 end:0x0211a8f0
-
-src/d_a_obj_tbox.c:
-    complete
-    .text start:0x0211a8f0 end:0x0211a930
+    .text start:0x0211a200 end:0x0211a930
 
 src/_ZN12daObjShell_cD1Ev.cpp:
     complete

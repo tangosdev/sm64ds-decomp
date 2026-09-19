@@ -1,0 +1,356 @@
+{
+  "id": "ov064/daObjTbox_c",
+  "module": "ov064",
+  "source": "src/actors/daObjTbox_c.cpp",
+  "promoted_source": "src/actors/daObjTbox_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211a200..0x211a8f0, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjTbox_c",
+    "build/tu_map.json leaves the immediately following factory run at 0x0211a8f0..0x0211a930 unattributed because it carries no mangled name; g_profile_TREASURE_BOX at 0x0211c4e8 stores that address as its factory word, and the run allocates this class's own 0x178, installs _ZTV11daObjTbox_c and constructs the ModelAnim at 0x0d4 and the dCcAc_c at 0x138 before ending exactly at daObjShell_c's D1. The join is registry/factory-backed rather than tu_map-proven, the same evidence ov064/daObjFl_Gura_c was joined on.",
+    "no hole: config/arm9/overlays/ov064/delinks.txt enrolled all 16 functions as adjacent `complete` entries covering 0x0211a200..0x0211a930 with no gap, so the whole run was claimable as one entry",
+    "no interleaving and no unlabelled edge: every symbol inside the span is a daObjTbox_c member or its factory; the neighbours are daWater_Ring_c's factory below (0x0211a1b0) and daObjShell_c's D1 above (0x0211a930)",
+    "module sinit corroboration: 11 sinit(s) / 11 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211a200",
+      "end": "0x0211a930"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN11daObjTbox_cD1Ev",
+      "address": "0x0211a200",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN11daObjTbox_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN11daObjTbox_cD0Ev",
+      "address": "0x0211a238",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN11daObjTbox_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c20UpdateModelTransformEv",
+      "address": "0x0211a284",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN11daObjTbox_c20UpdateModelTransformEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c6State2Ev",
+      "address": "0x0211a2c4",
+      "size": "0x000000bc",
+      "legacy_source": "src/_ZN11daObjTbox_c6State2Ev.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c10InitState2Ev",
+      "address": "0x0211a380",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN11daObjTbox_c10InitState2Ev.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c6State1Ev",
+      "address": "0x0211a39c",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN11daObjTbox_c6State1Ev.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c10InitState1Ev",
+      "address": "0x0211a49c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN11daObjTbox_c10InitState1Ev.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c6State0Ev",
+      "address": "0x0211a4c4",
+      "size": "0x0000021c",
+      "legacy_source": "src/_ZN11daObjTbox_c6State0Ev.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c10InitState0Ev",
+      "address": "0x0211a6e0",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN11daObjTbox_c10InitState0Ev.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c8SetStateEi",
+      "address": "0x0211a6ec",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN11daObjTbox_c8SetStateEi.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c17CallStateBehaviorEv",
+      "address": "0x0211a734",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN11daObjTbox_c17CallStateBehaviorEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c16CleanupResourcesEv",
+      "address": "0x0211a77c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN11daObjTbox_c16CleanupResourcesEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c6RenderEv",
+      "address": "0x0211a7c4",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN11daObjTbox_c6RenderEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c8BehaviorEv",
+      "address": "0x0211a7ec",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN11daObjTbox_c8BehaviorEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN11daObjTbox_c13InitResourcesEv",
+      "address": "0x0211a814",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN11daObjTbox_c13InitResourcesEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "daObjTbox_c_classInit",
+      "address": "0x0211a8f0",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_tbox.c",
+      "ordinal": 15
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create, then reconciled by hand and extended through the adjacent factory.",
+    "Two legacy shards declared DecIfAbove0_Short with different return types (void in State0, unsigned short in State2). The value-returning form is kept as the more complete observation; both call sites compile against it unchanged and all 16 functions still reproduce.",
+    "The destructor body is NOT written in the TU. include/daObjTbox_c.h now defines `~daObjTbox_c() {}` inline: from an inline body mwccarm emits D1 then D0 -- the cartridge's order -- and no leaf D2. With the body out of line in the TU the same two bodies come out D0-before-D1 and the isolation step refuses the object.",
+    "The factory is now a plain `new daObjTbox_c()`. It previously had to spell the allocation as a direct call to the mangled fBase_c::operator new, because without a leaf operator new in scope `new daObjTbox_c` reached for the global one and left an unresolved allocator relocation; the header now declares that leaf, so the ROM's own allocator call is what the compiler emits.",
+    "No static initializer is claimed: the module-wide sinit inventory does not narrow an owner to this class TU, and the three pointer-to-member pairs at data_ov064_0211c98c stay under legacy ownership.",
+    "The manifest licenses only the 16-function .text interval. Compiler-emitted RTTI, type-name and vtable records are exact deadstrip-data checks against canonical ROM addresses; production keeps the retail metadata band under legacy ownership.",
+    "tools/tubuild.py linkcheck ov064/daObjTbox_c: SCRATCH-LINK-VERIFIED. The whole .text range 0x0211a200..0x0211a930 reproduces from one object, all 106 modules byte-exact, and the full ROM built from the spliced configuration is sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, identical to the source-independent stock control. `dsd check symbols --fail` still FAILS on 9 error lines, all of which the no-substitution baseline control also has (0 new, 0 resolved), so that check is not green and is not claimed as such."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov064-daObjTbox_c/daObjTbox_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 16,
+    "functions_declared": 16,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        27
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11daObjTbox_c",
+        "_ZTI11daObjTbox_c",
+        "_ZTS11daObjTbox_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11daObjTbox_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS11daObjTbox_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11daObjTbox_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov064-daObjTbox_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211a200",
+        "end": "0x0211a930",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211a200",
+          "end": "0x0211a930",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 16
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys one re-emits it as vague linkage -- here the Vector3 automatics in State0, State1 and State2 pull it in. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte body. deadstrip-duplicate makes rombuild prove this body against the cartridge's own before anything is discarded."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited fBase_c typeinfo record as vague linkage. Its canonical arm9 home (0x02086d70) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited dBase_c typeinfo record as vague linkage. Its canonical arm9 home (0x02086e78) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited dActor_c typeinfo record as vague linkage. Its canonical arm9 home (0x0208e390) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited fBase_c type-name string as vague linkage. Its canonical arm9 home (0x02086e60) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited dBase_c type-name string as vague linkage. Its canonical arm9 home (0x02086e54) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "This TU defines every out-of-line virtual daObjTbox_c declares, so it is the class's key-function TU and emits the inherited dActor_c type-name string as vague linkage. Its canonical arm9 home (0x0208e384) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTV11daObjTbox_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c50c",
+      "reason": "Key-function emission: this TU defines the class's out-of-line destructor and all four of its out-of-line virtual overrides, so mwccarm emits daObjTbox_c's own vtable here as vague linkage. The compiled record is 0x84 bytes -- the two-word ABI preamble plus the 31 slots the ROM table has, 0x0211c50c being the address point and 0x0211c588 (_ZTI12daObjShell_c) the first byte past it. Its canonical ov064 home lies outside this entry's claimed .text range. romdata_check proves the slots word-by-word with relocations applied -- slot 0 is InitResources 0x0211a814, slot 3 CleanupResources 0x0211a77c, slot 6 Behavior 0x0211a7ec, slot 9 Render 0x0211a7c4, slots 16/17 the D1/D0 pair at 0x0211a200 and 0x0211a238, all of them this entry's own enrolled functions. The cartridge owns the record; this copy is discarded and the surviving vptr stores rebind to it."
+    },
+    {
+      "symbol": "_ZTI11daObjTbox_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c4cc",
+      "reason": "Key-function emission: companion of the vtable above. Its canonical ov064 home (0x0211c4cc) lies outside this entry's claimed .text range. The record is __si_class_type_info -- shared typeinfo vtable, name pointer to the ROM's _ZTS11daObjTbox_c at 0x0211c4d8, single direct base dActor_c at arm9:0x0208e390 -- and romdata_check proves all three words with relocations applied. The cartridge owns the record; this copy is discarded with the vtable."
+    },
+    {
+      "symbol": "_ZTS11daObjTbox_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c4d8",
+      "reason": "Key-function emission: the class type-name string '11daObjTbox_c' (0xe bytes). Its canonical ov064 home (0x0211c4d8) lies outside this entry's claimed .text range and romdata_check proves every compared byte against the ROM's own record. The cartridge owns the record; this copy is discarded."
+    }
+  ]
+}

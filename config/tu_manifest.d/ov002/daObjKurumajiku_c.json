@@ -1,0 +1,264 @@
+{
+  "id": "ov002/daObjKurumajiku_c",
+  "module": "ov002",
+  "source": "src_tu/actors/daObjKurumajiku_c.cpp",
+  "promoted_source": "src/actors/daObjKurumajiku_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b69e4..0x20b6c54, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjKurumajiku_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b69e4",
+      "end": "0x020b6c54"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD0Ev",
+      "address": "0x020b69e4",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD1Ev",
+      "address": "0x020b6a3c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b6a80",
+      "address": "0x020b6a80",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020b6a80.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b6ac8",
+      "address": "0x020b6ac8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020b6ac8.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_c6RenderEv",
+      "address": "0x020b6b10",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN17daObjKurumajiku_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_c8BehaviorEv",
+      "address": "0x020b6b38",
+      "size": "0x0000011c",
+      "legacy_source": "src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior builds Vector3 temporaries by value (`Vector3 mid; Vector3 res;`), so mwccarm re-emits Vector3's trivial vague-linkage D1 beside the licensed text. config/arm9/symbols.txt records one cartridge copy at arm9:0x020072c0, kind:function(arm,size=0x4), already owned by an enrolled source; text-only isolation discards this duplicate."
+    },
+    {
+      "symbol": "_ZTV17daObjKurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109320",
+      "reason": "Behavior is this class's key function, so the TU naturally emits the complete class vtable storage; verify reports size=0x88, i.e. the two-word ABI preamble plus the 32 dispatch slots include/daObjKurumajiku_c.h describes. romdata_check resolves the emitted relocations and proves 128 bytes equal to the cartridge at the configured public address point ov002:0x02109320, eight bytes past the emitted storage start. That measurement covers the two null words at slots 0 and 3 that make the class abstract. Text-only isolation discards the copy. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTI17daObjKurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021092f8",
+      "reason": "Single-inheritance RTTI record emitted with the key function. romdata_check proves 12 bytes equal to the cartridge at ov002:0x021092f8. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTS17daObjKurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109304",
+      "reason": "Type-name string emitted with the key function. romdata_check proves 20 bytes equal to the cartridge at ov002:0x02109304. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI for the direct base. romdata_check proves 12 bytes equal to the cartridge at its canonical ov002 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string. romdata_check scores it PARTIAL: the emitted bytes agree with the cartridge but stop short of the configured symbol extent, the known vague-linkage type-name tail effect. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI. romdata_check proves 12 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI. romdata_check proves 12 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI. romdata_check proves 8 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+    }
+  ],
+  "notes": [
+    "Merged from the six legacy one-function sources into the daBar_c shape: reverse-ROM source order, `// @symbol` on each of the four hand-written members, destructors left to the header's inline definition. The two `daObjKurumajiku_c_Emit*Destructor` forcing functions the legacy shards carried are NOT reproduced -- with the key function (Behavior) present in the TU the compiler emits D1 and D0 out of line on its own, and both still byte-match.",
+    "func_ov002_020b6a80's legacy .c source typed its parameter `char *`, which collided with the `daObjKurumajiku_c *` declaration Behavior's caller needs (mwccarm: `illegal function overloading`). Reconciled to the more complete observation -- the typed pointer -- with the cast kept at the top of the body, so the emitted bytes are unchanged.",
+    "DESTRUCTOR ORDER BLOCKER -- this TU is text-verified but NOT promotable as sliced. tools/tubuild.py linkcheck refuses it at the pre-link licensing audit: `licensed .text functions are not emitted in ROM address order`. The cartridge has D0 (0x020b69e4, 0x58) BELOW D1 (0x020b6a3c, 0x44); every source form in which the destructor body is visible emits D1 before D0. Measured with tools/tu_order_check.py: (a) destructor inline in-class -- D1,D0; (b) inline definition moved out of the class body but still in the header -- D1,D0; (c) destructor declared after Render, and last of all -- D1,D0; (d) eight arrangements of explicit `delete p` / `p->~daObjKurumajiku_c()` odr-uses, at the top and bottom of the TU -- D1,D0 in all eight, so the odr-use lever is inert while the vtable is emitted here.",
+    "The one form that reaches cartridge order is an out-of-line destructor definition in this TU (emits D2,D0,D1; the D2 is 0x44 and homeless). It is REFUTED by the descendants: with no body visible in the header, tools/tu_order_check.py puts ov043/daObjKm1_Kurumajiku_c and ov047/daObjKm3_Kurumajiku_c -- both already promoted and matching on main -- at D1 emitted 0x24 against ROM 0x50 and D0 emitted 0x38 against ROM 0x64. Moving the definition out of the class body but keeping it inline in the header restores both descendants, but leaves this TU at D1,D0. So the header's inline destructor is load-bearing for the descendants and incompatible with this slice's own order.",
+    "A form that does pass tu_order_check (`all match in ROM order`) is `#pragma defer_codegen off` plus an ascending-order rewrite plus two forcing functions whose `delete` and explicit destructor call odr-use D0 then D1 in that order. It is NOT taken here: notes/tu-promotion-conventions.md records that a genuine promotion contains no forcing object, and the pragma is file-global. Recorded as a measurement, not a recommendation.",
+    "Boundary note for whoever picks this up: tu_map scores this cut `medium`, and the structurally identical sibling daObjKuruma_c sits immediately below (0x020b686c..0x020b6958, same D1/helper/Render/Behavior shape) with a single unattributed function, func_ov002_020b6958 (0x8c), between them. Re-slicing was not attempted. No _ZN17daObjKurumajiku_cD2Ev exists anywhere in the cartridge's symbol tables, and the D2 this class would emit is 0x44, so func_ov002_020b6958 is not a hidden D2.",
+    "tubuild create warning, still true: src/func_ov002_020b6ac8.cpp did not split (its definition sits inside an `extern \"C\"` block), so that member was rewritten by hand rather than carried verbatim."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjKurumajiku_c/daObjKurumajiku_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        33
+      ],
+      "data": [
+        "_ZTV17daObjKurumajiku_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV17daObjKurumajiku_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "object-audit-refused",
+      "scratch": "build/tu/ov002-daObjKurumajiku_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": false,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null
+    },
+    "promotion_blocked_by": "destructor variant emission order; see notes[] -- text-verified only"
+  }
+}

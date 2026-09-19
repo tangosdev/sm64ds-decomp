@@ -5,6 +5,8 @@
 #include "ModelAnim.h"
 #include "dCcAc_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* The cartridge RTTI names this class daObjTbox_c, and that is now the
  * spelling every named virtual carries; the coined `TreasureChest` alias
  * this header used to gloss it with is gone. The ROM's
@@ -37,7 +39,15 @@ struct daObjTbox_c : dActor_c {
 
     typedef void (daObjTbox_c::*StateFunc)();
 
-    virtual ~daObjTbox_c();            /* slots 16, 17 */
+    /* Inline empty body on purpose. From an inline destructor mwccarm emits
+     * D1 and then D0 -- the cartridge's own order at 0x0211a200 and
+     * 0x0211a238 -- and no leaf D2. Written out of line in the translation
+     * unit instead, the same two bodies come out D0-before-D1 and the
+     * isolation step rejects the object. Every instruction in both is
+     * compiler-generated: the vptr store, then dCcAc_c at 0x138 and ModelAnim
+     * at 0x0d4 in reverse construction order, then the dActor_c base; D0 also
+     * returns the object to the actor heap. */
+    virtual ~daObjTbox_c() {}          /* slots 16, 17 */
 
     virtual int InitResources();         /* slot  0 */
     virtual int CleanupResources();      /* slot  3 */
@@ -54,6 +64,15 @@ struct daObjTbox_c : dActor_c {
     void UpdateModelTransform();
     void SetState(s32 state);
     void CallStateBehavior();
+
+    /* The factory's allocation goes through the actor heap, not the global
+     * operator new: daObjTbox_c_classInit's first call is fBase_c's own
+     * operator new with the literal 0x178. Spelling it here as a leaf
+     * operator new is what lets the factory be written as a plain
+     * `new daObjTbox_c()` and still emit that call. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

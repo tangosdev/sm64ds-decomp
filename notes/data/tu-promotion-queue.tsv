@@ -104,7 +104,7 @@ Crate	36	1426	ov098	yes	no	pragma:1;compiler-only:>=11(derived from own chain: 5
 UnchainedChomp+daIbl_c	17	713	ov100	partial	no	multi-class-tu:2;classif:no-header:daIbl_c;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	daObjPathLift_c	text-only
 dThIcon_c	2	35	ov001	yes	yes	compiler-only:>=3(derived from own chain: 1 classes incl. self via build/rtti.json; floor 2x1+1)	-	text-only
 Fireball	9	433	ov002	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
-daObjTbox_c	15	322	ov064	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjFl_Gura_c	text-only
+daObjTbox_c	15	322	ov064	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjFl_Gura_c	text-only
 CccArena	16	355	ov073	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 Coin	28	1148	ov002	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
 dMgPsOpt_c	11	343	ov004	yes	no	compiler-only:unknown(no chain for dMgPsOpt_c: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	dScMgBase_c	text-only
