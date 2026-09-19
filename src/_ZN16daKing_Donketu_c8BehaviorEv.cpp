@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN11ChiefChilly8BehaviorEv
+// @symbol _ZN16daKing_Donketu_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
  * One frame of the boss. Almost everything here is gated on WHICH state is
@@ -29,7 +29,7 @@
  * there -- it is what stops the many position temporaries being folded.
  */
 #pragma opt_propagation off
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 #include "dBgCh_Lin.h"
 struct Mat4x3 { int m[12]; };
 
@@ -76,7 +76,7 @@ extern void func_ov073_021215cc(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 }
 
-int ChiefChilly::Behavior()
+int daKing_Donketu_c::Behavior()
 {
     char *self = (char *)this;
     C *c = (C *)this;

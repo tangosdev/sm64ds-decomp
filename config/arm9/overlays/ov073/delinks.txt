@@ -3,11 +3,11 @@
     .ctor       start:0x02122f34 end:0x02122f3c kind:rodata align:4
     .data       start:0x02122f40 end:0x02123280 kind:data align:32
     .bss        start:0x02123280 end:0x021234e0 kind:bss align:32
-src/_ZN11ChiefChillyD1Ev.cpp:
+src/_ZN16daKing_Donketu_cD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f098
 
-src/_ZN11ChiefChillyD0Ev.cpp:
+src/_ZN16daKing_Donketu_cD0Ev.cpp:
     complete
     .text start:0x0211f098 end:0x0211f144
 
@@ -163,27 +163,27 @@ src/func_ov073_021215cc.c:
     complete
     .text start:0x021215cc end:0x021217e0
 
-src/_ZN11ChiefChilly16CleanupResourcesEv.cpp:
+src/_ZN16daKing_Donketu_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021217e0 end:0x0212186c
 
-src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp:
+src/_ZN16daKing_Donketu_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212186c end:0x02121870
 
-src/_ZN11ChiefChilly6RenderEv.cpp:
+src/_ZN16daKing_Donketu_c6RenderEv.cpp:
     complete
     .text start:0x02121870 end:0x021218a0
 
-src/_ZN11ChiefChilly8BehaviorEv.cpp:
+src/_ZN16daKing_Donketu_c8BehaviorEv.cpp:
     complete
     .text start:0x021218a0 end:0x02121ccc
 
-src/_ZN11ChiefChilly13InitResourcesEv.cpp:
+src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp:
     complete
     .text start:0x02121ccc end:0x02121ec0
 
-src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp:
+src/_ZN16daKing_Donketu_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02121ec0 end:0x02121ec8
 

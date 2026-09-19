@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11ChiefChillyD1Ev
+// @symbol _ZN16daKing_Donketu_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Three array cleanups, four member destructors and the chain into dEnemyBase_c, all
- * of it reverse declaration order out of ChiefChilly.h. Nothing here is
+ * of it reverse declaration order out of daKing_Donketu_c.h. Nothing here is
  * written by hand.
  *
  * The arrays are what took the longest to name. The ROM destroys them with
@@ -16,8 +16,8 @@
  * compiler's own spelling __cxa_vec_cleanup (PR #1353 identified them as the same
  * entry), which is what the compiler emits here.
  */
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 
-ChiefChilly::~ChiefChilly()
+daKing_Donketu_c::~daKing_Donketu_c()
 {
 }

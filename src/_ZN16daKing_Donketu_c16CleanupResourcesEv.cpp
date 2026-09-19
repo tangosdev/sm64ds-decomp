@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN11ChiefChilly16CleanupResourcesEv
+// @symbol _ZN16daKing_Donketu_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases NINE shared files and unloads the key models -- by far the largest
@@ -10,7 +10,7 @@
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 #include "SharedFilePtr.h"
 extern "C" {
 extern void UnloadKeyModels(int i);
@@ -26,7 +26,7 @@ extern void* data_ov073_02123298;
 
 }
 
-int ChiefChilly::CleanupResources(){
+int daKing_Donketu_c::CleanupResources(){
   UnloadKeyModels(4);
   ((SharedFilePtr *)(&data_ov073_02123280))->Release();
   ((SharedFilePtr *)(&data_ov073_021232a0))->Release();

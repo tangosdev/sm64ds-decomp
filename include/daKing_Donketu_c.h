@@ -1,5 +1,5 @@
-#ifndef CHIEFCHILLY_H
-#define CHIEFCHILLY_H
+#ifndef DAKING_DONKETU_C_H
+#define DAKING_DONKETU_C_H
 
 #include "types.h"
 
@@ -27,10 +27,20 @@
  *
  * Field provenance: notes/enemy-leaf-provenance.md.
  *
- * SM64DS RTTI names the implementation daKing_Donketu_c. The reconstructed
- * factory daKing_Donketu_c_classInit (historical alias
- * ChiefChilly_Spawn) constructs it for the KING_DONKETU
- * registry profile.
+ * NAME: daKing_Donketu_c is the cartridge's own RTTI spelling, not a coined one.
+ * extracted/overlays/overlay_0073.bin at file offset 0x4058 -- address 0x02123058,
+ * module load base 0x0211f000 -- holds the length-prefixed Itanium type-name
+ * string "16daKing_Donketu_c" (31 36 64 61 4b 69 6e 67 5f 44 6f 6e 6b 65 74 75
+ * 5f 63 00). That string is the payload of _ZTI16daKing_Donketu_c at 0x0212304c,
+ * a three-word __si_class_type_info: 0x0209a764 (_ZTVN3abi20__si_class_type_infoE),
+ * 0x02123058 (the type-name payload above), 0x021081c0 (_ZTI12dEnemyBase_c).
+ * The vtable's address point is 0x02123090, and the type-info word four bytes
+ * below it, at 0x0212308c, reads 0x0212304c -- that same record. So the vtable
+ * this tree used to spell _ZTV11ChiefChilly belongs to this type, and the base
+ * the RTTI record names is the base this header already declared.
+ *
+ * The reconstructed factory daKing_Donketu_c_classInit (historical alias
+ * ChiefChilly_Spawn) constructs it for the KING_DONKETU registry profile.
  */
 
 #ifdef __cplusplus
@@ -41,7 +51,7 @@
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
-struct ChiefChilly : dEnemyBase_c {
+struct daKing_Donketu_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     dBgCh_Actr mWithMeshClsn;                            /* 0x150 */
     BlendModelAnim mBlendModelAnim;                        /* 0x30c */
@@ -86,10 +96,10 @@ struct ChiefChilly : dEnemyBase_c {
     s32 unk_4ec;                                           /* 0x4ec */
     s32 unk_4f0;                                           /* 0x4f0 */
     s32 unk_4f4;                                           /* 0x4f4 */
-    /* trailing extent the ROM's `new ChiefChilly` literal proves; see tools/opnew_sizes.py */
+    /* trailing extent the ROM's `new daKing_Donketu_c` literal proves; see tools/opnew_sizes.py */
     u8 pad_4f8[0xc];
 
-    virtual ~ChiefChilly();
+    virtual ~daKing_Donketu_c();
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
@@ -102,9 +112,9 @@ struct ChiefChilly : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char ChiefChilly_size_must_be_0x504[sizeof(struct ChiefChilly) == 0x504 ? 1 : -1];
+typedef char daKing_Donketu_c_size_must_be_0x504[sizeof(struct daKing_Donketu_c) == 0x504 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */
 
-#endif /* CHIEFCHILLY_H */
+#endif /* DAKING_DONKETU_C_H */

@@ -276,7 +276,7 @@ def defined_mangled_symbol(path):
 
 
 # `extern int _ZTV6ToxBox[];`, `extern u32 _ZTV11ShadowModel[];`, `extern void
-# *_ZTV6Eyerok[];`, `extern int _ZTV11ChiefChilly;` -- the declaration that lets a
+# *_ZTV6Eyerok[];`, `extern int _ZTV16daKing_Donketu_c;` -- the declaration that lets a
 # non-polymorphic struct store a vptr by hand.
 #
 # BOTH SPELLINGS COUNT, and requiring either one alone undercounts by tens of files.
