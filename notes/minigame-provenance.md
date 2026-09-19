@@ -245,7 +245,7 @@ dScMgBase_c.h override returns void, so this now calls the base method as
 a plain statement instead of returning it, same fix `dScMgLuigi_c`'s own
 slot 5 needed), 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18
 (dScMgBase_c::OnYoshiTryEat, declared on the base and overridden here;
-the body is `src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp`, still a raw
+the body is `OnYoshiTryEat` (src/actors/dScMgAmida_c.cpp), still a raw
 extern "C" helper rather than a member definition, same precedent as
 every other dScMgBase_c leaf's slot 18; it no longer includes this
 header at all -- its one
@@ -370,7 +370,7 @@ inherited 0xb4/0xbc slot 18 touches) are NOT represented here -- they
 stay inside a pad, same discipline as every prior sibling. The class's
 true allocation size, 0x53fc, is independently confirmed (not just the
 last-named-field's rounded end) by the untouched constructor's own
-`_ZN7fBase_cnwEj(0x53fc)` call (src/d_s_mg_amida.cpp), which
+`_ZN7fBase_cnwEj(0x53fc)` call (src/actors/dScMgAmida_c.cpp), which
 also independently corroborates all four destroyed-array offsets/sizes
 via its own construction-side __cxa_vec_ctor calls.
 
@@ -410,13 +410,13 @@ name -- a wrong name is a claim the next reader will trust.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) leaves it at 1. |
-| 0x46d4 | `mFinished` | u8. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path ([func_ov004_020b0a54](../src/func_ov004_020b0a54.cpp)`(0)` instead of `0x12`, and Render's confetti pass). |
-| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) passes it as the y2 argument of four [func_ov004_020ae5c4](../src/func_ov004_020ae5c4.cpp) line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
-| 0x4724 | `mLanePos[4][2]` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
+| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/actors/dScMgAmida_c.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) leaves it at 1. |
+| 0x46d4 | `mFinished` | u8. [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path ([func_ov004_020b0a54](../src/func_ov004_020b0a54.cpp)`(0)` instead of `0x12`, and Render's confetti pass). |
+| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) passes it as the y2 argument of four [func_ov004_020ae5c4](../src/func_ov004_020ae5c4.cpp) line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
+| 0x4724 | `mLanePos[4][2]` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
 | 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
 | 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
-| 0x5368 | `mScrollSpeed` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov006/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x5368 | `mScrollSpeed` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov006/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
 | 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs [func_ov006_020d27dc](../config/arm9/overlays/ov006/symbols.txt) once per 16 accumulated -- a fixed-point step accumulator. |
 | 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
 | 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of [data_ov006_0213b880](../config/arm9/overlays/ov006/symbols.txt). |
@@ -425,9 +425,9 @@ name -- a wrong name is a claim the next reader will trust.
 | 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
 | 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after [func_ov004_020b0cac](../src/func_ov004_020b0cac.c)`(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
 | 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
-| 0x53d4 | `mPatternIndex` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
+| 0x53d4 | `mPatternIndex` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
 | 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
-| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
 
 Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
 1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
