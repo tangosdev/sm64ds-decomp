@@ -33,8 +33,9 @@
  *
  * dMgPsOpt_c carries no RTTI of its own. The only record in the cartridge is
  * the nested type's -- its type-info, vtable and type-string sit together at
- * ov004:0x020bca68, 0x020bca7c and 0x020bca84, and the manifest lists all
- * three. Their nested mangling still carries the length-prefixed
+ * ov004:0x020bca68, 0x020bca7c and 0x020bca84, where
+ * config/arm9/overlays/ov004/symbols.txt names all three. Their nested
+ * mangling still carries the length-prefixed
  * `10dMgPsOpt_c`, so the outer name is the cartridge's own and not a coined
  * one. A screen that instead looks for an unnested type-string for the outer
  * class finds nothing, because no such symbol exists, and triages this class
