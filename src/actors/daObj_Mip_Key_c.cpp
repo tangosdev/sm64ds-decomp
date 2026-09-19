@@ -8,6 +8,8 @@
  * __si_class_type_info record that names it, and 0x021301d8 is its vtable.
  * No part of this name is coined.
  *
+ * deslop
+ *
  * FUNCTION ORDER IS ROM-ASCENDING. This TU disables deferred code generation
  * so CodeWarrior emits each definition where it stands. That is also what
  * puts the destructor pair out in the cartridge's own order: ov085 has D1 at

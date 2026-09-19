@@ -1,9 +1,9 @@
 {
   "id": "ov085/daObj_Mip_Key_c",
   "module": "ov085",
-  "source": "src_tu/actors/daObj_Mip_Key_c.cpp",
+  "source": "src/actors/daObj_Mip_Key_c.cpp",
   "promoted_source": "src/actors/daObj_Mip_Key_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x212cc88..0x212d4e8, 14 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212d528 to take in daObj_Mip_Key_c_classInit at 0x212d4e8, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN15daObj_Mip_Key_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x1a0 and installs this class's vtable), and 0x212d528 is the next class's destructor. The sibling TUs ov085/daMip_c and ov085/daC_Jugem_c took in their own classInit on the same grounds.",
