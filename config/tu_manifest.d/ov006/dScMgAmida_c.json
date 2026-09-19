@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgAmida_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgAmida_c.cpp",
+  "source": "src/actors/dScMgAmida_c.cpp",
   "promoted_source": "src/actors/dScMgAmida_c.cpp",
-  "status": "link-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "CONTIGUOUS LINKER RUN (hypothesis only, and it is SHORT AT THE TOP EDGE). build/tu_map.json reports 0x020d1018..0x020d5974, 26 functions. A relocation census puts the real run at 0x020d1018..0x020d5a54, 28 functions: tu_map's right boundary stops at the last MANGLED member (AfterCleanupResources, ending 0x020d5974) and does not carry on over dScMgAmida_c_classInit (0x020d5974, 0xdc, named but unmangled and in no vtable slot) or func_ov006_020d5a50 (0x020d5a50, 4 bytes). Both are proved internal below. The shard count is a floor, not a count.",
