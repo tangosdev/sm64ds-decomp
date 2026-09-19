@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13QuestionBlock8BehaviorEv
+// @symbol _ZN18daObjHatenaBlock_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "QuestionBlock.h"
+#include "daObjHatenaBlock_c.h"
 #include "dBgW.h"
 extern "C" {
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
@@ -16,7 +16,7 @@ extern int data_0209caa0[];
 extern unsigned char data_0209f2d8;
 extern signed char data_0209f2f8;
 
-int QuestionBlock::Behavior()
+int daObjHatenaBlock_c::Behavior()
 {
     func_ov102_02149df0(((char*)this));
     if (mState != 2) {

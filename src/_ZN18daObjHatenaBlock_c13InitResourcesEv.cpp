@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13QuestionBlock13InitResourcesEv
+// @symbol _ZN18daObjHatenaBlock_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "QuestionBlock.h"
+#include "daObjHatenaBlock_c.h"
 
 extern "C" {
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
@@ -26,7 +26,7 @@ extern char gPFlowerCloseModelFile;
 
 struct M12 { int w[12]; };
 
-int QuestionBlock::InitResources()
+int daObjHatenaBlock_c::InitResources()
 {
     void *r5 = 0;
     switch (actorID - 0x14) {

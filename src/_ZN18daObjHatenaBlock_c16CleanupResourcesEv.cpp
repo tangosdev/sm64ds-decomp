@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13QuestionBlock16CleanupResourcesEv
+// @symbol _ZN18daObjHatenaBlock_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "QuestionBlock.h"
+#include "daObjHatenaBlock_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 extern "C" {
@@ -23,7 +23,7 @@ extern char data_ov102_0214e7f8[];
 extern char data_ov102_0214e7f0[];
 extern char data_ov102_0214e7d0[];
 
-int QuestionBlock::CleanupResources()
+int daObjHatenaBlock_c::CleanupResources()
 {
     int b, b2, b3;
     if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())

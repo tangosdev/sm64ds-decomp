@@ -110,7 +110,7 @@ Coin	28	1148	ov002	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 c
 dMgPsOpt_c	11	343	ov004	yes	no	compiler-only:unknown(no chain for dMgPsOpt_c: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	dScMgBase_c	text-only
 daWater_Ring_c	14	365	ov064	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjFl_Gura_c	text-only
 daObjBk_Lift_c	9	301	ov015	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjBkBillboard_c	text-only
-QuestionBlock	35	1029	ov102	yes	no	pragma:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
+daObjHatenaBlock_c	35	1029	ov102	yes	no	pragma:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 DonutBlock	7	174	ov036	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjRcBuranko_c	text-only
 daBbl_c	13	276	ov064	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjFl_Gura_c	text-only
 Coffin	13	288	ov071	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daEyBm_c	text-only
@@ -246,7 +246,7 @@ MrI	22	704	ov071	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl
 dScMiniGm_c	26	1304	ov005	yes	yes	pragma:1;classif:NONMATCHING-draft;classif:not-in-delinks;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 YoshiEgg	32	1304	ov002	yes	no	unmatched:1;pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
 Bullet	12	251	ov002	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
-dScMgSnowball_c	23	2047	ov006	yes	no	pragma:5;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
+dScMgSnowball_c	23	2047	ov006	yes	yes	pragma:5;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 Key	18	1009	ov089	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 dScMgJump_c	18	559	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1);not-in-delinks:1	dScMgSingle3DBase_c	text-only
 RollingIronBall	15	878	ov100	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjPathLift_c	text-only
