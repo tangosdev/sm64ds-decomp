@@ -1,0 +1,534 @@
+{
+  "id": "ov085/daC_Jugem_c",
+  "module": "ov085",
+  "source": "src_tu/actors/daC_Jugem_c.cpp",
+  "promoted_source": "src/actors/daC_Jugem_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x212d528..0x212ed54, 32 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212edac to take in daC_Jugem_c_classInit at 0x212ed54, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN11daC_Jugem_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x2e8 and installs this class's vtable), and 0x212edac is the next class's destructor. The sibling TU ov085/daMip_c took in its own classInit on the same grounds and is promoted.",
+    "class label(s): daC_Jugem_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0212d528",
+      "end": "0x0212edac"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN11daC_Jugem_cD1Ev",
+      "address": "0x0212d528",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN11daC_Jugem_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_cD0Ev",
+      "address": "0x0212d578",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN11daC_Jugem_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov085_0212d5dc",
+      "address": "0x0212d5dc",
+      "size": "0x00000148",
+      "legacy_source": "src/func_ov085_0212d5dc.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov085_0212d724",
+      "address": "0x0212d724",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov085_0212d724.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov085_0212d73c",
+      "address": "0x0212d73c",
+      "size": "0x000001b0",
+      "legacy_source": "src/func_ov085_0212d73c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov085_0212d8ec",
+      "address": "0x0212d8ec",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov085_0212d8ec.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov085_0212d9b8",
+      "address": "0x0212d9b8",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov085_0212d9b8.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov085_0212db04",
+      "address": "0x0212db04",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov085_0212db04.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov085_0212dbdc",
+      "address": "0x0212dbdc",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov085_0212dbdc.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov085_0212dcfc",
+      "address": "0x0212dcfc",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov085_0212dcfc.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov085_0212dd10",
+      "address": "0x0212dd10",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov085_0212dd10.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov085_0212ddc4",
+      "address": "0x0212ddc4",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov085_0212ddc4.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov085_0212de5c",
+      "address": "0x0212de5c",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov085_0212de5c.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov085_0212df84",
+      "address": "0x0212df84",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov085_0212df84.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov085_0212e078",
+      "address": "0x0212e078",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov085_0212e078.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov085_0212e180",
+      "address": "0x0212e180",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov085_0212e180.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov085_0212e19c",
+      "address": "0x0212e19c",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov085_0212e19c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov085_0212e2ec",
+      "address": "0x0212e2ec",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov085_0212e2ec.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov085_0212e310",
+      "address": "0x0212e310",
+      "size": "0x00000170",
+      "legacy_source": "src/func_ov085_0212e310.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov085_0212e480",
+      "address": "0x0212e480",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov085_0212e480.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov085_0212e4a4",
+      "address": "0x0212e4a4",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov085_0212e4a4.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov085_0212e59c",
+      "address": "0x0212e59c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov085_0212e59c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov085_0212e5ac",
+      "address": "0x0212e5ac",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov085_0212e5ac.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov085_0212e720",
+      "address": "0x0212e720",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov085_0212e720.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov085_0212e728",
+      "address": "0x0212e728",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov085_0212e728.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov085_0212e778",
+      "address": "0x0212e778",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov085_0212e778.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov085_0212e858",
+      "address": "0x0212e858",
+      "size": "0x00000238",
+      "legacy_source": "src/func_ov085_0212e858.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_c16CleanupResourcesEv",
+      "address": "0x0212ea90",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN11daC_Jugem_c16CleanupResourcesEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_c16OnPendingDestroyEv",
+      "address": "0x0212eacc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN11daC_Jugem_c16OnPendingDestroyEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_c6RenderEv",
+      "address": "0x0212ead0",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN11daC_Jugem_c6RenderEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_c8BehaviorEv",
+      "address": "0x0212eb18",
+      "size": "0x000000d4",
+      "legacy_source": "src/_ZN11daC_Jugem_c8BehaviorEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN11daC_Jugem_c13InitResourcesEv",
+      "address": "0x0212ebec",
+      "size": "0x00000168",
+      "legacy_source": "src/_ZN11daC_Jugem_c13InitResourcesEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "daC_Jugem_c_classInit",
+      "address": "0x0212ed54",
+      "size": "0x00000058",
+      "legacy_source": "src/d_a_c_jugem.c",
+      "ordinal": 32
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov085_0212db04.cpp (func_ov085_0212db04) did not split (the definition is inside the extern \"C\" block opened on line 6, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning: RAW: src/func_ov085_0212dd10.cpp (func_ov085_0212dd10) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning: RAW: src/func_ov085_0212ddc4.cpp (func_ov085_0212ddc4) did not split (the definition is inside the extern \"C\" block opened on line 6, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning: RAW: src/func_ov085_0212e078.cpp (func_ov085_0212e078) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning: RAW: src/func_ov085_0212e310.cpp (func_ov085_0212e310) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning: RAW: src/func_ov085_0212e778.cpp (func_ov085_0212e778) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own includes and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. The body itself is unmodified except where the manifest's other notes record a named reconciliation.)",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetFlag_3Ev' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetFlag_3Ev is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearR7Vector3RKS_5Fix12IiE' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _Z14ApproachLinearR7Vector3RKS_5Fix12IiE is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetLookAtERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetLookAtERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera6SetPosERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera6SetPosERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212e728' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. func_ov085_0212e728 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, which is `int func_ov085_0212e728(JugemHost *, JugemInitPMF *)`. The two legacy views disagreed about the ARGUMENT COUNT, not just the spelling -- three arguments from the file that held 0x0212e4a4, two from every other caller and from the definition itself -- and the cartridge settles it at two: the three call sites inside InitResources (0x0212ecc4, 0x0212ed14, 0x0212ed24) load only r0 and r1, and 0x0212e4a4's `mov r2,#0` at 0x0212e534 is consumed by the `strb r2,[r5,#0x2dc]` at 0x0212e57c, not by the call. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d73c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. data_0209f318 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, `extern void *data_0209f318` -- the camera pointer, kept as the complete observation rather than either file's local integer view. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetFlag_3Ev' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d8ec; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetFlag_3Ev is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetLookAtERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d8ec; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetLookAtERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera6SetPosERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d8ec; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera6SetPosERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d9b8; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN8dActor_c13ClosestPlayerEv is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212d9b8; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _Z14ApproachLinearRiii is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound8PlayLongEjjjRK7Vector3s' differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212d9b8; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN5Sound8PlayLongEjjjRK7Vector3s is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, the most complete of the two observations (u32 result, position by const reference). Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212e728' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212d9b8; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. func_ov085_0212e728 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, which is `int func_ov085_0212e728(JugemHost *, JugemInitPMF *)`. The two legacy views disagreed about the ARGUMENT COUNT, not just the spelling -- three arguments from the file that held 0x0212e4a4, two from every other caller and from the definition itself -- and the cartridge settles it at two: the three call sites inside InitResources (0x0212ecc4, 0x0212ed14, 0x0212ed24) load only r0 and r1, and 0x0212e4a4's `mov r2,#0` at 0x0212e534 is consumed by the `strb r2,[r5,#0x2dc]` at 0x0212e57c, not by the call. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212dbdc; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN8dActor_c13ClosestPlayerEv is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212e728' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212dbdc; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. func_ov085_0212e728 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, which is `int func_ov085_0212e728(JugemHost *, JugemInitPMF *)`. The two legacy views disagreed about the ARGUMENT COUNT, not just the spelling -- three arguments from the file that held 0x0212e4a4, two from every other caller and from the definition itself -- and the cartridge settles it at two: the three call sites inside InitResources (0x0212ecc4, 0x0212ed14, 0x0212ed24) load only r0 and r1, and 0x0212e4a4's `mov r2,#0` at 0x0212e534 is consumed by the `strb r2,[r5,#0x2dc]` at 0x0212e57c, not by the call. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201f32c' differs between the legacy file that used to hold func_ov085_0212dbdc and the one that held func_ov085_0212de5c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. func_0201f32c is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212e728' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212de5c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. func_ov085_0212e728 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, which is `int func_ov085_0212e728(JugemHost *, JugemInitPMF *)`. The two legacy views disagreed about the ARGUMENT COUNT, not just the spelling -- three arguments from the file that held 0x0212e4a4, two from every other caller and from the definition itself -- and the cartridge settles it at two: the three call sites inside InitResources (0x0212ecc4, 0x0212ed14, 0x0212ed24) load only r0 and r1, and 0x0212e4a4's `mov r2,#0` at 0x0212e534 is consumed by the `strb r2,[r5,#0x2dc]` at 0x0212e57c, not by the call. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212df84; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN8dActor_c13ClosestPlayerEv is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetFlag_3Ev' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212df84; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetFlag_3Ev is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetLookAtERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212df84; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera9SetLookAtERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera6SetPosERK7Vector3' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212df84; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN6Camera6SetPosERK7Vector3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212e19c; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _Z14ApproachLinearRsss is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212e5ac; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN8dActor_c13ClosestPlayerEv is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212e5ac; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. Vec3_HorzAngle is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. _ZN8dActor_c13ClosestPlayerEv is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold func_ov085_0212e5ac and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. Vec3_HorzDist is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. Vec3_HorzAngle is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov085_0212e5ac and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. Matrix4x3_FromRotationY is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov085_0212e5ac and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. MulVec3Mat4x3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021307e0' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held _ZN11daC_Jugem_c8BehaviorEv; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. data_ov085_021307e0 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, `extern JugemInitPMF data_ov085_021307e0`. This is one of the state objects the class drives itself with, and the two legacy files saw different halves of it: the setter at 0x0212e728 uses the pointer-to-member at offset 0, Behavior the one at offset 8. The reconciled declaration is the union, not either half. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021307d0' differs between the legacy file that used to hold _ZN11daC_Jugem_c8BehaviorEv and the one that held _ZN11daC_Jugem_c13InitResourcesEv; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. data_ov085_021307d0 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, `extern JugemInitPMF data_ov085_021307d0` -- same state-object pair as the other 0x021307xx rows, declared on the union of the two legacy views. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212dbdc; kept the first. RESOLVED: neither legacy typedef was kept. Both were dropped in favour of the tree's own spelling -- include/types.h's `typedef signed short s16;`, reached through common.h -- so the assembled TU declares no local integer typedef at all (its only typedefs are the four local shadow types, none of them scalar). Nothing is left commented out for review. tubuild verify reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov085-daC_Jugem_c/daC_Jugem_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 33,
+    "functions_declared": 33,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN11daC_Jugem_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN11daC_Jugem_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        16,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82
+      ],
+      "data": [
+        "_ZTV11daC_Jugem_c",
+        "_ZTI11daC_Jugem_c",
+        "_ZTS11daC_Jugem_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11daC_Jugem_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS11daC_Jugem_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11daC_Jugem_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov085-daC_Jugem_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212d528",
+        "end": "0x0212edac",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212d528",
+          "end": "0x0212edac",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 33
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN11daC_Jugem_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair. The cartridge has no D2 for this class -- ov085 runs D1 at 0x0212d528 straight into D0 at 0x0212d578 and then into func_ov085_0212d5dc, with no third variant in the overlay's delinks partition and no symbol of that name configured in any module -- so there is no configured home and no surviving relocation references it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Several members declare Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTV11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130344",
+      "reason": "This TU owns daC_Jugem_c's key function -- ~daC_Jugem_c is the only virtual the class declares and its body is out of line here -- so mwcc emits the complete 0x84-byte class vtable storage with its ABI preamble. The cartridge's storage begins at ov085:0x0213033c, where offset-to-top is 0 and the next word points at _ZTI11daC_Jugem_c (0x02130304); the public address point recorded in symbols.txt is 0x02130344, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130304",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x02130304 are a __si_class_type_info: its type-info vtable pointer, then _ZTS11daC_Jugem_c at 0x02130310, then _ZTI12dEnemyBase_c at 0x021081c0 as the single base -- which is the cartridge's own statement of this class's parent."
+    },
+    {
+      "symbol": "_ZTS11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130310",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These fourteen bytes are why the class is spelled daC_Jugem_c and why no part of the name is coined: they read 31 31 64 61 43 5f 4a 75 67 65 6d 5f 63 00, the length-prefixed mangled string \"11daC_Jugem_c\"."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    }
+  ]
+}
