@@ -154,7 +154,7 @@ third parameter, migrated: matches first try.
 
 `KillByAttack` was on [ov004](../config/arm9/overlays/ov004/symbols.txt) 0x020aea30, whose body walks an 8-byte table to an 0xffff sentinel. The [ov002](../config/arm9/overlays/ov002/symbols.txt) function there dispatches a pointer-to-member from `data_ov002_0210db80[mDeathState - 1]`, and is what all 34 enemy-overlay call
 sites reach. Same arity shape: an unused fourth argument makes it match.
-Deliberately left as [func_ov002_020aea30](../src/func_ov002_020aea30.cpp) -- the name was coined against the
+Deliberately left as [func_ov002_020aea30](../src/actors/dEnemyBase_c.cpp) -- the name was coined against the
 wrong body, and inheriting it would repeat the mistake -- with the evidence
 recorded in the file for a naming pass.
 
