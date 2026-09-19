@@ -60,7 +60,13 @@ struct daObjHatenaBlock_c : dBgActor_c {
     u8 mContentType;                       /* 0x3f3 */
 
     /* --- vtable --- */
-    virtual ~daObjHatenaBlock_c();
+    /* Defined here, not in src/actors/daObjHatenaBlock_c.cpp. mwccarm emits D2,
+       D1 and D0 from this body, and it emits them in the order the cartridge
+       links them -- D1 at 0x02148fbc then D0 at 0x02149010 -- which an
+       out-of-line definition in the .cpp reverses. Same three bodies, same
+       bytes; only the section order differs, and the section order is what
+       decides the addresses. */
+    virtual ~daObjHatenaBlock_c() {}
 
     int Behavior();
     int CleanupResources();

@@ -1,0 +1,579 @@
+{
+  "id": "ov102/daObjHatenaBlock_c",
+  "module": "ov102",
+  "source": "src/actors/daObjHatenaBlock_c.cpp",
+  "promoted_source": "src/actors/daObjHatenaBlock_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "tu_map cut (build/tu_map.json, tools/tu_map.py): 0x2148fbc..0x214a7ec, 35 function(s). That cut is six functions SHORT of the physical run: tu_map segments on symbol NAME, and the six registry factories daObjHatenaBlock_c_classInit_CAP_BLOCK_W/_L/_M, _ITEM_BLOCK, _HATENA_BLOCK and _VS_ITEM_BLOCK (0x0214a7ec..0x0214a96c) do not look like members of daObjHatenaBlock_c, so they were cut off from a run they physically abut. config/arm9/overlays/ov102/delinks.txt has no gap between them.",
+    "shipped span: .text 0x02148fbc..0x0214a96c, 41 function(s) -- the tu_map 35 plus the six abutting registry factories. One contiguous .text claim, no coverage hole; see sections[] and functions[], which are the authoritative rows.",
+    "lower wall: the delinks.txt entry immediately below is src/d_a_obj_simple_bg_ki_iwa.c, the last of six daObjSimpleBg_c_classInit_* factories for a DIFFERENT class, ending exactly at 0x02148fbc where _ZN18daObjHatenaBlock_cD1Ev begins.",
+    "upper wall: the delinks.txt entry immediately above is src/actors/daBmb_c.cpp, an already-folded TU whose .text claim begins exactly at 0x0214a96c.",
+    "hole check: all 41 delinks.txt entries across 0x02148fbc..0x0214a96c are marked complete and each declares a .text range only; consecutive entries share endpoints with no gap and no overlap, so the claim spans no unenrolled range.",
+    "each factory carries a recovered ROM filename (d_a_obj_hatena_block_cap_block_w/l/m.c, _item_block.c, _hatena_block.c, _vs_item_block.c), all six of the d_a_obj_hatena_block_* family, which is the cartridge's own name for this object.",
+    "class label(s): daObjHatenaBlock_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02148fbc",
+      "end": "0x0214a96c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN18daObjHatenaBlock_cD1Ev",
+      "address": "0x02148fbc",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_cD0Ev",
+      "address": "0x02149010",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov102_02149078",
+      "address": "0x02149078",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov102_02149078.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov102_02149100",
+      "address": "0x02149100",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov102_02149100.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov102_02149220",
+      "address": "0x02149220",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov102_02149220.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov102_02149288",
+      "address": "0x02149288",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov102_02149288.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov102_021492d4",
+      "address": "0x021492d4",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov102_021492d4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov102_02149384",
+      "address": "0x02149384",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov102_02149384.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov102_021493dc",
+      "address": "0x021493dc",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov102_021493dc.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov102_02149428",
+      "address": "0x02149428",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov102_02149428.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov102_02149478",
+      "address": "0x02149478",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov102_02149478.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov102_021494cc",
+      "address": "0x021494cc",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov102_021494cc.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov102_0214953c",
+      "address": "0x0214953c",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov102_0214953c.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov102_02149610",
+      "address": "0x02149610",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov102_02149610.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov102_02149684",
+      "address": "0x02149684",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov102_02149684.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c",
+      "address": "0x021496a4",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player",
+      "address": "0x02149710",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c8OnKickedER8dActor_c",
+      "address": "0x02149770",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c8OnKickedER8dActor_c.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c11OnAttacked1ER8dActor_c",
+      "address": "0x021497c8",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c11OnAttacked1ER8dActor_c.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c15OnGroundPoundedER8dActor_c",
+      "address": "0x02149820",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c15OnGroundPoundedER8dActor_c.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov102_02149878",
+      "address": "0x02149878",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov102_02149878.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov102_021498c4",
+      "address": "0x021498c4",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov102_021498c4.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov102_021498e0",
+      "address": "0x021498e0",
+      "size": "0x00000398",
+      "legacy_source": "src/func_ov102_021498e0.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov102_02149c78",
+      "address": "0x02149c78",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov102_02149c78.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov102_02149ccc",
+      "address": "0x02149ccc",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov102_02149ccc.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov102_02149d80",
+      "address": "0x02149d80",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov102_02149d80.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov102_02149da8",
+      "address": "0x02149da8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov102_02149da8.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov102_02149df0",
+      "address": "0x02149df0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov102_02149df0.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov102_02149e38",
+      "address": "0x02149e38",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov102_02149e38.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov102_02149ea4",
+      "address": "0x02149ea4",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov102_02149ea4.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov102_02149ff0",
+      "address": "0x02149ff0",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov102_02149ff0.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c16CleanupResourcesEv",
+      "address": "0x0214a08c",
+      "size": "0x00000220",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c6RenderEv",
+      "address": "0x0214a2ac",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c6RenderEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c8BehaviorEv",
+      "address": "0x0214a32c",
+      "size": "0x00000178",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c8BehaviorEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN18daObjHatenaBlock_c13InitResourcesEv",
+      "address": "0x0214a4a4",
+      "size": "0x00000348",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_W",
+      "address": "0x0214a7ec",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_cap_block_w.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_L",
+      "address": "0x0214a82c",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_cap_block_l.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_M",
+      "address": "0x0214a86c",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_cap_block_m.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_ITEM_BLOCK",
+      "address": "0x0214a8ac",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_item_block.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_HATENA_BLOCK",
+      "address": "0x0214a8ec",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_hatena_block.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK",
+      "address": "0x0214a92c",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_hatena_block_vs_item_block.c",
+      "ordinal": 40
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov102_02149220.cpp (func_ov102_02149220) did not split (the definition is inside the extern \"C\" block opened on line 9, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov102_02149384.cpp (func_ov102_02149384) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov102_02149e38.cpp (func_ov102_02149e38) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_02149288; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_021492d4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_021492d4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_021493dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_021493dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_02149428; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_02149428; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_02149478; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_02149478; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_021494cc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149684' differs between the legacy file that used to hold func_ov102_02149288 and the one that held func_ov102_0214953c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_0214953c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149da8' differs between the legacy file that used to hold _ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c and the one that held func_ov102_02149878; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov102_02149078 and the one that held func_ov102_02149ccc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_02149da8' differs between the legacy file that used to hold _ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c and the one that held _ZN18daObjHatenaBlock_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov102_02149100 and the one that held func_ov102_0214953c; kept the first, the other is commented out for review",
+    "promotion: executed by hand. tools/tubuild.py promote has no mutating path (it prints \"only --dry-run is implemented\"), so the three promotion edits were made directly: the shadow source moved from src_tu/actors/ to src/actors/, the 41 legacy one-function sources were removed, and the 41 per-function config/arm9/overlays/ov102/delinks.txt entries collapsed into the single complete .text claim 0x02148fbc..0x0214a96c. The linkcheck record above is the pre-promotion scratch-splice run, which is the only form available to a text-only TU: once delinks.txt holds the intact-object complete entry, tools/tu_production.py prepare_intact_object requires one .text claim AND at least one non-text claim, so re-running linkcheck after the collapse is refused structurally rather than on any defect in this TU. ov102/daBmb_c, promoted earlier, sits in the same state.",
+    "Reconciliation evidence for the 15 conflict records rewritten as RESOLVED. (1) _ZN8dActor_c13ClosestPlayerEv and _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as: the legacy sources carried nine mutually contradictory mangled free-function spellings between them (return types dActor_c*, struct dActor_c*, int, char*, void*). The fold declares neither name; every call now goes through the real members dActor_c::Spawn and dActor_c::ClosestPlayer in include/dActor_c.h, so the disagreement has no surviving spelling to be about. (2) func_ov102_02149684: the legacy spellings differed in return type (int vs void) and parameter types (Vector3*, int*, void*). No legacy call site consumed the return value -- every one stands in statement position -- so the single surviving declaration `void func_ov102_02149684(int *dst, int *src)` loses nothing, and all six callers byte-match against it. (3) func_ov102_02149da8: it is defined in this unit at ROM ordinal 26, so no extern spelling survives. The legacy `extern int` view is refuted rather than merely dropped: the ROM tail of func_ov102_02149878 sets no return value, which is why that function byte-matches with the void spelling. The sixteenth record, the typedef Vector3 disagreement, is NOT resolved -- its marker is still in the source and its note is still open."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov102-daObjHatenaBlock_c/daObjHatenaBlock_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 41,
+    "functions_declared": 41,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12HbSpawnFrameD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN12HbSpawnFrameD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        32,
+        49
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI18daObjHatenaBlock_c",
+        "_ZTS18daObjHatenaBlock_c",
+        "_ZTV18daObjHatenaBlock_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI18daObjHatenaBlock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS18daObjHatenaBlock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV18daObjHatenaBlock_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov102-daObjHatenaBlock_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02148fbc",
+        "end": "0x0214a96c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02148fbc",
+          "end": "0x0214a96c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 41
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12HbSpawnFrameD1Ev",
+      "disposition": "deadstrip",
+      "reason": "HbSpawnFrame is func_ov102_0214953c's local spawn frame; its Vector3 member carries the inline destructor types.h gives Vector3, so the compiler synthesises a four-byte bx lr body for the aggregate. The aggregate exists only inside that one function, so the body has no ROM symbol and no caller. Text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov102_0214953c, func_ov102_02149220, func_ov102_02149288, func_ov102_021493dc, func_ov102_02149384 and func_ov102_02149428 hold Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI18daObjHatenaBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e3a8",
+      "reason": "The out-of-line destructor is the key function, so this TU naturally emits the ROM-proven daObjHatenaBlock_c single-inheritance RTTI record. romdata_check proves the complete record and its base relocation to _ZTI10dBgActor_c before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTS18daObjHatenaBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e3b4",
+      "reason": "The key function naturally emits the ROM-proven type-name string -- the twenty-one bytes \"18daObjHatenaBlock_c\u0000\" the cartridge itself holds at 0x0214e3b4, which is where this class's name comes from. romdata_check proves its exact payload before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTV18daObjHatenaBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e47c",
+      "reason": "The key function emits the complete 0x88-byte class vtable storage (two header words plus 32 slots, the dBgActor_c-derived table length). romdata_check applies the measured eight-byte public-address-point bias and proves every slot before text-only isolation discards the copy."
+    }
+  ],
+  "externalized_output": [],
+  "production_mode": "text-only"
+}

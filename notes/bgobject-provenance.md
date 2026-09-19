@@ -410,14 +410,12 @@ sub; }` shadow is gone in favour of `mModel.Render(0)`, and `InitResources` reac
 ---
 ## daObjHatenaBlock_c (`include/daObjHatenaBlock_c.h`, [ov102](../config/arm9/overlays/ov102/symbols.txt), size 0x3f8)
 
-Bodies read: `src/_ZN18daObjHatenaBlock_c13InitResourcesEv.cpp`,
-`src/_ZN18daObjHatenaBlock_c8BehaviorEv.cpp`, `src/_ZN18daObjHatenaBlock_c6RenderEv.cpp`,
-`src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp`,
-`src/_ZN18daObjHatenaBlock_c15OnGroundPoundedER8dActor_c.cpp`,
-`src/_ZN18daObjHatenaBlock_c11OnAttacked1ER8dActor_c.cpp`,
-`src/_ZN18daObjHatenaBlock_c8OnKickedER8dActor_c.cpp`,
-`src/_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player.cpp`,
-`src/_ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c.cpp`.
+Bodies read: `src/actors/daObjHatenaBlock_c.cpp`, which now holds the whole
+translation unit. `InitResources`, `Behavior`, `Render`, `CleanupResources`,
+`OnGroundPounded`, `OnAttacked1`, `OnKicked`, `OnHitByMegaChar` and
+`OnHitFromUnderneath` were read there as one-function sources before the fold;
+they are real members of the class in that file now, and the offsets below were
+not re-derived from the folded source.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
