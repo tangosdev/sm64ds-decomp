@@ -186,7 +186,7 @@ batch is where shape-family amortization first pays.
 |[ov045](../config/arm9/overlays/ov045/symbols.txt)| 0x2111c30|  n=5|  L=74|   `TiltingPlatformBfs`|    pcov=3|
 |[ov047](../config/arm9/overlays/ov047/symbols.txt)| 0x21111a0|  n=4|  L=68|   `daObjKm3_Kurumajiku_c`| pcov=2|
 |[ov047](../config/arm9/overlays/ov047/symbols.txt)| 0x21114d4|  n=5|  L=96|   `daObjKm3_Dorifu_c`| |
-|[ov085](../config/arm9/overlays/ov085/symbols.txt)| 0x212edac|  n=7|  L=226|  `WallSign`| |
+|[ov085](../config/arm9/overlays/ov085/symbols.txt)| 0x212edac|  n=7|  L=226|  `daObjKanban_c`| |
 
 B4 completes [ov045](../config/arm9/overlays/ov045/symbols.txt): with B0's two, all four [ov045](../config/arm9/overlays/ov045/symbols.txt) safe TUs are done, making ov045 the
 first module where a `config_tu/` conversion becomes conceivable.

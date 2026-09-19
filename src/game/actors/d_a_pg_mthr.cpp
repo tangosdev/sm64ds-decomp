@@ -182,7 +182,7 @@ int daPgMthr_c::Behavior()
    mModelAnim.Render(0) would emit the vtable dispatch -- three words where the ROM
    has one bl. Naming the base explicitly (mModelAnim.Model::Render(0)) suppresses
    the dispatch and reproduces the ROM's direct call exactly. Same idiom as
-   PrincessPeach::Render. TextureSequence::Update is a plain (non-virtual) method,
+   daPeach_c::Render. TextureSequence::Update is a plain (non-virtual) method,
    so it is a direct call already; mModelAnim.data is the ModelComponents at +0xdc. */
 int daPgMthr_c::Render() {
     mTextureSequence.Update(mModelAnim.data);

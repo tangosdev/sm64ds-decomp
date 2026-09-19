@@ -36,7 +36,7 @@
  * had the problem, so it was left alone rather than widened opportunistically.
  *
  * 0x320 IS ALSO WHY sizeof(dBgActor_c) IS 0x320 -- include/dBgActor_c.h names this
- * class (as WallSign's sibling daObjKanban_c does) among the four direct
+ * class (as its sibling daObjKanban_c does) among the four direct
  * children that each place a 4-byte-aligned class member there.
  */
 #ifndef SIGNPOST_H

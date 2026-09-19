@@ -4,59 +4,59 @@
     .ctor       start:0x0212fdf0 end:0x0212fe08 kind:rodata align:4
     .data       start:0x0212fe20 end:0x02130480 kind:data align:32
     .bss        start:0x02130480 end:0x02130880 kind:bss align:32
-src/_ZN4ToadD1Ev.cpp:
+src/_ZN11daKinopio_cD1Ev.cpp:
     complete
     .text start:0x02129020 end:0x02129060
 
-src/_ZN4ToadD0Ev.cpp:
+src/_ZN11daKinopio_cD0Ev.cpp:
     complete
     .text start:0x02129060 end:0x021290b4
 
-src/_ZN4Toad12GetMessageIDEv.cpp:
+src/_ZN11daKinopio_c12GetMessageIDEv.cpp:
     complete
     .text start:0x021290b4 end:0x021291ac
 
-src/_ZN4Toad12St_Talk_MainEv.cpp:
+src/_ZN11daKinopio_c12St_Talk_MainEv.cpp:
     complete
     .text start:0x021291ac end:0x0212943c
 
-src/_ZN4Toad12St_Talk_InitEv.cpp:
+src/_ZN11daKinopio_c12St_Talk_InitEv.cpp:
     complete
     .text start:0x0212943c end:0x02129470
 
-src/_ZN4Toad12St_Idle_MainEv.cpp:
+src/_ZN11daKinopio_c12St_Idle_MainEv.cpp:
     complete
     .text start:0x02129470 end:0x021294f0
 
-src/_ZN4Toad12St_Idle_InitEv.cpp:
+src/_ZN11daKinopio_c12St_Idle_InitEv.cpp:
     complete
     .text start:0x021294f0 end:0x02129524
 
-src/_ZN4Toad8SetStateEi.cpp:
+src/_ZN11daKinopio_c8SetStateEi.cpp:
     complete
     .text start:0x02129524 end:0x02129570
 
-src/_ZN4Toad8RunStateEv.cpp:
+src/_ZN11daKinopio_c8RunStateEv.cpp:
     complete
     .text start:0x02129570 end:0x021295bc
 
-src/_ZN4Toad15UpdateModelPoseEv.cpp:
+src/_ZN11daKinopio_c15UpdateModelPoseEv.cpp:
     complete
     .text start:0x021295bc end:0x021297e8
 
-src/_ZN4Toad16CleanupResourcesEv.cpp:
+src/_ZN11daKinopio_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021297e8 end:0x02129854
 
-src/_ZN4Toad6RenderEv.cpp:
+src/_ZN11daKinopio_c6RenderEv.cpp:
     complete
     .text start:0x02129854 end:0x02129878
 
-src/_ZN4Toad8BehaviorEv.cpp:
+src/_ZN11daKinopio_c8BehaviorEv.cpp:
     complete
     .text start:0x02129878 end:0x02129a7c
 
-src/_ZN4Toad13InitResourcesEv.cpp:
+src/_ZN11daKinopio_c13InitResourcesEv.cpp:
     complete
     .text start:0x02129a7c end:0x02129cd0
 
@@ -64,98 +64,98 @@ src/d_a_kinopio.c:
     complete
     .text start:0x02129cd0 end:0x02129d18
 
-src/_ZN13PrincessPeachD1Ev.cpp:
+src/_ZN9daPeach_cD1Ev.cpp:
     complete
     .text start:0x02129d18 end:0x02129d60
 
-src/_ZN13PrincessPeachD0Ev.cpp:
+src/_ZN9daPeach_cD0Ev.cpp:
     complete
     .text start:0x02129d60 end:0x02129dbc
 
-src/_ZN13PrincessPeach12UpdateLookAtEv.cpp:
+src/_ZN9daPeach_c12UpdateLookAtEv.cpp:
     complete
     .text start:0x02129dbc end:0x02129ebc
 
-src/_ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr.cpp:
+src/_ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr.cpp:
     complete
     .text start:0x02129ebc end:0x02129f8c
 
 src/func_ov085_02129f8c.c:
     .text start:0x02129f8c end:0x02129fdc
 
-src/_ZN13PrincessPeach11UpdateModelEv.cpp:
+src/_ZN9daPeach_c11UpdateModelEv.cpp:
     complete
     .text start:0x02129fdc end:0x0212a0b8
 
-src/_ZN13PrincessPeach10InitState0Ev.cpp:
+src/_ZN9daPeach_c10InitState0Ev.cpp:
     complete
     .text start:0x0212a0b8 end:0x0212a0e8
 
-src/_ZN13PrincessPeach6State0Ev.cpp:
+src/_ZN9daPeach_c6State0Ev.cpp:
     complete
     .text start:0x0212a0e8 end:0x0212a148
 
-src/_ZN13PrincessPeach6State2Ev.cpp:
+src/_ZN9daPeach_c6State2Ev.cpp:
     complete
     .text start:0x0212a148 end:0x0212a150
 
-src/_ZN13PrincessPeach10InitState2Ev.cpp:
+src/_ZN9daPeach_c10InitState2Ev.cpp:
     complete
     .text start:0x0212a150 end:0x0212a19c
 
-src/_ZN13PrincessPeach10InitState4Ev.cpp:
+src/_ZN9daPeach_c10InitState4Ev.cpp:
     complete
     .text start:0x0212a19c end:0x0212a1d4
 
-src/_ZN13PrincessPeach6State1Ev.cpp:
+src/_ZN9daPeach_c6State1Ev.cpp:
     complete
     .text start:0x0212a1d4 end:0x0212a220
 
-src/_ZN13PrincessPeach6State3Ev.cpp:
+src/_ZN9daPeach_c6State3Ev.cpp:
     complete
     .text start:0x0212a220 end:0x0212a328
 
-src/_ZN13PrincessPeach10InitState1Ev.cpp:
+src/_ZN9daPeach_c10InitState1Ev.cpp:
     complete
     .text start:0x0212a328 end:0x0212a37c
 
-src/_ZN13PrincessPeach10InitState3Ev.cpp:
+src/_ZN9daPeach_c10InitState3Ev.cpp:
     complete
     .text start:0x0212a37c end:0x0212a3ec
 
-src/_ZN13PrincessPeach6State4Ev.cpp:
+src/_ZN9daPeach_c6State4Ev.cpp:
     complete
     .text start:0x0212a3ec end:0x0212a430
 
-src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp:
+src/_ZN9daPeach_c17CallStateBehaviorEv.cpp:
     complete
     .text start:0x0212a430 end:0x0212a46c
 
-src/_ZN13PrincessPeach13CallStateInitEv.cpp:
+src/_ZN9daPeach_c13CallStateInitEv.cpp:
     complete
     .text start:0x0212a46c end:0x0212a4a4
 
-src/_ZN13PrincessPeach8SetStateEi.cpp:
+src/_ZN9daPeach_c8SetStateEi.cpp:
     complete
     .text start:0x0212a4a4 end:0x0212a4c0
 
-src/_ZN13PrincessPeach16CleanupResourcesEv.cpp:
+src/_ZN9daPeach_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212a4c0 end:0x0212a504
 
-src/_ZN13PrincessPeach16OnPendingDestroyEv.cpp:
+src/_ZN9daPeach_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212a504 end:0x0212a508
 
-src/_ZN13PrincessPeach6RenderEv.cpp:
+src/_ZN9daPeach_c6RenderEv.cpp:
     complete
     .text start:0x0212a508 end:0x0212a52c
 
-src/_ZN13PrincessPeach8BehaviorEv.cpp:
+src/_ZN9daPeach_c8BehaviorEv.cpp:
     complete
     .text start:0x0212a52c end:0x0212a588
 
-src/_ZN13PrincessPeach13InitResourcesEv.cpp:
+src/_ZN9daPeach_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212a588 end:0x0212a684
 
@@ -167,11 +167,11 @@ src/actors/daMip_c.cpp:
     complete
     .text start:0x0212a6d4 end:0x0212cc88
 
-src/_ZN9RabbitKeyD1Ev.cpp:
+src/_ZN15daObj_Mip_Key_cD1Ev.cpp:
     complete
     .text start:0x0212cc88 end:0x0212ccc0
 
-src/_ZN9RabbitKeyD0Ev.cpp:
+src/_ZN15daObj_Mip_Key_cD0Ev.cpp:
     complete
     .text start:0x0212ccc0 end:0x0212cd0c
 
@@ -203,23 +203,23 @@ src/func_ov085_0212d2b8.cpp:
     complete
     .text start:0x0212d2b8 end:0x0212d374
 
-src/_ZN9RabbitKey16CleanupResourcesEv.cpp:
+src/_ZN15daObj_Mip_Key_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212d374 end:0x0212d398
 
-src/_ZN9RabbitKey16OnPendingDestroyEv.cpp:
+src/_ZN15daObj_Mip_Key_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212d398 end:0x0212d39c
 
-src/_ZN9RabbitKey6RenderEv.cpp:
+src/_ZN15daObj_Mip_Key_c6RenderEv.cpp:
     complete
     .text start:0x0212d39c end:0x0212d3ec
 
-src/_ZN9RabbitKey8BehaviorEv.cpp:
+src/_ZN15daObj_Mip_Key_c8BehaviorEv.cpp:
     complete
     .text start:0x0212d3ec end:0x0212d46c
 
-src/_ZN9RabbitKey13InitResourcesEv.cpp:
+src/_ZN15daObj_Mip_Key_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212d46c end:0x0212d4e8
 
@@ -227,11 +227,11 @@ src/d_a_obj_mip_key.c:
     complete
     .text start:0x0212d4e8 end:0x0212d528
 
-src/_ZN9LakituBroD1Ev.cpp:
+src/_ZN11daC_Jugem_cD1Ev.cpp:
     complete
     .text start:0x0212d528 end:0x0212d578
 
-src/_ZN9LakituBroD0Ev.cpp:
+src/_ZN11daC_Jugem_cD0Ev.cpp:
     complete
     .text start:0x0212d578 end:0x0212d5dc
 
@@ -335,23 +335,23 @@ src/func_ov085_0212e858.c:
     complete
     .text start:0x0212e858 end:0x0212ea90
 
-src/_ZN9LakituBro16CleanupResourcesEv.cpp:
+src/_ZN11daC_Jugem_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212ea90 end:0x0212eacc
 
-src/_ZN9LakituBro16OnPendingDestroyEv.cpp:
+src/_ZN11daC_Jugem_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212eacc end:0x0212ead0
 
-src/_ZN9LakituBro6RenderEv.cpp:
+src/_ZN11daC_Jugem_c6RenderEv.cpp:
     complete
     .text start:0x0212ead0 end:0x0212eb18
 
-src/_ZN9LakituBro8BehaviorEv.cpp:
+src/_ZN11daC_Jugem_c8BehaviorEv.cpp:
     complete
     .text start:0x0212eb18 end:0x0212ebec
 
-src/_ZN9LakituBro13InitResourcesEv.cpp:
+src/_ZN11daC_Jugem_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212ebec end:0x0212ed54
 
@@ -359,27 +359,27 @@ src/d_a_c_jugem.c:
     complete
     .text start:0x0212ed54 end:0x0212edac
 
-src/_ZN8WallSignD1Ev.cpp:
+src/_ZN13daObjKanban_cD1Ev.cpp:
     complete
     .text start:0x0212edac end:0x0212edf8
 
-src/_ZN8WallSignD0Ev.cpp:
+src/_ZN13daObjKanban_cD0Ev.cpp:
     complete
     .text start:0x0212edf8 end:0x0212ee58
 
-src/_ZN8WallSign16CleanupResourcesEv.cpp:
+src/_ZN13daObjKanban_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212ee58 end:0x0212ee7c
 
-src/_ZN8WallSign6RenderEv.cpp:
+src/_ZN13daObjKanban_c6RenderEv.cpp:
     complete
     .text start:0x0212ee7c end:0x0212eea4
 
-src/_ZN8WallSign8BehaviorEv.cpp:
+src/_ZN13daObjKanban_c8BehaviorEv.cpp:
     complete
     .text start:0x0212eea4 end:0x0212f1b0
 
-src/_ZN8WallSign13InitResourcesEv.cpp:
+src/_ZN13daObjKanban_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212f1b0 end:0x0212f244
 

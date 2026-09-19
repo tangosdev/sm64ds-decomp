@@ -82,7 +82,7 @@ a typed local of the REAL class (five of them; the other fifty define their
 own dumb shadow structs and never see it) from hand-managed lifecycle to
 implicit synthesis. Two kept the moved declaration and are byte-exact as
 synthesized (BowserFire, daObjPathLift_c — the latter already shaped right);
-one tried the move and gave it back (Toad: the synthesized pair scheduled one
+one tried the move and gave it back (daKinopio_c: the synthesized pair scheduled one
 instruction differently at the tail); and two are truly interleaved
 from the start. daTrs_c::Behavior has rc2 constructed only on some paths,
 with gotos into the middle of its lifetime, so it keeps **named word arrays**
@@ -90,7 +90,7 @@ with gotos into the middle of its lifetime, so it keeps **named word arrays**
 `(dBgCh_Gnd *)rc1`, which costs exactly the sp-relative add the old POD local
 spelled. The tempting alias form (`dBgCh_Gnd *const rc1 = (dBgCh_Gnd
 *)&storage;`) is measured wrong: it perturbs register allocation and cost
-Behavior +32 bytes. KnockDownPlank (+8) and Toad (+4) both showed that the
+Behavior +32 bytes. KnockDownPlank (+8) and daKinopio_c (+4) both showed that the
 moved-declaration synthesis reproduces construction/destruction but not
 always their exact scheduling; both restored hand C1/D1 calls over a `u32`
 array. The old comment in

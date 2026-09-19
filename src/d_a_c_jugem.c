@@ -7,7 +7,7 @@
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV9LakituBro */
+/* resolved: VT0 = _ZTV11daC_Jugem_c */
 /* Reconstructed source-style name: SM64DS proves daC_Jugem_c through RTTI,
  * allocation size, vtable identity, and the C_JUGEM registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -17,7 +17,7 @@ int *daC_Jugem_c_classInit(void)
     int *p = (int *)_ZN7fBase_cnwEj(744);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV9LakituBro;
+        p[0] = (int)_ZTV11daC_Jugem_c;
         _ZN9ModelAnimC1Ev((char *)p + 0x110);
         _ZN9ModelAnimC1Ev((char *)p + 0x174);
         _ZN15TextureSequenceC1Ev((char *)p + 0x1d8);

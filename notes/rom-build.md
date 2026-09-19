@@ -518,7 +518,7 @@ individually with `match.py` before the link confirmed them:
 
 | function | source named | ROM uses |
 |---|---|---|
-| `_ZN13PrincessPeach6RenderEv` | `CommonModel::Render` | `Model::Render` |
+| `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN9WaterRing6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
 | `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
 | [func_ov085_0212e778](../src/func_ov085_0212e778.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
