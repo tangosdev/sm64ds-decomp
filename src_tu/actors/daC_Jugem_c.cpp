@@ -138,7 +138,6 @@ u32   _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 a, u32 b, const void *po
    Fix12<int>-by-value reason. */
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *f, int a, Fix12i b, u32 c);
 void  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *thiz, BTP_File &f, int a, Fix12i b, u32 c);
-void  _ZN15ModelAnimC1Ev(void *thiz);
 void  _ZN9ModelAnimC1Ev(void *thiz);
 void  _ZN15TextureSequenceC1Ev(void *thiz);
 void  _ZN11ShadowModelC1Ev(void *thiz);
