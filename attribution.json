@@ -3947,6 +3947,22 @@
     "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c13InitResourcesEv": "tangosdev",
     "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c21AfterCleanupResourcesEj": "andrewboudreau",
     "src/actors/dScMgAmida_c.cpp#dScMgAmida_c_classInit": "tangosdev",
-    "src/actors/dScMgAmida_c.cpp#func_ov006_020d5a50": "tangosdev"
+    "src/actors/dScMgAmida_c.cpp#func_ov006_020d5a50": "tangosdev",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_cD1Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_cD0Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c20UpdateModelTransformEv": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c6State2Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c10InitState2Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c6State1Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c10InitState1Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c6State0Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c10InitState0Ev": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c8SetStateEi": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c17CallStateBehaviorEv": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c6RenderEv": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c8BehaviorEv": "andrewboudreau",
+    "src/actors/daObjTbox_c.cpp#_ZN11daObjTbox_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjTbox_c.cpp#daObjTbox_c_classInit": "tangosdev"
   }
 }
