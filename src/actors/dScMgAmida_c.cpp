@@ -22,7 +22,7 @@
  *   [27] 0x020d5a50  the legacy func_ov006_020d5a50 shard
  *
  * WHY PARTIAL. The class's linker run is 0x020d1018..0x020d5a54, 28 functions.
- * ROM ordinal 14, func_ov006_020d27dc (0x020d27dc, 0xe48), is a NONMATCHING
+ * ROM ordinal 14, func_ov006_020d27dc (0x020d27dc, 0xe48), is an unmatched
  * draft: it carries no `complete` marker, so dsd serves the cartridge's own
  * bytes for it, and a licensed .text claim cannot span a hole. That splits the
  * run into two all-matching stretches -- ordinals 0..13 (0x020d1018..0x020d27dc,
