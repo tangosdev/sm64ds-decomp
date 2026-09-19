@@ -1,0 +1,171 @@
+{
+  "id": "ov090/daPukupuku_c",
+  "module": "ov090",
+  "source": "src_tu/actors/daPukupuku_c.cpp",
+  "promoted_source": "src/actors/daPukupuku_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2133034..0x213367c, 15 function(s); 0x2133034..0x2133634 (14 fn) is build/tu_map.json's segment (tools/tu_map.py) and daPukupuku_c_classInit at 0x2133634..0x213367c was joined to it by hand -- tu_map cuts at class labels and the factory carries none, so it was left in a segment of its own",
+    "class label(s): daPukupuku_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "daPukupuku_c_classInit is this class's factory: it allocates 0x388, installs _ZTV12daPukupuku_c, and is the target of the PUKUPUKU profile descriptor at 0x02134300 (config/arm9/overlays/ov090/relocs.txt). It abuts InitResources below and _ZN9daShark_cD1Ev above with no gap, and all four classes in ov090 share the same [class run][classInit] shape. ov062/KoopaFlag folds daRFlag_c_classInit the same way.",
+    "referrer census of the 7 unlabelled func_ov090_* in this span (0x21330c8..0x21333ac): every reference is intra-TU. 0x21330c8 and 0x2133338 are called only from Behavior; 0x21332e8 only from func_ov090_02133190, func_ov090_02133200 and InitResources; and 0x2133190, 0x21331c4, 0x2133200, 0x2133290 are reached only as the four 8-byte pointer-to-member entries of this class's state table at 0x21342b8..0x21342d8, which sits in daPukupuku_c's own .data immediately below _ZTI12daPukupuku_c. No module outside ov090 references any address in the span; arm9's only references into ov090 are to the four g_profile_* descriptors."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02133034",
+      "end": "0x0213367c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daPukupuku_cD1Ev",
+      "address": "0x02133034",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN12daPukupuku_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daPukupuku_cD0Ev",
+      "address": "0x02133074",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12daPukupuku_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov090_021330c8",
+      "address": "0x021330c8",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov090_021330c8.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov090_02133190",
+      "address": "0x02133190",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov090_02133190.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov090_021331c4",
+      "address": "0x021331c4",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov090_021331c4.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov090_02133200",
+      "address": "0x02133200",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov090_02133200.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov090_02133290",
+      "address": "0x02133290",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov090_02133290.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov090_021332e8",
+      "address": "0x021332e8",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_021332e8.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov090_02133338",
+      "address": "0x02133338",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov090_02133338.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN12daPukupuku_c16CleanupResourcesEv",
+      "address": "0x021333ac",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN12daPukupuku_c16CleanupResourcesEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN12daPukupuku_c16OnPendingDestroyEv",
+      "address": "0x021333dc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN12daPukupuku_c6RenderEv",
+      "address": "0x021333e0",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN12daPukupuku_c6RenderEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN12daPukupuku_c8BehaviorEv",
+      "address": "0x02133430",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN12daPukupuku_c8BehaviorEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12daPukupuku_c13InitResourcesEv",
+      "address": "0x02133530",
+      "size": "0x00000104",
+      "legacy_source": "src/_ZN12daPukupuku_c13InitResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "daPukupuku_c_classInit",
+      "address": "0x02133634",
+      "size": "0x00000048",
+      "legacy_source": "src/d_a_pukupuku.c",
+      "ordinal": 14
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov090_021332e8' differs between the legacy file that used to hold func_ov090_02133190 and the one that held func_ov090_02133200; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov090_021332e8' differs between the legacy file that used to hold func_ov090_02133190 and the one that held _ZN12daPukupuku_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov090_02134564' differs between the legacy file that used to hold _ZN12daPukupuku_c16CleanupResourcesEv and the one that held _ZN12daPukupuku_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov090_0213455c' differs between the legacy file that used to hold _ZN12daPukupuku_c16CleanupResourcesEv and the one that held _ZN12daPukupuku_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov090_021342d8' differs between the legacy file that used to hold func_ov090_021330c8 and the one that held _ZN12daPukupuku_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "RECONCILED (was 'tubuild create warning' above): func_ov090_021332e8 has C linkage and so cannot be overloaded; the TU keeps one declaration -- the definition's own (PukuStateC*, PukuStatePMF*) -- and its three call sites cast. No argument value changes.",
+    "RECONCILED: data_ov090_0213455c is declared AnimFilePtr (the more complete observation: it carries a field layout and InitResources reads .file); CleanupResources casts to SharedFilePtr to reach Release(). data_ov090_02134564 and data_ov090_021342d8 were not real conflicts -- the two spellings differed only by the 'struct' keyword.",
+    "RECONCILED: data_ov090_02134594 is declared by include/decl_common.h as a scalar int; the generator's local 'int[]' redeclaration was dropped and the call sites take its address.",
+    "RECONCILED: the generator's 'struct dCcAcPos_c { int d; }' stand-in was dropped -- daPukupuku_c.h already supplies the real class, and the stand-in redefined it.",
+    "RECONCILED: func_ov090_021332e8's local 'C'/'PMF' names were renamed PukuStateC/PukuStatePMF to clear a collision with the Holder::PMF pair that Behavior needs. Names only; the forward-declare-then-typedef-then-define ordering that fixes the pointer-to-member representation is preserved.",
+    "include/common.h is included FIRST, deliberately. Matrix4x3 has two spellings sharing the MATRIX4X3_DEFINED guard and whichever a TU sees first stands. daPukupuku_c.h reaches math/Matrix.h (nested 'Matrix3x3 r; Vector3 t') through ModelAnim.h; that spelling splits func_ov090_02133338's 48-byte matrix copy into a 9-word and a 3-word move and compiled to 0x90 against the ROM's 0x74. common.h's flat 's32 m[12]' restores the ROM's three 4-register ldm/stm blocks. Both are 0x30 bytes and nothing in this TU names .r or .t.",
+    "Only the single ~daPukupuku_c() at ordinal 0 is defined: mwccarm emits the D1, D0 and D2 variants together from one declaration, so ordinal 1 carries its @symbol marker and a note instead of a body.",
+    "REFUTED and not carried into the TU: the legacy src/func_ov090_02133200.c claimed 'recovered name: daManta_c_Kill' and 'daManta_c::Kill - recovered from vtable slot identity'. _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only daManta_c's own functions; 0x2133200 is in no vtable. Its sole referrer in the ROM is 0x21342b8, the first pointer-to-member entry of daPukupuku_c's state table, which begins exactly where daManta_c's vtable ends -- the likely source of the mis-assignment. No replacement name is coined."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov090-daPukupuku_c/daPukupuku_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 15,
+    "functions_declared": 15,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "_ZN12daPukupuku_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "data": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

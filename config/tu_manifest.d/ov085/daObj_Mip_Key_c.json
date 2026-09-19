@@ -1,0 +1,305 @@
+{
+  "id": "ov085/daObj_Mip_Key_c",
+  "module": "ov085",
+  "source": "src_tu/actors/daObj_Mip_Key_c.cpp",
+  "promoted_source": "src/actors/daObj_Mip_Key_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x212cc88..0x212d4e8, 14 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212d528 to take in daObj_Mip_Key_c_classInit at 0x212d4e8, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN15daObj_Mip_Key_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x1a0 and installs this class's vtable), and 0x212d528 is the next class's destructor. The sibling TUs ov085/daMip_c and ov085/daC_Jugem_c took in their own classInit on the same grounds.",
+    "class label(s): daObj_Mip_Key_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "referrer census over the whole overlay image: every ARM bl in ov085 .text was decoded and every 32-bit word of overlay_0085.bin scanned for each of the seven unlabelled func_ov085_* inside the span. func_ov085_0212cd0c is called only from 0x0212cd80's body (0x0212ced4, 0x0212cf04, 0x0212cff0, 0x0212d00c); func_ov085_0212d268 only from 0x0212d108's body (0x0212d230) and daObj_Mip_Key_c::InitResources (0x0212d4d0); func_ov085_0212d2b8 only from daObj_Mip_Key_c::Render (0x0212d3c4). The other four (0x0212cd80, 0x0212d038, 0x0212d108, 0x0212d24c) are never called directly; each address occurs exactly once in the image, as a pointer-to-member word in .data at 0x02130174/0x0213017c/0x0213018c/0x02130184, immediately before _ZTI15daObj_Mip_Key_c at 0x02130194, installed by the module static-initialiser at 0x0212fa28..0x0212fa34. Every relocs.txt in config/ was searched for each of the 15 span addresses and ov085's own file is the only hit, so no other module reaches in. The run is closed."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0212cc88",
+      "end": "0x0212d528"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObj_Mip_Key_cD1Ev",
+      "address": "0x0212cc88",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_cD0Ev",
+      "address": "0x0212ccc0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov085_0212cd0c",
+      "address": "0x0212cd0c",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov085_0212cd0c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov085_0212cd80",
+      "address": "0x0212cd80",
+      "size": "0x000002b8",
+      "legacy_source": "src/func_ov085_0212cd80.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov085_0212d038",
+      "address": "0x0212d038",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov085_0212d038.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov085_0212d108",
+      "address": "0x0212d108",
+      "size": "0x00000144",
+      "legacy_source": "src/func_ov085_0212d108.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov085_0212d24c",
+      "address": "0x0212d24c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov085_0212d24c.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov085_0212d268",
+      "address": "0x0212d268",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov085_0212d268.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov085_0212d2b8",
+      "address": "0x0212d2b8",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov085_0212d2b8.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_c16CleanupResourcesEv",
+      "address": "0x0212d374",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_c16CleanupResourcesEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_c16OnPendingDestroyEv",
+      "address": "0x0212d398",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_c16OnPendingDestroyEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_c6RenderEv",
+      "address": "0x0212d39c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_c6RenderEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_c8BehaviorEv",
+      "address": "0x0212d3ec",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_c8BehaviorEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN15daObj_Mip_Key_c13InitResourcesEv",
+      "address": "0x0212d46c",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN15daObj_Mip_Key_c13InitResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "daObj_Mip_Key_c_classInit",
+      "address": "0x0212d4e8",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_mip_key.c",
+      "ordinal": 14
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov085_0212cd0c and the one that held func_ov085_0212cd80; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7Message7EndTalkEv' differs between the legacy file that used to hold func_ov085_0212cd0c and the one that held func_ov085_0212cd80; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov085_0212cd0c and the one that held func_ov085_0212cd80; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov085_0212cd80 and the one that held func_ov085_0212d108; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov085_0212d108 and the one that held func_ov085_0212d2b8; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212d268' differs between the legacy file that used to hold func_ov085_0212d108 and the one that held _ZN15daObj_Mip_Key_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED: reconciled by hand -- see this TU's header comment.",
+    "Hand-assembled from the tubuild create output: the generated file emitted the destructor twice (once per ROM variant) and carried each legacy file's local shadow typedefs at file scope. One destructor definition now covers D1 and D0, the shadow aggregates stay inside the member that recovered them under unique names, and the TU is written ROM-ascending under `#pragma defer_codegen off` -- the form both sibling TUs in this overlay use and the one that reproduces D1-before-D0 with no D2."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov085-daObj_Mip_Key_c/daObj_Mip_Key_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 15,
+    "functions_declared": 15,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN15daObj_Mip_Key_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN15daObj_Mip_Key_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        23,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "data": [
+        "_ZTV15daObj_Mip_Key_c",
+        "_ZTI15daObj_Mip_Key_c",
+        "_ZTS15daObj_Mip_Key_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI15daObj_Mip_Key_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS15daObj_Mip_Key_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObj_Mip_Key_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN15daObj_Mip_Key_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair. The cartridge has no D2 for this class -- ov085 runs D1 at 0x0212cc88 straight into D0 at 0x0212ccc0 and then into func_ov085_0212cd0c, with no third variant in the overlay's delinks partition and no symbol of that name configured in any module -- so there is no configured home and no surviving relocation references it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov085_0212d2b8 declares a Vector3 local, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTV15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021301d8",
+      "reason": "This TU owns daObj_Mip_Key_c's key function -- ~daObj_Mip_Key_c is the only virtual the class declares and its body is out of line here -- so mwcc emits the complete 0x84-byte class vtable storage with its ABI preamble. The cartridge's storage begins at ov085:0x021301d0, where offset-to-top is 0 and the next word points at _ZTI15daObj_Mip_Key_c (0x02130194); the public address point recorded in symbols.txt is 0x021301d8, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. Storage runs 0x021301d0..0x02130254, which is exactly 0x84 and closes on the next configured datum."
+    },
+    {
+      "symbol": "_ZTI15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130194",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x02130194 are a __si_class_type_info: its type-info vtable pointer (0x0209a764), then _ZTS15daObj_Mip_Key_c at 0x021301a0, then _ZTI12dEnemyBase_c at 0x021081c0 as the single base -- which is the cartridge's own statement of this class's parent."
+    },
+    {
+      "symbol": "_ZTS15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021301a0",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These eighteen bytes are why the class is spelled daObj_Mip_Key_c and why no part of the name is coined: they read 31 35 64 61 4f 62 6a 5f 4d 69 70 5f 4b 65 79 5f 63 00, the length-prefixed mangled string \"15daObj_Mip_Key_c\"."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    }
+  ]
+}

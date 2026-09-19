@@ -71,9 +71,16 @@ struct daKinopio_c : dActor_c {
     u8 mTargetOpacity;             /* 0x20e */
     u8 mStarReqIndex;              /* 0x20f */
 
-    /* Inline is load-bearing: explicit use from the two destructor sources
-     * makes mwccarm emit D1/D0 in ROM order without a homeless D2. */
-    virtual ~daKinopio_c() {}
+    /* Out of line, and the position is load-bearing. mwccarm emits D2, D0 and
+     * D1 from one definition; with deferred code generation off it emits them
+     * where that definition stands, which is what puts D1 at 0x02129020 and D0
+     * at 0x02129060 at the head of this class's text, with the homeless D2
+     * discarded. The two sibling classes in this same overlay, daMip_c and
+     * daC_Jugem_c, declare theirs the same way for the same reason. An inline
+     * definition here is instead materialized only when the vtable is, which in
+     * a merged translation unit is at the END -- measured, that costs nothing in
+     * bytes but emits both variants below the factory. */
+    virtual ~daKinopio_c();
 
     virtual int InitResources();
     virtual int CleanupResources();
