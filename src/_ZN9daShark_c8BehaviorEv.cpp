@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN5Shark8BehaviorEv
+// @symbol _ZN9daShark_c8BehaviorEv
 
-#include "Shark.h"
+#include "daShark_c.h"
 #include "PathPtr.h"
 
 struct SharkCallbackOwner;
@@ -21,13 +21,13 @@ s16 Vec3_VertAngle(Vector3 *a, Vector3 *b);
 void Matrix4x3_FromRotationY(void *matrix, s32 angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *matrix, s16 angle);
 void MulVec3Mat4x3(Vector3 *value, void *matrix, Vector3 *out);
-void func_ov090_02133904(Shark *shark);
+void func_ov090_02133904(daShark_c *shark);
 extern char data_020a0e68[];
 }
 
 void ApproachLinear(s16 &value, s16 target, s16 step);
 
-int Shark::Behavior()
+int daShark_c::Behavior()
 {
     DecIfAbove0_Short((u16 *)&mStateTimer);
     {

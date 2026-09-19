@@ -123,9 +123,9 @@ backlog forever; constructors were the last symbol kind with no playbook.
 
 PathPtr also supplied the first live sighting of §2's blast radius: the
 moment `PathPtr();` appeared in its header, every typed local of that class
-in every TU grew an implicit construction call. `Shark::InitResources`
+in every TU grew an implicit construction call. `daShark_c::InitResources`
 holds two such locals and constructs them BY HAND at interleaved ROM
-positions — each double-constructed, Shark went four words long, and
+positions — each double-constructed, daShark_c went four words long, and
 eligible.py caught it before anything linked. Its locals are now raw `u32`
 storage with a comment explaining why they must stay dumb. When you declare
 a constructor on a widely-embedded class, grep for typed locals of it

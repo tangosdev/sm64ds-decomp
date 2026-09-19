@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8MantaRay8BehaviorEv
+// @symbol _ZN9daManta_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
  * One frame of the ray, and it is a PATH FOLLOWER rather than a wanderer.
@@ -16,10 +16,10 @@
  * Motion falls out of the heading rather than being tracked separately. A
  * matrix built from the eased yaw and pitch turns a fixed 0xa000 forward vector
  * into a velocity written across 0x0a4..0x0b0 -- and only then is gravity
- * applied to its y, as max(mTerminalVelocity, mVertSpeed + mVertAccel). See MantaRay.h: those
+ * applied to its y, as max(mTerminalVelocity, mVertSpeed + mVertAccel). See daManta_c.h: those
  * are dActor_c's speed slots, repurposed as a vector.
  */
-#include "MantaRay.h"
+#include "daManta_c.h"
 #include "PathPtr.h"
 struct C3;
 typedef void (C3::*Fn)();
@@ -40,7 +40,7 @@ extern char data_020a0e68[];
 
 int ApproachLinear(short& v, short target, short step);
 
-int MantaRay::Behavior()
+int daManta_c::Behavior()
 {
     char* c = (char*)this;
     DecIfAbove0_Short((unsigned short*)&mStateTimer);

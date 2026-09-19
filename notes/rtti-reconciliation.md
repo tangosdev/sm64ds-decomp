@@ -567,8 +567,8 @@ Corpus-wide only **three** width conflicts survive, all the same benign shape â€
 header carries a `u8` marker where the base declares a real type:
 
     Bullet   @0xac vs Enemy: base s32, derived u8
-    MantaRay @0xa4 vs Enemy: base s32, derived u8
-    Shark    @0xa4 vs Enemy: base s32, derived u8
+    daManta_c @0xa4 vs Enemy: base s32, derived u8
+    daShark_c    @0xa4 vs Enemy: base s32, derived u8
 
 ## 11. The browsable reference
 ```sh

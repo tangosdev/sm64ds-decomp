@@ -525,8 +525,8 @@
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *"],
    "src/_ZN4Coin8BehaviorEv.cpp": ["param:#1 char *"],
-   "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *"],
-   "src/_ZN8MantaRay8BehaviorEv.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN9daManta_c8BehaviorEv.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *"],
    "src/actors/daMip_c.cpp": ["param:#1 const void *"],
    "src/func_02009138.c": ["param:#1 Vector3 *"],
    "src/func_020092c4.c": ["param:#1 Vector3 *"],
@@ -1750,7 +1750,6 @@
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN13daObjKanban_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["param:#1 const Vec3Raw *", "param:#2 const Vec3Raw *"],
-   "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 char *", "param:#2 char *"],
    "src/_ZN6Camera8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -1761,6 +1760,7 @@
    "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9Butterfly6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daPeach_c12UpdateLookAtEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daBgSnmBdy_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/actors/daBombking_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/actors/daGmch_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -1968,13 +1968,13 @@
    "src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN7Minimap21FixTHIPaintingRoomPosER7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN8MantaRay8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
    "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN9daManta_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/actors/Goomboss.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/actors/dMgJump3DMario_c.cpp": ["param:#1 Jump3DVec *", "param:#2 Jump3DVec *", "param:#3 Jump3DVec *"],
    "src/actors/daMip_c.cpp": ["param:#2 const void *", "param:#3 const void *"],
@@ -2017,11 +2017,11 @@
   },
   "Vec3_VertAngle": {
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/_ZN6Camera8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9Butterfly6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daPeach_c12UpdateLookAtEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daBombking_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/actors/daYurei_Mucho_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/func_02005110.c": ["param:#1 const Vec3 *", "param:#2 const Vec3 *"],
@@ -2585,10 +2585,10 @@
    "src/_ZN7Skeeter13InitResourcesEv.cpp": ["param:#2 struct dActor_c *", "param:#3 LocVec3 *"],
    "src/_ZN7Wiggler13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN8BookShot13InitResourcesEv.cpp": ["param:#1 char *", "param:#3 Vector3 *"],
-   "src/_ZN8MantaRay13InitResourcesEv.cpp": ["param:#3 const Vector3 &"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#3 Vec3 *"],
    "src/_ZN9SpikeBomb13InitResourcesEv.cpp": ["param:#3 const Vector3 &"],
    "src/_ZN9WaterRing13InitResourcesEv.cpp": ["param:#1 char *", "param:#3 Vector3 *"],
+   "src/_ZN9daManta_c13InitResourcesEv.cpp": ["param:#3 const Vector3 &"],
    "src/actors/daBombking_c.cpp": ["param:#3 Vector3 *"],
    "src/func_ov002_020dc174.c": ["param:#6 int", "param:#7 int", "return:int"],
    "src/func_ov002_020e63a4.c": ["param:#6 int", "param:#7 int", "return:int"],
@@ -4138,7 +4138,6 @@
    "src/_ZN4Door13InitResourcesEv.c": ["param:#1 void *"],
    "src/_ZN5Crate13InitResourcesEv.cpp": ["param:#1 char *", "return:int"],
    "src/_ZN5Koopa13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:BMD_File *"],
-   "src/_ZN5Shark13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN5Spiny13InitResourcesEv.cpp": ["return:BMD_File *"],
    "src/_ZN5Stage13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN5Stump13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -4173,6 +4172,7 @@
    "src/_ZN9Whirlpool13InitResourcesEv.cpp": ["return:BMD_File *"],
    "src/_ZN9daDossy_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN9daPeach_c13InitResourcesEv.cpp": ["param:#1 void *"],
+   "src/_ZN9daShark_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/actors/Goomboss.cpp": ["param:#1 void *"],
    "src/actors/Scuttlebug.cpp": ["param:#1 void *"],
    "src/actors/dScMgJump_c.cpp": ["param:#1 void *"],
@@ -6333,7 +6333,6 @@
    "src/_ZN3MrI13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN4Door13InitResourcesEv.c": ["param:#1 void *", "return:void *"],
    "src/_ZN5Koopa13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:void *"],
-   "src/_ZN5Shark13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN5Spiny13InitResourcesEv.cpp": ["return:BCA_File *"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN5Whomp13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
@@ -6355,6 +6354,7 @@
    "src/_ZN9Whirlpool13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN9daDossy_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN9daPeach_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
+   "src/_ZN9daShark_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/actors/Goomboss.cpp": ["param:#1 void *", "return:void *"],
    "src/actors/Scuttlebug.cpp": ["param:#1 void *", "return:void"],
    "src/actors/daGmch_c.cpp": ["param:#1 void *", "return:void *"],
@@ -6662,7 +6662,6 @@
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN4Door13InitResourcesEv.c": ["return:void"],
    "src/_ZN5Crate13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
-   "src/_ZN5Shark13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN5Whomp13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN6Bowser13InitResourcesEv.cpp": ["return:void"],
@@ -6683,6 +6682,7 @@
    "src/_ZN9TinyWater13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN9Whirlpool13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN9daDossy_c13InitResourcesEv.cpp": ["return:void"],
+   "src/_ZN9daShark_c13InitResourcesEv.cpp": ["return:void"],
    "src/actors/Goomboss.cpp": ["return:void"],
    "src/actors/daObjKaitendai_c.cpp": ["return:void"],
    "src/func_ov002_020b5e58.cpp": ["return:void"],
@@ -6900,10 +6900,10 @@
    "src/_ZN15RollingIronBall13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN17BigMovingIceBlock8BehaviorEv.cpp": ["param:#2 void *"],
    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": ["param:#2 void *"],
-   "src/_ZN5Shark13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#2 char *"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN7SkiLift8BehaviorEv.cpp": ["param:#2 void *"],
+   "src/_ZN9daShark_c13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/actors/daBgSnmBdy_c.cpp": ["param:#2 void *", "return:int"],
    "src/actors/daMip_c.cpp": ["param:#2 void *"],
    "src/func_0200b0fc.c": ["param:#2 Vector3 *"],
@@ -8570,15 +8570,15 @@
    "src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp": ["return:char []"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["return:char []"],
    "src/_ZN3Key8BehaviorEv.cpp": ["return:char"],
-   "src/_ZN5Shark8BehaviorEv.cpp": ["return:char []"],
    "src/_ZN6Coffin13InitResourcesEv.cpp": ["return:char"],
    "src/_ZN6Player6RenderEv.cpp": ["return:int"],
    "src/_ZN6ToxBox13InitResourcesEv.cpp": ["return:Mtx43"],
    "src/_ZN7Wiggler13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN7Wiggler8BehaviorEv.cpp": ["return:int []"],
-   "src/_ZN8MantaRay8BehaviorEv.cpp": ["return:char []"],
    "src/_ZN8YoshiEgg8BehaviorEv.cpp": ["return:int"],
+   "src/_ZN9daManta_c8BehaviorEv.cpp": ["return:char []"],
    "src/_ZN9daPeach_c11UpdateModelEv.cpp": ["return:int []"],
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["return:char []"],
    "src/actors/Eyerok.cpp": ["return:int []"],
    "src/actors/Scuttlebug.cpp": ["return:Mtx43"],
    "src/actors/dScMgJump_c.cpp": ["return:int"],
@@ -13165,10 +13165,10 @@
    "src/func_ov090_02133190.c": ["return:int []"]
   },
   "data_ov090_021345a4": {
-   "src/_ZN5Shark16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/_ZN9daShark_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov090_021345ac": {
-   "src/_ZN5Shark16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN9daShark_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/func_ov090_0213387c.c": ["return:int []"]
   },
   "data_ov091_021344f4": {
@@ -20348,7 +20348,7 @@
    "src/func_ov090_02131c48.c": ["param:#2 const void *", "return:void"]
   },
   "func_ov090_02132ac4": {
-   "src/_ZN8MantaRay13InitResourcesEv.cpp": ["param:#1 unsigned char *"]
+   "src/_ZN9daManta_c13InitResourcesEv.cpp": ["param:#1 unsigned char *"]
   },
   "func_ov090_021332e8": {
    "src/_ZN10CheepCheep13InitResourcesEv.cpp": ["return:void"],
@@ -20358,7 +20358,7 @@
    "src/func_ov090_02133830.c": ["return:int"]
   },
   "func_ov090_02133904": {
-   "src/_ZN5Shark8BehaviorEv.cpp": ["param:#1 Shark *"]
+   "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 daShark_c *"]
   },
   "func_ov091_02131cb0": {
    "src/func_ov091_02131db8.c": ["param:#2 const Vec3 *", "param:#3 const Vec3 *"]

@@ -1,12 +1,12 @@
-#ifndef MANTARAY_H
-#define MANTARAY_H
+#ifndef DAMANTA_C_H
+#define DAMANTA_C_H
 
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN8MantaRayD1Ev` destroys each member, and
- * `MantaRay_Spawn` constructs the same types at the same offsets before
- * storing `_ZTV8MantaRay`. Everything this header used to restate below
+ * the class's own destructor `_ZN9daManta_cD1Ev` destroys each member, and
+ * `daManta_c_classInit` constructs the same types at the same offsets before
+ * storing `_ZTV9daManta_c`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
@@ -16,16 +16,22 @@
  *     0x150 dBgCh_Actr               0x1bc   -> 0x30c
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
- * SIZE IS THE FACTORY'S LITERAL, NOT THE FIELD SPAN. `MantaRay_Spawn` calls
+ * SIZE IS THE FACTORY'S LITERAL, NOT THE FIELD SPAN. `daManta_c_classInit` calls
  * `fBase_c::operator new(1028)` -- 0x404 -- and stores this class's vtable,
  * so that literal IS this class's sizeof. The evidenced fields reach only
  * 0x38c; the 0x94 between is trailing space no source reads, and a rounded-up
  * field span would have made this assert wrong by 120 bytes.
  *
- * SM64DS proves this class as daManta_c through RTTI, allocation size and
- * vtable identity. The factory and profile spellings below are reconstructed
- * source-style names -- evidence-bounded proposals, not recovered SM64DS
- * symbols.
+ * THE CLASS NAME IS READ OUT OF THE CARTRIDGE, NOT COINED. `_ZTV9daManta_c`
+ * sits at 0x0213423c; the word before it, at 0x02134238, is the type_info
+ * pointer and resolves to `_ZTI9daManta_c` at 0x0213420c. That record's name
+ * pointer reaches 0x021341f4, where the overlay image literally spells
+ * `9daManta_c`. This header used to call the class MantaRay, which was a
+ * readable invention; the cartridge had a name for it all along.
+ *
+ * The factory and profile spellings below are NOT read out of the cartridge.
+ * They are reconstructed source-style names -- evidence-bounded proposals,
+ * not recovered SM64DS symbols.
  *
  * daManta_c_classInit at 0x02132fe8 (historical alias MantaRay_Spawn)
  * allocates 0x404 and installs this class's cartridge vtable. It backs the
@@ -38,7 +44,7 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
-struct MantaRay : dEnemyBase_c {
+struct daManta_c : dEnemyBase_c {
     dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim;            /* 0x30c */
@@ -51,7 +57,7 @@ struct MantaRay : dEnemyBase_c {
     u8  pad_38c[0x78];
 
     /* --- vtable --- */
-    virtual ~MantaRay();
+    virtual ~daManta_c();
 
     int Behavior();
     int CleanupResources();
@@ -62,7 +68,7 @@ struct MantaRay : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char MantaRay_size_must_be_0x404[sizeof(MantaRay) == 0x404 ? 1 : -1];
+typedef char daManta_c_size_must_be_0x404[sizeof(daManta_c) == 0x404 ? 1 : -1];
 #endif
 
-#endif /* MANTARAY_H */
+#endif /* DAMANTA_C_H */
