@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11ChiefChilly13InitResourcesEv
+// @symbol _ZN16daKing_Donketu_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
@@ -33,7 +33,7 @@ extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 extern int ChiefChilly_ChangeState(void* c, PMF* p);
 }
 
-int ChiefChilly::InitResources()
+int daKing_Donketu_c::InitResources()
 {
     BMD_File* f;
     Vector3 v;

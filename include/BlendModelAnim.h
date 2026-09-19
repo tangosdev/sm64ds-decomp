@@ -51,7 +51,7 @@ struct BlendModelAnim : ModelAnim {
 
     /* DECLARED, defined out of line in src/_ZN14BlendModelAnimC1Ev.cpp as
      * real C++ -- complete-object context for every ROM caller (it is a
-     * member subobject in ChiefChilly/Eyerok/Klepto/Unagi...), hence C1.
+     * member subobject in daKing_Donketu_c/Eyerok/Klepto/Unagi...), hence C1.
      * Body is empty; blendWeight and unk_6c are initialised through the init
      * list so their stores land where the ROM has them. */
 

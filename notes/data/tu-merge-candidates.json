@@ -27858,13 +27858,13 @@
    "start": "0x211f000",
    "end": "0x2121f90",
    "classes": [
-    "ChiefChilly"
+    "daKing_Donketu_c"
    ],
    "n_functions_map": 47,
    "n_files": 47,
    "files": [
-    "src/_ZN11ChiefChillyD1Ev.cpp",
-    "src/_ZN11ChiefChillyD0Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD1Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD0Ev.cpp",
     "src/func_ov073_0211f144.c",
     "src/func_ov073_0211f2c0.c",
     "src/func_ov073_0211f494.c",
@@ -27903,12 +27903,12 @@
     "src/func_ov073_02121538.cpp",
     "src/ChiefChilly_ChangeState.cpp",
     "src/func_ov073_021215cc.c",
-    "src/_ZN11ChiefChilly16CleanupResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp",
-    "src/_ZN11ChiefChilly6RenderEv.cpp",
-    "src/_ZN11ChiefChilly8BehaviorEv.cpp",
-    "src/_ZN11ChiefChilly13InitResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp",
+    "src/_ZN16daKing_Donketu_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnPendingDestroyEv.cpp",
+    "src/_ZN16daKing_Donketu_c6RenderEv.cpp",
+    "src/_ZN16daKing_Donketu_c8BehaviorEv.cpp",
+    "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnAimedAtWithEggEv.cpp",
     "src/daKing_Donketu_c_classInit.cpp"
    ],
    "ext_mix": {

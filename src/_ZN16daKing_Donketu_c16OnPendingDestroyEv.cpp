@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN11ChiefChilly16OnPendingDestroyEv
+// @symbol _ZN16daKing_Donketu_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * Empty in the ROM -- a single `bx lr`, an override that exists to suppress
  * the base's behaviour.
  */
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 
-void ChiefChilly::OnPendingDestroy()
+void daKing_Donketu_c::OnPendingDestroy()
 {
 }
