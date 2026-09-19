@@ -81,7 +81,7 @@ struct Coin : dActor_c {
     /* param1 bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise
        -- the same three-bit value LoadObjects compares against data_0209f220 to
        decide whether an object belongs to the entrance the level was started
-       from (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp). A red coin
+       from (src/stage/LevelObjects.cpp). A red coin
        claims a star-marker slot only when it matches (or the level is 0x13); a
        blue coin with a filter under 8 clears bit 0 of mCoinFlags.
        [_ZN4Coin13InitResourcesEv.cpp] */

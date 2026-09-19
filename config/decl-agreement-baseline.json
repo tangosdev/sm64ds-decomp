@@ -565,7 +565,6 @@
    "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN3HUD13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN5Model14LoadAndSetFileEtii.cpp": ["param:#1 unsigned short", "return:void *"],
-   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp": ["return:KCL_File *"],
    "src/actors/dScMgCup_c.cpp": ["return:void *"],
    "src/actors/dScMgHanachan_c.cpp": ["return:void *"],
    "src/actors/dScMgMemory2_c.cpp": ["return:void *"],
@@ -580,7 +579,8 @@
    "src/func_ov075_02116ad4.c": ["return:void *"],
    "src/minigames/d_s_mg_card.cpp": ["return:void *"],
    "src/minigames/d_s_mg_memory.cpp": ["return:void *"],
-   "src/minigames/d_s_mg_single3_d_base.cpp": ["return:void *"]
+   "src/minigames/d_s_mg_single3_d_base.cpp": ["return:void *"],
+   "src/stage/LevelObjects.cpp": ["return:KCL_File *"]
   },
   "LoadFont": {
    "src/func_0201a2f8.c": ["param:#1 int"],
@@ -1501,7 +1501,7 @@
    "src/func_02012310.c": ["return:void"]
   },
   "StartEntranceFaderWipe": {
-   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["arity:0"]
+   "src/stage/LevelObjects.cpp": ["arity:0"]
   },
   "StartExitFaderWipe": {
    "src/HitDeathPlane.c": ["param:#1 unsigned int"],
@@ -2076,9 +2076,6 @@
    "src/func_0206a3a4.c": ["arity:1"],
    "src/func_0206a6d0.c": ["arity:1"]
   },
-  "_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij": {
-   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp": ["param:#1 ObjTable *"]
-  },
   "_Z11UpdateAngleRssis": {
    "src/actors/dMgJump3DMario_c.cpp": ["param:#2 int", "param:#4 int"],
    "src/actors/daBgSnmBdy_c.cpp": ["return:int"],
@@ -2264,7 +2261,7 @@
    "src/minigames/d_s_mg_trampoline2.cpp": ["return:void"]
   },
   "_Z23LoadMinimapChangeObjecti5Fix12IiEh": {
-   "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#3 signed char"]
+   "src/stage/LevelObjects.cpp": ["param:#3 signed char"]
   },
   "_ZN10FaderColorD1Ev": {
    "include/decl_FaderColor.h": ["arity:1", "return:void"],
@@ -5153,15 +5150,12 @@
    "src/game/actors/d_a_wanwan.cpp": ["return:void"],
    "src/unnamed/ov063/func_ov063_0211ab68.c": ["return:void"]
   },
-  "_ZN7dBase_c5SpawnEjP7fBase_cii": {
-   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp": ["return:void"]
-  },
   "_ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File": {
-   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp": ["param:#1 KCL_File *"]
+   "src/stage/LevelObjects.cpp": ["param:#1 KCL_File *"]
   },
   "_ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block": {
    "src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c": ["param:#3 void *"],
-   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp": ["param:#3 CLPS_Block *"]
+   "src/stage/LevelObjects.cpp": ["param:#3 CLPS_Block *"]
   },
   "_ZN7dBgW_Kc8LoadFileER13SharedFilePtr": {
    "src/_ZN10DonutBlock13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
@@ -6051,9 +6045,6 @@
    "src/func_ov002_020edb3c.cpp": ["param:#1 const void *", "return:void *"]
   },
   "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as": {
-   "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#5 int", "param:#6 int", "return:int"],
-   "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:void *"],
-   "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:void *"],
    "src/_ZN10MrBlizzard13InitResourcesEv.cpp": ["param:#3 const void *", "param:#4 const void *", "param:#5 int", "param:#6 int", "return:void"],
    "src/_ZN10MrBlizzard8BehaviorEv.cpp": ["param:#3 const Vector3 *", "param:#4 const void *", "param:#5 int", "param:#6 int", "return:int"],
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:int"],
@@ -6148,6 +6139,7 @@
    "src/game/actors/d_a_jgm.cpp": ["param:#3 Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
    "src/game/actors/d_a_obj_hm_bskt.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:void"],
    "src/game/actors/d_a_pg_mthr.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:void"],
+   "src/stage/LevelObjects.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:void *"],
    "src/unnamed/ov063/func_ov063_02116244.c": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:char *"],
    "src/unnamed/ov063/func_ov063_02116bf4.c": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:char *"],
    "src/unnamed/ov063/func_ov063_02116e14.cpp": ["param:#3 Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
@@ -7472,7 +7464,6 @@
    "src/SetPlayerGlobals.c": ["return:unsigned char []"],
    "src/StartExitCharacterWipe.c": ["return:unsigned char []"],
    "src/StartFile.c": ["return:unsigned char []"],
-   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["return:unsigned char []"],
    "src/_ZN11daC_Jugem_c13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN12dScStarSel_c13InitResourcesEv.cpp": ["return:unsigned char []"],
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char []"],
@@ -7508,7 +7499,8 @@
    "src/func_ov100_02144730.cpp": ["return:char"],
    "src/func_ov100_02144cf8.c": ["return:GlobCaa0"],
    "src/game/actors/d_a_obj_hatena_switch.cpp": ["return:unsigned int []"],
-   "src/game/actors/d_a_obj_wl_polelift.cpp": ["return:unsigned int []"]
+   "src/game/actors/d_a_obj_wl_polelift.cpp": ["return:unsigned int []"],
+   "src/stage/LevelObjects.cpp": ["return:unsigned char []"]
   },
   "data_0209cae4": {
    "src/actors/dScMiniGm_c.cpp": ["return:MinigameSaveData"]
@@ -8016,7 +8008,7 @@
    "src/func_0202b044.c": ["return:int []"]
   },
   "data_0209f338": {
-   "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["return:int []"]
+   "src/_ZN5Stage13InitResourcesEv.cpp": ["return:int"]
   },
   "data_0209f33c": {
    "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj *"]
@@ -8191,7 +8183,6 @@
    "src/minigames/d_s_mg_trampoline2.cpp": ["return:char *"]
   },
   "data_0209f5c0": {
-   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["return:void *"],
    "src/func_ov006_020c6e4c.cpp": ["return:GObj *"],
    "src/func_ov075_02116818.c": ["return:void *"],
    "src/func_ov075_02116ad4.c": ["return:void *"]
@@ -14687,22 +14678,22 @@
    "src/func_ov001_020aaa54.cpp": ["param:#1 void *"]
   },
   "func_0202af80": {
-   "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
+   "src/stage/LevelObjects.cpp": ["param:#1 void *", "param:#2 unsigned int"]
   },
   "func_0202b044": {
-   "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
+   "src/stage/LevelObjects.cpp": ["param:#1 void *", "param:#2 unsigned int"]
   },
   "func_0202b060": {
-   "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
+   "src/stage/LevelObjects.cpp": ["param:#1 void *", "param:#2 unsigned int"]
   },
   "func_0202b090": {
-   "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
+   "src/stage/LevelObjects.cpp": ["param:#1 void *", "param:#2 unsigned int"]
   },
   "func_0202b0c4": {
-   "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
+   "src/stage/LevelObjects.cpp": ["param:#1 void *", "param:#2 unsigned int"]
   },
   "func_0202b0e0": {
-   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 LVL_Overlay::StandardEntry *"]
+   "src/stage/LevelObjects.cpp": ["param:#1 LVL_Overlay::StandardEntry *"]
   },
   "func_0202ec9c": {
    "src/func_ov004_020aeb24.cpp": ["return:void"],
@@ -15134,12 +15125,6 @@
   },
   "func_0203abd4": {
    "src/_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c.cpp": ["param:#1 dM3dGSph *", "param:#2 Vector3 *"]
-  },
-  "func_0203aca0": {
-   "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["param:#1 void *", "param:#2 unsigned int"]
-  },
-  "func_0203accc": {
-   "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp": ["arity:3"]
   },
   "func_0203ad6c": {
    "src/_ZN7PathPtr6FromIDEj.cpp": ["param:#1 PathPtr *"]

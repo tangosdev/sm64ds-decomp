@@ -8,9 +8,17 @@ by recommending that the next one deliberately avoid that shape, so the first
 whole-range link is not confounded by the destructor-emission-order problem it
 found. This is that candidate.
 
-**What it is not:** a build change. `src_tu/stage/LevelObjects.cpp` is not
-enrolled, `config/**/delinks.txt` is untouched, and the seventeen one-function
-sources under `src/` remain the sole enrolled owners of
+**Status update — the TU has since been promoted.** Everything below is the
+pilot's own record and is left as it was written. What has changed since: the
+reconstructed source now lives at `src/stage/LevelObjects.cpp`,
+`config/arm9/overlays/ov002/delinks.txt` carries one `complete` entry for it
+over `0x020fe190..0x020fea4c`, and the seventeen one-function sources are gone.
+The two vague-linkage Vector3 destructors §7 reports as unlicensed are now
+declared `deadstrip-duplicate` against their arm9 homes.
+
+**What it was not, at the time:** a build change. The file sat unenrolled under
+`src_tu/`, `config/**/delinks.txt` was untouched, and the seventeen one-function
+sources under `src/` were the sole enrolled owners of
 `0x020fe190..0x020fea4c`. No `rombuild.py`, no `eligible.py`, no link.
 
 ---
@@ -258,7 +266,7 @@ easy to get backwards:
 ```text
 compiled section order = ROM address order = reverse of SOURCE order
   =>  the ORIGINAL file's reading order = reverse of the ROM's addresses
-  =>  the original file read exactly the way src_tu/stage/LevelObjects.cpp
+  =>  the original file read exactly the way src/stage/LevelObjects.cpp
       reads top-to-bottom
 ```
 
@@ -627,7 +635,7 @@ efforts will need reconciling — a useful first test for it would be whether
 
 | Path | |
 | --- | --- |
-| [src_tu/stage/LevelObjects.cpp](../src_tu/stage/LevelObjects.cpp) | new — the shadow TU, not enrolled |
+| [src/stage/LevelObjects.cpp](../src/stage/LevelObjects.cpp) | new — the shadow TU, not enrolled at the time; it lived under `src_tu/` until the promotion recorded at the top of this file |
 | [config/tu_manifest.d/](../config/tu_manifest.d/) | modified — one entry appended, [ov002](../config/arm9/overlays/ov002/symbols.txt)/`LevelObjects`, status `text-verified` |
 | [notes/tu-reconstruction-pilot-2-report.md](../notes/tu-reconstruction-pilot-2-report.md) | new — this file |
 

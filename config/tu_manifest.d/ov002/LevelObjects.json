@@ -1,9 +1,9 @@
 {
   "id": "ov002/LevelObjects",
   "module": "ov002",
-  "source": "src_tu/stage/LevelObjects.cpp",
+  "source": "src/stage/LevelObjects.cpp",
   "promoted_source": "src/stage/LevelObjects.cpp",
-  "status": "link-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x020fe190..0x020fea4c, seventeen functions abutting exactly with no foreign symbol inside the span",
@@ -149,6 +149,22 @@
   ],
   "data": [],
   "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; the loaders here build Vector3 temporaries and five of the seventeen legacy one-function objects already emit their own copy today. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZN8Vector3sD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02011508",
+      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is also declared in include/types.h; LoadExitObjects builds the Vector3s temporary that pulls it in, and that one legacy object emits its own copy today. The cartridge keeps exactly one copy at arm9:0x02011508, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN8Vector3sD1Ev.cpp over 0x02011508..0x0201150c. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -168,11 +184,11 @@
       "no_constructor_or_destructor_variants": "PASS -- no D0/D1/D2 of any class this TU defines; there is no such class",
       "no_vtable_or_rtti_emission": "PASS -- zero _ZTV, _ZTI, _ZTS symbols; zero .data, .rodata, .bss, .init, .ctor sections",
       "no_pragma_opt_workarounds": "PASS -- no #pragma of any kind in the seventeen legacy sources or in the consolidated file",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- the object defines two .text symbols beyond the manifest, _ZN7Vector3D1Ev and _ZN8Vector3sD1Ev (4 bytes each, STB_LOPROC). Both are PRE-EXISTING, not caused by consolidation: five of the seventeen legacy objects already emit _ZN7Vector3D1Ev and one also emits _ZN8Vector3sD1Ev. Merging reduces six copies to two. See unlicensed_output_observed.",
-      "all_content_sections_licensed": "PARTIAL -- every content section is .text and every byte is accounted for (2244 emitted = 2236 licensed + 8 vague-linkage), but those 8 bytes are not licensed by this manifest",
-      "symbol_addresses_match": "NOT RUN",
-      "module_reproduces": "NOT RUN",
-      "rom_build_passes": "NOT RUN"
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "all_content_sections_licensed": "PASS -- every content section is .text. 2236 of the 2244 emitted bytes are the manifest's seventeen licensed functions; the remaining 8 are the two vague-linkage Vector3/Vector3s destructors, now carried by compiler_only_output as deadstrip-duplicate rows against their cartridge homes. linkcheck's pre-link audit reports 17 LICENSED, 0 COLLIDES-GAP, 0 COLLIDES-SRC, 0 HOMELESS and no unlicensed content section.",
+      "symbol_addresses_match": "PASS BY ATTRIBUTION, NOT GREEN -- `dsd check symbols --fail` reports 9 error lines; all 9 are also produced by the no-substitution baseline control, so 0 NEW and 0 resolved. None is attributable to this TU, and the command itself still FAILS.",
+      "module_reproduces": "PASS -- linked from ONE object, the whole .text range 0x020fe190..0x020fea4c is IDENTICAL (2236 bytes, 0 differing), all seventeen functions MATCH inside the linked range, `dsd check modules --fail` PASSes, and module fidelity is 106/106 exact at 100.000000% of compared bytes.",
+      "rom_build_passes": "PASS -- the production tools/rombuild.py ROM and the no-substitution stock control are both 16,777,216 bytes, sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8. rombuild reports 11,208 source-built functions reproducing, 0 mismatching."
     },
     "negative_controls": {
       "swap_two_ordinals": "DETECTED -- swapping LoadFogObjects and LoadTeleportDestObjects in the source moves the emitted section order; first divergence at ordinal 8",
@@ -182,7 +198,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-link-verified",
       "scratch": "build/tu/ov002-LevelObjects/link (gitignored)",
       "phases": {
         "delink": true,
@@ -199,38 +215,95 @@
         "differingBytes": 0,
         "firstDiff": null
       },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020fe190",
+          "end": "0x020fea4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 17,
-          "COLLIDES-SRC": 2
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [
-          "COLLIDES-SRC _ZN8Vector3sD1Ev STB_LOPROC .text size=0x4 already at arm9:0x02011508",
-          "COLLIDES-SRC _ZN7Vector3D1Ev STB_LOPROC .text size=0x4 already at arm9:0x020072c0"
-        ],
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
       "linkerOutput": null
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8Vector3sD1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8Vector3sD1Ev"
+      ],
+      "droppedSections": [
+        19,
+        20
+      ],
+      "data": [],
+      "dataExternalized": []
     }
   },
   "unlicensed_output_observed": {
-    "note": "Present in the compiled object, inventoried, not licensed, not verified. Unlike pilot #1's, none of this is a consequence of owning a class: this TU owns none.",
+    "note": "Present in the compiled object and inventoried here as a record of what the consolidated compile emits beyond its licensed functions. Both entries are now dispositioned by compiler_only_output above, which is the field the tools read; this block is documentation only. Unlike pilot #1's, none of this is a consequence of owning a class: this TU owns none.",
     "text": [
       {
         "symbol": "_ZN7Vector3D1Ev",
         "size": "0x4",
         "binding": "STB_LOPROC",
-        "in_rom": false,
-        "note": "vague-linkage out-of-line copy of the inline ~Vector3 declared in include/types.h, emitted because the loaders build Vector3 temporaries. Emitted today by five of the seventeen legacy objects on their own."
+        "in_rom": true,
+        "note": "vague-linkage out-of-line copy of the inline ~Vector3 declared in include/types.h, emitted because the loaders build Vector3 temporaries. Emitted today by five of the seventeen legacy objects on their own. CORRECTED: the original record said in_rom false, which was already wrong when it was written -- config/arm9/symbols.txt has carried `_ZN7Vector3D1Ev kind:function(arm,size=0x4) addr:0x020072c0` since the commit that gave Vector3 its destructor, and src/_ZN7Vector3D1Ev.cpp owns that range `complete`.",
+        "rom_home": "arm9:0x020072c0"
       },
       {
         "symbol": "_ZN8Vector3sD1Ev",
         "size": "0x4",
         "binding": "STB_LOPROC",
-        "in_rom": false,
-        "note": "same, for Vector3s; emitted today by the LoadExitObjects legacy object on its own."
+        "in_rom": true,
+        "note": "same, for Vector3s; emitted today by the LoadExitObjects legacy object on its own. CORRECTED for the same reason: config/arm9/symbols.txt carries `_ZN8Vector3sD1Ev kind:function(arm,size=0x4) addr:0x02011508`, owned `complete` by src/_ZN8Vector3sD1Ev.cpp.",
+        "rom_home": "arm9:0x02011508"
       }
     ],
     "data": [],
@@ -280,10 +353,10 @@
   },
   "notes": [
     "Pilot #2 for notes/translation-unit-reconstruction-plan.md section 18. Report: notes/tu-reconstruction-pilot-2-report.md. Deliberately the opposite shape from pilot #1 (ov045/daObjKm2_Ami_Bou_c): no class, therefore no destructor group and no vtable/RTTI, which is what this round exists to isolate.",
-    "All seventeen functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
+    "All seventeen functions reproduce their ROM bytes when compiled together, and the whole 0x020fe190..0x020fea4c range reproduces when linked from that single object. The seventeen legacy one-function sources under src/ have now been replaced by one `complete` delinks entry for src/stage/LevelObjects.cpp.",
     "SEVENTEEN functions, not the plan's 'approximately 5-15'. The evidence puts the boundary where it is; splitting it to hit the count would have been an invented cut.",
     "Consolidation forced FOUR declaration conflicts that per-file compilation had been hiding, where pilot #1 found none: data_0209caa0's element type (int[] vs u8[]), data_0209f5c0's type (ActorBase* vs void*), Actor::Spawn's spelling (real static method vs hand-spelled extern \"C\" alias, with four mutually inconsistent copies of the alias), and func_0203accc's ARITY (decl_common.h's 1 argument vs a local 3-argument declaration -- the one no cast could reconcile). All four resolutions are byte-free; see the report.",
-    "Promotion is refused. Requires: a licensed home for the two vague-linkage Vector3 destructors, a scratch link proving the whole 0x020fe190..0x020fea4c range, and the .data phase for the dispatch table."
+    "Promotion history: this entry was refused for a long time because the compiled object defines two vague-linkage Vector3 destructors the manifest did not license. Both have a single configured cartridge home owned by an enrolled `complete` source, and both bodies are the identical 4-byte `bx lr`, so they are now declared deadstrip-duplicate rather than left unlicensed. The whole-range scratch link and the stock-identical full ROM are both recorded above. The .data dispatch table at ov002:0x0210cbb8 is still NOT claimed -- it stays in the retail-gap contribution exactly as it was before promotion -- so this promotion is .text-only."
   ],
   "partial_isolation": {
     "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
