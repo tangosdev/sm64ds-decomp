@@ -54,8 +54,8 @@
 #include "SharedFilePtr.h"
 /* For daPukupuku_c_classInit (ROM ordinal 14) -- the class factory that sits
  * immediately above InitResources in this run and installs this class's
- * vtable. Its legacy file src/d_a_pukupuku.c took these from the same
- * decl_*.h headers. */
+ * vtable. The legacy shard that carried daPukupuku_c_classInit took these
+ * from the same decl_*.h headers; promotion absorbed it into this file. */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_ModelAnim.h"
@@ -354,7 +354,8 @@ int func_ov090_02133290(char* c){
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133200
 /* recovered: declarations from a shared header */
-/* The legacy file src/func_ov090_02133200.c carried
+/* The legacy shard that carried func_ov090_02133200 -- absorbed into this
+ * file by promotion -- carried
  * `// recovered name: daManta_c_Kill` and `daManta_c::Kill - recovered from
  * vtable slot identity`. That attribution is REFUTED and is not carried here.
  * _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only
