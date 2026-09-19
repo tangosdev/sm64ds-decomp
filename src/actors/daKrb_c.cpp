@@ -215,12 +215,12 @@ extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f,
 extern void _ZN5dCc_c5ClearEv(void *self);
 extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void *self, void *clsn);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-/* VARIADIC on purpose. src/func_ov002_020aea30.cpp records FOUR parameters, and
-   func_ov084_0212a774 passes a literal 7 in r3 -- but the ROM's call in
-   func_ov084_02129ed4 at 0x0212a4f4 sets only r0/r1/r2 (mov r0,r7 / mov r1,r6 /
-   add r2,r7,#0x1b4 / bl). The two legacy files therefore declared different
-   arities, which one TU cannot hold. `...` lets each call site materialise
-   exactly the registers the ROM materialises. */
+/* VARIADIC on purpose. src/actors/dEnemyBase_c.cpp records FOUR parameters for
+   func_ov002_020aea30, and func_ov084_0212a774 passes a literal 7 in r3 -- but
+   the ROM's call in func_ov084_02129ed4 at 0x0212a4f4 sets only r0/r1/r2
+   (mov r0,r7 / mov r1,r6 / add r2,r7,#0x1b4 / bl). The two legacy files
+   therefore declared different arities, which one TU cannot hold. `...` lets
+   each call site materialise exactly the registers the ROM materialises. */
 extern void func_ov002_020aea30(void *self, void *actor, void *clsn, ...);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 extern void func_ov084_0212a580(char *self);
