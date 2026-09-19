@@ -225,7 +225,7 @@ PowerStar+StarMarker	77	3268	ov002	yes	no	unmatched:2;pragma:2;multi-class-tu:2;
 dScMgCurling2_c	22	2051	ov006	yes	yes	pragma:3;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1);not-in-delinks:1	dScMgSingle3DBase_c	text-only
 dScMgMemory_c	1	1504	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 Bowser+BowserTail	78	3042	ov060	yes	no	pragma:2;multi-class-tu:2;compiler-only:>=12(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+2);not-in-delinks:1	-	text-only
-dScMgCurling_c	46	1643	ov006	yes	no	pragma:5;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1);not-in-delinks:1	dScMgSingle3DBase_c	text-only
+dScMgCurling_c	46	1643	ov006	yes	yes	pragma:5;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1);not-in-delinks:1	dScMgSingle3DBase_c	text-only
 Eyerok	28	2704	ov066	yes	yes	unmatched:6;pragma:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 dScMgRoulette_c	2	2007	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 dScMgTrampoline2_c	1	1731	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
