@@ -367,10 +367,19 @@ int func_ov090_02133290(char* c){
 /* ROM ordinal 5 -- func_ov090_02133200, 0x02133200, size 0x90 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133200
-// recovered name: daManta_c_Kill
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
-/* daManta_c::Kill - recovered from vtable slot identity */
+/* recovered: declarations from a shared header */
+/* The legacy file src/func_ov090_02133200.c carried
+ * `// recovered name: daManta_c_Kill` and `daManta_c::Kill - recovered from
+ * vtable slot identity`. That attribution is REFUTED and is not carried here.
+ * _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only
+ * daManta_c's own functions (0x2132e38, 0x2132c1c, 0x2132c94, 0x2132c68,
+ * 0x2132c64, 0x213269c, 0x21326dc); 0x2133200 is in no vtable at all. Its one
+ * and only referrer in the whole ROM is 0x21342b8, the first of the four
+ * 8-byte pointer-to-member entries in daPukupuku_c's state table -- which
+ * begins exactly where daManta_c's vtable ends, the likely source of the
+ * mis-assignment. This is a daPukupuku_c state handler, reached through
+ * func_ov090_021332e8. No replacement name is coined: the ROM names nothing
+ * here. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov090_02133200(char* c)
 {
