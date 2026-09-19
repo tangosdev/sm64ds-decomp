@@ -1,9 +1,9 @@
-#ifndef HEAVEHO_H
-#define HEAVEHO_H
+#ifndef DAPOPOI_C_H
+#define DAPOPOI_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN7HeaveHoD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN9daPopoi_cD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
  * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
@@ -24,7 +24,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daPopoi_c_classInit` calls
- * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
+ * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV9daPopoi_c`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x428; the difference is trailing space no source reads.
  *
@@ -43,7 +43,7 @@
 #include "TextureTransformer.h"
 #include "dBgCh_Actr.h"
 
-struct HeaveHo : dEnemyBase_c {
+struct daPopoi_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x144 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x184 */
@@ -63,7 +63,7 @@ struct HeaveHo : dEnemyBase_c {
     u8  pad_427[0x5];
 
     /* --- vtable --- */
-    virtual ~HeaveHo();
+    virtual ~daPopoi_c();
 
     int Behavior();
     int InitResources();
@@ -74,7 +74,7 @@ struct HeaveHo : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char HeaveHo_size_must_be_0x42c[sizeof(HeaveHo) == 0x42c ? 1 : -1];
+typedef char daPopoi_c_size_must_be_0x42c[sizeof(daPopoi_c) == 0x42c ? 1 : -1];
 #endif
 
-#endif /* HEAVEHO_H */
+#endif /* DAPOPOI_C_H */

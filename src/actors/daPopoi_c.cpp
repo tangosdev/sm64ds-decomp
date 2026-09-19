@@ -1,5 +1,5 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov077/HeaveHo (22 function(s)).
+/* HAND-ASSEMBLED translation unit -- ov077/daPopoi_c (22 function(s)).
  * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
  * so this is a raw concatenation of the complete legacy files in REVERSE
  * ROM order (mwccarm emits one .text section per function in the reverse
@@ -7,8 +7,8 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0212624c  src/_ZN7HeaveHoD1Ev.cpp
- *   [1] 0x0212629c  src/_ZN7HeaveHoD0Ev.cpp
+ *   [0] 0x0212624c  src/_ZN9daPopoi_cD1Ev.cpp
+ *   [1] 0x0212629c  src/_ZN9daPopoi_cD0Ev.cpp
  *   [2] 0x02126300  src/func_ov077_02126300.c
  *   [3] 0x02126528  src/func_ov077_02126528.cpp
  *   [4] 0x02126640  src/func_ov077_02126640.cpp
@@ -23,12 +23,12 @@
  *   [13] 0x02126cd4  src/func_ov077_02126cd4.cpp
  *   [14] 0x02126d5c  src/func_ov077_02126d5c.cpp
  *   [15] 0x02126dac  src/func_ov077_02126dac.c
- *   [16] 0x02126dec  src/_ZN7HeaveHo16CleanupResourcesEv.cpp
- *   [17] 0x02126e34  src/_ZN7HeaveHo16OnPendingDestroyEv.cpp
- *   [18] 0x02126e38  src/_ZN7HeaveHo6RenderEv.cpp
- *   [19] 0x02126e88  src/_ZN7HeaveHo8BehaviorEv.cpp
- *   [20] 0x0212706c  src/_ZN7HeaveHo13InitResourcesEv.cpp
- *   [21] 0x021271d4  src/daPopoi_c_classInit.c
+ *   [16] 0x02126dec  src/_ZN9daPopoi_c16CleanupResourcesEv.cpp
+ *   [17] 0x02126e34  src/_ZN9daPopoi_c16OnPendingDestroyEv.cpp
+ *   [18] 0x02126e38  src/_ZN9daPopoi_c6RenderEv.cpp
+ *   [19] 0x02126e88  src/_ZN9daPopoi_c8BehaviorEv.cpp
+ *   [20] 0x0212706c  src/_ZN9daPopoi_c13InitResourcesEv.cpp
+ *   [21] 0x021271d4  src/d_a_popoi.c
  */
 
 /* -------------------------------------------------------------------------- */
@@ -46,13 +46,13 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV7HeaveHo */
+/* resolved: VT0 = _ZTV9daPopoi_c */
 int *daPopoi_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1068);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)&_ZTV7HeaveHo[2]; /* +8: this TU defines the vtable */
+        p[0] = (int)&_ZTV9daPopoi_c[2]; /* +8: this TU defines the vtable */
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN10dCcAcPos_cC1Ev((char *)p + 0x144);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x184);
@@ -64,13 +64,13 @@ int *daPopoi_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN7HeaveHo13InitResourcesEv, 0x0212706c, size 0x168 */
+/* ROM ordinal 20 -- _ZN9daPopoi_c13InitResourcesEv, 0x0212706c, size 0x168 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHo13InitResourcesEv
+// @symbol _ZN9daPopoi_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -83,7 +83,7 @@ struct V3 { int x, y, z; };
 extern struct V3 data_ov077_02127a5c;
 }
 
-int HeaveHo::InitResources()
+int daPopoi_c::InitResources()
 {
   struct V3 v;
   void* f;
@@ -114,14 +114,14 @@ int HeaveHo::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN7HeaveHo8BehaviorEv, 0x02126e88, size 0x1e4 */
+/* ROM ordinal 19 -- _ZN9daPopoi_c8BehaviorEv, 0x02126e88, size 0x1e4 */
 /* -------------------------------------------------------------------------- */
 #include "types.h"
-// @symbol _ZN7HeaveHo8BehaviorEv
+// @symbol _ZN9daPopoi_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
@@ -143,7 +143,7 @@ void _ZN9Animation7AdvanceEv(void *self);
 extern int data_0209f32c;
 }
 
-int HeaveHo::Behavior()
+int daPopoi_c::Behavior()
 {
     int b;
     Vector3 v;
@@ -205,11 +205,11 @@ writeback:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN7HeaveHo6RenderEv, 0x02126e38, size 0x50 */
+/* ROM ordinal 18 -- _ZN9daPopoi_c6RenderEv, 0x02126e38, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHo6RenderEv
+// @symbol _ZN9daPopoi_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 extern int data_0209f32c;
 
 struct Cls {
@@ -221,7 +221,7 @@ struct Cls {
     virtual void method5(int);  /* at vtable offset 0x14 */
 };
 
-int HeaveHo::Render()
+int daPopoi_c::Render()
 {
     if (mPosY < data_0209f32c) return 1;
     Cls *obj = (Cls*)((char*)&mModelAnim);
@@ -230,23 +230,23 @@ int HeaveHo::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN7HeaveHo16OnPendingDestroyEv, 0x02126e34, size 0x4 */
+/* ROM ordinal 17 -- _ZN9daPopoi_c16OnPendingDestroyEv, 0x02126e34, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHo16OnPendingDestroyEv
+// @symbol _ZN9daPopoi_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 
-void HeaveHo::OnPendingDestroy()
+void daPopoi_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN7HeaveHo16CleanupResourcesEv, 0x02126dec, size 0x48 */
+/* ROM ordinal 16 -- _ZN9daPopoi_c16CleanupResourcesEv, 0x02126dec, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHo16CleanupResourcesEv
+// @symbol _ZN9daPopoi_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases the 4 shared file(s) InitResources claimed.
@@ -254,13 +254,13 @@ void HeaveHo::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
 }
 
-int HeaveHo::CleanupResources()
+int daPopoi_c::CleanupResources()
 {
     ((SharedFilePtr *)&data_ov077_02127c88)->Release();
     ((SharedFilePtr *)&data_ov077_02127ca0)->Release();
@@ -764,39 +764,39 @@ int func_ov077_02126300(void *vc)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN7HeaveHoD0Ev, 0x0212629c, size 0x64 */
+/* ROM ordinal 1 -- _ZN9daPopoi_cD0Ev, 0x0212629c, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHoD0Ev
+// @symbol _ZN9daPopoi_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases, then
- * return the object to its heap. Declaring `~HeaveHo()` is enough -- mwcc emits
+ * return the object to its heap. Declaring `~daPopoi_c()` is enough -- mwcc emits
  * D2, D0 and D1 together and objisolate keeps the one this file is bound to.
  *
  * The deallocation is an inline operator delete -- dEnemyBase_c's, reachable because
  * dEnemyBase_c is this class's IMMEDIATE base.
  */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 
-/* (no separate definition: the single ~HeaveHo() below emits the D0 and
+/* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN7HeaveHoD1Ev, 0x0212624c, size 0x50 */
+/* ROM ordinal 0 -- _ZN9daPopoi_cD1Ev, 0x0212624c, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7HeaveHoD1Ev
+// @symbol _ZN9daPopoi_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vtable store and a destructor call per member, every one a consequence of
- * `struct HeaveHo : dEnemyBase_c` and the members that declaration types, destroyed in
+ * `struct daPopoi_c : dEnemyBase_c` and the members that declaration types, destroyed in
  * reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
  *
  * This body is the evidence for the header: each member's size closes exactly
  * on the next one's offset.
  */
-#include "HeaveHo.h"
+#include "daPopoi_c.h"
 
-HeaveHo::~HeaveHo()
+daPopoi_c::~daPopoi_c()
 {
 }
 
