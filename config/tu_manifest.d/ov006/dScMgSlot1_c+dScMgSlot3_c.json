@@ -344,7 +344,10 @@
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c638; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c13OnYoshiTryEatEi; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('namespace', 'Sound') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review"
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "ROOT CAUSE of the linkcheck refusal recorded above, measured: src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp (ROM ordinal 18) is enrolled without `complete` because tools/eligible.py rejects it under rule 5 -- `unresolvable: func_020bc8b4`. That name is declared `extern int func_020bc8b4;` in include/decl_common.h and written as data by the body, but no config/**/symbols.txt defines it, so an isolated object would bind it weakly to 0. The address itself is genuinely ambiguous, not missing: config/arm9/overlays/ov006/relocs.txt records `from:0x0210c114 kind:load to:0x020bc8b4 module:overlays(0,2,4)`, and three different overlays name that address -- data_ov000_020bc8b4 (itself marked `ambiguous`), daObjHeart_c_classInit in ov002, and data_ov004_020bc8b4. Picking one is an overlay-residency question this entry has no evidence for, and the same unresolved name blocks src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp (from:0x0210d6a4, the same destination) in the sibling ov006/dScMgSlot1_c unit, so settling it is a decl_common.h change spanning both units, not a change to this TU. Until it is settled, linkcheck cannot run and this entry stays text-verified.",
+    "SECOND, INDEPENDENT promotion blocker, so fixing the enrollment above alone will not promote this entry: tools/tu_promote.py --dry-run refuses with \"'src/actors/dScMgSlot1_c+dScMgSlot3_c.cpp' has a character the linker command file cannot carry unquoted; rename the file before promoting\". The `+` multi-class naming convention is safe for src_tu/ -- nothing links those -- but dsd writes bare unquoted object names into the LCF and mwldarm's parser treats `+` as punctuation. This entry's promoted_source must be renamed to a `+`-free path before promotion, which is a separate decision about what the two-class file should be called.",
+    "compiler-only policy: the two unlicensed FUNCTIONS are now licensed as plain `deadstrip` (see compiler_only_output; both D2 variants, 0 configured ROM homes each). tubuild verify accordingly reports 0 compiler-only policy errors. The remaining 21 unlicensed symbols are all non-text -- the _ZTV/_ZTI/_ZTS records this TU emits because it defines both classes' key functions, plus the ancestor RTTI passengers they drag in -- and each still needs its own deadstrip-data (or deadstrip, where homeless) row before promotion, on the same pattern the promoted ov006 siblings use. They were deliberately left unwritten here: with the two blockers above open, promotion cannot be reached, and a canonical address banked now would not be validated by anything until it is."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -355,19 +358,41 @@
     "functions_matched": 39,
     "functions_declared": 39,
     "compilerOnlyOutput": {
-      "requested": [],
-      "unhandled": [
+      "requested": [
         "_ZN12dScMgSlot1_cD2Ev",
         "_ZN12dScMgSlot3_cD2Ev"
       ],
-      "data": []
+      "deadstripped": [
+        "_ZN12dScMgSlot1_cD2Ev",
+        "_ZN12dScMgSlot3_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        15,
+        16
+      ],
+      "data": [],
+      "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 23 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 21 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12dScMgSlot1_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. This TU carries the one out-of-line dScMgSlot1_c::~dScMgSlot1_c() definition, ROM ordinal 0, and mwccarm 2004/b56 emits all three structor variants from that single definition: the cartridge keeps D1 at ov006:0x0210a8c0 and D0 at ov006:0x0210a900, both licensed by this manifest, and D2 is the third. The base-object variant is odr-used only by a MORE-DERIVED class's destructor, and dScMgSlot1_c is a leaf in the ROM's own RTTI graph -- tools/rtti_extract.py resolves 413 base edges across the image and none of them names this class's typeinfo record ov006:0x0213e5a0 as a base -- so no instruction in the cartridge can reach it and the retail link discarded it. No address in config/ names a D2 for this class: relocs.load_symbol_homes() reads all 106 checked-in symbols.txt (arm9, itcm, dtcm and 103 overlays) and returns 0 homes for this name, while the same index returns one home each for this class's D1 and D0 and homes for 25 other classes' D2Ev symbols -- including this class's own base, _ZN11dScMgBase_cD2Ev at ov004:0x020b29c0 -- so the miss is a real absence and not a lookup artefact. 0 configured homes makes this a plain deadstrip; deadstrip-duplicate is refused here because there is no cartridge body to byte-compare the emitted one against. It is emitted inside the leading D1/D0/D2 group, so the licensed run's emission order is unaffected -- verify reports all 39 licensed functions in ROM-ascending section order with it present."
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless, and independently of the dScMgSlot1_c row above -- this is the second of the two classes this TU folds, and each one's destructor is its own definition. This TU carries the one out-of-line dScMgSlot3_c::~dScMgSlot3_c() definition, ROM ordinal 2, whose body is the single explicit func_ov006_020c21e4((char *)this + 0x4f38) call; mwccarm 2004/b56 emits D1, D0 and D2 from it. The cartridge keeps D1 at ov006:0x0210a954 and D0 at ov006:0x0210a9a8, both licensed here, and drops D2. dScMgSlot3_c is likewise a leaf: no edge in the ROM's RTTI graph names its typeinfo record ov006:0x0213e588 as a base, so its base-object destructor is never odr-used. No address in config/ names a D2 for this class -- relocs.load_symbol_homes() over all 106 symbols.txt returns 0 homes for the name, with the same positive controls as the row above. 0 configured homes, so plain deadstrip rather than deadstrip-duplicate. Emitted inside the leading structor group, ahead of ordinal 4, so the licensed run's ROM-ascending emission order is unaffected."
+    }
+  ]
 }
