@@ -1,0 +1,251 @@
+{
+  "id": "ov085/daPeach_c",
+  "module": "ov085",
+  "source": "src_tu/actors/daPeach_c.cpp",
+  "promoted_source": "src/actors/daPeach_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2129d18..0x212a684, 24 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212a6d4 to take in daPeach_c_classInit at 0x212a684, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN9daPeach_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x36c and installs this class's vtable), and 0x212a6d4 is where the next class's destructor begins. The sibling TUs ov085/daMip_c, ov085/daC_Jugem_c and ov085/daObjKanban_c took in their own classInit on the same grounds; daMip_c is promoted.",
+    "class label(s): daPeach_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02129d18",
+      "end": "0x0212a6d4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daPeach_cD1Ev",
+      "address": "0x02129d18",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN9daPeach_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daPeach_cD0Ev",
+      "address": "0x02129d60",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN9daPeach_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN9daPeach_c12UpdateLookAtEv",
+      "address": "0x02129dbc",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN9daPeach_c12UpdateLookAtEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr",
+      "address": "0x02129ebc",
+      "size": "0x000000d0",
+      "legacy_source": "src/_ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov085_02129f8c",
+      "address": "0x02129f8c",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov085_02129f8c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN9daPeach_c11UpdateModelEv",
+      "address": "0x02129fdc",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN9daPeach_c11UpdateModelEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN9daPeach_c10InitState0Ev",
+      "address": "0x0212a0b8",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN9daPeach_c10InitState0Ev.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN9daPeach_c6State0Ev",
+      "address": "0x0212a0e8",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN9daPeach_c6State0Ev.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN9daPeach_c6State2Ev",
+      "address": "0x0212a148",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN9daPeach_c6State2Ev.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN9daPeach_c10InitState2Ev",
+      "address": "0x0212a150",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN9daPeach_c10InitState2Ev.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN9daPeach_c10InitState4Ev",
+      "address": "0x0212a19c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN9daPeach_c10InitState4Ev.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN9daPeach_c6State1Ev",
+      "address": "0x0212a1d4",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN9daPeach_c6State1Ev.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN9daPeach_c6State3Ev",
+      "address": "0x0212a220",
+      "size": "0x00000108",
+      "legacy_source": "src/_ZN9daPeach_c6State3Ev.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN9daPeach_c10InitState1Ev",
+      "address": "0x0212a328",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daPeach_c10InitState1Ev.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN9daPeach_c10InitState3Ev",
+      "address": "0x0212a37c",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN9daPeach_c10InitState3Ev.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN9daPeach_c6State4Ev",
+      "address": "0x0212a3ec",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN9daPeach_c6State4Ev.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN9daPeach_c17CallStateBehaviorEv",
+      "address": "0x0212a430",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN9daPeach_c17CallStateBehaviorEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN9daPeach_c13CallStateInitEv",
+      "address": "0x0212a46c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN9daPeach_c13CallStateInitEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN9daPeach_c8SetStateEi",
+      "address": "0x0212a4a4",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN9daPeach_c8SetStateEi.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN9daPeach_c16CleanupResourcesEv",
+      "address": "0x0212a4c0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN9daPeach_c16CleanupResourcesEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN9daPeach_c16OnPendingDestroyEv",
+      "address": "0x0212a504",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daPeach_c16OnPendingDestroyEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN9daPeach_c6RenderEv",
+      "address": "0x0212a508",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN9daPeach_c6RenderEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN9daPeach_c8BehaviorEv",
+      "address": "0x0212a52c",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN9daPeach_c8BehaviorEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN9daPeach_c13InitResourcesEv",
+      "address": "0x0212a588",
+      "size": "0x000000fc",
+      "legacy_source": "src/_ZN9daPeach_c13InitResourcesEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "daPeach_c_classInit",
+      "address": "0x0212a684",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_peach.c",
+      "ordinal": 24
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/_ZN9daPeach_c11UpdateModelEv.cpp (_ZN9daPeach_c11UpdateModelEv) did not split (the definition is inside the extern \"C\" block opened on line 4, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block (UPDATE: the generated head this note describes was discarded during reconciliation. The member body is still carried verbatim, but its own include and pre-definition declarations were stripped and reconciled into the TU-wide extern \"C\" block at the head of the file, so no declaration remains inside the member block. Its local Matrix4x3 stand-in was renamed PeachM48 and hoisted to file scope for the same reason. The body itself is unmodified.)",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN9daPeach_c6State0Ev and the one that held _ZN9daPeach_c10InitState2Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling for the whole TU, `int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);`, in the TU-wide extern \"C\" block. All five callers -- State0, State1, State4, InitState1 and InitState2 -- pass `this + 0xd4` and a table entry, and all five byte-match under it, so no alternate declaration and no commented-out marker survives in src_tu/actors/daPeach_c.cpp.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_02129f8c' differs between the legacy file that used to hold _ZN9daPeach_c10InitState0Ev and the one that held _ZN9daPeach_c10InitState4Ev; kept the first, the other is commented out for review -- RESOLVED: no declaration of func_ov085_02129f8c survives. The TU is written in ROM-ascending order, so the definition at ordinal 4 stands above both callers -- InitState0 at ordinal 6 and InitState4 at ordinal 10 -- and declares itself. Its parameter is the `char *` the legacy definition in src/func_ov085_02129f8c.c already uses; both callers byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN9daPeach_c6State0Ev and the one that held _ZN9daPeach_c6State1Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling for the whole TU, `int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);`, in the TU-wide extern \"C\" block. All five callers -- State0, State1, State4, InitState1 and InitState2 -- pass `this + 0xd4` and a table entry, and all five byte-match under it, so no alternate declaration and no commented-out marker survives in src_tu/actors/daPeach_c.cpp.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold _ZN9daPeach_c12UpdateLookAtEv and the one that held _ZN9daPeach_c6State3Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling, `short Vec3_HorzAngle(const void *a, const void *b);`. UpdateLookAt passes `this + 0x5c` and a Vector3*, State3 passes two Vector3*; both byte-match under the void* form, so no alternate declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold _ZN9daPeach_c12UpdateLookAtEv and the one that held _ZN9daPeach_c6State3Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling, `int _Z14ApproachLinearRsss(short *dst, short target, short rate);`. The int return is load-bearing: State3 tests the result to decide when to advance the conversation step, which the kept-first `void` spelling cannot express. UpdateLookAt's two calls discard it and are unaffected. No alternate declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN9daPeach_c6State0Ev and the one that held _ZN9daPeach_c10InitState1Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling for the whole TU, `int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);`, in the TU-wide extern \"C\" block. All five callers -- State0, State1, State4, InitState1 and InitState2 -- pass `this + 0xd4` and a table entry, and all five byte-match under it, so no alternate declaration and no commented-out marker survives in src_tu/actors/daPeach_c.cpp.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov085_02129f8c and the one that held _ZN9daPeach_c10InitState3Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling, `void *_ZN8dActor_c10FindWithIDEj(unsigned int id);`, which is the kept-first one modulo the parameter name. InitState3 writes the result into a char* local and func_ov085_02129f8c into a void*; both byte-match. No alternate declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player9StartTalkER7fBase_cb' differs between the legacy file that used to hold _ZN9daPeach_c6State3Ev and the one that held _ZN9daPeach_c10InitState3Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling, `int _ZN6Player9StartTalkER7fBase_cb(void *self, void *ab, int b);`. State3 passes 1 and InitState3 passes false; the bool converts and both byte-match. No alternate declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN9daPeach_c6State0Ev and the one that held _ZN9daPeach_c6State4Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling for the whole TU, `int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);`, in the TU-wide extern \"C\" block. All five callers -- State0, State1, State4, InitState1 and InitState2 -- pass `this + 0xd4` and a table entry, and all five byte-match under it, so no alternate declaration and no commented-out marker survives in src_tu/actors/daPeach_c.cpp.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021304f4' differs between the legacy file that used to hold _ZN9daPeach_c16CleanupResourcesEv and the one that held _ZN9daPeach_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: reconciled to include/decl_common.h's own spelling, `extern char data_ov085_021304f4;`, so this TU adds no new reading of that symbol. Both readers -- CleanupResources, which takes its address as a SharedFilePtr*, and InitResources, which hands the same address to Model::LoadFile -- byte-match under it. No alternate declaration survives.",
+    "Reconciliation not covered by a generated warning: the two contradictory declarations of data_ov085_0212f280 that create emitted (SharedFilePtr *[] and void *[]) were replaced by include/decl_common.h's own `extern int data_ov085_0212f280[];`, with the SharedFilePtr* cast moved to CleanupResources' use site. The tree's declaration plurality for that symbol is therefore unchanged, and both readers byte-match.",
+    "daPeach_c declares its destructor inside the class body, so mwccarm emits the two variants on demand rather than at a declaration of their own. The two file-static functions at the head of the TU -- PeachDemandCompleteDtor and PeachDemandDeletingDtor -- are what demands them, in the cartridge's order: a pseudo-destructor call brings out D1 at 0x02129d18, a delete-expression brings out D0 at 0x02129d60. They are the same forcing idiom the two legacy one-function sources src/_ZN9daPeach_cD1Ev.cpp and src/_ZN9daPeach_cD0Ev.cpp already use, which is why neither those files nor include/daPeach_c.h are touched by this fold. Both statics are unreferenced and carry no ROM bytes; they are listed below as unlicensed sections. Moving the destructor declaration out of the class body would remove them, but it would also leave those two enrolled src/ files with no definition to compile, so it is not available without a delinks change.",
+    "tools/tubuild.py linkcheck REFUSES this TU, in both the whole-range and the --partial mode, with \"entry src/func_ov085_02129f8c.c is NOT `complete` today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step\". That entry is the only non-`complete` one in all of ov085: the recovered source carries a file-static helper `normalize` whose out-of-line copy is a second .text section, which eligible.py rule 1 rejects, and the ROM's own bytes end in a dead `cmp r0, #0` that only an out-of-line call produces -- six helper-free spellings were measured and every one came out 0x4c instead of 0x50, short by exactly that compare. So the refusal is about that one member's enrollment, not about this TU. tools/linkcheck.py was run per function against this TU's own object instead: 24 of 25 VERIFIED, and func_ov085_02129f8c BLIND-1, which is the identical verdict its legacy source returns today."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov085-daPeach_c/daPeach_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 25,
+    "functions_declared": 25,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "_Z23PeachDemandCompleteDtorP9daPeach_c",
+        "_Z23PeachDemandDeletingDtorP9daPeach_c",
+        "_ZN7Vector3D1Ev",
+        "normalize"
+      ],
+      "data": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 4 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkVerification": {
+      "round": "tools/tubuild.py linkcheck REFUSED (see notes); tools/linkcheck.py run per function against this TU's source instead",
+      "tubuildLinkcheck": "REFUSED -- entry src/func_ov085_02129f8c.c is NOT `complete` today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step",
+      "perFunctionVerified": 24,
+      "perFunctionBlind": [
+        "func_ov085_02129f8c (BLIND-1 -- one relocation slot unresolvable; src/func_ov085_02129f8c.c returns the same BLIND-1 today, so this is not a regression)"
+      ],
+      "perFunctionWrong": []
+    }
+  }
+}
