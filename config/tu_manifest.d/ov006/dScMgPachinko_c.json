@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgPachinko_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgPachinko_c.cpp",
+  "source": "src/actors/dScMgPachinko_c.cpp",
   "promoted_source": "src/actors/dScMgPachinko_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20fa75c..0x20ff3ec, 45 function(s), from build/tu_map.json (tools/tu_map.py)",
