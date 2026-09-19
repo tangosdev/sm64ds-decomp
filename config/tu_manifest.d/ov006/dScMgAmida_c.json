@@ -1,0 +1,225 @@
+{
+  "id": "ov006/dScMgAmida_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgAmida_c.cpp",
+  "promoted_source": "src/actors/dScMgAmida_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "CONTIGUOUS LINKER RUN (hypothesis only, and it is SHORT AT THE TOP EDGE). build/tu_map.json reports 0x020d1018..0x020d5974, 26 functions. A relocation census puts the real run at 0x020d1018..0x020d5a54, 28 functions: tu_map's right boundary stops at the last MANGLED member (AfterCleanupResources, ending 0x020d5974) and does not carry on over dScMgAmida_c_classInit (0x020d5974, 0xdc, named but unmangled and in no vtable slot) or func_ov006_020d5a50 (0x020d5a50, 4 bytes). Both are proved internal below. The shard count is a floor, not a count.",
+    "RELOCATION CENSUS, the method. Every relocation in config/arm9/**/relocs.txt was indexed and each referring WORD was resolved back to its containing function through that module's own symbols.txt, so referrers self-identify by NAME rather than by module tag. Two filter traps were measured on this image and both are real. (1) Keying on the exact tag module:overlay(6) returns 6,981 relocations, while asking whether 6 is IN the target module SET returns 7,104: the exact-tag filter silently drops 123 relocations spelled across 16 ambiguous module sets, among them overlays(2,6), overlays(5,6), overlays(6,90) and overlays(6,9,14,15,16,18,20,21,22,26,27,29,36). (2) The module set on its own does not discriminate at all here, because every ov006 minigame leaf answers to the same set; only the resolved referrer NAME separates them.",
+    "POSITIVE CONTROL, PASSED. The census returns _ZTV12dScMgAmida_c (0x0213b918) at the exact slot offsets the class header declares: InitResources at +0x00 (slot 0), AfterCleanupResources at +0x14 (slot 5), Behavior at +0x18 (slot 6), Render at +0x24 (slot 9), D1 at +0x40 (slot 16), D0 at +0x44 (slot 17), OnYoshiTryEat at +0x48 (slot 18), and the slot 31/34/35/36 overrides at +0x7c/+0x88/+0x8c/+0x90. Every vtable-pinned member comes back with the class's own _ZTV at the offset it is declared at. The vtable ADDRESS itself has exactly three referrers image-wide: D1 (from 0x020d10a0), D0 (from 0x020d1150) and dScMgAmida_c_classInit (from 0x020d5a2c); the third is what puts classInit in this run.",
+    "BASE-RATE CONTROL over two sibling ov006 classes, same census, comparable window widths. The census DISCRIMINATES; it is not returning the same set for everything. This run [0x020d1018,0x020d5a54) resolves to 6 dScMgAmida_c members, dScMgAmida_c_classInit, 12 words of its own vtable and 4 unlabelled ov006 helpers that are themselves inside the run, with ZERO dScMgTrampoline_c and ZERO dScMgBomroom_c referrers. The dScMgBomroom_c run immediately above [0x020d5a54,0x020d9574) resolves to 4 dScMgBomroom_c members, 39 words of its own vtable and 19 of its own helpers, ZERO Amida. The dScMgTrampoline_c / dScMgTrampoline2_c run immediately below [0x020d01e0,0x020d1018) resolves to 8 dScMgTrampoline_c and 6 dScMgTrampoline2_c members, both of their classInits and __sinit_ov006_0212fc7c, ZERO Amida.",
+    "THE TWO BOUNDARY WORDS, INDIVIDUALLY. LOW EDGE: the function immediately below the run, func_ov006_020d1008 (0x020d1008, 4 bytes), is referenced by _ZN17dScMgTrampoline_cD0Ev, _ZN17dScMgTrampoline_cD1Ev, _ZN18dScMgTrampoline2_cD0Ev, _ZN18dScMgTrampoline2_cD1Ev, both Trampoline classInits and __sinit_ov006_0212fc7c: it is the Trampolines' array destructor, not Amida's. The first word of the run, _ZN12dScMgAmida_cD1Ev (0x020d1018), is referenced only by Amida's own vtable. HIGH EDGE: func_ov006_020d5a50 has exactly ONE referrer image-wide, dScMgAmida_c_classInit, which hands it to __cxa_vec_ctor as the per-element constructor for the 0x80-entry piece array; the next function above it, _ZN14dScMgBomroom_cD1Ev (0x020d5a54), is referenced only by _ZTV14dScMgBomroom_c. Each of the run's other unlabelled func_ov006_* helpers likewise has every one of its referrers inside the run.",
+    "VTABLE SLOTS 0 AND 3: THE ABSTRACT HYPOTHESIS IS REFUTED ON THIS CLASS, and is recorded here as a refutation. Read out of extracted/overlays/overlay_0006.bin, slot 0 at 0x0213b918 is 0x020d5384 and slot 3 at 0x0213b924 is 0x02043bf0. Neither is a bare zero word and both carry a relocation: slot 0 a load to 0x020d5384 in module overlay(6), the class's own InitResources, and slot 3 a load to 0x02043bf0 in module main, an inherited override. dScMgAmida_c is not abstract at 0 or at 3, so an abstract slot is NOT the mechanism behind tu_map's undercount here. The undercount is at the TOP edge only, and its mechanism is that tu_map's right boundary stops at the last mangled member.",
+    "VTABLE LENGTH: 37 pointer slots (0..36), terminating at 0x0213b9ac where the next word reads 0x00000100 and is not a code address. The 31-words=dActor_c / 32-words=dBgActor_c rule DOES NOT APPLY to this class and was not used: dScMgAmida_c is a dScMgBase_c leaf, not an actor. Measured control in the same overlay: _ZTV14dScMgBomroom_c 36 slots, _ZTV11dScMgCard_c 37, _ZTV11dScMgCoin_c 36, _ZTV16dMgJump3DMario_c 8, _ZTV12dMgCardObj_c 3. The minigame-scene family sits at 36-37 and the 31/32 test does not separate its members.",
+    "WHY PARTIAL. This TU licenses 13 of the run's 28 functions: ROM ordinals 15..27, .text 0x020d3624..0x020d5a54, 9,264 bytes. The run is split by ordinal 14, func_ov006_020d27dc (0x020d27dc, 0xe48), which is a NONMATCHING draft. Its delink block carries no complete marker, so dsd serves the cartridge's own bytes for that range, and a licensed .text claim cannot span a hole: re-measured on this tree, 0 of the delinks entries under config/arm9 carry more than one .text run. That leaves exactly two all-matching stretches: ordinals 0..13, 0x020d1018..0x020d27dc, 14 functions, 6,084 bytes; and ordinals 15..27, this one, 13 functions, 9,264 bytes. This is the larger by bytes and carries every named member except the two destructors and the three small slot-31/34/35 overrides.",
+    "NO VTABLE IS EMITTED, and the reason is structural rather than chosen. The destructor pair (ROM ordinals 0 and 1, _ZN12dScMgAmida_cD1Ev at 0x020d1018 BELOW _ZN12dScMgAmida_cD0Ev at 0x020d10b8) sits on the far side of the ordinal-14 hole and is not in this licensed range, so this TU is not the class's key-function TU. The licensing audit of the compiled object reports 13 defined symbols, 13 LICENSED, 0 COLLIDES-GAP, 0 COLLIDES-SRC, 0 HOMELESS; compiler_only_output is empty and no _ZTV/_ZTI/_ZTS is produced. classInit installs the vtable pointer from the flat spelling &data_ov006_0213b918. include/dScMgAmida_c.h is NOT edited by this promotion.",
+    "NO DESTRUCTOR GRID WAS RUN, and this is the reason rather than an assumption. The D1/D0 pair is outside the licensed range, so no cell of the {destructor inline-in-class, destructor out-of-line} x {deferred codegen, defer_codegen off} grid can move a byte this TU emits: the object contains no destructor variant at all. Two facts were measured anyway so the agent who folds ordinals 0..13 does not have to. (a) There is NO D2 for this class anywhere in the image: 25 D2 symbols exist image-wide and not one of them is in ov006, let alone dScMgAmida_c's. (b) There is no ROM room for one either. D1 at 0x020d1018 size 0xa0 ends exactly where D0 at 0x020d10b8 begins, and D0 size 0xb4 ends exactly at func_ov006_020d116c. Any grid cell that would emit a D2 between those two addresses is excluded by the bytes, not by an argument from absence.",
+    "EMISSION ORDER, measured on this class rather than carried over. Source order is ROM-ASCENDING under #pragma defer_codegen off. The compiled object places the 13 functions at ELF section indices 5,7,9,11,13,15,17,19,21,23,25,27,29, ascending with source and therefore ascending with ROM address, and tubuild's own emission-order check reports all 13 function(s) in the expected ROM-ascending section order. Eight optimisation pragmas inherited from the legacy shards are carried as five positional push/off/pop brackets (opt_strength_reduction on ordinals 18,19,20,21,22; opt_common_subs on 19,20,21), which is what defer_codegen off makes bind per-bracket instead of leaking file-wide."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020d3624",
+      "end": "0x020d5a54"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov006_020d3624",
+      "address": "0x020d3624",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov006_020d3624.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov006_020d3668",
+      "address": "0x020d3668",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020d3668.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020d36a4",
+      "address": "0x020d36a4",
+      "size": "0x000004fc",
+      "legacy_source": "src/func_ov006_020d36a4.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020d3ba0",
+      "address": "0x020d3ba0",
+      "size": "0x0000098c",
+      "legacy_source": "src/func_ov006_020d3ba0.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020d452c",
+      "address": "0x020d452c",
+      "size": "0x000002c8",
+      "legacy_source": "src/func_ov006_020d452c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020d47f4",
+      "address": "0x020d47f4",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov006_020d47f4.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12dScMgAmida_c6RenderEv",
+      "address": "0x020d48dc",
+      "size": "0x000002a0",
+      "legacy_source": "src/_ZN12dScMgAmida_c6RenderEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12dScMgAmida_c8BehaviorEv",
+      "address": "0x020d4b7c",
+      "size": "0x00000774",
+      "legacy_source": "src/_ZN12dScMgAmida_c8BehaviorEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN12dScMgAmida_c13OnYoshiTryEatEi",
+      "address": "0x020d52f0",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN12dScMgAmida_c13InitResourcesEv",
+      "address": "0x020d5384",
+      "size": "0x000005a0",
+      "legacy_source": "src/_ZN12dScMgAmida_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN12dScMgAmida_c21AfterCleanupResourcesEj",
+      "address": "0x020d5924",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "dScMgAmida_c_classInit",
+      "address": "0x020d5974",
+      "size": "0x000000dc",
+      "legacy_source": "src/d_s_mg_amida.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020d5a50",
+      "address": "0x020d5a50",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020d5a50.c",
+      "ordinal": 12
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Assembled by hand from the thirteen legacy one-function sources. tubuild.py create cannot be used on this TU: several of the shards wrap their bodies in an extern \"C\" block, which its splitter refuses by design.",
+    "Declaration reconciliation, all of it codegen-free and all of it settled by the 13/13 byte match rather than by argument. Where two shards spelled one interface differently the more complete observation was kept and the narrower call site took the implicit conversion. func_02054efc returns void* per include/decl_common.h and three shards had re-declared it as char*, so those call sites now cast. _ZN11dScMgBase_cC2Ev returns void per decl_common.h and classInit had declared it int, whose result it discarded. data_ov006_0213b918 is a scalar in decl_common.h and classInit had declared it an int array, so its address is now taken with &. MultiStore16 takes void*, so the char* call site converts implicitly. data_ov006_0212e1a8 is char[], which both shards then do byte arithmetic on. func_ov006_020d36a4 keeps its own definition's dScMgAmida_c* parameter and its two callers pass this and a cast pointer. func_ov006_020d3668's definition took NO parameter while its one call site passes the scene pointer; under C linkage only one prototype can exist, so it now declares an unnamed, unread void* parameter.",
+    "Four of the merged members reach vtable slot 36 through a local shim struct rather than through this->Unk36(). Two shards had both named their shim Obj; that collision is the only rename in the merge (the second is now Obj3ba0), so every call expression is otherwise textually what it was. None of the four shim structs declares a virtual of its own, so none is a key function and none emits a vtable, confirmed by the object's licensing audit reporting 0 HOMELESS and 0 COLLIDES-*.",
+    "The shim dispatch itself is neither introduced nor endorsed here: it is what the pre-migration sources already had, and the class header records the measurement that keeps it (a plain virtual call compiled Render 0xc bytes larger than the ROM, 0x2ac against 0x2a0). Re-testing it belongs in its own commit with its own ROM build behind it."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgAmida_c/dScMgAmida_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 13,
+    "functions_declared": 13,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov006-dScMgAmida_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020d3624",
+        "end": "0x020d5a54",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020d3624",
+          "end": "0x020d5a54",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 13
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

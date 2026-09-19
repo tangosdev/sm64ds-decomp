@@ -7,7 +7,8 @@ in the tree with the programme's own gold-standard evidence attached.
 declared 1-byte width at that offset -- which is true, and which quietly removes it
 from the marker bucket. So the markers with the BEST evidence fell off the worklist
 precisely because the evidence was good. `daKrb_c.mModelAnim @0x370` was the case that
-proved it: `src/_ZN7daKrb_cD1Ev.cpp` D1-called `_ZN9ModelAnimD1Ev((char *)t + 0x370)` --
+proved it: the hand-written `daKrb_c` D1 shard, since folded into
+`src/actors/daKrb_c.cpp`, D1-called `_ZN9ModelAnimD1Ev((char *)t + 0x370)` --
 the very relocation notes/archive/plan-gen-header.md 3 uses as its worked example --
 while the field was still a bare `u8`.
 

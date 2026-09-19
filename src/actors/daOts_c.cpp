@@ -15,7 +15,7 @@
  * and where four different spellings of the same two ROM symbols had to be
  * collapsed into one (see the extern block below). InitResourcesCommon and
  * BehaviorCommon sat immediately after Render as leftover shards; they belong
- * here (this-pointer layout plus named daOts callees), not with Bully.
+ * here (this-pointer layout plus named daOts callees), not with daDonketu_c.
  *
  * THIS TU OWNS THE CLASS VTABLE. CleanupResources (vtable slot 3) is the first
  * virtual daOts_c declares out of line -- the destructor is inline in the class
@@ -54,8 +54,8 @@
  * - ApproachLinear stays mangled (Rsss / Riii); no header method form here.
  * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
  * - SharedFilePtr +4: SetAnim BCA loads; SharedFilePtr.h has no fields.
- * - 0x398..0x3f9 stay children's padding (annexing would shrink Bully /
- *   BigBully / daIDonketu_c pads; out of this TU). Helpers reach them as
+ * - 0x398..0x3f9 stay children's padding (annexing would shrink daDonketu_c /
+ *   daBDonketu_c / daIDonketu_c pads; out of this TU). Helpers reach them as
  *   offset soup.
  * - func_ov064_* helpers still in this TU keep cartridge addresses (no
  *   identifiers). InitResourcesCommon / BehaviorCommon are the two that
@@ -253,7 +253,7 @@ int daOts_c::InitResourcesCommon()
  *
  * Shared Behavior body. daOts_c leaves slot 6 pure virtual; all three
  * children fall through to this after UpdateKillByInvincibleChar (and
- * BigBully's secret-sound preamble). State machine on the children's +0x398
+ * daBDonketu_c's secret-sound preamble). State machine on the children's +0x398
  * word, calling this TU's leftover helpers and UpdateDeathState.
  *
  * The English name describes those call sites; the stripped image carries no
@@ -327,8 +327,8 @@ int daOts_c::BehaviorCommon()
 // @symbol _ZN7daOts_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9
  *
- * WAS _ZN5Bully6RenderEv, and misattributed: slot 9 holds 0x02116cf0 in daOts_c,
- * Bully AND daIDonketu_c. BigBully is the only one of the three that overrides
+ * WAS _ZN11daDonketu_c6RenderEv, and misattributed: slot 9 holds 0x02116cf0 in daOts_c,
+ * daDonketu_c AND daIDonketu_c. daBDonketu_c is the only one of the three that overrides
  * it (0x0211764c), which is exactly the pattern of an inherited method with one
  * child that replaces it.
  */
@@ -343,9 +343,9 @@ int daOts_c::Render()
 // @symbol _ZN7daOts_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 3
  *
- * WAS _ZN5Bully16CleanupResourcesEv, and that was a misattribution, not a
+ * WAS _ZN11daDonketu_c16CleanupResourcesEv, and that was a misattribution, not a
  * spelling choice: slot 3 holds 0x02116ca0 in daOts_c's table AND in all three
- * children's, so Bully does not override this -- it inherits it.
+ * children's, so daDonketu_c does not override this -- it inherits it.
  *
  * THE KEY FUNCTION. It is the first virtual daOts_c declares out of line, so
  * this TU emits _ZTV7daOts_c and the destructor pair the table points at.

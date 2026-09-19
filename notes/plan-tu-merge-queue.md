@@ -186,7 +186,7 @@ batch is where shape-family amortization first pays.
 |[ov045](../config/arm9/overlays/ov045/symbols.txt)| 0x2111c30|  n=5|  L=74|   `TiltingPlatformBfs`|    pcov=3|
 |[ov047](../config/arm9/overlays/ov047/symbols.txt)| 0x21111a0|  n=4|  L=68|   `daObjKm3_Kurumajiku_c`| pcov=2|
 |[ov047](../config/arm9/overlays/ov047/symbols.txt)| 0x21114d4|  n=5|  L=96|   `daObjKm3_Dorifu_c`| |
-|[ov085](../config/arm9/overlays/ov085/symbols.txt)| 0x212edac|  n=7|  L=226|  `WallSign`| |
+|[ov085](../config/arm9/overlays/ov085/symbols.txt)| 0x212edac|  n=7|  L=226|  `daObjKanban_c`| |
 
 B4 completes [ov045](../config/arm9/overlays/ov045/symbols.txt): with B0's two, all four [ov045](../config/arm9/overlays/ov045/symbols.txt) safe TUs are done, making ov045 the
 first module where a `config_tu/` conversion becomes conceivable.
@@ -236,7 +236,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov052](../config/arm9/overlays/ov052/symbols.txt)| 0x2111440|  n=7|   `SquarePathLift`|     CONF2|
 |[ov056](../config/arm9/overlays/ov056/symbols.txt)| 0x21111a0|  n=7|   `BigMovingIceBlock`|  CONF2 WHOLEMOD pcov=2|
 |[ov062](../config/arm9/overlays/ov062/symbols.txt)| 0x211af38|  n=8|   `KoopaFlag`|          CONF2 pcov=3|
-|[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x211a930|  n=8|   `Clam`|               CONF1|
+|[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x211a930|  n=8|   `daObjShell_c`|               CONF1|
 
 
 **B9 — R1 tail, largest bodies · 5 TUs / 41 files / net −36 / 1,341 lines**
@@ -269,7 +269,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov033](../config/arm9/overlays/ov033/symbols.txt)| 0x21111a0|  n=8|   `TinyCover`|        NORM1|
 |[ov043](../config/arm9/overlays/ov043/symbols.txt)| 0x21111a0|  n=7|   `daObjKm1_Ukishima_c`|      NORM1|
 |[ov045](../config/arm9/overlays/ov045/symbols.txt)| 0x21111a0|  n=9|   `FireSeaElevator`|  NORM1 CONF2|
-|[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x21174a0|  n=8|   `BigBully`|         NORM1 pcov=2|
+|[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x21174a0|  n=8|   `daBDonketu_c`|         NORM1 pcov=2|
 
 
 **B12 — R3, `#pragma long_calls on` · 10 TUs / 59 files / net −49 / 1,265 lines**

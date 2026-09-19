@@ -96,11 +96,11 @@ src/d_a_basabasa.c:
     complete
     .text start:0x02117ee8 end:0x02117f40
 
-src/_ZN6DorrieD1Ev.cpp:
+src/_ZN9daDossy_cD1Ev.cpp:
     complete
     .text start:0x02117f40 end:0x02117fa8
 
-src/_ZN6DorrieD0Ev.cpp:
+src/_ZN9daDossy_cD0Ev.cpp:
     complete
     .text start:0x02117fa8 end:0x02118024
 
@@ -148,11 +148,11 @@ src/func_ov065_02118cc4.c:
     complete
     .text start:0x02118cc4 end:0x02118d04
 
-src/_ZN6Dorrie16CleanupResourcesEv.cpp:
+src/_ZN9daDossy_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118d04 end:0x02118d80
 
-src/_ZN6Dorrie6RenderEv.cpp:
+src/_ZN9daDossy_c6RenderEv.cpp:
     complete
     .text start:0x02118d80 end:0x02118da8
 
@@ -160,7 +160,7 @@ src/_ZN12daDossyCap_c6RenderEv.cpp:
     complete
     .text start:0x02118da8 end:0x02118df0
 
-src/_ZN6Dorrie8BehaviorEv.cpp:
+src/_ZN9daDossy_c8BehaviorEv.cpp:
     complete
     .text start:0x02118df0 end:0x021190a8
 
@@ -172,7 +172,7 @@ src/func_ov065_02119210.c:
     complete
     .text start:0x02119210 end:0x02119228
 
-src/_ZN6Dorrie13InitResourcesEv.cpp:
+src/_ZN9daDossy_c13InitResourcesEv.cpp:
     complete
     .text start:0x02119228 end:0x021194e8
 

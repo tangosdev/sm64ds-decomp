@@ -266,7 +266,7 @@
     "ov065_siblings_at_this_base": {
       "promoted": ["daObjCtMecha03_c", "daObjCtMecha04_c", "daObjCtMecha05_c"],
       "text-verified": ["daObjCtKaitendai_c"],
-      "no_manifest": ["Snufit", "Swoop", "Dorrie", "DorriePlatform", "daDossyCap_c", "TtcRotatingCube", "TtcRotatingGear", "TTC_MovingBeam", "daObjCtRotateBlock_c", "daObjCtKaitendai_c", "daObjCtMecha08_c", "daObjCtMecha09_c"],
+      "no_manifest": ["Snufit", "Swoop", "daDossy_c", "DorriePlatform", "daDossyCap_c", "TtcRotatingCube", "TtcRotatingGear", "TTC_MovingBeam", "daObjCtRotateBlock_c", "daObjCtKaitendai_c", "daObjCtMecha08_c", "daObjCtMecha09_c"],
       "measured_from": "config/tu_manifest.d/ov065/ at a81adfa37 -- four files only"
     },
     "prose_naming_snufit": ["notes/archive/n64-decomp-cross-reference.md", "notes/data/class-build-worklist.tsv", "notes/data/tu-merge-candidates.json", "notes/data/tu-promotion-queue.tsv", "notes/handoff-marker-typing.md", "symbols/overlay_actors.md"],

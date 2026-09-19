@@ -2324,13 +2324,13 @@
    "start": "0x212cc88",
    "end": "0x212d528",
    "classes": [
-    "RabbitKey"
+    "daObj_Mip_Key_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN9RabbitKeyD1Ev.cpp",
-    "src/_ZN9RabbitKeyD0Ev.cpp",
+    "src/_ZN15daObj_Mip_Key_cD1Ev.cpp",
+    "src/_ZN15daObj_Mip_Key_cD0Ev.cpp",
     "src/func_ov085_0212cd0c.cpp",
     "src/func_ov085_0212cd80.c",
     "src/func_ov085_0212d038.c",
@@ -2338,11 +2338,11 @@
     "src/func_ov085_0212d24c.c",
     "src/func_ov085_0212d268.cpp",
     "src/func_ov085_0212d2b8.cpp",
-    "src/_ZN9RabbitKey16CleanupResourcesEv.cpp",
-    "src/_ZN9RabbitKey16OnPendingDestroyEv.cpp",
-    "src/_ZN9RabbitKey6RenderEv.cpp",
-    "src/_ZN9RabbitKey8BehaviorEv.cpp",
-    "src/_ZN9RabbitKey13InitResourcesEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c16OnPendingDestroyEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c6RenderEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c8BehaviorEv.cpp",
+    "src/_ZN15daObj_Mip_Key_c13InitResourcesEv.cpp",
     "src/d_a_obj_mip_key.c"
    ],
    "ext_mix": {
@@ -2872,13 +2872,13 @@
    "start": "0x211a200",
    "end": "0x211a930",
    "classes": [
-    "TreasureChest"
+    "daObjTbox_c"
    ],
    "n_functions_map": 16,
    "n_files": 16,
    "files": [
-    "src/_ZN13TreasureChestD1Ev.cpp",
-    "src/_ZN13TreasureChestD0Ev.c",
+    "src/_ZN11daObjTbox_cD1Ev.cpp",
+    "src/_ZN11daObjTbox_cD0Ev.c",
     "src/func_ov064_0211a284.c",
     "src/func_ov064_0211a2c4.cpp",
     "src/func_ov064_0211a380.c",
@@ -2888,10 +2888,10 @@
     "src/func_ov064_0211a6e0.c",
     "src/func_ov064_0211a6ec.cpp",
     "src/func_ov064_0211a734.cpp",
-    "src/_ZN13TreasureChest16CleanupResourcesEv.cpp",
-    "src/_ZN13TreasureChest6RenderEv.cpp",
-    "src/_ZN13TreasureChest8BehaviorEv.cpp",
-    "src/_ZN13TreasureChest13InitResourcesEv.cpp",
+    "src/_ZN11daObjTbox_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daObjTbox_c6RenderEv.cpp",
+    "src/_ZN11daObjTbox_c8BehaviorEv.cpp",
+    "src/_ZN11daObjTbox_c13InitResourcesEv.cpp",
     "src/d_a_obj_tbox.c"
    ],
    "ext_mix": {
@@ -3893,13 +3893,13 @@
    "start": "0x2119a58",
    "end": "0x211a200",
    "classes": [
-    "WaterRing"
+    "daWater_Ring_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN9WaterRingD1Ev.cpp",
-    "src/_ZN9WaterRingD0Ev.cpp",
+    "src/_ZN14daWater_Ring_cD1Ev.cpp",
+    "src/_ZN14daWater_Ring_cD0Ev.cpp",
     "src/func_ov064_02119afc.cpp",
     "src/func_ov064_02119c60.c",
     "src/func_ov064_02119ce4.c",
@@ -3907,11 +3907,11 @@
     "src/func_ov064_02119ea0.c",
     "src/func_ov064_02119ecc.cpp",
     "src/func_ov064_02119f1c.cpp",
-    "src/_ZN9WaterRing16CleanupResourcesEv.cpp",
-    "src/_ZN9WaterRing16OnPendingDestroyEv.cpp",
-    "src/_ZN9WaterRing6RenderEv.cpp",
-    "src/_ZN9WaterRing8BehaviorEv.cpp",
-    "src/_ZN9WaterRing13InitResourcesEv.cpp",
+    "src/_ZN14daWater_Ring_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daWater_Ring_c16OnPendingDestroyEv.cpp",
+    "src/_ZN14daWater_Ring_c6RenderEv.cpp",
+    "src/_ZN14daWater_Ring_c8BehaviorEv.cpp",
+    "src/_ZN14daWater_Ring_c13InitResourcesEv.cpp",
     "src/daWater_Ring_c_classInit.c"
    ],
    "ext_mix": {
@@ -4389,24 +4389,24 @@
    "start": "0x213367c",
    "end": "0x2133ce8",
    "classes": [
-    "Shark",
+    "daShark_c",
     "daPukupuku_c"
    ],
    "n_functions_map": 13,
    "n_files": 13,
    "files": [
-    "src/_ZN5SharkD1Ev.cpp",
-    "src/_ZN5SharkD0Ev.cpp",
+    "src/_ZN9daShark_cD1Ev.cpp",
+    "src/_ZN9daShark_cD0Ev.cpp",
     "src/func_ov090_02133710.cpp",
     "src/func_ov090_02133830.c",
     "src/func_ov090_0213387c.c",
     "src/func_ov090_021338b4.cpp",
     "src/func_ov090_02133904.c",
-    "src/_ZN5Shark16CleanupResourcesEv.cpp",
-    "src/_ZN5Shark16OnPendingDestroyEv.cpp",
-    "src/_ZN5Shark6RenderEv.cpp",
-    "src/_ZN5Shark8BehaviorEv.cpp",
-    "src/_ZN5Shark13InitResourcesEv.cpp",
+    "src/_ZN9daShark_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daShark_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daShark_c6RenderEv.cpp",
+    "src/_ZN9daShark_c8BehaviorEv.cpp",
+    "src/_ZN9daShark_c13InitResourcesEv.cpp",
     "src/d_a_shark.c"
    ],
    "ext_mix": {
@@ -4532,24 +4532,24 @@
    "start": "0x21185c0",
    "end": "0x2118b50",
    "classes": [
-    "LavaBubble"
+    "daBbl_c"
    ],
    "n_functions_map": 14,
    "n_files": 14,
    "files": [
-    "src/_ZN10LavaBubbleD1Ev.cpp",
-    "src/_ZN10LavaBubbleD0Ev.cpp",
+    "src/_ZN7daBbl_cD1Ev.cpp",
+    "src/_ZN7daBbl_cD0Ev.cpp",
     "src/func_ov064_02118644.c",
     "src/func_ov064_0211873c.c",
     "src/func_ov064_02118760.c",
     "src/func_ov064_021187d0.c",
     "src/func_ov064_021187ec.cpp",
-    "src/_ZN10LavaBubble16CleanupResourcesEv.cpp",
-    "src/_ZN10LavaBubble16OnPendingDestroyEv.cpp",
-    "src/_ZN10LavaBubble6RenderEv.cpp",
-    "src/_ZN10LavaBubble8BehaviorEv.cpp",
-    "src/_ZN10LavaBubble13InitResourcesEv.cpp",
-    "src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp",
+    "src/_ZN7daBbl_c16CleanupResourcesEv.cpp",
+    "src/_ZN7daBbl_c16OnPendingDestroyEv.cpp",
+    "src/_ZN7daBbl_c6RenderEv.cpp",
+    "src/_ZN7daBbl_c8BehaviorEv.cpp",
+    "src/_ZN7daBbl_c13InitResourcesEv.cpp",
+    "src/_ZN7daBbl_c13OnYoshiTryEatEv.cpp",
     "src/daBbl_c_classInit.c"
    ],
    "ext_mix": {
@@ -4597,24 +4597,24 @@
    "start": "0x213269c",
    "end": "0x2133034",
    "classes": [
-    "MantaRay",
+    "daManta_c",
     "daMenbo_c"
    ],
    "n_functions_map": 13,
    "n_files": 13,
    "files": [
-    "src/_ZN8MantaRayD1Ev.cpp",
-    "src/_ZN8MantaRayD0Ev.cpp",
+    "src/_ZN9daManta_cD1Ev.cpp",
+    "src/_ZN9daManta_cD0Ev.cpp",
     "src/func_ov090_02132730.cpp",
     "src/func_ov090_021327e4.cpp",
     "src/func_ov090_02132a58.cpp",
     "src/func_ov090_02132ac4.cpp",
     "src/func_ov090_02132b14.c",
-    "src/_ZN8MantaRay16CleanupResourcesEv.cpp",
-    "src/_ZN8MantaRay16OnPendingDestroyEv.cpp",
-    "src/_ZN8MantaRay6RenderEv.cpp",
-    "src/_ZN8MantaRay8BehaviorEv.cpp",
-    "src/_ZN8MantaRay13InitResourcesEv.cpp",
+    "src/_ZN9daManta_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daManta_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daManta_c6RenderEv.cpp",
+    "src/_ZN9daManta_c8BehaviorEv.cpp",
+    "src/_ZN9daManta_c13InitResourcesEv.cpp",
     "src/d_a_manta.c"
    ],
    "ext_mix": {
@@ -5516,18 +5516,18 @@
    "start": "0x211a930",
    "end": "0x211adb0",
    "classes": [
-    "Clam"
+    "daObjShell_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN4ClamD1Ev.cpp",
-    "src/_ZN4ClamD0Ev.cpp",
+    "src/_ZN12daObjShell_cD1Ev.cpp",
+    "src/_ZN12daObjShell_cD0Ev.cpp",
     "src/func_ov064_0211a9b4.c",
-    "src/_ZN4Clam16CleanupResourcesEv.cpp",
-    "src/_ZN4Clam6RenderEv.cpp",
-    "src/_ZN4Clam8BehaviorEv.cpp",
-    "src/_ZN4Clam13InitResourcesEv.cpp",
+    "src/_ZN12daObjShell_c16CleanupResourcesEv.cpp",
+    "src/_ZN12daObjShell_c6RenderEv.cpp",
+    "src/_ZN12daObjShell_c8BehaviorEv.cpp",
+    "src/_ZN12daObjShell_c13InitResourcesEv.cpp",
     "src/daObjShell_c_classInit.cpp"
    ],
    "ext_mix": {
@@ -6493,17 +6493,17 @@
    "start": "0x212edac",
    "end": "0x212f27c",
    "classes": [
-    "WallSign"
+    "daObjKanban_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN8WallSignD1Ev.cpp",
-    "src/_ZN8WallSignD0Ev.cpp",
-    "src/_ZN8WallSign16CleanupResourcesEv.cpp",
-    "src/_ZN8WallSign6RenderEv.cpp",
-    "src/_ZN8WallSign8BehaviorEv.cpp",
-    "src/_ZN8WallSign13InitResourcesEv.cpp",
+    "src/_ZN13daObjKanban_cD1Ev.cpp",
+    "src/_ZN13daObjKanban_cD0Ev.cpp",
+    "src/_ZN13daObjKanban_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjKanban_c6RenderEv.cpp",
+    "src/_ZN13daObjKanban_c8BehaviorEv.cpp",
+    "src/_ZN13daObjKanban_c13InitResourcesEv.cpp",
     "src/d_a_obj_kanban.c"
    ],
    "ext_mix": {
@@ -6904,18 +6904,18 @@
    "start": "0x21174a0",
    "end": "0x2117978",
    "classes": [
-    "BigBully"
+    "daBDonketu_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN8BigBullyD1Ev.cpp",
-    "src/_ZN8BigBullyD0Ev.c",
+    "src/_ZN12daBDonketu_cD1Ev.cpp",
+    "src/_ZN12daBDonketu_cD0Ev.c",
     "src/func_ov064_0211755c.c",
     "src/func_ov064_021175cc.cpp",
-    "src/_ZN8BigBully6RenderEv.cpp",
-    "src/_ZN8BigBully8BehaviorEv.cpp",
-    "src/_ZN8BigBully13InitResourcesEv.cpp",
+    "src/_ZN12daBDonketu_c6RenderEv.cpp",
+    "src/_ZN12daBDonketu_c8BehaviorEv.cpp",
+    "src/_ZN12daBDonketu_c13InitResourcesEv.cpp",
     "src/daBDonketu_c_classInit.c"
    ],
    "ext_mix": {
@@ -26950,22 +26950,22 @@
    "start": "0x2117070",
    "end": "0x21174a0",
    "classes": [
-    "Bully",
+    "daDonketu_c",
     "daDonketu_c"
    ],
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
-    "src/_ZN5BullyD1Ev.cpp",
-    "src/_ZN5BullyD0Ev.c",
+    "src/_ZN11daDonketu_cD1Ev.cpp",
+    "src/_ZN11daDonketu_cD0Ev.c",
     "src/func_ov064_0211712c.c",
     "src/func_ov064_02117140.c",
     "src/func_ov064_02117154.c",
     "src/func_ov064_02117168.c",
     "src/func_ov064_021171b0.c",
     "src/func_ov064_02117220.cpp",
-    "src/_ZN5Bully8BehaviorEv.cpp",
-    "src/_ZN5Bully13InitResourcesEv.cpp",
+    "src/_ZN11daDonketu_c8BehaviorEv.cpp",
+    "src/_ZN11daDonketu_c13InitResourcesEv.cpp",
     "src/daDonketu_c_classInit.c"
    ],
    "ext_mix": {
@@ -27136,14 +27136,14 @@
    "start": "0x2117f40",
    "end": "0x21196bc",
    "classes": [
-    "Dorrie",
+    "daDossy_c",
     "DorrieCap"
    ],
    "n_functions_map": 29,
    "n_files": 28,
    "files": [
-    "src/_ZN6DorrieD1Ev.cpp",
-    "src/_ZN6DorrieD0Ev.cpp",
+    "src/_ZN9daDossy_cD1Ev.cpp",
+    "src/_ZN9daDossy_cD0Ev.cpp",
     "src/_ZN9DorrieCapD1Ev.c",
     "src/_ZN9DorrieCapD0Ev.c",
     "src/func_ov065_021180b8.c",
@@ -27154,13 +27154,13 @@
     "src/func_ov065_02118634.c",
     "src/func_ov065_02118c4c.c",
     "src/func_ov065_02118cc4.c",
-    "src/_ZN6Dorrie16CleanupResourcesEv.cpp",
-    "src/_ZN6Dorrie6RenderEv.cpp",
+    "src/_ZN9daDossy_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daDossy_c6RenderEv.cpp",
     "src/_ZN9DorrieCap6RenderEv.cpp",
-    "src/_ZN6Dorrie8BehaviorEv.cpp",
+    "src/_ZN9daDossy_c8BehaviorEv.cpp",
     "src/_ZN9DorrieCap8BehaviorEv.cpp",
     "src/func_ov065_02119210.c",
-    "src/_ZN6Dorrie13InitResourcesEv.cpp",
+    "src/_ZN9daDossy_c13InitResourcesEv.cpp",
     "src/_ZN9DorrieCap13InitResourcesEv.cpp",
     "src/func_ov065_0211956c.c",
     "src/func_ov065_02119594.c",
@@ -27858,13 +27858,13 @@
    "start": "0x211f000",
    "end": "0x2121f90",
    "classes": [
-    "ChiefChilly"
+    "daKing_Donketu_c"
    ],
    "n_functions_map": 47,
    "n_files": 47,
    "files": [
-    "src/_ZN11ChiefChillyD1Ev.cpp",
-    "src/_ZN11ChiefChillyD0Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD1Ev.cpp",
+    "src/_ZN16daKing_Donketu_cD0Ev.cpp",
     "src/func_ov073_0211f144.c",
     "src/func_ov073_0211f2c0.c",
     "src/func_ov073_0211f494.c",
@@ -27903,12 +27903,12 @@
     "src/func_ov073_02121538.cpp",
     "src/ChiefChilly_ChangeState.cpp",
     "src/func_ov073_021215cc.c",
-    "src/_ZN11ChiefChilly16CleanupResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp",
-    "src/_ZN11ChiefChilly6RenderEv.cpp",
-    "src/_ZN11ChiefChilly8BehaviorEv.cpp",
-    "src/_ZN11ChiefChilly13InitResourcesEv.cpp",
-    "src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp",
+    "src/_ZN16daKing_Donketu_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnPendingDestroyEv.cpp",
+    "src/_ZN16daKing_Donketu_c6RenderEv.cpp",
+    "src/_ZN16daKing_Donketu_c8BehaviorEv.cpp",
+    "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp",
+    "src/_ZN16daKing_Donketu_c16OnAimedAtWithEggEv.cpp",
     "src/daKing_Donketu_c_classInit.cpp"
    ],
    "ext_mix": {
@@ -29247,13 +29247,13 @@
    "start": "0x2129020",
    "end": "0x2129d18",
    "classes": [
-    "Toad"
+    "daKinopio_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN4ToadD1Ev.cpp",
-    "src/_ZN4ToadD0Ev.c",
+    "src/_ZN11daKinopio_cD1Ev.cpp",
+    "src/_ZN11daKinopio_cD0Ev.c",
     "src/func_ov085_021290b4.c",
     "src/func_ov085_021291ac.c",
     "src/func_ov085_0212943c.cpp",
@@ -29262,10 +29262,10 @@
     "src/func_ov085_02129524.cpp",
     "src/func_ov085_02129570.cpp",
     "src/func_ov085_021295bc.c",
-    "src/_ZN4Toad16CleanupResourcesEv.cpp",
-    "src/_ZN4Toad6RenderEv.cpp",
-    "src/_ZN4Toad8BehaviorEv.cpp",
-    "src/_ZN4Toad13InitResourcesEv.cpp",
+    "src/_ZN11daKinopio_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daKinopio_c6RenderEv.cpp",
+    "src/_ZN11daKinopio_c8BehaviorEv.cpp",
+    "src/_ZN11daKinopio_c13InitResourcesEv.cpp",
     "src/d_a_kinopio.c"
    ],
    "ext_mix": {
@@ -29314,13 +29314,13 @@
    "start": "0x2129d18",
    "end": "0x212a6d4",
    "classes": [
-    "PrincessPeach"
+    "daPeach_c"
    ],
    "n_functions_map": 25,
    "n_files": 25,
    "files": [
-    "src/_ZN13PrincessPeachD1Ev.cpp",
-    "src/_ZN13PrincessPeachD0Ev.c",
+    "src/_ZN9daPeach_cD1Ev.cpp",
+    "src/_ZN9daPeach_cD0Ev.c",
     "src/func_ov085_02129dbc.cpp",
     "src/func_ov085_02129ebc.cpp",
     "src/func_ov085_02129f8c.c",
@@ -29338,11 +29338,11 @@
     "src/func_ov085_0212a430.cpp",
     "src/func_ov085_0212a46c.cpp",
     "src/func_ov085_0212a4a4.c",
-    "src/_ZN13PrincessPeach16CleanupResourcesEv.cpp",
-    "src/_ZN13PrincessPeach16OnPendingDestroyEv.cpp",
-    "src/_ZN13PrincessPeach6RenderEv.cpp",
-    "src/_ZN13PrincessPeach8BehaviorEv.cpp",
-    "src/_ZN13PrincessPeach13InitResourcesEv.cpp",
+    "src/_ZN9daPeach_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daPeach_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daPeach_c6RenderEv.cpp",
+    "src/_ZN9daPeach_c8BehaviorEv.cpp",
+    "src/_ZN9daPeach_c13InitResourcesEv.cpp",
     "src/d_a_peach.c"
    ],
    "ext_mix": {
@@ -29387,13 +29387,13 @@
    "start": "0x212d528",
    "end": "0x212edac",
    "classes": [
-    "LakituBro"
+    "daC_Jugem_c"
    ],
    "n_functions_map": 33,
    "n_files": 33,
    "files": [
-    "src/_ZN9LakituBroD1Ev.cpp",
-    "src/_ZN9LakituBroD0Ev.cpp",
+    "src/_ZN11daC_Jugem_cD1Ev.cpp",
+    "src/_ZN11daC_Jugem_cD0Ev.cpp",
     "src/func_ov085_0212d5dc.cpp",
     "src/func_ov085_0212d724.c",
     "src/func_ov085_0212d73c.c",
@@ -29419,11 +29419,11 @@
     "src/func_ov085_0212e728.cpp",
     "src/func_ov085_0212e778.cpp",
     "src/func_ov085_0212e858.c",
-    "src/_ZN9LakituBro16CleanupResourcesEv.cpp",
-    "src/_ZN9LakituBro16OnPendingDestroyEv.cpp",
-    "src/_ZN9LakituBro6RenderEv.cpp",
-    "src/_ZN9LakituBro8BehaviorEv.cpp",
-    "src/_ZN9LakituBro13InitResourcesEv.cpp",
+    "src/_ZN11daC_Jugem_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daC_Jugem_c16OnPendingDestroyEv.cpp",
+    "src/_ZN11daC_Jugem_c6RenderEv.cpp",
+    "src/_ZN11daC_Jugem_c8BehaviorEv.cpp",
+    "src/_ZN11daC_Jugem_c13InitResourcesEv.cpp",
     "src/d_a_c_jugem.c"
    ],
    "ext_mix": {
@@ -30567,13 +30567,13 @@
     "CapBlockMario",
     "CapBlockWario",
     "ExclamationBlock",
-    "QuestionBlock"
+    "daObjHatenaBlock_c"
    ],
    "n_functions_map": 40,
    "n_files": 40,
    "files": [
-    "src/_ZN13QuestionBlockD1Ev.cpp",
-    "src/_ZN13QuestionBlockD0Ev.cpp",
+    "src/_ZN18daObjHatenaBlock_cD1Ev.cpp",
+    "src/_ZN18daObjHatenaBlock_cD0Ev.cpp",
     "src/func_ov102_02149078.c",
     "src/func_ov102_02149100.c",
     "src/func_ov102_02149220.cpp",
@@ -30587,11 +30587,11 @@
     "src/func_ov102_0214953c.c",
     "src/func_ov102_02149610.cpp",
     "src/func_ov102_02149684.c",
-    "src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp",
-    "src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp",
-    "src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp",
-    "src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN18daObjHatenaBlock_c19OnHitFromUnderneathER8dActor_c.cpp",
+    "src/_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN18daObjHatenaBlock_c8OnKickedER8dActor_c.cpp",
+    "src/_ZN18daObjHatenaBlock_c11OnAttacked1ER8dActor_c.cpp",
+    "src/_ZN18daObjHatenaBlock_c15OnGroundPoundedER8dActor_c.cpp",
     "src/func_ov102_02149878.c",
     "src/func_ov102_021498c4.c",
     "src/func_ov102_021498e0.cpp",
@@ -30603,10 +30603,10 @@
     "src/func_ov102_02149e38.cpp",
     "src/func_ov102_02149ea4.c",
     "src/func_ov102_02149ff0.c",
-    "src/_ZN13QuestionBlock16CleanupResourcesEv.cpp",
-    "src/_ZN13QuestionBlock6RenderEv.cpp",
-    "src/_ZN13QuestionBlock8BehaviorEv.cpp",
-    "src/_ZN13QuestionBlock13InitResourcesEv.c",
+    "src/_ZN18daObjHatenaBlock_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjHatenaBlock_c6RenderEv.cpp",
+    "src/_ZN18daObjHatenaBlock_c8BehaviorEv.cpp",
+    "src/_ZN18daObjHatenaBlock_c13InitResourcesEv.c",
     "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_W.c",
     "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_L.c",
     "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_M.c",

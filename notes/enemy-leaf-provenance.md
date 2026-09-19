@@ -6,7 +6,7 @@ back, the field stays `unk_NNN` and the reason is recorded — a name nobody can
 check is a claim the next reader would trust for nothing.
 
 Classes covered here: JetStream, Goomboss, daWanwan_c, BobOmb, Whomp,
-RollingIronBall, KoopaShell, Klepto, daMip_c, ChiefChilly.
+RollingIronBall, KoopaShell, Klepto, daMip_c, daKing_Donketu_c.
 
 A recurring source of `unk_` in these headers is the `#else` C twin, which
 restates the whole `fBase_c -> dBase_c -> dActor_c -> dEnemyBase_c` chain flat.
@@ -32,7 +32,7 @@ once, here, rather than per class.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x300 | `mState` (`State *`) | `src/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `ChiefChilly` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
+| 0x300 | `mState` (`State *`) | `src/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `daKing_Donketu_c` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
 
 Left `unk_`:
 

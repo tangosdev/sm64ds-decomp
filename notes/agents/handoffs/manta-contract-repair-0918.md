@@ -22,13 +22,13 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-`MantaRay::InitResources` now calls `Model::LoadFile`, `Animation::LoadFile`,
+`daManta_c::InitResources` now calls `Model::LoadFile`, `Animation::LoadFile`,
 and `mModelAnim.SetFile` through their actual declarations. The removed local
 declaration incorrectly gave `Animation::LoadFile` a `void` return instead of
 the shared declaration's `char*`. The caller discards the result, but a matching
 instruction stream did not make that conflicting contract correct.
 
-`MantaRay::Behavior` now calls inherited `UpdatePosWithOnlySpeed` and the
+`daManta_c::Behavior` now calls inherited `UpdatePosWithOnlySpeed` and the
 collision object's `Clear` and `Update` methods directly. These replacements
 remove six manually spelled mangled declarations across the two methods.
 No headers, member layouts, metadata, enrollment, or attribution entries change.
@@ -46,7 +46,7 @@ repair to existing matched methods, not a new match or a complete class recovery
   initialization bridge remains and is recorded below.
 - `PATHPTR-2729-03` (reconstruction): Behavior still uses `C3`/`Obj` shadow types
   for its state callback. The Manta portion is tracked in issue #2750, owned by
-  `codex-integrator-0918` for a separately claimed continuation. The Shark
+  `codex-integrator-0918` for a separately claimed continuation. The daShark_c
   observation from the broader #2729 review is outside this repair and is not
   closed by it.
 - `PATHPTR-2729-04` (reconstruction): raw path/node reinterpretations, vector
@@ -65,7 +65,7 @@ Pinned compiler: `2004/b56`, wired-worktree canary passed.
 
 At original main `c1b266f36554734dc19851f88e08025cf3d43a25` plus this repair:
 
-- `python tools/prepush_linkcheck.py --files src/_ZN8MantaRay13InitResourcesEv.cpp src/_ZN8MantaRay8BehaviorEv.cpp --json build/manta-linkcheck.json`:
+- `python tools/prepush_linkcheck.py --files src/_ZN9daManta_c13InitResourcesEv.cpp src/_ZN9daManta_c8BehaviorEv.cpp --json build/manta-linkcheck.json`:
   exit 0, both VERIFIED, no differing bytes or blind relocations.
 - `python tools/rombuild.py -j 16 --no-rom --report-json build/manta-rombuild.json`:
   exit 0, 106/106 exact modules, 11,206 reproducing functions, zero mismatches.

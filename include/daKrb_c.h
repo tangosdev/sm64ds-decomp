@@ -47,25 +47,29 @@
  *
  * VTABLE. Three slots resolve from the census worklist against dActor_c's own vtable
  * (include/dActor_c.h), all previously blocked because this class was a flat struct
- * with no base to diff against. Two are named here:
+ * with no base to diff against. All three are named here:
  *
  *   slot 18  OnYoshiTryEat()              ov084 0x0212bfc0  -- named, byte-verified
- *   slot 19  OnTurnIntoEgg(Player &)      ov084 0x0212b344  -- STILL func_ov084_0212b344
+ *   slot 19  OnTurnIntoEgg(Player &)      ov084 0x0212b344  -- named, byte-verified
  *   slot 29  OnAimedAtWithEgg()           ov084 0x0212b30c  -- named, byte-verified
  *
- * SLOT 19 IS LEFT UNNAMED, on purpose. It has a PRE-EXISTING 4-byte gap that has
- * nothing to do with this migration: the untouched recovered free function does not
- * reproduce the ROM bytes either (candidate 0x1d0 vs target 0x1cc, confirmed against
- * the pre-rename original with tools/fdiff.py), and config/arm9/overlays/ov084/delinks.txt
- * never marked it `complete`. Isolated experiment (see the commit this header ships
- * with): the divergence appears verbatim on the ORIGINAL free function merely
- * recompiled with an `int` return instead of `void` -- nothing about turning it into
- * a method. That historical experiment questioned dActor_c.h's former int
- * declaration. The shared actor hook and named overrides now use void; this is
- * a consistent reconstruction, not an original signature recovered from a ROM
- * symbol table. The 4-byte observation above is the earlier isolated experiment,
- * not new proof for this class. Goomba's free hook remains unmigrated and needs
- * its own source and byte proof before this slot can become a named method.
+ * SLOT 19 WAS NAMED LAST, and enrolling the translation unit is what forced it. While
+ * the hook stayed a free function this class declared no override, so the compiler
+ * filled slot 19 with dActor_c's inherited word (arm9 0x02010154) where the cartridge's
+ * own vtable at ov084 0x02130948 holds 0x0212b344 -- one wrong word in thirty-one, in
+ * a table every reader of this class believed. Nothing in the tree compared the two
+ * until src/actors/daKrb_c.cpp became the enrolled owner of the run: an enrolled source
+ * carries a checked-in compiler-only-output policy for _ZTV7daKrb_c, and rombuild
+ * links the vtable this TU emits and compares it against the cartridge word by word
+ * before discarding it. Declaring the override and defining it as the method makes all
+ * thirty-one words agree, and the body still matches at 0x1cc -- `char *self =
+ * (char *)this` and one cast of the reference parameter are the whole cost.
+ *
+ * An older note here recorded a four-byte divergence on this function and treated it as
+ * a reason to leave the slot unnamed. That experiment recompiled the free function with
+ * an `int` return; the divergence was the return type, not the method conversion. The
+ * void signature this slot shares with every other named override carries no such cost,
+ * which the byte gate now states directly.
  *
  * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
  *
@@ -125,8 +129,8 @@ struct daKrb_c : dCapEnemy_c {
     /* methods */
     int Behavior();
     int CleanupResources();
-    /* Declared here so src/_ZN7daKrb_c13InitResourcesEv.cpp can be a real method
-       rather than an extern "C" free function under the mangled name. ~daKrb_c is
+    /* Declared here so daKrb_c::InitResources, in src/actors/daKrb_c.cpp, can be a
+       real method rather than an extern "C" free function under the mangled name. ~daKrb_c is
        still the first virtual DECLARED, so the key function -- and with it
        _ZTV7daKrb_c -- stays where it already was. */
     int InitResources();
@@ -135,8 +139,7 @@ struct daKrb_c : dCapEnemy_c {
 
     /* --- vtable, resolved from the census worklist against dActor_c --- */
     int OnYoshiTryEat();                        /* slot 18 */
-    /* slot 19 (OnTurnIntoEgg) is not declared here -- see the class comment.
-       It stays src/func_ov084_0212b344.cpp, an un-migrated free function. */
+    void OnTurnIntoEgg(Player &player);          /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
 };
 

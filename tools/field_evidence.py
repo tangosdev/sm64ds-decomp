@@ -19,7 +19,7 @@ This gathers the three routes to a handler and prints what each one reads:
             is where those land. Weakest route: confirm before believing it.
 
     python tools/field_evidence.py Bowser
-    python tools/field_evidence.py Dorrie --route called,scored
+    python tools/field_evidence.py daDossy_c --route called,scored
 
 Prints evidence, never verdicts. Read the handler before naming anything.
 """

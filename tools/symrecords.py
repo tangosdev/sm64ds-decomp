@@ -21,7 +21,7 @@ name. On 2026-08-30 a name-keyed "is this body sourced?" sweep took names from
 one record and looked them up against work keyed to the other; every divergent
 address came back "missing" and the sweep manufactured phantom crack targets out
 of functions that were matched, enrolled, and building (`func_ov062_0211bd10`,
-`_ZN13TreasureChest6State0Ev`). No name has that failure mode as an address: a
+`_ZN11daObjTbox_c6State0Ev`). No name has that failure mode as an address: a
 symbol's address is the same fact in both records, in delinks.txt, and in the
 provenance ledger.
 

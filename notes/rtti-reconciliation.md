@@ -159,8 +159,8 @@ Each row: the tree named an ancestor and skipped the class in between.
     daObjBSwdoor_c   (daObjBSwdoor_c)    : daObjSwdoor_c      tree said Platform
     daObjCvShutter_c (daObjCvShutter_c)    : daObjSwdoor_c      tree said Platform
     daObjFl_Ukiyuka_c                : daObjUkiyuka_c     tree said Platform
-    daDonketu_c      (Bully)         : daOts_c            tree said Enemy
-    daBDonketu_c     (BigBully)      : daOts_c            tree said Enemy
+    daDonketu_c      (daDonketu_c)         : daOts_c            tree said Enemy
+    daBDonketu_c     (daBDonketu_c)      : daOts_c            tree said Enemy
 ```
 This is exactly the failure mode `evidence_hierarchy.py`'s own docstring predicts — shims
 "routinely flatten the chain" because an intermediate base whose destructor was inlined away
@@ -416,9 +416,9 @@ identical-code folding is not silently reattributing anything.
 ### Two symbols in config are misattributed
 
 Reaching those vtables exposed a naming error the flattening had hidden. `daOts_c`'s own
-vtable slots 3 and 9 are named `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv` --
-but both are inherited unchanged by **both** of daOts_c's children, `daDonketu_c` (Bully)
-and `daBDonketu_c` (BigBully). A method both siblings inherit belongs to the base. The
+vtable slots 3 and 9 are named `_ZN11daDonketu_c16CleanupResourcesEv` and `_ZN11daDonketu_c6RenderEv` --
+but both are inherited unchanged by **both** of daOts_c's children, `daDonketu_c`
+and `daBDonketu_c`. A method both siblings inherit belongs to the base. The
 same shape appears at `daDsnBase_c` slots 3 and 9, named after `Thwomp`, its only child.
 
 These are `daOts_c`'s and `daDsnBase_c`'s methods wearing a descendant's name. Renaming
@@ -506,19 +506,19 @@ person re-deriving what is already known.
 
 ## 9. The two misattributed symbols: proven, not renameable yet
 
-`daOts_c` slots 3 and 9 are named `_ZN5Bully16CleanupResourcesEv` and
-`_ZN5Bully6RenderEv`; `daDsnBase_c` slots 3 and 9 are named after `Thwomp`.
+`daOts_c` slots 3 and 9 are named `_ZN11daDonketu_c16CleanupResourcesEv` and
+`_ZN11daDonketu_c6RenderEv`; `daDsnBase_c` slots 3 and 9 are named after `Thwomp`.
 
 The `daOts_c` case is provable, and identical-code folding does not weaken it.
-**BigBully does not derive from Bully** — both derive from `daOts_c` — so a method
-BigBully inherits at that address cannot be Bully's. It belongs to `daOts_c` or above,
-and `daOts_c` differs from `dEnemyBase_c` at that slot. Even if Bully declared an
+**daBDonketu_c does not derive from daDonketu_c** — both derive from `daOts_c` — so a method
+daBDonketu_c inherits at that address cannot be daDonketu_c's. It belongs to `daOts_c` or above,
+and `daOts_c` differs from `dEnemyBase_c` at that slot. Even if daDonketu_c declared an
 identical override that folded to the same address, `daOts_c::` is the name that must be
 right. The `daDsnBase_c` case has the same vtable evidence but only one child, so no
 sibling corroborates it.
 
 The fields corroborate too: both `CleanupResources` bodies reach `mFileTable`, so that
-field belongs to the base rather than to `Bully`/`Thwomp` where the headers put it.
+field belongs to the base rather than to `daDonketu_c`/`Thwomp` where the headers put it.
 
 **The rename was attempted and reverted.** It is not a mechanical change. Renaming the
 four symbols in `config/**/symbols.txt` and `delinks.txt`, renaming the four `src/` files
@@ -567,8 +567,8 @@ Corpus-wide only **three** width conflicts survive, all the same benign shape �
 header carries a `u8` marker where the base declares a real type:
 
     Bullet   @0xac vs Enemy: base s32, derived u8
-    MantaRay @0xa4 vs Enemy: base s32, derived u8
-    Shark    @0xa4 vs Enemy: base s32, derived u8
+    daManta_c @0xa4 vs Enemy: base s32, derived u8
+    daShark_c    @0xa4 vs Enemy: base s32, derived u8
 
 ## 11. The browsable reference
 ```sh

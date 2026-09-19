@@ -1,0 +1,373 @@
+{
+  "id": "ov006/dScMgSlot1_c+dScMgSlot3_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp",
+  "promoted_source": "src/actors/dScMgSlot1_c+dScMgSlot3_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "SUB-RANGE OF A LARGER TU, DISCLOSED. The ROM's translation unit is 0x0210a8c0..0x0210d6b8, 41 functions, holding dScMgSlot1_c and dScMgSlot3_c together; tools/tu_map.py derives the same span and label. This entry claims ordinals 0..38, 0x0210a8c0..0x0210c9e0.",
+    "WHY NOT ALL 41: ROM ordinal 39, _ZN12dScMgSlot1_c8BehaviorEv at 0x0210c9e0 size 0x81c, has NO entry of any kind in config/arm9/overlays/ov006/delinks.txt. Its recovered source src/_ZN12dScMgSlot1_c8BehaviorEv.cpp carries an honest NONMATCHING banner (19 of 519 words diverge, colouring residue) and tools/enroll.py keeps it out of the ROM build, so dsd serves that range from raw ROM. A delink entry cannot skip a range and resume, so no single claim reaches past it; ordinal 40 lies beyond it. 0..38 is the largest contiguous claimable run in this unit.",
+    "TWO CLASSES, ONE UNIT: sorting every ov006 symbol by address over 0x0210a8c0..0x0210d6b8 yields only dScMgSlot1_c (with its nested betIcon_c), dScMgSlot3_c, and unnamed func_ov006_* / *_classInit free functions. No third NAMED class falls between the first and last member, so the two classes cannot be separate units.",
+    "Bounds are hard on the left: 0x0210a8c0 is exactly where the already-promoted src/minigames/d_s_mg_single3_d_base.cpp complete range ends.",
+    "PRAGMA COLLISION RESOLVED BY #pragma defer_codegen off, MEASURED NOT ASSUMED. Three configurations of this same 39-function source were compiled and byte-compared. (a) file-global `opt_strength_reduction off`: 34/39, DIFF at ROM ordinals 12, 13, 19, 30, 35. (b) no optimisation pragma at all: 34/39, DIFF at ordinals 13, 15, 16, 19, 38. The two DIFF sets are disjoint apart from 13 and 19, which is the delete-outright positive control: the pragma demonstrably moves bytes at file scope, so a bracket test on it can carry signal. (c) `#pragma defer_codegen off` plus an ascending-ROM-order rewrite, with `opt_strength_reduction off` bracketed around ordinals 15, 16 and 38 and both it and `opt_loop_invariants off` around ordinal 13: 38/39, and the brackets bind per function -- ordinals 12, 30 and 35 stay matching outside them. Deferred codegen is why these pragmas are otherwise file-global last-wins; with it off they bind positionally, and mwccarm then emits .text in source order, which is why the source is written ascending.",
+    "The last DIFF, dScMgSlot3_c_classInit at ordinal 19, was a real relocation defect and not a byte difference: tools/objisolate.py refused `_ZTV12dScMgSlot3_c: unexpected reloc type=2 addend=0`. Because this TU defines dScMgSlot3_c's key function it also EMITS that class's vtable, and mwccarm's _ZTV symbol addresses the vtable object, two words of ABI preamble ahead of the slot array that config/arm9/overlays/ov006/symbols.txt names. The machine-shaped C shard inherited the importing-TU spelling (+0), which in an emitting TU points 8 bytes early. Rewriting that one store as &_ZTV12dScMgSlot3_c[2] took the unit to 39/39 with objisolate clean. The dScMgSingle3DBase_c store beside it stays at +0 because that vtable is only imported here. Same rule, opposite side, as src/game/actors/daTrs_c/d_a_trs_factories.cpp."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210a8c0",
+      "end": "0x0210c9e0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12dScMgSlot1_cD1Ev",
+      "address": "0x0210a8c0",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN12dScMgSlot1_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_cD0Ev",
+      "address": "0x0210a900",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12dScMgSlot1_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_cD1Ev",
+      "address": "0x0210a954",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12dScMgSlot3_cD1Ev.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_cD0Ev",
+      "address": "0x0210a9a8",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN12dScMgSlot3_cD0Ev.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv",
+      "address": "0x0210aa10",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c16OnAimedAtWithEggEv",
+      "address": "0x0210aa3c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12dScMgSlot3_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c9Virtual80Ev",
+      "address": "0x0210aa60",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_0210ab08",
+      "address": "0x0210ab08",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_0210ab08.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_0210ab90",
+      "address": "0x0210ab90",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_0210ab90.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_0210ab94",
+      "address": "0x0210ab94",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_0210ab94.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_0210ac38",
+      "address": "0x0210ac38",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_0210ac38.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_0210ac3c",
+      "address": "0x0210ac3c",
+      "size": "0x00000170",
+      "legacy_source": "src/func_ov006_0210ac3c.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_0210adac",
+      "address": "0x0210adac",
+      "size": "0x000001b8",
+      "legacy_source": "src/func_ov006_0210adac.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_0210af64",
+      "address": "0x0210af64",
+      "size": "0x00000298",
+      "legacy_source": "src/func_ov006_0210af64.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_0210b1fc",
+      "address": "0x0210b1fc",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov006_0210b1fc.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c13OnYoshiTryEatEi",
+      "address": "0x0210b314",
+      "size": "0x00000334",
+      "legacy_source": "src/_ZN12dScMgSlot3_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c6RenderEv",
+      "address": "0x0210b648",
+      "size": "0x00000668",
+      "legacy_source": "src/_ZN12dScMgSlot3_c6RenderEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c8BehaviorEv",
+      "address": "0x0210bcb0",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN12dScMgSlot3_c13InitResourcesEv",
+      "address": "0x0210bdb0",
+      "size": "0x00000370",
+      "legacy_source": "src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "dScMgSlot3_c_classInit",
+      "address": "0x0210c120",
+      "size": "0x00000060",
+      "legacy_source": "src/d_s_mg_slot3.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_0210c180",
+      "address": "0x0210c180",
+      "size": "0x00000028",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_0210c1a8",
+      "address": "0x0210c1a8",
+      "size": "0x00000060",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_0210c208",
+      "address": "0x0210c208",
+      "size": "0x00000010",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_0210c218",
+      "address": "0x0210c218",
+      "size": "0x0000001c",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_0210c234",
+      "address": "0x0210c234",
+      "size": "0x00000044",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_0210c278",
+      "address": "0x0210c278",
+      "size": "0x00000038",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_0210c2b0",
+      "address": "0x0210c2b0",
+      "size": "0x00000010",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_0210c2c0",
+      "address": "0x0210c2c0",
+      "size": "0x00000014",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_0210c2d4",
+      "address": "0x0210c2d4",
+      "size": "0x00000080",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_0210c354",
+      "address": "0x0210c354",
+      "size": "0x00000020",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c6RenderEv",
+      "address": "0x0210c374",
+      "size": "0x0000009c",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv",
+      "address": "0x0210c410",
+      "size": "0x00000068",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_0210c478",
+      "address": "0x0210c478",
+      "size": "0x00000040",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c19OnHitFromUnderneathEv",
+      "address": "0x0210c4b8",
+      "size": "0x00000024",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c15OnHitByMegaCharEv",
+      "address": "0x0210c4dc",
+      "size": "0x00000024",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_0210c500",
+      "address": "0x0210c500",
+      "size": "0x00000138",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_0210c638",
+      "address": "0x0210c638",
+      "size": "0x0000003c",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c13OnYoshiTryEatEi",
+      "address": "0x0210c674",
+      "size": "0x0000004c",
+      "legacy_source": "src/actors/dScMgSlot1_c.cpp",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c6RenderEv",
+      "address": "0x0210c6c0",
+      "size": "0x00000320",
+      "legacy_source": "src/_ZN12dScMgSlot1_c6RenderEv.cpp",
+      "ordinal": 38
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create emitted two defects that were fixed by hand in the shadow source: (1) its 'TUBUILD CONFLICT ... NOT applied' blocks are /* */ comments wrapping legacy text that itself contains /* */ comments, so the inner terminator closed the outer block and 20 of 23 blocks became syntax errors -- converted to // line comments here; (2) ROM ordinals 37..20 all come from ONE already-promoted legacy file, src/actors/dScMgSlot1_c.cpp, and create pasted that entire file once per ordinal, 18 identical copies -- deduplicated to a single copy, whose own internal order is already ROM-descending.",
+    "Declaration reconciliation done by hand: data_ov006_0213e5ec had two incompatible spellings (char *[] with byte offsets, void **[] with word indices); the extern \"C\" char *[] spelling was kept and the three void**-style subscripts rewritten to the same byte offsets. func_02012718, data_020a0e40 (scalar) and func_ov004_020b0a54 duplicated declarations already in include/decl_common.h with different parameter types; the local copies were dropped. struct Obj was applied in its virtual-only spelling but the dScMgSlot3_c bodies need the data members, so the reconciled spelling create computed and then discarded was applied instead, and the slot-18 virtual's two legacy names (v18 / m48) were unified.",
+    "tools/tubuild.py linkcheck REFUSES this TU, and the refusal is about enrollment, not about these bytes: `entry src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp is NOT complete today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step`. ROM ordinal 18 is enrolled in delinks.txt without a `complete` marker. That is pre-existing tree state; this entry is text-verified and changes no delinks entry, so nothing here depends on the link running.",
+    "The baseline control for the harness was run at this branch point before any of this work: tools/tubuild.py linkcheck --baseline --module ov006 -- modules PASS, 106/106 exact, ROM built, with `dsd check symbols --fail` reporting 9 pre-existing errors (overlay_100/overlay_102, two arm9 data symbols, five ITCM symbols) none of which is in ov006.",
+    "The 41 'tubuild create warning' lines below were dropped when these notes were written by hand, while all 41 markers stayed in the shadow source; the gate over deferred decisions reported them as unrecorded and they are restored here verbatim as tools/tubuild.py create emitted them. They are recorded as OPEN, not resolved. 21 of them are the same key, the local stand-in struct 'Obj': that struct's body was reconciled by hand against the byte-verified promoted src/actors/dScMgSlot1_c.cpp spelling, so what the file holds today is neither legacy text, but the 20 remaining alternate bodies were never individually adjudicated and the markers stay. The other 20 are extern declarations where two legacy files disagreed and the generator kept the first; the kept spelling is the one every member compiles and byte-matches against, which constrains those declarations but does not by itself prove the losing spelling wrong. Resolving any of them is the two-line edit the gate documents: drop the marker from the source and rewrite its line here to the RESOLVED form.",
+    "tubuild create warning: CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov006_0210ab94 and the one that held func_ov006_0210ac3c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov006_0210ab94 and the one that held func_ov006_0210adac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold func_ov006_0210adac and the one that held _ZN12dScMgSlot3_c13OnYoshiTryEatEi; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold _ZN12dScMgSlot3_c13OnYoshiTryEatEi and the one that held _ZN12dScMgSlot3_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'LoadCompressedFileAt' differs between the legacy file that used to hold _ZN12dScMgSlot3_c9Virtual80Ev and the one that held _ZN12dScMgSlot3_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold _ZN12dScMgSlot3_c9Virtual80Ev and the one that held _ZN12dScMgSlot3_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Hud_RenderSprite' differs between the legacy file that used to hold _ZN12dScMgSlot3_c6RenderEv and the one that held _ZN12dScMgSlot1_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN12dScMgSlot3_c9Virtual80Ev and the one that held _ZN12dScMgSlot1_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov006_0210ab94 and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Sound_PlayIfNotActive' differs between the legacy file that used to hold func_ov006_0210af64 and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold func_ov006_0210adac and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020adb1c' differs between the legacy file that used to hold func_ov006_0210adac and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_0210c2d4' differs between the legacy file that used to hold func_ov006_0210c180 and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'LoadCompressedFileAt' differs between the legacy file that used to hold _ZN12dScMgSlot3_c9Virtual80Ev and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN2G212GetBG2ScrPtrEv' differs between the legacy file that used to hold _ZN12dScMgSlot3_c13InitResourcesEv and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN3G2S13GetBG2CharPtrEv' differs between the legacy file that used to hold _ZN12dScMgSlot3_c13InitResourcesEv and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN3G2S12GetBG2ScrPtrEv' differs between the legacy file that used to hold _ZN12dScMgSlot3_c13InitResourcesEv and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN12dScMgSlot3_c9Virtual80Ev and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold _ZN12dScMgSlot3_c13InitResourcesEv and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot3_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot3_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c180; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c1a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c208; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c218; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c234; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c278; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c2b0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c2c0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c2d4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c354; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c9betIcon_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c478; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c19OnHitFromUnderneathEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c15OnHitByMegaCharEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c500; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held func_ov006_0210c638; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c13OnYoshiTryEatEi; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('namespace', 'Sound') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_0210ac3c and the one that held _ZN12dScMgSlot1_c13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSlot1_c+dScMgSlot3_c/dScMgSlot1_c+dScMgSlot3_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 39,
+    "functions_declared": 39,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "_ZN12dScMgSlot1_cD2Ev",
+        "_ZN12dScMgSlot3_cD2Ev"
+      ],
+      "data": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 23 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -6,7 +6,7 @@
  * nothing claimed. It is Vector3::~Vector3, and the ROM proves it: six classes
  * destroy arrays of a 0xc type through
  * `__cxa_vec_cleanup(ptr, N, 0xc, _ZN7Vector3D1Ev)`, a POD array needs no cleanup at
- * all, and ChiefChilly::InitResources fills those elements as x/y/z from the
+ * all, and daKing_Donketu_c::InitResources fills those elements as x/y/z from the
  * actor's position. types.h defines Vector3 as exactly `Fix12i x, y, z`.
  *
  * Compiling `Vector3 a[8]` inside a class with a destructor emits

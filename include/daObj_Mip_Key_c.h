@@ -1,0 +1,51 @@
+#ifndef DAOBJ_MIP_KEY_C_H
+#define DAOBJ_MIP_KEY_C_H
+
+#include "types.h"
+
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
+ * the class's own destructor `_ZN15daObj_Mip_Key_cD1Ev` destroys each member, and
+ * `daObj_Mip_Key_c_classInit` constructs the same types at the same offsets before
+ * storing `_ZTV15daObj_Mip_Key_c`. Everything this header used to restate below
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a
+ * reading rather than a guess:
+ *
+ *     0x110 Model                      0x50    -> 0x160
+ *     0x160 ShadowModel                0x28    -> 0x188
+ *
+ * SIZE IS THE ROM'S OWN: `daObj_Mip_Key_c_classInit` calls
+ * `fBase_c::operator new(416)` -- 0x1a0 -- and stores this class's
+ * vtable, so that literal IS this class's sizeof.
+ */
+
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ShadowModel.h"
+
+struct daObj_Mip_Key_c : dEnemyBase_c {
+    Model                        mModel;                /* 0x110 */
+    ShadowModel                  mShadowModel;          /* 0x160 */
+    u8                           unk_188;               /* 0x188 */
+    u8  pad_189[0x7];
+    s32                          unk_190;               /* 0x190 */
+    u8  pad_194[0x8];
+    s32                          unk_19c;               /* 0x19c */
+
+    /* --- vtable --- */
+    virtual ~daObj_Mip_Key_c();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    void OnPendingDestroy();
+    int Render();
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daObj_Mip_Key_c_size_must_be_0x1a0[sizeof(daObj_Mip_Key_c) == 0x1a0 ? 1 : -1];
+#endif
+
+#endif /* DAOBJ_MIP_KEY_C_H */

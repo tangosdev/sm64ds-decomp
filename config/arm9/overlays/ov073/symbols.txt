@@ -1,5 +1,5 @@
-_ZN11ChiefChillyD1Ev kind:function(arm,size=0x98) addr:0x0211f000
-_ZN11ChiefChillyD0Ev kind:function(arm,size=0xac) addr:0x0211f098
+_ZN16daKing_Donketu_cD1Ev kind:function(arm,size=0x98) addr:0x0211f000
+_ZN16daKing_Donketu_cD0Ev kind:function(arm,size=0xac) addr:0x0211f098
 func_ov073_0211f144 kind:function(arm,size=0x17c) addr:0x0211f144
 func_ov073_0211f2c0 kind:function(arm,size=0x1d4) addr:0x0211f2c0
 func_ov073_0211f494 kind:function(arm,size=0x188) addr:0x0211f494
@@ -38,12 +38,12 @@ func_ov073_02121388 kind:function(arm,size=0x1b0) addr:0x02121388
 func_ov073_02121538 kind:function(arm,size=0x44) addr:0x02121538
 ChiefChilly_ChangeState kind:function(arm,size=0x50) addr:0x0212157c
 func_ov073_021215cc kind:function(arm,size=0x214) addr:0x021215cc
-_ZN11ChiefChilly16CleanupResourcesEv kind:function(arm,size=0x8c) addr:0x021217e0
-_ZN11ChiefChilly16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212186c
-_ZN11ChiefChilly6RenderEv kind:function(arm,size=0x30) addr:0x02121870
-_ZN11ChiefChilly8BehaviorEv kind:function(arm,size=0x42c) addr:0x021218a0
-_ZN11ChiefChilly13InitResourcesEv kind:function(arm,size=0x1f4) addr:0x02121ccc
-_ZN11ChiefChilly16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02121ec0
+_ZN16daKing_Donketu_c16CleanupResourcesEv kind:function(arm,size=0x8c) addr:0x021217e0
+_ZN16daKing_Donketu_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212186c
+_ZN16daKing_Donketu_c6RenderEv kind:function(arm,size=0x30) addr:0x02121870
+_ZN16daKing_Donketu_c8BehaviorEv kind:function(arm,size=0x42c) addr:0x021218a0
+_ZN16daKing_Donketu_c13InitResourcesEv kind:function(arm,size=0x1f4) addr:0x02121ccc
+_ZN16daKing_Donketu_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02121ec0
 daKing_Donketu_c_classInit kind:function(arm,size=0xc8) addr:0x02121ec8
 _ZN8CccArenaD1Ev kind:function(arm,size=0x44) addr:0x02121f90
 _ZN8CccArenaD0Ev kind:function(arm,size=0x58) addr:0x02121fd4
@@ -106,7 +106,7 @@ data_ov073_02123040 kind:data(any) addr:0x02123040
 _ZTI16daKing_Donketu_c kind:data(any) addr:0x0212304c
 _ZTS16daKing_Donketu_c kind:data(any) addr:0x02123058
 g_profile_KING_DONKETU kind:data(any) addr:0x0212306c ambiguous
-_ZTV11ChiefChilly kind:data(any) addr:0x02123090
+_ZTV16daKing_Donketu_c kind:data(any) addr:0x02123090
 data_ov073_0212310c kind:data(any) addr:0x0212310c
 data_ov073_02123114 kind:data(any) addr:0x02123114
 data_ov073_0212311c kind:data(any) addr:0x0212311c

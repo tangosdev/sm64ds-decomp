@@ -22,7 +22,7 @@
     "bytes": 7644,
     "shards": 35,
     "gaps": 0,
-    "evidence": "35 consecutive config/arm9/overlays/ov102/delinks.txt entries, indices 53..87, every entry marked 'complete'; end-of-one == start-of-next with zero gaps; 7,644 bytes total. The neighbour below is QuestionBlock/daObjHatenaBlock_c, which ends at 0x0214a96c. The neighbour above is KoopaShell/daShl_c, which BEGINS at 0x0214c748 with src/_ZN10KoopaShellD1Ev.cpp. The claimed run does not spill into KoopaShell. Full ov102 run map, measured from delinks.txt at this revision (each run starts at that class's D1 shard): FortressTower/daObjSimpleBg_c 0x02148a80..0x02148fbc (12 files), QuestionBlock/daObjHatenaBlock_c 0x02148fbc..0x0214a96c (41 files), BobOmb/daBmb_c 0x0214a96c..0x0214c748 (35 files), KoopaShell/daShl_c 0x0214c748..0x0214d70c (25 files).",
+    "evidence": "35 consecutive config/arm9/overlays/ov102/delinks.txt entries, indices 53..87, every entry marked 'complete'; end-of-one == start-of-next with zero gaps; 7,644 bytes total. The neighbour below is daObjHatenaBlock_c/daObjHatenaBlock_c, which ends at 0x0214a96c. The neighbour above is KoopaShell/daShl_c, which BEGINS at 0x0214c748 with src/_ZN10KoopaShellD1Ev.cpp. The claimed run does not spill into KoopaShell. Full ov102 run map, measured from delinks.txt at this revision (each run starts at that class's D1 shard): FortressTower/daObjSimpleBg_c 0x02148a80..0x02148fbc (12 files), daObjHatenaBlock_c/daObjHatenaBlock_c 0x02148fbc..0x0214a96c (41 files), BobOmb/daBmb_c 0x0214a96c..0x0214c748 (35 files), KoopaShell/daShl_c 0x0214c748..0x0214d70c (25 files).",
     "queue_row_reconciliation": "The queue row says 34 shards / 1336 lines; measured here 35 / 1364. The difference is exactly src/d_a_bmb.c, the adjacent factory shard, at 28 lines. tools/queue_audit.py documents shard_count as a FLOOR that 'under-counts by however many adjacent factories'. Not a defect."
   },
   "typeinfo": {
@@ -250,7 +250,7 @@
         "ov078"
       ],
       "calling_runs_in_ov102": [
-        "QuestionBlock/daObjHatenaBlock_c"
+        "daObjHatenaBlock_c/daObjHatenaBlock_c"
       ]
     },
     {
@@ -328,7 +328,7 @@
       ],
       "calling_runs_in_ov102": [
         "BobOmb/daBmb_c",
-        "QuestionBlock/daObjHatenaBlock_c"
+        "daObjHatenaBlock_c/daObjHatenaBlock_c"
       ]
     },
     {
@@ -564,19 +564,19 @@
     ],
     "same_overlay_other_TU": [
       {
-        "caller_run": "QuestionBlock/daObjHatenaBlock_c",
+        "caller_run": "daObjHatenaBlock_c/daObjHatenaBlock_c",
         "caller_address": "0x0214926c",
         "caller_shard": "src/func_ov102_02149220.cpp",
         "target": "0x0214ad14"
       },
       {
-        "caller_run": "QuestionBlock/daObjHatenaBlock_c",
+        "caller_run": "daObjHatenaBlock_c/daObjHatenaBlock_c",
         "caller_address": "0x02149278",
         "caller_shard": "src/func_ov102_02149220.cpp",
         "target": "0x0214b384"
       }
     ],
-    "consequence": "Three helpers -- 0x0214ad14, 0x0214ae1c and 0x0214b384 -- are referenced from OUTSIDE this TU and must keep external linkage. All three take a daBmb_c* (they touch +0x3ea, +0x390, +0x144, +0x128, +0x134, +0x3e0), so all three are real methods rather than free helpers. Converting any of them into a daBmb_c:: method is a CROSS-MODULE rename: the new mangled name must land in ov102/symbols.txt AND every caller must move with it in the same commit -- ov002, ov014, ov078, ov098, plus src/func_ov102_02149220.cpp inside ov102's own QuestionBlock TU. The other 22 helpers are called only from inside this run and rename within the TU."
+    "consequence": "Three helpers -- 0x0214ad14, 0x0214ae1c and 0x0214b384 -- are referenced from OUTSIDE this TU and must keep external linkage. All three take a daBmb_c* (they touch +0x3ea, +0x390, +0x144, +0x128, +0x134, +0x3e0), so all three are real methods rather than free helpers. Converting any of them into a daBmb_c:: method is a CROSS-MODULE rename: the new mangled name must land in ov102/symbols.txt AND every caller must move with it in the same commit -- ov002, ov014, ov078, ov098, plus src/func_ov102_02149220.cpp inside ov102's own daObjHatenaBlock_c TU. The other 22 helpers are called only from inside this run and rename within the TU."
   },
   "ambiguous_module_resolutions": [
     {
@@ -681,15 +681,15 @@
     "bss_note": "These are this TU's file-scope statics. Three further Vector3 statics constructed by the same sinit -- 0x0214ea24, 0x0214ea30, 0x0214ea3c, contiguous on a 12-byte stride -- are referenced only from .init and never from any .text run, so the ROM does not say whether the four are one Vector3[4] or four separately named constants. Every one of these addresses is referenced ONLY by the BobOmb run and by that one sinit; no other ov102 run touches them."
   },
   "promotion_notes": {
-    "base_this_was_derived_against": "Derived against origin/main a81adfa37; origin/main advanced to 180bf7ac8 ('Merge pull request #2367 from tangosdev/tools/fix-gate-regressions-0905' -- 7 commits, all under tools/ plus one notes/ file) during the run, so 180bf7ac8 was MERGED into cpp/BobOmb-tu (not rebased) and every TREE-DERIVED claim in this file was re-measured against it and came back identical: the queue row (34 / 1336 / ov102 / text-only / sibling_oracle '-'), the 35 shards at 0x0214a96c..0x0214c748 totalling 1364 lines and all marked 'complete', 19 .cpp + 16 .c, 0 pragmas, the FortressTower and QuestionBlock run starts (0x02148a80 and 0x02148fbc), 31 promoted TUs with none in ov102, both oracle manifests still at 12 compiler_only_output rows with data [] and bss [], the four ov102 RTTI symbol rows with 0 hits for _ZTI6BobOmb or _ZTS6BobOmb, and symbols/actor_renames.tsv row 3098. This file ships against 180bf7ac8. ROM-derived claims are unaffected by either base.",
+    "base_this_was_derived_against": "Derived against origin/main a81adfa37; origin/main advanced to 180bf7ac8 ('Merge pull request #2367 from tangosdev/tools/fix-gate-regressions-0905' -- 7 commits, all under tools/ plus one notes/ file) during the run, so 180bf7ac8 was MERGED into cpp/BobOmb-tu (not rebased) and every TREE-DERIVED claim in this file was re-measured against it and came back identical: the queue row (34 / 1336 / ov102 / text-only / sibling_oracle '-'), the 35 shards at 0x0214a96c..0x0214c748 totalling 1364 lines and all marked 'complete', 19 .cpp + 16 .c, 0 pragmas, the FortressTower and daObjHatenaBlock_c run starts (0x02148a80 and 0x02148fbc), 31 promoted TUs with none in ov102, both oracle manifests still at 12 compiler_only_output rows with data [] and bss [], the four ov102 RTTI symbol rows with 0 hits for _ZTI6BobOmb or _ZTS6BobOmb, and symbols/actor_renames.tsv row 3098. This file ships against 180bf7ac8. ROM-derived claims are unaffected by either base.",
     "shard_language_mix": "19 .cpp + 16 .c of the 35; all 35 marked 'complete' in delinks.txt",
     "pragma_count": 0,
     "pragma_evidence": "grep for 'pragma' across all 35 shard files at this revision matched no file. Consistent with the queue row, whose blockers field carries no pragma term for this class.",
-    "siblings_in_ov102": "NONE promoted at this base. All four ov102 classes -- FortressTower/daObjSimpleBg_c (6 shards), QuestionBlock/daObjHatenaBlock_c (35), BobOmb/daBmb_c (34), KoopaShell/daShl_c (23) -- sit unpromoted in notes/data/tu-promotion-queue.tsv, and no src/actors/*.cpp covers ov102 (31 promoted TUs exist, none in this overlay). The queue's 'sibling_oracle: -' is correct.",
+    "siblings_in_ov102": "NONE promoted at this base. All four ov102 classes -- FortressTower/daObjSimpleBg_c (6 shards), daObjHatenaBlock_c/daObjHatenaBlock_c (35), BobOmb/daBmb_c (34), KoopaShell/daShl_c (23) -- sit unpromoted in notes/data/tu-promotion-queue.tsv, and no src/actors/*.cpp covers ov102 (31 promoted TUs exist, none in this overlay). The queue's 'sibling_oracle: -' is correct.",
     "chain_shape_oracles": "The queue lists no oracle because it looks only inside the overlay, but two promoted TUs have the IDENTICAL chain shape (X -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c): config/tu_manifest.d/ov064/daOts_c.json (src/actors/daOts_c.cpp, 22 functions) and config/tu_manifest.d/ov002/daObjMarioCap_c.json (src/actors/daObjMarioCap_c.cpp, 29 functions, production_mode 'text-only', sections = one .text range, data [] and bss [], externalized_output []). BOTH carry exactly 12 compiler_only_output rows: _ZN7Vector3D1Ev as 'deadstrip-duplicate', plus _ZTI/_ZTS for each of fBase_c, dBase_c, dActor_c and dEnemyBase_c and _ZTI/_ZTS/_ZTV for the class itself, all as 'deadstrip-data'. That is the queue's estimated floor of 11 plus the Vector3 row. Copy that manifest shape. include/daOts_c.h declares 'struct daOts_c : dEnemyBase_c'.",
     "naming_decision_the_writer_must_make": "deadstrip-data is licensed on the symbol having a known ROM home. daOts_c and daObjMarioCap_c both spell the class by its ROM RTTI name, which is why all three of their own RTTI symbols are homed. If this TU declares 'struct BobOmb', mwcc emits _ZTV6BobOmb / _ZTI6BobOmb / _ZTS6BobOmb -- and of those, ONLY _ZTV6BobOmb exists in ov102/symbols.txt (as a second name on 0x0214e558). _ZTI6BobOmb and _ZTS6BobOmb have no home anywhere in the tree, so they cannot take deadstrip-data and fall back to plain 'deadstrip', forfeiting those records. If it declares 'struct daBmb_c', all three emitted names are _ZTV7daBmb_c / _ZTI7daBmb_c / _ZTS7daBmb_c, every one of which is already a configured symbol at its true ROM address. This is a real cost difference, not a style preference. Renaming is the larger act: it moves 9 mangled member names (_ZN6BobOmb* -> _ZN7daBmb_c*), include/BobOmb.h, and the ov102/symbols.txt rows, and symbols/actor_renames.tsv row 3098 currently records _ZTV6BobOmb as the live name for 0x0214e558. THE SCOUT DOES NOT DECIDE THIS -- this records the evidence and the cost of each branch.",
     "vtable_ownership": "_ZTV7daBmb_c sits in unowned .data. No BobOmb shard claims any non-.text section (in this overlay only the four __sinit_* shards own .init), so the text-only route needs no delinks .data claim. If someone later wants production_mode 'intact-object' on this band, note that the vtable preamble at 0x0214e550 carries NO configured symbol, so there is nothing to drop there.",
-    "not_a_blocker": "The two names on 0x0214e558 (_ZTV6BobOmb and _ZTV7daBmb_c) are aliases at the SAME address, not interior aliases at different offsets, so this is NOT the multi-name-data-object blocker; the same double-naming exists on _ZTV13QuestionBlock/_ZTV18daObjHatenaBlock_c and _ZTV10KoopaShell/_ZTV7daShl_c in this overlay. The real interior-alias hazard here is in .bss: data_ov102_0214ea18, ..1c and ..20 are three configured symbols inside one 12-byte Vector3 and all three are relocs.txt destinations. Harmless for a text-only promotion, which never claims .bss, but it would block an intact-object claim on this .bss band."
+    "not_a_blocker": "The two names on 0x0214e558 (_ZTV6BobOmb and _ZTV7daBmb_c) are aliases at the SAME address, not interior aliases at different offsets, so this is NOT the multi-name-data-object blocker; the same double-naming exists on _ZTV18daObjHatenaBlock_c/_ZTV18daObjHatenaBlock_c and _ZTV10KoopaShell/_ZTV7daShl_c in this overlay. The real interior-alias hazard here is in .bss: data_ov102_0214ea18, ..1c and ..20 are three configured symbols inside one 12-byte Vector3 and all three are relocs.txt destinations. Harmless for a text-only promotion, which never claims .bss, but it would block an intact-object claim on this .bss band."
   },
   "unproven": [
     "The word 'BobOmb' itself -- it is COINED. The cartridge attests only 'daBmb_c' (RTTI) and 'BOMBHEI' (the profile id). See identity_evidence for the search's scope, case handling and encodings.",

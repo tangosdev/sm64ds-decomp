@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov065_02118838
-/* Rebuilds the seven moving collision segments of the ov065 actor (Dorrie's
+/* Rebuilds the seven moving collision segments of the ov065 actor (daDossy_c's
    body chain) once per frame.
 
    For each segment it takes the segment's index from the byte table at

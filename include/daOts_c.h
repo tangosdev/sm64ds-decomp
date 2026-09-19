@@ -9,7 +9,7 @@
 #include "dBgCh_Actr.h"
 
 /* The shared base of the three Bully variants. The ROM's RTTI names it daOts_c and
- * gives it exactly three children: daDonketu_c (Bully), daBDonketu_c (BigBully) and
+ * gives it exactly three children: daDonketu_c, daBDonketu_c and
  * daIDonketu_c. All three ROM names are the tree's names too now; the coined
  * `ChillBully` this file used to gloss daIDonketu_c with is gone. The production name
  * daOts_c is kept, as #1400 did for
@@ -47,7 +47,7 @@
  *
  * 0x398..0x3f9 ARE WRITTEN by this class's helpers (state, pos snapshot, shadow
  * matrix, counters). They still stay the children's padding: annexing them would
- * grow this sizeof and force shrinking pad_398 on Bully, BigBully and
+ * grow this sizeof and force shrinking pad_398 on daDonketu_c, daBDonketu_c and
  * daIDonketu_c, which is out of this TU. Helpers reach those bytes as offset soup.
  */
 /* THE VTABLE, all 37 slots diffed against dEnemyBase_c's and against all three children's:
@@ -55,14 +55,14 @@
  *   slot 0  InitResources    LITERAL ZERO here -- pure virtual. All three children
  *   slot 6  Behavior         override both, which is why they must.
  *   slot 3  CleanupResources 0x02116ca0 in ALL FOUR tables, so it is this class's.
- *   slot 9  Render           0x02116cf0 here, in Bully and in daIDonketu_c; BigBully
+ *   slot 9  Render           0x02116cf0 here, in daDonketu_c and in daIDonketu_c; daBDonketu_c
  *                            is the only one that overrides it.
  *   slot 29 OnAimedAtWithEgg 0x02115f84 in all four, so also this class's.
  *   slot 16/17               the destructor pair, one per class.
  *
  * THE NAMING DEFECT THIS NOTE USED TO RECORD IS NOW FIXED. The tree called 0x02116ca0
- * and 0x02116cf0 `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv`; the table
- * above says they are daOts_c's, because Bully does not override either -- it inherits
+ * and 0x02116cf0 `_ZN11daDonketu_c16CleanupResourcesEv` and `_ZN11daDonketu_c6RenderEv`; the table
+ * above says they are daOts_c's, because daDonketu_c does not override either -- it inherits
  * them. Both are renamed, and so are the three placeholders: 0x02115f84 (which carried
  * a `daBDonketu_c::OnAimedAtWithEgg -- recovered from vtable slot identity` comment,
  * naming a BASE's method after a CHILD) and the destructor pair.
@@ -88,9 +88,9 @@ struct daOts_c : dEnemyBase_c {
     dBgCh_Actr        mWithMeshClsn;          /* 0x174 */
     /* Pointer to a per-variant config block (this TU casts it 16 times). All
        three children declare a field here, which is what makes it the base's
-       rather than any one of theirs. Bully::InitResources points it at
-       data_ov064_0211b834; daOts_c::CleanupResources (inherited by Bully)
-       releases five SharedFilePtrs through it. BigBully's own header called it
+       rather than any one of theirs. daDonketu_c::InitResources points it at
+       data_ov064_0211b834; daOts_c::CleanupResources (inherited by daDonketu_c)
+       releases five SharedFilePtrs through it. daBDonketu_c's own header called it
        a u8; two of the three call it a word, and the use above is a pointer, so
        a word it is. */
     s32                 mFileTable;             /* 0x330 */

@@ -82,7 +82,7 @@ a typed local of the REAL class (five of them; the other fifty define their
 own dumb shadow structs and never see it) from hand-managed lifecycle to
 implicit synthesis. Two kept the moved declaration and are byte-exact as
 synthesized (BowserFire, daObjPathLift_c — the latter already shaped right);
-one tried the move and gave it back (Toad: the synthesized pair scheduled one
+one tried the move and gave it back (daKinopio_c: the synthesized pair scheduled one
 instruction differently at the tail); and two are truly interleaved
 from the start. daTrs_c::Behavior has rc2 constructed only on some paths,
 with gotos into the middle of its lifetime, so it keeps **named word arrays**
@@ -90,7 +90,7 @@ with gotos into the middle of its lifetime, so it keeps **named word arrays**
 `(dBgCh_Gnd *)rc1`, which costs exactly the sp-relative add the old POD local
 spelled. The tempting alias form (`dBgCh_Gnd *const rc1 = (dBgCh_Gnd
 *)&storage;`) is measured wrong: it perturbs register allocation and cost
-Behavior +32 bytes. KnockDownPlank (+8) and Toad (+4) both showed that the
+Behavior +32 bytes. KnockDownPlank (+8) and daKinopio_c (+4) both showed that the
 moved-declaration synthesis reproduces construction/destruction but not
 always their exact scheduling; both restored hand C1/D1 calls over a `u32`
 array. The old comment in
@@ -123,9 +123,9 @@ backlog forever; constructors were the last symbol kind with no playbook.
 
 PathPtr also supplied the first live sighting of §2's blast radius: the
 moment `PathPtr();` appeared in its header, every typed local of that class
-in every TU grew an implicit construction call. `Shark::InitResources`
+in every TU grew an implicit construction call. `daShark_c::InitResources`
 holds two such locals and constructs them BY HAND at interleaved ROM
-positions — each double-constructed, Shark went four words long, and
+positions — each double-constructed, daShark_c went four words long, and
 eligible.py caught it before anything linked. Its locals are now raw `u32`
 storage with a comment explaining why they must stay dumb. When you declare
 a constructor on a widely-embedded class, grep for typed locals of it

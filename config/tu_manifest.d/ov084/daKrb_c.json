@@ -1,0 +1,610 @@
+{
+  "id": "ov084/daKrb_c",
+  "module": "ov084",
+  "source": "src/actors/daKrb_c.cpp",
+  "promoted_source": "src/actors/daKrb_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "tu_map cut (build/tu_map.json, tools/tu_map.py): 0x2129020..0x212bff8, 32 function(s). That cut is three functions SHORT of the physical run: tu_map segments on symbol NAME, and daKrb_c_classInit_KURIBO_L/_S/(none) do not look like members of daKrb_c, so they were cut off from a run they physically abut. config/arm9/overlays/ov084/delinks.txt has no gap between them.",
+    "shipped span: .text 0x02129020..0x0212c10c, 35 function(s) -- the tu_map 32 plus the three abutting registry factories daKrb_c_classInit_KURIBO_L (0x0212bff8), _KURIBO_S (0x0212c054) and _KURIBO (0x0212c0b0). One contiguous .text claim, no coverage hole; see sections[] and functions[], which are the authoritative rows.",
+    "coverage audit against config/arm9/overlays/ov084/delinks.txt: the span 0x02129020..0x0212c10c is claimed by exactly 35 delink files with no gap and no overlap -- 2 destructor shards, 22 func_ov084_* shards, func_ov084_0212b344, 7 named members and src/d_a_krb_kuribo_l.c / _s.c / .c. The ~0x2280 'address gap' between the destructors (0x02129020..0x021290d4) and the named members (0x0212b30c..) is NOT a hole: it is 22 unlabelled func_ov084_* helpers of this same class, all delinked and all claimed here. One .text claim, not two.",
+    "the run below is the previous class's; the run above, from 0x0212c10c, is BobOmbBuddy's and is NOT absorbed.",
+    "referrer census for the three factories: no caller anywhere in src/ (grep across .c/.cpp/.h). They are reached only through the actor registry table, which ov084 does not delink -- the same shape as the landed ov084/daPkn_c, whose single abutting daPkn_c_classInit was likewise absorbed.",
+    "class label(s): daKrb_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "notes/data/tu-promotion-queue.tsv keys this unit 'daKrb_c+daKrb_c' and flags 'multi-class-tu:2'. That is a FALSE positive and the reason the generator's own id was daKrb_c+daKrb_c: tu_map assigned the run TWO class labels and BOTH are the string 'daKrb_c' (the generated entry read 'class label(s): daKrb_c, daKrb_c'). There is no second class in the span -- the next named class, BobOmbBuddy, begins at 0x0212c10c, one byte past the end of this claim. The unit is renamed to the plain class name here, the same way ov002/daObjLava_c landed from a generated 'daObjLava_c+daObjLava_c'."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02129020",
+      "end": "0x0212c10c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daKrb_cD1Ev",
+      "address": "0x02129020",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN7daKrb_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daKrb_cD0Ev",
+      "address": "0x02129070",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN7daKrb_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov084_021290d4",
+      "address": "0x021290d4",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov084_021290d4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov084_02129168",
+      "address": "0x02129168",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov084_02129168.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov084_02129238",
+      "address": "0x02129238",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov084_02129238.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov084_0212934c",
+      "address": "0x0212934c",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov084_0212934c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov084_02129498",
+      "address": "0x02129498",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov084_02129498.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov084_021294d0",
+      "address": "0x021294d0",
+      "size": "0x000001e0",
+      "legacy_source": "src/func_ov084_021294d0.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov084_021296b0",
+      "address": "0x021296b0",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov084_021296b0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov084_021296cc",
+      "address": "0x021296cc",
+      "size": "0x00000198",
+      "legacy_source": "src/func_ov084_021296cc.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov084_02129864",
+      "address": "0x02129864",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov084_02129864.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov084_021298d0",
+      "address": "0x021298d0",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov084_021298d0.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov084_02129a00",
+      "address": "0x02129a00",
+      "size": "0x0000029c",
+      "legacy_source": "src/func_ov084_02129a00.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov084_02129c9c",
+      "address": "0x02129c9c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov084_02129c9c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov084_02129cf4",
+      "address": "0x02129cf4",
+      "size": "0x000001e0",
+      "legacy_source": "src/func_ov084_02129cf4.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov084_02129ed4",
+      "address": "0x02129ed4",
+      "size": "0x000006ac",
+      "legacy_source": "src/func_ov084_02129ed4.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov084_0212a580",
+      "address": "0x0212a580",
+      "size": "0x00000178",
+      "legacy_source": "src/func_ov084_0212a580.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov084_0212a6f8",
+      "address": "0x0212a6f8",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov084_0212a6f8.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov084_0212a774",
+      "address": "0x0212a774",
+      "size": "0x0000033c",
+      "legacy_source": "src/func_ov084_0212a774.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov084_0212aab0",
+      "address": "0x0212aab0",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov084_0212aab0.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov084_0212ab48",
+      "address": "0x0212ab48",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov084_0212ab48.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov084_0212abd4",
+      "address": "0x0212abd4",
+      "size": "0x000003a0",
+      "legacy_source": "src/func_ov084_0212abd4.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov084_0212af74",
+      "address": "0x0212af74",
+      "size": "0x00000368",
+      "legacy_source": "src/func_ov084_0212af74.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov084_0212b2dc",
+      "address": "0x0212b2dc",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov084_0212b2dc.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN7daKrb_c16OnAimedAtWithEggEv",
+      "address": "0x0212b30c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN7daKrb_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN7daKrb_c13OnTurnIntoEggER6Player",
+      "address": "0x0212b344",
+      "size": "0x000001cc",
+      "legacy_source": "src/func_ov084_0212b344.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN7daKrb_c16CleanupResourcesEv",
+      "address": "0x0212b510",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN7daKrb_c16CleanupResourcesEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN7daKrb_c16OnPendingDestroyEv",
+      "address": "0x0212b5b8",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daKrb_c16OnPendingDestroyEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN7daKrb_c6RenderEv",
+      "address": "0x0212b5bc",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN7daKrb_c6RenderEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN7daKrb_c8BehaviorEv",
+      "address": "0x0212b6ec",
+      "size": "0x00000544",
+      "legacy_source": "src/_ZN7daKrb_c8BehaviorEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN7daKrb_c13InitResourcesEv",
+      "address": "0x0212bc30",
+      "size": "0x00000390",
+      "legacy_source": "src/_ZN7daKrb_c13InitResourcesEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN7daKrb_c13OnYoshiTryEatEv",
+      "address": "0x0212bfc0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN7daKrb_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "daKrb_c_classInit_KURIBO_L",
+      "address": "0x0212bff8",
+      "size": "0x0000005c",
+      "legacy_source": "src/d_a_krb_kuribo_l.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "daKrb_c_classInit_KURIBO_S",
+      "address": "0x0212c054",
+      "size": "0x0000005c",
+      "legacy_source": "src/d_a_krb_kuribo_s.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "daKrb_c_classInit_KURIBO",
+      "address": "0x0212c0b0",
+      "size": "0x0000005c",
+      "legacy_source": "src/d_a_krb_kuribo.c",
+      "ordinal": 34
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212934c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_021294d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN12dEnemyBase_c9SpawnCoinEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_021294d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129498' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_021294d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c10ReleaseCapERK7Vector3' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_021294d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c15RespawnIfHasCapEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_021294d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_02129a00; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov084_02129498 and the one that held func_ov084_02129a00; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212934c and the one that held func_ov084_02129c9c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c10ReleaseCapERK7Vector3' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212934c and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129498' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov002_020aea30' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a580; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a6f8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_021296cc' differs between the legacy file that used to hold func_ov084_021294d0 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN12dEnemyBase_c9SpawnCoinEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129498' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c10ReleaseCapERK7Vector3' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c15RespawnIfHasCapEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212934c and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov002_020aea30' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129c9c' differs between the legacy file that used to hold func_ov084_0212ab48 and the one that held func_ov084_0212abd4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212abd4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_02129cf4 and the one that held func_ov084_0212abd4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov084_02129cf4 and the one that held func_ov084_0212abd4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov084_0212abd4 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov084_0212abd4 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_02129cf4 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov084_02129498 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c15RespawnIfHasCapEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_021296cc' differs between the legacy file that used to hold func_ov084_021294d0 and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c11UntrackStarERa' differs between the legacy file that used to hold func_ov084_021296cc and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov084_021296cc and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129498' differs between the legacy file that used to hold func_ov084_02129238 and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209f344' differs between the legacy file that used to hold func_ov084_021296cc and the one that held func_ov084_0212b344; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c16CleanupResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c8PoofDustEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_02129498' differs between the legacy file that used to hold func_ov084_02129238 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c10ReleaseCapERK7Vector3' differs between the legacy file that used to hold func_ov084_02129238 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN11dCapEnemy_c15RespawnIfHasCapEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_021296cc' differs between the legacy file that used to hold func_ov084_021294d0 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation7AdvanceEv' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov084_02129cf4 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN12dEnemyBase_c9SpawnCoinEv' differs between the legacy file that used to hold func_ov084_02129238 and the one that held _ZN7daKrb_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c9TrackStarEjj' differs between the legacy file that used to hold func_ov084_02129864 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130cf8' differs between the legacy file that used to hold func_ov084_02129a00 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED in favour of the SECOND, `extern SharedFilePtr data_ov084_02130cf8;`, and the marker is gone from the source. The symbol has no definition anywhere in the tree, so tools/check_decl_agreement.py settles it by voting among the declarations. Before this fold the typed spelling held the vote 2-2 on the tie-break, carried by src/_ZN7daKrb_c13InitResourcesEv.cpp and src/func_ov074_02122634.cpp. Folding three of this symbol's declarers into one file dropped the typed side to a single vote and handed the reference to `char`, which then reported src/func_ov074_02122634.cpp -- a file nothing in this change touches -- as a new contradiction. Declaring the class here restores the vote and costs nothing: the TU already includes SharedFilePtr.h, already passed the handle to Model::LoadFile and SharedFilePtr::Release through a cast, and the four remaining `[1]` reads are now the SHARED_FILE macro over the same address. Re-verified 35/35 MATCH, objisolate clean, after the change.",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov084_02130ce8' differs between the legacy file that used to hold func_ov084_0212a6f8 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov084_0213089c' differs between the legacy file that used to hold func_ov084_0212a774 and the one that held _ZN7daKrb_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_02129ed4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212a774; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov084_02129a00 and the one that held func_ov084_0212af74; kept the first, the other is commented out for review",
+    "tools/tubuild.py create emitted 68 warnings for this TU (2 RAW members it could not split, 63 extern-declaration conflicts and 3 conflicting local `Vector3` typedefs). ALL 68 are resolved in the shipped source; the file compiles clean and verifies 35/35. The 66 per-conflict warnings above are the generator's own, restored verbatim -- this note originally replaced them, which left every conflict marker in the source unrecorded and is what tools/check_tubuild_conflicts.py reports. What the resolutions were: the shadow `dActor_c`, `Vector3`, `dCapEnemy_c` and `SharedFilePtr` types were deleted in favour of the real headers; the four two-word shared-file handles (data_ov084_02130ce0/ce8/cf0/cf8) were unified on ONE spelling, `extern void *X[]`, after the legacy files disagreed five ways about the same symbols; AddCap and DestroyIfCapNotNeeded became real dCapEnemy_c methods because decl_dCapEnemy_c.h declares both with EMPTY parameter lists and cannot be mixed with include/dCapEnemy_c.h; and the local `extern s32 AngleDiff(s16,s16)` gave way to decl_common.h's `extern int AngleDiff(int,int)`.",
+    "func_ov002_020aea30 is declared VARIADIC here, and that is a deliberate resolution of a real contradiction, not a shortcut. src/func_ov002_020aea30.cpp records FOUR parameters and func_ov084_0212a774 passes a literal 7 in r3 -- but the ROM's call inside func_ov084_02129ed4, at 0x0212a4f4, sets only r0/r1/r2 (mov r0,r7 / mov r1,r6 / add r2,r7,#0x1b4 / bl 0x20aea30) and never materialises r3. Disassembled from extracted/dsd/arm9_overlays/ov084.bin. The two legacy files therefore declared different arities, which one TU cannot hold; `...` lets each call site materialise exactly the registers the ROM materialises. Both call sites MATCH.",
+    "`#pragma optimize_for_size on` was carried out of a legacy member by the generator and had to be REMOVED. Under deferred codegen a non-long_calls pragma is FILE-GLOBAL last-wins, so one member's pragma silently recompiled every other member: with it present this TU verified 15/32, without it 31/32. `#pragma opt_common_subs off`, recorded against _ZN7daKrb_c6RenderEv, was never carried and is not needed -- Render MATCHes without it.",
+    "The last byte difference was func_ov084_021290d4, built 0xa4 against the ROM's 0x94. Cause: the legacy shard is a .c file compiled -lang c99, where `x == 1` has type int; inside this TU it compiles as C++, where it is a `bool`, and the C++ front end materialises the boolean (moveq r1,#1 / movne r1,#0) instead of predicating the store off the compare the way the ROM does (moveq r0,#0 / strheq r0,[r1,#0x58]). Holding the raw word and comparing in the `if` condition restores the ROM's if-conversion and the +4 words disappear. Any .c-derived member that assigns a comparison to an int is exposed to this when it is folded into a C++ TU.",
+    "PROMOTION IS REFUSED BY tools/tubuild.py promote --dry-run, and the TU is banked text-verified rather than promoted. The two printed reasons are 'manifest status is not link-verified or data-verified' and 'the promotion-ready status is not the recorded linkcheck result'. The recorded result is `scratch-link-verified`, which promotion_refusals() can never accept: it demands status in (link-verified, data-verified) AND linkcheck.result == status, while classify_link_result() returns the `scratch-` prefix whenever the compiler-only policy rewrites the object before the link -- which it does for every key-function TU, this one included (it deadstrips _ZN7Vector3D1Ev and _ZN7daKrb_cD2Ev). Census of config/tu_manifest.d on this tree: 163 of 176 promoted entries carry compiler_only_output, 75 promoted entries recorded exactly this `scratch-link-verified` or `scratch-data-verified` result, and only 2 entries in the whole tree satisfy status == recorded result -- both link-verified, neither promoted. The refusal is therefore structural to the gate, not a defect in this TU, and clearing it is a tools change that belongs in its own review.",
+    "Evidence the TU itself is sound, all of it re-runnable: tubuild verify = 35/35 MATCH, objisolate clean, reloc-destinations clean, emission order ROM-ascending. tubuild linkcheck = SCRATCH-LINK-VERIFIED; the whole claimed range 0x02129020..0x0212c10c links from ONE object and is byte-IDENTICAL over all 12524 bytes, all 106 modules byte-exact, and the full 16777216-byte ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, the stock hash. `dsd check symbols --fail` FAILS on 9 errors; the pristine-tree baseline control taken at this branch's merge base, with no TU substitution, produces the same 9 error lines with an EMPTY diff, so they are the tree's and not this TU's. The check is NOT green and is not reported as green.",
+    "PROMOTED ON THIS BRANCH: src_tu/actors/daKrb_c.cpp moved to src/actors/daKrb_c.cpp, the 35 superseded one-function sources deleted, and config/arm9/overlays/ov084/delinks.txt's 35 `complete` entries replaced by a single `complete` .text claim 0x02129020..0x0212c10c. The 35 removed entries tiled that span with no gap and no overlap and their path set equalled this manifest's functions[].legacy_source exactly, both asserted before the edit. `status` is deliberately left at text-verified: tools/tubuild.py promote still refuses this entry for the two structural reasons recorded above, and the verification level actually reached is the one banked. notes/data/tu-promotion-queue.tsv therefore keeps already_promoted = no, which is the value tools/queue_audit.py --check-promoted wants for any status other than exactly `promoted`.",
+    "VTABLE SLOT 19 WAS WRONG IN THE TREE, and enrolling this TU is what exposed it. ROM ordinal 25 at 0x0212b344 was the free function func_ov084_0212b344 and include/daKrb_c.h deliberately declared no override for slot 19, so mwccarm filled that slot with dActor_c's inherited _ZN8dActor_c13OnTurnIntoEggER6Player (arm9 0x02010154) while the cartridge's own _ZTV7daKrb_c at ov084 0x02130948 holds 0x0212b344. Nothing in the tree compared the two: the byte gates verify .text, and tools/romdata_check.py is advisory everywhere except on an ENROLLED source that carries a compiler-only-output policy row. Promotion made this file that source, and tools/rombuild.py then refused it -- 'compiler-only data policy: _ZTV7daKrb_c differs from the cartridge at ov084:0x02130948 in 4 of 124 compared bytes', one word, slot 19. SETTLED BY NAMING THE SLOT, not by relaxing the policy: include/daKrb_c.h declares void OnTurnIntoEgg(Player &), this TU defines it as the method, and config/arm9/overlays/ov084/symbols.txt renames the 0x0212b344 row in place to _ZN7daKrb_c13OnTurnIntoEggER6Player (a rename, not an added alias or bounding row). The body is unchanged apart from `char *self = (char *)this` and one cast of the reference parameter, and still matches at 0x1cc: tools/tubuild.py verify reports 35/35 MATCH, objisolate clean, reloc-destinations clean, and the linked vtable now agrees with the cartridge on all 31 words with none blind. A note previously carried in include/daKrb_c.h had recorded a four-byte divergence as the reason to leave this slot unnamed; that experiment recompiled the free function with an `int` return, and the divergence was the return type rather than the method conversion."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov084-daKrb_c/daKrb_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 35,
+    "functions_declared": 35,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7daKrb_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7daKrb_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        16,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI11dCapEnemy_c",
+        "_ZTS11dCapEnemy_c",
+        "_ZTI7daKrb_c",
+        "_ZTS7daKrb_c",
+        "_ZTV7daKrb_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dCapEnemy_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daKrb_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS11dCapEnemy_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daKrb_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daKrb_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov084-daKrb_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02129020",
+        "end": "0x0212c10c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02129020",
+          "end": "0x0212c10c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 35
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7daKrb_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. include/daKrb_c.h declares ~daKrb_c() OUT OF LINE, so mwccarm 2004/b56 emits three variants from the single definition in this file -- D1, D0 and D2 -- but the cartridge carries only D1 (0x02129020, 0x50) and D0 (0x02129070, 0x64). No symbols.txt anywhere under config/ has a _ZN7daKrb_cD2Ev row and no address in config/ names one, so it has no ROM home: plain deadstrip, not deadstrip-duplicate. It is emitted outside the licensed run and does not disturb it -- verify reports all 35 licensed functions MATCH with it present."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Several members of this TU hold Vector3 locals and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9 at 0x020072c0; this copy is a duplicate and is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI record; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI record; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI record; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical arm9 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Inherited vague-linkage RTTI record; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical ov002 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Inherited vague-linkage type-name string; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical ov002 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI11dCapEnemy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108260",
+      "reason": "Inherited vague-linkage RTTI record; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical ov002 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS11dCapEnemy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210826c",
+      "reason": "Inherited vague-linkage type-name string; the compiler emits its own copy because this TU names the type in daKrb_c's base chain. ov084 delinks no .data, so the ROM copy at its canonical ov002 home stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI7daKrb_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x021308e0",
+      "reason": "This class's OWN RTTI record, emitted here because the out-of-line destructor makes daKrb_c::~daKrb_c the key function and this TU defines it. ov084 delinks no .data, so the ROM copy at 0x021308e0 stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTS7daKrb_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x021308d4",
+      "reason": "This class's OWN type-name string -- the nine bytes \"7daKrb_c\u0000\" that are the cartridge's own name for the class, which is why the class is spelled daKrb_c here and not a coined English name. Emitted with the key function; the ROM copy at 0x021308d4 stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTV7daKrb_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x02130948",
+      "reason": "This class's OWN vtable, emitted here for the same key-function reason. The three registry factories in this TU store its address into the new object's vptr, which is how a byte-identical factory is tied to THIS class rather than a sibling. ov084 delinks no .data, so the ROM copy at 0x02130948 stays ROM-supplied and this one is discarded by text-only isolation."
+    }
+  ]
+}

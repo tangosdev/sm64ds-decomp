@@ -37,7 +37,7 @@
 
 #include "daObjKsWater_c.h"
 #include "SharedFilePtr.h"
-#include "TreasureChest.h"
+#include "daObjTbox_c.h"
 
 struct BMD_File;
 struct BTA_File;
@@ -107,7 +107,7 @@ int daObjKsWater_c::Behavior()
         int ok = 1;
         dActor_c *p = dActor_c::FindWithActorID(0xd, 0);
         while (p != 0) {
-            int state = ((TreasureChest *)p)->mState;
+            int state = ((daObjTbox_c *)p)->mState;
             int cond = 1;
             if (state != 1) {
                 if (state != 2) cond = 0;

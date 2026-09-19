@@ -245,7 +245,7 @@ dScMgBase_c.h override returns void, so this now calls the base method as
 a plain statement instead of returning it, same fix `dScMgLuigi_c`'s own
 slot 5 needed), 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18
 (dScMgBase_c::OnYoshiTryEat, declared on the base and overridden here;
-the body is `src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp`, still a raw
+the body is `OnYoshiTryEat` (src/actors/dScMgAmida_c.cpp), still a raw
 extern "C" helper rather than a member definition, same precedent as
 every other dScMgBase_c leaf's slot 18; it no longer includes this
 header at all -- its one
@@ -370,7 +370,7 @@ inherited 0xb4/0xbc slot 18 touches) are NOT represented here -- they
 stay inside a pad, same discipline as every prior sibling. The class's
 true allocation size, 0x53fc, is independently confirmed (not just the
 last-named-field's rounded end) by the untouched constructor's own
-`_ZN7fBase_cnwEj(0x53fc)` call (src/d_s_mg_amida.cpp), which
+`_ZN7fBase_cnwEj(0x53fc)` call (src/actors/dScMgAmida_c.cpp), which
 also independently corroborates all four destroyed-array offsets/sizes
 via its own construction-side __cxa_vec_ctor calls.
 
@@ -410,13 +410,13 @@ name -- a wrong name is a claim the next reader will trust.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) leaves it at 1. |
-| 0x46d4 | `mFinished` | u8. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path ([func_ov004_020b0a54](../src/func_ov004_020b0a54.cpp)`(0)` instead of `0x12`, and Render's confetti pass). |
-| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) passes it as the y2 argument of four [func_ov004_020ae5c4](../src/func_ov004_020ae5c4.cpp) line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
-| 0x4724 | `mLanePos[4][2]` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
+| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/actors/dScMgAmida_c.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) leaves it at 1. |
+| 0x46d4 | `mFinished` | u8. [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path ([func_ov004_020b0a54](../src/func_ov004_020b0a54.cpp)`(0)` instead of `0x12`, and Render's confetti pass). |
+| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) passes it as the y2 argument of four [func_ov004_020ae5c4](../src/func_ov004_020ae5c4.cpp) line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
+| 0x4724 | `mLanePos[4][2]` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
 | 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
 | 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
-| 0x5368 | `mScrollSpeed` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov006/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x5368 | `mScrollSpeed` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov006/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
 | 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs [func_ov006_020d27dc](../config/arm9/overlays/ov006/symbols.txt) once per 16 accumulated -- a fixed-point step accumulator. |
 | 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
 | 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of [data_ov006_0213b880](../config/arm9/overlays/ov006/symbols.txt). |
@@ -425,9 +425,9 @@ name -- a wrong name is a claim the next reader will trust.
 | 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
 | 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after [func_ov004_020b0cac](../src/func_ov004_020b0cac.c)`(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
 | 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
-| 0x53d4 | `mPatternIndex` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
+| 0x53d4 | `mPatternIndex` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
 | 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
-| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
 
 Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
 1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
@@ -442,30 +442,30 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0xab38 | `mPosX` / `mPosY` (0xab3c) | [func_ov006_021279b0](../src/func_ov006_021279b0.cpp) seeds `mPosX = 0x80000` and `mPosY = mStartY << 12`; Behavior adds the velocity into both; Render's progress bar reads `mPosY >> 12`. |
+| 0xab38 | `mPosX` / `mPosY` (0xab3c) | [func_ov006_021279b0](../src/actors/dScMgSnowball_c.cpp) seeds `mPosX = 0x80000` and `mPosY = mStartY << 12`; Behavior adds the velocity into both; Render's progress bar reads `mPosY >> 12`. |
 | 0xab40 | `mPrevPosX` / `mPrevPosY` (0xab44) | Behavior's first act each tick is to copy 0xab38/0xab3c here, and the climb term is `mPosY - mPrevPosY`. |
 | 0xab48 | `mDrawPosX` / `mDrawPosY` (0xab4c) | Render draws the ball sprite [data_ov006_02139c38](../config/arm9/overlays/ov006/symbols.txt) at `(n - mScrollX) >> 12`, the same transform every world object gets. |
 | 0xab50 | `mSoundPosX` / `mSoundPosY` (0xab54) | Behavior fires a rolling sound whenever the position has moved 0x30000 from these two, then copies the position in. |
 | 0xab60 | `mVelX` / `mVelY` (0xab64) | `Vec2_Len` of the pair is the speed, `atan2` of it is the heading, and it is added into `mPos` each tick. Capped at 0x8000. |
-| 0xab68 | `mScrollX` | Subtracted from every world X before drawing; [func_ov006_021279b0](../src/func_ov006_021279b0.cpp) zeroes it. |
-| 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in [_ZN15dScMgSnowball_c8OnKickedEv](../src/_ZN15dScMgSnowball_c8OnKickedEv.cpp). |
+| 0xab68 | `mScrollX` | Subtracted from every world X before drawing; [func_ov006_021279b0](../src/actors/dScMgSnowball_c.cpp) zeroes it. |
+| 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in [_ZN15dScMgSnowball_c8OnKickedEv](../src/actors/dScMgSnowball_c.cpp). |
 | 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample ([data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt)) here and steers off the difference from the previous one. |
 | 0xab78 | `mRollAngle` | u16. `+= speed * 0x2710 / mBallSize` -- an angle that advances faster the smaller the ball. |
 | 0xab7c | `mHeadingAngle` | u16. `atan2(mVelX, mVelY)`, approached linearly while rolling and set outright while crashing. |
 | 0xab7e | `mPrevRollAngle` / `mPrevHeadingAngle` (0xab82) | Behavior's prologue copies 0xab78..0xab7c into 0xab7e..0xab82 verbatim. |
-| 0xab84 | `mSpinAxis[3]` | [func_ov006_021279b0](../src/func_ov006_021279b0.cpp) seeds it from a `(0, 0x1000, 0)` Vector3 and passes it to `Quaternion_FromVector3`. |
+| 0xab84 | `mSpinAxis[3]` | [func_ov006_021279b0](../src/actors/dScMgSnowball_c.cpp) seeds it from a `(0, 0x1000, 0)` Vector3 and passes it to `Quaternion_FromVector3`. |
 | 0xab90 | `mSpinQuat[4]` | The destination of that same `Quaternion_FromVector3`, then `Quaternion_Normalize`. Four words. |
 | 0xaba0 | `mBallSize` | Seeded 0x4000; grows by the uphill distance, capped at 0x37000; Render scales mModel by `n/2 + n*4`; the melt state subtracts 0x1000 a tick until it reaches 0. |
 | 0xac58 | `mArray1Active[0x80]` | Render skips an mArray1 slot unless this byte is 1. |
 | 0xb0d8 | `mArray1Kind[0x80]` | 1 picks the eight-frame animated sprite table, anything else the single static sprite. |
-| 0xb2d8 | `mArray1Hit[0x80]` | [func_ov006_02125bbc.c](../src/func_ov006_02125bbc.c) sets it to 1 on contact; Render then adds 8 to the sprite frame. |
+| 0xb2d8 | `mArray1Hit[0x80]` | [func_ov006_02125bbc](../src/actors/dScMgSnowball_c.cpp) sets it to 1 on contact; Render then adds 8 to the sprite frame. |
 | 0xb358 | `mArray2Active[0x80]` | The same gate for mArray2. |
 | 0xb3d8 | `mArray2Kind[0x80]` | Render's `switch`: 0..2 draw one sprite, 3 picks between two by X. |
 | 0xb9d8 | `mAnimCounter` | Render bumps it and wraps it at 0x20; the obstacle frame is `(n / 4) & 7`. |
 | 0xb9dc | `mTimeLeft` | Frames. Seeded 0x960 or 0x4b0 by variant; Behavior counts it down and plays a tick sound at 60/30/15-frame intervals as it shortens; Render formats it as seconds and centiseconds; 0 ends the run. |
 | 0xb9e0 | `mScore` | Zeroed by the reset, +1 a tick while rolling, handed to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) at the crash -- the same sink dScMgAmida_c's score uses. |
 | 0xb9f4 | `mState` | Behavior's `switch`: 0 count-in, 1 rolling, 2/3 crash, 4 melt, 5 over. |
-| 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; [_ZN15dScMgSnowball_c8OnKickedEv](../src/_ZN15dScMgSnowball_c8OnKickedEv.cpp) uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
+| 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; [_ZN15dScMgSnowball_c8OnKickedEv](../src/actors/dScMgSnowball_c.cpp) uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
 | 0xb9fc | `mCountdownTimer` | Seeded 0xf1; state 0 counts it down, plays a beep at 0xf0/0xb4/0x78 and starts the run at 0x3c; Render draws the 3-2-1 banner from `n / 60`. |
 | 0xba00 | `mStartY` | 0x2dc0 or 0x1740 by variant; `mPosY` starts at `mStartY << 12` and the progress bar uses it as one end. |
 | 0xba04 | `mGoalY` | The other end of that bar, and the line `mPosY - mBallSize` must cross to end the run. |

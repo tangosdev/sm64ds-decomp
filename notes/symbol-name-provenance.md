@@ -313,7 +313,7 @@ What went wrong on 2026-08-30: an "is this body sourced?" sweep took *names* fro
 one record and looked them up against work keyed to the other. Every divergent
 address came back "missing", and the sweep manufactured phantom crack targets out
 of functions that were matched, enrolled, and building (`func_ov062_0211bd10`,
-`_ZN13TreasureChest6State0Ev` among them). No time was lost to a wrong edit, but
+`_ZN11daObjTbox_c6State0Ev` among them). No time was lost to a wrong edit, but
 only because the phantoms were noticed before anyone re-cracked a solved function.
 
 **The rule, stated once:**

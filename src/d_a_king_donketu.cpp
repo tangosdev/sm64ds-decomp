@@ -1,5 +1,5 @@
 //cpp
-#include "ChiefChilly.h"
+#include "daKing_Donketu_c.h"
 extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void _ZN12dEnemyBase_cC2Ev(void*);
 extern "C" void _ZN10dCcAcPos_cC1Ev(void*);
@@ -8,7 +8,7 @@ extern "C" void _ZN14BlendModelAnimC1Ev(void*);
 extern "C" void _ZN11ShadowModelC1Ev(void*);
 extern "C" void __cxa_vec_ctor(void* p, int a, int b, void* f1, void* f2);
 
-extern int _ZTV11ChiefChilly;
+extern int _ZTV16daKing_Donketu_c;
 extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" void func_0203d384(void);
 
@@ -18,10 +18,10 @@ extern "C" void func_0203d384(void);
  * preserved. Historical alias: ChiefChilly_Spawn. */
 extern "C" void* daKing_Donketu_c_classInit(void)
 {
-    char* p = (char*)_ZN7fBase_cnwEj(sizeof(struct ChiefChilly));
+    char* p = (char*)_ZN7fBase_cnwEj(sizeof(struct daKing_Donketu_c));
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        *(void**)p = &_ZTV11ChiefChilly;
+        *(void**)p = &_ZTV16daKing_Donketu_c;
         _ZN10dCcAcPos_cC1Ev(p + 0x110);
         _ZN10dBgCh_ActrC1Ev(p + 0x150);
         _ZN14BlendModelAnimC1Ev(p + 0x30c);

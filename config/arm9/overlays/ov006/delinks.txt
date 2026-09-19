@@ -1302,57 +1302,9 @@ src/func_ov006_020d25fc.c:
     complete
     .text start:0x020d25fc end:0x020d27dc
 
-src/func_ov006_020d3624.cpp:
+src/actors/dScMgAmida_c.cpp:
     complete
-    .text start:0x020d3624 end:0x020d3668
-
-src/func_ov006_020d3668.cpp:
-    complete
-    .text start:0x020d3668 end:0x020d36a4
-
-src/func_ov006_020d36a4.cpp:
-    complete
-    .text start:0x020d36a4 end:0x020d3ba0
-
-src/func_ov006_020d3ba0.cpp:
-    complete
-    .text start:0x020d3ba0 end:0x020d452c
-
-src/func_ov006_020d452c.c:
-    complete
-    .text start:0x020d452c end:0x020d47f4
-
-src/func_ov006_020d47f4.c:
-    complete
-    .text start:0x020d47f4 end:0x020d48dc
-
-src/_ZN12dScMgAmida_c6RenderEv.cpp:
-    complete
-    .text start:0x020d48dc end:0x020d4b7c
-
-src/_ZN12dScMgAmida_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020d4b7c end:0x020d52f0
-
-src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x020d52f0 end:0x020d5384
-
-src/_ZN12dScMgAmida_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020d5384 end:0x020d5924
-
-src/_ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp:
-    complete
-    .text start:0x020d5924 end:0x020d5974
-
-src/d_s_mg_amida.cpp:
-    complete
-    .text start:0x020d5974 end:0x020d5a50
-
-src/func_ov006_020d5a50.c:
-    complete
-    .text start:0x020d5a50 end:0x020d5a54
+    .text start:0x020d3624 end:0x020d5a54
 
 src/_ZN14dScMgBomroom_cD1Ev.cpp:
     complete
@@ -1690,113 +1642,9 @@ src/actors/dScMgCup_c.cpp:
     complete
     .text start:0x020de988 end:0x020e0638
 
-src/_ZN14dScMgCurling_cD1Ev.cpp:
+src/actors/dScMgCurling_c.cpp:
     complete
-    .text start:0x020e0638 end:0x020e065c
-
-src/_ZN14dScMgCurling_cD0Ev.cpp:
-    complete
-    .text start:0x020e065c end:0x020e0694
-
-src/func_ov006_020e0694.c:
-    complete
-    .text start:0x020e0694 end:0x020e071c
-
-src/func_ov006_020e071c.c:
-    complete
-    .text start:0x020e071c end:0x020e07b0
-
-src/func_ov006_020e07b0.c:
-    complete
-    .text start:0x020e07b0 end:0x020e0884
-
-src/func_ov006_020e0884.cpp:
-    complete
-    .text start:0x020e0884 end:0x020e091c
-
-src/func_ov006_020e091c.c:
-    complete
-    .text start:0x020e091c end:0x020e0a24
-
-src/func_ov006_020e0a24.c:
-    complete
-    .text start:0x020e0a24 end:0x020e0b64
-
-src/func_ov006_020e0b64.c:
-    complete
-    .text start:0x020e0b64 end:0x020e0ca0
-
-src/func_ov006_020e0ca0.c:
-    complete
-    .text start:0x020e0ca0 end:0x020e0d84
-
-src/func_ov006_020e0d84.cpp:
-    complete
-    .text start:0x020e0d84 end:0x020e0e18
-
-src/func_ov006_020e0e18.c:
-    complete
-    .text start:0x020e0e18 end:0x020e0edc
-
-src/func_ov006_020e0edc.c:
-    complete
-    .text start:0x020e0edc end:0x020e0ff0
-
-src/func_ov006_020e0ff0.c:
-    complete
-    .text start:0x020e0ff0 end:0x020e1100
-
-src/func_ov006_020e1100.c:
-    complete
-    .text start:0x020e1100 end:0x020e1214
-
-src/func_ov006_020e1214.cpp:
-    complete
-    .text start:0x020e1214 end:0x020e1264
-
-src/func_ov006_020e1264.c:
-    complete
-    .text start:0x020e1264 end:0x020e12d0
-
-src/func_ov006_020e12d0.cpp:
-    complete
-    .text start:0x020e12d0 end:0x020e13a4
-
-src/func_ov006_020e13a4.c:
-    complete
-    .text start:0x020e13a4 end:0x020e1554
-
-src/func_ov006_020e1554.c:
-    complete
-    .text start:0x020e1554 end:0x020e1608
-
-src/func_ov006_020e1608.c:
-    complete
-    .text start:0x020e1608 end:0x020e1680
-
-src/func_ov006_020e1680.c:
-    complete
-    .text start:0x020e1680 end:0x020e17f8
-
-src/func_ov006_020e17f8.cpp:
-    complete
-    .text start:0x020e17f8 end:0x020e1854
-
-src/func_ov006_020e1854.c:
-    complete
-    .text start:0x020e1854 end:0x020e1b54
-
-src/func_ov006_020e1b54.c:
-    complete
-    .text start:0x020e1b54 end:0x020e1c68
-
-src/func_ov006_020e1c68.c:
-    complete
-    .text start:0x020e1c68 end:0x020e1dc8
-
-src/func_ov006_020e1dc8.cpp:
-    complete
-    .text start:0x020e1dc8 end:0x020e20bc
+    .text start:0x020e0638 end:0x020e20bc
 
 src/func_ov006_020e269c.c:
     complete
@@ -3711,97 +3559,9 @@ src/minigames/d_s_mg_bsc.cpp:
     complete
     .text start:0x02124908 end:0x0212568c
 
-src/_ZN15dScMgSnowball_cD1Ev.cpp:
+src/actors/dScMgSnowball_c.cpp:
     complete
-    .text start:0x0212568c end:0x0212573c
-
-src/_ZN15dScMgSnowball_cD0Ev.cpp:
-    complete
-    .text start:0x0212573c end:0x02125800
-
-src/func_ov006_02125800.c:
-    complete
-    .text start:0x02125800 end:0x02125804
-
-src/func_ov006_02125804.c:
-    complete
-    .text start:0x02125804 end:0x02125890
-
-src/func_ov006_02125890.c:
-    complete
-    .text start:0x02125890 end:0x02125994
-
-src/func_ov006_02125994.c:
-    complete
-    .text start:0x02125994 end:0x021259d8
-
-src/func_ov006_021259d8.c:
-    complete
-    .text start:0x021259d8 end:0x02125bbc
-
-src/func_ov006_02125bbc.c:
-    complete
-    .text start:0x02125bbc end:0x02125cdc
-
-src/func_ov006_02125cdc.c:
-    complete
-    .text start:0x02125cdc end:0x02125f68
-
-src/func_ov006_02125f68.cpp:
-    complete
-    .text start:0x02125f68 end:0x02126948
-
-src/func_ov006_02126948.c:
-    complete
-    .text start:0x02126948 end:0x02126a98
-
-src/func_ov006_02126a98.c:
-    complete
-    .text start:0x02126a98 end:0x02126b4c
-
-src/func_ov006_02126b4c.c:
-    complete
-    .text start:0x02126b4c end:0x02126ee4
-
-src/func_ov006_02126ee4.cpp:
-    complete
-    .text start:0x02126ee4 end:0x021279b0
-
-src/func_ov006_021279b0.cpp:
-    complete
-    .text start:0x021279b0 end:0x02127d10
-
-src/_ZN15dScMgSnowball_c6RenderEv.cpp:
-    complete
-    .text start:0x02127d10 end:0x021283a4
-
-src/_ZN15dScMgSnowball_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021283a4 end:0x02128fb8
-
-src/_ZN15dScMgSnowball_c8OnKickedEv.cpp:
-    complete
-    .text start:0x02128fb8 end:0x021291b0
-
-src/_ZN15dScMgSnowball_c8OnPushedEv.cpp:
-    complete
-    .text start:0x021291b0 end:0x021291d4
-
-src/_ZN15dScMgSnowball_c11OnAttacked2Ev.cpp:
-    complete
-    .text start:0x021291d4 end:0x021291f8
-
-src/_ZN15dScMgSnowball_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021291f8 end:0x0212921c
-
-src/_ZN15dScMgSnowball_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x0212921c end:0x02129268
-
-src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02129268 end:0x021295ac
+    .text start:0x0212568c end:0x021295ac
 
 src/func_ov006_021295ac.cpp:
     complete

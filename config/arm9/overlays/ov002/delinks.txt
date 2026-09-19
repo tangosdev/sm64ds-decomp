@@ -390,21 +390,9 @@ src/_ZN13daObjKuruma_cD1Ev.cpp:
     complete
     .text start:0x020b686c end:0x020b68b0
 
-src/func_ov002_020b68b0.cpp:
+src/actors/daObjKuruma_c.cpp:
     complete
-    .text start:0x020b68b0 end:0x020b68f8
-
-src/_ZN13daObjKuruma_c6RenderEv.cpp:
-    complete
-    .text start:0x020b68f8 end:0x020b6920
-
-src/_ZN13daObjKuruma_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b6920 end:0x020b6958
-
-src/func_ov002_020b6958.c:
-    complete
-    .text start:0x020b6958 end:0x020b69e4
+    .text start:0x020b68b0 end:0x020b69e4
 
 src/_ZN17daObjKurumajiku_cD0Ev.cpp:
     complete
