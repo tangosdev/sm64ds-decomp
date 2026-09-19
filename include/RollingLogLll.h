@@ -33,12 +33,6 @@
 #include "daObjMaruta_c.h"
 
 struct RollingLogLll : daObjMaruta_c {
-    /* UNOBSERVED, not inherited. Nothing in the tree reads this span: neither this
-       class's own three methods nor daObjMaruta_c's. It is here rather than on the
-       base because the base's Behavior slot is null, so no method of the base
-       could be reading it -- see include/daObjMaruta_c.h. */
-    u8  pad_320[0x24];
-
     /* --- vtable --- */
     virtual ~RollingLogLll();          /* slots 16 (D1), 17 (D0) */
 
