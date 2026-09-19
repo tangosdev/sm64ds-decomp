@@ -1,0 +1,180 @@
+{
+  "id": "ov022/daObjFlMaruta_c+daObj_volcanoCannon_c",
+  "module": "ov022",
+  "source": "src_tu/actors/daObjFlMaruta_c+daObj_volcanoCannon_c.cpp",
+  "promoted_source": "src/actors/daObjFlMaruta_c+daObj_volcanoCannon_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run 0x02112498..0x02112950, 16 function(s); every function carries a `complete` .text claim in config/arm9/overlays/ov022/delinks.txt and the run ends exactly at this overlay's .text boundary",
+    "class label(s): daObjFlMaruta_c (spelled RollingLogLll in this tree), daObj_volcanoCannon_c",
+    "the two classes interleave and so cannot be separate translation units: daObjFlMaruta_c's vtable at ov022 0x021143a4 owns slot 32 -> 0x021126ac and slot 34 -> 0x02112710, both of which sit between daObj_volcanoCannon_c's D0 at 0x02112610 and its ChangeState at 0x02112790. A translation unit is a contiguous address run, so the two runs overlap and neither class can be carved out alone.",
+    "build/tu_map.json cuts a TU boundary at 0x021125e0 that this fold does not honour. That cut is an artifact of the class being known under two spellings: tu_map's union-find over overlapping class spans compares the vtable name _ZTV13RollingLogLll against the RTTI name daObjFlMaruta_c as if they were two classes, so it never merges the two runs.",
+    "the preceding TU, src/game/actors/daObjFl_Fall_Block_c.cpp, is already promoted and ends at 0x02112498, which fixes this TU's lower bound",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02112498",
+      "end": "0x02112950"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13RollingLogLllD1Ev",
+      "address": "0x02112498",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN13RollingLogLllD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13RollingLogLllD0Ev",
+      "address": "0x021124e8",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13RollingLogLllD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN13RollingLogLll16CleanupResourcesEv",
+      "address": "0x0211254c",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN13RollingLogLll16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13RollingLogLll8BehaviorEv",
+      "address": "0x02112560",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN13RollingLogLll8BehaviorEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13RollingLogLll13InitResourcesEv",
+      "address": "0x02112590",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN13RollingLogLll13InitResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "daObjFlMaruta_c_classInit",
+      "address": "0x021125a4",
+      "size": "0x0000003c",
+      "legacy_source": "src/d_a_obj_fl_maruta.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_cD1Ev",
+      "address": "0x021125e0",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_cD1Ev.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_cD0Ev",
+      "address": "0x02112610",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_cD0Ev.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov022_02112654",
+      "address": "0x02112654",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov022_02112654.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov022_021126ac",
+      "address": "0x021126ac",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov022_021126ac.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov022_02112710",
+      "address": "0x02112710",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov022_02112710.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE",
+      "address": "0x02112790",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_c16CleanupResourcesEv",
+      "address": "0x021127e0",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_c16CleanupResourcesEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_c8BehaviorEv",
+      "address": "0x02112800",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_c8BehaviorEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_c13InitResourcesEv",
+      "address": "0x021128b8",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN21daObj_volcanoCannon_c13InitResourcesEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "daObj_volcanoCannon_c_classInit",
+      "address": "0x02112918",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_volcano_cannon.c",
+      "ordinal": 15
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13RollingLogLllD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor variant beside the licensed D1/D0 pair whenever it lowers an out-of-line destructor definition. RollingLogLll's D2 has no entry in config/arm9/overlays/ov022/symbols.txt, so the ROM gives it no home, and no function surviving in this TU references it."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov022_02112654.cpp (func_ov022_02112654) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov022-daObjFlMaruta_c+daObj_volcanoCannon_c/daObjFlMaruta_c+daObj_volcanoCannon_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 16,
+    "functions_declared": 16,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN13RollingLogLllD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN13RollingLogLllD2Ev"
+      ],
+      "droppedSections": [
+        34,
+        35
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1), (5, 6)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
