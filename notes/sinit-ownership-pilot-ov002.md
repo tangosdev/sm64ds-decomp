@@ -17,7 +17,7 @@ The initializer has no calls or destructor registrations. Its eighteen ROM
 relocations load sixteen 8-byte descriptors and the two 0x40-byte BSS destinations:
 
 - [data_ov002_0210db80](../config/arm9/overlays/ov002/symbols.txt) is referenced by only
-  [func_ov002_020aea30](../src_tu/actors/Enemy.cpp) - ROM ordinal 24 used to assemble `Enemy.cpp` (ROM load at `0x020aeab8`). The function invokes an entry
+  [func_ov002_020aea30](../src/actors/dEnemyBase_c.cpp) - ROM ordinal 24 used to assemble `Enemy.cpp` (ROM load at `0x020aeab8`). The function invokes an entry
   as `void (dEnemyBase_c::*)(int, int)`.
 - [data_ov002_0210dbc0](../config/arm9/overlays/ov002/symbols.txt) is referenced by only
   `dEnemyBase_c::UpdateDeath(dBgCh_Actr&)` (ROM load at `0x020ae738`). The function
@@ -32,14 +32,14 @@ The first BSS table is initialized in this source order:
 
 | Index | `.init` pool offset | ROM descriptor | Descriptor function target |
 | ---: | ---: | ---: | ---: |
-| 0 | `+0x15c` | `0x021081b8` | `0x020ae9f8` ([func_ov002_020ae9f8](../src_tu/actors/Enemy.cpp), ROM ordinal 24) |
-| 1 | `+0x160` | `0x02108150` | `0x020ae954` ([func_ov002_020ae954](../src_tu/actors/Enemy.cpp), ROM ordinal 19) |
-| 2 | `+0x168` | `0x02108168` | `0x020ae890` ([func_ov002_020ae890](../src_tu/actors/Enemy.cpp), ROM ordinal 17) |
-| 3 | `+0x16c` | `0x02108160` | `0x020ae87c` ([func_ov002_020ae87c](../src_tu/actors/Enemy.cpp), ROM ordinal 16) |
-| 4 | `+0x170` | `0x02108158` | `0x020ae844` ([func_ov002_020ae844](../src_tu/actors/Enemy.cpp), ROM ordinal 15) |
-| 5 | `+0x174` | `0x02108170` | `0x020ae80c` ([func_ov002_020ae80c](../src_tu/actors/Enemy.cpp), ROM ordinal 14) |
-| 6 | `+0x178` | `0x02108140` | `0x020ae73c` ([func_ov002_020ae73c](../src_tu/actors/Enemy.cpp), ROM ordinal 13) |
-| 7 | `+0x17c` | `0x021081a0` | `0x020aea2c` ([func_ov002_020aea2c](../src_tu/actors/Enemy.cpp), ROM ordinal 23) |
+| 0 | `+0x15c` | `0x021081b8` | `0x020ae9f8` ([func_ov002_020ae9f8](../src/actors/dEnemyBase_c.cpp), ROM ordinal 24) |
+| 1 | `+0x160` | `0x02108150` | `0x020ae954` ([func_ov002_020ae954](../src/actors/dEnemyBase_c.cpp), ROM ordinal 19) |
+| 2 | `+0x168` | `0x02108168` | `0x020ae890` ([func_ov002_020ae890](../src/actors/dEnemyBase_c.cpp), ROM ordinal 17) |
+| 3 | `+0x16c` | `0x02108160` | `0x020ae87c` ([func_ov002_020ae87c](../src/actors/dEnemyBase_c.cpp), ROM ordinal 16) |
+| 4 | `+0x170` | `0x02108158` | `0x020ae844` ([func_ov002_020ae844](../src/actors/dEnemyBase_c.cpp), ROM ordinal 15) |
+| 5 | `+0x174` | `0x02108170` | `0x020ae80c` ([func_ov002_020ae80c](../src/actors/dEnemyBase_c.cpp), ROM ordinal 14) |
+| 6 | `+0x178` | `0x02108140` | `0x020ae73c` ([func_ov002_020ae73c](../src/actors/dEnemyBase_c.cpp), ROM ordinal 13) |
+| 7 | `+0x17c` | `0x021081a0` | `0x020aea2c` ([func_ov002_020aea2c](../src/actors/dEnemyBase_c.cpp), ROM ordinal 23) |
 
 The destination [data_ov002_0210db80](../config/arm9/overlays/ov002/symbols.txt) occupies pool offset `+0x164`.
 
@@ -49,14 +49,14 @@ probe reproduces exactly:
 
 | Index | `.init` pool offset | ROM descriptor | Descriptor function target |
 | ---: | ---: | ---: | ---: |
-| 0 | `+0x180` | `0x021081b0` | `0x020ae64c` ([func_ov002_020ae64c](../src_tu/actors/Enemy.cpp), ROM ordinal 11) |
-| 1 | `+0x184` | `0x021081a8` | `0x020ae608` ([func_ov002_020ae608](../src_tu/actors/Enemy.cpp), ROM ordinal 10) |
-| 2 | `+0x188` | `0x02108148` | `0x020ae608` ([func_ov002_020ae608](../src_tu/actors/Enemy.cpp), ROM ordinal 10) |
-| 3 | `+0x1a0` | `0x02108198` | `0x020ae4cc` ([func_ov002_020ae4cc](../src_tu/actors/Enemy.cpp), ROM ordinal 8) |
-| 4 | `+0x18c` | `0x02108190` | `0x020ae608` ([func_ov002_020ae608](../src_tu/actors/Enemy.cpp), ROM ordinal 10) |
-| 5 | `+0x190` | `0x02108188` | `0x020ae608` ([func_ov002_020ae608](../src_tu/actors/Enemy.cpp), ROM ordinal 10) |
-| 6 | `+0x194` | `0x02108180` | `0x020ae454` ([func_ov002_020ae454](../src_tu/actors/Enemy.cpp), ROM ordinal 7) |
-| 7 | `+0x198` | `0x02108178` | `0x020aea24` ([func_ov002_020aea24](../src_tu/actors/Enemy.cpp), ROM ordinal 22) |
+| 0 | `+0x180` | `0x021081b0` | `0x020ae64c` ([func_ov002_020ae64c](../src/actors/dEnemyBase_c.cpp), ROM ordinal 11) |
+| 1 | `+0x184` | `0x021081a8` | `0x020ae608` ([func_ov002_020ae608](../src/actors/dEnemyBase_c.cpp), ROM ordinal 10) |
+| 2 | `+0x188` | `0x02108148` | `0x020ae608` ([func_ov002_020ae608](../src/actors/dEnemyBase_c.cpp), ROM ordinal 10) |
+| 3 | `+0x1a0` | `0x02108198` | `0x020ae4cc` ([func_ov002_020ae4cc](../src/actors/dEnemyBase_c.cpp), ROM ordinal 8) |
+| 4 | `+0x18c` | `0x02108190` | `0x020ae608` ([func_ov002_020ae608](../src/actors/dEnemyBase_c.cpp), ROM ordinal 10) |
+| 5 | `+0x190` | `0x02108188` | `0x020ae608` ([func_ov002_020ae608](../src/actors/dEnemyBase_c.cpp), ROM ordinal 10) |
+| 6 | `+0x194` | `0x02108180` | `0x020ae454` ([func_ov002_020ae454](../src/actors/dEnemyBase_c.cpp), ROM ordinal 7) |
+| 7 | `+0x198` | `0x02108178` | `0x020aea24` ([func_ov002_020aea24](../src/actors/dEnemyBase_c.cpp), ROM ordinal 22) |
 
 The destination [data_ov002_0210dbc0](../config/arm9/overlays/ov002/symbols.txt) occupies pool offset `+0x19c`.
 
@@ -74,7 +74,7 @@ the `dEnemyBase_c` tables and this row has no conflict blocker.
 
 ## Organic compiler proof
 
-The pilot block at the end of [src_tu/actors/Enemy.cpp](../src_tu/actors/Enemy.cpp) is excluded normally and
+The pilot block at the end of [src/actors/dEnemyBase_c.cpp](../src/actors/dEnemyBase_c.cpp) is excluded normally and
 enabled only by `-DSINIT_OWNERSHIP_PILOT`. It declares two ordinary non-const PMF
 arrays and deliberately contains no `__sinit` function. Under pinned mwccarm
 2004/b56, the compiler generates:
