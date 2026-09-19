@@ -1,9 +1,9 @@
 {
   "id": "ov090/daPukupuku_c",
   "module": "ov090",
-  "source": "src_tu/actors/daPukupuku_c.cpp",
+  "source": "src/actors/daPukupuku_c.cpp",
   "promoted_source": "src/actors/daPukupuku_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2133034..0x213367c, 15 function(s); 0x2133034..0x2133634 (14 fn) is build/tu_map.json's segment (tools/tu_map.py) and daPukupuku_c_classInit at 0x2133634..0x213367c was joined to it by hand -- tu_map cuts at class labels and the factory carries none, so it was left in a segment of its own",
@@ -140,6 +140,83 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "include/types.h declares Vector3's destructor and leaves it empty, so every TU that destroys a Vector3 re-emits it as vague linkage (STB_LOPROC, 4 bytes). This TU destroys three Vector3 automatics: v in daPukupuku_c::InitResources (ov090:0x02133530), and v and hv in func_ov090_021330c8. The cartridge keeps exactly one copy, arm9:0x020072c0, kind:function(arm,size=0x4) -- the 4-byte `bx lr` body -- and an enrolled source already owns it, so rombuild compares this object's copy against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate. Home count taken from tools/relocs.py load_symbol_homes(), the index the gate itself reads: exactly 1, across all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102), which is what selects deadstrip-duplicate over a plain deadstrip."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTI12daPukupuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021342e4",
+      "reason": "InitResources naturally emits the ROM-proven daPukupuku_c single-inheritance RTTI. romdata_check proves its complete record and relocations before isolation."
+    },
+    {
+      "symbol": "_ZTS12daPukupuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021342f0",
+      "reason": "InitResources naturally emits the ROM-proven daPukupuku_c type-name string. romdata_check proves its exact payload before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTV12daPukupuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x02134324",
+      "reason": "InitResources naturally emits the complete 0x84-byte class vtable storage. romdata_check applies the measured eight-byte public-address-point bias and proves every slot before isolation."
     }
   ],
   "notes": [
@@ -176,17 +253,58 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
         22,
         23,
         30
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI12daPukupuku_c",
+        "_ZTS12daPukupuku_c",
+        "_ZTV12daPukupuku_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI12daPukupuku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS12daPukupuku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daPukupuku_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
     }

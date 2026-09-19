@@ -4080,6 +4080,21 @@
     "src/stage/LevelObjects.cpp#_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
     "src/stage/LevelObjects.cpp#_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
     "src/stage/LevelObjects.cpp#_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
-    "src/stage/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev"
+    "src/stage/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_cD1Ev": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_cD0Ev": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_021330c8": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_02133190": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_021331c4": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_02133200": "andrewboudreau",
+    "src/actors/daPukupuku_c.cpp#func_ov090_02133290": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_021332e8": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#func_ov090_02133338": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_c6RenderEv": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_c8BehaviorEv": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#_ZN12daPukupuku_c13InitResourcesEv": "tangosdev",
+    "src/actors/daPukupuku_c.cpp#daPukupuku_c_classInit": "tangosdev"
   }
 }
