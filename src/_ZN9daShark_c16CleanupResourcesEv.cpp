@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN5Shark16CleanupResourcesEv
+// @symbol _ZN9daShark_c16CleanupResourcesEv
 
 #include "SharedFilePtr.h"
-#include "Shark.h"
+#include "daShark_c.h"
 
 extern "C" {
 extern SharedFilePtr data_ov090_021345a4;
 extern SharedFilePtr data_ov090_021345ac;
 }
 
-int Shark::CleanupResources()
+int daShark_c::CleanupResources()
 {
     data_ov090_021345a4.Release();
     data_ov090_021345ac.Release();

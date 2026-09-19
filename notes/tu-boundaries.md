@@ -74,7 +74,7 @@ daSnowman_c   0x2125eb8-0x21261d4   RTTI span straddles the boundary
 
 The naive union merged them. The sinit count adjudicates: [ov081](../config/arm9/overlays/ov081/symbols.txt) has five named classes
 and five sinits, so five TUs is right. [ov090](../config/arm9/overlays/ov090/symbols.txt) fails identically (`daMenbo_c` bridging
-MantaRay and Skeeter; four classes, four sinits). An RTTI span is *inferred* from a
+daManta_c and Skeeter; four classes, four sinits). An RTTI span is *inferred* from a
 slot list, and a slot can point at inherited or shared code in a neighbouring object;
 a mangled name cannot be wrong about its own function. Hence the asymmetry.
 

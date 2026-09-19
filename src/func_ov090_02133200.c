@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov090_02133200
-// recovered name: MantaRay_Kill
+// recovered name: daManta_c_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */

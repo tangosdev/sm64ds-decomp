@@ -2646,13 +2646,13 @@ ov090	0x02131f88	func_ov090_02131f88	_ZN7Skeeter8BehaviorEv	vtable slot 6
 ov090	0x0213235c	func_ov090_0213235c	_ZN7Skeeter13InitResourcesEv	vtable slot 0
 ov090	0x02132654	func_ov090_02132654	Skeeter_Spawn	spawnfunc
 ov090	0x02132654	Skeeter_Spawn	daMenbo_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov090	0x0213269c	func_ov090_0213269c	_ZN8MantaRayD1Ev	vtable slot 16
-ov090	0x021326dc	func_ov090_021326dc	_ZN8MantaRayD0Ev	vtable slot 17
-ov090	0x02132c1c	func_ov090_02132c1c	_ZN8MantaRay16CleanupResourcesEv	vtable slot 3
-ov090	0x02132c64	func_ov090_02132c64	_ZN8MantaRay16OnPendingDestroyEv	vtable slot 12
-ov090	0x02132c68	func_ov090_02132c68	_ZN8MantaRay6RenderEv	vtable slot 9
-ov090	0x02132c94	func_ov090_02132c94	_ZN8MantaRay8BehaviorEv	vtable slot 6
-ov090	0x02132e38	func_ov090_02132e38	_ZN8MantaRay13InitResourcesEv	vtable slot 0
+ov090	0x0213269c	func_ov090_0213269c	_ZN9daManta_cD1Ev	vtable slot 16
+ov090	0x021326dc	func_ov090_021326dc	_ZN9daManta_cD0Ev	vtable slot 17
+ov090	0x02132c1c	func_ov090_02132c1c	_ZN9daManta_c16CleanupResourcesEv	vtable slot 3
+ov090	0x02132c64	func_ov090_02132c64	_ZN9daManta_c16OnPendingDestroyEv	vtable slot 12
+ov090	0x02132c68	func_ov090_02132c68	_ZN9daManta_c6RenderEv	vtable slot 9
+ov090	0x02132c94	func_ov090_02132c94	_ZN9daManta_c8BehaviorEv	vtable slot 6
+ov090	0x02132e38	func_ov090_02132e38	_ZN9daManta_c13InitResourcesEv	vtable slot 0
 ov090	0x02132fe8	func_ov090_02132fe8	MantaRay_Spawn	spawnfunc
 ov090	0x02132fe8	MantaRay_Spawn	daManta_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov090	0x02133034	func_ov090_02133034	_ZN10CheepCheepD1Ev	vtable slot 16
@@ -2664,13 +2664,13 @@ ov090	0x02133430	func_ov090_02133430	_ZN10CheepCheep8BehaviorEv	vtable slot 6
 ov090	0x02133530	func_ov090_02133530	_ZN10CheepCheep13InitResourcesEv	vtable slot 0
 ov090	0x02133634	func_ov090_02133634	CheepCheep_Spawn	spawnfunc
 ov090	0x02133634	CheepCheep_Spawn	daPukupuku_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov090	0x0213367c	func_ov090_0213367c	_ZN5SharkD1Ev	vtable slot 16
-ov090	0x021336bc	func_ov090_021336bc	_ZN5SharkD0Ev	vtable slot 17
-ov090	0x02133978	func_ov090_02133978	_ZN5Shark16CleanupResourcesEv	vtable slot 3
-ov090	0x021339a8	func_ov090_021339a8	_ZN5Shark16OnPendingDestroyEv	vtable slot 12
-ov090	0x021339ac	func_ov090_021339ac	_ZN5Shark6RenderEv	vtable slot 9
-ov090	0x021339d8	func_ov090_021339d8	_ZN5Shark8BehaviorEv	vtable slot 6
-ov090	0x02133b98	func_ov090_02133b98	_ZN5Shark13InitResourcesEv	vtable slot 0
+ov090	0x0213367c	func_ov090_0213367c	_ZN9daShark_cD1Ev	vtable slot 16
+ov090	0x021336bc	func_ov090_021336bc	_ZN9daShark_cD0Ev	vtable slot 17
+ov090	0x02133978	func_ov090_02133978	_ZN9daShark_c16CleanupResourcesEv	vtable slot 3
+ov090	0x021339a8	func_ov090_021339a8	_ZN9daShark_c16OnPendingDestroyEv	vtable slot 12
+ov090	0x021339ac	func_ov090_021339ac	_ZN9daShark_c6RenderEv	vtable slot 9
+ov090	0x021339d8	func_ov090_021339d8	_ZN9daShark_c8BehaviorEv	vtable slot 6
+ov090	0x02133b98	func_ov090_02133b98	_ZN9daShark_c13InitResourcesEv	vtable slot 0
 ov090	0x02133ca0	func_ov090_02133ca0	Shark_Spawn	spawnfunc
 ov090	0x02133ca0	Shark_Spawn	daShark_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov090	0x02134144	data_ov090_02134144	Skeeter_SpawnInfo	spawninfo
@@ -2678,13 +2678,13 @@ ov090	0x02134144	Skeeter_SpawnInfo	g_profile_MENBO	reconstructed profile global;
 ov090	0x02134168	data_ov090_02134168	_ZTV7Skeeter	vtable alloc=0x3b0
 ov090	0x02134218	data_ov090_02134218	MantaRay_SpawnInfo	spawninfo
 ov090	0x02134218	MantaRay_SpawnInfo	g_profile_MANTA	reconstructed profile global; literal ROM ID MANTA+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov090	0x0213423c	data_ov090_0213423c	_ZTV8MantaRay	vtable alloc=?
+ov090	0x0213423c	data_ov090_0213423c	_ZTV9daManta_c	vtable alloc=?
 ov090	0x02134300	data_ov090_02134300	CheepCheep_SpawnInfo	spawninfo
 ov090	0x02134300	CheepCheep_SpawnInfo	g_profile_PUKUPUKU	reconstructed profile global; literal ROM ID PUKUPUKU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov090	0x02134324	data_ov090_02134324	_ZTV10CheepCheep	vtable alloc=0x388
 ov090	0x021343c8	data_ov090_021343c8	Shark_SpawnInfo	spawninfo
 ov090	0x021343c8	Shark_SpawnInfo	g_profile_SHARK	reconstructed profile global; literal ROM ID SHARK+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov090	0x021343ec	data_ov090_021343ec	_ZTV5Shark	vtable alloc=0x3a0
+ov090	0x021343ec	data_ov090_021343ec	_ZTV9daShark_c	vtable alloc=0x3a0
 ov091	0x02130f00	func_ov091_02130f00	_ZN25RotatingUpDownPlatformUtmD1Ev	vtable slot 16
 ov091	0x02130f4c	func_ov091_02130f4c	_ZN25RotatingUpDownPlatformUtmD0Ev	vtable slot 17
 ov091	0x02131388	func_ov091_02131388	_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv	vtable slot 3

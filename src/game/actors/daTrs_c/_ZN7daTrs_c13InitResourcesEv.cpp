@@ -18,7 +18,7 @@
  * - `*(int *)(this+8) = param1 & 0xfff` stays asymmetric on purpose: spelling
  *   both sides identically lets mwccarm CSE the field address (addlt + [r2]),
  *   one instruction the ROM does not have -- it wants [r4,#8] direct. Same
- *   lever as src/func_ov084_0212b344.cpp.
+ *   lever as daKrb_c::OnTurnIntoEgg in src/actors/daKrb_c.cpp.
  * - The MulMat4x3 first argument stays a raw 0x394 load: the bone-matrix
  *   pointer inside Model.data, and ModelComponents is only forward-declared
  *   tree-wide.
@@ -178,7 +178,7 @@ int daTrs_c::InitResources()
             /* int on the store side only: spelling both sides identically
                lets mwccarm CSE the field address (addlt r2,r4,#8 + [r2]),
                one instruction the ROM does not have -- it wants [r4,#8] direct.
-               Same lever as src/func_ov084_0212b344.cpp. */
+               Same lever as daKrb_c::OnTurnIntoEgg in src/actors/daKrb_c.cpp. */
             *(int *)((char *)this + 8) = param1 & 0xfff;
         }
         if (DestroyIfCapNotNeeded() == 0) {

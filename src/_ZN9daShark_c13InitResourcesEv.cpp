@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN5Shark13InitResourcesEv
+// @symbol _ZN9daShark_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Shark.h"
+#include "daShark_c.h"
 #include "PathPtr.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
@@ -20,7 +20,7 @@ extern char data_ov090_021345ac[];
 
 }
 
-int Shark::InitResources()
+int daShark_c::InitResources()
 {
     /* RAW STORAGE, not `PathPtr p1;`: PathPtr now has a DECLARED constructor
        (_ZN7PathPtrC1Ev.cpp, see notes/ctor-migration.md), so typed locals

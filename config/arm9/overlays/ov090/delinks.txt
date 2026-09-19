@@ -103,11 +103,11 @@ src/d_a_menbo.c:
     complete
     .text start:0x02132654 end:0x0213269c
 
-src/_ZN8MantaRayD1Ev.cpp:
+src/_ZN9daManta_cD1Ev.cpp:
     complete
     .text start:0x0213269c end:0x021326dc
 
-src/_ZN8MantaRayD0Ev.cpp:
+src/_ZN9daManta_cD0Ev.cpp:
     complete
     .text start:0x021326dc end:0x02132730
 
@@ -131,23 +131,23 @@ src/func_ov090_02132b14.c:
     complete
     .text start:0x02132b14 end:0x02132c1c
 
-src/_ZN8MantaRay16CleanupResourcesEv.cpp:
+src/_ZN9daManta_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02132c1c end:0x02132c64
 
-src/_ZN8MantaRay16OnPendingDestroyEv.cpp:
+src/_ZN9daManta_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02132c64 end:0x02132c68
 
-src/_ZN8MantaRay6RenderEv.cpp:
+src/_ZN9daManta_c6RenderEv.cpp:
     complete
     .text start:0x02132c68 end:0x02132c94
 
-src/_ZN8MantaRay8BehaviorEv.cpp:
+src/_ZN9daManta_c8BehaviorEv.cpp:
     complete
     .text start:0x02132c94 end:0x02132e38
 
-src/_ZN8MantaRay13InitResourcesEv.cpp:
+src/_ZN9daManta_c13InitResourcesEv.cpp:
     complete
     .text start:0x02132e38 end:0x02132fe8
 
@@ -215,11 +215,11 @@ src/d_a_pukupuku.c:
     complete
     .text start:0x02133634 end:0x0213367c
 
-src/_ZN5SharkD1Ev.cpp:
+src/_ZN9daShark_cD1Ev.cpp:
     complete
     .text start:0x0213367c end:0x021336bc
 
-src/_ZN5SharkD0Ev.cpp:
+src/_ZN9daShark_cD0Ev.cpp:
     complete
     .text start:0x021336bc end:0x02133710
 
@@ -243,23 +243,23 @@ src/func_ov090_02133904.c:
     complete
     .text start:0x02133904 end:0x02133978
 
-src/_ZN5Shark16CleanupResourcesEv.cpp:
+src/_ZN9daShark_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02133978 end:0x021339a8
 
-src/_ZN5Shark16OnPendingDestroyEv.cpp:
+src/_ZN9daShark_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021339a8 end:0x021339ac
 
-src/_ZN5Shark6RenderEv.cpp:
+src/_ZN9daShark_c6RenderEv.cpp:
     complete
     .text start:0x021339ac end:0x021339d8
 
-src/_ZN5Shark8BehaviorEv.cpp:
+src/_ZN9daShark_c8BehaviorEv.cpp:
     complete
     .text start:0x021339d8 end:0x02133b98
 
-src/_ZN5Shark13InitResourcesEv.cpp:
+src/_ZN9daShark_c13InitResourcesEv.cpp:
     complete
     .text start:0x02133b98 end:0x02133ca0
 

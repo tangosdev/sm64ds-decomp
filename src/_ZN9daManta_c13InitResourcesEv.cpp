@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8MantaRay13InitResourcesEv
+// @symbol _ZN9daManta_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Loads the model and animation, unpacks the spawn word, caches the path, and
@@ -20,7 +20,7 @@
  * One level (data_0209f2d8 == 2) overrides all of it: node 3, a fixed heading,
  * and a hardcoded position. That is a scripted placement, not a spawn.
  */
-#include "MantaRay.h"
+#include "daManta_c.h"
 #include "PathPtr.h"
 struct SharedFilePtr;
 struct BMD_File;
@@ -39,7 +39,7 @@ extern int data_ov090_0213454c;
 extern unsigned char data_0209f2d8;
 }
 
-int MantaRay::InitResources()
+int daManta_c::InitResources()
 {
     unsigned char* thiz = (unsigned char*)this;
     mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov090_02134524), 1, -1);

@@ -25,8 +25,8 @@ Relation to what already existed
 `marker_census.py` asks the same question of `src/`: it greps decompiled destructor
 BODIES for `_ZN9ModelAnimD1Ev(t + 0xd4)`.  That is the same evidence, but it can only
 see the destructors this tree has already recovered as C.  This pass reads the
-cartridge, so it also sees every destructor that is still `func_ov084_0212b344` or has
-no source file at all.  `marker_census` reports 34 decidable; the cartridge proves 832
+cartridge, so it also sees every destructor that is still an unnamed `func_<addr>`
+shard or has no source file at all.  `marker_census` reports 34 decidable; the cartridge proves 832
 member pairs, of which 91 were decidable and untyped when this landed.
 
 `opnew_sizes.py` recovers a class's EXTENT from the `operator new` literal and is blind
