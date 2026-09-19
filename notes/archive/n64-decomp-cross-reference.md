@@ -327,7 +327,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | ov060 |
 | `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | ov030 |
 | (Eyerok boss) | → | `Eyerok` | ov066 |
-| — | | `CheepCheep` ov090, `Skeeter` ov090 | |
+| — | | `daPukupuku_c` ov090, `daMenbo_c` ov090 | |
 
 **Two traps in this table:**
 

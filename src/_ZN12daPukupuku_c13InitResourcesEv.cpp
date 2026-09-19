@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10CheepCheep13InitResourcesEv
+// @symbol _ZN12daPukupuku_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CheepCheep.h"
+#include "daPukupuku_c.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct BCA_File;
@@ -34,7 +34,7 @@ struct AnimFilePtr { int a; struct BCA_File *file; };
 extern struct AnimFilePtr data_ov090_0213455c;
 extern struct Vector3 data_ov090_021342d8;
 
-int CheepCheep::InitResources()
+int daPukupuku_c::InitResources()
 {
     struct BMD_File *bmd;
     struct Vector3 v;

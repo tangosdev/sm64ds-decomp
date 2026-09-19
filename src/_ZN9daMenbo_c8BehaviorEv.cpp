@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN7Skeeter8BehaviorEv
+// @symbol _ZN9daMenbo_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
  * One frame of the skeeter -- the water strider -- in four mutually exclusive
@@ -19,7 +19,7 @@
  * The final cylinder Update is gated on the closest player's +0x6fb, so the
  * skeeter stops colliding while that player is in some state of their own.
  */
-#include "Skeeter.h"
+#include "daMenbo_c.h"
 
 struct CoinVec3 { s32 x, y, z; };
 
@@ -52,7 +52,7 @@ void func_ov090_021310b4(void* c);
 extern signed char data_0209f2f8;
 }
 
-int Skeeter::Behavior()
+int daMenbo_c::Behavior()
 {
     char* c = (char*)this;
 

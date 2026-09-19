@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov090_021327e4
-// recovered name: Skeeter_Kill
+// recovered name: daMenbo_c_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daMenbo_c::Kill - recovered from vtable slot identity */
 typedef short s16;

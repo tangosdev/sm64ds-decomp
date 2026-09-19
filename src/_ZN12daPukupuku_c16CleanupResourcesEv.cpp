@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN10CheepCheep16CleanupResourcesEv
+// @symbol _ZN12daPukupuku_c16CleanupResourcesEv
 
-#include "CheepCheep.h"
+#include "daPukupuku_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -9,7 +9,7 @@ extern SharedFilePtr data_ov090_02134564;
 extern SharedFilePtr data_ov090_0213455c;
 }
 
-int CheepCheep::CleanupResources()
+int daPukupuku_c::CleanupResources()
 {
     data_ov090_02134564.Release();
     data_ov090_0213455c.Release();

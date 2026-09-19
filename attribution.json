@@ -3947,6 +3947,10 @@
     "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c13InitResourcesEv": "tangosdev",
     "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c21AfterCleanupResourcesEj": "andrewboudreau",
     "src/actors/dScMgAmida_c.cpp#dScMgAmida_c_classInit": "tangosdev",
-    "src/actors/dScMgAmida_c.cpp#func_ov006_020d5a50": "tangosdev"
+    "src/actors/dScMgAmida_c.cpp#func_ov006_020d5a50": "tangosdev",
+    "src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp": "tangosdev",
+    "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp#_ZN9daMenbo_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp#_ZN12daPukupuku_c16OnPendingDestroyEv": "tangosdev",
+    "src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp#_ZN9daMenbo_c16OnAimedAtWithEggEv": "tangosdev"
   }
 }

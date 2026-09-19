@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN10CheepCheep8BehaviorEv
+// @symbol _ZN12daPukupuku_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CheepCheep.h"
+#include "daPukupuku_c.h"
 struct dBgCh_Actr;
 struct dCc_c;
 struct dEnemyBase_c;
@@ -22,7 +22,7 @@ extern char *_ZN8dActor_c13ClosestPlayerEv(dEnemyBase_c *thiz);
 }
 
 
-int CheepCheep::Behavior()
+int daPukupuku_c::Behavior()
 {
     char *c = (char *)((dEnemyBase_c *)this);
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((dEnemyBase_c *)this), (dBgCh_Actr *)(c + 0x150)) != 0) {
