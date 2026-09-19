@@ -2258,13 +2258,13 @@
    "start": "0x2133034",
    "end": "0x213367c",
    "classes": [
-    "CheepCheep"
+    "daPukupuku_c"
    ],
    "n_functions_map": 15,
    "n_files": 15,
    "files": [
-    "src/_ZN10CheepCheepD1Ev.cpp",
-    "src/_ZN10CheepCheepD0Ev.cpp",
+    "src/_ZN12daPukupuku_cD1Ev.cpp",
+    "src/_ZN12daPukupuku_cD0Ev.cpp",
     "src/func_ov090_021330c8.cpp",
     "src/func_ov090_02133190.c",
     "src/func_ov090_021331c4.c",
@@ -2272,11 +2272,11 @@
     "src/func_ov090_02133290.c",
     "src/func_ov090_021332e8.cpp",
     "src/func_ov090_02133338.c",
-    "src/_ZN10CheepCheep16CleanupResourcesEv.cpp",
-    "src/_ZN10CheepCheep16OnPendingDestroyEv.cpp",
-    "src/_ZN10CheepCheep6RenderEv.cpp",
-    "src/_ZN10CheepCheep8BehaviorEv.cpp",
-    "src/_ZN10CheepCheep13InitResourcesEv.cpp",
+    "src/_ZN12daPukupuku_c16CleanupResourcesEv.cpp",
+    "src/_ZN12daPukupuku_c16OnPendingDestroyEv.cpp",
+    "src/_ZN12daPukupuku_c6RenderEv.cpp",
+    "src/_ZN12daPukupuku_c8BehaviorEv.cpp",
+    "src/_ZN12daPukupuku_c13InitResourcesEv.cpp",
     "src/d_a_pukupuku.c"
    ],
    "ext_mix": {
@@ -29542,13 +29542,13 @@
    "start": "0x2130f00",
    "end": "0x213269c",
    "classes": [
-    "Skeeter"
+    "daMenbo_c"
    ],
    "n_functions_map": 25,
    "n_files": 25,
    "files": [
-    "src/_ZN7SkeeterD1Ev.cpp",
-    "src/_ZN7SkeeterD0Ev.cpp",
+    "src/_ZN9daMenbo_cD1Ev.cpp",
+    "src/_ZN9daMenbo_cD0Ev.cpp",
     "src/func_ov090_02130f94.c",
     "src/func_ov090_021310b4.c",
     "src/func_ov090_02131378.cpp",
@@ -29563,14 +29563,14 @@
     "src/func_ov090_02131db0.c",
     "src/func_ov090_02131e00.cpp",
     "src/func_ov090_02131e50.c",
-    "src/_ZN7Skeeter16CleanupResourcesEv.cpp",
-    "src/_ZN7Skeeter16OnPendingDestroyEv.cpp",
-    "src/_ZN7Skeeter6RenderEv.cpp",
-    "src/_ZN7Skeeter8BehaviorEv.cpp",
-    "src/_ZN7Skeeter13InitResourcesEv.cpp",
-    "src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp",
-    "src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp",
-    "src/_ZN7Skeeter13OnYoshiTryEatEv.cpp",
+    "src/_ZN9daMenbo_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daMenbo_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daMenbo_c6RenderEv.cpp",
+    "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+    "src/_ZN9daMenbo_c13InitResourcesEv.cpp",
+    "src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp",
+    "src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp",
     "src/d_a_menbo.c"
    ],
    "ext_mix": {

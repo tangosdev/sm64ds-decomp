@@ -1,5 +1,5 @@
-_ZN7SkeeterD1Ev kind:function(arm,size=0x40) addr:0x02130f00
-_ZN7SkeeterD0Ev kind:function(arm,size=0x54) addr:0x02130f40
+_ZN9daMenbo_cD1Ev kind:function(arm,size=0x40) addr:0x02130f00
+_ZN9daMenbo_cD0Ev kind:function(arm,size=0x54) addr:0x02130f40
 func_ov090_02130f94 kind:function(arm,size=0x120) addr:0x02130f94
 func_ov090_021310b4 kind:function(arm,size=0x2c4) addr:0x021310b4
 func_ov090_02131378 kind:function(arm,size=0x128) addr:0x02131378
@@ -14,14 +14,14 @@ func_ov090_02131c48 kind:function(arm,size=0x168) addr:0x02131c48
 func_ov090_02131db0 kind:function(arm,size=0x50) addr:0x02131db0
 func_ov090_02131e00 kind:function(arm,size=0x50) addr:0x02131e00
 func_ov090_02131e50 kind:function(arm,size=0x8c) addr:0x02131e50
-_ZN7Skeeter16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02131edc
-_ZN7Skeeter16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02131f30
-_ZN7Skeeter6RenderEv kind:function(arm,size=0x54) addr:0x02131f34
-_ZN7Skeeter8BehaviorEv kind:function(arm,size=0x3d4) addr:0x02131f88
-_ZN7Skeeter13InitResourcesEv kind:function(arm,size=0x2bc) addr:0x0213235c
-_ZN7Skeeter16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02132618
-_ZN7Skeeter13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02132620
-_ZN7Skeeter13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0213264c
+_ZN9daMenbo_c16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02131edc
+_ZN9daMenbo_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02131f30
+_ZN9daMenbo_c6RenderEv kind:function(arm,size=0x54) addr:0x02131f34
+_ZN9daMenbo_c8BehaviorEv kind:function(arm,size=0x3d4) addr:0x02131f88
+_ZN9daMenbo_c13InitResourcesEv kind:function(arm,size=0x2bc) addr:0x0213235c
+_ZN9daMenbo_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02132618
+_ZN9daMenbo_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02132620
+_ZN9daMenbo_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0213264c
 daMenbo_c_classInit kind:function(arm,size=0x48) addr:0x02132654
 _ZN9daManta_cD1Ev kind:function(arm,size=0x40) addr:0x0213269c
 _ZN9daManta_cD0Ev kind:function(arm,size=0x54) addr:0x021326dc
@@ -36,8 +36,8 @@ _ZN9daManta_c6RenderEv kind:function(arm,size=0x2c) addr:0x02132c68
 _ZN9daManta_c8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02132c94
 _ZN9daManta_c13InitResourcesEv kind:function(arm,size=0x1b0) addr:0x02132e38
 daManta_c_classInit kind:function(arm,size=0x4c) addr:0x02132fe8
-_ZN10CheepCheepD1Ev kind:function(arm,size=0x40) addr:0x02133034
-_ZN10CheepCheepD0Ev kind:function(arm,size=0x54) addr:0x02133074
+_ZN12daPukupuku_cD1Ev kind:function(arm,size=0x40) addr:0x02133034
+_ZN12daPukupuku_cD0Ev kind:function(arm,size=0x54) addr:0x02133074
 func_ov090_021330c8 kind:function(arm,size=0xc8) addr:0x021330c8
 func_ov090_02133190 kind:function(arm,size=0x34) addr:0x02133190
 func_ov090_021331c4 kind:function(arm,size=0x3c) addr:0x021331c4
@@ -45,11 +45,11 @@ func_ov090_02133200 kind:function(arm,size=0x90) addr:0x02133200
 func_ov090_02133290 kind:function(arm,size=0x58) addr:0x02133290
 func_ov090_021332e8 kind:function(arm,size=0x50) addr:0x021332e8
 func_ov090_02133338 kind:function(arm,size=0x74) addr:0x02133338
-_ZN10CheepCheep16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021333ac
-_ZN10CheepCheep16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021333dc
-_ZN10CheepCheep6RenderEv kind:function(arm,size=0x50) addr:0x021333e0
-_ZN10CheepCheep8BehaviorEv kind:function(arm,size=0x100) addr:0x02133430
-_ZN10CheepCheep13InitResourcesEv kind:function(arm,size=0x104) addr:0x02133530
+_ZN12daPukupuku_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021333ac
+_ZN12daPukupuku_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021333dc
+_ZN12daPukupuku_c6RenderEv kind:function(arm,size=0x50) addr:0x021333e0
+_ZN12daPukupuku_c8BehaviorEv kind:function(arm,size=0x100) addr:0x02133430
+_ZN12daPukupuku_c13InitResourcesEv kind:function(arm,size=0x104) addr:0x02133530
 daPukupuku_c_classInit kind:function(arm,size=0x48) addr:0x02133634
 _ZN9daShark_cD1Ev kind:function(arm,size=0x40) addr:0x0213367c
 _ZN9daShark_cD0Ev kind:function(arm,size=0x54) addr:0x021336bc
@@ -84,7 +84,6 @@ _ZTS9daMenbo_c kind:data(any) addr:0x02134120
 data_ov090_0213412c kind:data(any) addr:0x0213412c
 _ZTI9daMenbo_c kind:data(any) addr:0x02134138
 g_profile_MENBO kind:data(any) addr:0x02134144 ambiguous
-_ZTV7Skeeter kind:data(any) addr:0x02134168
 _ZTV9daMenbo_c kind:data(any) addr:0x02134168
 data_ov090_021341e4 kind:data(any) addr:0x021341e4
 data_ov090_021341ec kind:data(any) addr:0x021341ec
@@ -101,7 +100,6 @@ data_ov090_021342d8 kind:data(any) addr:0x021342d8
 _ZTI12daPukupuku_c kind:data(any) addr:0x021342e4
 _ZTS12daPukupuku_c kind:data(any) addr:0x021342f0
 g_profile_PUKUPUKU kind:data(any) addr:0x02134300 ambiguous
-_ZTV10CheepCheep kind:data(any) addr:0x02134324
 _ZTV12daPukupuku_c kind:data(any) addr:0x02134324
 data_ov090_021343a0 kind:data(any) addr:0x021343a0
 data_ov090_021343a8 kind:data(any) addr:0x021343a8
