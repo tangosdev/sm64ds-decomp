@@ -9,7 +9,7 @@ case; its old launch, claim, path, and completion rules are not the active workf
 a real header. Your job is not to author a class; it is to **gather** its
 scattered bodies into the translation unit Nintendo actually shipped.
 
-**Reference commit: `a6486519a`** — "ov009: promote daObjMc_Metalnet_c into a
+**Reference commit: [#a6486519a](https://github.com/tangosdev/sm64ds-decomp/commit/a6486519a)** — "ov009: promote daObjMc_Metalnet_c into a
 single C++ TU". Read it (`git show --stat a6486519a`) before you start.
 
 Do **not** use a `Reconstruct N actor profiles (wave NN)` commit as your
@@ -32,7 +32,7 @@ whose first parameter is not the object, or that will not convert byte-neutrally
 **stays a free function**: that is a result, not a failure. `dScMgMemory2_c` is the
 oracle for every mechanical question -- read its source and manifest first, and
 read it knowing that **43 of its 51 methods were renamed in the promotion commit
-itself** (8 mangled rows in `ov006/symbols.txt` at `4d92d0f98^`, 51 at
+itself** (8 mangled rows in [`ov006/symbols.txt`](../../../config/arm9/overlays/ov006/symbols.txt) at `4d92d0f98^`, 51 at
 `4d92d0f98`). 51/52 was a coordinated naming pass, not conversion alone.
 
 **Name which wall you hit, because there are three and they need different
@@ -42,7 +42,7 @@ answers.**
 |---|---|---|
 | **codegen** | the member compiles as a method but the bytes move | usually unfixable here; leave it C |
 | **scope** | it byte-matches, but an unpromoted shard still calls the C name | let `mwldarm` enumerate it -- `dScMgCurling2_c`: 29/29 byte-neutral, 12 refused |
-| **naming** | the member has an auto-generated `func_ovNNN_*` name, so converting it *is* a rename | the rename must reach `symbols.txt` in the same commit, and every external namer must move with it -- `ov071/Scuttlebug`: all 27 unconverted members |
+| **naming** | the member has an auto-generated `func_ovNNN_*` name, so converting it *is* a rename | the rename must reach `symbols.txt` in the same commit, and every external namer must move with it -- [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`: all 27 unconverted members |
 
 Reporting "10/37" without naming the wall is not a result. The three are not
 interchangeable: a scope wall is enumerated for you by the linker, a naming wall
@@ -69,7 +69,7 @@ reads prose: `mwccarm` strips comments, `tiers.py` blanks them before scoring, a
 completely ungated.
 
 This is the **most common defect the reviewer finds**, and it has hit both of the two
-most recent classes: five wrong counts across `ov071/Scuttlebug`'s manifest notes,
+most recent classes: five wrong counts across [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`'s manifest notes,
 facts file and PR body, and three in one comment block shipped inside
 the Luigi TU (`dScMgLuigi_c.cpp` at that revision).
 
@@ -81,7 +81,7 @@ So, before you hand off:
   definitions carrying 58 symbols; 55 mangled, 3 C-named; 10 file-scope regions"
   makes the next drift visible; "the two regions below" hides it.
 * **A negative claim from a search is unproven until you state the search's case,
-  scope and encoding.** `ov071/Scuttlebug` shipped "nothing named Scuttlebug or
+  scope and encoding.** [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug` shipped "nothing named Scuttlebug or
   Spider exists anywhere in this cartridge" from a case-sensitive scan; lowercase
   `spider` is in `overlay_0000.bin` as two asset paths and `SPIDER` is in
   `arm9_dec.bin`. The class name really was coined -- the stated reason was not.
@@ -193,27 +193,27 @@ number instead of a default.
 
 `verify` does not work on a class with no manifest — it exits `no manifest entry
 for '<ov>/<Class>'; run 'create' first`. The real cycle is:
-
+```sh
     python tools/tubuild.py create    <ov>/<Class>     # writes into src_tu/
     #   ... reconcile the merged source ...
     python tools/tubuild.py verify    <ov>/<Class>
     python tools/tubuild.py linkcheck --baseline       # ONCE per fresh worktree
     python tools/tubuild.py linkcheck <ov>/<Class>     # BEFORE promotion; see below
-
+```
 **`linkcheck --baseline` is mandatory in a fresh worktree, and its position in
 the sequence is load-bearing.** Skip it and `linkcheck` exits 1 at `[4/8]` naming
-two *unrelated* intact-object TUs — `ov036/daObjRcCarpet_c` and
-`ov070/daPropeller_Heyho_c` — with `vtable partition baseline proof
+two *unrelated* intact-object TUs — [ov036](../../../config/arm9/overlays/ov036/symbols.txt)/`daObjRcCarpet_c` and
+[ov070](../../../config/arm9/overlays/ov070/symbols.txt)/`daPropeller_Heyho_c` — with `vtable partition baseline proof
 unavailable`. Nothing about your class, and it costs a full run to work out.
 
 It builds the **working tree with no substitution**, so it must run while the
 tree is still pristine — *before* you move the destructor inline. Do it after
 the header edit and the still-enrolled `D1Ev.cpp`/`D0Ev.cpp` shards redefine the
 now-inline destructor and the control run breaks. Working order:
-
+```text
     create -> linkcheck --baseline (pristine tree) -> header edit + reconcile
            -> verify -> linkcheck <ov>/<Class>
-
+```
 **For a text-only TU, `linkcheck` cannot be re-run once the promotion is
 enrolled.** With the `src/` path in `delinks.txt`, `tubuild` routes the candidate
 to the intact-object path and refuses: *"intact production requires one .text
@@ -233,7 +233,7 @@ accurate and both matter — read them.
 down in reverse source order *by default*, which is why the merged file is
 normally written descending-ROM. With `#pragma defer_codegen off` the TU emits
 **ROM-ascending** and can be written ROM-ascending — measured on
-`ov006/dScMgMemory2_c`, 52/52 with the pragma, and "51 ordinal pair(s) NOT in
+[ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgMemory2_c`, 52/52 with the pragma, and "51 ordinal pair(s) NOT in
 ROM order" the moment it was removed. Ascending is the more readable form. Either
 is fine; what is not fine is writing one and assuming the other.
 
@@ -334,7 +334,7 @@ steps the dry-run does not print:
 **Run `linkcheck` before you promote.** Once the source is enrolled in
 `delinks.txt`, `linkcheck` routes down the intact path unconditionally and fails
 at `[4/8]` regardless of `production_mode`. That is pre-existing behaviour, not
-something you caused — it fails identically for `ov002/daBar_c` on untouched
+something you caused — it fails identically for [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daBar_c` on untouched
 `main`. The pre-promotion run is the usable evidence; record it.
 
 ## Matching is not promotion
@@ -364,18 +364,18 @@ long omitted:
 | `externalized_output` | a symbol whose one kept copy lives in **another module** — disposition `canonical-import` |
 
 **An unowned `.data` section in `delinks.txt` does NOT mean your TU cannot own
-data.** Prompts and notes have repeatedly stated the ov006 constraint as "the
+data.** Prompts and notes have repeatedly stated the [ov006](../../../config/arm9/overlays/ov006/symbols.txt) constraint as "the
 whole `.data` segment is one section owned by no file, so a TU there cannot own
 data objects". Measured false: `dScMgTrampoline_c+MgTrampolineTime` and
 `dScMgTrampoline2_c` each own named objects at that section's tail
 (`0x0213faa0`, `0x0213fbc4`). The section being unowned in `delinks.txt` and a
 manifest claiming individual symbols inside it are different questions. The
-constraint that does survive is narrower and is about position: ov006's vtables
+constraint that does survive is narrower and is about position: [ov006](../../../config/arm9/overlays/ov006/symbols.txt)'s vtables
 sit **mid-section**, so they cannot be carved out, and a TU there still must not
 emit its own vtable.
 
 **Do not assume a sibling convention about the `*_classInit` factory — count
-it.** It is tempting to read one promoted neighbour and generalise. On ov006,
+it.** It is tempting to read one promoted neighbour and generalise. On [ov006](../../../config/arm9/overlays/ov006/symbols.txt),
 **14 of the 20 manifests name a `classInit`**, and three of the exclusions are
 only because a separate manifest already claims it. Whether the factory belongs
 in your claim is decided by whether it is contiguous with the run you are
@@ -390,13 +390,13 @@ module's `symbols.txt`. If it does — even in another overlay — it is
 **But "the address has a home" is the wrong test, and this file stated it as the
 right one.** `apply_compiler_only_policy` (`tools/tubuild.py:2280`) resolves a
 row's home through `all_symbol_homes()`, which is **keyed on the `symbols.txt`
-spelling, not the address**. Measured on ov062/`Koopa`: `_ZTI5Koopa`'s record
-sits at a fully configured ov062 address — `0x0211da68` — and was refused
+spelling, not the address**. Measured on [ov062](../../../config/arm9/overlays/ov062/symbols.txt)/`Koopa`: `_ZTI5Koopa`'s record
+sits at a fully configured [ov062](../../../config/arm9/overlays/ov062/symbols.txt) address — `0x0211da68` — and was refused
 anyway, because the cartridge configures it as `_ZTI8daNknk_c`. `tubuild.py`'s
-own comment at `:2264` says it outright: *"`homes` is keyed on the symbols.txt
+own comment at `:2264` says it outright: *"`homes` is keyed on the `symbols.txt`
 spelling while `_ZTI`/`_ZTS` are LENGTH-PREFIXED mangled strings — a coined name
 misses on both the prefix and the body, and the miss reads as 'the ROM has no
-such record'."*
+such record'.'*
 
 So read the rule as **spelled-the-cartridge's-way vs. not**, and expect it to
 bite exactly one class of symbol: a coined class's own `_ZTI`/`_ZTS`, in a TU
@@ -405,7 +405,7 @@ coined alias row for it — honest for a vtable, and **not available for `_ZTS`*
 whose *content* is the length-prefixed name (`"5Koopa"` where the cartridge
 holds `"8daNknk_c"`). Three separate classes hit this in one day (`Koopa`,
 `Scuttlebug`, `KingBobOmb`); `class_rename.py` counts **125** in this state. The
-unblock is the rename, as its own change. The promoted precedent `ov029/daObjWcObj01_c`
+unblock is the rename, as its own change. The promoted precedent [ov029](../../../config/arm9/overlays/ov029/symbols.txt)/`daObjWcObj01_c`
 carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
 
@@ -483,19 +483,19 @@ about renaming, and this is the reconciliation:
 
 **And the inline-destructor lever can CREATE this blocker out of nothing.**
 Inlining moves the key function to the first out-of-line virtual declared. On
-ov071/`Scuttlebug` that pulled the key function *into* the claimed range — which
+[ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug` that pulled the key function *into* the claimed range — which
 is what the writer wanted for emission order, and it is also what turned a
 harmless coined name into a hard refusal. The TU then emitted
 `_ZTI10Scuttlebug` / `_ZTS10Scuttlebug`, which no `symbols.txt` anywhere names,
 and both dispositions refuse:
-
+```text
     deadstrip-data -> "declared compiler-only data but has no configured ROM
                        home; a homeless object is a plain deadstrip"
     deadstrip      -> "an RTTI/vtable record banked as a plain deadstrip, which
                        is never compared against the cartridge. If the class
                        carries a coined name, rename it to the cartridge's RTTI
                        spelling..."
-
+```
 Result: `verify` 37/37 MATCH, TEXT-VERIFIED, **PROMOTION REFUSED** on two
 symbols. So before you reach for the inline destructor, check whether the class
 name is coined — the two levers interact, and `class_rename.py` reports **125
@@ -518,9 +518,7 @@ in this very file: `actor-class-names-off-by-one` in `include/daObjHmBskt_c.h`,
 `key-function-tu-vptr-store-blocker` in
 `src/game/actors/d_a_obj_km3_dorifu.cpp`, `phantom-references` in
 `include/nitro/hw/registers.h`, and `stale-tu-map-overcut-ov006` in two
-`config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings — each written
-there with a `notes/` prefix and a `.md` suffix. Those files live
-in one machine's private memory directory; nobody else can follow the reference,
+`config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings ([MgBingoBallSlotsShot.json](../../../config/tu_manifest.d/ov006/MgBingoBallSlotsShot.json) & [MgWhichWiggler.json](../../../config/tu_manifest.d/ov006/MgWhichWiggler.json)) — each written there with a `notes/` prefix and a `.md` suffix. Those files live in one machine's private memory directory; nobody else can follow the reference,
 and the dead-reference gate never saw them because it walked only `.md`.
 
 State the test as the fresh-clone property, not as "don't cite memory". An agent
@@ -538,7 +536,7 @@ rename touches `symbols.txt` tree-wide and is a separate, reviewable decision.
 **The whole formula is conditional on the licensed range owning the key
 function, and this file used to state it unconditionally.** A TU that does not
 own the key function emits **no vtable and no RTTI at all** — zero rows from
-this formula, not `2x(ancestors+self)+1`. Measured on `Goomboss` (ov074): a
+this formula, not `2x(ancestors+self)+1`. Measured on `Goomboss` ([ov074](../../../config/arm9/overlays/ov074/symbols.txt)): a
 key-function-owning probe emitted exactly the predicted 11; the range actually
 licensed excludes the key function and needs **1** row, the `_ZN7Vector3D1Ev`
 duplicate. Both numbers are right. Decide which TU you are building first.
@@ -547,7 +545,7 @@ duplicate. Both numbers are right. Decide which TU you are building first.
 any `Vector3` the TU *odr-uses* — **function locals count**. `dScMgD3DBase_c` is
 5 levels deep and needs **11** because it touches none. `daDsnBase_c` is also 5
 levels and needs **13**: it has no `Vector3` member either, but
-`func_ov091_02132f04` holds two as locals.
+[func_ov091_02132f04](../../../src/actors/daDsnBase_c.cpp) holds two as locals.
 
 That 13th row is a second thing the formula never predicted: a file-local
 anonymous struct holding those locals emits its own destructor,
@@ -572,8 +570,8 @@ needs 2x5+2 = **12**. Its oracle `daIDonketu_c` sits one level deeper and needs
 
 **Do not assume a symbol's `canonical_module` is your TU's module.** `_ZTI`/`_ZTS`
 have vague linkage, so the linker keeps **one** copy wherever it first landed,
-which can be a different overlay entirely. Measured on `daOts_c` (ov064): its own
-`_ZTI7daOts_c`/`_ZTS7daOts_c` live in **ov027**, and ov064's vtable header word
+which can be a different overlay entirely. Measured on `daOts_c` ([ov064](../../../config/arm9/overlays/ov064/symbols.txt)): its own
+`_ZTI7daOts_c`/`_ZTS7daOts_c` live in **[ov027](../../../config/arm9/overlays/ov027/symbols.txt)**, and [ov064](../../../config/arm9/overlays/ov064/symbols.txt)'s vtable header word
 relocates across to them. `dsd` reports that relocation's module as a list of
 sixteen overlays; the real one is whichever overlay's `symbols.txt` actually
 names the address. Two rows will be wrong if you guess.
@@ -581,7 +579,7 @@ names the address. Two rows will be wrong if you guess.
 **`decl_common.h` is not always right, and correcting it is precedented.** It is
 generated by `decl_headers.py`, which reads a legacy shard's K&R forward
 declaration in preference to its definition — so a member can be recorded with
-the wrong signature entirely. Measured: `func_ov006_020d672c` was recorded
+the wrong signature entirely. Measured: [func_ov006_020d672c](../../../src/actors/dScMgBomroom_c.cpp) (ROM ordinal 39 used to assemble TU) was recorded
 `int f()` from an `extern int f();` line, while the cartridge's bytes take the
 scene pointer in r0 and leave r0 untouched on the early-out path, making it
 `void(void*)`. Most overload collisions are adaptable byte-neutrally (take
@@ -618,7 +616,7 @@ row, do not chase the count.
 
 **Most classes do not need `production_mode: intact-object`.** If the class's
 `_ZTV`/`_ZTI`/`_ZTS` live outside the TU's `.text` range, the ordinary text-only
-route plus a `compiler_only_output` block is correct. In all of ov002,
+route plus a `compiler_only_output` block is correct. In all of [ov002](../../../config/arm9/overlays/ov002/symbols.txt),
 intact-object is used exactly once. Attempting it wrongly gives `intact
 production requires one .text claim and at least one non-text claim`, which
 reads like your source is broken and is not.
@@ -642,8 +640,8 @@ mwccarm 2004/b56 behaviours, not style preferences.
 
   Out-of-line *without* that pragma emits `D2/D0/D1` in the wrong order plus a
   homeless `D2`, which is where the flat "always inline it" rule this file used
-  to state came from. Landed both ways: ov006/`dScMgTeresa_c` and
-  ov006/`dScMgPanel_c` (71/71 bytes; its stage-2 "link-verified" was **not
+  to state came from. Landed both ways: [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgTeresa_c` and
+  [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c` (71/71 bytes; its stage-2 "link-verified" was **not
   reproducible** and stage 4 had to repair the linkage — see below) are both
   out-of-line +
   `defer_codegen off`. **Try both before you take a partial** — and note the
@@ -660,7 +658,7 @@ mwccarm 2004/b56 behaviours, not style preferences.
   `return 0 if text_verified else 1` — so a run that prints `PROMOTION REFUSED`,
   for unlicensed output or a compiler-only policy refusal, still **exits 0**.
   Only a compile failure or a byte/reloc failure gives 1. Read the console text;
-  never gate on `$?` alone here. (Measured on ov071/`Scuttlebug`: two refused
+  never gate on `$?` alone here. (Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`: two refused
   runs, both exit 0.)
 
   **Two more things that run does not say out loud.** The manifest's
@@ -698,7 +696,7 @@ mwccarm 2004/b56 behaviours, not style preferences.
   That is a real handle on the order — but the destructor group travels with the
   scaffold that forces it, emitted immediately below that function wherever it
   lands, so it is unusable when the pair belongs at the very start of a module's
-  `.text` (on `Goomboss`, D1 *is* the first byte of ov074's `.text`; there is no
+  `.text` (on `Goomboss`, D1 *is* the first byte of [ov074](../../../config/arm9/overlays/ov074/symbols.txt)'s `.text`; there is no
   address below it).
 
   Do not read that as "inline is the fallback". On `dScMgTeresa_c` inlining
@@ -769,7 +767,7 @@ they cost minutes; discover them after and each is a cycle.
   **But "hand-curate one declaration per symbol" is the wrong next step, and at
   real size it is unworkable.** 301 independent recoveries of one symbol
   disagree constantly, and forcing a single spelling rewrites call sites.
-  Measured on ov002/`Player` (301 members): in mwccarm 2004/b56 a declaration
+  Measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player` (301 members): in mwccarm 2004/b56 a declaration
   written at **block scope inside an `extern "C"` region gets C linkage**, and
   two function bodies may declare one C symbol with **different types**. So keep
   every member's declarations **inside its own body** and merge nothing. Hoist
@@ -783,9 +781,9 @@ they cost minutes; discover them after and each is a cycle.
   `extern` names the ROM symbol. A class member function — `Class::Method` — may
   not sit in a linkage-specification region at all, so the identical block-scope
   declaration written in *its* body gets **C++ linkage** and the reference
-  mangles. Measured on ov006/`dScMgPanel_c`: 67 wrapped members were fine, the
+  mangles. Measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c`: 67 wrapped members were fine, the
   four C++-named ones (ordinals 67-70) emitted **41 mangled undefined symbols**
-  — `_Z8LoadFilei`, `_Z10DeallocatePv`, `_Z19func_ov006_021063a0Pv` — and
+  — `_Z8LoadFilei`, `_Z10DeallocatePv`, [_Z19func_ov006_021063a0Pv](../../../config/tu_manifest.d/ov006/dScMgPanel_c.json) — and
   mwldarm aborted with 22 `Undefined`. Nothing before the link noticed:
   `tubuild verify` was 71/71 MATCH with objisolate and reloc-destinations clean,
   and the `[4b]` object audit was `order_ok True, {'LICENSED': 71}, 0 refusals`.
@@ -793,7 +791,7 @@ they cost minutes; discover them after and each is a cycle.
   linkage specification outright — `extern "C" { extern void f(int); }` inside a
   function is `Error: declarator expected`. So a TU with C++-named members needs
   **one file-scope `extern "C"` region** for what those members call, the way
-  ov006/`dScMgTeresa_c` and ov006/`dScMgRoulette_c` already do. Place it *after*
+  [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgTeresa_c` and [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgRoulette_c` already do. Place it *after*
   the last wrapped member so none of them can see it and their independently
   recovered spellings stand. Declarations naming members of the TU itself do not
   belong in it at all — delete them and let the call bind to the definition
@@ -807,10 +805,9 @@ they cost minutes; discover them after and each is a cycle.
   a **file-scope** redeclaration is rejected.
 
   **But the licence is for FUNCTIONS with C linkage, and a project header
-  revokes it for data.** Measured on ov006/`dScMgPanel_c`:
+  revokes it for data.** Measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c`:
   `include/dScMgBase_c.h:12` already declares
-  `extern "C" void *data_ov004_020beb68;`, ordinal 60 recovered the object as
-  `char *`, and the block-scope form is rejected outright —
+  `extern "C" void *`[data_ov004_020beb68](../../../config/arm9/overlays/ov004/symbols.txt); ordinal 60 recovered the object as `char *`, and the block-scope form is rejected outright —
   `identifier 'data_ov004_020beb68' redeclared; was declared as: 'void *'`.
   The wording above sends you hunting for a file-scope duplicate *inside your
   own TU* that is not there; the conflicting declaration is in a header you
@@ -847,7 +844,7 @@ and not. Every auto-named `func_ovNN_ADDR` shard is declared in `decl_common.h`,
 so **every** merged shard needs the check. When the merge makes both spellings
 visible mwccarm rejects it as `illegal function overloading`, and the error text
 points at your *definition* line while saying nothing about the header —
-measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
+measured on [func_ov091_02133098](../../../src/actors/daDsnBase_c.cpp) (ROM ordinal 6 used to assemble `daDsnBase_c`), defined `void*` against the header's `char*`.
 **The fix pattern is to change the *definition* to the header's type and add a
 one-line cast alias inside the body** — not to fight the header. Three members of
 one TU hit this at once (`char*` vs `void*` twice, `int*` vs `char*` once).
@@ -867,8 +864,8 @@ align your spellings to it, rather than assuming the header will collide with
 you on its own.
 
 **But a `decl_common.h` return type can cost you the match, and then the header
-is what gives way.** Measured on ov066/`Eyerok`: `decl_common.h:2730` types
-`func_ov066_02119454` as `void(void*, void*)` and the ROM function returns a
+is what gives way.** Measured on [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`Eyerok`: `decl_common.h:2730` types
+[func_ov066_02119454](../../../src/actors/Eyerok.cpp) (ROM ordinal 52 used to assemble `Eyerok`) as `void(void*, void*)` and the ROM function returns a
 value — declaring it `int` MATCHes, declaring it `void` does not. That TU
 excludes the header and declares every symbol the header would have supplied.
 So: include it and align *by default*, but when a spelling it dictates breaks a
@@ -876,10 +873,10 @@ byte match, measure both ways and say which you took and why. The bytes outrank
 the header.
 
 **And "include it" inverts above some member count — this is a size-dependent
-rule, not a default.** `decl_common.h` declares 10 of ov006/`dScMgPanel_c`'s 71
+rule, not a default.** `decl_common.h` declares 10 of [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c`'s 71
 members and **7 of the 10 contradict the byte-matched shard**, two of them on
 the return type. Including it makes each an `illegal function overloading`
-error against code that already matches. That TU excluded the header (the ov002
+error against code that already matches. That TU excluded the header (the [ov002](../../../config/arm9/overlays/ov002/symbols.txt)
 `Player` precedent) and gave the four class-method members their `decl_common`
 declarations at block scope instead — **and that half did not link**; they had
 to move to a file-scope `extern "C"` region, for the reason measured above.
@@ -908,7 +905,7 @@ Disassembling retail `AfterCleanupResources` showed `mov r0, r5` immediately
 before the `bl`, proving the argument is real and the callee simply ignores it.
 Two `disasm.py` runs replaced a guess and a full verify cycle. Remember
 `--base` is applied at file offset 0, so pass the module's **first
-`symbols.txt` address** (ov006 = `0x020bfec0`).
+`symbols.txt` address** ([ov006](../../../config/arm9/overlays/ov006/symbols.txt) = `0x020bfec0`).
 - No C++11: no `nullptr`, `auto`, `override`, STL, east-const. This is 2004.
 
 Ask the compiler rather than hand-mangling:
@@ -928,17 +925,17 @@ Ask the compiler rather than hand-mangling:
   not in the build, so the tree is still pristine for baseline purposes.
   **But it is NOT only header edits that spoil a baseline** — this file used to
   say so. The baseline's fingerprint is `trackedConfigArm9Sha256`, so **any**
-  edit under `config/arm9` invalidates it, including a one-line `complete` marker
+  edit under [config/arm9](../../../config/arm9/) invalidates it, including a one-line `complete` marker
   in a `delinks.txt`. Worse, **the failure is indistinguishable from never having
   run a baseline at all**: both die at `[4/8]` with the same
-  `ov036/daObjRcCarpet_c` + `ov070/daPropeller_Heyho_c` "vtable partition
+  [ov036](../../../config/arm9/overlays/ov036/symbols.txt)/`daObjRcCarpet_c` + [ov070](../../../config/arm9/overlays/ov070/symbols.txt)/`daPropeller_Heyho_c` "vtable partition
   baseline proof unavailable" pair. Recovery costs a second full baseline run
   with the header **temporarily reverted** — the still-enrolled D1/D0 shards will
   not compile against an inline destructor.
 - **Reading the `_ZTV` extent from the next `symbols.txt` row UNDER-reports it** —
   the opposite error to the one below, and easier to fall for because it looks
   authoritative. `_ZTV7daDkk_c` at `0x02113850` is followed by
-  `data_ov025_021138a8`, implying `0x58` / 22 slots; it is really `0x88` / 32.
+  [data_ov025_021138a8](../../../config/arm9/overlays/ov025/symbols.txt), implying `0x58` / 22 slots; it is really `0x88` / 32.
   Three `ambiguous` `data_ov025_*` rows are **phantom interior symbols sitting
   inside the table**. `relocs.txt` narrows it — every word through `0x021138cc`
   is a relocated entry, and `0x021138d0` already belongs to the next class's
@@ -946,14 +943,14 @@ Ask the compiler rather than hand-mangling:
   `blindWords: 0`.
 
   **But "take the contiguous relocated run" OVERSHOOTS, and this worked example
-  is what proves it.** Measured on the same ov025 table: the relocated run from
+  is what proves it.** Measured on the same [ov025](../../../config/arm9/overlays/ov025/symbols.txt) table: the relocated run from
   `0x0211384c` reaches `0x021138d8` with **no gap anywhere** — 36 words, four
   more than the real 32 — because `_ZTI14daObjDpBrock_c` at `0x021138d0` is a
   `__si_class_type_info`, three fully-relocated words butted straight against the
   table. Nothing in `relocs.txt` marks that boundary.
 
   **The `_ZTI`/`_ZTS` tie-break first proposed here does NOT generalise — a
-  later sweep refuted it.** All 51 `_ZTV` in ov006 were checked: the run-overshoot
+  later sweep refuted it.** All 51 `_ZTV` in [ov006](../../../config/arm9/overlays/ov006/symbols.txt) were checked: the run-overshoot
   is real in **15 of them**, but in every one of those the overshooting words are
   ordinary `data_ov006_*` / `g_profile_*` objects, **never** a `_ZTI`. So "look
   for a `_ZTI`/`_ZTS` named inside the run" would have caught **0 of 15**. And
@@ -1126,8 +1123,8 @@ rather than a failure. When the ROM's emission order cannot be reproduced by any
 admissible source form:
 
 **The destructor direction is per-class and is not inherited.** `daDkk_c`
-derives from `daDsnBase_c`, and the two go opposite ways: ov025 orders `daDkk_c`
-D1-below-D0 so it promoted whole 8-of-8, while ov091 orders `daDsnBase_c`
+derives from `daDsnBase_c`, and the two go opposite ways: [ov025](../../../config/arm9/overlays/ov025/symbols.txt) orders `daDkk_c`
+D1-below-D0 so it promoted whole 8-of-8, while [ov091](../../../config/arm9/overlays/ov091/symbols.txt) orders `daDsnBase_c`
 D0-below-D1 so it promoted 9-of-11. Measure your own class.
 
 **Never infer destructor placement from a sibling header.** `daDgr_c.h` declared
@@ -1137,7 +1134,7 @@ definitions were a duplicate definition *as well as* the wrong order. Read the
 cartridge, not the neighbour.
 
 **Destructor order is not the only reason to take a subset.** Two more, both
-measured on `ov006/dScMgHanachan_c` (22 of 61):
+measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgHanachan_c` (22 of 61):
 
 - **A sourceless function splits the run.** `func_ov006_020ea914` has no `src/`
   file anywhere and no `delinks.txt` entry — the cartridge's own bytes cover it.
@@ -1156,7 +1153,7 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   this exact class from 22 of 61 to 49 of 61.** The pragma-driven exclusions were
   all 27 of them; the only functions still held back are the sourceless hole and
   the 11 on its smaller side, which is a different and unfixable refusal. Measured
-  on `ov006/dScMgHanachan_c` (PR #2309): `verify` 49/49 MATCH, `linkcheck [4b/8]`
+  on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgHanachan_c` (PR #2309): `verify` 49/49 MATCH, `linkcheck [4b/8]`
   49 LICENSED with `emittedTextOrderIsRomAscending = true`, 106/106 modules exact,
   ROM sha256 identical to stock. The decisive probe was adding one
   `opt_strength_reduction off` member under a `push`/`pop` bracket: 23/23, with
@@ -1171,7 +1168,7 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   **Why the bracket alone is not enough, stated precisely: with codegen
   deferred, the state that binds is the state at END OF FILE.** So a `push` /
   `opt_X off` / `pop` bracket restores the *other* members but cannot give the
-  bracketed member its own setting. The full chain, measured on ov002/`Player`
+  bracketed member its own setting. The full chain, measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player`
   (301 members, one `#pragma opt_propagation off` at ordinal 35):
 
   | configuration | result |
@@ -1185,7 +1182,7 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   While codegen is deferred the bracket binds to nothing, so it is worth **zero**
   members — not "buys back the casualties but not its own". An earlier revision of
   this file printed 250 / 293 / 294 here and glossed a "294-vs-301 gap"; those
-  figures do not reproduce. Re-measured on the shipped ov002/`Player` TU.
+  figures do not reproduce. Re-measured on the shipped [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player` TU.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:
@@ -1201,7 +1198,7 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   **The older, superseded framing follows.**
   Bracketed pragmas do not bind while codegen is deferred, which is the default,
   and the measurement above was almost certainly taken that way. Measured on
-  `ov006/dScMgMemory2_c`: with `#pragma defer_codegen off` at the top of the TU,
+  [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgMemory2_c`: with `#pragma defer_codegen off` at the top of the TU,
   **52/52 MATCH**; removing that one line dropped it to **50/52**, and the two
   DIFFs were exactly the two functions carrying bracketed pragmas —
   `opt_propagation off` (27 words) and `opt_loop_invariants off` (6 words). The
@@ -1212,7 +1209,7 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   measure either way.
 
   **A second writer confirmed the lever on a third pragma AND confirmed the
-  default.** Five controls on `ov006/dScMgRoulette_c`: `optimize_for_size on` at
+  default.** Five controls on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgRoulette_c`: `optimize_for_size on` at
   file scope with no closing `off` gave 23/40 (so the pragma really does move
   bytes there); bracketing `on`/`off` around one offender gave 40/40, i.e. the
   bracket did **not** bind and the trailing `off` restored the default file-wide
@@ -1243,7 +1240,7 @@ the header needs no edit. Check where the key function landed before deriving
 anything.
 
 The discriminator is which way the cartridge ordered the destructors. ROM **D1
-below D0** is the reproducible direction and promotes whole (`ov029/daObjWcObj01_c`);
+below D0** is the reproducible direction and promotes whole ([ov029](../../../config/arm9/overlays/ov029/symbols.txt)/`daObjWcObj01_c`);
 ROM **D0 below D1** cannot be reproduced by any admissible form and costs you the
 pair (`daObjFloatBoard_c` 5-of-7, `daObjFallBlock_c` 10-of-12, `daDsnBase_c`
 9-of-11). Check that before you plan the range, not after.

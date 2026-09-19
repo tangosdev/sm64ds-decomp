@@ -122,7 +122,7 @@ PASS signals:
   construction, and this file used to say it was.** With correct `path#symbol`
   overrides committed, the validator reports `0 changed` and the four "expected"
   fold lines collapse to one (`N address range(s) left the byte-verified set`).
-  Measured on `ov006/dScMgRoulette_c`: `32 consolidated with credit intact,
+  Measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgRoulette_c`: `32 consolidated with credit intact,
   0 changed, 0 lost`. So aim for `0 changed`; if you cannot reach it, say which
   rows resist and why, rather than writing it off as inherent. **`0 changed` is
   a target, not a merge bar** — the landed `dScMgHanachan_c` promotion (#2309)
@@ -130,7 +130,7 @@ PASS signals:
 
   **It is NOT the same computation as the validator's credit line on a
   many-to-one fold, and this file used to imply that it was.** Measured on the
-  52-member ov006/`dScMgMemory2_c` promotion: locally `0 changed, 0 lost`, at the
+  52-member [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgMemory2_c` promotion: locally `0 changed, 0 lost`, at the
   validator **`11 changed`**. The two disagree about which side is *before* — for
   `dScMgMemory2_c_classInit` the local `--json` gave `before=tangosdev,
   after=tangosdev` while the validator reported `tangosdev -> tangosdev`, exactly
@@ -140,7 +140,7 @@ PASS signals:
   fails a merge while `changed` is explicitly not a blocker.
 
   **A second, independent mechanism for the same divergence, measured on the
-  301-member ov002/`Player` fold: a symbol with NO override row at all.** Local
+  301-member [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player` fold: a symbol with NO override row at all.** Local
   reported `0 changed`; the validator reported **18 changed**, because for those
   18 the resolver fell back to the *promotion commit's* author — moving them off
   `tangosdev` (8), `ruspecial` (6) and `lunavyqo` (4). The repair is to restore
@@ -215,7 +215,7 @@ own its key function. The proof-block example shows nonzero counts; do not read
 zeros as a failed run.
 
 **They are NOT evidence for an empty `compiler_only_output`, and this file used
-to say they were.** `romdata_check` reports on *data* symbols. ov066/`Eyerok`
+to say they were.** `romdata_check` reports on *data* symbols. [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`Eyerok`
 measures 0/0/0/0 with a non-empty **two-row** `compiler_only_output`, because
 both rows are functions. Read all-zero as "no data rows", never as "no rows".
 
@@ -246,7 +246,7 @@ a manifest you then commit.
 and addend), and `reloc_audit` (destination identity).
 
 **And all four of those together still do not prove the TU LINKS.** Measured on
-`ov006/dScMgPanel_c`: 71/71 MATCH, objisolate clean, reloc-destinations clean,
+[ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c`: 71/71 MATCH, objisolate clean, reloc-destinations clean,
 `[4b]` object audit `order_ok True, {'LICENSED': 71}, 0 refusals` — and the
 object carried **41 undefined symbols that do not exist anywhere in the image**,
 because a declaration got the wrong linkage. Every byte gate is happy with a
@@ -254,7 +254,7 @@ relocation against a name nobody defines; only the linker is not. **Add one
 cheap check to the sweep**: read the compiled object's `.symtab` and list the
 `SHN_UNDEF` entries (a ~20-line ELF walk over
 `build/tu/<ov>-<Class>/<Class>.o`). Any `_Z…`-mangled name whose demangling is a
-plain C ROM symbol — `_Z8LoadFilei`, `_Z19func_ov006_021063a0Pv` — is a linkage
+plain C ROM symbol — `_Z8LoadFilei`, [_Z19func_ov006_021063a0Pv](../../../config/tu_manifest.d/ov006/dScMgPanel_c.json) — is a linkage
 bug, and it costs seconds where finding it through a failed `rombuild` costs an
 hour. Legitimate `_ZN…` / `_ZT…` names are not what you are looking for.
 
@@ -285,9 +285,9 @@ wrong conclusion in the exact place it matters.
 ## Two manifest defects no gate catches
 
 **Nothing checks a manifest's `legacy_source` paths against the tree.** Measured
-on `config/tu_manifest.d/ov006/dScMgMemory2_c.json`, landed on `main`: ordinal
+on [config/tu_manifest.d/ov006/dScMgMemory2_c.json](../../../config/tu_manifest.d/ov006/dScMgMemory2_c.json), landed on `main`: ordinal
 30 recorded the shard `_ZN14dScMgMemory2_c14RoundShowCardsEv` with a **`.c`**
-extension where both the file and its `delinks.txt` entry are **`.cpp`**. (Both
+extension where both the file and its [delinks.txt](../../../config/arm9/overlays/ov006/delinks.txt) entry are **`.cpp`**. (Both
 spellings are written bare here rather than repo-rooted: quoting the dead one in
 full would fail `check_dead_references`, which is a gate this very paragraph
 would otherwise trip.) `linkcheck` refuses before doing any work
@@ -592,9 +592,9 @@ already stale. Getting this wrong costs a full validation cycle.
   Once the source is enrolled in `delinks.txt`, `cmd_linkcheck` sets
   `enrolled_intact_candidate = True` unconditionally and routes down the intact
   path whatever `production_mode` says; it dies at `[4/8]`. Pre-existing — it
-  fails identically for `ov002/daBar_c` on untouched `main`, and a second
+  fails identically for [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daBar_c` on untouched `main`, and a second
   control taken on the `dScMgPanel_c` run reproduces it on
-  `ov006/dScMgTeresa_c`, an already-promoted text-only TU that run never
+  [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgTeresa_c`, an already-promoted text-only TU that run never
   touched: `FAIL src/actors/dScMgTeresa_c.cpp: isolate: intact TU preparation
   refused: ov006/dScMgTeresa_c: intact production requires one .text claim and
   at least one non-text claim`. The exact chain is
@@ -610,7 +610,7 @@ already stale. Getting this wrong costs a full validation cycle.
   Do not report its failure as a defect in the change.
 
   **But do NOT take the writer's recorded linkcheck as proof of the link.** This
-  file used to say to, and on `ov006/dScMgPanel_c` that was wrong: the manifest
+  file used to say to, and on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c` that was wrong: the manifest
   recorded `result: scratch-link-verified` with `phases.link: true`, and the
   source as shipped **did not link at all** — 41 mangled undefined symbols, and
   mwldarm aborting with 22 `Undefined`. **The link proof you can still run is
@@ -638,7 +638,7 @@ already stale. Getting this wrong costs a full validation cycle.
 - **`source_coverage --check` and `prepush_attribution` are BASE-RELATIVE, and a
   stale base makes both scream about other people's work.** A `main` that moved
   mid-build produced `REGRESSION: 4,672 B stopped being built from source`
-  naming five files in ov002/ov005/ov034 with nothing to do with the class, and
+  naming five files in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/[ov005](../../../config/arm9/overlays/ov005/symbols.txt)/[ov034](../../../config/arm9/overlays/ov034/symbols.txt) with nothing to do with the class, and
   a `CREDIT LOST` for a different class entirely. Both read exactly like real
   regressions. Re-fetch and **merge** `origin/main` before believing either;
   after the merge both were clean. **Merge, do not rebase** — a rebase of a

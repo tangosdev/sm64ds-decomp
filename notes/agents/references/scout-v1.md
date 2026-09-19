@@ -8,10 +8,10 @@ they cannot see the ROM the way you can, so anything you leave out becomes a
 guess they make silently.
 
 ## Claim
-
+```sh
     python tools/classqueue.py next  --role writer
     python tools/classqueue.py claim <class> --role writer --worktree <path>
-
+```
 (The scout claims the `writer` slot, because scouting and writing are one
 handoff and splitting the claim lets a writer start on unfinished facts.)
 
@@ -34,10 +34,10 @@ far and may be wrong; the cartridge is not.
    *length* — 31 words = `dActor_c`, 32 = `dBgActor_c` — is corroboration for
    subclasses, not proof, so do not report it as the reason.
 4. **Own overrides.** Ask the tooling rather than reading a header:
-
+```sh
        python tools/rtti_extract.py            # writes build/rtti.json -- FIRST
        python tools/rtti_vtables.py --own <Class>
-
+```
    `rtti_vtables.py` crashes with a bare `FileNotFoundError: build/rtti.json` if
    you skip the extract step. For each slot whose target lies inside this overlay: the
    slot index, the target address, and the inherited slot name. Slot names come
@@ -48,8 +48,8 @@ far and may be wrong; the cartridge is not.
 5. **Where the RTTI actually lives.** `_ZTI`/`_ZTS` have vague linkage: the
    linker keeps one copy wherever it first landed, which can be a **different
    overlay from the `_ZTV`**. Record the module for each of the three symbols
-   separately. `daOts_c`'s vtable is in ov064 while its `_ZTI`/`_ZTS` are in
-   ov027. Resolve an ambiguous `dsd` module list by finding which overlay's
+   separately. `daOts_c`'s vtable is in [ov064](../../../config/arm9/overlays/ov064/symbols.txt) while its `_ZTI`/`_ZTS` are in
+   [ov027](../../../config/arm9/overlays/ov027/symbols.txt). Resolve an ambiguous `dsd` module list by finding which overlay's
    `symbols.txt` names the address.
 6. **Non-virtual methods.** Everything in the class's address range that no
    vtable slot points to. Find callers to distinguish a real method from a
@@ -93,22 +93,22 @@ overlays against 43 real ones on `dScMgCoin_c`, a 2.5x error. Accept a
 relocation only when its destination module is the overlay you are scouting.
 
 **And get the spelling right, because getting it wrong fails SILENTLY and in the
-plausible direction.** `relocs.txt` spells the module `overlay(6)`, not `ov006`.
-A filter written against `ov006` rejects every hit and then reports **zero
+plausible direction.** [relocs.txt](../../../config/arm9/relocs.txt) spells the module `overlay(6)`, not [ov006](../../../config/arm9/overlays/ov006/symbols.txt).
+A filter written against [ov006](../../../config/arm9/overlays/ov006/symbols.txt) rejects every hit and then reports **zero
 callers for every function in the run** — which reads like a clean result for a
 self-contained class, not like a broken filter. One scout shipped that answer
 before catching it. Sanity-check any "no external callers" finding by counting
 the rows your filter *rejected*.
 
 **A relocation scan alone cannot find intra-overlay callers at all.** A `BL`
-inside one overlay carries no relocation, so `relocs.txt` makes every
+inside one overlay carries no relocation, so [relocs.txt](../../../config/arm9/relocs.txt) makes every
 overlay-local helper look uncalled. Decode the overlay's `.text` to find those —
 14 file-local helpers on `dScMgCup_c` were invisible until that was done.
 
 ## Output
 
 Write `notes/data/class-facts/<class>.json`:
-
+```json
     {
       "class": "da1up_c",
       "rtti_name": "7da1up_c",
@@ -129,7 +129,7 @@ Write `notes/data/class-facts/<class>.json`:
       "fields": [],
       "unproven": ["object size - no allocation site found"]
     }
-
+```
 Every address is a string in `0x` form. `unproven` is the important field: it is
 the writer's list of things they must not fabricate.
 

@@ -84,7 +84,7 @@ Worth keeping through the upgrade, because they were measured and they worked:
 - **One agent per worktree, always.** The `build/` corruption is intra-worktree;
   sibling worktrees do not collide, and `build/objcache` is content-hashed and safe
   to share.
-- **Concurrent classes in distinct overlays.** Five ran at once across ov030, ov081,
-  ov102, ov002 and ov085 with no `symbols.txt` or manifest conflict.
+- **Concurrent classes in distinct overlays.** Five ran at once across [ov030](../../config/arm9/overlays/ov030/symbols.txt), [ov081](../../config/arm9/overlays/ov081/symbols.txt),
+  [ov102](../../config/arm9/overlays/ov102/symbols.txt), [ov002](../../config/arm9/overlays/ov002/symbols.txt) and [ov085](../../config/arm9/overlays/ov085/symbols.txt) with no `symbols.txt` or manifest conflict.
 - **Never `git worktree remove`** — it deletes through the junctions and empties the
   shared, non-redownloadable `extracted/` ROM dump. `wt-remove.ps1` only.

@@ -203,7 +203,7 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   floor-labeled misses at div<=8 too - they are 97-99% matched and Fable's 60+-attempt
   grind cracked 2/2 of them; park only deep cascades (div 27/32/91 all stayed parked).
   Fable promotion tier record so far: 9/9 across two batches.
-- **WRONG-DEST salvage (2026-07-02, func_ov066_02119ce8):** when the land link-gate
+- **WRONG-DEST salvage (2026-07-02, [func_ov066_02119ce8](../../config/arm9/overlays/ov066/symbols.txt), `_ZN6Eyerok13InitResourcesEv`, see [Eyerok.json](../../config/tu_manifest.d/ov066/Eyerok.json)):** when the land link-gate
   rejects an agent MATCH with `WRONG-DEST reloc` and the function stores/loads two
   same-shaped globals (e.g. two zero-stores), the agent likely swapped the symbols -
   swap them in the source, re-run abverify (still MATCH), then land via a synthesized
@@ -263,8 +263,8 @@ The real bases:
 
 | module | load base | derive it |
 |---|---|---|
-| arm9 | **0x02004000** | `extracted/arm9_dec.bin` |
-| ov006 | **0x020bfec0** | `extracted/overlays/overlay_0006.bin` |
+| [arm9](../../config/arm9/symbols.txt) | **0x02004000** | `extracted/arm9_dec.bin` |
+| [ov006](../../config/arm9/overlays/ov006/symbols.txt) | **0x020bfec0** | `extracted/overlays/overlay_0006.bin` |
 | any overlay | that overlay's **lowest symbol address** | its first function sits at file offset 0 |
 
 ```sh
@@ -291,9 +291,9 @@ an EMPTY set, and the tool believes nothing is matched. It then prints a plausib
 - **Work around** (read-only, no ledger write): derive unmatched from `src/` directly -- a
   symbol is matched iff `src/<symbol>.c|.cpp` exists (AGENTS.md: the filename IS the symbol).
   Subtract that set from `kind:function(arm,...)` in the config symbol tables.
-- **Real numbers on 2026-07-16** once computed that way: arm9 10,664 matched / 146 unmatched
-  (~98.5%), all-module unmatched 641 -- concentrated in ov006 (218), arm9 (146), ov002 (108),
-  ov007 (59). Anything claiming thousands of arm9 candidates is reading an absent ledger.
+- **Real numbers on 2026-07-16** once computed that way: [arm9](../../config/arm9/symbols.txt) 10,664 matched / 146 unmatched
+  (~98.5%), all-module unmatched 641 -- concentrated in [ov006](../../config/arm9/overlays/ov006/symbols.txt) (218), [arm9](../../config/arm9/symbols.txt) (146), [ov002](../../config/arm9/overlays/ov002/symbols.txt) (108),
+  [ov007](../../config/arm9/overlays/ov007/symbols.txt) (59). Anything claiming thousands of [arm9](../../config/arm9/symbols.txt) candidates is reading an absent ledger.
 - **Fix worth making**: have `load_matched()` fall back to scanning `src/` when the ledger is
   absent, rather than returning an empty set.
 

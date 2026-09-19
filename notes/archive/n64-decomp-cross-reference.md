@@ -45,12 +45,12 @@ constants came back exact.
 
 ### 2.1 Jump velocity table — the cleanest artifact
 
-`data_ov002_0210a59c`, file offset `0x5CF3C` in `overlay_0002.bin`, raw words:
+[data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt), file offset `0x5CF3C` in `overlay_0002.bin`, raw words:
 
-```text
-0x5cf3c: 0002a000  ->  42.0
-0x5cf40: 00034000  ->  52.0
-0x5cf44: 00045000  ->  69.0
+```c
+0x5cf3c: 0002a000  // ->  42.0
+0x5cf40: 00034000  // ->  52.0
+0x5cf44: 00045000  // ->  69.0
 ```
 
 N64 `src/game/mario.c:824 / :786 / :797` — `ACT_JUMP` 42.0f, `ACT_DOUBLE_JUMP` 52.0f,
@@ -125,7 +125,7 @@ cross-check. Low confidence on its own (round numbers), but useful.
 
 | System | N64 | SM64DS |
 |---|---|---|
-| Action state | `u32` ID packing group + 22 `ACT_FLAG_*` bits, `switch (action & ACT_GROUP_MASK)` | `State*` at `Player+0x370`/`+0x374`/`+0x378`, Metrowerks pointer-to-member dispatch; 0x18-byte `{Init, Main, Cleanup}` descriptors in ov002 **.bss** (runtime-constructed, not statically readable); flags in a separate `u16` at `+0x6ce` |
+| Action state | `u32` ID packing group + 22 `ACT_FLAG_*` bits, `switch (action & ACT_GROUP_MASK)` | `State*` at `Player+0x370`/`+0x374`/`+0x378`, Metrowerks pointer-to-member dispatch; 0x18-byte `{Init, Main, Cleanup}` descriptors in [ov002](../../config/arm9/overlays/ov002/symbols.txt) **.bss** (runtime-constructed, not statically readable); flags in a separate `u16` at `+0x6ce` |
 | Collision broadphase | 16×16 XZ grid, ±0x2000, pre-sorted floor/ceil/wall lists | **KCL octree** (Mario Kart DS lineage), 1 bit/axis descent, one triangle list per leaf, classified at query time |
 | Floor threshold | `normal.y > 0.01` | `normal.y > 0` (`cmp r0,#0; ble` @ 0x01ffd5cc) |
 | Point-in-triangle | 3× 2D XZ cross products, no tolerance | KCL 3D edge-plane dots + prism `length`, ±0x20000 tolerance |
@@ -163,8 +163,8 @@ a documented contamination vector worth a policy note. *This was not verified �
 
 1. **`src/_ZN6Player16St_WallJump_InitEv.cpp` is misattributed.** Its own banner admits it is
    *"NOT a Player method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
-   past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in ov002; this one is in
-   ov006. **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
+   past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in [ov002](../../config/arm9/overlays/ov002/symbols.txt); this one is in
+   [ov006](../../config/arm9/overlays/ov006/symbols.txt). **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
    about "offsets far outside the object." Anything trusting that note is building on a bad symbol.
 
 2. **Binary angles being read as fx12.** `0x4000` is 90°, `0x8000` is 180° — *not* 4.0 and 8.0.
@@ -192,15 +192,15 @@ a documented contamination vector worth a policy note. *This was not verified �
 | Address | Name | Basis |
 |---|---|---|
 | `data_020994e0` | `gArctanTable` — 1025 `s16` (the +1 guard entry matters), 0x802 bytes | byte-identical to N64 |
-| `data_02082214` | `FX_SinCosTable_` — 0x1000 interleaved fx16 sin/cos pairs, 0x4000 bytes, ends 0x02086214 | NitroSDK standard |
-| `data_ov002_0210a59c` | `sJumpVelocities` / `sPlayerJumpComboVelY` | rodata {42.0, 52.0, 69.0} |
-| `data_ov002_0210a5a8` | jump-combo animation IDs | rodata {0x53, 0x4f, 0x4b} |
-| `func_ov002_020e28d4` | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
-| `func_ov002_020bf2d8` | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
-| `func_02037e38` | `CLPS::GetType` | the only CLPS getter used in a jump-table dispatch (ov098 @0x02139264) |
+| `data_02082214` | `FX_SinCosTable_` — 0x1000 interleaved fx16 sin/cos pairs, 0x4000 bytes, ends 0x02086214 | *NitroSDK* standard |
+| [data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt) | `sJumpVelocities` / `sPlayerJumpComboVelY` | rodata {42.0, 52.0, 69.0} |
+| [data_ov002_0210a5a8](../../config/arm9/overlays/ov002/symbols.txt) | jump-combo animation IDs | rodata {0x53, 0x4f, 0x4b} |
+| [func_ov002_020e28d4](../../src/func_ov002_020e28d4.c) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
+| [func_ov002_020bf2d8](../../src/actors/Player.cpp) (ROM ordinal 39 used to assemble `Player.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
+| `func_02037e38` | `CLPS::GetType` | the only CLPS getter used in a jump-table dispatch ([ov098](../../config/arm9/overlays/ov098/symbols.txt) @0x02139264) |
 | 0x02037e14–0x02037e90 | eight more CLPS bitfield getters | 3-instruction accessors, bit extents recovered |
 
-Camera `State` descriptors (ov002, `data_ov002_0211xxxx`, 41 unnamed), disambiguated by
+Camera `State` descriptors ([ov002](../../config/arm9/overlays/ov002/symbols.txt), `data_ov002_0211xxxx`, 41 unnamed), disambiguated by
 `ChangeState` caller analysis:
 
 | Address | Role |
@@ -222,7 +222,7 @@ let `ChangeState` and every `St_*_Main` drop their per-file local `struct State`
 An earlier pass claimed the camera behaviour table at `0x0209b008` had **exactly 15** entries at
 0x10 stride, "matching N64's 15 populated camera modes." **This is wrong.** The relocs continue:
 
-```text
+```c
 0x0209b000 0x0209b004 0x0209b008 0x0209b018 ... 0x0209b0e8 0x0209b0f8
 0x0209b108 0x0209b118 0x0209b128 0x0209b138
 ```
@@ -242,7 +242,7 @@ This is the best-evidenced scope of the investigation, because **vtables are rea
 structures**: a wrong class name breaks the relocation link, so it cannot be hallucinated.
 
 `notes/actor-vtables.md` records `_ZTV9ActorBase` (18 slots), `_ZTV12ActorDerived` (18),
-`_ZTV5Actor` (31), `_ZTV6Player` (31, ov002) recovered byte-for-byte from `symbols.txt`/`relocs.txt`
+`_ZTV5Actor` (31), `_ZTV6Player` (31, [ov002](../../config/arm9/overlays/ov002/symbols.txt)) recovered byte-for-byte from `symbols.txt`/`relocs.txt`
 — every slot resolves to a named function, none is a thunk. Hierarchy is
 `ActorBase → ActorDerived → Actor → Player` (`Actor` is *not* a direct child of `ActorBase`,
 confirmed from the double-vptr-store in `_ZN5ActorC2Ev`).
@@ -267,7 +267,7 @@ sits between Amp at 3852 and Koopa at 5079, nowhere near Boo at 2984). **Converg
 Only Goomba and BobOmb `InitResources` are confirmed byte-identical in `progress/matched.jsonl`;
 everything else below is explicitly unverified.
 
-**Goomba** (`ov084:0x0212bc30`, size 0x390, verified; tables read from raw `ov084.bin` bytes):
+**Goomba** ([ov084](../../config/arm9/overlays/ov084/symbols.txt):`0x0212bc30`, size 0x390, verified; tables read from raw `ov084.bin` bytes):
 
 | | N64 (`goomba.inc.c`) | DS tiny / regular / huge |
 |---|---|---|
@@ -281,7 +281,7 @@ gravity) — data reuse at the formula level. But N64 uses one fixed 72×50 hitb
 size (a known quirk: a huge Goomba looks 2.3× bigger but hits like a regular one) while **DS scales
 the hitbox with size**. A real behavioral difference — DS fixed what reads as an N64 oversight.
 
-**BobOmb** (`ov102:0x0214c510`, size 0x1d4, verified): DS radius 60.0 / height 80.0 vs N64 65 / 113
+**BobOmb** ([ov102](../../config/arm9/overlays/ov102/symbols.txt):`0x0214c510`, size 0x1d4, verified): DS radius 60.0 / height 80.0 vs N64 65 / 113
 (`bobomb.inc.c:3-13`). Close on radius, ~29% off on height. Convergent, not shared data.
 
 **daWanwan_c** — DS side **[T2, unmatched]**: claimed 150.0 / 300.0 vs N64 80 / 160
@@ -293,7 +293,7 @@ than a cylinder (N64 `LOAD_COLLISION_DATA(whomp_seg6_collision_...)`; DS `MeshCo
 `MovingMeshCollider::SetFile`), and both encode regular-vs-King as **one class with a flag**, not
 two behaviors (N64 `oBhvParams2ndByte != WHOMP_BP_SMALL`; DS `mIsKing`).
 
-**daDonketu_c** — not recoverable; DS logic is behind unmatched `func_ov064_02116ec0`. N64 ground truth
+**daDonketu_c** — not recoverable; DS logic is behind unmatched [func_ov064_02116ec0](../../config/tu_manifest.d/ov064/daOts_c.json) - (`_ZN7daOts_c19InitResourcesCommonEv`, ROM ordinal 39 which assembles [daOts_c.cpp](../../src/actors/daOts_c.cpp)). N64 ground truth
 for future comparison (`bully.inc.c:3-52`): small 73/123/63/113, gravity 4.0, friction 0.91;
 big 115/235/105/225, gravity 5.0, friction 0.93.
 
@@ -304,36 +304,36 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 
 | N64 behavior | → | DS class | overlay |
 |---|---|---|---|
-| `bhvGoomba` | → | `Goomba` | ov084 |
-| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `BobOmbBuddy` | ov102 / ov078 / ov084 |
-| `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | ov014 |
-| `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | ov064 |
-| `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | ov079 |
-| `bhvThwomp` | → | `Thwomp` | ov091 |
-| `bhvBoo` | → | `Boo` / `BigBoo` | ov063 |
-| `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | ov071 |
-| **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | ov020 |
-| `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | ov070 |
-| `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | ov062 |
-| `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | ov062 |
-| `bhvHeaveHo` | → | `HeaveHo` | ov077 |
-| `bhvFlyGuy` | → | `FlyGuy` | ov070 |
-| `bhvSnufit` / `bhvSwoop` | → | `Snufit` / `Swoop` | ov065 |
-| `bhvScuttlebug` | → | `Scuttlebug` | ov071 |
-| `bhvSpindrift` | → | `Spindrift` | ov081 |
-| `bhvWigglerHead`/`Body` | → | `Wiggler` | ov034 |
-| `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | ov084 |
-| `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `daC_Jugem_c` | ov077 / ov085 |
-| `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | ov060 |
-| `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | ov030 |
-| (Eyerok boss) | → | `Eyerok` | ov066 |
-| — | | `daPukupuku_c` ov090, `daMenbo_c` ov090 | |
+| `bhvGoomba` | → | `Goomba` | [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
+| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `BobOmbBuddy` | [ov102](../../config/arm9/overlays/ov102/symbols.txt) / [ov078](../../config/arm9/overlays/ov078/symbols.txt) / [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
+| `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | [ov014](../../config/arm9/overlays/ov014/symbols.txt) |
+| `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | [ov064](../../config/arm9/overlays/ov064/symbols.txt) |
+| `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | [ov079](../../config/arm9/overlays/ov079/symbols.txt) |
+| `bhvThwomp` | → | `Thwomp` | [ov091](../../config/arm9/overlays/ov091/symbols.txt) |
+| `bhvBoo` | → | `Boo` / `BigBoo` | [ov063](../../config/arm9/overlays/ov063/symbols.txt) |
+| `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
+| **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | [ov020](../../config/arm9/overlays/ov020/symbols.txt) |
+| `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
+| `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
+| `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
+| `bhvHeaveHo` | → | `HeaveHo` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) |
+| `bhvFlyGuy` | → | `FlyGuy` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
+| `bhvSnufit` / `bhvSwoop` | → | `Snufit` / `Swoop` | [ov065](../../config/arm9/overlays/ov065/symbols.txt) |
+| `bhvScuttlebug` | → | `Scuttlebug` | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
+| `bhvSpindrift` | → | `Spindrift` | [ov081](../../config/arm9/overlays/ov081/symbols.txt) |
+| `bhvWigglerHead`/`Body` | → | `Wiggler` | [ov034](../../config/arm9/overlays/ov034/symbols.txt) |
+| `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
+| `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `daC_Jugem_c` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) / [ov085](../../config/arm9/overlays/ov085/symbols.txt) |
+| `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | [ov060](../../config/arm9/overlays/ov060/symbols.txt) |
+| `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | [ov030](../../config/arm9/overlays/ov030/symbols.txt) |
+| (Eyerok boss) | → | `Eyerok` | [ov066](../../config/arm9/overlays/ov066/symbols.txt) |
+| — | | `daPukupuku_c` [ov090](../../config/arm9/overlays/ov090/symbols.txt), `daMenbo_c` [ov090](../../config/arm9/overlays/ov090/symbols.txt) | |
 
 **Two traps in this table:**
 
 1. **`Bookend` → `BookShot`.** The community actor-ID label and the ROM-embedded mangled class name
    disagree. `src/d_a_book_killer_book.c` has `VT0=_ZTV8BookShot`. Trust the mangled name.
-2. **`UkikiThief` is not a class.** `UkikiThief_Spawn` (`ov030/symbols.txt:60`) instantiates
+2. **`UkikiThief` is not a class.** `UkikiThief_Spawn` ([ov030](../../config/arm9/overlays/ov030/symbols.txt):60) instantiates
    `_ZTV13RollingLogTtm` — identical-code folding. `notes/actor-naming.md:31-33` already warns
    that shared functions are "claimed by the lowest actor id." Re-derive its real behavior; do not
    take `RollingLogTtm` as its semantic identity.
@@ -385,7 +385,7 @@ Class 5 is not a DS invention. N64's slide rule is `normal.y < 0.9998477f` → f
 `0.9998477 × 4096 = 4095.4` → truncates to **4095 = 0xFFF**, and the accel is 5.3 on both sides.
 DS turned N64's special case in front of the switch into a first-class enum value.
 
-### 9.2 The three class tables (ov002, adjacent leaf functions)
+### 9.2 The three class tables ([ov002](../../config/arm9/overlays/ov002/symbols.txt), adjacent leaf functions)
 
 | Function | Role | Values | vs N64 |
 |---|---|---|---|
@@ -433,7 +433,7 @@ rate. **The 1 : 3.5 : 10 ratio is preserved exactly.** A rescale, not a redesign
 ### 9.5 What was genuinely replaced
 
 N64's `update_walking_speed` core is **absent**. Verified: `1.1` (`0x119A`/`0x1199`) and `43.0`
-(`0x2B000`) have **zero occurrences in all 394 KB of ov002** — no literal, no ARM immediate, no
+(`0x2B000`) have **zero occurrences in all 394 KB of [ov002](../../config/arm9/overlays/ov002/symbols.txt)** — no literal, no ARM immediate, no
 reciprocal multiply, no magic-number division. Also absent from the walk chain: the `48.0` cap,
 the `32.0`/`24.0` targets, the `0.95` `normal.y` gate.
 
@@ -455,11 +455,11 @@ speed factor table @ `0x020FF170`, a 30-frame character-1 ramp, a 24-frame tight
 Quicksand is the exception — **carried over verbatim**: `if (depth > 10.0) target *= 6.25/depth`
 at `0x020d3dcc`–`0x020d3de0`, threshold and factor both exact.
 
-### 9.6 The ov098 table is quicksand depth, not speed
+### 9.6 The [ov098](../../config/arm9/overlays/ov098/symbols.txt) table is quicksand depth, not speed
 
-Earlier notes described the ov098 jump table (30/45/60/100 → `+0x5f0`) as a surface-type→speed
-table. **It is quicksand sink depth.** ov098 is the Shifting Sand Land object overlay;
-`func_ov098_02139228` = `Crate::UpdateQuicksand`. `+0x5f0` is target sink depth, `+0x5f4` current,
+Earlier notes described the [ov098](../../config/arm9/overlays/ov098/symbols.txt) jump table (30/45/60/100 → `+0x5f0`) as a surface-type→speed
+table. **It is quicksand sink depth.** [ov098](../../config/arm9/overlays/ov098/symbols.txt) is the Shifting Sand Land object overlay;
+[func_ov098_02139228](../../src/func_ov098_02139228.cpp) = `Crate::UpdateQuicksand`. `+0x5f0` is target sink depth, `+0x5f4` current,
 approached at 0.5/frame. Render position is built as `pos.y − this[0x5f4]` — verbatim N64
 `mario.c:1552` `o->header.gfx.pos[1] -= m->quicksandDepth`.
 
@@ -488,14 +488,14 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 ### 9.8 Names earned by this pass
 
 `0x02037e58` `CLPS::GetSlipperiness` · `0x02037e38` `CLPS::GetSurfaceType` ·
-`ov002:0x020f02c8` `GetSlideAccelForClass` · `0x020f030c` `GetSlideLossFactorForClass` ·
+[ov002](../../config/arm9/overlays/ov002/symbols.txt):`0x020f02c8` `GetSlideAccelForClass` · `0x020f030c` `GetSlideLossFactorForClass` ·
 `0x020f035c` `FloorIsSlope` · `0x020c031c` `Player::GetFloorClass` ·
 `0x020c04e0` `Player::ApplySlopeAccel` · `0x020c06fc` `Player::UpdateSliding` ·
 `0x020bf56c` `Player::GetSlopeDecelCoef` · `0x020c16ec` `Player::SetFloorSurfaceInfo` ·
 `0x020d4d88` `Player::UpdateGroundSpeed` · `0x020d3b9c` `Player::UpdateWalkingSpeed` ·
 `0x020d45c0` `Player::Walk_UpdateRunDustFx` · `0x020d413c` `Player::Walk_UpdateBodyLean` ·
 `0x020bf30c` `Player::ScaleSpeedByCharacter` · `0x020c29d4` `Player::UpdateQuicksandFlag` ·
-`ov098:0x02139228` `Crate::UpdateQuicksand` · `ov002:0x02110514` `St_Crawl` state descriptor
+[ov098](../../config/arm9/overlays/ov098/symbols.txt):`0x02139228` `Crate::UpdateQuicksand` · [ov002](../../config/arm9/overlays/ov002/symbols.txt):`0x02110514` `St_Crawl` state descriptor
 
 **Player offsets recovered:** `+0x8e` visual yaw · `+0x94` moveYaw · `+0x98` forwardVel ·
 `+0xa8` velY · `+0x554/558/55c` floorNormal xyz (fx12, already rescaled from KCL's 0x400) ·

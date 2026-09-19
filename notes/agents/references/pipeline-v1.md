@@ -64,8 +64,8 @@ goal is writing the classes back.
 
 **The ruling: convert as far as byte-match allows.** `dScMgMemory2_c` is the proof
 the route works end to end -- but read what it cost before you take 51/52 as a
-target. Measured across its promotion commit `4d92d0f98`, in
-`config/arm9/overlays/ov006/symbols.txt`:
+target. Measured across its promotion commit [#4d92d0f98](https://github.com/tangosdev/sm64ds-decomp/commit/4d92d0f98), in
+[config/arm9/overlays/ov006/symbols.txt](../../../config/arm9/overlays/ov006/symbols.txt) the 52 members are:
 
 | | mangled `_ZN14dScMgMemory2_c*` rows |
 |---|---|
@@ -80,7 +80,7 @@ carrying a mangled name converts as a codegen question -- does it byte-match.
 A member carrying an auto-generated `func_ovNNN_*` name converts only by being
 **renamed**, which is a different, larger, and riskier act: the new name must
 reach `symbols.txt` in the same commit (see below), and every external caller
-must move with it. Measured on `ov071/Scuttlebug`, all 27 unconverted members
+must move with it. Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`, all 27 unconverted members
 were auto-named, so its ceiling was **name recovery, not codegen and not
 scope** -- a different wall from `dScMgCurling2_c`'s, where all 29 compiled
 byte-neutrally and 12 were refused for scope alone.
@@ -114,7 +114,7 @@ what the ROM proves (member-ness, dispatch-table index) from what is invented (t
 word). Apply the same split to a class name: say what the cartridge attests and what
 you chose.
 
-State the identity either way. `dScMgCurling2_c` is ROM RTTI -- the ov006 bytes at
+State the identity either way. `dScMgCurling2_c` is ROM RTTI -- the [ov006](../../../config/arm9/overlays/ov006/symbols.txt) bytes at
 `0x0213c4c8` are literally `15dScMgCurling2_c` -- and its facts file says so in
 `identity_evidence`. A coined name needs the same field, saying it is coined and on
 what basis. **Do not run `class_rename.py`** to manufacture agreement.

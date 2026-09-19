@@ -37,7 +37,7 @@ Reconstructed code has a characteristic smell. Flag it:
   obvious. The answer is very often already in a comment somewhere in the tree —
   grep the field offset before declaring it unknowable.
 
-  **But that heuristic inverts on the ov006 scene classes, where a sibling hit
+  **But that heuristic inverts on the [ov006](../../../config/arm9/overlays/ov006/symbols.txt) scene classes, where a sibling hit
   is actively misleading.** Those classes overlap addresses with different
   layouts, so the same offset means unrelated things in different ones: `0x51c8`
   is a `u16` on a 0x24 stride in `dScMgSound_c` and something else entirely in
