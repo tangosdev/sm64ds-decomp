@@ -367,11 +367,11 @@
   },
   "DrawOamSprite": {
    "src/actors/dScMgCurling2_c.cpp": ["param:#1 int", "param:#2 int", "param:#4 int"],
+   "src/actors/dScMgCurling_c.cpp": ["param:#1 int", "param:#2 int", "param:#4 int"],
    "src/actors/dScMgHanachan_c.cpp": ["param:#2 int", "param:#4 int"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#1 int", "param:#2 int", "param:#4 int"],
    "src/actors/dScMgTeresa_c.cpp": ["param:#1 int", "param:#2 int", "param:#4 int"],
    "src/func_ov004_020b1e44.c": ["param:#1 int", "param:#2 int", "param:#4 int"],
-   "src/func_ov006_020e0694.c": ["param:#1 int", "param:#2 int", "param:#4 int"],
    "src/func_ov006_02129690.c": ["param:#2 int"]
   },
   "FS_CloseFile": {
@@ -3874,7 +3874,6 @@
   },
   "_ZN4cstd4sqrtEy": {
    "src/func_0202ee94.c": ["return:unsigned long long"],
-   "src/func_ov006_020e1854.c": ["param:#1 long long"],
    "src/func_ov006_020fcb4c.c": ["return:long long"],
    "src/func_ov089_02130fb4.c": ["return:unsigned int"]
   },
@@ -3884,6 +3883,7 @@
    "src/_ZN6Player19St_CrazedCrate_MainEv.cpp": ["return:int"],
    "src/_ZN6Player20St_StomachSlide_MainEv.cpp": ["return:int"],
    "src/actors/dScMgCurling2_c.cpp": ["return:int"],
+   "src/actors/dScMgCurling_c.cpp": ["return:int"],
    "src/actors/dScMgSnowball_c.cpp": ["return:int"],
    "src/actors/daBombking_c.cpp": ["return:int"],
    "src/actors/daOts_c.cpp": ["return:int"],
@@ -3894,8 +3894,6 @@
    "src/func_ov002_020dd2f4.c": ["return:int"],
    "src/func_ov002_020e28d4.c": ["return:int"],
    "src/func_ov002_020f43cc.c": ["return:int"],
-   "src/func_ov006_020e1854.c": ["return:unsigned short"],
-   "src/func_ov006_020e1dc8.cpp": ["return:int"],
    "src/func_ov006_020e91a0.c": ["return:int"],
    "src/func_ov006_02100bac.c": ["return:int"],
    "src/func_ov020_02111b28.cpp": ["return:int"],
@@ -4207,6 +4205,7 @@
    "src/actors/dScMgCoin_c.cpp": ["return:void"],
    "src/actors/dScMgCup_c.cpp": ["return:void"],
    "src/actors/dScMgCurling2_c.cpp": ["return:void"],
+   "src/actors/dScMgCurling_c.cpp": ["return:void"],
    "src/actors/dScMgLuigi_c.cpp": ["return:void"],
    "src/actors/dScMgMemory2_c.cpp": ["return:void"],
    "src/actors/dScMgPanel_c.cpp": ["return:void"],
@@ -7688,8 +7687,7 @@
    "src/func_020196cc.c": ["return:unsigned char []"]
   },
   "data_0209d4b8": {
-   "src/func_020196cc.c": ["return:int []"],
-   "src/func_ov006_020e1264.c": ["return:int []"]
+   "src/func_020196cc.c": ["return:int []"]
   },
   "data_0209d4c8": {
    "src/_ZN5Stage10PS_CleanupEv.cpp": ["return:int []"],
@@ -8458,6 +8456,7 @@
    "src/_ZN6Player17St_SweepKick_MainEv.cpp": ["return:unsigned char []"],
    "src/actors/dScMgAmida_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgCup_c.cpp": ["return:unsigned char []"],
+   "src/actors/dScMgCurling_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgFlower_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgHanachan_c.cpp": ["return:unsigned char []"],
    "src/actors/dScMgSnowball_c.cpp": ["return:unsigned char []"],
@@ -8474,7 +8473,6 @@
    "src/func_ov004_020b6b40.c": ["return:unsigned char []"],
    "src/func_ov004_020b6c9c.c": ["return:unsigned char []"],
    "src/func_ov006_020de0e0.cpp": ["return:unsigned char []"],
-   "src/func_ov006_020e1854.c": ["return:unsigned char []"],
    "src/func_ov006_020e5a0c.c": ["return:unsigned char []"],
    "src/func_ov006_02102f3c.c": ["return:unsigned char []"],
    "src/func_ov006_0210af64.c": ["return:unsigned char []"],
@@ -17964,10 +17962,10 @@
   },
   "func_ov004_020af948": {
    "src/actors/dScMgCurling2_c.cpp": ["param:#1 int", "param:#4 int"],
+   "src/actors/dScMgCurling_c.cpp": ["param:#1 int", "param:#4 int"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#4 int"],
    "src/func_ov004_020b653c.c": ["param:#4 int"],
    "src/func_ov004_020b6948.c": ["param:#4 int"],
-   "src/func_ov006_020e0694.c": ["param:#1 int", "param:#4 int"],
    "src/func_ov006_020ea350.c": ["param:#4 int"]
   },
   "func_ov004_020afb20": {
@@ -17978,7 +17976,7 @@
    "src/_ZN16dScMgSmartball_c6RenderEv.cpp": ["param:#1 int"],
    "src/_ZN18cMgSmartball_ana_c6UpdateEv.cpp": ["param:#1 int"],
    "src/actors/dScMgCurling2_c.cpp": ["param:#1 int", "return:int"],
-   "src/func_ov006_020e17f8.cpp": ["param:#1 int", "return:int"],
+   "src/actors/dScMgCurling_c.cpp": ["param:#1 int", "return:int"],
    "src/func_ov006_020fae20.c": ["param:#1 int"],
    "src/func_ov006_020faf14.c": ["param:#1 int", "return:int"],
    "src/func_ov006_020fc144.c": ["param:#1 int"],
@@ -18064,12 +18062,12 @@
    "src/minigames/d_s_mg_memory.cpp": ["arity:4"]
   },
   "func_ov004_020b2220": {
+   "src/actors/dScMgCurling_c.cpp": ["param:#7 int"],
    "src/actors/dScMgHanachan_c.cpp": ["param:#3 void *", "param:#7 int"],
    "src/actors/dScMgLuigi_c.cpp": ["param:#7 int"],
    "src/actors/dScMgRoulette_c.cpp": ["param:#7 int"],
    "src/actors/dScMgSnowball_c.cpp": ["param:#7 int"],
-   "src/actors/dScMgTeresa_c.cpp": ["param:#7 int"],
-   "src/func_ov006_020e1554.c": ["param:#7 int"]
+   "src/actors/dScMgTeresa_c.cpp": ["param:#7 int"]
   },
   "func_ov004_020b29a0": {
    "src/func_ov004_020b78f4.cpp": ["param:#2 int"],
