@@ -11,6 +11,7 @@ notes/agent-partitioned-tu-workflow.md	evidence	tu-promotion	live		Operational c
 notes/agents/IN-FLIGHT.md	doctrine	process	live		What is in flight and where it is recorded, written 2026-09-07 while winding the class pipeline down for a workflow upgrade.
 notes/agents/LAUNCH.md	doctrine	process	live		Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
 notes/agents/PIPELINE.md	doctrine	process	live		The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
+notes/agents/handoffs/pr2386-tool-repair-0920.md	evidence	process	live		PR 2386 tooling repair: normalized notes accounting, deterministic paths, and reference-checker regressions.
 notes/agents/roles/builder.md	doctrine	process	live		Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
 notes/agents/roles/humanizer.md	doctrine	process	live		Humanizer role: checklist for whether reconstructed C++ reads like plausible 2004 EAD source.
 notes/agents/roles/integrator.md	doctrine	process	live		Integrator role: compose several proven class promotions onto one branch for a single validator run.

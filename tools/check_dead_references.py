@@ -140,7 +140,7 @@ JSONL_LEDGERS = {"config/match_attempts.jsonl", "config/match_provenance.jsonl",
                   "config/converted-backslide-exceptions.jsonl",
                   "config/source-coverage-exceptions.jsonl"}
 
-PATH_RE = re.compile(r"(?<![\w./\\-])((?:[A-Za-z0-9_.\-]+/)+[A-Za-z0-9_.\-]+)(?![\w-])")
+PATH_RE = re.compile(r"(?<![\w./\\+\-])((?:[A-Za-z0-9_.+\-]+/)+[A-Za-z0-9_.+\-]+)(?![\w+\-])")
 # Templates, globs and format placeholders are not paths anyone can resolve.
 GLOBBY = re.compile(r"[*?\[\]{}<>]|\.\.\.|%s|\$\(|::")
 TRAILING = ".,;:)\"'`!?"
@@ -414,6 +414,43 @@ def _tu_manifest_prose(text):
     return out
 
 
+def _port_linkage_prose(text):
+    """Keep path-bearing comments; the stamp's branch/basis describe Git history.
+
+    This exception applies only to those two top-level string fields in the
+    port-linkage stamp. Other fields, nested values and malformed input retain
+    normal reference checking. A field's opening line locates structured prose,
+    as for TU manifest prose above.
+    """
+    try:
+        data = json.loads(text)
+    except (ValueError, TypeError):
+        return _text_prose(text)
+    if not isinstance(data, dict):
+        return _text_prose(text)
+    out = []
+
+    def append_strings(value, lineno):
+        if isinstance(value, str):
+            out.append((lineno, value))
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                append_strings(key, lineno)
+                append_strings(item, lineno)
+        elif isinstance(value, list):
+            for item in value:
+                append_strings(item, lineno)
+
+    for key, value in data.items():
+        if key in ("branch", "basis") and isinstance(value, str):
+            continue
+        idx = text.find(json.dumps(key))
+        lineno = text.count("\n", 0, idx) + 1 if idx != -1 else 1
+        append_strings(key, lineno)
+        append_strings(value, lineno)
+    return out
+
+
 def _normalise(ref):
     ref = ref.strip().rstrip(TRAILING).lstrip("(\"'`[").replace("\\", "/")
     return ref.lstrip("./").rstrip("/")
@@ -435,6 +472,8 @@ def collect(root=REPO):
             # `legacy_source` names the pre-merge file a TU absorbed on purpose.
             regions = _tu_manifest_prose(text)
             heads = {"notes"}
+        elif rel == "config/port_linkage.json":
+            regions = _port_linkage_prose(text)
         elif rel.endswith((".yml", ".yaml")):
             regions = _yaml_prose(text)
         elif rel.endswith(CODE_SUFFIXES):

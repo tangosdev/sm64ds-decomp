@@ -427,6 +427,58 @@ class NewSurfaceTests(unittest.TestCase):
             "config/thing.json", '{"note": "see notes/gone.md"}\n'))
         self.assertIn(("config/thing.json", "notes/gone.md"), dead)
 
+    def test_port_linkage_refs_are_metadata_but_comments_are_checked(self):
+        def build(t):
+            t.write("port/tools/linkage.py", "pass\n")
+            t.write("config/port_linkage.json", json.dumps({
+                "branch": "port/link100",
+                "basis": "integration branch port/link100; sync port/l6-sync",
+                "_comment": ["Run port/tools/linkage.py", "See\nport/missing.py"],
+                "future_path": "port/also-missing.py",
+            }))
+        self.assertEqual(self._dead(build), {
+            ("config/port_linkage.json", "port/missing.py"),
+            ("config/port_linkage.json", "port/also-missing.py"),
+        })
+
+    def test_branch_field_elsewhere_is_not_exempt(self):
+        def build(t):
+            t.write("config/other.json", json.dumps({"branch": "port/missing.py"}))
+            t.write("notes/other.md", "See port/link100\n")
+        self.assertEqual(self._dead(build), {
+            ("config/other.json", "port/missing.py"),
+            ("notes/other.md", "port/link100"),
+        })
+
+    def test_port_linkage_unexpected_shapes_do_not_hide_references(self):
+        for payload in (
+            {"branch": ["port/missing.py"]},
+            {"nested": {"basis": "port/missing.py"}},
+            [{"branch": "port/missing.py"}],
+        ):
+            with self.subTest(payload=payload):
+                self.assertIn(("config/port_linkage.json", "port/missing.py"),
+                    self._dead(lambda t: t.write(
+                        "config/port_linkage.json", json.dumps(payload))))
+
+    def test_port_linkage_malformed_json_keeps_reference_detection(self):
+        self.assertIn(("config/port_linkage.json", "port/missing.py"),
+            self._dead(lambda t: t.write(
+                "config/port_linkage.json", '{"branch": "port/missing.py",')))
+
+    def test_plus_paths_are_complete_tokens_and_resolve(self):
+        live = "src_tu/actors/Koopa+KoopaSmall.cpp"
+        missing = "src_tu/actors/Other+Missing.cpp"
+        def build(t):
+            t.write(live, "int x;\n")
+            t.write("notes/plus.md", f"See {live} and {missing}.\n")
+        self.assertEqual(self._dead(build), {("notes/plus.md", missing)})
+        self.assertEqual(CDR.PATH_RE.findall(live), [live])
+
+    def test_plus_directory_names_are_preserved(self):
+        path = "notes/a+b/reference.md"
+        self.assertEqual(CDR.PATH_RE.findall(path), [path])
+
     def test_tu_manifest_boundary_evidence_is_scanned(self):
         dead = self._dead(lambda t: t.write(
             "config/tu_manifest.d/ov001/Thing.json",

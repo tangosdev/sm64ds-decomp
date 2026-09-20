@@ -12,11 +12,11 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **370,228 bytes (361.6KB)** across 19 files, against a stated 150KB cap.
+Doctrine budget: **364,788 bytes (356.2KB)** across 19 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
-Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
+Tier counts: 19 doctrine, 87 evidence, 42 data, 8 archive (156 files total).
 
 ## process
 
@@ -32,6 +32,7 @@ Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
 - **[`agents/roles/scout.md`](agents/roles/scout.md)** — Scout role: which ROM facts to establish and write to class-facts/<Class>.json before writing starts.
 - **[`agents/roles/writer.md`](agents/roles/writer.md)** — Writer role: gather a class's scattered shard files into one real C++ TU; states the D0/D1/D2 order rule.
 - [`agent-cpp-class-migration.md`](agent-cpp-class-migration.md) _superseded_ — Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
+- [`agents/handoffs/pr2386-tool-repair-0920.md`](agents/handoffs/pr2386-tool-repair-0920.md) — PR 2386 tooling repair: normalized notes accounting, deterministic paths, and reference-checker regressions.
 - [`match-attempts.md`](match-attempts.md) — What match_attempts.jsonl records vs. nearmiss/db.jsonl and match_provenance.jsonl; the status vocabulary.
 - [`match-logging-console.md`](match-logging-console.md) — Which tools tangOS Console's match-logging stack requires (log_attempt/stamp_provenance/bank).
 - [`match-provenance.md`](match-provenance.md) — How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.

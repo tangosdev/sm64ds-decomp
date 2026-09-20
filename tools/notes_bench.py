@@ -3,9 +3,11 @@
 no ROM, no compiler. Per canonical question: resolves (answer_file exists
 and answer_regex still matches -- FAIL means a fact was lost), hops (BFS
 distance from the front-door set over markdown links / path mentions,
-'unreachable' if none), path_bytes (bytes read walking that shortest path),
+'unreachable' if none), path_bytes (LF-normalized UTF-8 bytes along that path),
 grep_fanout (notes/**/*.md files matching the question's key terms -- false
-candidates to triage). Advisory: exit 0 unless --strict, then 1 on any FAIL.
+candidates to triage). Equal-hop paths use FRONT_DOORS order, then lexical
+neighbor order; this is a reproducible proxy, not a minimum-byte path or a
+measurement of reader time. Advisory: exit 0 unless --strict, then 1 on any FAIL.
 """
 import argparse, json, os, re, sys
 from collections import deque
@@ -66,7 +68,7 @@ def build_graph(repo_root):
             text = p.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-        sizes[rel] = p.stat().st_size
+        sizes[rel] = len(text.encode("utf-8"))
         targets = set()
         for raw in LINK_RE.findall(text) + MENTION_RE.findall(text):
             t = clean_target(raw)
@@ -84,7 +86,7 @@ def bfs(graph, repo_root):
     dq = deque(starts)
     while dq:
         cur = dq.popleft()
-        for nxt in graph.get(cur, ()):
+        for nxt in sorted(graph.get(cur, ())):
             if nxt not in dist:
                 dist[nxt], parent[nxt] = dist[cur] + 1, cur
                 dq.append(nxt)

@@ -40,7 +40,7 @@ WHAT `--check` VERIFIES
 (a) every file `git` tracks or would track (i.e. not gitignored) under `notes/` has a
     registry row;
 (b) every registry row names a file that actually exists;
-(c) `notes/README.md` on disk is byte-identical to what this tool would generate;
+(c) `notes/README.md`, with LF-normalized newlines, agrees with the generated text;
 (d) the `doctrine` tier's total bytes, reported against the 150KB cap named in
     `notes/CONVENTIONS.md`'s design discussion -- REPORTED, not gated: today's honest
     total is well over the cap (doctrine condensation is a separate, not-yet-run
@@ -232,7 +232,10 @@ def doctrine_bytes(rows: list[dict[str, str]], repo: pathlib.Path) -> tuple[int,
     for path in files:
         full = repo / path
         if full.is_file():
-            total += full.stat().st_size
+            # Count UTF-8 bytes after universal-newline decoding, just as the
+            # README comparison does. Git checkout line endings must not alter
+            # either the doctrine budget or the self-counting README fixed point.
+            total += len(full.read_text(encoding="utf-8").encode("utf-8"))
     return total, files
 
 
