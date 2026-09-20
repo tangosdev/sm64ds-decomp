@@ -2526,6 +2526,25 @@ MaskRow *g_tlattr;
    carried on would fault somewhere else entirely and look like a render bug.
    About 12.6 MB at this tier's allocation, so in practice this does not fail
    on any machine that can open the window. */
+/* ---- THE EDGE-SMOOTHING PASS'S OWN BUFFER (run hd2) ----------------------
+ * The pass reads the picture and writes the picture, so it cannot read what
+ * it has already written: a filter fed on its own output smears instead of
+ * smoothing. One scratch copy of the frame solves it -- read from the copy,
+ * write to the framebuffer -- and it is the reason this is a buffer and not a
+ * three-row window: the raster's row bands are INTERLEAVED (a thread owns
+ * rows tid, tid+nt, ...), so a thread's neighbours are always another
+ * thread's rows.
+ * ON THE HEAP for the raster buffers' reason one block down, and allocated
+ * only on the first frame the setting is actually on, so a run with the key
+ * absent holds nothing. */
+uint32_t *g_aa_src;
+
+int g_aa_mode = 0;                     /* 0 off, 1 edge smoothing */
+unsigned long long g_aa_changed;       /* pixels rewritten, whole run */
+unsigned long long g_aa_run_frames;    /* frames the pass ran on */
+unsigned long long g_aa_stood_down;    /* frames it refused, capture armed */
+unsigned g_aa_hits[64];                /* per band, summed after each pass */
+
 bool raster_buffers(void)
 {
     if (g_depth) return true;
@@ -2550,6 +2569,215 @@ const uint8_t *gx_coverage()
 {
     raster_buffers();
     return &g_cover[0][0];
+}
+
+void gx_configure_anti_aliasing(int mode) {
+    g_aa_mode = mode < 0 ? 0 : (mode > 1 ? 1 : mode);
+}
+
+int gx_anti_aliasing() { return g_aa_mode; }
+
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
+                    unsigned long long &stood_down) {
+    changed = g_aa_changed;
+    frames = g_aa_run_frames;
+    stood_down = g_aa_stood_down;
+}
+
+namespace {
+
+/* Rec.601 luma, the channel weighting every edge filter of this family uses,
+   on the 0..255 scale the framebuffer already holds. */
+inline float luma(uint32_t p) {
+    return 0.299f * (float)((p >> 16) & 0xFF) +
+           0.587f * (float)((p >> 8) & 0xFF) +
+           0.114f * (float)(p & 0xFF);
+}
+
+/* Blend two pixels, t of b. The alpha byte is left at 0xFF: every pixel in
+   this framebuffer is opaque by the time the raster is finished, and the 2D
+   compositor reads the coverage mask rather than the alpha byte. */
+inline uint32_t mix2(uint32_t a, uint32_t b, float t) {
+    const float s = 1.0f - t;
+    auto ch = [&](int sh) {
+        const float v = (float)((a >> sh) & 0xFF) * s +
+                        (float)((b >> sh) & 0xFF) * t;
+        const int i = (int)(v + 0.5f);
+        return (uint32_t)(i < 0 ? 0 : (i > 255 ? 255 : i));
+    };
+    return 0xFF000000u | (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/* ---- ONE BAND OF THE EDGE-SMOOTHING PASS ---------------------------------
+ *
+ * WHAT IT DOES, in the order it does it. For every pixel of the picture:
+ *
+ *   1. IT WRITES ONLY WHERE THE 3D ENGINE DREW. The coverage mask is the
+ *      test, and it is the whole of the promise that this setting cannot
+ *      touch text, the HUD or the touch-screen art: those are drawn by
+ *      hal/message_compositor.cpp and hal/sub_screen.cpp, both of which run
+ *      AFTER gx_render returns, so at this moment they are not in the
+ *      framebuffer at all and every pixel this pass can reach is either a
+ *      pixel this engine drew or the frame's own clear colour.
+ *   2. It reads the four neighbours whether they are covered or not, for
+ *      that same reason: an uncovered neighbour is the clear colour behind
+ *      the model, and a silhouette against the background is exactly the
+ *      edge worth softening. Reads are clamped to the picture.
+ *   3. THE CONTRAST TEST. The local luma range must clear both an absolute
+ *      floor and a fraction of the brightest neighbour, which is the pair
+ *      every filter of this family uses: the absolute floor keeps the pass
+ *      out of flat shading noise and the relative one keeps it out of dark
+ *      areas where a few levels of difference are not an edge.
+ *   4. THE DIRECTION. The second difference across x and across y says which
+ *      way the step runs; the pass blends along the axis with the larger one,
+ *      which is the axis the staircase is climbing.
+ *   5. HOW FAR. How far this pixel's own luma sits from the average of its
+ *      four neighbours, as a fraction of the local range, squared so that
+ *      only a pixel that really sticks out moves much, and capped at half.
+ *      A pixel in the middle of a smooth gradient has an average close to
+ *      itself and does not move at all.
+ *
+ * Contiguous row chunks rather than the raster's interleaved bands: this pass
+ * reads a row above and a row below, and contiguous chunks keep those reads
+ * in the same part of the scratch buffer. Every row is written by exactly one
+ * band, so the framebuffer needs no locking, exactly as the raster does not.
+ */
+struct AaCtx {
+    Framebuffer *fb;
+    int w, h;
+};
+
+void aa_band(void *ctxp, int tid, int nt) {
+    const AaCtx &c = *static_cast<AaCtx *>(ctxp);
+    const int y0 = (int)((long long)c.h * tid / nt);
+    const int y1 = (int)((long long)c.h * (tid + 1) / nt);
+    const uint32_t *const src = g_aa_src;
+    unsigned hits = 0;
+    for (int y = y0; y < y1; ++y) {
+        const uint8_t *crow = g_cover[y];
+        uint32_t *frow = c.fb->px[y];
+        const uint32_t *rm = src + (size_t)y * SCREEN_W;
+        const uint32_t *rn = src + (size_t)(y > 0 ? y - 1 : 0) * SCREEN_W;
+        const uint32_t *rs = src + (size_t)(y + 1 < c.h ? y + 1 : y) * SCREEN_W;
+        for (int x = 0; x < c.w; ++x) {
+            if (!crow[x]) continue;
+            const int xw = x > 0 ? x - 1 : 0;
+            const int xe = x + 1 < c.w ? x + 1 : x;
+            const uint32_t pM = rm[x], pN = rn[x], pS = rs[x];
+            const uint32_t pW = rm[xw], pE = rm[xe];
+            const float lM = luma(pM), lN = luma(pN), lS = luma(pS);
+            const float lW = luma(pW), lE = luma(pE);
+            float lo = lM, hi = lM;
+            const float ls[4] = {lN, lS, lW, lE};
+            for (int i = 0; i < 4; ++i) {
+                if (ls[i] < lo) lo = ls[i];
+                if (ls[i] > hi) hi = ls[i];
+            }
+            const float range = hi - lo;
+            /* 8 of 255 absolute, an eighth of the brightest relative */
+            if (range < 8.0f || range < hi * 0.125f) continue;
+            const float d2x = std::fabs(lW + lE - 2.0f * lM);
+            const float d2y = std::fabs(lN + lS - 2.0f * lM);
+            const uint32_t n1 = (d2x >= d2y) ? pW : pN;
+            const uint32_t n2 = (d2x >= d2y) ? pE : pS;
+            const float avg = 0.25f * (lN + lS + lW + lE);
+            float t = std::fabs(avg - lM) / range;
+            t = t * t;
+            if (t > 0.5f) t = 0.5f;
+            if (t <= 0.002f) continue;
+            const uint32_t nb = mix2(n1, n2, 0.5f);
+            const uint32_t out = mix2(pM, nb, t);
+            if (out != pM) {
+                frow[x] = out;
+                ++hits;
+            }
+        }
+    }
+    g_aa_hits[tid & 63] = hits;
+}
+
+}  // namespace
+
+/* THE PASS ITSELF, run at the end of gx_render. Returns at once when the
+   setting is off, which is the default, so a key-absent frame pays one
+   compare. */
+static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
+    if (!g_aa_mode || cw <= 0 || ch <= 0) return;
+    /* THE ONE THING THIS SETTING MAY NOT DO. See ntr::ppu_capture_armed: the
+       game reads this framebuffer back through the DS capture unit for the
+       dual-screen minigames, and on a frame it is going to read, the picture
+       must be the picture it would have got with the setting absent. So the
+       pass stands down rather than trying to undo itself afterwards, and the
+       capture is byte-identical by construction. */
+    ++g_aa_run_frames;
+    if (ppu_capture_armed()) {
+        --g_aa_run_frames;
+        ++g_aa_stood_down;
+        return;
+    }
+    if (!g_aa_src) {
+        g_aa_src = (uint32_t *)std::calloc((size_t)SCREEN_W * SCREEN_H,
+                                           sizeof(uint32_t));
+        if (!g_aa_src) {
+            std::fprintf(stderr,
+                         "[aa] no memory for the %d x %d scratch picture; edge "
+                         "smoothing is off for this run.\n", SCREEN_W, SCREEN_H);
+            std::fflush(stderr);
+            g_aa_mode = 0;
+            --g_aa_run_frames;
+            return;
+        }
+    }
+    for (int y = 0; y < ch; ++y)
+        std::memcpy(g_aa_src + (size_t)y * SCREEN_W, fb.px[y],
+                    (size_t)cw * sizeof(uint32_t));
+    AaCtx ctx{&fb, cw, ch};
+    /* THE SAME THREAD COUNT THE RASTER JUST USED, and through the same pool.
+       RasterPool::run hands every band the width it was started at, so asking
+       for a different one here would leave bands unaccounted for and the wait
+       short. The counters array is indexed by band and the pool is capped at
+       eight workers, so 64 slots is room to spare. */
+    const int n = nt < 1 ? 1 : (nt > 64 ? 64 : nt);
+    for (int i = 0; i < n; ++i) g_aa_hits[i] = 0;
+    if (nt <= 1) {
+        aa_band(&ctx, 0, 1);
+    } else {
+        pool(nt).run(aa_band, &ctx);
+    }
+    for (int i = 0; i < n; ++i) g_aa_changed += g_aa_hits[i];
+}
+
+/* SM64DS_AA_STATS=1: what the smoothing pass has done, every 300 frames and
+   once more at the end of the run. Off by default. It is the evidence for two
+   claims that cannot be read off a picture: that a key-absent run does NO
+   work (every number zero), and that the pass never runs on a frame the game
+   reads the framebuffer back on (stood_down counts those frames, and the
+   captured bytes are then the key-absent bytes by construction). */
+static void aa_report(void) {
+    static int want = -1;
+    if (want < 0) want = getenv("SM64DS_AA_STATS") ? 1 : 0;
+    if (!want) return;
+    static unsigned f;
+    static int at_exit_registered;
+    if (!at_exit_registered) {
+        at_exit_registered = 1;
+        std::atexit([] {
+            std::fprintf(stderr,
+                         "[aa] final: mode %d, %llu frame(s) smoothed, %llu "
+                         "frame(s) stood down for the display capture, %llu "
+                         "pixel(s) rewritten\n",
+                         g_aa_mode, g_aa_run_frames, g_aa_stood_down,
+                         g_aa_changed);
+            std::fflush(stderr);
+        });
+    }
+    if ((f++ % 300) != 0) return;
+    std::fprintf(stderr,
+                 "[aa] frame %u: mode %d, %llu frame(s) smoothed, %llu stood "
+                 "down, %llu pixel(s) rewritten\n",
+                 f - 1, g_aa_mode, g_aa_run_frames, g_aa_stood_down,
+                 g_aa_changed);
+    std::fflush(stderr);
 }
 
 void gx_render(Framebuffer &fb) {
@@ -3096,6 +3324,18 @@ void gx_render(Framebuffer &fb) {
         pool(nt).run([](void *p, int tid, int n) { (*static_cast<B *>(p))(tid, n); },
                      &band);
     }
+
+    /* EDGE SMOOTHING, LAST, AND STILL INSIDE gx_render (run hd2). Here rather
+       than at present time because here is the only moment the framebuffer
+       holds the 3D picture and nothing else: hal/message_compositor.cpp puts
+       engine A's 2D layers over it, hal/sub_screen.cpp drops the bottom-screen
+       panel in and walk_window applies the fade, and all three run after this
+       function returns. So a pass that runs here cannot read a HUD pixel,
+       cannot write one, and needs no list of regions to avoid.
+       Inside the timed section deliberately: it is part of what a frame costs
+       when the setting is on, and the perf line should say so. */
+    aa_pass(fb, cw, ch, nt);
+    aa_report();
 
     if (tm) {
         using clk = std::chrono::steady_clock;

@@ -118,6 +118,25 @@ void gx_bind_texture(const uint32_t *rgba, int width, int height);
 void gx_configure_texture_filter(int mode);
 int gx_texture_filter();
 
+// EDGE SMOOTHING OVER THE FINISHED 3D PICTURE (run hd2, the "AntiAliasing"
+// setting). 0 is off and is no pass at all; 1 runs a contrast-edge filter
+// over the picture at the END of gx_render -- before any 2D layer is
+// composited over it, so text, the HUD and the touch-screen art are never
+// read and never written.
+//
+// Call it once at boot, beside gx_configure_texture_filter: the pass keeps a
+// scratch copy of the picture, allocated on first use and never freed.
+void gx_configure_anti_aliasing(int mode);
+int gx_anti_aliasing();
+
+// What the smoothing pass has done since the program started: how many pixels
+// it rewrote, how many frames it ran on, and how many frames it stood down on
+// because the display capture unit was armed. The A/B evidence that a
+// key-absent run does no work at all, and that the pass never runs on a frame
+// the GAME reads the framebuffer back on.
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
+                    unsigned long long &stood_down);
+
 // The game path: TEXIMAGE_PARAM / PLTT_BASE writes (ports 0x2A/0x2B) bind by
 // decoding lazily out of the mapped VRAM texture/palette slot windows.
 void gx_teximage_param(uint32_t value);

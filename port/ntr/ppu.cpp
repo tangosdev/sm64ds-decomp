@@ -705,6 +705,29 @@ void ppu_vram_publish(void) {
     }
 }
 
+/* IS A CAPTURE PENDING THIS FRAME (run hd2, lane PIC). DISPCAPCNT's enable
+   bit, read and nothing else: no field is decoded, the bit is not cleared and
+   no memory moves. ppu_display_capture below owns the clear.
+
+   IT EXISTS FOR ONE CALLER. The edge-smoothing pass at the end of gx_render
+   rewrites pixels of engine A's framebuffer, and this game READS that
+   framebuffer back through the capture unit for the dual-screen minigames --
+   the capture point is hal/sub_screen.cpp, after gx_render and after the 2D
+   composite. A smoothing pass that ran on a frame the game is about to
+   capture would hand the GAME different bytes, which is the one thing a
+   picture setting may never do. So the pass asks this first and stands down
+   on any frame the bit is set, and the capture then reads the same bytes it
+   reads with the setting absent, by construction rather than by comparison.
+
+   The bit is armed before the frame is drawn (Scene::ResetHardwareRegisters
+   at every scene boot, and both dScMgD3DBase_c arms beside the VRAM mapping)
+   and cleared by the capture itself at the end of the frame, so a frame is
+   either armed for its whole draw or not armed at all. */
+bool ppu_capture_armed(void) {
+    volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
+    return (*reg & 0x80000000u) != 0;
+}
+
 void ppu_display_capture(const uint32_t *src, int w, int h) {
     volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
     const uint32_t cap = *reg;

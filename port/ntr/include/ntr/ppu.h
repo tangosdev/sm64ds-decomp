@@ -286,6 +286,14 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb);
 // filter would invent pixels nobody drew.
 void ppu_display_capture(const uint32_t *src, int w, int h);
 
+// IS A CAPTURE ARMED FOR THIS FRAME? DISPCAPCNT's enable bit, read without
+// clearing it and without decoding any other field, so asking costs one load
+// and changes nothing. The edge-smoothing pass at the end of gx_render asks
+// it and stands down when it is set: the game READS this framebuffer back
+// through the capture unit, and a picture setting may never hand the game
+// different bytes. See the definition for the whole argument.
+bool ppu_capture_armed(void);
+
 // ---- WHERE A CAPTURED BANK GOES NEXT ----------------------------------------
 //
 // A DS VRAM bank is 128 KB of SRAM that appears at exactly ONE cpu address at a

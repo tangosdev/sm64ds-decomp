@@ -85,6 +85,15 @@ def main():
     # to one from before it existed.
     if os.environ.get("SM64DS_SMOOTH_MODELS"):
         e["SM64DS_SMOOTH_MODELS"] = os.environ["SM64DS_SMOOTH_MODELS"]
+    # Run hd2, lane PIC: the texture filter and the edge-smoothing pass carry
+    # through for the same reason. Both are picture only, so the opening must
+    # take the same distinct positions with them on as with them absent, and
+    # there is no way to ask that question without passing the keys. With the
+    # variables unset these two lines do nothing.
+    if os.environ.get("SM64DS_TEXTURE_FILTER"):
+        e["SM64DS_TEXTURE_FILTER"] = os.environ["SM64DS_TEXTURE_FILTER"]
+    if os.environ.get("SM64DS_ANTI_ALIASING"):
+        e["SM64DS_ANTI_ALIASING"] = os.environ["SM64DS_ANTI_ALIASING"]
     log = out / "run.log"
     with log.open("wb") as f:
         # The quiet spawner every other launcher in port/tools uses (battery.py's

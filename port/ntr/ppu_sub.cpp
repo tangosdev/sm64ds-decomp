@@ -4566,8 +4566,14 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     // ROW-WISE across the two strides: `top` is the framebuffer (stride
     // SCREEN_W), `dst` is the stacked image (stride dst_w == the live width).
     // On the fixed tiers dst_w == SCREEN_W == active_w and this is the old
-    // contiguous copy; on NTR_WIDE_RT with the toggle off dst_w is 512 and the
-    // framebuffer stride is 1024, so the copy has to step each separately.
+    // contiguous copy; on NTR_WIDE_RT with the toggle off dst_w is 512 while
+    // the framebuffer stride is SCREEN_W, which is that tier's whole
+    // allocation and not the live width, so the copy has to step each
+    // separately. This sentence used to spell that stride out as 1024. Run
+    // hd1 grew the NTR_WIDE_RT allocation to 1368x768 so RenderScale 4 has
+    // somewhere to draw, and the spelled-out number has been wrong since
+    // (found by run link100, lane INT20). The loop below always read the
+    // constant; only the prose was stale.
     for (int y = 0; y < active_h; ++y)
         std::memcpy(dst + (size_t)(a_y + y) * dst_w,
                     top + (size_t)y * SCREEN_W, (size_t)active_w * 4);
