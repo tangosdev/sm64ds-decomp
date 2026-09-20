@@ -34,10 +34,11 @@ far and may be wrong; the cartridge is not.
    *length* — 31 words = `dActor_c`, 32 = `dBgActor_c` — is corroboration for
    subclasses, not proof, so do not report it as the reason.
 4. **Own overrides.** Ask the tooling rather than reading a header:
-```sh
-       python tools/rtti_extract.py            # writes build/rtti.json -- FIRST
-       python tools/rtti_vtables.py --own <Class>
-```
+
+   ```sh
+   python tools/rtti_extract.py            # writes build/rtti.json -- FIRST
+   python tools/rtti_vtables.py --own <Class>
+   ```
    `rtti_vtables.py` crashes with a bare `FileNotFoundError: build/rtti.json` if
    you skip the extract step. For each slot whose target lies inside this overlay: the
    slot index, the target address, and the inherited slot name. Slot names come

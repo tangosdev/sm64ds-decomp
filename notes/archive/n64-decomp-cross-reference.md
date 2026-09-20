@@ -47,10 +47,10 @@ constants came back exact.
 
 [data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt), file offset `0x5CF3C` in `overlay_0002.bin`, raw words:
 
-```c
-0x5cf3c: 0002a000  // ->  42.0
-0x5cf40: 00034000  // ->  52.0
-0x5cf44: 00045000  // ->  69.0
+```text
+0x5cf3c: 0002a000  ->  42.0
+0x5cf40: 00034000  ->  52.0
+0x5cf44: 00045000  ->  69.0
 ```
 
 N64 `src/game/mario.c:824 / :786 / :797` — `ACT_JUMP` 42.0f, `ACT_DOUBLE_JUMP` 52.0f,
@@ -222,7 +222,7 @@ let `ChangeState` and every `St_*_Main` drop their per-file local `struct State`
 An earlier pass claimed the camera behaviour table at `0x0209b008` had **exactly 15** entries at
 0x10 stride, "matching N64's 15 populated camera modes." **This is wrong.** The relocs continue:
 
-```c
+```text
 0x0209b000 0x0209b004 0x0209b008 0x0209b018 ... 0x0209b0e8 0x0209b0f8
 0x0209b108 0x0209b118 0x0209b128 0x0209b138
 ```
@@ -316,7 +316,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
 | `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
 | `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
-| `bhvHeaveHo` | → | `HeaveHo` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) |
+| `bhvHeaveHo` | → | `daPopoi_c` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) |
 | `bhvFlyGuy` | → | `FlyGuy` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
 | `bhvSnufit` / `bhvSwoop` | → | `Snufit` / `Swoop` | [ov065](../../config/arm9/overlays/ov065/symbols.txt) |
 | `bhvScuttlebug` | → | `Scuttlebug` | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |

@@ -396,7 +396,7 @@ anyway, because the cartridge configures it as `_ZTI8daNknk_c`. `tubuild.py`'s
 own comment at `:2264` says it outright: *"`homes` is keyed on the `symbols.txt`
 spelling while `_ZTI`/`_ZTS` are LENGTH-PREFIXED mangled strings — a coined name
 misses on both the prefix and the body, and the miss reads as 'the ROM has no
-such record'.'*
+such record'."*
 
 So read the rule as **spelled-the-cartridge's-way vs. not**, and expect it to
 bite exactly one class of symbol: a coined class's own `_ZTI`/`_ZTS`, in a TU
@@ -807,7 +807,8 @@ they cost minutes; discover them after and each is a cycle.
   **But the licence is for FUNCTIONS with C linkage, and a project header
   revokes it for data.** Measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgPanel_c`:
   `include/dScMgBase_c.h:12` already declares
-  `extern "C" void *`[data_ov004_020beb68](../../../config/arm9/overlays/ov004/symbols.txt); ordinal 60 recovered the object as `char *`, and the block-scope form is rejected outright —
+  [`extern "C" void *data_ov004_020beb68;`](../../../config/arm9/overlays/ov004/symbols.txt),
+  ordinal 60 recovered the object as `char *`, and the block-scope form is rejected outright —
   `identifier 'data_ov004_020beb68' redeclared; was declared as: 'void *'`.
   The wording above sends you hunting for a file-scope duplicate *inside your
   own TU* that is not there; the conflicting declaration is in a header you

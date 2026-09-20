@@ -579,13 +579,13 @@
    "start": "0x212624c",
    "end": "0x2127230",
    "classes": [
-    "HeaveHo"
+    "daPopoi_c"
    ],
    "n_functions_map": 22,
    "n_files": 22,
    "files": [
-    "src/_ZN7HeaveHoD1Ev.cpp",
-    "src/_ZN7HeaveHoD0Ev.cpp",
+    "src/_ZN9daPopoi_cD1Ev.cpp",
+    "src/_ZN9daPopoi_cD0Ev.cpp",
     "src/func_ov077_02126300.c",
     "src/func_ov077_02126528.cpp",
     "src/func_ov077_02126640.cpp",
@@ -600,11 +600,11 @@
     "src/func_ov077_02126cd4.cpp",
     "src/func_ov077_02126d5c.cpp",
     "src/func_ov077_02126dac.c",
-    "src/_ZN7HeaveHo16CleanupResourcesEv.cpp",
-    "src/_ZN7HeaveHo16OnPendingDestroyEv.cpp",
-    "src/_ZN7HeaveHo6RenderEv.cpp",
-    "src/_ZN7HeaveHo8BehaviorEv.cpp",
-    "src/_ZN7HeaveHo13InitResourcesEv.cpp",
+    "src/_ZN9daPopoi_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daPopoi_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daPopoi_c6RenderEv.cpp",
+    "src/_ZN9daPopoi_c8BehaviorEv.cpp",
+    "src/_ZN9daPopoi_c13InitResourcesEv.cpp",
     "src/daPopoi_c_classInit.c"
    ],
    "ext_mix": {
@@ -37466,11 +37466,11 @@
    "start": "0x212624c",
    "end": "0x2127230",
    "classes": [
-    "HeaveHo"
+    "daPopoi_c"
    ],
    "files": [
-    "src/_ZN7HeaveHoD1Ev.cpp",
-    "src/_ZN7HeaveHoD0Ev.cpp",
+    "src/_ZN9daPopoi_cD1Ev.cpp",
+    "src/_ZN9daPopoi_cD0Ev.cpp",
     "src/func_ov077_02126300.c",
     "src/func_ov077_02126528.cpp",
     "src/func_ov077_02126640.cpp",
@@ -37485,11 +37485,11 @@
     "src/func_ov077_02126cd4.cpp",
     "src/func_ov077_02126d5c.cpp",
     "src/func_ov077_02126dac.c",
-    "src/_ZN7HeaveHo16CleanupResourcesEv.cpp",
-    "src/_ZN7HeaveHo16OnPendingDestroyEv.cpp",
-    "src/_ZN7HeaveHo6RenderEv.cpp",
-    "src/_ZN7HeaveHo8BehaviorEv.cpp",
-    "src/_ZN7HeaveHo13InitResourcesEv.cpp",
+    "src/_ZN9daPopoi_c16CleanupResourcesEv.cpp",
+    "src/_ZN9daPopoi_c16OnPendingDestroyEv.cpp",
+    "src/_ZN9daPopoi_c6RenderEv.cpp",
+    "src/_ZN9daPopoi_c8BehaviorEv.cpp",
+    "src/_ZN9daPopoi_c13InitResourcesEv.cpp",
     "src/daPopoi_c_classInit.c"
    ],
    "ext_mix": {

@@ -144,93 +144,9 @@ src/d_a_tgz.c:
     complete
     .text start:0x021261f4 end:0x0212624c
 
-src/_ZN7HeaveHoD1Ev.cpp:
+src/actors/daPopoi_c.cpp:
     complete
-    .text start:0x0212624c end:0x0212629c
-
-src/_ZN7HeaveHoD0Ev.cpp:
-    complete
-    .text start:0x0212629c end:0x02126300
-
-src/func_ov077_02126300.c:
-    complete
-    .text start:0x02126300 end:0x02126528
-
-src/func_ov077_02126528.cpp:
-    complete
-    .text start:0x02126528 end:0x02126640
-
-src/func_ov077_02126640.cpp:
-    complete
-    .text start:0x02126640 end:0x02126758
-
-src/func_ov077_02126758.cpp:
-    complete
-    .text start:0x02126758 end:0x0212679c
-
-src/func_ov077_0212679c.c:
-    complete
-    .text start:0x0212679c end:0x02126930
-
-src/func_ov077_02126930.cpp:
-    complete
-    .text start:0x02126930 end:0x021269a8
-
-src/func_ov077_021269a8.cpp:
-    complete
-    .text start:0x021269a8 end:0x02126a04
-
-src/func_ov077_02126a04.c:
-    complete
-    .text start:0x02126a04 end:0x02126a50
-
-src/func_ov077_02126a50.c:
-    complete
-    .text start:0x02126a50 end:0x02126a84
-
-src/func_ov077_02126a84.c:
-    complete
-    .text start:0x02126a84 end:0x02126ad0
-
-src/func_ov077_02126ad0.c:
-    complete
-    .text start:0x02126ad0 end:0x02126cd4
-
-src/func_ov077_02126cd4.cpp:
-    complete
-    .text start:0x02126cd4 end:0x02126d5c
-
-src/func_ov077_02126d5c.cpp:
-    complete
-    .text start:0x02126d5c end:0x02126dac
-
-src/func_ov077_02126dac.c:
-    complete
-    .text start:0x02126dac end:0x02126dec
-
-src/_ZN7HeaveHo16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02126dec end:0x02126e34
-
-src/_ZN7HeaveHo16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02126e34 end:0x02126e38
-
-src/_ZN7HeaveHo6RenderEv.cpp:
-    complete
-    .text start:0x02126e38 end:0x02126e88
-
-src/_ZN7HeaveHo8BehaviorEv.cpp:
-    complete
-    .text start:0x02126e88 end:0x0212706c
-
-src/_ZN7HeaveHo13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212706c end:0x021271d4
-
-src/d_a_popoi.c:
-    complete
-    .text start:0x021271d4 end:0x02127230
+    .text start:0x0212624c end:0x02127230
 
 src/__sinit_ov077_02127240.c:
     complete

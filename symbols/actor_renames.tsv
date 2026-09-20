@@ -2327,13 +2327,13 @@ ov077	0x02125f68	func_ov077_02125f68	_ZN5Spiny8BehaviorEv	vtable slot 6
 ov077	0x02126058	func_ov077_02126058	_ZN5Spiny13InitResourcesEv	vtable slot 0
 ov077	0x021261f4	func_ov077_021261f4	Spiny_Spawn	spawnfunc
 ov077	0x021261f4	Spiny_Spawn	daTgz_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov077	0x0212624c	func_ov077_0212624c	_ZN7HeaveHoD1Ev	vtable slot 16
-ov077	0x0212629c	func_ov077_0212629c	_ZN7HeaveHoD0Ev	vtable slot 17
-ov077	0x02126dec	func_ov077_02126dec	_ZN7HeaveHo16CleanupResourcesEv	vtable slot 3
-ov077	0x02126e34	func_ov077_02126e34	_ZN7HeaveHo16OnPendingDestroyEv	vtable slot 12
-ov077	0x02126e38	func_ov077_02126e38	_ZN7HeaveHo6RenderEv	vtable slot 9
-ov077	0x02126e88	func_ov077_02126e88	_ZN7HeaveHo8BehaviorEv	vtable slot 6
-ov077	0x0212706c	func_ov077_0212706c	_ZN7HeaveHo13InitResourcesEv	vtable slot 0
+ov077	0x0212624c	func_ov077_0212624c	_ZN9daPopoi_cD1Ev	vtable slot 16
+ov077	0x0212629c	func_ov077_0212629c	_ZN9daPopoi_cD0Ev	vtable slot 17
+ov077	0x02126dec	func_ov077_02126dec	_ZN9daPopoi_c16CleanupResourcesEv	vtable slot 3
+ov077	0x02126e34	func_ov077_02126e34	_ZN9daPopoi_c16OnPendingDestroyEv	vtable slot 12
+ov077	0x02126e38	func_ov077_02126e38	_ZN9daPopoi_c6RenderEv	vtable slot 9
+ov077	0x02126e88	func_ov077_02126e88	_ZN9daPopoi_c8BehaviorEv	vtable slot 6
+ov077	0x0212706c	func_ov077_0212706c	_ZN9daPopoi_c13InitResourcesEv	vtable slot 0
 ov077	0x021271d4	func_ov077_021271d4	HeaveHo_Spawn	spawnfunc
 ov077	0x021271d4	HeaveHo_Spawn	daPopoi_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov077	0x02127848	data_ov077_02127848	daJgm_c_SpawnInfo	spawninfo
@@ -2344,7 +2344,7 @@ ov077	0x02127960	Spiny_SpawnInfo	g_profile_TOGEZO	reconstructed profile global; 
 ov077	0x02127984	data_ov077_02127984	_ZTV5Spiny	vtable alloc=0x3ec
 ov077	0x02127a74	data_ov077_02127a74	HeaveHo_SpawnInfo	spawninfo
 ov077	0x02127a74	HeaveHo_SpawnInfo	g_profile_POPOI	reconstructed profile global; literal ROM ID POPOI+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov077	0x02127a98	data_ov077_02127a98	_ZTV7HeaveHo	vtable alloc=?
+ov077	0x02127a98	data_ov077_02127a98	_ZTV9daPopoi_c	vtable alloc=?
 ov078	0x02123740	func_ov078_02123740	_ZN12daBombking_cD1Ev	vtable slot 16 (was _ZN10KingBobOmbD1Ev)
 ov078	0x02123798	func_ov078_02123798	_ZN12daBombking_cD0Ev	vtable slot 17 (was _ZN10KingBobOmbD0Ev)
 ov078	0x02125ff4	func_ov078_02125ff4	_ZN12daBombking_c16CleanupResourcesEv	vtable slot 3 (was _ZN10KingBobOmb16CleanupResourcesEv)
