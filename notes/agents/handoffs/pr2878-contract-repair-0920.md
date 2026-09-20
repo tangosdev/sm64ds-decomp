@@ -14,7 +14,7 @@ DA2878-03 is locally repaired. DA2878-04 remains open for ApplyOpacity: using
 the current one-u32 genuine method removes the retail third-register setup and
 shrinks RenderMirrorImage by4bytes. No padding, fake wrapper or type erasure is
 introduced to conceal it. A coherent shared API proposal must account for the
-reconstructed name, reserved canonical ARM9 symbols/enrollment and all consumers.
+reconstructed name, reserved canonical ARM9 symbols and enrollment and all consumers.
 The other changes do not authorize editing those reservations.
 
 This checkpoint is local source progress, not current-main or full-ROM acceptance.
