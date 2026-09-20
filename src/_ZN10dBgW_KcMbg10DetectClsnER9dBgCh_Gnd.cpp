@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method
  *
  * Vtable slot 6. A downward ground probe answered as a LINE query: the probe
- * point and a second point b4c below it are pulled into the collider's local
+ * point and a second point at the clamped probe depth below it are pulled into the collider's local
  * frame, and the scratch dBgCh_Lin at 0x020a0d0c is aimed between them, so
  * the base dBgW_Kc::DetectClsn(dBgCh_Lin&) does the work.
  *
@@ -13,9 +13,6 @@
  * shorter. So a collider can only improve on the caller's best floor, never
  * report one below it -- which is what makes several moving colliders
  * queryable in sequence without ordering them.
- *
- * The volatile on the local is load-bearing and original: it forces the
- * probe's y to be re-read from the stack for the subtraction.
  */
 #include "dBgW_KcMbg.h"
 #include "dBgCh_Gnd.h"
@@ -28,8 +25,6 @@ extern void func_02035394(dBgCh_Lin *dst, dBgCh_Gnd *src);
 extern void func_02039e30(dBgW_KcMbg *self, const Vector3 *v, Vector3 *res);
 
 extern dBgCh_Lin data_020a0d0c;
-extern Vector3   data_020a0d60;
-extern dBgPi     data_020a0d1c;
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray)
@@ -45,7 +40,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray)
 
     int probeHeight = ray.mProbeHeight;
     if (ray.hasClsn != 0) {
-        int distanceToHit = *(volatile Fix12i *)&probePos.y - ray.clsnY;
+        int distanceToHit = probePos.y - ray.clsnY;
         if (distanceToHit < probeHeight)
             probeHeight = distanceToHit;
     }
@@ -58,8 +53,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray)
 
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
-        func_02039e30(this, &data_020a0d60, &worldPos);
-        (dBgPi &)ray = data_020a0d1c;
+        func_02039e30(this, &data_020a0d0c.lineEnd, &worldPos);
+        (dBgPi &)ray = static_cast<dBgPi &>(data_020a0d0c);
         ray.clsnY = worldPos.y;
         ray.hasClsn = 1;
     }

@@ -33,6 +33,31 @@ If you contribute, keep this separation: import knowledge, write code.
   arm9 corpus. Every candidate was independently re-verified against the ROM before landing;
   duplicate re-submissions of already-matched functions and a handful of match-to-nonmatching
   regressions were dropped.
+- **lplaat** (https://github.com/lplaat) - hand-matched a batch of arm9 flag setters,
+  thunks and small helpers, together with a set of ov002 cleanups (PR #86).
+- **lunavyqo** (https://github.com/lunavyqo) - hand-matched functions across ov001 and a
+  wide spread of the scene overlays from PR #89 on, banked near-miss tips for the ones
+  that would not fall (Wiggler, Dorrie, the TTC moving cube), and has since carried the
+  class translation-unit cleanup work: promoting a folded actor TU and then clearing the
+  one-function leftovers it strands.
+- **ruspecial** (https://github.com/ruspecial) - hand-matched large batches across ov002,
+  ov006 and the arm9 BIOS SVC stubs from PR #90 on, banked 174 near-misses with the C++
+  exception-handling and split-symbol triage notes that came out of them (PR #806), and
+  contributed oracle-verified host copies for the two Bowser ov060 holes on the port side
+  (PR #1505).
+- **natbree** (https://github.com/natbree) - hand-matched functions in arm9 and ov075,
+  including a batch of fifteen (PRs #347, #349, #504).
+- **ai-tdd-labs** (https://github.com/ai-tdd-labs) - hand-matched functions across arm9
+  and many overlays in a long run of small byte-identical batches (PRs #361 to #471),
+  verified relocation targets on several more, and taught the worklist generator to skip
+  sources already tracked in the tree (PR #428).
+- **mitchellcairns** (https://github.com/mitchellcairns) - hand-matched functions in arm9,
+  ov002 and ov006, including the cut crash screen (PR #466), and improved three arm9
+  near-miss drafts from Ghidra full bodies (PR #604).
+- **NitroShellMKDS** (https://github.com/NitroShellMKDS) - hand-matched functions in ov006
+  (PRs #840, #937).
+- **mitch030504** (https://github.com/mitch030504) - hand-matched functions across arm9
+  and the overlays in five batches (PRs #1054 to #1081).
 
 ## Tooling contributions
 - **webheadvr** (https://github.com/webheadvr) - made the relocation symbol resolver
@@ -43,3 +68,21 @@ If you contribute, keep this separation: import knowledge, write code.
   (`tools/reloc_audit.py`) and an opt-in `match.py --strict-relocs` check that verifies each
   reloc slot points at the address `config/**/relocs.txt` records, closing a gap where the
   byte compare wildcards relocated words without checking their destination (PR #47).
+- **mitchellcairns** (https://github.com/mitchellcairns) - added the C++ decompilation
+  index, the safe renaming tools and the ABI naming guide (PR #861); measured the C/C++
+  language-mode gap and added the CI ratchet that stops it growing (PRs #1140, #1141);
+  migrated the GX, GXS and G2S namespaces out of C mode (PRs #1142, #1144); and corrected
+  the setup documentation, which could not actually get you the pinned 2004/b56 compiler
+  (PR #1139).
+- **liveteklol** (https://github.com/liveteklol) - made `tools/recover_cw2004.py` run on
+  Linux by removing its `fsutil` and backslash-basename Windows-isms (PR #1112), and
+  mapped the `func_ov080_02125460` wall across repeated full-angle sweeps, including the
+  `gccext` statement-expression attractor recorded in `notes/mwccarm-codegen.md` 6bb
+  (PRs #1025, #1111, #1133).
+
+## Documentation contributions
+- **Alberto12345678999** (https://github.com/Alberto12345678999) - fixed markdown syntax
+  and code-fence languages across the notes tree (PRs #1578, #1658, #1664, #2060, #2732),
+  and ran the phase 1 to 8 passes that link the overlay and data symbols named in the
+  provenance and reference notes to the records they stand for (PRs #2123, #2166, #2180,
+  #2305, #2381, #2643, #2675, #2724).

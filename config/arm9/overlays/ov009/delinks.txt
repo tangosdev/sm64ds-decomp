@@ -4,11 +4,11 @@
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
     .data       start:0x02112b60 end:0x02113c20 kind:data align:32
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
-src/_ZN4BirdD1Ev.cpp:
+src/_ZN9daSBird_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d8
 
-src/_ZN4BirdD0Ev.cpp:
+src/_ZN9daSBird_cD0Ev.cpp:
     complete
     .text start:0x021111d8 end:0x02111224
 
@@ -20,37 +20,9 @@ src/func_ov009_02111234.cpp:
     complete
     .text start:0x02111234 end:0x0211145c
 
-src/func_ov009_021115d8.c:
+src/game/actors/d_a_s_bird.cpp:
     complete
-    .text start:0x021115d8 end:0x021116ec
-
-src/func_ov009_021116ec.cpp:
-    complete
-    .text start:0x021116ec end:0x0211183c
-
-src/_ZN4Bird16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211183c end:0x0211186c
-
-src/_ZN4Bird16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0211186c end:0x02111870
-
-src/_ZN4Bird6RenderEv.cpp:
-    complete
-    .text start:0x02111870 end:0x02111898
-
-src/_ZN4Bird8BehaviorEv.cpp:
-    complete
-    .text start:0x02111898 end:0x0211197c
-
-src/_ZN4Bird13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211197c end:0x02111a30
-
-src/d_a_s_bird.c:
-    complete
-    .text start:0x02111a30 end:0x02111a70
+    .text start:0x021115d8 end:0x02111a70
 
 src/game/actors/d_a_obj_mc_water.cpp:
     complete

@@ -594,15 +594,15 @@ ov006	0x0213f974	MgHideAndBooSeek_SpawnInfo	g_profile_MG_TERESA	reconstructed pr
 ov006	0x0213fab8	MgTrampolineTime_SpawnInfo	g_profile_MG_TRAMPOLINE	reconstructed profile global; literal ROM ID MG_TRAMPOLINE+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213fd6c	MgLuckyStars_SpawnInfo	g_profile_MG_BS_CARD	reconstructed profile global; literal ROM ID MG_BS_CARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213ffb8	MgSnowballSlalom_SpawnInfo	g_profile_MG_SNOWBALL	reconstructed profile global; literal ROM ID MG_SNOWBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov009	0x021111a0	func_ov009_021111a0	_ZN4BirdD1Ev	vtable slot 16
-ov009	0x021111d8	func_ov009_021111d8	_ZN4BirdD0Ev	vtable slot 17
-ov009	0x0211183c	func_ov009_0211183c	_ZN4Bird16CleanupResourcesEv	vtable slot 3
-ov009	0x0211186c	func_ov009_0211186c	_ZN4Bird16OnPendingDestroyEv	vtable slot 12
-ov009	0x02111870	func_ov009_02111870	_ZN4Bird6RenderEv	vtable slot 9
-ov009	0x02111898	func_ov009_02111898	_ZN4Bird8BehaviorEv	vtable slot 6
-ov009	0x0211197c	func_ov009_0211197c	_ZN4Bird13InitResourcesEv	vtable slot 0
-ov009	0x02111a30	func_ov009_02111a30	Bird_Spawn	spawnfunc
-ov009	0x02111a30	Bird_Spawn	daSBird_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov009	0x021111a0	func_ov009_021111a0	_ZN9daSBird_cD1Ev	vtable slot 16
+ov009	0x021111d8	func_ov009_021111d8	_ZN9daSBird_cD0Ev	vtable slot 17
+ov009	0x0211183c	func_ov009_0211183c	_ZN9daSBird_c16CleanupResourcesEv	vtable slot 3
+ov009	0x0211186c	func_ov009_0211186c	_ZN9daSBird_c16OnPendingDestroyEv	vtable slot 12
+ov009	0x02111870	func_ov009_02111870	_ZN9daSBird_c6RenderEv	vtable slot 9
+ov009	0x02111898	func_ov009_02111898	_ZN9daSBird_c8BehaviorEv	vtable slot 6
+ov009	0x0211197c	func_ov009_0211197c	_ZN9daSBird_c13InitResourcesEv	vtable slot 0
+ov009	0x02111a30	func_ov009_02111a30	daSBird_c_Spawn	spawnfunc
+ov009	0x02111a30	daSBird_c_Spawn	daSBird_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov009	0x02111d8c	func_ov009_02111d8c	daObjMcWater_c_classInit	spawnfunc
 ov009	0x02111dc4	func_ov009_02111dc4	_ZN18daObjMc_Metalnet_cD1Ev	vtable slot 16 (was _ZN14daObjMcWater_cD1Ev)
 ov009	0x02111e08	func_ov009_02111e08	_ZN18daObjMc_Metalnet_cD0Ev	vtable slot 17 (was _ZN14daObjMcWater_cD0Ev)
@@ -620,9 +620,9 @@ ov009	0x02112144	func_ov009_02112144	_ZN10daMcFlag_c8BehaviorEv	vtable slot 6 (w
 ov009	0x02112190	func_ov009_02112190	_ZN10daMcFlag_c13InitResourcesEv	vtable slot 0 (was _ZN8DockPole13InitResourcesEv, then _ZN4Flag13InitResourcesEv)
 ov009	0x021121f0	func_ov009_021121f0	daMcFlag_c_Spawn	spawnfunc (was Flag_Spawn)
 ov009	0x021121f0	daMcFlag_c_Spawn	daMcFlag_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov009	0x02113934	data_ov009_02113934	Bird_SpawnInfo	spawninfo
-ov009	0x02113934	Bird_SpawnInfo	g_profile_SBIRD	reconstructed profile global; literal ROM ID SBIRD+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov009	0x02113958	data_ov009_02113958	_ZTV4Bird	vtable alloc=0x184
+ov009	0x02113934	data_ov009_02113934	daSBird_c_SpawnInfo	spawninfo
+ov009	0x02113934	daSBird_c_SpawnInfo	g_profile_SBIRD	reconstructed profile global; literal ROM ID SBIRD+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov009	0x02113958	data_ov009_02113958	_ZTV9daSBird_c	vtable alloc=0x184
 ov009	0x021139f4	data_ov009_021139f4	daObjMcWater_c_SpawnInfo	spawninfo
 ov009	0x021139f4	daObjMcWater_c_SpawnInfo	g_profile_MC_WATER	reconstructed profile global; literal ROM ID MC_WATER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov009	0x02113abc	data_ov009_02113abc	g_profile_MC_METALNET	supersedes a misattributed DockPole spawninfo row: tools/actor_names.py's pre-#1418 parse_spawnfunc took the NEXT class's identity, writing DockPole onto daObjMc_Metalnet_c's addresses; symbols/actor_renames_report.txt:762 then shows the generator refusing the correct name as "already claimed by DockPole". DockPole never named this symbol
@@ -2891,12 +2891,15 @@ ov096	0x021379d8	data_ov096_021379d8	_ZTV9daSanbo_c	vtable alloc=0x3b0
 ov096	0x02137a6c	data_ov096_02137a6c	Tornado_SpawnInfo	spawninfo
 ov096	0x02137a6c	Tornado_SpawnInfo	g_profile_TORNADO	reconstructed profile global; literal ROM ID TORNADO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov096	0x02137a90	data_ov096_02137a90	_ZTV7Tornado	vtable alloc=0x370
-ov098	0x02137be0	func_ov098_02137be0	_ZN14ArrowSignRightD1Ev	vtable slot 16
-ov098	0x02137c2c	func_ov098_02137c2c	_ZN14ArrowSignRightD0Ev	vtable slot 17
-ov098	0x02137dbc	func_ov098_02137dbc	_ZN14ArrowSignRight16CleanupResourcesEv	vtable slot 3
-ov098	0x02137e20	func_ov098_02137e20	_ZN14ArrowSignRight6RenderEv	vtable slot 9
-ov098	0x02137e48	func_ov098_02137e48	_ZN14ArrowSignRight8BehaviorEv	vtable slot 6
-ov098	0x02137eec	func_ov098_02137eec	_ZN14ArrowSignRight13InitResourcesEv	vtable slot 0
+ov098	0x02137be0	func_ov098_02137be0	_ZN15daObjYajirusi_cD1Ev	vtable slot 16
+ov098	0x02137c2c	func_ov098_02137c2c	_ZN15daObjYajirusi_cD0Ev	vtable slot 17
+ov098	0x02137ccc	_ZN14ArrowSignRight4KillEv	_ZN15daObjYajirusi_c4KillEv	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 31)
+ov098	0x02137d40	_ZN14ArrowSignRight11OnAttacked1ER8dActor_c	_ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 22); the R8dActor_c reference spelling is a coined guess the bytes cannot distinguish from a pointer
+ov098	0x02137d80	_ZN14ArrowSignRight15OnHitByMegaCharER6Player	_ZN15daObjYajirusi_c15OnHitByMegaCharER6Player	class renamed to its ROM RTTI name 15daObjYajirusi_c (_ZTS15daObjYajirusi_c at ov098 0x0213c36c, _ZTI at 0x0213c360, _ZTV at 0x0213c3d8); method name vtable-slot recovered (slot 27); the R6Player reference spelling is a coined guess the bytes cannot distinguish from a pointer
+ov098	0x02137dbc	func_ov098_02137dbc	_ZN15daObjYajirusi_c16CleanupResourcesEv	vtable slot 3
+ov098	0x02137e20	func_ov098_02137e20	_ZN15daObjYajirusi_c6RenderEv	vtable slot 9
+ov098	0x02137e48	func_ov098_02137e48	_ZN15daObjYajirusi_c8BehaviorEv	vtable slot 6
+ov098	0x02137eec	func_ov098_02137eec	_ZN15daObjYajirusi_c13InitResourcesEv	vtable slot 0
 ov098	0x02137fd0	func_ov098_02137fd0	ArrowSignRight_Spawn	spawnfunc
 ov098	0x02137fd0	ArrowSignRight_Spawn	daObjYajirusi_c_classInit_YAJIRUSI_R	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x02138008	func_ov098_02138008	ArrowSignLeft_Spawn	spawnfunc
@@ -2932,7 +2935,7 @@ ov098	0x0213c398	data_ov098_0213c398	ArrowSignLeft_SpawnInfo	spawninfo
 ov098	0x0213c398	ArrowSignLeft_SpawnInfo	g_profile_YAJIRUSI_L	reconstructed profile global; literal ROM ID YAJIRUSI_L+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213c3b4	data_ov098_0213c3b4	ArrowSignRight_SpawnInfo	spawninfo
 ov098	0x0213c3b4	ArrowSignRight_SpawnInfo	g_profile_YAJIRUSI_R	reconstructed profile global; literal ROM ID YAJIRUSI_R+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov098	0x0213c3d8	data_ov098_0213c3d8	_ZTV14ArrowSignRight	vtable alloc=0x380
+ov098	0x0213c3d8	data_ov098_0213c3d8	_ZTV15daObjYajirusi_c	vtable alloc=0x380
 ov098	0x0213c434	data_ov098_0213c434	MgShellSmash_SpawnInfo	spawninfo
 ov098	0x0213c510	data_ov098_0213c510	Crate_SpawnInfo	spawninfo
 ov098	0x0213c510	Crate_SpawnInfo	g_profile_BLOCK_S	reconstructed profile global; literal ROM ID BLOCK_S+registry role+later EAD lineage; exact SM64DS spelling not preserved

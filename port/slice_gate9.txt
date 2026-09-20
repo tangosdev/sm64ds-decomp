@@ -1,12 +1,11 @@
-# Gate-9 slice: the actor framework -- a real actor (ArrowSignRight)
+# Gate-9 slice: the actor framework -- a real actor (daObjYajirusi_c)
 # spawns through its factory, initializes, behaves and renders through
 # vtable dispatch. Sits on the full prior stack.
 
-src/d_a_obj_yajirusi_yajirusi_r.c
-src/_ZN14ArrowSignRight13InitResourcesEv.cpp
-src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
-src/_ZN14ArrowSignRight8BehaviorEv.cpp
-src/_ZN14ArrowSignRight6RenderEv.cpp
+# daObjYajirusi_c is one production translation unit; the factory,
+# InitResources, CleanupResources, Behavior and Render this slice
+# used to name separately all live in it.
+src/actors/daObjYajirusi_c.cpp
 # dBgActor_c is one production translation unit; the constructor,
 # UpdateClsnPosAndRot, UpdateModelPosAndRotY and IsClsnInRangeOnScreen
 # this slice used to name separately all live in it.
@@ -26,7 +25,6 @@ src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/func_02039394.c
 src/func_020393a4.c
-src/func_ov098_02137c8c.c
 src/func_020393f0.c
 src/func_02039404.c
 src/InvMat4x3.c

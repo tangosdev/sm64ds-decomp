@@ -1,5 +1,14 @@
 # Metrowerks `mwccarm` Version Archive Search Playbook
 
+**Status 2026-09-19: build 56 is no longer outstanding.** It was recovered and verified
+on 2026-08-05 and is now the pin: `2004/b56` is what `rombuild.VERSION` and `match.py`'s
+`CANONICAL` name, and [tools/recover_cw2004.py](../tools/recover_cw2004.py) fetches and
+checks it out of public archives in-process. The current instruction is
+[notes/setup-mwccarm.md](../notes/setup-mwccarm.md) section 1. Builds 46, 49 and 50 are
+still unrecovered, so the hunt below still applies to them. Everything from here on is
+the playbook as it was written, and the goal sentence in the next section predates the
+recovery.
+
 Last updated: 2026-07-27
 
 ## Purpose

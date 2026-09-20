@@ -1,0 +1,137 @@
+{
+  "id": "ov009/daSBird_c",
+  "module": "ov009",
+  "source": "src/game/actors/d_a_s_bird.cpp",
+  "promoted_source": "src/game/actors/d_a_s_bird.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "partial linker run after hatch hole: 0x021115d8..0x02111a70, 8 function(s). func_ov009_0211145c (0x0211145c, 0x17c) is an unenrolled draft; D1/D0/02111224/02111234 remain leftover enrolled files below that hole.",
+    "class label(s): daSBird_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021115d8",
+      "end": "0x02111a70"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov009_021115d8",
+      "address": "0x021115d8",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov009_021115d8.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov009_021116ec",
+      "address": "0x021116ec",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov009_021116ec.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN9daSBird_c16CleanupResourcesEv",
+      "address": "0x0211183c",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN9daSBird_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN9daSBird_c16OnPendingDestroyEv",
+      "address": "0x0211186c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daSBird_c16OnPendingDestroyEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN9daSBird_c6RenderEv",
+      "address": "0x02111870",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN9daSBird_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN9daSBird_c8BehaviorEv",
+      "address": "0x02111898",
+      "size": "0x000000e4",
+      "legacy_source": "src/_ZN9daSBird_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN9daSBird_c13InitResourcesEv",
+      "address": "0x0211197c",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN9daSBird_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daSBird_c_classInit",
+      "address": "0x02111a30",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_s_bird.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in func_ov009_021115d8 / 021116ec pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body."
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "Renamed from coined Bird to ROM RTTI daSBird_c (tools/class_rename.py --with-derived) before promotion. _ZTS9daSBird_c 0x0211391c / _ZTI9daSBird_c 0x02113928 / _ZTV9daSBird_c 0x02113958. The coined _ZTV4Bird alias at the same address was deleted, not renamed onto the ROM name.",
+    "PARTIAL PROMOTION. func_ov009_0211145c (0x0211145c, 0x17c) is a hand-written asm hatch that does not reproduce from C (five-word register-allocation miss). A delinks entry cannot skip a hole, so this TU licenses only the contiguous upper run 0x021115d8..0x02111a70 (8 functions). D1/D0/02111224/02111234 stay leftover enrolled files below the hole (1876 matched bytes total). The hatch stays src/func_ov009_0211145c.c, not in delinks.",
+    "Factory is return new daSBird_c() via fBase_c::operator new(unsigned long). Destructor is out of line so this TU does not emit D1/D0. Key function is ~daSBird_c(); leftover D1/D0 files emit the class vtable and RTTI, not this TU. RandomIntInternal kept as unsigned."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov009-daSBird_c/d_a_s_bird.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        26
+      ],
+      "data": [],
+      "dataExternalized": []
+    }
+  }
+}

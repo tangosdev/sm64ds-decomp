@@ -68,7 +68,7 @@ it lose it. Both directions are live. Affected Tier 1:
 * **All 100 Tier-1 TUs: zero missing, zero incomplete**, map function count == census
   file count exactly. The Tier-1 pool is genuinely clean.
 * 3 Tier-2 TUs hide a blocker: [ov063](../config/arm9/overlays/ov063/symbols.txt)/`Bookshelf+MansionSteps+MerryGoRound+TrapDoor`
-  (`_ZN12MansionSteps13InitResourcesEv` has no source), [ov009](../config/arm9/overlays/ov009/symbols.txt)/`Bird`, [ov055](../config/arm9/overlays/ov055/symbols.txt)/`MirrorLuigi`.
+  (`_ZN12MansionSteps13InitResourcesEv` has no source), [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c`, [ov055](../config/arm9/overlays/ov055/symbols.txt)/`MirrorLuigi`.
 * Same failure inflates §6 below.
 
 Two clean confirmations: cross-joining the C++ census's blocker tags against the safe

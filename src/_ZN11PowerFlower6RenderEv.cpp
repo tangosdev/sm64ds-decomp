@@ -2,7 +2,6 @@
 // @symbol _ZN11PowerFlower6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "PowerFlower.h"
-struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual void g5(void*); };
 
 int PowerFlower::Render()
 {
@@ -11,9 +10,9 @@ int PowerFlower::Render()
   unsigned char st = mLifeTimer;
   if (st < 0x2d && (st & 1)) return 1;
   switch (mState) {
-  case 0: ((Sub*)((char*)&mModel1))->g5((char*)&mScaleX); break;
-  case 1: ((Sub*)((char*)&mModel2))->g5((char*)&mScaleX); break;
-  case 2: ((Sub*)((char*)&mModel2))->g5((char*)&mScaleX); break;
+  case 0: mModel1.Render((const Vector3 *)&mScaleX); break;
+  case 1: mModel2.Render((const Vector3 *)&mScaleX); break;
+  case 2: mModel2.Render((const Vector3 *)&mScaleX); break;
   }
   return 1;
 }

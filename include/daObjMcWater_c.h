@@ -11,7 +11,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *
  * ov009 is mixed (DOCK_POLE / CASTLE_WATER / METAL_NET / FLAG / BIRD).
  * RTTI names this class daObjMcWater_c; the debug table names CASTLE_WATER.
- * This is the water plane, not daObjMc_Metalnet_c / daMcFlag_c / Bird.
+ * This is the water plane, not daObjMc_Metalnet_c / daMcFlag_c / daSBird_c.
  *
  *   _ZTS  ov009 0x021139e0  "14daObjMcWater_c"
  *   _ZTI  ov009 0x021139d4  __si_class_type_info; base dBgActor_c
