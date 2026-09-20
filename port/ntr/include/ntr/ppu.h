@@ -286,32 +286,27 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb);
 // filter would invent pixels nobody drew.
 void ppu_display_capture(const uint32_t *src, int w, int h);
 
-// IS A CAPTURE ARMED FOR THIS FRAME? DISPCAPCNT's enable bit, read without
-// clearing it and without decoding any other field, so asking costs one load
-// and changes nothing. The edge-smoothing pass at the end of gx_render asks
-// it and stands down when it is set: the game READS this framebuffer back
-// through the capture unit, and a picture setting may never hand the game
-// different bytes. See the definition for the whole argument.
-bool ppu_capture_armed(void);
-
 // WHAT THE CAPTURE UNIT ACTUALLY DID THIS RUN. `performed` is how many frames
 // a capture was written on; `refused` how many were armed and then turned away
 // for one of the unit's own reasons (a source this port does not model, a
 // destination that is not an LCDC block -- which is what every scene's
 // Scene::ResetHardwareRegisters write comes to -- or a size running off the
-// bank). `hash` is FNV-1a over every halfword written into VRAM, in capture
-// order, so two runs agree on it only if every captured pixel of every
-// captured frame agrees.
+// bank). `from_preimage` is how many of the performed captures read the
+// PRE-SMOOTHING copy of the frame rather than the live framebuffer. `hash` is
+// FNV-1a over every halfword written into VRAM, in capture order, so two runs
+// agree on it only if every captured pixel of every captured frame agrees.
 //
 // They exist so the edge-smoothing pass's promise can be CHECKED rather than
-// believed. The pass stands down whenever it finds the unit armed, so
-// performed + refused is exactly the set of frames it stood down on, and the
-// hash with the setting on has to equal the hash with it off. Counted whether
-// or not anything asks; reading them costs nothing.
-// `from_preimage` is how many of the performed captures read the
-// pre-smoothing copy of the frame rather than the live framebuffer. With
-// AntiAliasing on it has to equal `performed` exactly: a capture that read
-// the live framebuffer is a frame on which the game saw the setting.
+// believed, and the check is `from_preimage` == `performed` with the setting
+// on, plus an equal hash with it on and off. A capture that read the live
+// framebuffer is exactly a frame on which the game saw the setting.
+//
+// THERE IS DELIBERATELY NO "is the capture armed" ACCESSOR HERE any more. One
+// existed and the pass used it to refuse to smooth an already-armed frame;
+// that is an assumption about when the game arms the unit, and measurement
+// broke it (see ppu_display_capture). The guarantee must not depend on order.
+//
+// Counted whether or not anything asks; reading them costs nothing.
 void ppu_capture_counters(unsigned long long &performed,
                           unsigned long long &refused,
                           unsigned long long &hash,

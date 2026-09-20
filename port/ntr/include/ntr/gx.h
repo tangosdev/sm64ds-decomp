@@ -130,10 +130,12 @@ void gx_configure_anti_aliasing(int mode);
 int gx_anti_aliasing();
 
 // What the smoothing pass has done since the program started: how many pixels
-// it rewrote, how many frames it ran on, and how many it could not run on.
-// The A/B evidence that a key-absent run does no work at all.
-void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
-                    unsigned long long &stood_down);
+// it rewrote and how many frames it ran on. The A/B evidence that a key-absent
+// run does no work at all. (It used to carry a third number, the frames the
+// pass refused to run on because the display capture unit was already armed.
+// That mechanism is gone -- see gx_aa_preimage below -- and the pass now runs
+// on every frame, so the number could only ever have been zero.)
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames);
 
 // THE FRAME AS IT WAS BEFORE THE SMOOTHING PASS, or null when there is no such
 // frame (the setting is off, or gx_render has not finished one this frame).

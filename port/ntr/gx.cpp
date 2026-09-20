@@ -2550,7 +2550,6 @@ int g_aa_pre_valid;
 int g_aa_mode = 0;                     /* 0 off, 1 edge smoothing */
 unsigned long long g_aa_changed;       /* pixels rewritten, whole run */
 unsigned long long g_aa_run_frames;    /* frames the pass ran on */
-unsigned long long g_aa_stood_down;    /* frames it refused, no buffer yet */
 unsigned g_aa_hits[64];                /* per band, summed after each pass */
 
 bool raster_buffers(void)
@@ -2585,11 +2584,9 @@ void gx_configure_anti_aliasing(int mode) {
 
 int gx_anti_aliasing() { return g_aa_mode; }
 
-void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
-                    unsigned long long &stood_down) {
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames) {
     changed = g_aa_changed;
     frames = g_aa_run_frames;
-    stood_down = g_aa_stood_down;
 }
 
 /* THE FRAME AS IT WAS BEFORE THE SMOOTHING, or null when there is no such
@@ -2734,8 +2731,8 @@ static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
      * be the picture it would have got with the setting absent.
      *
      * THE FIRST ATTEMPT AT THIS WAS WRONG AND THE MEASUREMENT SAYS SO. It
-     * asked ntr::ppu_capture_armed() here and stood the pass down on any frame
-     * DISPCAPCNT's enable bit was already set. That assumed the game always
+     * read DISPCAPCNT's enable bit here and stood the pass down on any frame
+     * that bit was already set. That assumed the game always
      * arms the unit before the frame is rasterised. On a course it does. On a
      * RUNNING dual-screen minigame it does not: scene 372 driven past its menu
      * captures 669 frames out of 1200 while this test fired on only 169 of
@@ -2790,11 +2787,26 @@ static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
 }
 
 /* SM64DS_AA_STATS=1: what the smoothing pass has done, every 300 frames and
-   once more at the end of the run. Off by default. It is the evidence for two
-   claims that cannot be read off a picture: that a key-absent run does NO
-   work (every number zero), and that the pass never runs on a frame the game
-   reads the framebuffer back on (stood_down counts those frames, and the
-   captured bytes are then the key-absent bytes by construction). */
+   once more at the end of the run. Off by default.
+
+   IT IS THE EVIDENCE FOR TWO CLAIMS THAT CANNOT BE READ OFF A PICTURE.
+
+   The first is that a key-absent run does NO work at all: every number zero.
+
+   The second is that the GAME reads back the same picture either way, and the
+   line carries it as the two capture numbers side by side -- captures
+   PERFORMED against captures that READ THE PRE-SMOOTHING FRAME. With the
+   setting on those two must be equal, because what the capture unit reads is
+   the copy taken before this pass touched a pixel (gx_aa_preimage above), and
+   a capture that read the live framebuffer instead is exactly a frame on
+   which the game saw the setting. Pair them with the captured-bytes hash,
+   which has to match between a setting-off and a setting-on run of the same
+   rows.
+
+   THE NUMBERS ARE A CHECK, NOT A DESCRIPTION OF WHEN THE PASS RUNS: it runs
+   on every frame. An earlier version of this file gated it on whether the
+   capture unit was already armed, and these counters are what proved that
+   wrong -- the measurement is written up at ntr::ppu_display_capture. */
 static void aa_report(void) {
     static int want = -1;
     if (want < 0) want = getenv("SM64DS_AA_STATS") ? 1 : 0;
@@ -2817,13 +2829,12 @@ static void aa_report(void) {
             ppu_capture_counters(cap, ref, hash, pre);
             std::fprintf(stderr,
                          "[aa] final: mode %d, %llu frame(s) smoothed, %llu "
-                         "frame(s) stood down for the display capture, %llu "
                          "pixel(s) rewritten; captures performed %llu, armed "
                          "but refused %llu, captures that read the "
                          "pre-smoothing frame %llu, captured-bytes hash "
                          "%016llx\n",
-                         g_aa_mode, g_aa_run_frames, g_aa_stood_down,
-                         g_aa_changed, cap, ref, pre, hash);
+                         g_aa_mode, g_aa_run_frames, g_aa_changed, cap, ref,
+                         pre, hash);
             std::fflush(stderr);
         });
     }
@@ -2831,11 +2842,11 @@ static void aa_report(void) {
     unsigned long long cap = 0, ref = 0, hash = 0, pre = 0;
     ppu_capture_counters(cap, ref, hash, pre);
     std::fprintf(stderr,
-                 "[aa] frame %u: mode %d, %llu frame(s) smoothed, %llu stood "
-                 "down, %llu pixel(s) rewritten; captures %llu, refused %llu, "
-                 "pre %llu, hash %016llx\n",
-                 f - 1, g_aa_mode, g_aa_run_frames, g_aa_stood_down,
-                 g_aa_changed, cap, ref, pre, hash);
+                 "[aa] frame %u: mode %d, %llu frame(s) smoothed, %llu "
+                 "pixel(s) rewritten; captures %llu, refused %llu, pre %llu, "
+                 "hash %016llx\n",
+                 f - 1, g_aa_mode, g_aa_run_frames, g_aa_changed, cap, ref,
+                 pre, hash);
     std::fflush(stderr);
 }
 

@@ -709,41 +709,25 @@ void ppu_vram_publish(void) {
     }
 }
 
-/* IS A CAPTURE PENDING THIS FRAME (run hd2, lane PIC). DISPCAPCNT's enable
-   bit, read and nothing else: no field is decoded, the bit is not cleared and
-   no memory moves. ppu_display_capture below owns the clear.
-
-   IT EXISTS FOR ONE CALLER. The edge-smoothing pass at the end of gx_render
-   rewrites pixels of engine A's framebuffer, and this game READS that
-   framebuffer back through the capture unit for the dual-screen minigames --
-   the capture point is hal/sub_screen.cpp, after gx_render and after the 2D
-   composite. A smoothing pass that ran on a frame the game is about to
-   capture would hand the GAME different bytes, which is the one thing a
-   picture setting may never do. So the pass asks this first and stands down
-   on any frame the bit is set, and the capture then reads the same bytes it
-   reads with the setting absent, by construction rather than by comparison.
-
-   The bit is armed before the frame is drawn (Scene::ResetHardwareRegisters
-   at every scene boot, and both dScMgD3DBase_c arms beside the VRAM mapping)
-   and cleared by the capture itself at the end of the frame, so a frame is
-   either armed for its whole draw or not armed at all. */
-bool ppu_capture_armed(void) {
-    volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
-    return (*reg & 0x80000000u) != 0;
-}
-
 /* ---- WHAT THE CAPTURE UNIT ACTUALLY DID (run hd2, lane PIC) --------------
- * Three numbers, so the edge-smoothing pass's promise can be CHECKED rather
- * than believed. The pass stands down on every frame it finds DISPCAPCNT
- * armed; these say how many of those frames really went on to capture, how
- * many were armed and then refused for one of the unit's own reasons, and
- * what the captured bytes were.
+ * Four numbers, so the edge-smoothing pass's promise can be CHECKED rather
+ * than believed. The promise is that the picture this game reads back off its
+ * own top screen is the same with the AntiAliasing setting on as with it off,
+ * and it is kept by capturing the PRE-SMOOTHING copy of the frame (ntr/gx.h,
+ * gx_aa_preimage) -- never by deciding when the pass is allowed to run.
  *
- * THE HASH IS THE POINT. Counting frames proves the pass was not running when
- * the game read the screen; hashing every captured buffer, in capture order,
- * proves the bytes the game read are the same bytes with the setting on as
- * with it off. It is FNV-1a over exactly the halfwords written into VRAM, so
- * two runs agree only if every captured pixel of every captured frame agrees.
+ * SO THE TWO TO READ TOGETHER ARE `performed` AND `from_preimage`: with the
+ * setting on they must be EQUAL. A capture that read the live framebuffer
+ * instead is, exactly, a frame on which the game saw the setting. `refused`
+ * is the frames the unit was armed on and turned away for one of its own
+ * reasons, which in this game is almost always
+ * Scene::ResetHardwareRegisters' write naming a block that is not in LCDC.
+ *
+ * THE HASH IS THE OTHER HALF. The counts say the right buffer was read;
+ * hashing every captured buffer, in capture order, says the bytes in it are
+ * the same bytes either way. It is FNV-1a over exactly the halfwords written
+ * into VRAM, so two runs agree only if every captured pixel of every captured
+ * frame agrees.
  *
  * They cost three increments and one multiply per captured pixel on the
  * capture path only, which is at most 49152 pixels on the frames this game
@@ -903,12 +887,14 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
      * every other time, which is every run with the setting off, and then this
      * is the framebuffer it always was.
      *
-     * IT REPLACED A WEAKER RULE. The pass used to refuse to run on a frame it
-     * found the capture unit already armed. That is true on a course and false
-     * on a running dual-screen minigame, where the arm lands after the raster:
-     * scene 372 driven past its menu captured 669 frames of 1200 while the
-     * refusal fired on 169. Reading the copy needs no assumption about when
-     * the game arms the unit. */
+     * DO NOT REPLACE THIS WITH AN ORDER-BASED SHORTCUT. That is what was here
+     * first: the pass asked whether DISPCAPCNT was already armed and refused
+     * to smooth that frame. It is true on a course and FALSE on a running
+     * dual-screen minigame, which arms the unit AFTER gx_render -- measured on
+     * scene 372 driven past its menu, where 669 of 1200 frames captured and
+     * the armed test caught only 169 of them, so five hundred captured frames
+     * carried the smoothing. Reading the copy assumes nothing about when the
+     * game arms the unit, which is the only reason it holds. */
     if (const uint32_t *pre = gx_aa_preimage()) {
         src = pre;
         ++g_cap_from_preimage;
