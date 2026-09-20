@@ -1022,6 +1022,10 @@ extern unsigned char port_ov009_gap_0211222c[];
 int lk7_persist_write(void);
 int lk7_persist_read(void);
 int lk7_persist_available(void);
+/* 1 when a savestate.bin is sitting beside the exe. Says nothing about whether
+   it would load; it is the cheap question the startup line and the menu's load
+   row need. */
+int lk7_persist_present(void);
 /* Why the last read turned a savestate.bin away, short enough for the on-screen
    toast; "" when there was nothing to refuse. See the note at the bottom of
    hal/lk7_persist.cpp. */
@@ -1045,6 +1049,110 @@ static void ss_note(const char *msg)
 {
     snprintf(ss_toast, sizeof ss_toast, "%s", msg);
     ss_toast_left = 120;
+}
+
+/* ---- WHERE A SAVE STATE MAY BE TAKEN, AND WHERE ONE COMES FROM ------------
+
+   0.4.0 shipped two rules that together cost a player his opening. F8 wrote
+   savestate.bin at any moment, including the middle of the opening cutscene,
+   and the boot read that file back on EVERY launch. One stray press therefore
+   changed every later launch, silently: Peach never spoke, the wrong character
+   stood on the roof, nobody came out of the pipes, and nothing on screen said
+   the game had been restored rather than booted.
+
+   Tango's ruling: the disk state loads only when the player asks for it, and a
+   snapshot is refused while a cutscene is running.
+
+   THE PREDICATE IS THE ROM'S OWN WORD. data_0209fc48 is the running Kuppa
+   script and nothing else -- RunKuppaScript seats it, EndKuppaScript clears it
+   -- so it is non-zero for exactly the frames a cutscene occupies. The same
+   word already decides the two "[intro]" reports (hal/level_boot.cpp and the
+   staging block below), so this adds no new flag and costs one load.
+
+   EVERY cutscene, not only the opening: the predicate covers them all for
+   free, and a mid-script snapshot is unsafe in all of them for one reason --
+   it freezes a script cursor whose world has already been staged around it,
+   and a restore brings the cursor back without that staging. The opening is
+   only where it was noticed. data_0209fc4c (the continuation the opening's
+   first half parks for its second) is deliberately NOT in the test: it is
+   non-zero only across a level load, during which the F8 latch does not run,
+   and a path that ever left it set would refuse saves forever.
+
+   A LOAD is not refused anywhere. data_0209fc48 lives inside the captured
+   .dsstate span (hal/level_boot.cpp), so restoring a state taken outside a
+   cutscene puts the word back to 0 and ends the cutscene cleanly. That is the
+   way out for anyone already stuck in a bad opening, and there is no evidence
+   it is unsafe, so it stays. */
+static int ss_cutscene_running(void)
+{
+    return data_0209fc48 != 0;
+}
+
+/* The one save path: the F8 latch, the debug menu's save row and the scripted
+   SM64DS_SS_SAVE all come through here, so a refusal cannot be true on one of
+   them and false on another. Returns 1 if the world was snapshotted.
+
+   to_disk mirrors a successful save to savestate.bin. A player always wants
+   that (it is what makes the state survive the run); the scripted reproducer
+   passes its own SM64DS_SS_DISK, so a soak run over five levels still leaves
+   no file behind. */
+static int ss_save_state(const char *how, int to_disk)
+{
+    if (ss_cutscene_running()) {
+        fprintf(stderr, "[savestate] %s refused: a cutscene script is running "
+                        "(%p). Nothing was written to the slot or to disk -- a "
+                        "snapshot taken mid-cutscene restores into a world the "
+                        "script has already moved past.\n",
+                how, (void *)(size_t)data_0209fc48);
+        ss_note("no save states during cutscenes");
+        return 0;
+    }
+    if (!lk6_savestate_save()) {
+        ss_note("state NOT saved (see log)");
+        return 0;
+    }
+    /* mirror to disk; the toast tells the player whether this save will
+       outlive the run, which is the difference every "it did not save" report
+       was actually about */
+    if (to_disk)
+        ss_note(lk7_persist_write() ? "state saved to disk (F9 loads it)"
+                                    : "state saved for THIS RUN (F9 loads it)");
+    else
+        ss_note("state saved for THIS RUN (F9 loads it)");
+    return 1;
+}
+
+/* The one load path, for the same reason -- and the place the boot-time read
+   moved to. With the startup restore gone the in-memory slot is EMPTY in a
+   fresh process, so the first F9 of a session has to reach the disk itself or
+   a player's saved state would simply stop existing. Order: the slot if it
+   holds anything (that is this session's own latest snapshot and it is what
+   F9 has always meant), otherwise the file. lk7_persist_read fills the slot on
+   its way through, so the second F9 is a plain slot load.
+
+   Returns 1 if the world was restored. The caller owns the census and the
+   reseat, because only it knows which pointers it holds. */
+static int ss_load_state(void)
+{
+    if (lk6_savestate_has()) {
+        if (lk6_savestate_load()) { ss_note("state loaded"); return 1; }
+        ss_note("state NOT loaded (see log)");
+        return 0;
+    }
+    if (lk7_persist_present()) {
+        fprintf(stderr, "[savestate] the slot was empty, so the disk state was "
+                        "read instead\n");
+        if (lk7_persist_read()) { ss_note("state loaded from disk"); return 1; }
+        /* the header refusals -- another build's on-disk layout, a damaged
+           file, a world that is not runnable -- used to be reported at boot,
+           because that is where the read was. They belong wherever the read
+           is, so they are said here now, through the same toast slot. */
+        ss_note(lk7_persist_refusal()[0] ? lk7_persist_refusal()
+                                         : "state NOT loaded (see log)");
+        return 0;
+    }
+    ss_note("no state saved yet (F8 saves)");
+    return 0;
 }
 
 /* ShadowModel::CleanAll, seated at the point Stage::Behavior calls it. The
@@ -4842,11 +4950,21 @@ static void menu_draw(const OvlSurface &fb)
     /* the disk suffix tells the player whether a save will outlive the run: it
        does only when the arena is at its fixed base, which is what lets a disk
        state's pointers relocate on the next launch (hal/lk7_persist.cpp). */
-    snprintf(ln[MENU_SAVESTATE], sizeof ln[0], "save state        F8   %s%s",
-             lk6_savestate_has() ? "(slot in use, overwrite)" : "(slot empty)",
-             lk7_persist_available() ? " to disk" : " this run only");
+    if (ss_cutscene_running())
+        snprintf(ln[MENU_SAVESTATE], sizeof ln[0],
+                 "save state        F8   (not during cutscenes)");
+    else
+        snprintf(ln[MENU_SAVESTATE], sizeof ln[0], "save state        F8   %s%s",
+                 lk6_savestate_has() ? "(slot in use, overwrite)" : "(slot empty)",
+                 lk7_persist_available() ? " to disk" : " this run only");
+    /* THE LOAD ROW IS NOW THE ONLY PLACE THE GAME SAYS THE FILE IS THERE. The
+       boot no longer reads savestate.bin, so a player coming back to the game
+       has an empty slot and a full disk -- and the row used to answer that with
+       "(no state saved)", which is exactly wrong. */
     snprintf(ln[MENU_LOADSTATE], sizeof ln[0], "load state        F9   %s",
-             lk6_savestate_has() ? "(restore slot)" : "(no state saved)");
+             lk6_savestate_has() ? "(restore slot)"
+                                 : (lk7_persist_present() ? "(load from disk)"
+                                                          : "(no state saved)"));
 
     /* THE FOUR ROWS A SCENE HAS NOTHING TO ACT ON, said before they are
        pressed. Everything above is written for a level and reads level state;
@@ -5424,27 +5542,16 @@ static void menu_input(int pad_live, const XPad *pad)
                    The toast fires here too: highlighting the row and
                    closing the menu does NOT save, and the only way a
                    player can learn that is being shown the difference. */
-                if (edge & (1u << 5)) {
-                    if (lk6_savestate_save())
-                        ss_note(lk7_persist_write()
-                                    ? "state saved to disk (F9 loads it)"
-                                    : "state saved for THIS RUN (F9 loads it)");
-                    else
-                        ss_note("state NOT saved (see log)");
-                }
+                if (edge & (1u << 5))
+                    ss_save_state("the menu's save row", 1);
                 break;
             case MENU_LOADSTATE:
                 /* enter/right only: restore the slot. A no-op with no
                    saved state. */
                 if (edge & (1u << 5)) {
-                    if (lk6_savestate_load()) {
+                    if (ss_load_state()) {
                         an_pivot_live = 0;
                         ss_reseat_pending = 1;
-                        ss_note("state loaded");
-                    } else {
-                        ss_note(lk6_savestate_has()
-                                    ? "state NOT loaded (see log)"
-                                    : "no state saved yet (F8 saves)");
                     }
                 }
                 break;
@@ -10184,17 +10291,24 @@ int main(void)
     };
     (void)ss_reseat;
 
-    /* Disk save state, read exactly once, here: the world is fully booted (the
-       disk state describes a booted world, so restoring earlier would be
-       stomped by the rest of boot) and the frame loop has not started. Never in
-       a selftest: the comparator runs must stay deterministic, and a stray
-       savestate.bin beside the exe would silently swap the world out from
-       under them. */
-    /* SM64DS_SS_DISKLOAD=1 opts a selftest INTO the disk read, for the
-       cross-restart reproducer: run one saves to disk (SM64DS_SS_DISK=1), run
-       two boots with this set and must land on the first run's hardware hash.
-       Without the env, selftests never touch savestate.bin, so the comparator
-       runs stay deterministic. */
+    /* THE DISK STATE IS NOT READ AT STARTUP ANY MORE. It used to be, on every
+       launch, and 0.4.0 shipped that: one accidental F8 during the opening
+       wrote savestate.bin, and from then on every launch restored that
+       half-played cutscene instead of booting. No message a player would
+       notice, no way to guess what had happened, and the file was on disk
+       until somebody deleted it by hand.
+
+       The state is a save state. It loads when the player asks -- F9, or the
+       debug menu's load row -- and never on its own. Those two go through
+       ss_load_state above, which reaches the file itself when the slot is
+       empty, so a fresh process's first F9 finds exactly what the boot read
+       used to find. Nothing about the file changes: not its format, not the
+       header refusals, not where it is written. */
+    /* SM64DS_SS_DISKLOAD=1 still opts a selftest INTO a boot-time disk read,
+       and this is now its only caller: the cross-restart reproducer needs the
+       restore to happen before the frame loop, where no key press can reach.
+       Run one saves to disk (SM64DS_SS_DISK=1) and prints its hardware hash,
+       run two boots with this set and must land on that hash. */
     /* THE ROLLBACK-COUPLED GUARDS' A/B HOOK, joined here because this is the
        only binary that links both halves: hal/lk6_savestate.cpp owns the hook
        and the two smoke targets link it without the mount table, while
@@ -10216,7 +10330,18 @@ int main(void)
        get. */
     const int ss_playerboot = !selftest || getenv("SM64DS_SS_PLAYERBOOT") != 0;
 
-    if ((ss_playerboot || getenv("SM64DS_SS_DISKLOAD")) && lk7_persist_available()) {
+    if (ss_playerboot && lk7_persist_present()) {
+        /* ONE LINE, IN THE LOG, AND NOTHING ON SCREEN. A player who has never
+           pressed F8 must not be shown a message about save states, and a
+           player who has pressed it gets the file back with one key rather
+           than a toast on every launch for the rest of the game's life. This
+           line is what a support reply reads. */
+        fprintf(stderr, "[savestate] savestate.bin is present beside the game; "
+                        "it is NOT loaded at startup -- press F9 (or the debug "
+                        "menu's load row) to load it\n");
+    }
+
+    if (getenv("SM64DS_SS_DISKLOAD") && lk7_persist_available()) {
         if (lk7_persist_read()) {
             an_pivot_live = 0;   /* no ease across the load */
             ss_census("after the boot-time disk restore", player, cam);
@@ -10433,36 +10558,26 @@ int main(void)
         /* F8 SNAPSHOTS the game, F9 RESTORES it. Their own edge latches, up
            here at the top of the frame after the message drain and before this
            frame's tick, which is the between-frames point the save state wants:
-           the previous tick is fully complete and nothing is mid-update. A load
-           with no prior save is a safe no-op (lk6_savestate_load says so and
-           does nothing). Deliberately outside the menu's held-mask below so
+           the previous tick is fully complete and nothing is mid-update. Both
+           go through ss_save_state / ss_load_state above, which are also what
+           the debug menu's two rows and the scripted reproducer call, so the
+           cutscene refusal and the empty-slot fall through to disk cannot be
+           true on one of the three and false on another. A load with nothing
+           saved anywhere is a safe no-op and says so on screen. Deliberately
+           outside the menu's held-mask below so
            they work during live play whether or not the menu is open, and so
            the menu never swallows them. */
         {
             static int save_edge, load_edge;
             const int save_now = key_live(VK_F8);
             const int load_now = key_live(VK_F9);
-            if (save_now && !save_edge) {
-                if (lk6_savestate_save()) {
-                    /* mirror to disk; the toast tells the player whether this
-                       save will outlive the run, which is the difference every
-                       "it did not save" report was actually about */
-                    ss_note(lk7_persist_write()
-                                ? "state saved to disk (F9 loads it)"
-                                : "state saved for THIS RUN (F9 loads it)");
-                } else {
-                    ss_note("state NOT saved (see log)");
-                }
-            }
+            if (save_now && !save_edge)
+                ss_save_state("F8", 1);
             if (load_now && !load_edge) {
-                if (lk6_savestate_load()) {
+                if (ss_load_state()) {
                     an_pivot_live = 0;   /* no ease across */
                     ss_census("after an F9 restore", player, cam);
                     ss_reseat("after an F9 restore");
-                    ss_note("state loaded");
-                } else {
-                    ss_note(lk6_savestate_has() ? "state NOT loaded (see log)"
-                                                : "no state saved yet (F8 saves)");
                 }
             }
             save_edge = save_now;
@@ -10600,15 +10715,26 @@ int main(void)
                     last_cov = cov;
                 }
             }
+            /* THE SCRIPTED SAVE OBEYS THE CUTSCENE RULE TOO, which is what
+               makes it a proof of the rule rather than a way around it: the
+               refusal is measured on the same call F8 makes. ss_save_state
+               already mirrors a successful save to disk, so the ss_disk arm
+               below only has to report it. */
+            if (ss_save_fr >= 0 && frame == ss_save_fr &&
+                !ss_save_state("the scripted SM64DS_SS_SAVE", ss_disk)) {
+                fprintf(stderr, "[ss-repro] f%d save: refused, nothing "
+                                "written\n", frame);
+                ss_save_fr = -1;          /* it did not happen; do not pretend */
+            }
             if (ss_save_fr >= 0 && frame == ss_save_fr) {
-                lk6_savestate_save();
                 ss_census("at the scripted SM64DS_SS_SAVE", player, cam);
-                /* the cross-restart reproducer's first half: mirror this save
-                   to savestate.bin so a SECOND run (SM64DS_SS_DISKLOAD=1) can
-                   boot from it and compare hashes across the restart */
+                /* the cross-restart reproducer's first half: the save above
+                   already mirrored to savestate.bin, so a SECOND run
+                   (SM64DS_SS_DISKLOAD=1) can boot from it and compare hashes
+                   across the restart. This line reports whether it landed. */
                 if (ss_disk)
                     fprintf(stderr, "[ss-repro] f%d disk write: %s\n", frame,
-                            lk7_persist_write() ? "ok" : "SKIPPED/FAILED");
+                            lk7_persist_present() ? "ok" : "SKIPPED/FAILED");
                 ss_lock_at_save = data_0209d660;
                 ss_hash_at_save = ss_hw_hash();
                 ss_saw_save = 1;
@@ -10676,7 +10802,12 @@ int main(void)
                                   "no rollback (the soak's verdict comes from "
                                   "the storage-coverage lines above)" : "");
                 }
-                if (lk6_savestate_load()) {
+                /* THE SAME CALL F9 MAKES, and that is the point of routing it
+                   here: with the boot-time disk read gone, a fresh process's
+                   slot is empty, and what has to be proven is that the
+                   PLAYER's key finds the file. It can only be proven on the
+                   player's own function. */
+                if (ss_load_state()) {
                     an_pivot_live = 0;
                     ss_census("after the scripted SM64DS_SS_LOAD restore",
                                    player, cam);
