@@ -44,6 +44,11 @@ owned TU comments now state this ceiling, distinguish the retail vtable address
 from emitted RTTI identity, and remove an obsolete one-function destructor
 stripping claim. KP2864-05 is a provenance defect that must be corrected before
 promotion, not an accepted deferral. Shared header and manifest remain unchanged.
+The original finding kind remains provenance. No remaining false claim of verified
+retail RTTI was identified in their prose: Koopa.h explicitly names daNknk_c, and
+the manifest says text-verified while recording the output/order failures. The
+unresolved evidence is the actual emitted identity mismatch; its review disposition
+must distinguish that production prerequisite from a false historical assertion.
 
 ## Proof and coverage
 
