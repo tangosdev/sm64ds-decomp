@@ -34,7 +34,9 @@ Source lineage: merged PR #2829, commit `2c8493b80`.
 - Complete unisolated compiler object: 2320 bytes, byte-for-byte
   identical to the source-base object. Both SHA-256 values:
   `97dfe933cced8e873450bedbc417b1143ef9deb19fb45fc96111f9774120f7a1`.
-  Only the target function is defined; no lifecycle/RTTI/vtable output was added.
+  The object also defines the existing four-byte `_ZN7Vector3D1Ev` compiler
+  passenger. It is unchanged from the base; no new lifecycle/RTTI/vtable output
+  was added.
 - Compilation uses `2004/b56` and `rombuild.CFLAGS` with `-lang c++`.
 - Three-file prepush linkcheck: 3 checked, 3 verified, no warnings or blocking.
 - `check_decl_agreement.py --changed 077483245976d72477eba0d2a7ccca4390da2b1b`:
