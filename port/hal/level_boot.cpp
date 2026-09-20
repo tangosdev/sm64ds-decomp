@@ -3595,6 +3595,51 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         const char *sf = std::getenv("SM64DS_STAR_FILTER");
         data_0209f220[0] = sf ? std::atoi(sf) : 1;
     }
+    /* SM64DS_STARS_SEED=<course>:<hex>[,<course>:<hex>...] -- the collected-star
+       bitmask a loaded save file would have left in the save block, written ONCE
+       on the first stage boot of the process.
+
+       WHY IT HAS TO EXIST FOR AN ACT TO BE PROVABLE AT ALL. The star select
+       derives its grid from that block
+       (src/_ZN12dScStarSel_c13InitResourcesEv.cpp:283-320): a course with
+       nothing collected offers exactly ONE icon, so the player cannot pick a
+       second act and no headless row can either. On a cartridge the bits come
+       off the card through SaveData::ReadFileData when a file is chosen; a
+       direct boot into a level takes no file-select route, and the ROM's own
+       game init clears the whole block first (the R2a arm,
+       func_02013e64 -> memset(data_0209caa0, 0, 0x32c)).
+
+       So this writes the same bytes a loaded file would and nothing else. The
+       layout is the ROM's: bit N of data_0209cab4[course] is star N
+       (src/IsStarCollected.c), star 1 is act 1, and the select shows the
+       collected ones plus the first uncollected one. INERT UNLESS SET. */
+    {
+        static bool stars_seeded = false;
+        const char *ss = std::getenv("SM64DS_STARS_SEED");
+        if (ss && !stars_seeded) {
+            const char *p = ss;
+            while (*p) {
+                char *q;
+                const long course = std::strtol(p, &q, 10);
+                p = q;
+                if (*p == ':') {
+                    ++p;
+                    const unsigned long bits = std::strtoul(p, &q, 16);
+                    p = q;
+                    if (course >= 0 && course < 0x1e) {
+                        data_0209cab4[course] |= (unsigned char)bits;
+                        std::fprintf(stderr, "[stars-seed] course %d star bits "
+                                     "now %02x\n", (int)course,
+                                     (unsigned)data_0209cab4[course]);
+                    }
+                }
+                while (*p && *p != ',') ++p;
+                if (*p == ',') ++p;
+            }
+            std::fflush(stderr);
+        }
+        stars_seeded = true;
+    }
     /* data_0209f344: the VS star-order pointer Stage::InitResources:427 seats to
        &VS_STAR_SPAWN_ORDERS[func_0203dad4() % 6]. The port hand-rolls the boot
        and skips InitResources, so without this the pointer stays NULL and the
