@@ -67,6 +67,22 @@ Vec4 mul(const Vec4 &v, const Mat &m) {
 // --- engine state -----------------------------------------------------------
 enum MtxMode { MTX_PROJ = 0, MTX_POS = 1, MTX_POSVEC = 2, MTX_TEX = 3 };
 
+/* WHAT THE DISPLAY LIST SAID, for one vertex, before any matrix touched it.
+   This is the material the shape store (ntr/smooth.h) keys on. It never
+   reaches the polygon list and the raster never sees it. */
+struct GxRaw {
+    int16_t x, y, z;        // the VTX command's own coordinates
+    uint32_t nrm;           // the NORMAL command's 30-bit payload
+    uint32_t mgen;          // matrix generation this vertex was projected under
+    uint32_t ngen;          // matrix generation that NORMAL was latched under
+    uint8_t has_normal;     // normal_live: the colour came from lighting
+};
+
+/* A raw record the shape store can never accept: mgen and ngen disagree, so
+   store_eligible refuses it before it looks at anything else. It is what a
+   vertex carries when SmoothModels is 0 and nothing will read it anyway. */
+const GxRaw g_raw_dead = {0, 0, 0, 0, 0, 1, 0};
+
 struct State {
     int mode = MTX_POS;
     Mat proj = Mat::identity();
@@ -104,6 +120,16 @@ struct State {
     uint32_t poly_attr = 0x80;     // POLYGON_ATTR latch; bit6 back, bit7 front
     int16_t vx = 0, vy = 0, vz = 0;
     std::vector<GxVertex> strip;   // vertices accumulated in the current primitive
+    /* THE SAME STRIP, RAW. One row per row of `strip`, pushed and cleared
+       with it, holding what the display list actually said (the VTX
+       coordinates, the NORMAL payload, the matrix generation) rather than
+       what the matrices made of it. It is a PARALLEL array rather than three
+       more fields on GxVertex deliberately: GxVertex is embedded three times
+       in every GxTriangle, GxTriangle is what the raster streams through
+       memory a few tens of thousands of times a frame, and widening it by a
+       quarter to carry data the raster never reads would cost more in memory
+       traffic than the store saves in arithmetic. */
+    std::vector<GxRaw> strip_raw;
     int strip_parity = 0;
 
     /* THE LATCHED VERTEX NORMAL, for the model smoother (ntr/smooth.h).
@@ -122,6 +148,19 @@ struct State {
        whatever normal the last lit model happened to leave behind. */
     float nrm[3] = {0, 0, 0};
     int normal_live = 0;
+
+    /* THE RAW HALF OF THE SAME LATCH, for the shape store (ntr/smooth.h).
+       nrm_raw is the NORMAL command's own 30-bit payload, before the VECTOR
+       matrix and before the normalise -- the number the MODEL carries, which
+       is what makes a stored patch survive the model being loaded at a
+       different address or drawn at a different place in the world.
+       nrm_gen is the matrix generation that payload was latched under: a
+       normal transformed by one matrix and a position transformed by another
+       do not share a local space, and the store refuses the pair rather than
+       guessing. Both are written only on the NORMAL path, beside the three
+       floats above, and nothing but the store reads them. */
+    uint32_t nrm_raw = 0;
+    uint32_t nrm_gen = 0;
 
     /* THE PRESENT RECTANGLE, not the whole extent: a scene presented at the
        native 4:3 field draws into the centred sub-rectangle and leaves the
@@ -325,6 +364,153 @@ StarGeo g_stargeo;
 int stargeo_on() {
     if (g_stargeo.on < 0) g_stargeo.on = std::getenv("SM64DS_STAR_GEO") ? 1 : 0;
     return g_stargeo.on;
+}
+
+/* ===========================================================================
+   THE MATRIX GENERATION, and the one question the shape store asks about a
+   matrix (ntr/smooth.h has the store's own contract).
+
+   A stored patch is built in the model's OWN space out of raw VTX
+   coordinates and raw NORMAL payloads, and replayed by pushing the stored
+   points through the current position matrix. That is the same patch the
+   live path builds from transformed corners only when the matrix is a
+   SIMILARITY -- a rotation and a uniform scale and a translation. Work it
+   through and the reason is one line of algebra: the PN edge control point
+   is (2Pi + Pj - Ni * dot(Pj - Pi, Ni)) / 3, a rotation leaves that dot
+   product alone, a uniform scale s multiplies both the dot and the
+   difference by s, and the patch evaluation is an affine combination
+   (the ten Bernstein weights sum to one), so the whole grid transforms with
+   the matrix. A NON-uniform scale or a shear breaks it, because the dot
+   product is then not the one the patch needed and there is no single R to
+   carry the normals.
+
+   The normals also have to ride the same rotation, and on this engine they
+   ride the VECTOR matrix rather than the position one. In MTX_MODE 2 the two
+   are loaded together and are the same numbers; when they are not, the store
+   stands down rather than assuming. Nothing here approximates: a matrix that
+   does not pass goes down the live path and is counted.
+
+   HOW A CHANGE IS NOTICED WITHOUT TOUCHING THE MATRIX COMMANDS. A dozen
+   command cases write g.pos or g.vec, and none of them is this lane's to
+   edit. So instead of an increment in each, the two matrices are remembered
+   here and compared -- two 64-byte memcmps -- at the two moments the store
+   cares about: when a vertex is projected and when a NORMAL is latched. Two
+   matrices that are numerically equal but bitwise different read as a change,
+   which costs a cache miss and never a wrong answer. The whole block is
+   behind `smooth_level() > 0`, so with the setting absent it is one compare
+   on a file-scope int, which is what it was before this lane.
+   =========================================================================== */
+Mat g_mtx_seen_pos, g_mtx_seen_vec;
+uint32_t g_mtx_gen = 0;      // bumped whenever either matrix changes
+int g_mtx_similar = 0;       // pos is a similarity AND vec agrees with it
+
+/* THE LAST FEW MATRICES, kept so a triangle replays through the matrix its
+   OWN CORNERS rode rather than through whatever happens to be live when the
+   third corner arrives. The two are usually the same, and the first version
+   of this code simply required it -- and refused 236 triangles a frame on
+   castle grounds, nearly half of everything otherwise eligible, because a
+   quad and a quad strip each emit a triangle whose last named corner is not
+   the last vertex submitted. Eight slots is far more than the one or two a
+   primitive ever spans, and a slot is used only while its generation still
+   matches, so a matrix that has aged out is a miss and never a wrong
+   answer. */
+enum { MTX_RING = 8 };
+Mat g_mtx_ring[MTX_RING];
+uint32_t g_mtx_ring_gen[MTX_RING];
+int g_mtx_ring_sim[MTX_RING];
+
+/* Is the live position matrix a similarity, and does the vector matrix carry
+   the same rotation? Runs once per matrix change, never per vertex. */
+int mtx_similar_check() {
+    /* mul(v, m) forms out_j = sum_i v_i * m[4i + j], so the image of basis
+       vector e_i is the row (m[4i], m[4i+1], m[4i+2]). A similarity is three
+       mutually orthogonal images of equal length.
+
+       THE TOLERANCE IS NOT COSMETIC, and the first version of it cost the
+       whole feature. A DS matrix is 1.19.12 fixed point, so every component
+       the cartridge authored is quantised to a 4096th. A rotation stored that
+       way has row lengths that disagree by up to about eight parts in ten
+       thousand, and rows whose dot product misses zero by about as much,
+       before the engine multiplies two of them together. One part in ten
+       thousand -- which is what this read first -- therefore refuses almost
+       every real model matrix in the game: castle grounds took the stored
+       path exactly zero times. One part in a hundred admits the quantisation
+       with room to spare, and what it lets through is a non-uniform scale or
+       a shear of half a percent, which moves a patch by half a percent of a
+       bulge that is itself about a sixth of the triangle. What actually gets
+       through is then measured against the live patch by the
+       SM64DS_SMOOTH_ABDIFF arm, so this number is checked and not argued. */
+    const float *m = g.pos.m;
+    float u[3][3];
+    for (int i = 0; i < 3; ++i)
+        for (int k = 0; k < 3; ++k) u[i][k] = m[i * 4 + k];
+    const float l0 = u[0][0]*u[0][0] + u[0][1]*u[0][1] + u[0][2]*u[0][2];
+    const float l1 = u[1][0]*u[1][0] + u[1][1]*u[1][1] + u[1][2]*u[1][2];
+    const float l2 = u[2][0]*u[2][0] + u[2][1]*u[2][1] + u[2][2]*u[2][2];
+    if (l0 <= 1e-12f) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_LEN, 1);
+        return 0;
+    }
+    const float eps = 1e-2f;                 // relative, on the squared length
+    if (std::fabs(l1 - l0) > eps * l0 || std::fabs(l2 - l0) > eps * l0) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_LEN, 1);
+        return 0;
+    }
+    const float d01 = u[0][0]*u[1][0] + u[0][1]*u[1][1] + u[0][2]*u[1][2];
+    const float d02 = u[0][0]*u[2][0] + u[0][1]*u[2][1] + u[0][2]*u[2][2];
+    const float d12 = u[1][0]*u[2][0] + u[1][1]*u[2][1] + u[1][2]*u[2][2];
+    if (std::fabs(d01) > eps * l0 || std::fabs(d02) > eps * l0 ||
+        std::fabs(d12) > eps * l0) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_ORTHO, 1);
+        return 0;
+    }
+
+    /* And the VECTOR matrix has to carry the SAME ROTATION, or the normals
+       the live path lights with are not the normals a stored patch was
+       curved by. It need not carry the same SCALE: a transformed normal is
+       normalised, so any positive multiple of the rotation gives the same
+       unit normal. The two are therefore compared as directions, each row
+       divided by its own matrix's scale, rather than as numbers. */
+    const float *w = g.vec.m;
+    const float k0 = w[0]*w[0] + w[1]*w[1] + w[2]*w[2];
+    if (k0 <= 1e-12f) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_VEC, 1);
+        return 0;
+    }
+    const float sp = std::sqrt(l0), sv = std::sqrt(k0);
+    for (int i = 0; i < 3; ++i)
+        for (int kk = 0; kk < 3; ++kk) {
+            const float a = m[i * 4 + kk] / sp;
+            const float b = w[i * 4 + kk] / sv;
+            if (std::fabs(a - b) > eps) {
+                smooth_store_count(SMOOTH_STORE_NONSIM_VEC, 1);
+                return 0;
+            }
+        }
+    return 1;
+}
+
+void mtx_gen_update() {
+    const Mat &P = g.pos;
+    if (std::memcmp(&g_mtx_seen_pos, &P, sizeof(Mat)) == 0 &&
+        std::memcmp(&g_mtx_seen_vec, &g.vec, sizeof(Mat)) == 0)
+        return;
+    g_mtx_seen_pos = P;
+    g_mtx_seen_vec = g.vec;
+    ++g_mtx_gen;
+    g_mtx_similar = mtx_similar_check();
+    const int slot = static_cast<int>(g_mtx_gen & (MTX_RING - 1));
+    g_mtx_ring[slot] = P;
+    g_mtx_ring_gen[slot] = g_mtx_gen;
+    g_mtx_ring_sim[slot] = g_mtx_similar;
+}
+
+/* The matrix generation `gen` rode, or null if it has aged out of the ring or
+   was not one a stored patch may be replayed through. */
+const Mat *mtx_for_gen(uint32_t gen) {
+    const int slot = static_cast<int>(gen & (MTX_RING - 1));
+    if (g_mtx_ring_gen[slot] != gen || !g_mtx_ring_sim[slot]) return 0;
+    return &g_mtx_ring[slot];
 }
 
 /* VIEW SPACE -> CLIP SPACE, factored out of project() and out of nothing
@@ -614,11 +800,209 @@ void emit_tri_near(const GxVertex &a, const GxVertex &b, const GxVertex &c) {
    =========================================================================== */
 
 /* The sub-triangle sink: project the invented vertices and send them down the
-   ordinary path. */
+   ordinary path. Only SM64DS_SMOOTH_LIVE=1 reaches it now; smooth_emit_grid
+   below is what every other run takes, and the two agree bit for bit. */
 void smooth_sink(void *, const SmoothVertex &a, const SmoothVertex &b,
                  const SmoothVertex &c);
 
-int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c) {
+/* ONE INVENTED VERTEX. The view-space point goes through project()'s own
+   view_to_clip, and the attributes come from the kernel's own
+   smooth_grid_attrs at the same barycentric weights: the two pieces of work
+   the old sink did, in the same order, on the same numbers. */
+void smooth_grid_vertex(const float p[3], float a, float b, float c,
+                        const SmoothVertex s[3], GxVertex &o) {
+    const Vec4 view{p[0], p[1], p[2], 1.0f};
+    const Vec4 clip = view_to_clip(view);
+    o.x = clip.x; o.y = clip.y; o.z = clip.z; o.w = clip.w;
+    o.vx = view.x; o.vy = view.y; o.vz = view.z; o.vw = view.w;
+    SmoothVertex at;
+    smooth_grid_attrs(s[0], s[1], s[2], a, b, c, at);
+    o.u = at.u; o.v = at.v; o.color = at.color;
+    o.nx = at.nx; o.ny = at.ny; o.nz = at.nz;
+}
+
+/* EMIT A TESSELLATED TRIANGLE FROM ITS GRID.
+   `pts` is smooth_grid_points(tf) positions. With `xform` null they are
+   already in view space; with `xform` set they are in the model's own space
+   and each one is pushed through that matrix first, which is the replay half
+   of the shape store.
+
+   WHY THIS EXISTS separately from the sink above. An interior grid point
+   belongs to up to six sub-triangles, and the sink was handed it once per
+   sub-triangle, so it was projected up to six times. At level 3 that is 192
+   projections to draw 45 distinct vertices. Here each point is projected
+   ONCE and the sub-triangles are assembled from an index list. The vertices
+   that reach the near clip are the same vertices in the same order, each
+   computed by the same arithmetic, so this is not an approximation of the
+   old path: it is the old path with the repeats taken out. */
+void smooth_emit_grid(const float *pts, int tf, const SmoothVertex s[3],
+                      const Mat *xform) {
+    GxVertex v[SMOOTH_MAX_GRID];
+    const float inv = 1.0f / (float)tf;
+    int n = 0;
+    for (int ia = 0; ia <= tf; ++ia) {
+        for (int ib = 0; ib <= tf - ia; ++ib, ++n) {
+            const float a = (float)ia * inv;
+            const float b = (float)ib * inv;
+            float c = 1.0f - a - b;
+            if (c < 0.0f) c = 0.0f;
+            if (xform) {
+                const Vec4 l{pts[n * 3], pts[n * 3 + 1], pts[n * 3 + 2], 1.0f};
+                const Vec4 w = mul(l, *xform);
+                const float vp[3] = {w.x, w.y, w.z};
+                smooth_grid_vertex(vp, a, b, c, s, v[n]);
+            } else {
+                smooth_grid_vertex(pts + n * 3, a, b, c, s, v[n]);
+            }
+        }
+    }
+    const uint16_t *idx = smooth_grid_tri_index(tf);
+    const int ntris = smooth_grid_tris(tf);
+    for (int i = 0; i < ntris; ++i)
+        emit_tri_near(v[idx[i * 3]], v[idx[i * 3 + 1]], v[idx[i * 3 + 2]]);
+}
+
+/* The NORMAL command's 30-bit payload back out as three floats, decoded
+   exactly as the NORMAL case decodes it (three 10-bit signed fields, 1.9
+   fixed point) and before any matrix touches it. */
+void raw_normal(uint32_t n, float &nx, float &ny, float &nz) {
+    const int32_t a = static_cast<int32_t>(n << 22) >> 22;
+    const int32_t b = static_cast<int32_t>((n >> 10) << 22) >> 22;
+    const int32_t c = static_cast<int32_t>((n >> 20) << 22) >> 22;
+    nx = a / 512.0f; ny = b / 512.0f; nz = c / 512.0f;
+}
+
+void smooth_counters_for(int why) {
+    switch (why) {
+        case SMOOTH_WHY_NO_NORMAL: smooth_count(SMOOTH_COUNT_NO_NORMAL, 1); break;
+        case SMOOTH_WHY_FLAT:      smooth_count(SMOOTH_COUNT_FLAT, 1); break;
+        case SMOOTH_WHY_EDGE:      smooth_count(SMOOTH_COUNT_EDGE, 1); break;
+        case SMOOTH_WHY_RADIUS:    smooth_count(SMOOTH_COUNT_RADIUS, 1); break;
+        default: break;
+    }
+}
+
+/* CAN THIS TRIANGLE'S SHAPE BE STORED? Every condition is about whether a
+   single local space exists for the three corners and whether the matrix
+   carries the patch faithfully; the store's own header has the algebra. A
+   refusal is counted and the triangle takes the ordinary path unchanged. */
+bool store_eligible(const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
+    /* No authored normal on a corner: the policy refuses it in three
+       compares without a square root, so there is nothing worth keeping. */
+    if (!ra.has_normal || !rb.has_normal || !rc.has_normal) return false;
+    /* A zero payload is the one normal whose live value is NOT the rotation
+       of its raw value: the NORMAL case turns it into (0,0,1) rather than
+       leaving it zero, so a local patch built from it would curve towards a
+       different surface. */
+    if (!ra.nrm || !rb.nrm || !rc.nrm) {
+        smooth_store_count(SMOOTH_STORE_ZERONRM, 1);
+        return false;
+    }
+    /* Corners from different matrices have no shared local space at all.
+       That is the bone joint, and it is why the live path stays. */
+    if (ra.mgen != rb.mgen || rb.mgen != rc.mgen) {
+        smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_CORNER, 1);
+        return false;
+    }
+    /* A normal latched before the matrix moved is in the wrong space for the
+       position beside it. Counted apart from the joint above, because the two
+       want different answers: this one could be fixed by keeping the raw
+       normal per vertex rather than as a latch, the one above cannot. */
+    if (ra.ngen != ra.mgen || rb.ngen != rb.mgen || rc.ngen != rc.mgen) {
+        smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_NORMAL, 1);
+        return false;
+    }
+    /* The matrix those corners rode has to still be in the ring AND have
+       passed the similarity check. mtx_for_gen answers both, and the replay
+       uses the matrix it hands back rather than whatever is live now. */
+    if (!mtx_for_gen(rc.mgen)) {
+        smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_STALE, 1);
+        return false;
+    }
+    return true;
+}
+
+/* THE STORED PATH. The verdict has already been taken, LIVE, by the caller:
+   all this does is find the tessellation for a shape that has been seen
+   before, or build it once if it has not, and replay it through the matrix
+   the three corners rode. Returns 0 when it could not, and the caller falls
+   through to building the grid in view space. */
+int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
+                     const GxRaw &rc, int tf, const SmoothPolicy &pol,
+                     int prof) {
+    const Mat *xform = mtx_for_gen(rc.mgen);
+    if (!xform) {
+        smooth_store_count(SMOOTH_STORE_NONSIM, 1);
+        return 0;
+    }
+
+    SmoothKey key;
+    const GxRaw *r[3] = {&ra, &rb, &rc};
+    for (int i = 0; i < 3; ++i) {
+        key.p[i][0] = r[i]->x; key.p[i][1] = r[i]->y; key.p[i][2] = r[i]->z;
+        key.n[i] = r[i]->nrm;
+    }
+    key.level = static_cast<uint32_t>(pol.level);
+
+    const long long t_sub = prof ? smooth_prof_ticks() : 0;
+    const SmoothEntry *e = smooth_store_find(key);
+    if (!e) {
+        /* THE ONCE. Build the corners in the model's own space out of the
+           display list's own numbers -- the same FX12 scaling project() puts
+           on a VTX coordinate, and the raw NORMAL payload -- and tessellate.
+           Texel coordinates and colour are deliberately left at zero: they
+           are live state, and the replay interpolates the current ones at
+           the same barycentric weights. */
+        SmoothVertex l[3];
+        for (int i = 0; i < 3; ++i) {
+            l[i].x = r[i]->x * FX12;
+            l[i].y = r[i]->y * FX12;
+            l[i].z = r[i]->z * FX12;
+            raw_normal(r[i]->nrm, l[i].nx, l[i].ny, l[i].nz);
+            l[i].u = 0.0f; l[i].v = 0.0f; l[i].color = 0;
+        }
+        float pts[SMOOTH_MAX_GRID * 3];
+        smooth_grid_positions(l[0], l[1], l[2], tf, pts);
+        e = smooth_store_add(key, tf, pts);
+        if (!e) return 0;
+    }
+    if (e->tf != tf) return 0;     /* built at another level: rebuild live */
+    const float *grid = smooth_store_grid(e);
+    if (!grid) return 0;
+
+    if (smooth_abdiff_on()) {
+        /* The audit arm: build the patch the old way as well and measure how
+           far the two land apart. In exact arithmetic they are the same
+           patch; this is the number that says how close the machine gets. */
+        float liveg[SMOOTH_MAX_GRID * 3];
+        smooth_grid_positions(s[0], s[1], s[2], tf, liveg);
+        const int npts = smooth_grid_points(tf);
+        float worst = 0.0f;
+        for (int i = 0; i < npts; ++i) {
+            const Vec4 lv{grid[i * 3], grid[i * 3 + 1], grid[i * 3 + 2], 1.0f};
+            const Vec4 w = mul(lv, *xform);
+            const float dx = w.x - liveg[i * 3];
+            const float dy = w.y - liveg[i * 3 + 1];
+            const float dz = w.z - liveg[i * 3 + 2];
+            const float d = std::sqrt(dx * dx + dy * dy + dz * dz);
+            if (d > worst) worst = d;
+        }
+        float e0[3] = {s[1].x - s[0].x, s[1].y - s[0].y, s[1].z - s[0].z};
+        smooth_abdiff_add(0, worst,
+                          std::sqrt(e0[0]*e0[0] + e0[1]*e0[1] + e0[2]*e0[2]));
+    }
+
+    smooth_emit_grid(grid, tf, s, xform);
+    if (prof) smooth_prof_add(SMOOTH_PROF_SUBDIV,
+                              smooth_prof_ticks() - t_sub, 1);
+    return 1;
+}
+
+int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
+               const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     const SmoothPolicy &pol = smooth_policy();
 
     /* A mode-3 polygon is a shadow volume. Its stencil protocol compares the
@@ -651,38 +1035,74 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c) {
         s[i].u = in[i]->u; s[i].v = in[i]->v;
         s[i].color = in[i]->color;
     }
-    /* Say WHY, so the measurement table can separate "the feature did nothing
-       because the scene is flat" from "the caps are too tight". */
+
+    /* STEP-0 PROFILER (SM64DS_SMOOTH_PROF; ntr/smooth.h has the contract).
+       Off, this is one compare on a cached int inside a path that only runs
+       when SmoothModels is on. */
+    const int prof = smooth_prof_on();
+
+    /* THE VERDICT IS ALWAYS LIVE, and it is 0.4.0's own call on 0.4.0's own
+       inputs: the view-space corners, this frame. Nothing about which
+       triangles get smoothed is remembered, for the reason written out over
+       SmoothEntry in ntr/smooth.h. Say WHY, so the measurement table can
+       separate "the feature did nothing because the scene is flat" from "the
+       caps are too tight". */
     int why = SMOOTH_WHY_OK;
+    const long long t_pol = prof ? smooth_prof_ticks() : 0;
     const int tf = smooth_tess_factor(s[0], s[1], s[2], pol, &why);
+    if (prof) smooth_prof_add(SMOOTH_PROF_POLICY,
+                              smooth_prof_ticks() - t_pol, 1);
     if (smooth_census_on()) smooth_census_tri(s[0], s[1], s[2], tf);
     if (tf <= 1) {
-        switch (why) {
-            case SMOOTH_WHY_NO_NORMAL: smooth_count(SMOOTH_COUNT_NO_NORMAL, 1); break;
-            case SMOOTH_WHY_FLAT:      smooth_count(SMOOTH_COUNT_FLAT, 1); break;
-            case SMOOTH_WHY_EDGE:      smooth_count(SMOOTH_COUNT_EDGE, 1); break;
-            case SMOOTH_WHY_RADIUS:    smooth_count(SMOOTH_COUNT_RADIUS, 1); break;
-            default: break;
-        }
+        smooth_counters_for(why);
         return 0;
     }
 
     smooth_count(SMOOTH_COUNT_SUBDIVIDED, 1);
-    smooth_subdivide(s[0], s[1], s[2], tf, smooth_sink, 0);
+
+    /* THE GEOMETRY is what the store remembers, and this is where a triangle
+       that has been seen before costs a lookup instead of a patch. */
+    if (!smooth_live_mode() && store_eligible(ra, rb, rc) &&
+        smooth_try_store(s, ra, rb, rc, tf, pol, prof))
+        return 1;
+
+    /* AND THE PATH FOR EVERYTHING ELSE: a bone joint, a matrix that is not a
+       similarity, a shape the store would not take, or the A/B switch. The
+       patch is rebuilt from the view-space corners, every frame. */
+    smooth_store_count(SMOOTH_STORE_LIVE, 1);
+    const long long t_sub = prof ? smooth_prof_ticks() : 0;
+    if (smooth_live_mode()) {
+        smooth_subdivide(s[0], s[1], s[2], tf, smooth_sink, 0);
+    } else {
+        float pts[SMOOTH_MAX_GRID * 3];
+        smooth_grid_positions(s[0], s[1], s[2], tf, pts);
+        smooth_emit_grid(pts, tf, s, 0);
+    }
+    if (prof) smooth_prof_add(SMOOTH_PROF_SUBDIV,
+                              smooth_prof_ticks() - t_sub, 1);
     return 1;
 }
 
-void emit_tri(const GxVertex &a, const GxVertex &b, const GxVertex &c) {
+void emit_tri(const GxVertex &a, const GxVertex &b, const GxVertex &c,
+              const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     smooth_count(SMOOTH_COUNT_IN, 1);
     /* OFF IS ONE COMPARE. smooth_level() is a load of a file-scope int that
        walk_window sets once at boot; with the setting absent it is 0 and this
        function is the same call it always was. */
-    if (smooth_level() > 0 && smooth_try(a, b, c)) return;
+    if (smooth_level() > 0 && smooth_try(a, b, c, ra, rb, rc)) return;
     emit_tri_near(a, b, c);
 }
 
 void smooth_sink(void *, const SmoothVertex &a, const SmoothVertex &b,
                  const SmoothVertex &c) {
+    /* Bucket three: ONE sub-triangle, from the three view-space points the
+       kernel invented to the push onto the polygon list. This is the cost a
+       cache of the patch maths cannot remove, which is the whole reason the
+       profiler splits it out. It is also the bucket the clock read perturbs
+       most, because it is read once per sub-triangle rather than once per
+       triangle: see the honesty note in ntr/smooth.h. */
+    const int prof = smooth_prof_on() >= 2;
+    const long long t0 = prof ? smooth_prof_ticks() : 0;
     GxVertex out[3];
     const SmoothVertex *in[3] = {&a, &b, &c};
     for (int i = 0; i < 3; ++i) {
@@ -697,36 +1117,60 @@ void smooth_sink(void *, const SmoothVertex &a, const SmoothVertex &b,
     /* Straight to the near clip: a sub-triangle must never re-enter
        smooth_try, and this is where that is enforced. */
     emit_tri_near(out[0], out[1], out[2]);
+    if (prof) smooth_prof_add(SMOOTH_PROF_SINK, smooth_prof_ticks() - t0, 1);
 }
 
 // Assemble according to the active BEGIN_VTXS primitive type.
-void push_vertex(const GxVertex &v) {
+//
+// MDL2: every emit_tri call now carries the three RAW vertex records beside
+// the three transformed ones, taken from the parallel strip at the same
+// indices. The assembly rules below -- which vertices make a triangle, in
+// which order, with which winding -- are untouched.
+void push_vertex(const GxVertex &v, const GxRaw *r) {
     g.strip.push_back(v);
+    /* OFF COSTS NOTHING HERE EITHER. With the setting absent `r` is null, the
+       parallel array stays empty and never allocates, and the references
+       handed to emit_tri below are one dead record that the store can never
+       accept -- emit_tri does not read them at all in that case, because
+       smooth_level() is 0 and it short-circuits before smooth_try. */
+    if (r) g.strip_raw.push_back(*r);
     const size_t n = g.strip.size();
+    const GxVertex *s = g.strip.empty() ? 0 : &g.strip[0];
+    const GxRaw *qp = (g.strip_raw.size() == n) ? &g.strip_raw[0] : 0;
+    struct QAt {
+        const GxRaw *p;
+        const GxRaw &operator()(size_t i) const { return p ? p[i] : g_raw_dead; }
+    } q = {qp};
     switch (g.prim) {
         case 0:                                        // separate triangles
-            if (n == 3) { emit_tri(g.strip[0], g.strip[1], g.strip[2]); g.strip.clear(); }
+            if (n == 3) {
+                emit_tri(s[0], s[1], s[2], q(0), q(1), q(2));
+                g.strip.clear();
+                g.strip_raw.clear();
+            }
             break;
         case 1:                                        // separate quads
             if (n == 4) {
-                emit_tri(g.strip[0], g.strip[1], g.strip[2]);
-                emit_tri(g.strip[0], g.strip[2], g.strip[3]);
+                emit_tri(s[0], s[1], s[2], q(0), q(1), q(2));
+                emit_tri(s[0], s[2], s[3], q(0), q(2), q(3));
                 g.strip.clear();
+                g.strip_raw.clear();
             }
             break;
         case 2:                                        // triangle strip
             if (n >= 3) {
-                const GxVertex &p0 = g.strip[n - 3], &p1 = g.strip[n - 2], &p2 = g.strip[n - 1];
-                if ((n - 3) & 1) emit_tri(p1, p0, p2);  // alternate winding
-                else emit_tri(p0, p1, p2);
+                const size_t i0 = n - 3, i1 = n - 2, i2 = n - 1;
+                if ((n - 3) & 1)                        // alternate winding
+                    emit_tri(s[i1], s[i0], s[i2], q(i1), q(i0), q(i2));
+                else
+                    emit_tri(s[i0], s[i1], s[i2], q(i0), q(i1), q(i2));
             }
             break;
         case 3:                                        // quad strip
             if (n >= 4 && (n % 2) == 0) {
-                const GxVertex &p0 = g.strip[n - 4], &p1 = g.strip[n - 3];
-                const GxVertex &p2 = g.strip[n - 2], &p3 = g.strip[n - 1];
-                emit_tri(p0, p1, p3);
-                emit_tri(p0, p3, p2);
+                const size_t i0 = n - 4, i1 = n - 3, i2 = n - 2, i3 = n - 1;
+                emit_tri(s[i0], s[i1], s[i3], q(i0), q(i1), q(i3));
+                emit_tri(s[i0], s[i3], s[i2], q(i0), q(i3), q(i2));
             }
             break;
         default: break;
@@ -735,7 +1179,20 @@ void push_vertex(const GxVertex &v) {
 
 void vertex(int16_t x, int16_t y, int16_t z) {
     g.vx = x; g.vy = y; g.vz = z;
-    if (g.prim >= 0) push_vertex(project(x, y, z));
+    if (g.prim < 0) return;
+    /* The raw half of the vertex, for the shape store. With the setting
+       absent it is filled with a pair of generations that can never match,
+       so the store is unreachable rather than merely unused. */
+    GxRaw r = g_raw_dead;
+    if (smooth_level() > 0) {
+        mtx_gen_update();
+        r.x = x; r.y = y; r.z = z;
+        r.nrm = g.nrm_raw;
+        r.mgen = g_mtx_gen;
+        r.ngen = g.nrm_gen;
+        r.has_normal = (uint8_t)(g.normal_live ? 1 : 0);
+    }
+    push_vertex(project(x, y, z), smooth_level() > 0 ? &r : 0);
 }
 
 // --- command execution ------------------------------------------------------
@@ -984,6 +1441,17 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
                these two fields, so lighting is bit-for-bit what it was. */
             g.nrm[0] = nx; g.nrm[1] = ny; g.nrm[2] = nz;
             g.normal_live = 1;
+            /* MDL2: and the RAW payload beside it, with the matrix generation
+               it was latched under, for the shape store (ntr/smooth.h). This
+               is the number the MODEL carries; the three floats above are
+               what one particular matrix made of it. Behind the level check,
+               so a run with the setting absent pays one compare on a
+               file-scope int and nothing else. */
+            if (smooth_level() > 0) {
+                mtx_gen_update();
+                g.nrm_raw = p[0] & 0x3FFFFFFFu;
+                g.nrm_gen = g_mtx_gen;
+            }
 
             /* WHICH LIGHTS ARE ON IS THE POLYGON'S OWN BUSINESS. GBATEK puts
                the four light-enable flags in POLYGON_ATTR bits 0-3, so the
@@ -1125,9 +1593,21 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
         case 0x40:                                               // BEGIN_VTXS
             g.prim = p[0] & 3;
             g.strip.clear();
+            /* MDL2: the parallel raw strip is indexed with this one, so it
+               empties with it. Leaving it behind here silently offset every
+               raw record by however many vertices the previous primitive had
+               left, which is the shape store keying a patch on another
+               triangle's coordinates -- the SM64DS_SMOOTH_ABDIFF arm
+               measured that as a thousand view units of separation before
+               this line existed. */
+            g.strip_raw.clear();
             g.strip_parity = 0;
             break;
-        case 0x41: g.prim = -1; g.strip.clear(); break;          // END_VTXS
+        case 0x41:                                               // END_VTXS
+            g.prim = -1;
+            g.strip.clear();
+            g.strip_raw.clear();
+            break;
         case 0x50:                                               // SWAP_BUFFERS
             /* rung R3b/BSWAP: latch, do not act. See THE PENDING SWAP above. */
             g_swap_pending = 1;
@@ -1783,8 +2263,11 @@ void gx_reset() {
 
     std::vector<GxVertex> strip = std::move(g.strip);
     std::vector<GxTriangle> tris = std::move(g.tris);
+    /* the raw strip rides with the strip it mirrors, for the same reason */
+    std::vector<GxRaw> strip_raw = std::move(g.strip_raw);
     strip.clear();
     tris.clear();
+    strip_raw.clear();
     /* AND KEEP THE LIGHT TABLE, because it is not per-frame state.
        LIGHT_VECTOR and LIGHT_COLOR are latched registers on the geometry
        engine and nothing on a DS clears them at a frame boundary. The game
@@ -1868,6 +2351,7 @@ void gx_reset() {
     if (!proj_carry_off) g.proj = proj_keep;
     g.strip = std::move(strip);
     g.tris = std::move(tris);
+    g.strip_raw = std::move(strip_raw);
     for (int i = 0; i < 4; ++i) g.lights[i] = lights[i];
     g.light_mask = light_mask;
     g_teximage = g_plttbase = 0;

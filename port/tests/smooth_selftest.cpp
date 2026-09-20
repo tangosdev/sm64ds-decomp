@@ -26,11 +26,23 @@
 //                                               round gives the same curve)
 //   (new) policy decisions                   -> POLICY
 //   (new) degenerate input                   -> DEGENERATE
+//
+// And the five rows the shape store brought with it (run hd2, lane MDL2):
+//
+//   SHAPESPLIT  the policy split in two still gives the one verdict
+//   REPLAY      a patch built in local space and pushed through a similarity
+//               is the patch built from the transformed corners
+//   KEYMTX      the key is the raw input, so one triangle under two matrices
+//               is one entry
+//   COLLIDE     four thousand entries, every lookup answered with its own
+//               grid: the full key is compared, never just its hash
+//   CAPEVICT    the pool is bounded and the bound is enforced
 
 #include "ntr/smooth.h"
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <vector>
 
 using ntr::SmoothVertex;
@@ -437,7 +449,291 @@ static void test_uvcolor() {
     row("UVCOLOR", ok, detail);
 }
 
+// --------------------------------------------------------- the shape store
+//
+// These four rows are the whole of the "computed once and reused" claim. The
+// store lives in the kernel, so they need no engine, no matrix stack and no
+// ROM: a similarity matrix written out longhand here is the same kind of
+// matrix the geometry stage checks for before it ever forms a key.
+
+// A rotation and a uniform scale and a translation, applied to a point. The
+// geometry stage refuses anything else, which is why this is all the test
+// needs: see the matrix-generation block in ntr/gx.cpp.
+struct Sim {
+    float r[3][3];   // a rotation: r[i] is the image of basis vector i
+    float s;         // uniform scale
+    float t[3];      // translation
+};
+
+static Sim sim_make(float ax, float ay, float az, float ang, float s,
+                    float tx, float ty, float tz) {
+    // Rodrigues, written out so the test depends on nothing but itself.
+    const float l = sqrtf(ax * ax + ay * ay + az * az);
+    ax /= l; ay /= l; az /= l;
+    const float ca = cosf(ang), sa = sinf(ang), ic = 1.0f - ca;
+    Sim m;
+    m.r[0][0] = ca + ax * ax * ic;
+    m.r[0][1] = ax * ay * ic + az * sa;
+    m.r[0][2] = ax * az * ic - ay * sa;
+    m.r[1][0] = ay * ax * ic - az * sa;
+    m.r[1][1] = ca + ay * ay * ic;
+    m.r[1][2] = ay * az * ic + ax * sa;
+    m.r[2][0] = az * ax * ic + ay * sa;
+    m.r[2][1] = az * ay * ic - ax * sa;
+    m.r[2][2] = ca + az * az * ic;
+    m.s = s;
+    m.t[0] = tx; m.t[1] = ty; m.t[2] = tz;
+    return m;
+}
+
+static void sim_point(const Sim &m, const float p[3], float o[3]) {
+    for (int k = 0; k < 3; ++k)
+        o[k] = (p[0] * m.r[0][k] + p[1] * m.r[1][k] + p[2] * m.r[2][k]) * m.s
+             + m.t[k];
+}
+
+static void sim_dir(const Sim &m, const float p[3], float o[3]) {
+    for (int k = 0; k < 3; ++k)
+        o[k] = p[0] * m.r[0][k] + p[1] * m.r[1][k] + p[2] * m.r[2][k];
+}
+
+// REPLAY: the grid built in LOCAL space and then pushed through the matrix is
+// the grid built from the TRANSFORMED corners. In exact arithmetic these are
+// the same points -- the PN edge term is a dot product a rotation preserves
+// and a uniform scale multiplies along with everything else, and the patch
+// evaluation is an affine combination of the control points -- so the only
+// difference the machine can produce is the order the roundings happen in.
+// The row reports that difference as a fraction of the triangle's own size,
+// which is the only scale it means anything against.
+static void test_store_replay() {
+    const SmoothVertex l0 = vtx(0.0f, 0.0f, 0.0f,  -0.3f, -0.4f, 0.87f,
+                                0, 0, 0xFF112233u);
+    const SmoothVertex l1 = vtx(2.5f, 0.25f, -0.5f, 0.6f, -0.2f, 0.77f,
+                                4, 0, 0xFF445566u);
+    const SmoothVertex l2 = vtx(0.75f, 2.0f, 0.4f, -0.1f, 0.65f, 0.75f,
+                                0, 8, 0xFF778899u);
+
+    const Sim m = sim_make(0.3f, -0.7f, 0.65f, 1.17f, 3.5f,
+                           120.0f, -45.0f, 610.0f);
+
+    // The live build: corners through the matrix, normals through its
+    // rotation, patch in that space.
+    SmoothVertex v[3];
+    const SmoothVertex *src[3] = {&l0, &l1, &l2};
+    for (int i = 0; i < 3; ++i) {
+        const float p[3] = {src[i]->x, src[i]->y, src[i]->z};
+        const float n[3] = {src[i]->nx, src[i]->ny, src[i]->nz};
+        float op[3], on[3];
+        sim_point(m, p, op);
+        sim_dir(m, n, on);
+        v[i] = vtx(op[0], op[1], op[2], on[0], on[1], on[2],
+                   src[i]->u, src[i]->v, src[i]->color);
+    }
+
+    float worst = 0.0f, size = 0.0f;
+    for (int lvl = 1; lvl <= ntr::SMOOTH_MAX_LEVEL; ++lvl) {
+        const int tf = 1 << lvl;
+        std::vector<float> a(ntr::smooth_grid_points(tf) * 3);
+        std::vector<float> b(ntr::smooth_grid_points(tf) * 3);
+        const int n = ntr::smooth_grid_positions(l0, l1, l2, tf, &a[0]);
+        ntr::smooth_grid_positions(v[0], v[1], v[2], tf, &b[0]);
+        for (int i = 0; i < n; ++i) {
+            float o[3];
+            sim_point(m, &a[i * 3], o);
+            const float dx = o[0] - b[i * 3];
+            const float dy = o[1] - b[i * 3 + 1];
+            const float dz = o[2] - b[i * 3 + 2];
+            const float d = sqrtf(dx * dx + dy * dy + dz * dz);
+            if (d > worst) worst = d;
+        }
+        const float e0 = dist(v[0], v[1]), e1 = dist(v[1], v[2]);
+        if (e0 > size) size = e0;
+        if (e1 > size) size = e1;
+    }
+    const float rel = worst / size;
+    // A float carries about seven decimal digits, the positions here are
+    // hundreds of units from the origin, and the two routes multiply in a
+    // different order, so a few parts in ten million is the floor. Anything
+    // above a part in a hundred thousand would be an algebra error, not a
+    // rounding one.
+    char detail[200];
+    snprintf(detail, sizeof detail,
+             "replayed vs live grid: worst %g units over a %.1f-unit triangle "
+             "= %g of its size (limit 1e-5)",
+             (double)worst, (double)size, (double)rel);
+    row("REPLAY", rel < 1e-5f, detail);
+}
+
+// KEYMTX: the key is the raw input and nothing else, so the same triangle
+// under two different matrices is ONE entry. The store has no matrix in its
+// interface at all, which is the point; this row pins that the second lookup
+// hits rather than inserting a twin.
+static void test_store_keymtx() {
+    ntr::smooth_store_clear();
+    ntr::SmoothStoreStats before, after;
+    ntr::smooth_store_stats(before);
+
+    ntr::SmoothKey k;
+    for (int i = 0; i < 3; ++i) {
+        k.p[i][0] = (int16_t)(100 + i * 7);
+        k.p[i][1] = (int16_t)(-40 + i * 3);
+        k.p[i][2] = (int16_t)(900 - i * 11);
+        k.n[i] = 0x12345678u + (uint32_t)i;
+    }
+    k.level = 2;
+    const int tf = 4;
+    std::vector<float> grid(ntr::smooth_grid_points(tf) * 3, 0.25f);
+    ntr::smooth_store_add(k, tf, &grid[0]);
+
+    // The same raw triangle, seen again on a later frame under a completely
+    // different matrix: the caller forms the same key, because the key never
+    // saw a matrix.
+    const ntr::SmoothEntry *e1 = ntr::smooth_store_find(k);
+    const ntr::SmoothEntry *e2 = ntr::smooth_store_find(k);
+    ntr::smooth_store_stats(after);
+    const bool ok = e1 && e1 == e2 && after.entries == before.entries + 1
+                 && after.hits == before.hits + 2;
+    char detail[200];
+    snprintf(detail, sizeof detail,
+             "one insert, two hits, %llu entr%s (want 1 and 2 and 1)",
+             (unsigned long long)after.entries,
+             after.entries == 1 ? "y" : "ies");
+    row("KEYMTX", ok, detail);
+}
+
+// COLLIDE: fill the table hard enough that hash collisions are certain, then
+// check every entry still answers with its OWN grid. A lookup that trusted
+// the hash rather than comparing the whole key would hand back a neighbour's
+// patch here, and the sentinel in each grid is what would catch it.
+static void test_store_collide() {
+    ntr::smooth_store_clear();
+    const int N = 4000;
+    const int tf = 2;
+    const int npts = ntr::smooth_grid_points(tf);
+    std::vector<float> grid((size_t)npts * 3, 0.0f);
+
+    for (int i = 0; i < N; ++i) {
+        ntr::SmoothKey k;
+        for (int c = 0; c < 3; ++c) {
+            k.p[c][0] = (int16_t)(i * 3 + c);
+            k.p[c][1] = (int16_t)(-i + c);
+            k.p[c][2] = (int16_t)((i * 7) & 0x7FFF);
+            k.n[c] = (uint32_t)(i * 131u + (uint32_t)c);
+        }
+        k.level = 1;
+        grid[0] = (float)i;            // the sentinel: which entry this is
+        ntr::smooth_store_add(k, tf, &grid[0]);
+    }
+
+    int wrong = 0, missing = 0;
+    for (int i = 0; i < N; ++i) {
+        ntr::SmoothKey k;
+        for (int c = 0; c < 3; ++c) {
+            k.p[c][0] = (int16_t)(i * 3 + c);
+            k.p[c][1] = (int16_t)(-i + c);
+            k.p[c][2] = (int16_t)((i * 7) & 0x7FFF);
+            k.n[c] = (uint32_t)(i * 131u + (uint32_t)c);
+        }
+        k.level = 1;
+        const ntr::SmoothEntry *e = ntr::smooth_store_find(k);
+        if (!e) { ++missing; continue; }
+        const float *gp = ntr::smooth_store_grid(e);
+        if (!gp || gp[0] != (float)i) ++wrong;
+    }
+    // And a key that was never inserted must miss rather than land on
+    // whatever shares its slot.
+    ntr::SmoothKey absent;
+    for (int c = 0; c < 3; ++c) {
+        absent.p[c][0] = 30000; absent.p[c][1] = -30000; absent.p[c][2] = 111;
+        absent.n[c] = 0xDEADBEEFu;
+    }
+    absent.level = 1;
+    const bool stranger_missed = ntr::smooth_store_find(absent) == 0;
+
+    char detail[200];
+    snprintf(detail, sizeof detail,
+             "%d entries: %d missing, %d handed back another entry's grid, "
+             "unknown key %s (want 0, 0, missed)",
+             N, missing, wrong, stranger_missed ? "missed" : "HIT");
+    row("COLLIDE", missing == 0 && wrong == 0 && stranger_missed, detail);
+}
+
+// CAPEVICT: the pool is bounded, and the bound is enforced by emptying it.
+// main() sets SM64DS_SMOOTH_STORE_MB to 1 before anything touches the store,
+// so this row runs against a cap small enough to reach in a fraction of a
+// second and the rows above stay comfortably inside it.
+static void test_store_cap() {
+    ntr::smooth_store_clear();
+    ntr::SmoothStoreStats before, after;
+    ntr::smooth_store_stats(before);
+
+    const int tf = 8;                       // the biggest grid, 45 points
+    const int npts = ntr::smooth_grid_points(tf);
+    std::vector<float> grid((size_t)npts * 3, 1.0f);
+
+    uint64_t peak = 0;
+    for (int i = 0; i < 20000; ++i) {
+        ntr::SmoothKey k;
+        for (int c = 0; c < 3; ++c) {
+            k.p[c][0] = (int16_t)(i & 0x7FFF);
+            k.p[c][1] = (int16_t)(c - i);
+            k.p[c][2] = (int16_t)(i >> 2);
+            k.n[c] = (uint32_t)(i * 7919u + (uint32_t)c);
+        }
+        k.level = 3;
+        ntr::smooth_store_add(k, tf, &grid[0]);
+        ntr::smooth_store_stats(after);
+        if (after.bytes > peak) peak = after.bytes;
+        if (after.clears > before.clears + 1) break;
+    }
+    ntr::smooth_store_stats(after);
+    const bool ok = after.clears > before.clears
+                 && peak <= after.cap_bytes
+                 && after.cap_bytes > 0;
+    char detail[220];
+    snprintf(detail, sizeof detail,
+             "cap %llu bytes, peak %llu, %llu eviction(s) (want peak <= cap "
+             "and at least one)",
+             (unsigned long long)after.cap_bytes, (unsigned long long)peak,
+             (unsigned long long)(after.clears - before.clears));
+    row("CAPEVICT", ok, detail);
+    ntr::smooth_store_clear();
+}
+
+// SHAPESPLIT: smooth_tess_factor and the split pair must be one verdict. The
+// split is what lets half the policy be remembered, so it is worth pinning
+// that it did not become a second opinion.
+static void test_shape_split() {
+    SmoothPolicy pol;
+    pol.level = 2; pol.flat_cos = 0.99985f; pol.max_radius = 128.0f;
+    pol.max_edge = 0.0f;
+    int bad = 0, checked = 0;
+    for (int i = 0; i < 64; ++i) {
+        const float f = (float)i * 0.031f;
+        const SmoothVertex a = vtx(0, 0, 0,  0, 0, 1,  0, 0, 0xFF000000u);
+        const SmoothVertex b = vtx(1 + f, 0, 0,  f * 0.2f, 0,
+                                   1 - f * 0.05f, 1, 0, 0xFF000000u);
+        const SmoothVertex c = vtx(0, 1 + f, 0,  0, -f * 0.1f, 1,
+                                   0, 1, 0xFF000000u);
+        int w1 = -1, w2 = -1;
+        const int t1 = ntr::smooth_tess_factor(a, b, c, pol, &w1);
+        ntr::SmoothShape sh;
+        ntr::smooth_shape(a, b, c, pol, sh);
+        const int t2 = ntr::smooth_shape_factor(sh, pol, 1.0f, &w2);
+        ++checked;
+        if (t1 != t2 || w1 != w2) ++bad;
+    }
+    row("SHAPESPLIT", bad == 0,
+        "%.0f of %.0f triangles: the split policy and the whole one disagree "
+        "(want 0)", (double)bad, (double)checked);
+}
+
 int main() {
+    /* The store latches its cap the first time anything touches it, so the
+       cap the CAPEVICT row needs has to be in the environment before the
+       first store call. One megabyte is small enough to fill in a fraction
+       of a second and large enough for every other row here. */
+    _putenv("SM64DS_SMOOTH_STORE_MB=1");
     printf("smooth_selftest (ntr/smooth) -- PN triangles, "
            "MAX_LEVEL=%d, MAX_TF=%d\n", (int)ntr::SMOOTH_MAX_LEVEL,
            (int)ntr::SMOOTH_MAX_TF);
@@ -454,6 +750,11 @@ int main() {
     test_policy();
     test_degenerate();
     test_uvcolor();
+    test_shape_split();
+    test_store_replay();
+    test_store_keymtx();
+    test_store_collide();
+    test_store_cap();
     printf("------------ ------- ------------------------------------------------\n");
     printf("%s: %d failing row(s)\n", g_fail ? "SELFTEST RED" : "SELFTEST GREEN",
            g_fail);
