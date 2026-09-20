@@ -82,6 +82,12 @@ in the normal `src/` production build.
   local report. Private CI and formal queue review publication have not run;
   `formal_acceptance: false`.
 
+The producer stage retains its original initializer/handoff artifact list.
+Its approved file/range resource amendment additionally reserves Behavior.
+Source-review coverage is derived from the complete amended file resources,
+not that original artifact list, and must cover every source at the exact
+candidate and tested base.
+
 Current local producer evidence is under `build/shadow-backport2/`:
 `checks.json`, `gates.json`, `secondary-gates.json`, `rombuild-report.json`,
 `rombuild.log`, `romdata.json` and `attribution.json`. Independent controls and
