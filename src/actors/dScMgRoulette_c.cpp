@@ -11,11 +11,10 @@
  *
  * Eight of the 40 are this class's own vtable slots: 0 InitResources,
  * 3 CleanupResources, 6 Behavior, 9 Render, the 16/17 destructor pair, and
- * 18/19 OnYoshiTryEat/OnTurnIntoEgg.  The other 32 are the file-local helpers
- * that shared the translation unit with them -- board hit-testing, the racer
- * update and draw loops, the slider physics and the HUD strips.  None is
- * reached from outside 0x0210788c..0x0210a400 and the ROM gives none of them
- * a mangled name, so none was a class member with external linkage.
+ * 18/19 OnYoshiTryEat/OnTurnIntoEgg. The remaining 32 address-named helpers
+ * cover board hit-testing, racer update and draw loops, slider physics and
+ * HUD strips. Their repository labels do not recover the original names,
+ * linkage or choice of member versus free function.
  *
  * PRODUCTION translation unit: enrolled in
  * config/arm9/overlays/ov006/delinks.txt as one complete .text range and
@@ -863,29 +862,29 @@ int dScMgRoulette_c::OnTurnIntoEgg(int /* mode */)
 {
     char *self = (char *)this;
 
-    switch (*(s16 *)(self + 0x53e6)) {
+    switch (mPhase) {
     case 5:
         FreeGfxSlotsById(0x1d);
         if (func_ov006_02107a6c() != 0)
-            (*(s16 *)(self + 0x53e6))++;
+            (mPhase)++;
         break;
     case 6:
         if (func_ov006_020c1718(self + 0x4f38) != 0) {
-            *(u16 *)(self + 0x53e8) = 0x3c;
-            *(int *)(self + 0x53f8) = 0;
-            (*(s16 *)(self + 0x53e6))++;
+            mPhaseTimer = 0x3c;
+            mDealIndex = 0;
+            (mPhase)++;
         }
         break;
     case 7:
-        (*(s16 *)(self + 0x53e8))--;
-        if (*(s16 *)(self + 0x53e8) == 0) {
-            if (*(s16 *)(self + 0x53f2) != 0)
+        (mPhaseTimer)--;
+        if (mPhaseTimer == 0) {
+            if (mScore != 0)
                 func_ov004_020b56c8();
-            (*(s16 *)(self + 0x53e6))++;
+            (mPhase)++;
         }
         break;
     case 8:
-        (*(s16 *)(self + 0x53e6))++;
+        (mPhase)++;
         /* fall through */
     case 9:
     default:

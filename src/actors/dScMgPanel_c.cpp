@@ -2411,7 +2411,7 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
         if (*(u32 *)(self + 0xbc) > 0x270e)
             *(int *)(self + 0xbc) = 0x270e;
     } else {
-        *(u8 *)(self + 0x4fea) = 0;
+        unk_4fea = 0;
         *(int *)(self + 0xbc) = 0;
         if (*(u32 *)(self + 0xbc) > 0x270e)
             *(int *)(self + 0xbc) = 0x270e;
@@ -2429,8 +2429,8 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
     func_ov006_02106168(this);
     func_ov006_02104b24(self);
 
-    *(u8 *)(self + 0x4fe2) = 3;
-    *(int *)(self + 0x4ca8) = 0;
+    unk_4fe2 = 3;
+    unk_4ca8 = 0;
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);
     SetSubBg0Offset(0, 0);
 
@@ -2467,7 +2467,7 @@ s32 dScMgPanel_c::Behavior()
 {
     extern Ent_358 data_ov006_02142888[];
     char *c = (char *)this;
-    int idx = *(int *)(c + 0x4000 + 0xca8);
+    int idx = unk_4ca8;
     Ent_358 *e = &data_ov006_02142888[idx];
     int adj = e->b;
     char *obj = c + (adj >> 1);
@@ -2600,18 +2600,18 @@ s32 dScMgPanel_c::InitResources()
     func_ov006_021067a4(c);
     func_ov006_02106758(c);
 
-    *(int *)(c + 0x4cb0) = 0;
-    *(u8 *)(c + 0x4fea) = 0;
-    *(int *)(c + 0x4cb4) = 0xff;
+    unk_4cb0 = 0;
+    unk_4fea = 0;
+    unk_4cb4 = 0xff;
 
     func_ov006_021063a0(c);
     func_ov006_02106168(this);
     func_ov006_02105118(c);
     func_ov006_02104b24(c);
 
-    *(int *)(c + 0x4ca8) = 1;
-    *(int *)(c + 0x4cac) = 0;
-    *(u8 *)(c + 0x4fe2) = 3;
+    unk_4ca8 = 1;
+    unk_4cac = 0;
+    unk_4fe2 = 3;
 
     func_ov004_020b04d0(0x20);
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);

@@ -1,0 +1,4961 @@
+{
+  "schema": 1,
+  "task": "pr2877-provenance-repair-0920",
+  "session": "codex-scenes-source-0920",
+  "stage": "reconstruct",
+  "original_author_head": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+  "source_base": "4679d2a9a319abc7c5b43a04211a0e6b877d471e",
+  "worktree_head": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+  "compiler": "2004/b56",
+  "formal_acceptance": false,
+  "rows": [
+    {
+      "source": "src/actors/dScMgCup_c.cpp",
+      "manifest": "config/tu_manifest.d/ov006/dScMgCup_c.json",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "source_sha256": {
+        "original": "1bada820b81db810ad8b773c3c203dc7069b4c2cb5c57cd2dfc5eda0c3f73307",
+        "candidate": "7ca55b02f6c17812e03524d4807e9440fab3d0df6aa5d85c3a8368bca843f131"
+      },
+      "object_sha256": {
+        "original": "777dbb9b72e9e30a39ad032bc99a0c1f4e746a3a7f3eaeb7d29b61cb819525ab",
+        "candidate": "777dbb9b72e9e30a39ad032bc99a0c1f4e746a3a7f3eaeb7d29b61cb819525ab"
+      },
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "entire_inventory_identical": true,
+      "strict": [
+        {
+          "name": "_ZN10dScMgCup_cD1Ev",
+          "module": "ov006",
+          "addr": "0x020de988",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_cD0Ev",
+          "module": "ov006",
+          "addr": "0x020dea1c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020deac4",
+          "module": "ov006",
+          "addr": "0x020deac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020deac8",
+          "module": "ov006",
+          "addr": "0x020deac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020deaf0",
+          "module": "ov006",
+          "addr": "0x020deaf0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020deb48",
+          "module": "ov006",
+          "addr": "0x020deb48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020debb4",
+          "module": "ov006",
+          "addr": "0x020debb4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020debfc",
+          "module": "ov006",
+          "addr": "0x020debfc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020dec3c",
+          "module": "ov006",
+          "addr": "0x020dec3c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020dec5c",
+          "module": "ov006",
+          "addr": "0x020dec5c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020dec88",
+          "module": "ov006",
+          "addr": "0x020dec88",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ded00",
+          "module": "ov006",
+          "addr": "0x020ded00",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ded84",
+          "module": "ov006",
+          "addr": "0x020ded84",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020dedfc",
+          "module": "ov006",
+          "addr": "0x020dedfc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020deed8",
+          "module": "ov006",
+          "addr": "0x020deed8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020def80",
+          "module": "ov006",
+          "addr": "0x020def80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020df024",
+          "module": "ov006",
+          "addr": "0x020df024",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c9StateIdleEv",
+          "module": "ov006",
+          "addr": "0x020df1bc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c11StateFinishEv",
+          "module": "ov006",
+          "addr": "0x020df1c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c11StateResultEv",
+          "module": "ov006",
+          "addr": "0x020df28c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c11StateSelectEv",
+          "module": "ov006",
+          "addr": "0x020df3bc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c17StateWaitForInputEv",
+          "module": "ov006",
+          "addr": "0x020df540",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c12StateShuffleEv",
+          "module": "ov006",
+          "addr": "0x020df5b8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c19StatePrepareShuffleEv",
+          "module": "ov006",
+          "addr": "0x020dfcd8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c10StateSetupEv",
+          "module": "ov006",
+          "addr": "0x020dfd48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c9Virtual50Ev",
+          "module": "ov006",
+          "addr": "0x020dfed4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c13OnYoshiTryEatEi",
+          "module": "ov006",
+          "addr": "0x020dfeec",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c6RenderEv",
+          "module": "ov006",
+          "addr": "0x020e0068",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c8BehaviorEv",
+          "module": "ov006",
+          "addr": "0x020e0204",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN10dScMgCup_c13InitResourcesEv",
+          "module": "ov006",
+          "addr": "0x020e0308",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "dScMgCup_c_classInit",
+          "module": "ov006",
+          "addr": "0x020e0574",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e0634",
+          "module": "ov006",
+          "addr": "0x020e0634",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "licensed_bytes": 7344,
+      "compiler_only_errors": [],
+      "compiler_only_policy": {
+        "requested": [
+          "_ZN10dScMgCup_cD2Ev"
+        ],
+        "deadstripped": [
+          "_ZN10dScMgCup_cD2Ev"
+        ],
+        "droppedSections": [
+          9,
+          10,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82
+        ],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dScene_c",
+          "_ZTI7dBase_c",
+          "_ZTI11dScMgBase_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTI8dScene_c",
+          "_ZTI10dScMgCup_c",
+          "_ZTS10dScMgCup_c",
+          "_ZTI19dScMgSingle3DBase_c",
+          "_ZTS19dScMgSingle3DBase_c",
+          "_ZTV10dScMgCup_c"
+        ],
+        "dataExternalized": [
+          "_ZTI10dScMgCup_c",
+          "_ZTI11dScMgBase_c",
+          "_ZTI19dScMgSingle3DBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS10dScMgCup_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTS19dScMgSingle3DBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dScene_c",
+          "_ZTV10dScMgCup_c"
+        ]
+      },
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "licensed_emission_order": [
+        "_ZN10dScMgCup_cD1Ev",
+        "_ZN10dScMgCup_cD0Ev",
+        "func_ov006_020deac4",
+        "func_ov006_020deac8",
+        "func_ov006_020deaf0",
+        "func_ov006_020deb48",
+        "func_ov006_020debb4",
+        "func_ov006_020debfc",
+        "func_ov006_020dec3c",
+        "func_ov006_020dec5c",
+        "func_ov006_020dec88",
+        "func_ov006_020ded00",
+        "func_ov006_020ded84",
+        "func_ov006_020dedfc",
+        "func_ov006_020deed8",
+        "func_ov006_020def80",
+        "func_ov006_020df024",
+        "_ZN10dScMgCup_c9StateIdleEv",
+        "_ZN10dScMgCup_c11StateFinishEv",
+        "_ZN10dScMgCup_c11StateResultEv",
+        "_ZN10dScMgCup_c11StateSelectEv",
+        "_ZN10dScMgCup_c17StateWaitForInputEv",
+        "_ZN10dScMgCup_c12StateShuffleEv",
+        "_ZN10dScMgCup_c19StatePrepareShuffleEv",
+        "_ZN10dScMgCup_c10StateSetupEv",
+        "_ZN10dScMgCup_c9Virtual50Ev",
+        "_ZN10dScMgCup_c13OnYoshiTryEatEi",
+        "_ZN10dScMgCup_c6RenderEv",
+        "_ZN10dScMgCup_c8BehaviorEv",
+        "_ZN10dScMgCup_c13InitResourcesEv",
+        "dScMgCup_c_classInit",
+        "func_ov006_020e0634"
+      ],
+      "expected_order": [
+        "_ZN10dScMgCup_cD1Ev",
+        "_ZN10dScMgCup_cD0Ev",
+        "func_ov006_020deac4",
+        "func_ov006_020deac8",
+        "func_ov006_020deaf0",
+        "func_ov006_020deb48",
+        "func_ov006_020debb4",
+        "func_ov006_020debfc",
+        "func_ov006_020dec3c",
+        "func_ov006_020dec5c",
+        "func_ov006_020dec88",
+        "func_ov006_020ded00",
+        "func_ov006_020ded84",
+        "func_ov006_020dedfc",
+        "func_ov006_020deed8",
+        "func_ov006_020def80",
+        "func_ov006_020df024",
+        "_ZN10dScMgCup_c9StateIdleEv",
+        "_ZN10dScMgCup_c11StateFinishEv",
+        "_ZN10dScMgCup_c11StateResultEv",
+        "_ZN10dScMgCup_c11StateSelectEv",
+        "_ZN10dScMgCup_c17StateWaitForInputEv",
+        "_ZN10dScMgCup_c12StateShuffleEv",
+        "_ZN10dScMgCup_c19StatePrepareShuffleEv",
+        "_ZN10dScMgCup_c10StateSetupEv",
+        "_ZN10dScMgCup_c9Virtual50Ev",
+        "_ZN10dScMgCup_c13OnYoshiTryEatEi",
+        "_ZN10dScMgCup_c6RenderEv",
+        "_ZN10dScMgCup_c8BehaviorEv",
+        "_ZN10dScMgCup_c13InitResourcesEv",
+        "dScMgCup_c_classInit",
+        "func_ov006_020e0634"
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTV10dScMgCup_c",
+          "size": 152,
+          "result": {
+            "symbol": "_ZTV10dScMgCup_c",
+            "module": "ov006",
+            "addr": 34849108,
+            "bytes": 144,
+            "emitted": 144,
+            "romExtent": 144,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTI10dScMgCup_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI10dScMgCup_c",
+            "module": "ov006",
+            "addr": 34848840,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS10dScMgCup_c",
+          "size": 13,
+          "result": {
+            "symbol": "_ZTS10dScMgCup_c",
+            "module": "ov006",
+            "addr": 34848852,
+            "bytes": 12,
+            "emitted": 13,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI19dScMgSingle3DBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "addr": 34847844,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS19dScMgSingle3DBase_c",
+          "size": 22,
+          "result": {
+            "symbol": "_ZTS19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "addr": 34848000,
+            "bytes": 20,
+            "emitted": 22,
+            "romExtent": 24,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI11dScMgBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324332,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS11dScMgBase_c",
+          "size": 14,
+          "result": {
+            "symbol": "_ZTS11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324356,
+            "bytes": 12,
+            "emitted": 14,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI8dScene_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI8dScene_c",
+            "module": "arm9",
+            "addr": 34149588,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS8dScene_c",
+          "size": 10,
+          "result": {
+            "symbol": "_ZTS8dScene_c",
+            "module": "arm9",
+            "addr": 34149552,
+            "bytes": 8,
+            "emitted": 10,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI7dBase_c",
+            "module": "arm9",
+            "addr": 34107000,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7dBase_c",
+            "module": "arm9",
+            "addr": 34106964,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "result": {
+            "symbol": "_ZTI7fBase_c",
+            "module": "arm9",
+            "addr": 34106736,
+            "bytes": 8,
+            "emitted": 8,
+            "romExtent": 8,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7fBase_c",
+            "module": "arm9",
+            "addr": 34106976,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        }
+      ],
+      "token_delta": "Exactly one existing-member subscript substitution; all other edits are comments.",
+      "committed_blob": "82d38e15a5e2d89b47e75656179cfdc07c2d9926"
+    },
+    {
+      "source": "src/actors/dScMgCurling2_c.cpp",
+      "manifest": "config/tu_manifest.d/ov006/dScMgCurling2_c.json",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "source_sha256": {
+        "original": "9607d9a4d842637ddfa739af00cdb616e95e67f6fdcf76c13478d56feb88a432",
+        "candidate": "f0647b9e1941dd4da03c98a95db7bed779ea3b828ab05a574b88405588099276"
+      },
+      "object_sha256": {
+        "original": "7c25ba850a35aa81406b928223a60ee59461bd797db363dc3fe20f77e9d86e1a",
+        "candidate": "7c25ba850a35aa81406b928223a60ee59461bd797db363dc3fe20f77e9d86e1a"
+      },
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "entire_inventory_identical": true,
+      "strict": [
+        {
+          "name": "_ZN15dScMgCurling2_cD1Ev",
+          "module": "ov006",
+          "addr": "0x020e3854",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_cD0Ev",
+          "module": "ov006",
+          "addr": "0x020e3878",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e38b0",
+          "module": "ov006",
+          "addr": "0x020e38b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e3948",
+          "module": "ov006",
+          "addr": "0x020e3948",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c10SpawnValueEii",
+          "module": "ov006",
+          "addr": "0x020e39e0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e3b9c",
+          "module": "ov006",
+          "addr": "0x020e3b9c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e3bc4",
+          "module": "ov006",
+          "addr": "0x020e3bc4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c13StepYRampDownEi",
+          "module": "ov006",
+          "addr": "0x020e3c4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c11StepYRampUpEi",
+          "module": "ov006",
+          "addr": "0x020e3ce0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c12StepYRestartEi",
+          "module": "ov006",
+          "addr": "0x020e3db4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c11StepXSettleEi",
+          "module": "ov006",
+          "addr": "0x020e3e4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c12StepXPushNegEi",
+          "module": "ov006",
+          "addr": "0x020e3f54",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c12StepXPushPosEi",
+          "module": "ov006",
+          "addr": "0x020e4094",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c9StepXPickEi",
+          "module": "ov006",
+          "addr": "0x020e41d0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c9StepXAndYEi",
+          "module": "ov006",
+          "addr": "0x020e42b4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c15StepXSettleFastEi",
+          "module": "ov006",
+          "addr": "0x020e4348",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
+          "module": "ov006",
+          "addr": "0x020e440c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
+          "module": "ov006",
+          "addr": "0x020e4520",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c13StepXPickFastEi",
+          "module": "ov006",
+          "addr": "0x020e4630",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c9StepXOnlyEi",
+          "module": "ov006",
+          "addr": "0x020e4744",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c12PickStepModeEi",
+          "module": "ov006",
+          "addr": "0x020e4794",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e4800",
+          "module": "ov006",
+          "addr": "0x020e4800",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e48d4",
+          "module": "ov006",
+          "addr": "0x020e48d4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e4a84",
+          "module": "ov006",
+          "addr": "0x020e4a84",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e4b00",
+          "module": "ov006",
+          "addr": "0x020e4b00",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e4b78",
+          "module": "ov006",
+          "addr": "0x020e4b78",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c10DragUpdateEv",
+          "module": "ov006",
+          "addr": "0x020e4bd4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgCurling2_c9DragBeginEv",
+          "module": "ov006",
+          "addr": "0x020e4ed4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e4fe8",
+          "module": "ov006",
+          "addr": "0x020e4fe8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e507c",
+          "module": "ov006",
+          "addr": "0x020e507c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020e513c",
+          "module": "ov006",
+          "addr": "0x020e513c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "licensed_bytes": 7164,
+      "compiler_only_errors": [],
+      "compiler_only_policy": {
+        "requested": [
+          "_ZN15dScMgCurling2_cD2Ev"
+        ],
+        "deadstripped": [
+          "_ZN15dScMgCurling2_cD2Ev"
+        ],
+        "droppedSections": [
+          9,
+          10,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78
+        ],
+        "data": [
+          "_ZTI15dScMgCurling2_c",
+          "_ZTS15dScMgCurling2_c",
+          "_ZTI11dScMgBase_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS8dScene_c",
+          "_ZTI7dBase_c",
+          "_ZTS7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTV15dScMgCurling2_c"
+        ],
+        "dataExternalized": [
+          "_ZTI11dScMgBase_c",
+          "_ZTI15dScMgCurling2_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTS15dScMgCurling2_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dScene_c",
+          "_ZTV15dScMgCurling2_c"
+        ]
+      },
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "licensed_emission_order": [
+        "_ZN15dScMgCurling2_cD1Ev",
+        "_ZN15dScMgCurling2_cD0Ev",
+        "func_ov006_020e38b0",
+        "func_ov006_020e3948",
+        "_ZN15dScMgCurling2_c10SpawnValueEii",
+        "func_ov006_020e3b9c",
+        "func_ov006_020e3bc4",
+        "_ZN15dScMgCurling2_c13StepYRampDownEi",
+        "_ZN15dScMgCurling2_c11StepYRampUpEi",
+        "_ZN15dScMgCurling2_c12StepYRestartEi",
+        "_ZN15dScMgCurling2_c11StepXSettleEi",
+        "_ZN15dScMgCurling2_c12StepXPushNegEi",
+        "_ZN15dScMgCurling2_c12StepXPushPosEi",
+        "_ZN15dScMgCurling2_c9StepXPickEi",
+        "_ZN15dScMgCurling2_c9StepXAndYEi",
+        "_ZN15dScMgCurling2_c15StepXSettleFastEi",
+        "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
+        "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
+        "_ZN15dScMgCurling2_c13StepXPickFastEi",
+        "_ZN15dScMgCurling2_c9StepXOnlyEi",
+        "_ZN15dScMgCurling2_c12PickStepModeEi",
+        "func_ov006_020e4800",
+        "func_ov006_020e48d4",
+        "func_ov006_020e4a84",
+        "func_ov006_020e4b00",
+        "func_ov006_020e4b78",
+        "_ZN15dScMgCurling2_c10DragUpdateEv",
+        "_ZN15dScMgCurling2_c9DragBeginEv",
+        "func_ov006_020e4fe8",
+        "func_ov006_020e507c",
+        "func_ov006_020e513c"
+      ],
+      "expected_order": [
+        "_ZN15dScMgCurling2_cD1Ev",
+        "_ZN15dScMgCurling2_cD0Ev",
+        "func_ov006_020e38b0",
+        "func_ov006_020e3948",
+        "_ZN15dScMgCurling2_c10SpawnValueEii",
+        "func_ov006_020e3b9c",
+        "func_ov006_020e3bc4",
+        "_ZN15dScMgCurling2_c13StepYRampDownEi",
+        "_ZN15dScMgCurling2_c11StepYRampUpEi",
+        "_ZN15dScMgCurling2_c12StepYRestartEi",
+        "_ZN15dScMgCurling2_c11StepXSettleEi",
+        "_ZN15dScMgCurling2_c12StepXPushNegEi",
+        "_ZN15dScMgCurling2_c12StepXPushPosEi",
+        "_ZN15dScMgCurling2_c9StepXPickEi",
+        "_ZN15dScMgCurling2_c9StepXAndYEi",
+        "_ZN15dScMgCurling2_c15StepXSettleFastEi",
+        "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
+        "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
+        "_ZN15dScMgCurling2_c13StepXPickFastEi",
+        "_ZN15dScMgCurling2_c9StepXOnlyEi",
+        "_ZN15dScMgCurling2_c12PickStepModeEi",
+        "func_ov006_020e4800",
+        "func_ov006_020e48d4",
+        "func_ov006_020e4a84",
+        "func_ov006_020e4b00",
+        "func_ov006_020e4b78",
+        "_ZN15dScMgCurling2_c10DragUpdateEv",
+        "_ZN15dScMgCurling2_c9DragBeginEv",
+        "func_ov006_020e4fe8",
+        "func_ov006_020e507c",
+        "func_ov006_020e513c"
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTV15dScMgCurling2_c",
+          "size": 152,
+          "result": {
+            "symbol": "_ZTV15dScMgCurling2_c",
+            "module": "ov006",
+            "addr": 34850064,
+            "bytes": 144,
+            "emitted": 144,
+            "romExtent": 144,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTI15dScMgCurling2_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI15dScMgCurling2_c",
+            "module": "ov006",
+            "addr": 34849980,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS15dScMgCurling2_c",
+          "size": 18,
+          "result": {
+            "symbol": "_ZTS15dScMgCurling2_c",
+            "module": "ov006",
+            "addr": 34849992,
+            "bytes": 16,
+            "emitted": 18,
+            "romExtent": 20,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI11dScMgBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324332,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS11dScMgBase_c",
+          "size": 14,
+          "result": {
+            "symbol": "_ZTS11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324356,
+            "bytes": 12,
+            "emitted": 14,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI8dScene_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI8dScene_c",
+            "module": "arm9",
+            "addr": 34149588,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS8dScene_c",
+          "size": 10,
+          "result": {
+            "symbol": "_ZTS8dScene_c",
+            "module": "arm9",
+            "addr": 34149552,
+            "bytes": 8,
+            "emitted": 10,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI7dBase_c",
+            "module": "arm9",
+            "addr": 34107000,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7dBase_c",
+            "module": "arm9",
+            "addr": 34106964,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "result": {
+            "symbol": "_ZTI7fBase_c",
+            "module": "arm9",
+            "addr": 34106736,
+            "bytes": 8,
+            "emitted": 8,
+            "romExtent": 8,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7fBase_c",
+            "module": "arm9",
+            "addr": 34106976,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        }
+      ],
+      "token_delta": "None.",
+      "committed_blob": "8b5bae39bf44c46b8f315bd613dc0d3923f8a365"
+    },
+    {
+      "source": "src/actors/dScMgHanachan_c.cpp",
+      "manifest": "config/tu_manifest.d/ov006/dScMgHanachan_c.json",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "source_sha256": {
+        "original": "d48e1c59a3fd611b3e55eac5907f39d09aeb174a1f31fd8d49bab9ffcb5624d5",
+        "candidate": "e3c4006b347f58dae5512ad7936015f3c662f7f32077d39c896e3e28320f925f"
+      },
+      "object_sha256": {
+        "original": "e345b4207f64895194f49be2ea9037fb8b7aca9b9eac605cd11ec01ea4dde8d5",
+        "candidate": "e345b4207f64895194f49be2ea9037fb8b7aca9b9eac605cd11ec01ea4dde8d5"
+      },
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "entire_inventory_identical": true,
+      "strict": [
+        {
+          "name": "func_ov006_020eac38",
+          "module": "ov006",
+          "addr": "0x020eac38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb018",
+          "module": "ov006",
+          "addr": "0x020eb018",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb0c8",
+          "module": "ov006",
+          "addr": "0x020eb0c8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb1e0",
+          "module": "ov006",
+          "addr": "0x020eb1e0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb31c",
+          "module": "ov006",
+          "addr": "0x020eb31c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb3e4",
+          "module": "ov006",
+          "addr": "0x020eb3e4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb558",
+          "module": "ov006",
+          "addr": "0x020eb558",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb610",
+          "module": "ov006",
+          "addr": "0x020eb610",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb768",
+          "module": "ov006",
+          "addr": "0x020eb768",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb7b0",
+          "module": "ov006",
+          "addr": "0x020eb7b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb7f8",
+          "module": "ov006",
+          "addr": "0x020eb7f8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb8f0",
+          "module": "ov006",
+          "addr": "0x020eb8f0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb9b0",
+          "module": "ov006",
+          "addr": "0x020eb9b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020eb9dc",
+          "module": "ov006",
+          "addr": "0x020eb9dc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebb40",
+          "module": "ov006",
+          "addr": "0x020ebb40",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebc08",
+          "module": "ov006",
+          "addr": "0x020ebc08",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebc7c",
+          "module": "ov006",
+          "addr": "0x020ebc7c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebd7c",
+          "module": "ov006",
+          "addr": "0x020ebd7c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebe6c",
+          "module": "ov006",
+          "addr": "0x020ebe6c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebeb4",
+          "module": "ov006",
+          "addr": "0x020ebeb4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ebf20",
+          "module": "ov006",
+          "addr": "0x020ebf20",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec134",
+          "module": "ov006",
+          "addr": "0x020ec134",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec2bc",
+          "module": "ov006",
+          "addr": "0x020ec2bc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec458",
+          "module": "ov006",
+          "addr": "0x020ec458",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec4dc",
+          "module": "ov006",
+          "addr": "0x020ec4dc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec6e8",
+          "module": "ov006",
+          "addr": "0x020ec6e8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec84c",
+          "module": "ov006",
+          "addr": "0x020ec84c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec93c",
+          "module": "ov006",
+          "addr": "0x020ec93c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ec9c0",
+          "module": "ov006",
+          "addr": "0x020ec9c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ecb80",
+          "module": "ov006",
+          "addr": "0x020ecb80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ecba4",
+          "module": "ov006",
+          "addr": "0x020ecba4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ecdb8",
+          "module": "ov006",
+          "addr": "0x020ecdb8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgHanachan_c16CleanupResourcesEv",
+          "module": "ov006",
+          "addr": "0x020ecec8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgHanachan_c6RenderEv",
+          "module": "ov006",
+          "addr": "0x020ecee4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgHanachan_c8BehaviorEv",
+          "module": "ov006",
+          "addr": "0x020ed18c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed270",
+          "module": "ov006",
+          "addr": "0x020ed270",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed274",
+          "module": "ov006",
+          "addr": "0x020ed274",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed300",
+          "module": "ov006",
+          "addr": "0x020ed300",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed328",
+          "module": "ov006",
+          "addr": "0x020ed328",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed32c",
+          "module": "ov006",
+          "addr": "0x020ed32c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed34c",
+          "module": "ov006",
+          "addr": "0x020ed34c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed40c",
+          "module": "ov006",
+          "addr": "0x020ed40c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed494",
+          "module": "ov006",
+          "addr": "0x020ed494",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed81c",
+          "module": "ov006",
+          "addr": "0x020ed81c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed844",
+          "module": "ov006",
+          "addr": "0x020ed844",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020ed8a4",
+          "module": "ov006",
+          "addr": "0x020ed8a4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgHanachan_c13OnYoshiTryEatEi",
+          "module": "ov006",
+          "addr": "0x020eda48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgHanachan_c13InitResourcesEv",
+          "module": "ov006",
+          "addr": "0x020edb04",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_020edcb0",
+          "module": "ov006",
+          "addr": "0x020edcb0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "licensed_bytes": 12768,
+      "compiler_only_errors": [],
+      "compiler_only_policy": {
+        "requested": [],
+        "deadstripped": [],
+        "data": [],
+        "dataExternalized": []
+      },
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "licensed_emission_order": [
+        "func_ov006_020eac38",
+        "func_ov006_020eb018",
+        "func_ov006_020eb0c8",
+        "func_ov006_020eb1e0",
+        "func_ov006_020eb31c",
+        "func_ov006_020eb3e4",
+        "func_ov006_020eb558",
+        "func_ov006_020eb610",
+        "func_ov006_020eb768",
+        "func_ov006_020eb7b0",
+        "func_ov006_020eb7f8",
+        "func_ov006_020eb8f0",
+        "func_ov006_020eb9b0",
+        "func_ov006_020eb9dc",
+        "func_ov006_020ebb40",
+        "func_ov006_020ebc08",
+        "func_ov006_020ebc7c",
+        "func_ov006_020ebd7c",
+        "func_ov006_020ebe6c",
+        "func_ov006_020ebeb4",
+        "func_ov006_020ebf20",
+        "func_ov006_020ec134",
+        "func_ov006_020ec2bc",
+        "func_ov006_020ec458",
+        "func_ov006_020ec4dc",
+        "func_ov006_020ec6e8",
+        "func_ov006_020ec84c",
+        "func_ov006_020ec93c",
+        "func_ov006_020ec9c0",
+        "func_ov006_020ecb80",
+        "func_ov006_020ecba4",
+        "func_ov006_020ecdb8",
+        "_ZN15dScMgHanachan_c16CleanupResourcesEv",
+        "_ZN15dScMgHanachan_c6RenderEv",
+        "_ZN15dScMgHanachan_c8BehaviorEv",
+        "func_ov006_020ed270",
+        "func_ov006_020ed274",
+        "func_ov006_020ed300",
+        "func_ov006_020ed328",
+        "func_ov006_020ed32c",
+        "func_ov006_020ed34c",
+        "func_ov006_020ed40c",
+        "func_ov006_020ed494",
+        "func_ov006_020ed81c",
+        "func_ov006_020ed844",
+        "func_ov006_020ed8a4",
+        "_ZN15dScMgHanachan_c13OnYoshiTryEatEi",
+        "_ZN15dScMgHanachan_c13InitResourcesEv",
+        "func_ov006_020edcb0"
+      ],
+      "expected_order": [
+        "func_ov006_020eac38",
+        "func_ov006_020eb018",
+        "func_ov006_020eb0c8",
+        "func_ov006_020eb1e0",
+        "func_ov006_020eb31c",
+        "func_ov006_020eb3e4",
+        "func_ov006_020eb558",
+        "func_ov006_020eb610",
+        "func_ov006_020eb768",
+        "func_ov006_020eb7b0",
+        "func_ov006_020eb7f8",
+        "func_ov006_020eb8f0",
+        "func_ov006_020eb9b0",
+        "func_ov006_020eb9dc",
+        "func_ov006_020ebb40",
+        "func_ov006_020ebc08",
+        "func_ov006_020ebc7c",
+        "func_ov006_020ebd7c",
+        "func_ov006_020ebe6c",
+        "func_ov006_020ebeb4",
+        "func_ov006_020ebf20",
+        "func_ov006_020ec134",
+        "func_ov006_020ec2bc",
+        "func_ov006_020ec458",
+        "func_ov006_020ec4dc",
+        "func_ov006_020ec6e8",
+        "func_ov006_020ec84c",
+        "func_ov006_020ec93c",
+        "func_ov006_020ec9c0",
+        "func_ov006_020ecb80",
+        "func_ov006_020ecba4",
+        "func_ov006_020ecdb8",
+        "_ZN15dScMgHanachan_c16CleanupResourcesEv",
+        "_ZN15dScMgHanachan_c6RenderEv",
+        "_ZN15dScMgHanachan_c8BehaviorEv",
+        "func_ov006_020ed270",
+        "func_ov006_020ed274",
+        "func_ov006_020ed300",
+        "func_ov006_020ed328",
+        "func_ov006_020ed32c",
+        "func_ov006_020ed34c",
+        "func_ov006_020ed40c",
+        "func_ov006_020ed494",
+        "func_ov006_020ed81c",
+        "func_ov006_020ed844",
+        "func_ov006_020ed8a4",
+        "_ZN15dScMgHanachan_c13OnYoshiTryEatEi",
+        "_ZN15dScMgHanachan_c13InitResourcesEv",
+        "func_ov006_020edcb0"
+      ],
+      "metadata": [],
+      "token_delta": "None.",
+      "committed_blob": "debd68aa85588fc84f24e151a7e1e39fddc9845b"
+    },
+    {
+      "source": "src/actors/dScMgPanel_c.cpp",
+      "manifest": "config/tu_manifest.d/ov006/dScMgPanel_c.json",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "source_sha256": {
+        "original": "3244646ae96c191e64a9398a278302f1d98e306f1bc439eabb5016980680c43a",
+        "candidate": "f52c4fb923e58f705308eb175e6f4a817e716354fe85423105f012fde9e78702"
+      },
+      "object_sha256": {
+        "original": "3416d9548cd488ada573abcb83556cc09a4574be20260106d9d48517c7a3f8f1",
+        "candidate": "3416d9548cd488ada573abcb83556cc09a4574be20260106d9d48517c7a3f8f1"
+      },
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "entire_inventory_identical": true,
+      "strict": [
+        {
+          "name": "_ZN12dScMgPanel_cD1Ev",
+          "module": "ov006",
+          "addr": "0x0210428c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN12dScMgPanel_cD0Ev",
+          "module": "ov006",
+          "addr": "0x021042b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021042e8",
+          "module": "ov006",
+          "addr": "0x021042e8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104354",
+          "module": "ov006",
+          "addr": "0x02104354",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210446c",
+          "module": "ov006",
+          "addr": "0x0210446c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104558",
+          "module": "ov006",
+          "addr": "0x02104558",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104580",
+          "module": "ov006",
+          "addr": "0x02104580",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104870",
+          "module": "ov006",
+          "addr": "0x02104870",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021048b0",
+          "module": "ov006",
+          "addr": "0x021048b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021048e4",
+          "module": "ov006",
+          "addr": "0x021048e4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104920",
+          "module": "ov006",
+          "addr": "0x02104920",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104a10",
+          "module": "ov006",
+          "addr": "0x02104a10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104ac0",
+          "module": "ov006",
+          "addr": "0x02104ac0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104ac4",
+          "module": "ov006",
+          "addr": "0x02104ac4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104b24",
+          "module": "ov006",
+          "addr": "0x02104b24",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104b4c",
+          "module": "ov006",
+          "addr": "0x02104b4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104b5c",
+          "module": "ov006",
+          "addr": "0x02104b5c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104bac",
+          "module": "ov006",
+          "addr": "0x02104bac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104bb0",
+          "module": "ov006",
+          "addr": "0x02104bb0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104c08",
+          "module": "ov006",
+          "addr": "0x02104c08",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104c60",
+          "module": "ov006",
+          "addr": "0x02104c60",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104cfc",
+          "module": "ov006",
+          "addr": "0x02104cfc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104d44",
+          "module": "ov006",
+          "addr": "0x02104d44",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104d94",
+          "module": "ov006",
+          "addr": "0x02104d94",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104e70",
+          "module": "ov006",
+          "addr": "0x02104e70",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104e80",
+          "module": "ov006",
+          "addr": "0x02104e80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104ea8",
+          "module": "ov006",
+          "addr": "0x02104ea8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104eb8",
+          "module": "ov006",
+          "addr": "0x02104eb8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104ec8",
+          "module": "ov006",
+          "addr": "0x02104ec8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104ecc",
+          "module": "ov006",
+          "addr": "0x02104ecc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02104fb4",
+          "module": "ov006",
+          "addr": "0x02104fb4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210500c",
+          "module": "ov006",
+          "addr": "0x0210500c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210508c",
+          "module": "ov006",
+          "addr": "0x0210508c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021050bc",
+          "module": "ov006",
+          "addr": "0x021050bc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105118",
+          "module": "ov006",
+          "addr": "0x02105118",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105134",
+          "module": "ov006",
+          "addr": "0x02105134",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021051dc",
+          "module": "ov006",
+          "addr": "0x021051dc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021053a8",
+          "module": "ov006",
+          "addr": "0x021053a8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105670",
+          "module": "ov006",
+          "addr": "0x02105670",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105730",
+          "module": "ov006",
+          "addr": "0x02105730",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021057f0",
+          "module": "ov006",
+          "addr": "0x021057f0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105854",
+          "module": "ov006",
+          "addr": "0x02105854",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105ab4",
+          "module": "ov006",
+          "addr": "0x02105ab4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105c1c",
+          "module": "ov006",
+          "addr": "0x02105c1c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105c88",
+          "module": "ov006",
+          "addr": "0x02105c88",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105d20",
+          "module": "ov006",
+          "addr": "0x02105d20",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02105de4",
+          "module": "ov006",
+          "addr": "0x02105de4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106048",
+          "module": "ov006",
+          "addr": "0x02106048",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106080",
+          "module": "ov006",
+          "addr": "0x02106080",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106168",
+          "module": "ov006",
+          "addr": "0x02106168",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021063a0",
+          "module": "ov006",
+          "addr": "0x021063a0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106664",
+          "module": "ov006",
+          "addr": "0x02106664",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106758",
+          "module": "ov006",
+          "addr": "0x02106758",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021067a4",
+          "module": "ov006",
+          "addr": "0x021067a4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021068d8",
+          "module": "ov006",
+          "addr": "0x021068d8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106910",
+          "module": "ov006",
+          "addr": "0x02106910",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106a08",
+          "module": "ov006",
+          "addr": "0x02106a08",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106aa8",
+          "module": "ov006",
+          "addr": "0x02106aa8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106bac",
+          "module": "ov006",
+          "addr": "0x02106bac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106bc0",
+          "module": "ov006",
+          "addr": "0x02106bc0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106ca4",
+          "module": "ov006",
+          "addr": "0x02106ca4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106eb8",
+          "module": "ov006",
+          "addr": "0x02106eb8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106f44",
+          "module": "ov006",
+          "addr": "0x02106f44",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02106fdc",
+          "module": "ov006",
+          "addr": "0x02106fdc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210709c",
+          "module": "ov006",
+          "addr": "0x0210709c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210713c",
+          "module": "ov006",
+          "addr": "0x0210713c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021071d4",
+          "module": "ov006",
+          "addr": "0x021071d4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+          "module": "ov006",
+          "addr": "0x021071fc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN12dScMgPanel_c6RenderEv",
+          "module": "ov006",
+          "addr": "0x0210730c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN12dScMgPanel_c8BehaviorEv",
+          "module": "ov006",
+          "addr": "0x02107358",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN12dScMgPanel_c13InitResourcesEv",
+          "module": "ov006",
+          "addr": "0x021073b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "licensed_bytes": 13772,
+      "compiler_only_errors": [],
+      "compiler_only_policy": {
+        "requested": [
+          "_ZN12dScMgPanel_cD2Ev"
+        ],
+        "deadstripped": [
+          "_ZN12dScMgPanel_cD2Ev"
+        ],
+        "droppedSections": [
+          9,
+          10,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136
+        ],
+        "data": [
+          "_ZTI12dScMgPanel_c",
+          "_ZTS12dScMgPanel_c",
+          "_ZTI11dScMgBase_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS8dScene_c",
+          "_ZTI7dBase_c",
+          "_ZTS7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTV12dScMgPanel_c"
+        ],
+        "dataExternalized": [
+          "_ZTI11dScMgBase_c",
+          "_ZTI12dScMgPanel_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTS12dScMgPanel_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dScene_c",
+          "_ZTV12dScMgPanel_c"
+        ]
+      },
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "licensed_emission_order": [
+        "_ZN12dScMgPanel_cD1Ev",
+        "_ZN12dScMgPanel_cD0Ev",
+        "func_ov006_021042e8",
+        "func_ov006_02104354",
+        "func_ov006_0210446c",
+        "func_ov006_02104558",
+        "func_ov006_02104580",
+        "func_ov006_02104870",
+        "func_ov006_021048b0",
+        "func_ov006_021048e4",
+        "func_ov006_02104920",
+        "func_ov006_02104a10",
+        "func_ov006_02104ac0",
+        "func_ov006_02104ac4",
+        "func_ov006_02104b24",
+        "func_ov006_02104b4c",
+        "func_ov006_02104b5c",
+        "func_ov006_02104bac",
+        "func_ov006_02104bb0",
+        "func_ov006_02104c08",
+        "func_ov006_02104c60",
+        "func_ov006_02104cfc",
+        "func_ov006_02104d44",
+        "func_ov006_02104d94",
+        "func_ov006_02104e70",
+        "func_ov006_02104e80",
+        "func_ov006_02104ea8",
+        "func_ov006_02104eb8",
+        "func_ov006_02104ec8",
+        "func_ov006_02104ecc",
+        "func_ov006_02104fb4",
+        "func_ov006_0210500c",
+        "func_ov006_0210508c",
+        "func_ov006_021050bc",
+        "func_ov006_02105118",
+        "func_ov006_02105134",
+        "func_ov006_021051dc",
+        "func_ov006_021053a8",
+        "func_ov006_02105670",
+        "func_ov006_02105730",
+        "func_ov006_021057f0",
+        "func_ov006_02105854",
+        "func_ov006_02105ab4",
+        "func_ov006_02105c1c",
+        "func_ov006_02105c88",
+        "func_ov006_02105d20",
+        "func_ov006_02105de4",
+        "func_ov006_02106048",
+        "func_ov006_02106080",
+        "func_ov006_02106168",
+        "func_ov006_021063a0",
+        "func_ov006_02106664",
+        "func_ov006_02106758",
+        "func_ov006_021067a4",
+        "func_ov006_021068d8",
+        "func_ov006_02106910",
+        "func_ov006_02106a08",
+        "func_ov006_02106aa8",
+        "func_ov006_02106bac",
+        "func_ov006_02106bc0",
+        "func_ov006_02106ca4",
+        "func_ov006_02106eb8",
+        "func_ov006_02106f44",
+        "func_ov006_02106fdc",
+        "func_ov006_0210709c",
+        "func_ov006_0210713c",
+        "func_ov006_021071d4",
+        "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+        "_ZN12dScMgPanel_c6RenderEv",
+        "_ZN12dScMgPanel_c8BehaviorEv",
+        "_ZN12dScMgPanel_c13InitResourcesEv"
+      ],
+      "expected_order": [
+        "_ZN12dScMgPanel_cD1Ev",
+        "_ZN12dScMgPanel_cD0Ev",
+        "func_ov006_021042e8",
+        "func_ov006_02104354",
+        "func_ov006_0210446c",
+        "func_ov006_02104558",
+        "func_ov006_02104580",
+        "func_ov006_02104870",
+        "func_ov006_021048b0",
+        "func_ov006_021048e4",
+        "func_ov006_02104920",
+        "func_ov006_02104a10",
+        "func_ov006_02104ac0",
+        "func_ov006_02104ac4",
+        "func_ov006_02104b24",
+        "func_ov006_02104b4c",
+        "func_ov006_02104b5c",
+        "func_ov006_02104bac",
+        "func_ov006_02104bb0",
+        "func_ov006_02104c08",
+        "func_ov006_02104c60",
+        "func_ov006_02104cfc",
+        "func_ov006_02104d44",
+        "func_ov006_02104d94",
+        "func_ov006_02104e70",
+        "func_ov006_02104e80",
+        "func_ov006_02104ea8",
+        "func_ov006_02104eb8",
+        "func_ov006_02104ec8",
+        "func_ov006_02104ecc",
+        "func_ov006_02104fb4",
+        "func_ov006_0210500c",
+        "func_ov006_0210508c",
+        "func_ov006_021050bc",
+        "func_ov006_02105118",
+        "func_ov006_02105134",
+        "func_ov006_021051dc",
+        "func_ov006_021053a8",
+        "func_ov006_02105670",
+        "func_ov006_02105730",
+        "func_ov006_021057f0",
+        "func_ov006_02105854",
+        "func_ov006_02105ab4",
+        "func_ov006_02105c1c",
+        "func_ov006_02105c88",
+        "func_ov006_02105d20",
+        "func_ov006_02105de4",
+        "func_ov006_02106048",
+        "func_ov006_02106080",
+        "func_ov006_02106168",
+        "func_ov006_021063a0",
+        "func_ov006_02106664",
+        "func_ov006_02106758",
+        "func_ov006_021067a4",
+        "func_ov006_021068d8",
+        "func_ov006_02106910",
+        "func_ov006_02106a08",
+        "func_ov006_02106aa8",
+        "func_ov006_02106bac",
+        "func_ov006_02106bc0",
+        "func_ov006_02106ca4",
+        "func_ov006_02106eb8",
+        "func_ov006_02106f44",
+        "func_ov006_02106fdc",
+        "func_ov006_0210709c",
+        "func_ov006_0210713c",
+        "func_ov006_021071d4",
+        "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+        "_ZN12dScMgPanel_c6RenderEv",
+        "_ZN12dScMgPanel_c8BehaviorEv",
+        "_ZN12dScMgPanel_c13InitResourcesEv"
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTV12dScMgPanel_c",
+          "size": 152,
+          "result": {
+            "symbol": "_ZTV12dScMgPanel_c",
+            "module": "ov006",
+            "addr": 34857548,
+            "bytes": 144,
+            "emitted": 144,
+            "romExtent": 144,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTI12dScMgPanel_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI12dScMgPanel_c",
+            "module": "ov006",
+            "addr": 34856256,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS12dScMgPanel_c",
+          "size": 15,
+          "result": {
+            "symbol": "_ZTS12dScMgPanel_c",
+            "module": "ov006",
+            "addr": 34856324,
+            "bytes": 12,
+            "emitted": 15,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI11dScMgBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324332,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS11dScMgBase_c",
+          "size": 14,
+          "result": {
+            "symbol": "_ZTS11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324356,
+            "bytes": 12,
+            "emitted": 14,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI8dScene_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI8dScene_c",
+            "module": "arm9",
+            "addr": 34149588,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS8dScene_c",
+          "size": 10,
+          "result": {
+            "symbol": "_ZTS8dScene_c",
+            "module": "arm9",
+            "addr": 34149552,
+            "bytes": 8,
+            "emitted": 10,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI7dBase_c",
+            "module": "arm9",
+            "addr": 34107000,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7dBase_c",
+            "module": "arm9",
+            "addr": 34106964,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "result": {
+            "symbol": "_ZTI7fBase_c",
+            "module": "arm9",
+            "addr": 34106736,
+            "bytes": 8,
+            "emitted": 8,
+            "romExtent": 8,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7fBase_c",
+            "module": "arm9",
+            "addr": 34106976,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        }
+      ],
+      "token_delta": "None.",
+      "committed_blob": "07fd487594b283e1b16e07acb9e8e278bd837933"
+    },
+    {
+      "source": "src/actors/dScMgRoulette_c.cpp",
+      "manifest": "config/tu_manifest.d/ov006/dScMgRoulette_c.json",
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "source_sha256": {
+        "original": "4b577a125dd4696428a9295967a38f2716f286bb68352d2137f2bf44afa3e10a",
+        "candidate": "465d5b6246ab1d2a3b7420912fcc5b36101ba5db50dc0cccb1e6fa1e7ba6f2e5"
+      },
+      "object_sha256": {
+        "original": "cb8f143ef31aa48f111aca5586ac41e61cde1b5ba90f0dda9cb73bb565f4bc07",
+        "candidate": "cb8f143ef31aa48f111aca5586ac41e61cde1b5ba90f0dda9cb73bb565f4bc07"
+      },
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "entire_inventory_identical": true,
+      "strict": [
+        {
+          "name": "_ZN15dScMgRoulette_cD1Ev",
+          "module": "ov006",
+          "addr": "0x0210788c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_cD0Ev",
+          "module": "ov006",
+          "addr": "0x02107920",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021079c8",
+          "module": "ov006",
+          "addr": "0x021079c8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021079cc",
+          "module": "ov006",
+          "addr": "0x021079cc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107a6c",
+          "module": "ov006",
+          "addr": "0x02107a6c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107b14",
+          "module": "ov006",
+          "addr": "0x02107b14",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107b70",
+          "module": "ov006",
+          "addr": "0x02107b70",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107b94",
+          "module": "ov006",
+          "addr": "0x02107b94",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107c50",
+          "module": "ov006",
+          "addr": "0x02107c50",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107d20",
+          "module": "ov006",
+          "addr": "0x02107d20",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107d58",
+          "module": "ov006",
+          "addr": "0x02107d58",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107d80",
+          "module": "ov006",
+          "addr": "0x02107d80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107db8",
+          "module": "ov006",
+          "addr": "0x02107db8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02107ea8",
+          "module": "ov006",
+          "addr": "0x02107ea8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021082c4",
+          "module": "ov006",
+          "addr": "0x021082c4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021082fc",
+          "module": "ov006",
+          "addr": "0x021082fc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108508",
+          "module": "ov006",
+          "addr": "0x02108508",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108524",
+          "module": "ov006",
+          "addr": "0x02108524",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210858c",
+          "module": "ov006",
+          "addr": "0x0210858c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021085c0",
+          "module": "ov006",
+          "addr": "0x021085c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108650",
+          "module": "ov006",
+          "addr": "0x02108650",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108b90",
+          "module": "ov006",
+          "addr": "0x02108b90",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108cc0",
+          "module": "ov006",
+          "addr": "0x02108cc0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108d28",
+          "module": "ov006",
+          "addr": "0x02108d28",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108e24",
+          "module": "ov006",
+          "addr": "0x02108e24",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02108f2c",
+          "module": "ov006",
+          "addr": "0x02108f2c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210927c",
+          "module": "ov006",
+          "addr": "0x0210927c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021092a0",
+          "module": "ov006",
+          "addr": "0x021092a0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021092e8",
+          "module": "ov006",
+          "addr": "0x021092e8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_0210935c",
+          "module": "ov006",
+          "addr": "0x0210935c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021094ac",
+          "module": "ov006",
+          "addr": "0x021094ac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02109530",
+          "module": "ov006",
+          "addr": "0x02109530",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_021095ac",
+          "module": "ov006",
+          "addr": "0x021095ac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+          "module": "ov006",
+          "addr": "0x021095cc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+          "module": "ov006",
+          "addr": "0x021096c8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+          "module": "ov006",
+          "addr": "0x0210980c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c6RenderEv",
+          "module": "ov006",
+          "addr": "0x02109834",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov006_02109aa0",
+          "module": "ov006",
+          "addr": "0x02109aa0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c8BehaviorEv",
+          "module": "ov006",
+          "addr": "0x02109aac",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN15dScMgRoulette_c13InitResourcesEv",
+          "module": "ov006",
+          "addr": "0x0210a194",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "licensed_bytes": 11124,
+      "compiler_only_errors": [],
+      "compiler_only_policy": {
+        "requested": [],
+        "deadstripped": [],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dScene_c",
+          "_ZTI7dBase_c",
+          "_ZTI11dScMgBase_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTI8dScene_c",
+          "_ZTI19dScMgSingle3DBase_c",
+          "_ZTS19dScMgSingle3DBase_c",
+          "_ZTI15dScMgRoulette_c",
+          "_ZTS15dScMgRoulette_c",
+          "_ZTV15dScMgRoulette_c"
+        ],
+        "dataExternalized": [
+          "_ZTI11dScMgBase_c",
+          "_ZTI15dScMgRoulette_c",
+          "_ZTI19dScMgSingle3DBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dScene_c",
+          "_ZTS11dScMgBase_c",
+          "_ZTS15dScMgRoulette_c",
+          "_ZTS19dScMgSingle3DBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dScene_c",
+          "_ZTV15dScMgRoulette_c"
+        ]
+      },
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "licensed_emission_order": [
+        "_ZN15dScMgRoulette_cD1Ev",
+        "_ZN15dScMgRoulette_cD0Ev",
+        "func_ov006_021079c8",
+        "func_ov006_021079cc",
+        "func_ov006_02107a6c",
+        "func_ov006_02107b14",
+        "func_ov006_02107b70",
+        "func_ov006_02107b94",
+        "func_ov006_02107c50",
+        "func_ov006_02107d20",
+        "func_ov006_02107d58",
+        "func_ov006_02107d80",
+        "func_ov006_02107db8",
+        "func_ov006_02107ea8",
+        "func_ov006_021082c4",
+        "func_ov006_021082fc",
+        "func_ov006_02108508",
+        "func_ov006_02108524",
+        "func_ov006_0210858c",
+        "func_ov006_021085c0",
+        "func_ov006_02108650",
+        "func_ov006_02108b90",
+        "func_ov006_02108cc0",
+        "func_ov006_02108d28",
+        "func_ov006_02108e24",
+        "func_ov006_02108f2c",
+        "func_ov006_0210927c",
+        "func_ov006_021092a0",
+        "func_ov006_021092e8",
+        "func_ov006_0210935c",
+        "func_ov006_021094ac",
+        "func_ov006_02109530",
+        "func_ov006_021095ac",
+        "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+        "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+        "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+        "_ZN15dScMgRoulette_c6RenderEv",
+        "func_ov006_02109aa0",
+        "_ZN15dScMgRoulette_c8BehaviorEv",
+        "_ZN15dScMgRoulette_c13InitResourcesEv"
+      ],
+      "expected_order": [
+        "_ZN15dScMgRoulette_cD1Ev",
+        "_ZN15dScMgRoulette_cD0Ev",
+        "func_ov006_021079c8",
+        "func_ov006_021079cc",
+        "func_ov006_02107a6c",
+        "func_ov006_02107b14",
+        "func_ov006_02107b70",
+        "func_ov006_02107b94",
+        "func_ov006_02107c50",
+        "func_ov006_02107d20",
+        "func_ov006_02107d58",
+        "func_ov006_02107d80",
+        "func_ov006_02107db8",
+        "func_ov006_02107ea8",
+        "func_ov006_021082c4",
+        "func_ov006_021082fc",
+        "func_ov006_02108508",
+        "func_ov006_02108524",
+        "func_ov006_0210858c",
+        "func_ov006_021085c0",
+        "func_ov006_02108650",
+        "func_ov006_02108b90",
+        "func_ov006_02108cc0",
+        "func_ov006_02108d28",
+        "func_ov006_02108e24",
+        "func_ov006_02108f2c",
+        "func_ov006_0210927c",
+        "func_ov006_021092a0",
+        "func_ov006_021092e8",
+        "func_ov006_0210935c",
+        "func_ov006_021094ac",
+        "func_ov006_02109530",
+        "func_ov006_021095ac",
+        "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+        "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+        "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+        "_ZN15dScMgRoulette_c6RenderEv",
+        "func_ov006_02109aa0",
+        "_ZN15dScMgRoulette_c8BehaviorEv",
+        "_ZN15dScMgRoulette_c13InitResourcesEv"
+      ],
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "size": 8,
+          "result": {
+            "symbol": "_ZTI7fBase_c",
+            "module": "arm9",
+            "addr": 34106736,
+            "bytes": 8,
+            "emitted": 8,
+            "romExtent": 8,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7fBase_c",
+            "module": "arm9",
+            "addr": 34106976,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "size": 9,
+          "result": {
+            "symbol": "_ZTS7dBase_c",
+            "module": "arm9",
+            "addr": 34106964,
+            "bytes": 8,
+            "emitted": 9,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTS8dScene_c",
+          "size": 10,
+          "result": {
+            "symbol": "_ZTS8dScene_c",
+            "module": "arm9",
+            "addr": 34149552,
+            "bytes": 8,
+            "emitted": 10,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI7dBase_c",
+            "module": "arm9",
+            "addr": 34107000,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTI11dScMgBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324332,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS11dScMgBase_c",
+          "size": 14,
+          "result": {
+            "symbol": "_ZTS11dScMgBase_c",
+            "module": "ov004",
+            "addr": 34324356,
+            "bytes": 12,
+            "emitted": 14,
+            "romExtent": 16,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI8dScene_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI8dScene_c",
+            "module": "arm9",
+            "addr": 34149588,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTI19dScMgSingle3DBase_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "addr": 34847844,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS19dScMgSingle3DBase_c",
+          "size": 22,
+          "result": {
+            "symbol": "_ZTS19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "addr": 34848000,
+            "bytes": 20,
+            "emitted": 22,
+            "romExtent": 24,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTI15dScMgRoulette_c",
+          "size": 12,
+          "result": {
+            "symbol": "_ZTI15dScMgRoulette_c",
+            "module": "ov006",
+            "addr": 34857728,
+            "bytes": 12,
+            "emitted": 12,
+            "romExtent": 12,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        },
+        {
+          "symbol": "_ZTS15dScMgRoulette_c",
+          "size": 18,
+          "result": {
+            "symbol": "_ZTS15dScMgRoulette_c",
+            "module": "ov006",
+            "addr": 34857740,
+            "bytes": 16,
+            "emitted": 18,
+            "romExtent": 20,
+            "blindWords": 0,
+            "verdict": "PARTIAL"
+          }
+        },
+        {
+          "symbol": "_ZTV15dScMgRoulette_c",
+          "size": 152,
+          "result": {
+            "symbol": "_ZTV15dScMgRoulette_c",
+            "module": "ov006",
+            "addr": 34857884,
+            "bytes": 144,
+            "emitted": 144,
+            "romExtent": 144,
+            "blindWords": 0,
+            "verdict": "VERIFIED"
+          }
+        }
+      ],
+      "token_delta": "None.",
+      "committed_blob": "e80e408946cc5308b82d9fc73437072b08fb69d9"
+    }
+  ],
+  "metadata_ownership": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "module": "arm9",
+      "address": "0x2086d70",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "module": "arm9",
+      "address": "0x2086e60",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "module": "arm9",
+      "address": "0x2086e54",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "module": "arm9",
+      "address": "0x20914b0",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "module": "arm9",
+      "address": "0x2086e78",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "module": "ov004",
+      "address": "0x20bbf6c",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "module": "ov004",
+      "address": "0x20bbf84",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "module": "arm9",
+      "address": "0x20914d4",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTI10dScMgCup_c",
+      "module": "ov006",
+      "address": "0x213c048",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS10dScMgCup_c",
+      "module": "ov006",
+      "address": "0x213c054",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "module": "ov006",
+      "address": "0x213bc64",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "module": "ov006",
+      "address": "0x213bd00",
+      "complete_source_owners": []
+    },
+    {
+      "symbol": "_ZTV10dScMgCup_c",
+      "module": "ov006",
+      "address": "0x213c154",
+      "complete_source_owners": []
+    }
+  ],
+  "manifest_prose_only": {
+    "exactly_ten_reason_strings": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "before": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "before": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI name passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "before": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI name passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTS8dScene_c",
+        "before": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI name passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "before": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTI11dScMgBase_c",
+        "before": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTS11dScMgBase_c",
+        "before": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI name passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTI8dScene_c",
+        "before": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTI19dScMgSingle3DBase_c",
+        "before": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      },
+      {
+        "symbol": "_ZTS19dScMgSingle3DBase_c",
+        "before": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled",
+        "after": "ancestor RTTI name passenger; the canonical cartridge copy is ROM-supplied; no complete source owner is enrolled at this address"
+      }
+    ],
+    "all_other_values_order_unchanged": true
+  },
+  "summary": {
+    "strict_verified": 223,
+    "differing_words": 0,
+    "blind_words": 0,
+    "complete_objects_identical": 5,
+    "metadata": {
+      "VERIFIED": 26,
+      "PARTIAL": 22
+    },
+    "formal_acceptance": false
+  },
+  "replay": {
+    "command": "python extracted_recipe.py PATH_TO_WIRED_CANDIDATE_WORKTREE",
+    "python_source": "import pathlib, sys, subprocess, json, hashlib, io, collections, re\nfrom elftools.elf.elffile import ELFFile\n\nroot = pathlib.Path(sys.argv[1]).resolve()\noriginal = '4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b'\nbase = '4679d2a9a319abc7c5b43a04211a0e6b877d471e'\nsys.path.insert(0, str(root / 'tools'))\nimport match as M, build_pin as B, tubuild as T, objisolate as O\nimport linkcheck as L, reloc_audit as R, romdata_check as D, source_coverage as C\n\nout = root / 'build/pr2877-source-proof'\nout.mkdir(parents=True, exist_ok=True)\nidx = R.build_name_index()\nhomes = T.all_symbol_homes()\ndef sha(b): return hashlib.sha256(b).hexdigest()\ndef git(*a): return subprocess.check_output(['git', '-C', str(root), *a])\ndef allocated(raw):\n    e = ELFFile(io.BytesIO(raw))\n    return [(i, s.name, dict(s.header), sha(s.data())) for i, s in enumerate(e.iter_sections()) if s['sh_flags'] & 2]\ndef strict(raw, f, module):\n    isolated, plan = O.derive(raw, f['symbol'])\n    assert isolated, plan\n    result = L.linkcheck(f['symbol'], int(f['address'], 0), int(f['size'], 0), module, idx, obj=isolated, sym=f['symbol'])\n    assert result['verdict'] == 'VERIFIED' and not result.get('diffs') and result.get('blind') == 0, result\n    return result\ndef tokens(text):\n    return re.findall(r'\\w+|\\S', re.sub(r'//[^\\n]*|/\\*.*?\\*/', '', text, flags=re.S))\n\nreport = {'schema': 1, 'task': 'pr2877-provenance-repair-0920', 'session': 'codex-scenes-source-0920',\n          'stage': 'reconstruct', 'original_author_head': original, 'source_base': base,\n          'worktree_head': git('rev-parse', 'HEAD').decode().strip(), 'compiler': '2004/b56',\n          'formal_acceptance': False, 'rows': [], 'metadata_ownership': []}\nnames = ['dScMgCup_c', 'dScMgCurling2_c', 'dScMgHanachan_c', 'dScMgPanel_c', 'dScMgRoulette_c']\nfor cls in names:\n    path = f'src/actors/{cls}.cpp'\n    manifest_path = f'config/tu_manifest.d/ov006/{cls}.json'\n    entry = json.loads((root / manifest_path).read_text())\n    assert T.resolve_tu_version(entry)[0] == '2004/b56'\n    flags = B.flags_for(root / path)\n    sources = {'original': git('show', original + ':' + path), 'candidate': (root / path).read_bytes()}\n    objects = {}\n    for label, source in sources.items():\n        folder = out / cls / label\n        folder.mkdir(parents=True, exist_ok=True)\n        scratch = folder / pathlib.Path(path).name\n        scratch.write_bytes(source)\n        raw = M.compile_c(scratch, '2004/b56', flags)\n        assert raw, path\n        (folder / (cls + '.o')).write_bytes(raw)\n        objects[label] = raw\n    a, b = objects['original'], objects['candidate']\n    inv = T.elf_inventory(b)\n    audited, policy, errors = T.apply_compiler_only_policy(b, entry, homes=homes)\n    unlicensed = T.unlicensed_inventory(entry, T.elf_inventory(audited or b))\n    licensed = {f['symbol'] for f in entry['functions']}\n    order = [s['name'] for s in sorted(inv['symbols'], key=lambda s: (s['shndx'] if isinstance(s['shndx'], int) else -1, s['value'])) if s['name'] in licensed]\n    expected = [f['symbol'] for f in entry['functions']]\n    row = {'source': path, 'manifest': manifest_path, 'flags': flags,\n           'source_sha256': {k: sha(v) for k, v in sources.items()},\n           'object_sha256': {k: sha(v) for k, v in objects.items()},\n           'raw_object_identical': a == b, 'allocated_sections_identical': allocated(a) == allocated(b),\n           'entire_inventory_identical': T.elf_inventory(a) == inv,\n           'strict': [strict(b, f, entry['module']) for f in entry['functions']],\n           'licensed_bytes': sum(int(f['size'], 0) for f in entry['functions']),\n           'compiler_only_errors': errors, 'compiler_only_policy': policy,\n           'unlicensed_outputs': unlicensed, 'licensed_emission_order': order, 'expected_order': expected,\n           'metadata': []}\n    for name, section, value, size in D.emitted_data_symbols(b):\n        row['metadata'].append({'symbol': name, 'size': size, 'result': D.verify_data_symbol(b, name, section, value, size, idx)})\n    assert a == b and not errors and not any(unlicensed) and order == expected, path\n    if cls == 'dScMgCup_c':\n        wanted = sources['original'].decode().replace('[((int*)c + k)[0x1510]]', '[unk_5440[k]]')\n        assert tokens(wanted) == tokens(sources['candidate'].decode())\n        row['token_delta'] = 'Exactly one existing-member subscript substitution; all other edits are comments.'\n    else:\n        assert tokens(sources['original'].decode()) == tokens(sources['candidate'].decode())\n        row['token_delta'] = 'None.'\n    report['rows'].append(row)\n    (out / 'proof.json').write_text(json.dumps(report, indent=2) + '\\n')\n    print(json.dumps({'source': path, 'strict': len(row['strict']), 'raw_object_identical': a == b,\n                      'metadata': dict(collections.Counter(x['result']['verdict'] for x in row['metadata']))}), flush=True)\n\nmanifest_path = 'config/tu_manifest.d/ov006/dScMgCup_c.json'\nold = json.loads(git('show', original + ':' + manifest_path))\nnew = json.loads((root / manifest_path).read_text())\nchanges = []\nfor a, b in zip(old['compiler_only_output'], new['compiler_only_output']):\n    if a != b:\n        ac, bc = dict(a), dict(b)\n        ar, br = ac.pop('reason'), bc.pop('reason')\n        assert ac == bc and ar.endswith('independently enrolled')\n        changes.append({'symbol': a['symbol'], 'before': ar, 'after': br})\n        b['reason'] = ar\nassert len(changes) == 10 and old == new\nreport['manifest_prose_only'] = {'exactly_ten_reason_strings': changes, 'all_other_values_order_unchanged': True}\nassert git('diff', original, '--', 'config/arm9', 'config/arm7', 'config/itcm', 'config/dtcm') == b''\nentries, exists = C.entries_from_ref(original, repo=root)\nranges = C.built_ranges(entries, exists)\nfor policy in old['compiler_only_output']:\n    if 'canonical_address' not in policy: continue\n    addr = int(policy['canonical_address'], 0)\n    owners = [{'module': m, 'section': s, 'source': p, 'start': hex(a), 'end': hex(b)} for m, s, p, a, b in ranges if m == policy['canonical_module'] and a <= addr < b]\n    assert not owners\n    report['metadata_ownership'].append({'symbol': policy['symbol'], 'module': policy['canonical_module'], 'address': hex(addr), 'complete_source_owners': owners})\nassert len(report['metadata_ownership']) == 13\nreport['summary'] = {'strict_verified': sum(len(r['strict']) for r in report['rows']), 'differing_words': 0,\n                     'blind_words': 0, 'complete_objects_identical': len(report['rows']),\n                     'metadata': dict(collections.Counter(x['result']['verdict'] for r in report['rows'] for x in r['metadata'])),\n                     'formal_acceptance': False}\nassert report['summary']['strict_verified'] == 223\nreport['replay'] = {'command': 'python extracted_recipe.py PATH_TO_WIRED_CANDIDATE_WORKTREE',\n                    'python_source': pathlib.Path(__file__).read_text()}\n(out / 'proof.json').write_text(json.dumps(report, indent=2) + '\\n')\nprint(json.dumps(report['summary']), flush=True)\n"
+  },
+  "source_anchor": "8131d067bb56ae7d0fc8594545fac63a688b82e5",
+  "tested_worktree_overlay_bound_to_source_anchor": true,
+  "approved_patch_sha256": "7f7ca12447f05d9c4dbe3aebe0067d7e5d7dd2d8eadc54d82cc68c3d813ebcb2",
+  "user_authorization": {
+    "user_reply": "Authorize these PR-specific Cup edits",
+    "approved_patch": "build/reviewer-0919/pr2877-proposed-source-repair.patch",
+    "patch_sha256": "7f7ca12447f05d9c4dbe3aebe0067d7e5d7dd2d8eadc54d82cc68c3d813ebcb2",
+    "paths": [
+      "src/actors/dScMgCup_c.cpp",
+      "config/tu_manifest.d/ov006/dScMgCup_c.json"
+    ],
+    "scope": "Exactly one proven named-array access, source comment corrections and ten manifest reason-string corrections. Preserve existing owner branch, reservation, candidate and all15finding IDs. No Cup header, range, address, policy, order or larger owner-candidate transplant.",
+    "preserved_owner_task": "pr2500-cup-source-repair-0911"
+  },
+  "ownership": {
+    "state_commit": "7f752742d7abae774e8d02abafe6ee6c536d8521",
+    "tasks": [
+      {
+        "task_id": "pr2877-provenance-repair-0920",
+        "phase": "running",
+        "stage_index": 0,
+        "resources": [
+          "class:dScMgRoulette_c",
+          "file:notes/agents/handoffs/pr2877-integration-0920.md",
+          "file:notes/agents/handoffs/pr2877-source-repair-0920.md",
+          "file:notes/experiments/pr2877-integration-0920.json",
+          "file:notes/experiments/pr2877-source-repair-0920.json",
+          "file:src/actors/dscmgroulette_c.cpp",
+          "range:ov006:34633868:34644992"
+        ],
+        "input_commit": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+        "outputs": [],
+        "owner": {
+          "session": "codex-scenes-source-0920",
+          "role": "producer",
+          "worktree": "C:/tmp/sm64ds-scenes2877-0920",
+          "input_commit": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b"
+        },
+        "predecessor_tasks": [
+          "pr2500-cup-source-repair-0911"
+        ],
+        "inherited_finding_ids": [
+          "BASE-PROV01",
+          "BASE-PROV02",
+          "CUP-01",
+          "CUP-02",
+          "CUP-03",
+          "CUP-03-P",
+          "CUP-04",
+          "CUP-05",
+          "CUP-06",
+          "SOUND-PROV01",
+          "SOUND-RECON01",
+          "TERESA-PROV01"
+        ]
+      },
+      {
+        "task_id": "pr2500-cup-source-repair-0911",
+        "phase": "running",
+        "stage_index": 1,
+        "resources": [
+          "class:dScMgCup_c",
+          "file:config/tu_manifest.d/ov006/dscmgcup_c.json",
+          "file:include/dscmgcup_c.h",
+          "file:notes/agents/handoffs/pr2500-cup-source-repair-0911.md",
+          "file:src/actors/dscmgcup_c.cpp",
+          "range:ov006:34466184:34473528"
+        ],
+        "input_commit": "d4d4013bffc661487ed2521cf7f376ebffb52cab",
+        "outputs": [
+          {
+            "stage_id": "fix",
+            "commit": "4e087732b5c85f7111e1229916c55da066fa928b",
+            "session": "codex-r2445-0910"
+          }
+        ],
+        "owner": {
+          "session": "codex-r2398-cup-verifier-0911",
+          "role": "verifier",
+          "worktree": "C:/tmp/sm64ds-vcup-r2398-0911",
+          "input_commit": "4e087732b5c85f7111e1229916c55da066fa928b"
+        },
+        "predecessor_tasks": [
+          "issue-2492-cup-composition-review-0908"
+        ],
+        "inherited_finding_ids": [
+          "BASE-PROV01",
+          "BASE-PROV02",
+          "CUP-01",
+          "CUP-02",
+          "CUP-03",
+          "CUP-03-P",
+          "CUP-04",
+          "CUP-05",
+          "CUP-06",
+          "SOUND-PROV01",
+          "SOUND-RECON01",
+          "TERESA-PROV01"
+        ]
+      }
+    ]
+  },
+  "static_checks": [
+    {
+      "check": "declarations",
+      "command": [
+        "python",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "4679d2a9a319abc7c5b43a04211a0e6b877d471e"
+      ],
+      "exit_code": 0,
+      "output": "check_decl_agreement: 8708 file(s), 38385 extern declaration(s) of 13943 distinct symbol(s), 10605 of which the tree also defines; 2 unparsed declarator(s)\n  16926 disagreement(s) across 3770 symbol(s)   arity=1118  kind=333  linkage=1  mangled=53  param=7880  return=7541\n  --changed 4679d2a9a319abc7c5b43a04211a0e6b877d471e: 5 source file(s) changed defining 216 symbol(s), 0 symbol(s) named by a changed config row, 484 file(s) reached through 63 changed type name(s); 1171 file(s) in scope once every declaration of those is folded in; 5789 disagreement(s) among them\n  no new declaration disagreements\n"
+    },
+    {
+      "check": "conflicts",
+      "command": [
+        "python",
+        "tools/check_tubuild_conflicts.py",
+        "ov006/dScMgCup_c",
+        "ov006/dScMgCurling2_c",
+        "ov006/dScMgHanachan_c",
+        "ov006/dScMgPanel_c",
+        "ov006/dScMgRoulette_c"
+      ],
+      "exit_code": 0,
+      "output": "\nchecked 5 manifest entries (5 sources read); 0 carry a conflict note or marker\nevery recorded conflict matches the source, and every conflict in a source is recorded\n"
+    },
+    {
+      "check": "port",
+      "command": [
+        "python",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "output": "  [OK  ] manifests      244 reference(s) checked, 0 stale\n  [OK  ] cmake-symbols  21 reference(s) checked, 0 stale\n  [OK  ] hal-links      153 reference(s) checked, 0 stale\nport-refcheck: 418 checked - all references resolve\n"
+    },
+    {
+      "check": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "references",
+      "command": [
+        "python",
+        "tools/check_references.py",
+        "--against",
+        "4679d2a9a319abc7c5b43a04211a0e6b877d471e"
+      ],
+      "exit_code": 1,
+      "output": "missing C:\\tmp\\sm64ds-scenes2877-0920\\build\\rombuild-eligibility.json\nRun tools/eligible.py first, or pass --report.\n"
+    }
+  ],
+  "full_rom": {
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "tested_commit": "8131d067bb56ae7d0fc8594545fac63a688b82e5",
+    "exit_code": 0,
+    "summary": "106/106 modules exact;11208/11208 functions reproduce,0 mismatches;26/26 source-owned data claims reproduce and3 BSS claims pass. Global emitted-data report758 verified/265 partial/3 differ/298 unnamed; these are not a blanket metadata pass. Scratch baseline control has pre-existing dsd symbol errors; intact production has zero new symbol errors.",
+    "log_sha256": "ccf400c82f87050864d99e169293f3ceafc8829306cde3722b69905c30d781d1",
+    "log_tail": [
+      "  mismatching: 0",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "  of 3,049,600 module bytes: 2,102,784 (69.0%) source-built code, 0 source-owned data, 811,492 data bytes no complete source entry reaches; 0 compiler-emitted data bytes verified overall",
+      "  retail-gap contribution: 946,816 module bytes (135,324 function-code, 811,492 data/non-function)",
+      "ROM-build analysis: PASS",
+      "      dsd check modules --fail: PASS",
+      "[7/8] dsd check symbols --fail",
+      "      FAIL (0.1s), 9 error line(s)",
+      "      | [ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+      "      | [ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary",
+      "      | [ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+      "      | [ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+      "      | [ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+      "      | [ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+      "      | [ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+      "      | [ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+      "      | [ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+      "      | Error: Some symbol(s) did not match.",
+      "[8/8] dsd rom config + rom build",
+      "      ok (3.4s) -> build/tu/_baseline/link/sm64ds-tu.nds  16777216 bytes  sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "",
+      "BASELINE CONTROL: modules PASS, dsd check symbols --fail FAIL, ROM built.",
+      "This is the same scratch pipeline with NO TU substitution: anything failing here is pre-existing and belongs to the tree, not to any TU.",
+      "report -> build/tu/_baseline/link/linkcheck.json (gitignored)",
+      "[3/6] mwccarm: 8027 enrolled source file(s), -j16",
+      "      8022 reused from cache, 5 compiled",
+      "[4/6] mwldarm",
+      "      intact TU gates: dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "[5/6] skipped (--no-rom)",
+      "[6/6] analyze module and source fidelity",
+      "source-built functions: 11,208  (2,151,584 / 2,238,108 code bytes, 96.13%)",
+      "  reproducing: 11,208",
+      "  mismatching: 0",
+      "source-owned data claims: 26  (reproducing 26, mismatching 0)",
+      "source-owned BSS claims: 3  (172 NOBITS bytes; object/symbol gates)",
+      "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+      "  of 3,049,600 module bytes: 2,151,584 (70.6%) source-built code, 4,984 source-owned data, 806,508 data bytes no complete source entry reaches; 45,576 compiler-emitted data bytes verified overall",
+      "  retail-gap contribution: 893,032 module bytes (86,524 function-code, 806,508 data/non-function)",
+      "ROM-build analysis: PASS",
+      "ROM data from source: 758 symbol(s) verified, 265 partial, 3 differ, 298 unnamed by config (from 6,182 object records)"
+    ]
+  },
+  "historical_cup_experiments": [
+    {
+      "label": "shuffle_add_assign",
+      "original": "mShuffleAngle = mShuffleAngle + 0x8000;",
+      "replacement": "mShuffleAngle += 0x8000;",
+      "source_sha256": "3d1f84809ba808ccc32e1e482a01c00383d59c63427d6dbc35be82d0d864b514",
+      "raw_object_identical": false,
+      "allocated_sections_identical": false,
+      "strict": {
+        "name": "_ZN10dScMgCup_c12StateShuffleEv",
+        "module": "ov006",
+        "addr": "0x020df5b8",
+        "verdict": "WRONG",
+        "diffs": [
+          {
+            "off": "+0x58",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x64",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xe0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x178",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x234",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x290",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x348",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x34c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x378",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3b8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3bc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3c4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3d0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3f4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x404",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x408",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x40c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x414",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x418",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x420",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x424",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x428",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x42c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x430",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x434",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x438",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x43c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x440",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x444",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x448",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x44c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x450",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x454",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x458",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x45c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x460",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x464",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x468",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x46c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x470",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x474",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x478",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x47c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x480",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x484",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x488",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x48c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x490",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x494",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x498",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x49c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4a0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4a4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4a8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4ac",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4b0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4b4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4b8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4bc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4c0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4c4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4c8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4cc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4d0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4d4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4d8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4dc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4e0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4e4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4e8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4ec",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4f0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4f4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4f8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4fc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x500",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x504",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x508",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x50c",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x510",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x514",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x518",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x51c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x520",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x524",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x528",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x52c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x530",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x534",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x538",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x53c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x540",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x544",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x548",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x54c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x550",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x554",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x558",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x55c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x560",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x564",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x568",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x56c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x570",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x574",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x578",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x57c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x580",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x584",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x588",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x58c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x590",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x594",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x598",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x59c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5a0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5a4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5a8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5ac",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5b0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5b4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5b8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5bc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5c0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5c4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5c8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5cc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5d0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5d4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5d8",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x5dc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5e0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5e4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5e8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5ec",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5f0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5f4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5f8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5fc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x600",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x604",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x608",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x60c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x610",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x614",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x618",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x61c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x620",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x624",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x628",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x62c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x630",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x634",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x638",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x63c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x640",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x644",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x648",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x64c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x650",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x654",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x658",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x65c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x660",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x664",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x668",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x66c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x670",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x674",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x678",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x67c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x680",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x684",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x688",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x68c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x690",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x694",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x698",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x69c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6a0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6a4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6a8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6ac",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6b0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6b4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6b8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6bc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6c0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6c4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6c8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6cc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6d0",
+            "sym": "func_ov006_020deb48",
+            "target": "0x020deb48"
+          },
+          {
+            "off": "+0x6d4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6d8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6dc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6e0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6e4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6e8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6ec",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6f0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6f4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6f8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6fc",
+            "sym": "data_02082214",
+            "target": "0x02082214"
+          },
+          {
+            "off": "+0x700",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x704",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x708",
+            "sym": "data_0209e650",
+            "target": "0x0209e650"
+          },
+          {
+            "off": "+0x70c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x710",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x714",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x718",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x71c",
+            "sym": "data_ov006_0213c084",
+            "target": "0x0213c084"
+          },
+          {
+            "off": "+0x720",
+            "sym": "data_ov006_0213c085",
+            "target": "0x0213c085"
+          },
+          {
+            "off": "+0x724",
+            "sym": null,
+            "target": null
+          }
+        ],
+        "blind": 0
+      },
+      "candidate_size": 1832,
+      "retail_size": "0x00000720",
+      "input_commit": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+      "input_path": "src/actors/dScMgCup_c.cpp",
+      "reproduce": "Read the input path with git show at input_commit; replace original with replacement exactly once; compile with build_pin.flags_for of the input source under2004/b56 and strict-linkcheck the recorded symbol/module/address/size. No other source or header change."
+    },
+    {
+      "label": "shuffle_fused_negation",
+      "original": "speed = -speed;\n                mShuffleSpeed = speed;",
+      "replacement": "mShuffleSpeed = -speed;",
+      "source_sha256": "f7472ba65fba00aade5b3dcadbf952b7416451e004fdc93308f1c88460355bce",
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "strict": {
+        "name": "_ZN10dScMgCup_c12StateShuffleEv",
+        "module": "ov006",
+        "addr": "0x020df5b8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      "candidate_size": 1824,
+      "retail_size": "0x00000720",
+      "input_commit": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+      "input_path": "src/actors/dScMgCup_c.cpp",
+      "reproduce": "Read the input path with git show at input_commit; replace original with replacement exactly once; compile with build_pin.flags_for of the input source under2004/b56 and strict-linkcheck the recorded symbol/module/address/size. No other source or header change."
+    },
+    {
+      "label": "render_named_array",
+      "original": "[((int*)c + k)[0x1510]]",
+      "replacement": "[unk_5440[k]]",
+      "source_sha256": "c9c48a3416c05eddfa3434264751daecee670e7f2d4de6a9fc342b89d988507c",
+      "raw_object_identical": true,
+      "allocated_sections_identical": true,
+      "strict": {
+        "name": "_ZN10dScMgCup_c6RenderEv",
+        "module": "ov006",
+        "addr": "0x020e0068",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      "candidate_size": 412,
+      "retail_size": "0x0000019c",
+      "input_commit": "4eb4ef1b37ebd0fb1ab722fa3705e4c32195b74b",
+      "input_path": "src/actors/dScMgCup_c.cpp",
+      "reproduce": "Read the input path with git show at input_commit; replace original with replacement exactly once; compile with build_pin.flags_for of the input source under2004/b56 and strict-linkcheck the recorded symbol/module/address/size. No other source or header change."
+    }
+  ],
+  "limits": [
+    "Producer result only; this session authored the repair and cannot independently accept it.",
+    "Original author head/base only. Root must compose actual current main, reconcile final queue accounting and obtain independent exact-head acceptance.",
+    "Metadata26 VERIFIED/22 PARTIAL; policies isolate emitted copies and this task does not claim new data/BSS ownership.",
+    "Only one existing-member expression changed after the original author field substitutions. Raw components, helpers, lifecycle and broad interface reconstruction remain partial.",
+    "No shared-header, symbol, delink, ledger or source-enrollment changes. No existing Cup owner candidate content was transplanted."
+  ],
+  "producer_source_assessment": {
+    "formal_acceptance": false,
+    "completion": "partial",
+    "findings": [
+      {
+        "id": "BASE-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgBase_c.h:109",
+        "summary": "Minigame/actor distinction, current slot21 description and last observed field are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "BASE-PROV02",
+        "kind": "provenance",
+        "location": "include/dScMgBase_c.h:158",
+        "summary": "Repeated false hierarchy comparisons and dangling removed-table references are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-01",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:508",
+        "summary": "Both fake Obj self-call views were replaced with real inherited virtual calls.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-02",
+        "kind": "provenance",
+        "location": "include/dScMgCup_c.h:71; src/actors/dScMgCup_c.cpp:1048",
+        "summary": "Actual PMF receiver, seven own slots and inferred names are accurately described.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-03",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:77; include/dScMgCup_c.h:96",
+        "summary": "Typed Cup fields, component/tail storage and helper interfaces remain partly reconstructed.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "CUP-03-P",
+        "kind": "provenance",
+        "location": "include/dScMgCup_c.h:26",
+        "summary": "Live component and tail extents are accurately bounded as observations.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-04",
+        "kind": "correctness",
+        "location": "src/actors/dScMgCup_c.cpp:377",
+        "summary": "Every incoming epilogue path initializes cup.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-05",
+        "kind": "correctness",
+        "location": "include/dScMgBase_c.h:132; five minigame Virtual50 definitions",
+        "summary": "Five minigame declarations/definitions coherently return void; two helper views now match their actual void definition.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-06",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:1168",
+        "summary": "Manual factory/lifecycle, raw components/arrays and address-named helpers remain partial.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "SOUND-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgSound_c.h:10; src/actors/dScMgSound_c.cpp:145",
+        "summary": "Component extent, live state, call count, PMF entry, source spelling and helper address descriptions are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "SOUND-RECON01",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgSound_c.cpp:239",
+        "summary": "Counterfeit receiver/PMF views, manual decoders, raw arrays and empty-condition scaffolding remain inherited reconstruction.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "TERESA-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgTeresa_c.h:6",
+        "summary": "Own slot18 and current slot34 member status are accurately listed.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-07",
+        "kind": "provenance",
+        "location": "src/actors/dScMgCup_c.cpp; include/dScMgCup_c.h; config/tu_manifest.d/ov006/dScMgCup_c.json:notes",
+        "summary": "Current source prose no longer describes obsolete shadow views or universal raw-address requirements.",
+        "disposition": "fixed",
+        "reason": "The approved bounded source comments now distinguish measured alternatives from universal compiler requirements, no longer call extern-C helpers file-local, and remove obsolete Render linkage instructions. Existing header layout and historical manifest experiments are preserved; no claim that the unlanded owner full reconstruction was adopted."
+      },
+      {
+        "id": "CUP-08",
+        "kind": "provenance",
+        "location": "config/tu_manifest.d/ov006/dScMgCup_c.json:compiler_only_output",
+        "summary": "Canonical RTTI/type-name copies were falsely called independently source-enrolled.",
+        "disposition": "fixed",
+        "reason": "Fresh complete-range ownership audit finds zero source owners at all13 canonical addresses. Changed exactlyten manifest reason strings to ROM-supplied/no complete source owner; every address, symbol, disposition, ordering and other manifest value is unchanged. Raw Cup metadata remains7 VERIFIED/6 PARTIAL."
+      },
+      {
+        "id": "CUP-09",
+        "kind": "reconstruction",
+        "location": "include/dScMgCup_c.h:CupPosition; src/actors/dScMgCup_c.cpp:member accesses and InitResources",
+        "summary": "Replace the whole-object Obj6e view and measured raw member accesses with actual class storage.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "SCMG2877-01",
+        "kind": "provenance",
+        "location": "src/actors/dScMgCup_c.cpp:1032",
+        "summary": "The newly edited Render comment incorrectly claims that unk_5440[k] breaks matching.",
+        "disposition": "fixed",
+        "reason": "Actual Render subscript now uses existing unk_5440[k]. The final complete Cup object equals the original author control, and all32 bodies remain strict VERIFIED. The false comment is removed."
+      },
+      {
+        "id": "SCMG2877-02",
+        "kind": "provenance",
+        "location": "src/actors/dScMgRoulette_c.cpp:13; src/actors/dScMgCup_c.cpp:5,18-44",
+        "summary": "Inherited banners overclaim helper linkage and universal compiler constraints; the new field edits also leave Cup only-mState prose stale.",
+        "disposition": "fixed",
+        "reason": "Cup/Roulette comments accurately describe address-named helpers without inferring unrecovered linkage/memberness. Token comparison proves Roulette is comment-only and Cup has only the approved one-expression change; all five complete objects remain identical."
+      }
+    ]
+  }
+}

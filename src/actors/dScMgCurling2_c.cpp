@@ -1131,26 +1131,26 @@ void dScMgCurling2_c::DragBegin()
     if (flag == 0)
         return;
 
-    x = (*(int *)(self + 0x5584) >> 0xc) - data_020a0dea[idx * 4];
-    y = (*(int *)(self + 0x5588) >> 0xc) - data_020a0deb[idx * 4];
+    x = (unk_5584 >> 0xc) - data_020a0dea[idx * 4];
+    y = (unk_5588 >> 0xc) - data_020a0deb[idx * 4];
 
-    *(int *)(self + 0x5594) = x << 0xc;
-    *(int *)(self + 0x5598) = y << 0xc;
-    *(u8 *)(self + 0x55b8) = 1;
-    *(u16 *)(self + 0x55b2) = 0xc000;
+    unk_5594 = x << 0xc;
+    unk_5598 = y << 0xc;
+    unk_55b8 = 1;
+    unk_55b2 = 0xc000;
 
     if (*(u8 *)(self + 0x55bd) == 0)
     {
-        func_02012718(0x1d2, *(int *)(self + 0x5584));
+        func_02012718(0x1d2, unk_5584);
         *(u8 *)(self + 0x55bd) = 6;
     }
 
     *(int *)(self + 0x55a0) = 0;
     *(int *)(self + 0x55a4) = 0;
-    *(int *)(self + 0x558c) = *(int *)(self + 0x5584) + *(int *)(self + 0x5594);
-    *(int *)(self + 0x5590) = *(int *)(self + 0x5588) + *(int *)(self + 0x5598);
-    *(int *)(self + 0x55a8) = 0xff;
-    *(u8 *)(self + 0x55be) = 0;
+    *(int *)(self + 0x558c) = unk_5584 + unk_5594;
+    unk_5590 = unk_5588 + unk_5598;
+    unk_55a8 = 0xff;
+    unk_55be = 0;
 }
 
 
