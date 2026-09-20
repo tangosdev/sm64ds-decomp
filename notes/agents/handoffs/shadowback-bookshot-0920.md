@@ -64,8 +64,10 @@ Source lineage: `a3776dc057779c652309ab5de764061c63a426ad` and
 - Language-mode check against chaos-data `c2a172f73a18dc02b8f416f8fe598341cbc28b7f`:
   reports `extern_vtable` 104 -> 105 and classes 105 -> 106. The independent
   clean worktree at the exact source base reproduces both failures. This is an
-  unchanged main/baseline failure, not a passing gate. The CONVERTED ratchet
-  passes at 2989 against 2973, identically on the base and this candidate.
+  unchanged cached-baseline failure. After refreshing the live chaos-data
+  baseline at `1203652ceff9b6e2c82e4d130762bb7366e31869`, the language-mode
+  ratchet PASSES. The CONVERTED ratchet passes at 2989 against 2973, identically
+  on the base and this candidate. No repository baseline was edited.
 - Independent exact-commit review and private CI: not yet run for this candidate.
 
 Next owner is the independent verifier for this local candidate. Remaining full
