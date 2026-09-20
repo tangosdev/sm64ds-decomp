@@ -1,0 +1,1436 @@
+{
+  "source_anchor": "8abe7e98eb2fd6615bb24459b2a63176a084030a",
+  "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+  "formal_acceptance": false,
+  "status": "Blocked independent source review; preserve every finding for explicit repair continuation.",
+  "independent_review": {
+    "schema": 1,
+    "tested_commit": "8abe7e98eb2fd6615bb24459b2a63176a084030a",
+    "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+    "formal_acceptance": false,
+    "verdict": "BLOCKED_SOURCE_CONTRACTS",
+    "retained_prior_findings": [
+      {
+        "id": "BASE-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgBase_c.h:109",
+        "summary": "Minigame/actor distinction, current slot21 description and last observed field are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "BASE-PROV02",
+        "kind": "provenance",
+        "location": "include/dScMgBase_c.h:158",
+        "summary": "Repeated false hierarchy comparisons and dangling removed-table references are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-01",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:508",
+        "summary": "Both fake Obj self-call views were replaced with real inherited virtual calls.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-02",
+        "kind": "provenance",
+        "location": "include/dScMgCup_c.h:71; src/actors/dScMgCup_c.cpp:1048",
+        "summary": "Actual PMF receiver, seven own slots and inferred names are accurately described.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-03",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:77; include/dScMgCup_c.h:96",
+        "summary": "Typed Cup fields, component/tail storage and helper interfaces remain partly reconstructed.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "CUP-03-P",
+        "kind": "provenance",
+        "location": "include/dScMgCup_c.h:26",
+        "summary": "Live component and tail extents are accurately bounded as observations.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-04",
+        "kind": "correctness",
+        "location": "src/actors/dScMgCup_c.cpp:377",
+        "summary": "Every incoming epilogue path initializes cup.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-05",
+        "kind": "correctness",
+        "location": "include/dScMgBase_c.h:132; five minigame Virtual50 definitions",
+        "summary": "Five minigame declarations/definitions coherently return void; two helper views now match their actual void definition.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-06",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgCup_c.cpp:1168",
+        "summary": "Manual factory/lifecycle, raw components/arrays and address-named helpers remain partial.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "SOUND-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgSound_c.h:10; src/actors/dScMgSound_c.cpp:145",
+        "summary": "Component extent, live state, call count, PMF entry, source spelling and helper address descriptions are corrected.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "SOUND-RECON01",
+        "kind": "reconstruction",
+        "location": "src/actors/dScMgSound_c.cpp:239",
+        "summary": "Counterfeit receiver/PMF views, manual decoders, raw arrays and empty-condition scaffolding remain inherited reconstruction.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "TERESA-PROV01",
+        "kind": "provenance",
+        "location": "include/dScMgTeresa_c.h:6",
+        "summary": "Own slot18 and current slot34 member status are accurately listed.",
+        "disposition": "fixed",
+        "reason": "The accepted d4d4013b dependency repair survives in current PR source; subsequent dependency header changes only add PC size-assert guards, and added source audit comments do not undo it."
+      },
+      {
+        "id": "CUP-07",
+        "kind": "provenance",
+        "location": "src/actors/dScMgCup_c.cpp; include/dScMgCup_c.h; config/tu_manifest.d/ov006/dScMgCup_c.json:notes",
+        "summary": "Current source prose no longer describes obsolete shadow views or universal raw-address requirements.",
+        "disposition": "fixed",
+        "reason": "The approved bounded source comments now distinguish measured alternatives from universal compiler requirements, no longer call extern-C helpers file-local, and remove obsolete Render linkage instructions. Existing header layout and historical manifest experiments are preserved; no claim that the unlanded owner full reconstruction was adopted."
+      },
+      {
+        "id": "CUP-08",
+        "kind": "provenance",
+        "location": "config/tu_manifest.d/ov006/dScMgCup_c.json:compiler_only_output",
+        "summary": "Canonical RTTI/type-name copies were falsely called independently source-enrolled.",
+        "disposition": "fixed",
+        "reason": "Fresh complete-range ownership audit finds zero source owners at all13 canonical addresses. Changed exactlyten manifest reason strings to ROM-supplied/no complete source owner; every address, symbol, disposition, ordering and other manifest value is unchanged. Raw Cup metadata remains7 VERIFIED/6 PARTIAL."
+      },
+      {
+        "id": "CUP-09",
+        "kind": "reconstruction",
+        "location": "include/dScMgCup_c.h:CupPosition; src/actors/dScMgCup_c.cpp:member accesses and InitResources",
+        "summary": "Replace the whole-object Obj6e view and measured raw member accesses with actual class storage.",
+        "disposition": "deferred",
+        "reason": "Existing partial reconstruction remains. The unlanded owner candidate has further field/position/Obj6e repairs; those changes are not silently imported or claimed at PR2877.",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2492",
+        "owner": "issue2492 humanizer/integrator support through andrewboudreau"
+      },
+      {
+        "id": "SCMG2877-01",
+        "kind": "provenance",
+        "location": "src/actors/dScMgCup_c.cpp:1032",
+        "summary": "The newly edited Render comment incorrectly claims that unk_5440[k] breaks matching.",
+        "disposition": "fixed",
+        "reason": "Actual Render subscript now uses existing unk_5440[k]. The final complete Cup object equals the original author control, and all32 bodies remain strict VERIFIED. The false comment is removed."
+      },
+      {
+        "id": "SCMG2877-02",
+        "kind": "provenance",
+        "location": "src/actors/dScMgRoulette_c.cpp:13; src/actors/dScMgCup_c.cpp:5,18-44",
+        "summary": "Inherited banners overclaim helper linkage and universal compiler constraints; the new field edits also leave Cup only-mState prose stale.",
+        "disposition": "fixed",
+        "reason": "Cup/Roulette comments accurately describe address-named helpers without inferring unrecovered linkage/memberness. Token comparison proves Roulette is comment-only and Cup has only the approved one-expression change; all five complete objects remain identical."
+      }
+    ],
+    "new_findings": [
+      {
+        "id": "SCMG2877-03",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Sound PlayBank2_2D return and namespace declarations",
+        "basis": "Actual src/_ZN5Sound12PlayBank2_2DEj.cpp:16 returns unsigned int; include/Sound.h:104 agrees. Cup109, Curling259 and Panel130/458 plus block-local copies declare void; other TUs inherit the false bridge from decl_common.h:1900.",
+        "required_action": "Use existing Sound.h and genuine Sound::PlayBank2_2D calls, remove local fake/mangled declarations; do not change shared header merely to retain an unused bridge. Recompile all five whole TUs.",
+        "exact_diagnostics": [
+          {
+            "symbol": "_ZN5Sound12PlayBank2_2DEj",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 109,
+            "decl": "void (unsigned int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+            "ref_line": 16,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "_ZN5Sound12PlayBank2_2DEj",
+            "kind": "return",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 259,
+            "decl": "void (unsigned int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+            "ref_line": 16,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "_ZN5Sound12PlayBank2_2DEj",
+            "kind": "return",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 130,
+            "decl": "void (unsigned int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+            "ref_line": 16,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "_ZN5Sound12PlayBank2_2DEj",
+            "kind": "return",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 458,
+            "decl": "void (unsigned int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+            "ref_line": 16,
+            "ref": "unsigned int (unsigned int)"
+          }
+        ],
+        "additional_evidence": [
+          "Producer supplied measured build-only 03/04/05 repair after this finding. Not yet independently accepted or applied at this anchor."
+        ]
+      },
+      {
+        "id": "SCMG2877-04",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "func_02012790 void and signed argument views",
+        "basis": "Actual src/func_02012790.c:3 is unsigned int(unsigned int), returning Sound::Play2D forwarding result. Cup126, Hanachan415, Roulette312 and Panel424/881 block scopes instead declare void(int).",
+        "required_action": "Use u32(u32) consistently in every changed TU, including scanner-omitted block declarations. All current call IDs are positive constants.",
+        "exact_diagnostics": [
+          {
+            "symbol": "func_02012790",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 126,
+            "decl": "void (int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "func_02012790",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 126,
+            "decl": "void (int)",
+            "got": "#1 int",
+            "want": "#1 unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "func_02012790",
+            "kind": "return",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 415,
+            "decl": "void (int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "func_02012790",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 415,
+            "decl": "void (int)",
+            "got": "#1 int",
+            "want": "#1 unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "func_02012790",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 312,
+            "decl": "void (int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          },
+          {
+            "symbol": "func_02012790",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 312,
+            "decl": "void (int)",
+            "got": "#1 int",
+            "want": "#1 unsigned int",
+            "basis": "definition",
+            "ref_file": "src/func_02012790.c",
+            "ref_line": 3,
+            "ref": "unsigned int (unsigned int)"
+          }
+        ],
+        "additional_evidence": []
+      },
+      {
+        "id": "SCMG2877-05",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Hanachan sound-update last argument width",
+        "basis": "Actual src/func_02012468.c:11 has final short parameter; Hanachan373 says int. Call at835 passes literal zero. Cup already has the correct short formal.",
+        "required_action": "Correct only the evidenced final parameter and prove whole-object/strict identity.",
+        "exact_diagnostics": [
+          {
+            "symbol": "func_02012468",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 373,
+            "decl": "int (int, int, int, int, int, int, int, int)",
+            "got": "#8 int",
+            "want": "#8 short",
+            "basis": "definition",
+            "ref_file": "src/func_02012468.c",
+            "ref_line": 11,
+            "ref": "int (int, int, int, int, int, int, int, short)"
+          }
+        ],
+        "additional_evidence": []
+      },
+      {
+        "id": "SCMG2877-06",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Shared minigame veneer arity contradiction",
+        "basis": "Cup148/1040, Hanachan398/1734 and Panel2382/2448 pass receiver,0xe0,0x14,1, but base source defines void(void*) at src/func_ov004_020b1e34.c:5. Earlier independent 15-production-caller census establishes the coherent four-parameter reconstructed entry with three unused scalar inputs; original arity remains inferred.",
+        "required_action": "Inherit the separately coordinated Memory2875 production+shadow veneer repair and independently verify exact current-base composition. Do not remove caller arguments to follow the legacy definition.",
+        "exact_diagnostics": [
+          {
+            "symbol": "func_ov004_020b1e34",
+            "kind": "arity",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 148,
+            "decl": "void (void *, int, int, int)",
+            "got": "4",
+            "want": "1",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b1e34.c",
+            "ref_line": 5,
+            "ref": "void (void *)"
+          },
+          {
+            "symbol": "func_ov004_020b1e34",
+            "kind": "arity",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 398,
+            "decl": "void (void *, int, int, int)",
+            "got": "4",
+            "want": "1",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b1e34.c",
+            "ref_line": 5,
+            "ref": "void (void *)"
+          },
+          {
+            "symbol": "func_ov004_020b1e34",
+            "kind": "arity",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2382,
+            "decl": "void (void *, int, int, int)",
+            "got": "4",
+            "want": "1",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b1e34.c",
+            "ref_line": 5,
+            "ref": "void (void *)"
+          }
+        ],
+        "additional_evidence": []
+      },
+      {
+        "id": "SCMG2877-07",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Additional manually checked local interface families",
+        "basis": "Each family below was inspected against its real definition and actual use; raw scanner labels alone are not acceptance authority.",
+        "required_action": "Measure coherent local repairs and explicitly acquire any necessary callback/callee dependency. Preserve exact current source bytes or report blockers.",
+        "exact_diagnostics": [
+          {
+            "symbol": "DecompressLZ16",
+            "kind": "param",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2369,
+            "decl": "void (int, void *)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/DecompressLZ16.c",
+            "ref_line": 5,
+            "ref": "void (void *, void *)"
+          },
+          {
+            "symbol": "DecompressLZ16",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 306,
+            "decl": "void (void *, int)",
+            "got": "#2 int",
+            "want": "#2 void *",
+            "basis": "definition",
+            "ref_file": "src/DecompressLZ16.c",
+            "ref_line": 5,
+            "ref": "void (void *, void *)"
+          },
+          {
+            "symbol": "LoadCompressedFileAt",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 158,
+            "decl": "void (int, int)",
+            "got": "void",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/LoadCompressedFileAt.c",
+            "ref_line": 7,
+            "ref": "unsigned int (unsigned short, void *)"
+          },
+          {
+            "symbol": "LoadCompressedFileAt",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 158,
+            "decl": "void (int, int)",
+            "got": "#1 int",
+            "want": "#1 unsigned short",
+            "basis": "definition",
+            "ref_file": "src/LoadCompressedFileAt.c",
+            "ref_line": 7,
+            "ref": "unsigned int (unsigned short, void *)"
+          },
+          {
+            "symbol": "LoadCompressedFileAt",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 158,
+            "decl": "void (int, int)",
+            "got": "#2 int",
+            "want": "#2 void *",
+            "basis": "definition",
+            "ref_file": "src/LoadCompressedFileAt.c",
+            "ref_line": 7,
+            "ref": "unsigned int (unsigned short, void *)"
+          },
+          {
+            "symbol": "MultiStore16",
+            "kind": "param",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2370,
+            "decl": "void (unsigned short, char *, int)",
+            "got": "#1 unsigned short",
+            "want": "#1 short",
+            "basis": "definition",
+            "ref_file": "src/MultiStore16.c",
+            "ref_line": 1,
+            "ref": "void (short, char *, int)"
+          },
+          {
+            "symbol": "_Z14ApproachLinearRiii",
+            "kind": "return",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 446,
+            "decl": "int (int *, int, int)",
+            "got": "int",
+            "want": "void",
+            "basis": "plurality",
+            "ref_file": "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
+            "ref_line": 12,
+            "ref": "void (int *, int, int)"
+          },
+          {
+            "symbol": "_Z14ApproachLinearRiii",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 286,
+            "decl": "int (int &, int, int)",
+            "got": "int",
+            "want": "void",
+            "basis": "plurality",
+            "ref_file": "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
+            "ref_line": 12,
+            "ref": "void (int *, int, int)"
+          },
+          {
+            "symbol": "_Z14ApproachLinearRiii",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 286,
+            "decl": "int (int &, int, int)",
+            "got": "#1 int &",
+            "want": "#1 int *",
+            "basis": "plurality",
+            "ref_file": "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
+            "ref_line": 12,
+            "ref": "void (int *, int, int)"
+          },
+          {
+            "symbol": "_ZN2G212GetBG2ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2383,
+            "decl": "char * (void)",
+            "got": "char *",
+            "want": "void *",
+            "basis": "definition",
+            "ref_file": "src/_ZN2G212GetBG2ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "void * (void)"
+          },
+          {
+            "symbol": "_ZN3G2S12GetBG0ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 161,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S12GetBG0ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S12GetBG0ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 292,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S12GetBG0ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S12GetBG2ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 162,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S12GetBG2ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S12GetBG2ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2384,
+            "decl": "char * (void)",
+            "got": "char *",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S12GetBG2ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S12GetBG2ScrPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 291,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S12GetBG2ScrPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S13GetBG2CharPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 157,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S13GetBG2CharPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S13GetBG2CharPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 290,
+            "decl": "int (void)",
+            "got": "int",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S13GetBG2CharPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3G2S13GetBG3CharPtrEv",
+            "kind": "return",
+            "file": "src/actors/dScMgPanel_c.cpp",
+            "line": 2385,
+            "decl": "char * (void)",
+            "got": "char *",
+            "want": "unsigned int",
+            "basis": "definition",
+            "ref_file": "src/_ZN3G2S13GetBG3CharPtrEv.cpp",
+            "ref_line": 11,
+            "ref": "unsigned int (void)"
+          },
+          {
+            "symbol": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 107,
+            "decl": "int (int, OamAttr *, int, int, int, int, int, int)",
+            "got": "int",
+            "want": "OamAttr *",
+            "basis": "definition",
+            "ref_file": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c",
+            "ref_line": 35,
+            "ref": "OamAttr * (int, OamAttr *, int, int, int, int, int, int)"
+          },
+          {
+            "symbol": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+            "kind": "return",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 369,
+            "decl": "void (int, void *, int, int, int, int, int, int)",
+            "got": "void",
+            "want": "OamAttr *",
+            "basis": "definition",
+            "ref_file": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c",
+            "ref_line": 35,
+            "ref": "OamAttr * (int, OamAttr *, int, int, int, int, int, int)"
+          },
+          {
+            "symbol": "_ZN4cstd5atan2E5Fix12IiES1_",
+            "kind": "return",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 258,
+            "decl": "int (int, int)",
+            "got": "int",
+            "want": "short",
+            "basis": "definition",
+            "ref_file": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+            "ref_line": 13,
+            "ref": "short (int, int)"
+          },
+          {
+            "symbol": "_ZN5Model17UpdateFileOffsetsER8BMD_File",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 288,
+            "decl": "void (void *)",
+            "got": "#1 void *",
+            "want": "#1 BMD_File &",
+            "basis": "definition",
+            "ref_file": "src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp",
+            "ref_line": 10,
+            "ref": "void (BMD_File &)"
+          },
+          {
+            "symbol": "__cxa_vec_ctor",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 167,
+            "decl": "void (void *, int, int, void *, void *)",
+            "got": "#2 int",
+            "want": "#2 unsigned int",
+            "basis": "definition",
+            "ref_file": "src/__cxa_vec_ctor.cpp",
+            "ref_line": 48,
+            "ref": "void (void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *))"
+          },
+          {
+            "symbol": "__cxa_vec_ctor",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 167,
+            "decl": "void (void *, int, int, void *, void *)",
+            "got": "#3 int",
+            "want": "#3 unsigned int",
+            "basis": "definition",
+            "ref_file": "src/__cxa_vec_ctor.cpp",
+            "ref_line": 48,
+            "ref": "void (void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *))"
+          },
+          {
+            "symbol": "__cxa_vec_ctor",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 167,
+            "decl": "void (void *, int, int, void *, void *)",
+            "got": "#4 void *",
+            "want": "#4 void (*)(void *)",
+            "basis": "definition",
+            "ref_file": "src/__cxa_vec_ctor.cpp",
+            "ref_line": 48,
+            "ref": "void (void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *))"
+          },
+          {
+            "symbol": "__cxa_vec_ctor",
+            "kind": "param",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 167,
+            "decl": "void (void *, int, int, void *, void *)",
+            "got": "#5 void *",
+            "want": "#5 void (*)(void *)",
+            "basis": "definition",
+            "ref_file": "src/__cxa_vec_ctor.cpp",
+            "ref_line": 48,
+            "ref": "void (void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *))"
+          },
+          {
+            "symbol": "func_ov004_020ad90c",
+            "kind": "arity",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 397,
+            "decl": "void (void *)",
+            "got": "1",
+            "want": "0",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020ad90c.c",
+            "ref_line": 4,
+            "ref": "void (void)"
+          },
+          {
+            "symbol": "func_ov004_020af948",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 247,
+            "decl": "void (int, int, int, int)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020af948.cpp",
+            "ref_line": 6,
+            "ref": "void (void *, int, int, void *)"
+          },
+          {
+            "symbol": "func_ov004_020af948",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 247,
+            "decl": "void (int, int, int, int)",
+            "got": "#4 int",
+            "want": "#4 void *",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020af948.cpp",
+            "ref_line": 6,
+            "ref": "void (void *, int, int, void *)"
+          },
+          {
+            "symbol": "func_ov004_020afdd0",
+            "kind": "return",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 251,
+            "decl": "int (int, int, int, int, int)",
+            "got": "int",
+            "want": "void",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020afdd0.cpp",
+            "ref_line": 8,
+            "ref": "void (void *, int, int, int, int)"
+          },
+          {
+            "symbol": "func_ov004_020afdd0",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 251,
+            "decl": "int (int, int, int, int, int)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020afdd0.cpp",
+            "ref_line": 8,
+            "ref": "void (void *, int, int, int, int)"
+          },
+          {
+            "symbol": "func_ov006_020c33dc",
+            "kind": "return",
+            "file": "src/actors/dScMgCup_c.cpp",
+            "line": 166,
+            "decl": "void (void *)",
+            "got": "void",
+            "want": "int",
+            "basis": "definition",
+            "ref_file": "src/func_ov006_020c33dc.c",
+            "ref_line": 9,
+            "ref": "int (char *)"
+          }
+        ],
+        "additional_evidence": [
+          {
+            "symbols": [
+              "LoadCompressedFileAt"
+            ],
+            "required": "Cup158 must agree with actual u32 LoadCompressedFileAt(u16 fileID,void* target) at src/LoadCompressedFileAt.c:7; calls1128/1132-34 use literal IDs and hardware addresses. Preserve real pointer/address conversions."
+          },
+          {
+            "symbols": [
+              "DecompressLZ16"
+            ],
+            "required": "Panel2369 and Roulette306 integer source/destination slots are memory buffers. Actual assembly signature is void(void*,void*) and directly dereferences r0/r1. Keep necessary explicit hardware-address casts."
+          },
+          {
+            "symbols": [
+              "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi"
+            ],
+            "required": "Cup107 int-return and Hanachan369 void-return contradict actual OamAttr* return at src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c:35, which returns null or an emitted OAM entry. Use the actual scalar bridge; do not invent a native Fix12 overload."
+          },
+          {
+            "symbols": [
+              "_ZN4cstd5atan2E5Fix12IiES1_"
+            ],
+            "required": "Curling258 int return contradicts actual s16 return and explicit s16 narrowing at src/_ZN4cstd5atan2E5Fix12IiES1_.c:13. Check all three call sites1074/1227/1253; report any sign-extension change, not a fake workaround."
+          },
+          {
+            "symbols": [
+              "MultiStore16"
+            ],
+            "required": "Panel2370 u16 differs from actual short at src/MultiStore16.c:1. Both callers pass 0xf361. Measure truthful signed input/local forms; retain a real byte blocker if extension changes. The body stores only16bits, so original signedness is not uniquely inferred merely from it."
+          },
+          {
+            "symbols": [
+              "func_ov004_020afdd0",
+              "func_ov004_020af948"
+            ],
+            "required": "Curling251 afdd0 must return void, with real sprite pointer first; actual definition8 has bare returns and only draw side effects. af948 actual definition6 uses a sprite pointer and matrix pointer in positions1/4; Curling247 and Panel552 use integer views. Include block-scope Panel162/678 prototypes in consistency audit."
+          },
+          {
+            "symbols": [
+              "__cxa_vec_ctor"
+            ],
+            "required": "Cup167 runtime prototype must use unsigned count/stride and void(*)(void*) callbacks, matching src/__cxa_vec_ctor.cpp:48. Current own020deac4/020e0634 plus external0203d738/NullDestructor0203d47c are void(void) empties. Incompatible callback casts alone do not fix that contract; census and propose coherent unused object-pointer callbacks with owned external dependencies and exact proof."
+          },
+          {
+            "symbols": [
+              "_ZN5Model17UpdateFileOffsetsER8BMD_File"
+            ],
+            "required": "Roulette288 void* view contradicts genuine Model::UpdateFileOffsets(BMD_File&) at src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp:10. Prefer genuine static call through Model.h; measure include-order effects without changing layout."
+          },
+          {
+            "symbols": [
+              "_Z14ApproachLinearRiii"
+            ],
+            "required": "Actual src/_Z14ApproachLinearRiii.cpp:2 is int ApproachLinear(int&,int,int). Keep int return: scanner void plurality is wrong. Hanachan446 pointer view should use genuine reference interface where measured exact; Roulette already uses int&. Do not modify return to match plurality."
+          },
+          {
+            "symbols": [
+              "_ZN2G212GetBG2ScrPtrEv",
+              "_ZN3G2S12GetBG0ScrPtrEv",
+              "_ZN3G2S12GetBG2ScrPtrEv",
+              "_ZN3G2S13GetBG2CharPtrEv",
+              "_ZN3G2S13GetBG3CharPtrEv"
+            ],
+            "required": "Current genuine G2::GetBG2ScrPtr returns void*; genuine G2S four entries return unsigned address words. Cup/Panel/Roulette local signatures differ. Agree with those current interfaces and explicitly convert at memory APIs; do not silently change shared SDK definitions to fit one caller."
+          },
+          {
+            "symbols": [
+              "func_ov006_020c33dc"
+            ],
+            "required": "Cup166 says void; actual constructor-like helper returns its receiver at src/func_ov006_020c33dc.c:9/end. The legacy int is an address encoding, not evidence of a numerical result. Use a truthful receiver-return ABI view or coherent callee repair, not invented semantics."
+          },
+          {
+            "symbols": [
+              "func_ov004_020ad90c"
+            ],
+            "required": "Hanachan397/1717 passes this to actual void(void) global-state helper. The body reads global020beb68 and never reads incoming receiver. First measure ordinary no-argument call; if it changes bytes, census before reconstructing a documented unused context parameter."
+          }
+        ]
+      },
+      {
+        "id": "SCMG2877-08",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Roulette omits the actual payout/count input",
+        "basis": "Roulette320/882 declares/calls void(), but actual linked instructions load signed mScore to r0 at0210979c, compare it at021097a0, then BL020b56c8 at021097a8. Callee src/func_ov004_020b56c8.c:13 consumes the input, storing it at lines23/27 into global counters. Its char* type is a legacy integer-as-pointer error, not a real pointer parameter.",
+        "required_action": "Reconstruct a coherent int count input and explicitly pass mScore. Census all callers and shared callee/shadow/global views before editing. Do not invent a pointer or fabricate an argument merely to occupy r0.",
+        "exact_diagnostics": [
+          {
+            "symbol": "func_ov004_020b56c8",
+            "kind": "arity",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 320,
+            "decl": "void (void)",
+            "got": "0",
+            "want": "1",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b56c8.c",
+            "ref_line": 13,
+            "ref": "void (char *)"
+          }
+        ],
+        "additional_evidence": [
+          {
+            "file": "src/actors/dScMgMemory2_c.cpp:868",
+            "argument": "5 * (5 - byte at +0x5408), currently cast char*"
+          },
+          {
+            "file": "src/minigames/d_s_mg_bsc.cpp:719",
+            "argument": "data_ov004_020bfa18 << 1"
+          },
+          {
+            "file": "src/minigames/d_s_mg_card.cpp:517",
+            "argument": "v * data_ov004_020bfa18"
+          },
+          {
+            "file": "src/minigames/d_s_mg_memory.cpp:887",
+            "argument": "val"
+          },
+          {
+            "file": "src/minigames/d_s_mg_m_carlo.cpp:382",
+            "argument": "scalar data_ov006_0213d568 currently cast char*"
+          },
+          {
+            "file": "src/func_ov004_020b4aa4.c:20; src/func_ov004_020b53f0.c:24,47; src/func_ov004_020b556c.cpp:26,44",
+            "evidence": "Global020bf9f8 is decremented and used as an integer count;020bf9e8 receives arithmetic at020b5e40/020b5ed0."
+          }
+        ]
+      },
+      {
+        "id": "SCMG2877-09",
+        "kind": "correctness",
+        "disposition": "open",
+        "title": "Shared legacy interface contradictions need semantic reconciliation",
+        "basis": "These are real disagreement/dependency boundaries, but several legacy definitions have misleading pointer types or omitted forwarding parameters.",
+        "required_action": "Use actual argument semantics and machine-code/caller evidence; do not normalize scene callers blindly to scanner reference text.",
+        "exact_diagnostics": [
+          {
+            "symbol": "DrawOamSprite",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 253,
+            "decl": "void (int, int, int, int)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/DrawOamSprite.cpp",
+            "ref_line": 15,
+            "ref": "void (void *, void *, int, void *)"
+          },
+          {
+            "symbol": "DrawOamSprite",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 253,
+            "decl": "void (int, int, int, int)",
+            "got": "#2 int",
+            "want": "#2 void *",
+            "basis": "definition",
+            "ref_file": "src/DrawOamSprite.cpp",
+            "ref_line": 15,
+            "ref": "void (void *, void *, int, void *)"
+          },
+          {
+            "symbol": "DrawOamSprite",
+            "kind": "param",
+            "file": "src/actors/dScMgCurling2_c.cpp",
+            "line": 253,
+            "decl": "void (int, int, int, int)",
+            "got": "#4 int",
+            "want": "#4 void *",
+            "basis": "definition",
+            "ref_file": "src/DrawOamSprite.cpp",
+            "ref_line": 15,
+            "ref": "void (void *, void *, int, void *)"
+          },
+          {
+            "symbol": "DrawOamSprite",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 400,
+            "decl": "void (void *, int, int, int)",
+            "got": "#2 int",
+            "want": "#2 void *",
+            "basis": "definition",
+            "ref_file": "src/DrawOamSprite.cpp",
+            "ref_line": 15,
+            "ref": "void (void *, void *, int, void *)"
+          },
+          {
+            "symbol": "DrawOamSprite",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 400,
+            "decl": "void (void *, int, int, int)",
+            "got": "#4 int",
+            "want": "#4 void *",
+            "basis": "definition",
+            "ref_file": "src/DrawOamSprite.cpp",
+            "ref_line": 15,
+            "ref": "void (void *, void *, int, void *)"
+          },
+          {
+            "symbol": "Ov004_Deallocate",
+            "kind": "arity",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 307,
+            "decl": "void (void *)",
+            "got": "1",
+            "want": "0",
+            "basis": "definition",
+            "ref_file": "src/Ov004_Deallocate.c",
+            "ref_line": 2,
+            "ref": "void (void)"
+          },
+          {
+            "symbol": "func_ov004_020adc68",
+            "kind": "return",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 315,
+            "decl": "void * (int)",
+            "got": "void *",
+            "want": "void",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020adc68.c",
+            "ref_line": 2,
+            "ref": "void (void)"
+          },
+          {
+            "symbol": "func_ov004_020adc68",
+            "kind": "arity",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 315,
+            "decl": "void * (int)",
+            "got": "1",
+            "want": "0",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020adc68.c",
+            "ref_line": 2,
+            "ref": "void (void)"
+          },
+          {
+            "symbol": "func_ov004_020b1b08",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 316,
+            "decl": "void (int)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b1b08.c",
+            "ref_line": 3,
+            "ref": "void (void *)"
+          },
+          {
+            "symbol": "func_ov004_020b1b40",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 317,
+            "decl": "void (int)",
+            "got": "#1 int",
+            "want": "#1 void *",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b1b40.c",
+            "ref_line": 3,
+            "ref": "void (void *)"
+          },
+          {
+            "symbol": "func_ov004_020b2220",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 401,
+            "decl": "void (int, int, void *, int, int, int, int)",
+            "got": "#3 void *",
+            "want": "#3 int",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b2220.c",
+            "ref_line": 19,
+            "ref": "void (int, int, int, int, int, int, unsigned short)"
+          },
+          {
+            "symbol": "func_ov004_020b2220",
+            "kind": "param",
+            "file": "src/actors/dScMgHanachan_c.cpp",
+            "line": 401,
+            "decl": "void (int, int, void *, int, int, int, int)",
+            "got": "#7 int",
+            "want": "#7 unsigned short",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b2220.c",
+            "ref_line": 19,
+            "ref": "void (int, int, int, int, int, int, unsigned short)"
+          },
+          {
+            "symbol": "func_ov004_020b2220",
+            "kind": "param",
+            "file": "src/actors/dScMgRoulette_c.cpp",
+            "line": 319,
+            "decl": "void (int, int, int, int, int, int, int)",
+            "got": "#7 int",
+            "want": "#7 unsigned short",
+            "basis": "definition",
+            "ref_file": "src/func_ov004_020b2220.c",
+            "ref_line": 19,
+            "ref": "void (int, int, int, int, int, int, unsigned short)"
+          }
+        ],
+        "additional_evidence": [
+          {
+            "symbols": [
+              "DrawOamSprite"
+            ],
+            "assessment": "Actual definition src/DrawOamSprite.cpp:15 is void(void*,void*,int,void*), but argument2 is immediately cast to int x at both OAM calls. Sprite and matrix pointers are real; x is a scalar. Curling/Hanachan/Panel integer x declarations should NOT be changed to void* solely to match this legacy callee. Reconcile the callee to semantic x plus caller first/fourth pointers and census other users."
+          },
+          {
+            "symbols": [
+              "Ov004_Deallocate",
+              "func_ov004_020adc68"
+            ],
+            "assessment": "Zero-argument void definitions only tail-forward Deallocate/LoadFile. Roulette passes allocated pointers and file IDs and consumes load results. Their current definitions do not establish true zero arity/void return. Preserve caller semantic values; inspect tail ABI/population and coherently repair the wrapper dependency."
+          },
+          {
+            "symbols": [
+              "func_ov004_020b1b08",
+              "func_ov004_020b1b40"
+            ],
+            "assessment": "Current wrappers use void* c and forward as void* value, but actual020b1b78 subtracts int val and020b1ba0 adds s32 delta; Roulette passes1. This is a legacy scalar-as-pointer wrapper, not a reason to cast1 to a pointer. Requires coherent callee-side declarations if repaired."
+          },
+          {
+            "symbols": [
+              "func_ov004_020b2220"
+            ],
+            "assessment": "Actual listed definition is NONMATCHING draft, not a matching callee proof. Its code treats parameter3 as numeric score and parameter7 as u16 angle; Hanachan passes a score through void*, Roulette passes int angle. Before using draft signature as final authority, inspect retail parameter load/use and measure changes. Do not claim the draft VERIFIED."
+          }
+        ]
+      }
+    ],
+    "raw_diagnostic_count": 83,
+    "excluded_or_nonautomatic_rows": [
+      {
+        "symbols": [
+          "Camera_UpdateMatrices",
+          "func_ov006_020c0aa8",
+          "func_ov006_020c225c",
+          "func_ov006_020c1718",
+          "Vec2_Sub",
+          "func_0203d680",
+          "func_0203d704",
+          "func_0203d5dc"
+        ],
+        "assessment": "Existing raw receiver/vector views are nominal/layout reconstruction. Actual distance helper reads only first two words despite local Vector3 tag; no evidence here that scene V2 needs a speculative third word. No new correctness finding solely from these pointer spellings."
+      },
+      {
+        "symbols": [
+          "LoadFile"
+        ],
+        "assessment": "Actual LoadFile/0201818c encode heap addresses as int; pointer-return scene views reflect real pointer use. Do not regress them to integer semantics merely to satisfy scanner."
+      },
+      {
+        "symbols": [
+          "_ZTV19dScMgSingle3DBase_c",
+          "data_0209e650",
+          "data_020a0e40",
+          "data_ov004_020b9488",
+          "data_ov004_020bf9e4"
+        ],
+        "assessment": "Plurality-only data-view diagnostics; no new layout/type truth proved by voting. Preserve unchanged records and do not bank new contradictions."
+      },
+      {
+        "symbols": [
+          "func_02012718"
+        ],
+        "assessment": "Actual definition is void(int,int); Curling agrees. Investigated and explicitly NOT a finding."
+      }
+    ],
+    "own_byte_proof": {
+      "source_pairs": 5,
+      "strict_functions_per_version": 223,
+      "whole_objects_identical": 5,
+      "blind": 0,
+      "diffs": 0,
+      "metadata": {
+        "VERIFIED": 26,
+        "PARTIAL": 22
+      },
+      "formal_acceptance": false
+    },
+    "proof_artifact": "pr2877-independent-anchor-proof.json",
+    "raw_contract_artifact": "pr2877-independent-contract-scan.json",
+    "payout_disassembly": "pr2877-payout-caller-disassembly.json",
+    "source_edits": false,
+    "claims_or_publication": false,
+    "queue_measurement_status": "Root precise mapper scope inspected; independent tu_map attempt stopped because fresh reviewer build lacks rtti_vtables.json. No queue count claimed as independently regenerated. All223 manifest function ranges independently proved complete TU enrollment.",
+    "next_action": "Supersede blocked composition with a scoped interface repair retaining all17 previous and these7 new IDs. Resolve shared dependencies before final composition; independent exact-head recheck required."
+  },
+  "gates": {
+    "rom": {
+      "pr": 2877,
+      "group": "rom",
+      "tested_commit": "8abe7e98eb2fd6615bb24459b2a63176a084030a",
+      "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/rombuild.py",
+            "-j16",
+            "--report-json",
+            "build/pr2877-production/rom.json",
+            "--data-json",
+            "build/pr2877-production/data.json"
+          ],
+          "exit_code": 0,
+          "seconds": 274.62,
+          "log": "build/pr2877-production/rombuild.log"
+        },
+        {
+          "name": "prepush-linkcheck",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "5c075024562a469c6e4336d8540e3dfa9ffa84a1..8abe7e98eb2fd6615bb24459b2a63176a084030a",
+            "--json",
+            "build/pr2877-production/prepush-linkcheck.json"
+          ],
+          "exit_code": 0,
+          "seconds": 169.03,
+          "log": "build/pr2877-production/prepush-linkcheck.log"
+        }
+      ]
+    },
+    "static": {
+      "pr": 2877,
+      "group": "static",
+      "tested_commit": "8abe7e98eb2fd6615bb24459b2a63176a084030a",
+      "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+      "gates": [
+        {
+          "name": "coverage",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/source_coverage.py",
+            "--check",
+            "--base",
+            "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+          ],
+          "exit_code": 0,
+          "seconds": 0.41,
+          "log": "build/pr2877-production/coverage.log"
+        },
+        {
+          "name": "layout",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/layout_check.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.39,
+          "log": "build/pr2877-production/layout.log"
+        },
+        {
+          "name": "conflicts",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_tubuild_conflicts.py",
+            "--list"
+          ],
+          "exit_code": 0,
+          "seconds": 0.17,
+          "log": "build/pr2877-production/conflicts.log"
+        },
+        {
+          "name": "references",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_dead_references.py"
+          ],
+          "exit_code": 0,
+          "seconds": 6.22,
+          "log": "build/pr2877-production/references.log"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.97,
+          "log": "build/pr2877-production/port.log"
+        },
+        {
+          "name": "declarations",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+          ],
+          "exit_code": 0,
+          "seconds": 7.8,
+          "log": "build/pr2877-production/declarations.log"
+        },
+        {
+          "name": "attribution",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_attribution.py",
+            "--base",
+            "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+            "--head",
+            "8abe7e98eb2fd6615bb24459b2a63176a084030a"
+          ],
+          "exit_code": 0,
+          "seconds": 37.27,
+          "log": "build/pr2877-production/attribution.log"
+        },
+        {
+          "name": "converted",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/tiers_ratchet.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 4.22,
+          "log": "build/pr2877-production/converted.log"
+        },
+        {
+          "name": "queue",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/queue_audit.py",
+            "--check-promoted"
+          ],
+          "exit_code": 0,
+          "seconds": 0.09,
+          "log": "build/pr2877-production/queue.log"
+        },
+        {
+          "name": "offsets",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_header_offsets.py",
+            "--changed",
+            "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+          ],
+          "exit_code": 0,
+          "seconds": 0.38,
+          "log": "build/pr2877-production/offsets.log"
+        },
+        {
+          "name": "rename-ledger",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_rename_ledger.py",
+            "--repo",
+            "."
+          ],
+          "exit_code": 0,
+          "seconds": 0.08,
+          "log": "build/pr2877-production/rename-ledger.log"
+        },
+        {
+          "name": "profile-campaign",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_profile_campaign.py",
+            "--repo",
+            "."
+          ],
+          "exit_code": 0,
+          "seconds": 0.11,
+          "log": "build/pr2877-production/profile-campaign.log"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/langmode_audit.py",
+            "--check",
+            "build/pr2877-production/main-langmode.json"
+          ],
+          "exit_code": 0,
+          "seconds": 7.83,
+          "log": "build/pr2877-production/langmode.log"
+        }
+      ]
+    }
+  },
+  "continuation_task": "pr2877-interface-repair-0921",
+  "ownership": "Only our task is superseded; original Cup owner pr2500-cup-source-repair-0911 keeps its branch, candidate and reservations. Global queue is freed for prerequisite Memory integration."
+}
