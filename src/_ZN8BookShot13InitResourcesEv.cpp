@@ -9,13 +9,17 @@ struct dActor_c; struct Vector3; struct Vector3_16; struct BMD_File;
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 
 extern "C" {
-extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void LoadBlueCoinModel(void* c);
-extern int _ZN11ShadowModel12InitCylinderEv(char* self);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+/* The production mesh initializer still takes actor/rotation addresses as int.
+   Its native header spells a different symbol; retain that scalar contract. */
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    dBgCh_Actr* self, int actor, int radius, int height,
+    int first, int second);
+/* Native cylinder call experiments are recorded in
+   notes/experiments/pr2869-source-repair-0920.json. */
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,
+    int radius, int height, u32 flags, u32 vulnFlags);
 }
 
 extern SharedFilePtr data_ov020_02114aa0;
@@ -29,21 +33,21 @@ extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int BookShot::InitResources()
 {
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov020_02114aa0);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov020_02114ab8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov020_02114aa8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov020_02114ab0);
-    LoadBlueCoinModel(((char*)this));
+    Model::LoadFile(data_ov020_02114aa0);
+    Model::LoadFile(data_ov020_02114ab8);
+    Animation::LoadFile(data_ov020_02114aa8);
+    Animation::LoadFile(data_ov020_02114ab0);
+    LoadBlueCoinModel(this);
 
-    if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x25c, (struct dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (int)this, 0x32000, 0x32000, 0, 0);
 
     unk_438 = 0;
     unk_43c = 0;
     unk_440 = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, (const Vector3*)&unk_438, 0x19000, 0x32000, 0x200001, 0);
 
     unk_418 = 0;
     unk_41c = 0;
@@ -54,7 +58,7 @@ int BookShot::InitResources()
     unk_430 = mPosY;
     unk_434 = mPosZ;
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
+    if (mModel.SetFile((BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
     *(struct Matrix4x3*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
