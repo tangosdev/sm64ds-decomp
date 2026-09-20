@@ -827,7 +827,7 @@ int daMky_c::EnterState9()
 {
     char *p = (char *)this;
     *(int *)(p + 0x98) = 0;
-    *(int *)(p + 0x3b4) = 9;
+    mState = 9;
     return 1;
 }
 
@@ -1003,10 +1003,10 @@ int daMky_c::EnterState8() {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, data_ov030_02115d18.b, 0, 0x1000, 0);
     *(int *)(c + 0x130) = 0x1000;
     _ZN7PathPtr6FromIDEj(c+0x398, *(int*)(c+8) & 0xff);
-    *(int *)(c + 0x3a0) = 1;
-    *(char *)(c + 0x3c7) = 0;
+    mPathNode = 1;
+    unk_3c7 = 0;
     *(int *)(c + 0x98) = 0x6000;
-    *(int *)(c + 0x3b4) = 8;
+    mState = 8;
     return 1;
 }
 
@@ -1272,17 +1272,17 @@ int daMky_c::EnterState6()
     char *c = (char *)this;
     *(int *)(c + 0xb0) &= ~0x80000;
     if (Vec3_Dist(c + 0x380, c + 0x5c) < 0x514000 &&
-        *(int *)(c + 0x60) > *(int *)(c + 0x384) - 0x12c000) {
-        *(unsigned char *)(c + 0x3c7) = 0;
+        *(int *)(c + 0x60) > mPerchPosY - 0x12c000) {
+        unk_3c7 = 0;
         _ZN8dActor_c13SpawnSoundObjEj(c, 1);
     } else {
-        *(unsigned char *)(c + 0x3c7) = 3;
+        unk_3c7 = 3;
     }
     *(int *)(c + 0x98) = 0;
-    *(unsigned char *)(c + 0x3c6) = 0x3c;
+    mActionTimer = 0x3c;
     _ZN5dCc_c5ClearEv(c + 0x160);
-    *(int *)(c + 0x3b8) = *(int *)(c + 0x3b4);
-    *(int *)(c + 0x3b4) = 6;
+    mPrevState = mState;
+    mState = 6;
     return 1;
 }
 
@@ -1389,13 +1389,13 @@ int daMky_c::EnterState5() {
     int* p = (int*)((int)c + 0xb0);
     int tmp = *p;
     *p = tmp & ~0x80000;
-    *(unsigned char*)(c + 0x3c7) = 0;
+    unk_3c7 = 0;
     void* arg1 = (void*)(c + 0x160);
     *(int*)(c + 0x98) = 0;
     _ZN5dCc_c5ClearEv(arg1);
     _ZN10dBgCh_Actr15ClearGroundFlagEv((void*)(c + 0x194));
-    *(int*)(c + 0x3b8) = *(int*)(c + 0x3b4);
-    *(int*)(c + 0x3b4) = 5;
+    mPrevState = mState;
+    mState = 5;
     return 1;
 }
 
@@ -1537,14 +1537,14 @@ int daMky_c::EnterState4(){
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, (void *)data_ov030_02115ce0[1], 0, 0x1000, 0);
     *(int*)(c+0x130) = 0x1000;
     if (Vec3_Dist(c+0x380, c+0x5c) < 0x514000
-        && *(int*)(c+0x60) > *(int*)(c+0x384) - 0x12c000) {
-        *(unsigned char*)(c+0x3c7) = 0;
+        && *(int*)(c+0x60) > mPerchPosY - 0x12c000) {
+        unk_3c7 = 0;
         _ZN8dActor_c13SpawnSoundObjEj(c, 1);
     } else {
-        *(unsigned char*)(c+0x3c7) = 2;
+        unk_3c7 = 2;
     }
-    *(unsigned char*)(c+0x3c6) = 0x3c;
-    *(int*)(c+0x3b4) = 4;
+    mActionTimer = 0x3c;
+    mState = 4;
     return 1;
 }
 
@@ -1775,21 +1775,21 @@ int daMky_c::EnterState3()
     extern char data_ov030_02115ce0[];
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, *(void **)(data_ov030_02115ce0 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x130) = 0x1000;
-    if (*(unsigned char*)(c + 0x3c8) == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
-        *(unsigned char*)(c + 0x3c7) = 5;
+    if (mHasSpawnedCap == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
+        unk_3c7 = 5;
     } else {
         char* p = *(char**)(c + 0x3a8);
         if (*(unsigned char*)(p + 0x6f9) != 0 ||
             *(unsigned char*)(p + 0x6fb) != 0 ||
             *(unsigned char*)(p + 0x6ff) != 0) {
-            *(unsigned char*)(c + 0x3c7) = 4;
+            unk_3c7 = 4;
         } else {
-            *(unsigned char*)(c + 0x3c7) = 0;
+            unk_3c7 = 0;
             unsigned char* f = (unsigned char*)((unsigned long long)((int)(c) + 0x3c8));
             *f ^= 1;
         }
     }
-    *(int*)(c + 0x3b4) = 3;
+    mState = 3;
     return 1;
 }
 
@@ -1987,9 +1987,8 @@ int func_ov030_02113d20(void *c) {
 /* The number 1 is read from the ROM too: this body writes the immediate 1 to the state word at +0x3b4, and it is the only one of the 44 that writes 1.  "EnterState" is coined; see the block above. */
 // @symbol _ZN7daMky_c11EnterState1Ev
 int daMky_c::EnterState1(){
-    char* c = (char*)this;
-  *(char*)(c+0x3c7)=0;
-  *(int*)(c+0x3b4)=1;
+  unk_3c7=0;
+  mState=1;
   return 1;
 }
 

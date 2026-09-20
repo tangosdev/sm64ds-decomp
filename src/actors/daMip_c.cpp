@@ -257,7 +257,7 @@ int daMip_c::TestWaterBelow()
     v.z = z;
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, c);
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg)) {
-        *(int *)(c + 0x464) = rg.detect[12];
+        mFloorY = rg.detect[12];
         if (SurfaceInfo_TestFlag0x20(rg.detect)) {
             _ZN9dBgCh_GndD1Ev(&rg);
             return 1;
@@ -292,7 +292,7 @@ void daMip_c::UpdateGrab()
     if (_ZN6Player7TryGrabER8dActor_c(o, c) == 0) return;
     *(void **)(c + 0x45c) = o;
     *(int *)(((int)c + 0x128)) |= 2;
-    if (*(unsigned char *)(c + 0x426) == 0) {
+    if (unk_426 == 0) {
         SetState(data_ov085_021306ac);
     } else {
         SetState(data_ov085_021306bc);
@@ -327,8 +327,8 @@ int daMip_c::StateSaveTalkMain()
     unsigned char gb;
     int state;
 
-    *(short *)(self + 0x424) = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(r4 + 0x5c));
-    ApproachAngle(self + 0x94, *(short *)(self + 0x424), 1, 0x500, 0x500);
+    mTargetAngY = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(r4 + 0x5c));
+    ApproachAngle(self + 0x94, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
     vec.x = *(int *)(self + 0x5c);
@@ -336,7 +336,7 @@ int daMip_c::StateSaveTalkMain()
     vec.z = *(int *)(self + 0x64);
     vec.y += 0x3c000;
 
-    state = *(int *)(self + 0x41c);
+    state = mActionStep;
     switch (state) {
     case 0:
         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r4, self, 0x148, &vec, 0, 0)) {
@@ -429,10 +429,10 @@ int daMip_c::StateTalkMain()
     switch (_ZN6Player12GetTalkStateEv(player)) {
     case 0:
         pos.y = pos.y + 0x46000;
-        if (*(int *)(self + 0x43c) == 7) {
+        if (mRabbitId == 7) {
             id = 0x13d;
         }
-        if (*(int *)(self + 0x43c) == 6) {
+        if (mRabbitId == 6) {
             id = 0x13a;
         }
         if (_Z14ApproachLinearRsss((s16 *)(self + 0x94), angle, 0x800)) {
@@ -555,7 +555,7 @@ int daMip_c::StateReleasedInit()
     int *a = (int *)(((int)c + 0x12c));
     int *b = (int *)(((int)c + 0x128));
     *(int *)(c + 0x9c) = -0x1000;
-    *(unsigned char *)(c + 0x426) = 1;
+    unk_426 = 1;
     *a &= ~0x1000;
     *b |= 0x4000000;
     *(int *)(c + 0x114) = 0x78000;
@@ -601,7 +601,7 @@ int daMip_c::StateCaughtMain()
         return 1;
     }
 
-    if (*(s32 *)(c + 0x41c) == 0) {
+    if (mActionStep == 0) {
         {
             int *ps = (int *)(pl + 0x5c);
             pv.x = ps[0];
@@ -609,7 +609,7 @@ int daMip_c::StateCaughtMain()
             pv.z = ps[2];
         }
 
-        if (*(u8 *)(c + 0x426) != 0) {
+        if (unk_426 != 0) {
             s16 ang = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &pv);
             _Z14ApproachLinearRsss((s16 *)(c + 0x94), ang, 0x800);
             if (AngleDiff(*(s16 *)(c + 0x94), ang) > 0x200)
@@ -619,7 +619,7 @@ int daMip_c::StateCaughtMain()
         {
             int guard = (*(s32 *)(c + 0xb0) & 0x4000) ? 1 : 0;
             if (guard == 0) {
-                if (*(u8 *)(c + 0x426) != 2)
+                if (unk_426 != 2)
                     goto after_first_section;
             }
             {
@@ -629,16 +629,16 @@ int daMip_c::StateCaughtMain()
                     pos.y = *(s32 *)(c + 0x60);
                     pos.z = *(s32 *)(c + 0x64);
 
-                    if (*(s32 *)(c + 0x43c) == 7)
+                    if (mRabbitId == 7)
                         goto msg_13c;
-                    if (func_02013890(*(s32 *)(c + 0x43c), *(s32 *)(pl + 8)) == 0) {
+                    if (func_02013890(mRabbitId, *(s32 *)(pl + 8)) == 0) {
                         if (*(s32 *)(pl + 8) != 3) {
                             _ZN7Message11PrepareTalkEv();
                             {
                                 int z = r4;
                                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, z);
                             }
-                            if (*(s32 *)(c + 0x43c) == 6)
+                            if (mRabbitId == 6)
                                 goto msg_123a;
                             msg = (s16)(*(s32 *)(pl + 8) + 0x11b);
                             r4 = 0x163;
@@ -649,7 +649,7 @@ int daMip_c::StateCaughtMain()
                             goto have_msg;
                         }
                         /* simple msgs for character id 3 */
-                        if (*(s32 *)(c + 0x43c) != 6)
+                        if (mRabbitId != 6)
                             msg = 0x12b;
                         else
                             msg = 0x12c;
@@ -657,12 +657,12 @@ int daMip_c::StateCaughtMain()
                     } else {
                         if (*(s32 *)(pl + 8) != 3) {
                             _ZN7Message11PrepareTalkEv();
-                            if (*(u8 *)(c + 0x429) == 0) {
+                            if (mIsGlowing == 0) {
                                 {
                                     int z = r4;
                                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, z);
                                 }
-                                if (*(s32 *)(c + 0x43c) == 6)
+                                if (mRabbitId == 6)
                                     goto msg_127a;
                                 msg = (s16)(*(s32 *)(pl + 8) + 0x11f);
                                 r4 = 0x163;
@@ -683,8 +683,8 @@ int daMip_c::StateCaughtMain()
                             goto have_msg;
                         }
                         /* character id 3 simple path */
-                        if (*(u8 *)(c + 0x429) == 0) {
-                            if (*(s32 *)(c + 0x43c) != 6)
+                        if (mIsGlowing == 0) {
+                            if (mRabbitId != 6)
                                 msg = 0x12d;
                             else
                                 msg = 0x12e;
@@ -705,7 +705,7 @@ int daMip_c::StateCaughtMain()
                         y = y + 0x64000;
                         pos.y = y;
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
-                            *(s32 *)(c + 0x41c) = 1;
+                            mActionStep = 1;
                             if (r4 != 0)
                                 func_02012694(r4, c + 0x74);
                         }
@@ -722,9 +722,9 @@ int daMip_c::StateCaughtMain()
     if (_ZN6Player12GetTalkStateEv(pl) != -1) {
         if (data_0209d660 != 0) {
             if (data_0209d6bc == 9) {
-                if (*(s32 *)(c + 0x43c) != 7) {
-                    if (func_02013890(*(s32 *)(c + 0x43c), *(s32 *)(pl + 8)) != 0) {
-                        if (*(u8 *)(c + 0x429) == 0)
+                if (mRabbitId != 7) {
+                    if (func_02013890(mRabbitId, *(s32 *)(pl + 8)) != 0) {
+                        if (mIsGlowing == 0)
                             goto talk_active_done;
                     }
                 }
@@ -746,7 +746,7 @@ int daMip_c::StateCaughtMain()
     }
     *(s32 *)(c + 0x98) = 0;
 
-    if (*(s32 *)(c + 0x43c) == 7) {
+    if (mRabbitId == 7) {
         pos7.x = *(s32 *)(c + 0x5c);
         pos7.y = *(s32 *)(c + 0x60);
         pos7.z = *(s32 *)(c + 0x64);
@@ -755,19 +755,19 @@ int daMip_c::StateCaughtMain()
             s8 cc = *(s8 *)(c + 0xcc);
             int m1 = -1;
             void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xe5, *(s32 *)(c + 0x43c), &pos7, (void *)(c + 0x8c), cc, m1);
+                0xe5, mRabbitId, &pos7, (void *)(c + 0x8c), cc, m1);
             if (spawned != 0)
                 *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);
         }
         func_02012790(0xa);
-        *(u8 *)(c + 0x427) = 0;
+        mTalkState = 0;
         *(s32 *)(c + 0x45c) = 0;
         SetState(data_ov085_021306bc);
         return 1;
     }
 
-    if (func_02013890(*(s32 *)(c + 0x43c), *(s32 *)(pl + 8)) != 0) {
-        if (*(u8 *)(c + 0x429) == 0)
+    if (func_02013890(mRabbitId, *(s32 *)(pl + 8)) != 0) {
+        if (mIsGlowing == 0)
             goto no_spawn;
         if (_ZN8SaveData22NumGlowingRabbitsFoundEv() != 7)
             goto no_spawn;
@@ -777,8 +777,8 @@ int daMip_c::StateCaughtMain()
         posR.y = *(s32 *)(c + 0x60);
         posR.z = *(s32 *)(c + 0x64);
         {
-            u32 param = *(s32 *)(c + 0x43c);
-            if (*(u8 *)(c + 0x429) != 0) {
+            u32 param = mRabbitId;
+            if (mIsGlowing != 0) {
                 param = 0x4d;
                 func_02013944();
             }
@@ -792,7 +792,7 @@ int daMip_c::StateCaughtMain()
                     *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);
             }
             func_02012790(0xa);
-            *(u8 *)(c + 0x427) = 0;
+            mTalkState = 0;
             {
                 u16 *pf = (u16 *)(pl + 0x6ce);
                 *pf = (u16)(*pf | 0x800);
@@ -801,14 +801,14 @@ int daMip_c::StateCaughtMain()
         goto after_spawn;
     }
 no_spawn:
-    if (*(u8 *)(c + 0x427) == 2) {
+    if (mTalkState == 2) {
         {
             u16 *pf = (u16 *)(pl + 0x6ce);
             *pf = (u16)(*pf & ~0x800);
         }
-        *(u8 *)(c + 0x427) = 0;
+        mTalkState = 0;
     }
-    if (*(u8 *)(c + 0x429) == 0) {
+    if (mIsGlowing == 0) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x7f, 0, 0x7444, 0);
         _ZN7Message7EndTalkEv();
     }
@@ -817,7 +817,7 @@ after_spawn:
 
     *(s32 *)(c + 0x45c) = 0;
 
-    if (*(u8 *)(c + 0x429) == 0)
+    if (mIsGlowing == 0)
         goto do_306bc;
     if (_ZN8SaveData22NumGlowingRabbitsFoundEv() != 8)
         goto flag_path;
@@ -844,7 +844,7 @@ int daMip_c::StateCaughtInit()
     extern int data_ov085_021305b8[];
     char *c = (char *)this;
 
-    *(int*)(c + 0x41c) = 0;
+    mActionStep = 0;
     *(int*)(c + 0x98) = 0;
     *(int*)(c + 0x114) = 0x28000;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, (void*)data_ov085_021305b8[1], 0, 0x1000, 0);
@@ -1051,28 +1051,28 @@ int daMip_c::StateFleeInit()
   struct Vector3 *src;
 
   char *p = (char *)ClosestPlayer();
-  *(int *)(c + 0x41c) = 0;
+  mActionStep = 0;
   if (p)
   {
     src = (struct Vector3 *)(p + 0x5c);
     v = *src;
     _ZN7PathPtrC1Ev(pathptr);
-    _ZN7PathPtr6FromIDEj(pathptr, *(int *)(c + 0x438));
+    _ZN7PathPtr6FromIDEj(pathptr, mPathId);
 
-    indices[0] = *(int *)(c + 0x448) - 1;
-    if (*(int *)(c + 0x448) - 1 < 0)
-      indices[0] = *(int *)(c + 0x444) - 1;
-    indices[1] = *(int *)(c + 0x448) + 1;
-    if (*(int *)(c + 0x448) + 1 >= *(int *)(c + 0x444))
+    indices[0] = mPathNodeIndex - 1;
+    if (mPathNodeIndex - 1 < 0)
+      indices[0] = mNumPathNodes - 1;
+    indices[1] = mPathNodeIndex + 1;
+    if (mPathNodeIndex + 1 >= mNumPathNodes)
       indices[1] = 0;
 
     for (i = 0; i < 2; i++)
       _ZNK7PathPtr7GetNodeER7Vector3j(pathptr, &nodes[i], indices[i]);
 
-    *(int *)(c + 0x44c) = 1;
+    mPathDir = 1;
     d0 = Vec3_Dist(&v, &nodes[0]);
     if (d0 > Vec3_Dist(&v, &nodes[1]))
-      *(int *)(c + 0x44c) = -1;
+      mPathDir = -1;
   }
 
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void *)(c + 0x300), data_ov085_021305d0[1], 0, 0x1000, 0);
@@ -1152,14 +1152,14 @@ int daMip_c::StateIdleMain()
     pp.y = ppp->y;
     pp.z = ppp->z;
     int lim = 0x3e8000;
-    if (*(int*)(c + 0x43c) == 7) lim = 0x2ee000;
+    if (mRabbitId == 7) lim = 0x2ee000;
 
     if (Vec3_HorzDist((Vector3*)(c + 0x5c), &pp) < lim) {
-        int t = *(int*)(c + 0x43c);
+        int t = mRabbitId;
         int cond = 0;
         if (t == 7 || t == 1 ||
-            (t == 4 && *(int*)(c + 0x440) == 1) ||
-            (t == 4 && *(int*)(c + 0x440) == 3)) {
+            (t == 4 && mCharacterId == 1) ||
+            (t == 4 && mCharacterId == 3)) {
             if (*(int*)(c + 0x60) + 0x64000 <= pp.y) cond = 1;
         }
         if (!cond) {
@@ -1170,42 +1170,42 @@ int daMip_c::StateIdleMain()
     }
 
     u32 r = (u32)RandomIntInternal(data_0209e650) >> 8;
-    if (*(int*)(c + 0x43c) == 1) {
+    if (mRabbitId == 1) {
         if (Vec3_HorzDist((Vector3*)(c + 0x5c), &pp) < 0x4b0000) {
-            *(s16*)(c + 0x424) = Vec3_HorzAngle((Vector3*)(c + 0x5c), &pp) + 0x8000;
+            mTargetAngY = Vec3_HorzAngle((Vector3*)(c + 0x5c), &pp) + 0x8000;
             *(s16*)(c + 0x100) = 0x1e;
         }
     }
 
     if (_ZN9Animation8FinishedEv(c + 0x350) != 0) {
-        switch (*(int*)(c + 0x41c)) {
+        switch (mActionStep) {
         case 1:
             *(int*)(c + 0x98) = 0x4000;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov085_021305d0[1], 0x40000000, 0x1000, 0);
-            (*(int*)(c + 0x41c))++;
+            (mActionStep)++;
             break;
         case 2:
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov085_021305b0[1], 0x40000000, 0x1000, 0);
             *(int*)(c + 0x98) = 0;
-            (*(int*)(c + 0x41c))++;
+            (mActionStep)++;
             break;
         case 3:
             *(s16*)(c + 0x100) = (r & 0x1f) + 0x1e;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov085_021305c0[1], 0, 0x1000, 0);
-            *(int*)(c + 0x41c) = 0;
+            mActionStep = 0;
             break;
         }
     }
 
-    if (*(int*)(c + 0x41c) == 0 && *(u16*)(c + 0x100) == 0) {
-        *(s16*)(c + 0x424) = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)(c + 0x42c));
+    if (mActionStep == 0 && *(u16*)(c + 0x100) == 0) {
+        mTargetAngY = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)(c + 0x42c));
         s16* ang = (s16*)(c + 0x424);
         *ang = *ang + (0x1800 - ((r & 3) << 12));
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov085_021305c8[1], 0x40000000, 0x1000, 0);
-        *(int*)(c + 0x41c) = 1;
+        mActionStep = 1;
     }
 
-    ApproachAngle((short*)(c + 0x94), *(s16*)(c + 0x424), 1, 0x500, 0x500);
+    ApproachAngle((short*)(c + 0x94), mTargetAngY, 1, 0x500, 0x500);
     return 1;
 }
 
@@ -1219,10 +1219,10 @@ int daMip_c::StateIdleInit()
   char *p = (char *)this;
 
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p+0x300, *(void**)((char*)&data_ov085_021305c0+4), 0, 0x1000, 0);
-  *(int*)(p+0x42c)=*(int*)(p+0x5c);
-  *(int*)(p+0x430)=*(int*)(p+0x60);
-  *(int*)(p+0x434)=*(int*)(p+0x64);
-  *(int*)(p+0x41c)=0;
+  mIdlePosX=*(int*)(p+0x5c);
+  mIdlePosY=*(int*)(p+0x60);
+  mIdlePosZ=*(int*)(p+0x64);
+  mActionStep=0;
   *(short*)(p+0x100)=0;
   return 1;
 }

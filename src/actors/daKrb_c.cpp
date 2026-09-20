@@ -1345,7 +1345,7 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
     Obj *o = (Obj *)self;
     int b5, b4;
 
-    if ((*(unsigned char *)(self + 0x113) & 0xf) < 6 || *(unsigned char *)(self + 0x464) == 2) {
+    if ((*(unsigned char *)(self + 0x113) & 0xf) < 6 || mRewardType == 2) {
         *(int *)(self + 0x5c) = *(int *)(self + 0x41c);
         *(int *)(self + 0x60) = *(int *)(self + 0x420);
         *(int *)(self + 0x64) = *(int *)(self + 0x424);
@@ -1362,7 +1362,7 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
             b4 = b5;
             if (*(unsigned char *)(self + 0x108) == 1)
                 b5 = 1;
-            if (*(unsigned char *)(self + 0x464) == 1) {
+            if (mRewardType == 1) {
                 _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));
                 b4 = 1;
                 _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x50, (Vector3 *)(self + 0x41c), 0, *(signed char *)(self + 0xcc), -1);
@@ -1370,10 +1370,10 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
                    lets mwccarm CSE the field address (add r2,r7,#8 + [r2]),
                    one instruction the ROM does not have -- it wants [r7,#8] direct */
                 *(int *)(self + 8) = *(unsigned int *)(self + 8) & 0xff0f;
-            } else if (*(unsigned char *)(self + 0x464) == 2) {
-                if (*(unsigned char *)(self + 0x466) == data_0209f344[data_0209f208[0]]) {
+            } else if (mRewardType == 2) {
+                if (mStarID == data_0209f344[data_0209f208[0]]) {
                     _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));
-                    *(unsigned char *)(self + 0x464) = 3;
+                    mRewardType = 3;
                     b4 = 1;
                 }
             }
@@ -1625,17 +1625,17 @@ int daKrb_c::InitResources()
     char *c = (char *)this;
     int i;
 
-    *(unsigned char*)(c + 0x464) = (*(unsigned int*)(c + 8) >> 4) & 0xf;
-    *(signed char*)(c + 0x465) = -1;
+    mRewardType = (*(unsigned int*)(c + 8) >> 4) & 0xf;
+    mStarTracked = -1;
     *(unsigned char*)(c + 0x112) = (*(unsigned int*)(c + 8) >> 8) & 0xf;
-    *(unsigned char*)(c + 0x466) = (*(unsigned int*)(c + 8) >> 0xc) & 0xf;
+    mStarID = (*(unsigned int*)(c + 8) >> 0xc) & 0xf;
 
-    if (*(unsigned char*)(c + 0x464) == 1)
+    if (mRewardType == 1)
     {
-        *(unsigned char*)(c + 0x465) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c + 0x466), 1);
+        mStarTracked = _ZN8dActor_c9TrackStarEjj(c, mStarID, 1);
         LoadSilverStarAndNumber();
     }
-    else if (*(unsigned char*)(c + 0x464) == 2)
+    else if (mRewardType == 2)
     {
         LoadSilverStarAndNumber();
     }
@@ -1671,7 +1671,7 @@ int daKrb_c::InitResources()
         int cond = (id == 0xc9);
         if (cond != false)
         {
-            *(int*)(c + 0x460) = 0;
+            mGoombaType = 0;
         }
         else
         {
@@ -1680,64 +1680,64 @@ int daKrb_c::InitResources()
             {
                 if (*(int*)(c + 8) == 0xeeee || *(int*)(c + 8) == 0xeeef)
                 {
-                    *(int*)(c + 0x460) = 3;
+                    mGoombaType = 3;
                     *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~2;
                     if (*(int*)(c + 8) == 0xeeee)
                         *(unsigned char*)(c + 0x108) = 0;
                 }
                 else
                 {
-                    *(int*)(c + 0x460) = 1;
+                    mGoombaType = 1;
                 }
             }
             else
             {
-                *(int*)(c + 0x460) = 2;
+                mGoombaType = 2;
                 LoadBlueCoinModel(c);
             }
         }
     }
 
     {
-        int scale = data_ov084_02130258[*(int*)(c + 0x460)];
+        int scale = data_ov084_02130258[mGoombaType];
         *(int*)(c + 0x80) = scale;
         *(int*)(c + 0x84) = scale;
         *(int*)(c + 0x88) = scale;
     }
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[*(int*)(c + 0x460)], 0x200000, 0xa6efe0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[mGoombaType], 0x200000, 0xa6efe0);
 
-    if (*(int*)(c + 0x460) == 2)
+    if (mGoombaType == 2)
         *(int*)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000;
 
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1b4, c, *(int*)(c + 0x80) * 0x3c, *(int*)(c + 0x80) * 0x3c, 0, 0);
     _ZN10dBgCh_Actr19StartDetectingWaterEv(c + 0x1b4);
 
-    *(unsigned char*)(c + 0x468) = 0;
-    *(int*)(c + 0x434) = 0;
+    mSoundLatchFlags = 0;
+    mState = 0;
     *(int*)(c + 0x10c) = 0;
-    *(int*)(c + 0x438) = 0;
-    *(int*)(c + 0x440) = 0x7fffffff;
-    *(short*)(c + 0x45a) = *(short*)(c + 0x94);
-    *(int*)(c + 0x444) = data_ov084_02130228[*(int*)(c + 0x460)];
-    *(short*)(c + 0x450) = 0;
-    *(int*)(c + 0x43c) = 0;
-    *(short*)(c + 0x454) = 0;
-    *(short*)(c + 0x456) = 0;
+    unk_438 = 0;
+    mDistToPlayer = 0x7fffffff;
+    mInitAngleY = *(short*)(c + 0x94);
+    unk_444 = data_ov084_02130228[mGoombaType];
+    mHeadingHoldTimer = 0;
+    mTargetUniqueID = 0;
+    mWanderRerollTimer = 0;
+    mStuckTimer = 0;
     *(int*)(c + 0x428) = *(int*)(c + 0x5c);
     *(int*)(c + 0x42c) = *(int*)(c + 0x60);
     *(int*)(c + 0x430) = *(int*)(c + 0x64);
-    *(short*)(c + 0x458) = 0;
+    mTimer458 = 0;
     func_ov084_021290d4(c);
 
     *(int*)(c + 0x41c) = *(int*)(c + 0x5c);
     *(int*)(c + 0x420) = *(int*)(c + 0x60);
     *(int*)(c + 0x424) = *(int*)(c + 0x64);
-    *(int*)(c + 0x9c) = data_ov084_02130238[*(int*)(c + 0x460)];
+    *(int*)(c + 0x9c) = data_ov084_02130238[mGoombaType];
     *(int*)(c + 0xa0) = -0x32000;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce8[1], 0, 0x1000, 0);
 
-    *(unsigned char*)(c + 0x467) = 0;
-    *(int*)(c + 0x44c) = *(int*)(c + 8);
+    unk_467 = 0;
+    mSavedParam = *(int*)(c + 8);
     return 1;
 }
 
