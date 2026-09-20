@@ -345,7 +345,7 @@ int BookShot::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
-    *(struct M48*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
+    *(struct M48*)(&unk_1ec) = IDENTITY_MATRIX4X3;
     unk_450 = 0;
     *(short*)(int)LDR((char*)&mAngleY) = *(short*)(int)LDR((char*)&mAngleY) + 0x8000;
     unk_44c = 0x800;
@@ -434,8 +434,8 @@ int BookShotSpawner::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int BookShot::Behavior()
 {
-    func_0200f760(((char*)this), ((char*)this) + 0x21c);
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x25c) != 0) {
+    func_0200f760(((char*)this), &mdCcAcPos_c);
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         if (mEatenByYoshi != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;
@@ -455,9 +455,9 @@ int BookShot::Behavior()
         break;
     }
     func_ov020_0211216c(((char*)this));
-    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x21c, *(Vector3*)((char*)&unk_438));
-    _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
+    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, *(Vector3*)(&unk_438));
+    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
     return 1;
 }
 
