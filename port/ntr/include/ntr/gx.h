@@ -104,6 +104,20 @@ void gx_invalidate_textures();
 // Bind a decoded texture for subsequent geometry. Pass null for untextured.
 void gx_bind_texture(const uint32_t *rgba, int width, int height);
 
+// HOW A TEXEL IS CHOSEN (run hd2, the "TextureFilter" setting). 0 is nearest,
+// the sampler this renderer has always used and the DS's own behaviour; 1 is
+// bilinear; 2 is trilinear, which adds a chain of halved copies of each
+// texture and blends the two sizes nearest the surface's distance.
+//
+// CALL IT ONCE, AT BOOT, BEFORE ANY GEOMETRY. The mode decides whether the
+// texture cache builds a mip chain as each texture enters it, so a run that
+// changed it half way would have chains for some textures and not others. At
+// 0 no chain is built, no extra memory is held, and the raster runs the same
+// instructions it ran before this existed: the mode is resolved once per
+// frame into one of three whole raster bodies, never as a test per pixel.
+void gx_configure_texture_filter(int mode);
+int gx_texture_filter();
+
 // The game path: TEXIMAGE_PARAM / PLTT_BASE writes (ports 0x2A/0x2B) bind by
 // decoding lazily out of the mapped VRAM texture/palette slot windows.
 void gx_teximage_param(uint32_t value);

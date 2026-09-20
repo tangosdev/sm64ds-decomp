@@ -8686,6 +8686,16 @@ int main(void)
     ntr::hdtex_configure(host_setting_hd_textures(),
                          host_setting_hd_textures_dir());
     ntr::smooth_configure(host_setting_smooth_models());
+    /* AND RUN hd2's SAMPLING MODE, in the same place and for the same reason:
+       it decides whether the texture cache builds a mip chain as each texture
+       enters it, so it has to be settled before the first bind. At 0 -- the
+       key absent -- no chain is built and the raster runs the body it ran
+       before this call existed. */
+    ntr::gx_configure_texture_filter(host_setting_texture_filter());
+    if (ntr::gx_texture_filter())
+        fprintf(stderr, "[render] TextureFilter %d: textures are sampled %s\n",
+                ntr::gx_texture_filter(),
+                ntr::gx_texture_filter() >= 2 ? "trilinear" : "bilinear");
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address
