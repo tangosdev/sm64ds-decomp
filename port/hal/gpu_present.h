@@ -47,6 +47,13 @@
  *                                   source picture's own size, which is the
  *                                   row that can be exact.
  *   SM64DS_PRESENT_OFFSCREEN_EVERY=N    check every Nth frame (default 30)
+ *   SM64DS_PRESENT_OFFSCREEN_BMP=<name> also write each checked frame out as
+ *                                   an ordinary bitmap, so the three filters
+ *                                   can be looked at side by side without a
+ *                                   window ever appearing
+ *   SM64DS_PRESENT_RECTCHECK=1      print the destination rectangle the present
+ *                                   path computes and the one this file draws
+ *                                   into, at three client sizes
  *   SM64DS_PRESENT_ADDRCHECK=1      print the six DS ranges, the save-state
  *                                   arena and the free address space before
  *                                   and after the device, and at exit

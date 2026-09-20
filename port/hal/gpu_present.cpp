@@ -777,6 +777,49 @@ unsigned reference_pixel(const unsigned char *src, int stride_px, int sw, int sh
     return out;
 }
 
+/* A PICTURE FOR SOMEBODY TO LOOK AT, because the one thing this setting is
+   for -- how the picture looks stretched -- is the one thing a number cannot
+   settle. SM64DS_PRESENT_OFFSCREEN_BMP=<name> writes the frame that was just
+   read back, as an ordinary 32-bit bitmap, so three runs at the three filter
+   settings produce three files that can be opened side by side without a
+   window ever appearing. Overwritten on every check, so the file is the LAST
+   checked frame of the run, which is the same frame in every arm when the
+   frame count and the check interval are. Off unless the variable is set, and
+   the file goes wherever the caller names, which in every run here is beside
+   the exe in the build directory and never into the repository. */
+void offscreen_bmp(const unsigned char *pixels, size_t pitch, int w, int h)
+{
+    const char *name = getenv("SM64DS_PRESENT_OFFSCREEN_BMP");
+    if (!name || !*name) return;
+    FILE *f = fopen(name, "wb");
+    if (!f) return;
+    const unsigned rowbytes = (unsigned)w * 4;
+    const unsigned bits = rowbytes * (unsigned)h;
+    unsigned char hdr[54];
+    memset(hdr, 0, sizeof hdr);
+    hdr[0] = 'B'; hdr[1] = 'M';
+    const unsigned total = 54 + bits;
+    memcpy(hdr + 2, &total, 4);
+    const unsigned off = 54;
+    memcpy(hdr + 10, &off, 4);
+    const unsigned isz = 40;
+    memcpy(hdr + 14, &isz, 4);
+    const int iw = w, ih = -h;             /* negative height: top-down rows */
+    memcpy(hdr + 18, &iw, 4);
+    memcpy(hdr + 22, &ih, 4);
+    const unsigned short planes = 1, bpp = 32;
+    memcpy(hdr + 26, &planes, 2);
+    memcpy(hdr + 28, &bpp, 2);
+    memcpy(hdr + 34, &bits, 4);
+    fwrite(hdr, 1, sizeof hdr, f);
+    for (int y = 0; y < h; ++y)
+        fwrite(pixels + (size_t)y * pitch, 1, rowbytes, f);
+    fclose(f);
+    if (g_off_checked == 1)
+        fprintf(stderr, "[present] offscreen picture written: %dx%d, filter "
+                "%d, 32-bit bitmap\n", w, h, g_filter);
+}
+
 void offscreen_compare(const unsigned char *src, int stride_px, int sw, int sh,
                        int dw, int dh)
 {
@@ -851,6 +894,7 @@ void offscreen_compare(const unsigned char *src, int stride_px, int sw, int sh,
             }
         }
     }
+    offscreen_bmp((const unsigned char *)m.pData, m.RowPitch, dw, dh);
     g_ctx->Unmap(g_off_stage, 0);
     /* WHAT COUNTS AS A DISAGREEMENT, and it is not the same question for the
        three filters. Filter 0 picks a texel and cannot round, so one differing
