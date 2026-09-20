@@ -1011,7 +1011,11 @@ void prof_report(uint64_t frame) {
 }  // namespace
 
 int smooth_prof_on() {
-    if (g_prof < 0) g_prof = getenv("SM64DS_SMOOTH_PROF") ? 1 : 0;
+    if (g_prof < 0) {
+        const char *e = getenv("SM64DS_SMOOTH_PROF");
+        g_prof = (e && *e) ? atoi(e) : 0;
+        if (g_prof < 0) g_prof = 0;
+    }
     return g_prof;
 }
 

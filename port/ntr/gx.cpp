@@ -77,6 +77,11 @@ struct GxRaw {
     uint8_t has_normal;     // normal_live: the colour came from lighting
 };
 
+/* A raw record the shape store can never accept: mgen and ngen disagree, so
+   store_eligible refuses it before it looks at anything else. It is what a
+   vertex carries when SmoothModels is 0 and nothing will read it anyway. */
+const GxRaw g_raw_dead = {0, 0, 0, 0, 0, 1, 0};
+
 struct State {
     int mode = MTX_POS;
     Mat proj = Mat::identity();
@@ -1095,7 +1100,7 @@ void smooth_sink(void *, const SmoothVertex &a, const SmoothVertex &b,
        profiler splits it out. It is also the bucket the clock read perturbs
        most, because it is read once per sub-triangle rather than once per
        triangle: see the honesty note in ntr/smooth.h. */
-    const int prof = smooth_prof_on();
+    const int prof = smooth_prof_on() >= 2;
     const long long t0 = prof ? smooth_prof_ticks() : 0;
     GxVertex out[3];
     const SmoothVertex *in[3] = {&a, &b, &c};
@@ -1120,24 +1125,33 @@ void smooth_sink(void *, const SmoothVertex &a, const SmoothVertex &b,
 // the three transformed ones, taken from the parallel strip at the same
 // indices. The assembly rules below -- which vertices make a triangle, in
 // which order, with which winding -- are untouched.
-void push_vertex(const GxVertex &v, const GxRaw &r) {
+void push_vertex(const GxVertex &v, const GxRaw *r) {
     g.strip.push_back(v);
-    g.strip_raw.push_back(r);
+    /* OFF COSTS NOTHING HERE EITHER. With the setting absent `r` is null, the
+       parallel array stays empty and never allocates, and the references
+       handed to emit_tri below are one dead record that the store can never
+       accept -- emit_tri does not read them at all in that case, because
+       smooth_level() is 0 and it short-circuits before smooth_try. */
+    if (r) g.strip_raw.push_back(*r);
     const size_t n = g.strip.size();
     const GxVertex *s = g.strip.empty() ? 0 : &g.strip[0];
-    const GxRaw *q = g.strip_raw.empty() ? 0 : &g.strip_raw[0];
+    const GxRaw *qp = (g.strip_raw.size() == n) ? &g.strip_raw[0] : 0;
+    struct QAt {
+        const GxRaw *p;
+        const GxRaw &operator()(size_t i) const { return p ? p[i] : g_raw_dead; }
+    } q = {qp};
     switch (g.prim) {
         case 0:                                        // separate triangles
             if (n == 3) {
-                emit_tri(s[0], s[1], s[2], q[0], q[1], q[2]);
+                emit_tri(s[0], s[1], s[2], q(0), q(1), q(2));
                 g.strip.clear();
                 g.strip_raw.clear();
             }
             break;
         case 1:                                        // separate quads
             if (n == 4) {
-                emit_tri(s[0], s[1], s[2], q[0], q[1], q[2]);
-                emit_tri(s[0], s[2], s[3], q[0], q[2], q[3]);
+                emit_tri(s[0], s[1], s[2], q(0), q(1), q(2));
+                emit_tri(s[0], s[2], s[3], q(0), q(2), q(3));
                 g.strip.clear();
                 g.strip_raw.clear();
             }
@@ -1146,16 +1160,16 @@ void push_vertex(const GxVertex &v, const GxRaw &r) {
             if (n >= 3) {
                 const size_t i0 = n - 3, i1 = n - 2, i2 = n - 1;
                 if ((n - 3) & 1)                        // alternate winding
-                    emit_tri(s[i1], s[i0], s[i2], q[i1], q[i0], q[i2]);
+                    emit_tri(s[i1], s[i0], s[i2], q(i1), q(i0), q(i2));
                 else
-                    emit_tri(s[i0], s[i1], s[i2], q[i0], q[i1], q[i2]);
+                    emit_tri(s[i0], s[i1], s[i2], q(i0), q(i1), q(i2));
             }
             break;
         case 3:                                        // quad strip
             if (n >= 4 && (n % 2) == 0) {
                 const size_t i0 = n - 4, i1 = n - 3, i2 = n - 2, i3 = n - 1;
-                emit_tri(s[i0], s[i1], s[i3], q[i0], q[i1], q[i3]);
-                emit_tri(s[i0], s[i3], s[i2], q[i0], q[i3], q[i2]);
+                emit_tri(s[i0], s[i1], s[i3], q(i0), q(i1), q(i3));
+                emit_tri(s[i0], s[i3], s[i2], q(i0), q(i3), q(i2));
             }
             break;
         default: break;
@@ -1168,7 +1182,7 @@ void vertex(int16_t x, int16_t y, int16_t z) {
     /* The raw half of the vertex, for the shape store. With the setting
        absent it is filled with a pair of generations that can never match,
        so the store is unreachable rather than merely unused. */
-    GxRaw r;
+    GxRaw r = g_raw_dead;
     if (smooth_level() > 0) {
         mtx_gen_update();
         r.x = x; r.y = y; r.z = z;
@@ -1176,14 +1190,8 @@ void vertex(int16_t x, int16_t y, int16_t z) {
         r.mgen = g_mtx_gen;
         r.ngen = g.nrm_gen;
         r.has_normal = (uint8_t)(g.normal_live ? 1 : 0);
-    } else {
-        r.x = r.y = r.z = 0;
-        r.nrm = 0;
-        r.mgen = 0;
-        r.ngen = 1;
-        r.has_normal = 0;
     }
-    push_vertex(project(x, y, z), r);
+    push_vertex(project(x, y, z), smooth_level() > 0 ? &r : 0);
 }
 
 // --- command execution ------------------------------------------------------

@@ -279,6 +279,11 @@ enum {
     SMOOTH_PROF_SINK,         // one sub-triangle: project, near-clip, push
     SMOOTH_PROF_BUCKETS
 };
+// 1 times the policy and the tessellation, which is the pair an A/B between
+// the stored path and the live one has to compare. 2 also times each
+// SUB-TRIANGLE, which is the finer split step 0 needed -- and which reads the
+// clock thousands of times a frame, so it makes the live path look worse than
+// it is and must never be the arm a comparison is drawn from.
 int smooth_prof_on();
 // Nanoseconds on a monotonic clock. Only meaningful as a difference.
 long long smooth_prof_ticks();
