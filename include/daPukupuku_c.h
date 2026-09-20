@@ -39,7 +39,11 @@ struct daPukupuku_c : dEnemyBase_c {
     s32 mHomePosZ;                      /* 0x37c */
 
     /* --- vtable --- */
-    virtual ~daPukupuku_c();
+    /* Inline and first: measured (class-form skill) that mwccarm 2004/b56
+       emits the retail D1-then-D0 pair in ROM order plus _ZTV/_ZTI/_ZTS
+       homed in the instantiating TU, and no leaf D2. Out-of-line emits
+       D0 before D1, which the production isolate refuses. */
+    virtual ~daPukupuku_c() {}
 
     int Behavior();
     int CleanupResources();
@@ -47,9 +51,9 @@ struct daPukupuku_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    /* Tail padding. The field span stops short of the real size: CheepCheep_Spawn
-       calls fBase_c::operator new(0x388), read off the retail
-       instruction. A span is only a LOWER BOUND. */
+    /* Tail padding. The field span stops short of the real size:
+       daPukupuku_c_classInit calls fBase_c::operator new(0x388), read off
+       the retail instruction. A span is only a LOWER BOUND. */
     u8 pad_380[0x8];      /* 0x380, to the ROM's 0x388 */
 };
 
