@@ -295,7 +295,6 @@
    "src/actors/daObjFallBlock_c.cpp": ["return:int"],
    "src/actors/daPgDfdr_c.cpp": ["return:int"],
    "src/func_ov002_020b2070.cpp": ["return:void"],
-   "src/func_ov002_020ba3a8.c": ["return:int"],
    "src/func_ov034_02111588.cpp": ["return:int"],
    "src/func_ov075_0211478c.c": ["param:#1 char *", "return:int"],
    "src/game/actors/d_a_obj_maruta.cpp": ["return:int"]
@@ -1449,8 +1448,7 @@
    "src/func_ov006_020cc198.cpp": ["param:#2 int", "param:#3 int"]
   },
   "Sound_PlayIfNotActive": {
-   "src/func_02009e70.cpp": ["arity:3"],
-   "src/func_02012310.c": ["return:void"]
+   "src/func_02009e70.cpp": ["arity:3"]
   },
   "StartEntranceFaderWipe": {
    "src/stage/LevelObjects.cpp": ["arity:0"]
@@ -2209,7 +2207,6 @@
    "src/func_ov002_020e930c.c": ["arity:0"]
   },
   "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_": {
-   "src/_ZN10StarSwitch8BehaviorEv.cpp": ["param:#1 char *"],
    "src/_ZN16SpinningPlatform8BehaviorEv.cpp": ["param:#1 char *"],
    "src/_ZN17SlidingPlatformWf8BehaviorEv.cpp": ["param:#1 char *"],
    "src/_ZN6Coffin8BehaviorEv.cpp": ["param:#1 char *"],
@@ -2365,7 +2362,6 @@
    "src/_ZN10DonutBlock13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int", "return:int"],
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN10SlidingIce13InitResourcesEv.cpp": ["param:#2 int", "param:#5 int"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["param:#2 int", "param:#6 int"],
    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN11BillBlaster13InitResourcesEv.cpp": ["param:#3 const void *"],
    "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["param:#3 struct Matrix4x3 *"],
@@ -2412,7 +2408,6 @@
   "_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s": {
    "src/_ZN15TtcRotatingCube10UpdateClsnEv.cpp": ["param:#2 Matrix4x3 &", "return:int"],
    "src/actors/daObjHatenaBlock_c.cpp": ["param:#2 Matrix4x3 &", "return:int"],
-   "src/func_ov002_020b9f80.cpp": ["param:#2 Matrix4x3 &", "return:int"],
    "src/func_ov064_02118fa4.cpp": ["param:#2 const Matrix4x3 &"],
    "src/func_ov092_02131a88.cpp": ["param:#2 Matrix4x3 &", "return:int"],
    "src/func_ov098_021397c8.cpp": ["param:#2 Matrix4x3 &", "return:int"]
@@ -3859,13 +3854,11 @@
   },
   "_ZN5Event8ClearBitEj": {
    "src/_ZN10PyramidTop13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14EnemySwitchTag13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN14EnemySwitchTag8BehaviorEv.cpp": ["return:void"],
    "src/_ZN3Key13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN3Key16CleanupResourcesEv.cpp": ["return:void"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["return:void"],
-   "src/func_ov002_020ba0f8.cpp": ["return:void"],
    "src/func_ov002_020e8618.c": ["return:void"]
   },
   "_ZN5Fader13AdvanceInterpEv": {
@@ -3907,7 +3900,6 @@
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN10SlidingIce13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN10StarMarker13InitResourcesEv.cpp": ["param:#1 void *"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["param:#1 int", "return:int"],
    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN11CrazedCrate13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -4333,8 +4325,6 @@
    "src/func_ov002_020b1884.c": ["param:#2 void *", "return:int"],
    "src/func_ov002_020b1ad4.c": ["param:#2 const Vector3 *"],
    "src/func_ov002_020b1bfc.cpp": ["param:#2 void *"],
-   "src/func_ov002_020ba0f8.cpp": ["param:#2 Vector3 *"],
-   "src/func_ov002_020ba2d0.c": ["param:#2 void *"],
    "src/func_ov064_02118e24.cpp": ["param:#2 const Vector3 *"],
    "src/func_ov071_021220c8.cpp": ["param:#2 Vector3 *"],
    "src/func_ov071_02122194.c": ["param:#2 void *"],
@@ -5022,7 +5012,6 @@
    "src/_ZN10PyramidTop13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN10RockPillar13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN10SlidingIce13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["param:#1 int", "return:int"],
    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN11BillBlaster13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:struct KCL_File *"],
@@ -5415,7 +5404,6 @@
    "src/_ZN10BulletBill8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN10StarMarker16OnPendingDestroyEv.cpp": ["return:void *"],
    "src/_ZN10StarMarker8BehaviorEv.cpp": ["return:char *"],
-   "src/_ZN10StarSwitch8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN11RollingRock8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN11daDonketu_c8BehaviorEv.cpp": ["return:char *"],
    "src/_ZN11daKinopio_c12St_Idle_MainEv.cpp": ["return:void *"],
@@ -5698,7 +5686,6 @@
    "src/func_ov002_020b1008.c": ["return:void *"],
    "src/func_ov002_020b1328.c": ["return:int"],
    "src/func_ov002_020b20b4.cpp": ["return:void *"],
-   "src/func_ov002_020b9f00.c": ["return:void *"],
    "src/func_ov002_020e700c.c": ["return:void *"],
    "src/func_ov002_020e7554.c": ["param:#2 char *", "return:char *"],
    "src/func_ov002_020e7c90.cpp": ["param:#2 char *", "return:char *"],
@@ -6331,7 +6318,6 @@
    "src/_ZN10MrBlizzard13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN10PyramidTop13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN10SlidingIce13InitResourcesEv.cpp": ["param:#2 int"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["param:#2 int", "return:void"],
    "src/_ZN11BillBlaster13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN11CrazedCrate13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["return:void"],
@@ -8830,10 +8816,8 @@
    "src/_ZN13BigBrickBlock13InitResourcesEv.cpp": ["return:ClpsRow []"]
   },
   "data_ov002_021098e8": {
-   "src/_ZN10StarSwitch16CleanupResourcesEv.cpp": ["return:char"]
   },
   "data_ov002_021098ec": {
-   "src/_ZN10StarSwitch16CleanupResourcesEv.cpp": ["return:char"]
   },
   "data_ov002_0210af2c": {
    "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp": ["return:PathLiftState []"]
@@ -9563,7 +9547,6 @@
    "src/__sinit_ov002_02106e40.c": ["return:void *"]
   },
   "data_ov002_0211092c": {
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["return:int"],
    "src/_ZN14UnchainedChomp13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN14UnchainedChomp16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov002_02106e40.c": ["return:void *"]
@@ -13235,8 +13218,6 @@
    "src/_ZN6Player17St_ButtSlide_MainEv.cpp": ["param:#4 char *", "param:#6 int"]
   },
   "func_02012310": {
-   "include/decl_common.h": ["return:int"],
-   "src/func_ov002_020ba1ac.c": ["return:int"]
   },
   "func_020123c8": {
    "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": ["param:#1 char *", "param:#2 unsigned int", "param:#3 unsigned int", "param:#4 const Vector3 &"],
@@ -14768,7 +14749,6 @@
   },
   "func_020393c4": {
    "src/_ZN10DonutBlock13InitResourcesEv.cpp": ["param:#2 void *"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN11VolcanoRing13InitResourcesEv.cpp": ["param:#2 void *"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["param:#2 void *"],
@@ -17080,19 +17060,12 @@
    "include/decl_common.h": ["param:#1 char *"]
   },
   "func_ov002_020ba4d8": {
-   "src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp": ["param:#1 char *"],
-   "src/_ZN10StarSwitch8BehaviorEv.cpp": ["param:#1 char *"],
-   "src/func_ov002_020ba0bc.c": ["return:int"],
-   "src/func_ov002_020ba1ac.c": ["param:#1 char *"],
-   "src/func_ov002_020ba2d0.c": ["param:#1 char *"],
-   "src/func_ov002_020ba3a8.c": ["param:#1 struct C *"]
   },
   "func_ov002_020ba520": {
    "include/decl_common.h": ["param:#1 char *"]
   },
   "func_ov002_020baa98": {
-   "include/decl_common.h": ["kind:data"],
-   "src/_ZN10StarSwitch13InitResourcesEv.cpp": ["kind:data"]
+   "include/decl_common.h": ["kind:data"]
   },
   "func_ov002_020bae9c": {
    "src/_ZN8SignPost4KillEv.cpp": ["return:int"]

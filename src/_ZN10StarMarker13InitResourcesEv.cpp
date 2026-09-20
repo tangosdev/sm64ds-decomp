@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "StarMarker.h"
+#include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
 extern "C" {
@@ -19,7 +20,7 @@ extern int _ZN8dActor_c18GetBitInDeathTableEv(void *self);
 }
 
 extern char data_ov002_0210d9a8;
-extern char data_ov002_0211092c;
+extern SharedFilePtr data_ov002_0211092c;
 extern u8 data_0209f2d8;
 extern s8 data_0209f2f8;
 

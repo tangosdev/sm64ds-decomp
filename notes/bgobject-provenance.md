@@ -13,49 +13,48 @@ and again after each raw-offset collapse.
 
 ---
 
-## StarSwitch (`include/StarSwitch.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x354)
+## daObjSwitch_c (`include/daObjSwitch_c.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x354)
 
-Bodies read: `src/_ZN10StarSwitch13InitResourcesEv.cpp`,
-`src/_ZN10StarSwitch8BehaviorEv.cpp`, `src/_ZN10StarSwitch6RenderEv.cpp`,
-`src/_ZN10StarSwitch16CleanupResourcesEv.cpp`,
-`src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp`, `src/d_a_obj_switch_star_switch.c`.
+Current evidence: the twenty-function production TU
+[`src/actors/daObjSwitch_c.cpp`](../src/actors/daObjSwitch_c.cpp), its genuine
+class header, and the separately enrolled factory
+`src/d_a_obj_switch_star_switch.c`. The names describe observed use; retail RTTI
+supplies the class identity, not the English field names. The original
+StarSwitch source and intermediate rename history remain recorded in the
+[source experiment](experiments/pr2874-source-repair-0920.json).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mDrawScaleX` | `InitResources` writes `0x1000` (Fix12 1.0) to 0x320/0x324/0x328; `Render` passes `&mDrawScaleX` to the `Model` at 0xd4 through vtable slot 5. `daObjBC_Switch_c::Render` calls the same slot with a literal `0` — so the argument is an optional pointer, and three consecutive Fix12 1.0s behind it are a scale vector. |
-| 0x324 | `mDrawScaleY` | as above |
-| 0x328 | `mDrawScaleZ` | as above |
-| 0x334 | `mMusicVolume` | `Behavior` reads it into `v`, tests `v == 0x40` / `v == 0x7f`, then passes `v` as the first argument of `Sound::ChangeMusicVolume(u32, Fix12i)`. Every other caller in the tree (`Message::PrepareTalk`, `Message::EndTalk`, `Player::St_Talk_Main`, `func_0201f32c`) passes the literals `0x40` / `0x7f` there, so that parameter is a target volume level, not an id. |
-| 0x338 | `mTimer` (`u16`) | `Behavior` sets it to `1` when the switch's home area starts showing, and increments it once a frame while the pause bit `0x4000000` of `data_0209b454` is clear. The ROM proves the type: the increment only reproduces as a `u16` increment — writing `mTimer++` against the old `s16` declaration cost 1 word, and re-declaring the field `u16` made `mTimer++` byte-exact. |
-| 0x33a | `mTimeLimit` | `InitResources` takes `(param1 >> 8) & 0xff`; `0xff` or `0` becomes `0x190` (400), any other value is multiplied by `0xa`. A frame budget with a spawn-parameter override and a 400-frame default. |
-| 0x33c | `mSwitchType` | `InitResources` sets `2` for `actorID == 0xc` (the silver-star variant) and `param1 & 3` otherwise; `Behavior` gates the music fade on `mSwitchType == 2`. |
-| 0x344 | `mTargetActorID` | pre-existing name; `Behavior` passes it to `dActor_c::FindWithID`. |
-| 0x348 | `mTargetActor` | zeroed in `InitResources`; `Behavior` stores the `dActor_c *` that `dActor_c::FindWithID(mTargetActorID)` returned. Declared type left `s32` — the store is still a cast, because changing the declared type is not needed to make the name true. |
-| 0x34c | `mResourceIdx` | `InitResources` sets `1` for the silver-star variant and `0` otherwise, then uses it as `idx` in `*(int *)(table + idx * 0xc)` for both the BMD table ([data_ov002_021098e8](../config/arm9/overlays/ov002/symbols.txt)) and the KCL tables (`…8ec`, `…8f0`); `CleanupResources` releases the same two rows by the same index. |
-| 0x34d | `mMusicFadeDone` | `InitResources` sets it to `1`; `Behavior` only calls `Sound::ChangeMusicVolume` when it is `0`, and stores the call's return value back into it. A "fade finished" latch, not a counter. |
-| 0x34e | `mEventBit` | `InitResources` sets `(param1 >> 3) & 0xf` and passes it straight to `Event::ClearBit(u32)`. |
-| 0x353 | `mHomeAreaId` | `InitResources` copies `mAreaId` into it; `Behavior` uses it as the argument to `IsAreaShowing` and restores `mAreaId` from it. The area the switch belongs to, kept across the area-id shuffling `Behavior` does. |
+| 0x320/0x324/0x328 | `mDrawScale` (`Vector3`) | `InitResources` sets all three components to Fix12 one. `Render` calls `mModel.Render(&mDrawScale)`. Helper `func_ov002_020ba01c` updates the selected x/y/z components from its axis mask. The flat C compatibility view retains `mDrawScaleX/Y/Z` at the same offsets. |
+| 0x32c | `mDisplacementY` | The scale helper computes the displacement from a `0x3c000` height; the collision-matrix helper subtracts it from `mPosY` for matrix translation. |
+| 0x330 | `mTickSoundHandle` | State executor `func_ov002_020ba1ac` resets it when the remaining timer reaches `0x2d`, then passes it to `func_02012310` with sound `0x38` or `0x39` and stores the returned integer handle. That wrapper forwards the actual `Sound_PlayIfNotActive` result. |
+| 0x334 | `mMusicVolume` | State initializers choose `0x40` or `0x7f`; `Behavior` tests those values and passes the selected volume to the scalar `Sound::ChangeMusicVolume` bridge. |
+| 0x338 | `mTimer` (`u16`) | `Behavior` sets it to one when `IsAreaShowing(mHomeAreaId)` returns zero and increments it while the `0x4000000` pause bit is clear. State initializers reset it; the timed executor compares it with `mTimeLimit`. The declared unsigned halfword increment reproduces retail. |
+| 0x33a | `mTimeLimit` | The high spawn-parameter byte gives the frame budget: zero or `0xff` selects `0x190`; other values are multiplied by ten. |
+| 0x33c | `mSwitchType` | `InitResources` selects two for actor ID `0xc` and `param1 & 3` otherwise. The timed executor and music-fade path test this value. |
+| 0x340 | `mState` | `func_ov002_020ba4d8` stores the next index and invokes the corresponding init member pointer. `func_ov002_020ba520` dispatches the exec member pointer from the same real-class `StateEntry` table. `OnGroundPounded` requires state zero. |
+| 0x344 | `mTargetActorID` | The star-search helper stores a matched actor's `uniqueID`; `Behavior` resolves it through `dActor_c::FindWithID` and clears it when the target disappears. |
+| 0x348 | `mTargetActor` (`dActor_c *`) | Zeroed in `InitResources`; `Behavior` directly stores the pointer returned by `FindWithID`. State executors pass it to the star helpers and inspect the existing PowerStar state view. There is no integer store or receiver cast at this assignment. |
+| 0x34c | `mResourceIdx` | Selects entry zero or one in the class-owned `Resources` table. `InitResources` loads its model and collision files and supplies its CLPS pointer; `CleanupResources` releases those same model/collision resources. |
+| 0x34d | `mMusicFadeDone` | Initialized to one and cleared by the relevant state initializers; `Behavior` calls the volume-change helper only while it is zero and saves the helper's result. |
+| 0x34e | `mEventBit` | Set from `(param1 >> 3) & 0xf`; switch states set and clear that event bit through the existing Event interface. |
+| 0x34f | `mPressTimer` | Initialized/reset to five. `func_ov002_020ba3a8` decrements it while `mPlayerNearby` is set and enters the pressed state when the countdown reaches zero; otherwise it resets the timer. |
+| 0x350 | `mPlayerNearby` | The unpressed-state executor reads this byte to choose the press countdown; `Behavior` clears it at the end of the update. |
+| 0x351 | `mStarID` | The star-switch variant stores the low parameter byte, mapping `0xff` to zero. Its search helper compares the byte with `PowerStar::unk_49d` on actors of ID `0xb2`. |
+| 0x353 | `mHomeAreaId` | Copied from `mAreaId` during initialization, used for the area-visibility query and restored after temporary area changes. |
 
-Left `unk_`:
+The current model/collision code uses genuine `mModel.Render`, `SetFile`,
+`mMeshCollider.IsEnabled`, `Disable`, and `Transform` calls. The collision helper
+assigns `mClsnMat = mModel.mat4x3` before replacing its translation. The remaining
+scalar collider SetFile bridge and widened integer conditions have exact
+compiler experiments; these are bounded constraints, not a claim that all
+interfaces are complete.
 
-* `0x340` — `OnGroundPounded` does `if (unk_340 != 0) return;` and nothing else in any
-  matched body touches it. That says it gates the ground-pound, not what it holds.
-* `0x34f` — written `5` once in `InitResources`, never read in a matched body.
-* `0x350` — cleared at the end of every `Behavior`, never read in a matched body.
-* `0x351` — `InitResources` sets `param1 & 0xff`, mapping `0xff` to `0`, only on the
-  silver-star variant. Its consumer is in un-decompiled code.
-* `0x060`…`0x0c4` in the `#else` C twin — those are `dActor_c`'s fields restated flat,
-  not `StarSwitch`'s. `include/dActor_c.h` is out of scope for this pass.
-
-Raw-offset collapses, each re-verified byte-exact:
-
-* `Behavior`: `(*(u8 *)&mAreaId) = mHomeAreaId;` → `mAreaId = mHomeAreaId;` (2 sites).
-* `Behavior`: `*(void **)((char *)&unk_348) = a;` → `mTargetActor = (s32)a;`.
-* `Render`: the local `struct C { char p1[0xd4]; Sub sub; }` shadow of the whole object
-  is gone; the call now goes through `&mModel` directly, matching the shape
-  `daObjBC_Switch_c::Render` already used.
-* `CleanupResources`: `((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))` →
-  `((dBgW *)&mMeshCollider)`.
+The foreign PowerStar field at `+0x438` still has an explicit unnamed view.
+Padding at `0x31e` and `0x352` has no field claim. The flat C compatibility view
+also restates inherited actor/model/collider storage; it does not make those
+members newly owned by this class. Full source, consumer and metadata proof is
+recorded in the [integration evidence](experiments/pr2874-integration-0920.json).
 
 ---
 

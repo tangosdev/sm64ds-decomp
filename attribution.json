@@ -4219,6 +4219,26 @@
     "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6a80": "tangosdev",
     "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6ac8": "tangosdev",
     "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv": "tangosdev",
-    "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c8BehaviorEv": "andrewboudreau"
+    "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c8BehaviorEv": "andrewboudreau",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_cD1Ev": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_cD0Ev": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020b9f00": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020b9f80": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba01c": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba0bc": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba0f8": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba1ac": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba2ac": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba2d0": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba3a8": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba3fc": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba4c0": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba4d8": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#func_ov002_020ba520": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_c6RenderEv": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjSwitch_c.cpp#_ZN13daObjSwitch_c13InitResourcesEv": "tangosdev"
   }
 }

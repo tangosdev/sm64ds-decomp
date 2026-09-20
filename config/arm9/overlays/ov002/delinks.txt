@@ -630,85 +630,9 @@ src/d_a_obj_power_up_item.c:
     complete
     .text start:0x020b9e0c end:0x020b9e64
 
-src/_ZN10StarSwitchD1Ev.cpp:
+src/actors/daObjSwitch_c.cpp:
     complete
-    .text start:0x020b9e64 end:0x020b9ea8
-
-src/_ZN10StarSwitchD0Ev.cpp:
-    complete
-    .text start:0x020b9ea8 end:0x020b9f00
-
-src/func_ov002_020b9f00.c:
-    complete
-    .text start:0x020b9f00 end:0x020b9f80
-
-src/func_ov002_020b9f80.cpp:
-    complete
-    .text start:0x020b9f80 end:0x020b9fec
-
-src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x020b9fec end:0x020ba01c
-
-src/func_ov002_020ba01c.cpp:
-    complete
-    .text start:0x020ba01c end:0x020ba0bc
-
-src/func_ov002_020ba0bc.c:
-    complete
-    .text start:0x020ba0bc end:0x020ba0f8
-
-src/func_ov002_020ba0f8.cpp:
-    complete
-    .text start:0x020ba0f8 end:0x020ba1ac
-
-src/func_ov002_020ba1ac.c:
-    complete
-    .text start:0x020ba1ac end:0x020ba2ac
-
-src/func_ov002_020ba2ac.c:
-    complete
-    .text start:0x020ba2ac end:0x020ba2d0
-
-src/func_ov002_020ba2d0.c:
-    complete
-    .text start:0x020ba2d0 end:0x020ba3a8
-
-src/func_ov002_020ba3a8.c:
-    complete
-    .text start:0x020ba3a8 end:0x020ba3fc
-
-src/func_ov002_020ba3fc.cpp:
-    complete
-    .text start:0x020ba3fc end:0x020ba4c0
-
-src/func_ov002_020ba4c0.c:
-    complete
-    .text start:0x020ba4c0 end:0x020ba4d8
-
-src/func_ov002_020ba4d8.cpp:
-    complete
-    .text start:0x020ba4d8 end:0x020ba520
-
-src/func_ov002_020ba520.cpp:
-    complete
-    .text start:0x020ba520 end:0x020ba568
-
-src/_ZN10StarSwitch16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020ba568 end:0x020ba5f4
-
-src/_ZN10StarSwitch6RenderEv.cpp:
-    complete
-    .text start:0x020ba5f4 end:0x020ba624
-
-src/_ZN10StarSwitch8BehaviorEv.cpp:
-    complete
-    .text start:0x020ba624 end:0x020ba83c
-
-src/_ZN10StarSwitch13InitResourcesEv.cpp:
-    complete
-    .text start:0x020ba83c end:0x020baa2c
+    .text start:0x020b9e64 end:0x020baa2c
 
 src/func_ov002_020baa2c.c:
     complete

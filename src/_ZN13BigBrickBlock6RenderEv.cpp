@@ -2,7 +2,7 @@
 // @symbol _ZN13BigBrickBlock6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "BigBrickBlock.h"
-#include "StarSwitch.h"
+#include "daObjSwitch_c.h"
 
 /* Event has no shared namespace declaration yet. */
 extern "C" int _ZN5Event6GetBitEj(unsigned int bit);

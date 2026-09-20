@@ -1,0 +1,329 @@
+{
+  "id": "ov002/daObjSwitch_c",
+  "module": "ov002",
+  "source": "src/actors/daObjSwitch_c.cpp",
+  "promoted_source": "src/actors/daObjSwitch_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b9e64..0x20baa2c, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjSwitch_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b9e64",
+      "end": "0x020baa2c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjSwitch_cD1Ev",
+      "address": "0x020b9e64",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13daObjSwitch_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_cD0Ev",
+      "address": "0x020b9ea8",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjSwitch_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b9f00",
+      "address": "0x020b9f00",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov002_020b9f00.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b9f80",
+      "address": "0x020b9f80",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020b9f80.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c",
+      "address": "0x020b9fec",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov002_020ba01c",
+      "address": "0x020ba01c",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov002_020ba01c.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov002_020ba0bc",
+      "address": "0x020ba0bc",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020ba0bc.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov002_020ba0f8",
+      "address": "0x020ba0f8",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov002_020ba0f8.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov002_020ba1ac",
+      "address": "0x020ba1ac",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov002_020ba1ac.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov002_020ba2ac",
+      "address": "0x020ba2ac",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov002_020ba2ac.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov002_020ba2d0",
+      "address": "0x020ba2d0",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov002_020ba2d0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov002_020ba3a8",
+      "address": "0x020ba3a8",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov002_020ba3a8.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov002_020ba3fc",
+      "address": "0x020ba3fc",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov002_020ba3fc.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov002_020ba4c0",
+      "address": "0x020ba4c0",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020ba4c0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov002_020ba4d8",
+      "address": "0x020ba4d8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020ba4d8.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov002_020ba520",
+      "address": "0x020ba520",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020ba520.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_c16CleanupResourcesEv",
+      "address": "0x020ba568",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN13daObjSwitch_c16CleanupResourcesEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_c6RenderEv",
+      "address": "0x020ba5f4",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN13daObjSwitch_c6RenderEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_c8BehaviorEv",
+      "address": "0x020ba624",
+      "size": "0x00000218",
+      "legacy_source": "src/_ZN13daObjSwitch_c8BehaviorEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN13daObjSwitch_c13InitResourcesEv",
+      "address": "0x020ba83c",
+      "size": "0x000001f0",
+      "legacy_source": "src/_ZN13daObjSwitch_c13InitResourcesEv.cpp",
+      "ordinal": 19
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Originally assembled by tubuild from the renamed StarSwitch sources; reconstructed and contract-audited in PR2874 source repair. Five methods,13 C-linkage helpers and two compiler-emitted destructor bodies; no claim that address-named helpers are recovered method names.",
+    "Historical tubuild create warning: RAW: src/func_ov002_020b9f80.cpp (func_ov002_020b9f80) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block; the assembled block was subsequently reconstructed and its duplicate declarations removed in PR2874 source repair.",
+    "Historical tubuild create warning: RAW: src/func_ov002_020ba3fc.cpp (func_ov002_020ba3fc) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block; the assembled block was subsequently reconstructed and its duplicate declarations removed in PR2874 source repair.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba4d8' differs between the legacy file that used to hold _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c and the one that held func_ov002_020ba0bc; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Event8ClearBitEj' differs between the legacy file that used to hold func_ov002_020ba0bc and the one that held func_ov002_020ba0f8; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba4d8' differs between the legacy file that used to hold _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c and the one that held func_ov002_020ba0f8; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba4d8' differs between the legacy file that used to hold _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c and the one that held func_ov002_020ba1ac; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba01c' differs between the legacy file that used to hold func_ov002_020ba0f8 and the one that held func_ov002_020ba2d0; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020ba0f8 and the one that held func_ov002_020ba2d0; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba4d8' differs between the legacy file that used to hold _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c and the one that held func_ov002_020ba2d0; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba4d8' differs between the legacy file that used to hold _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c and the one that held func_ov002_020ba3a8; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ba01c' differs between the legacy file that used to hold func_ov002_020ba0f8 and the one that held _ZN13daObjSwitch_c8BehaviorEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Event8ClearBitEj' differs between the legacy file that used to hold func_ov002_020ba0bc and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN13daObjSwitch_c8BehaviorEv and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0211092c' differs between the legacy file that used to hold _ZN13daObjSwitch_c16CleanupResourcesEv and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
+    "Complete licensed text is ov002:[0x020b9e64,0x020baa2c),20 functions/3016 bytes. Callback/state initializer/factory bodies after the endpoint remain outside this TU.",
+    "The12 recorded declaration conflicts are resolved: void state transition and void PMF handler; actual int Event::ClearBit; shared fixed-point scalar aliases; real Sound::PlayBank3 reference, dBgActor_c method and SharedFilePtr resource. The shared decl_common.h still calls the callback an integer object; this TU no longer includes that incompatible declaration. No shared-header change or waiver is made.",
+    "Existing body/helper symbol identities and original rename ancestry a6e6eb8379738f97c6b62e558d028b23a0820128 are retained. daObjSwitch_c comes from retail RTTI; field labels and SwitchResources/StateEntry labels describe observed use, not recovered identifiers.",
+    "SS2874-08: StarMarker InitResources now declares shared data_ov002_0211092c as SharedFilePtr using the existing header. This is a caller declaration repair at ov002:[020eb204,020eb63c), with complete object identity and strict bytes proved; no new mismatch bank or shared-header edit."
+  ],
+  "verification": {
+    "round": "PR2874 producer: whole promoted TU compiled once; strict20 and direct metadata proof in notes/experiments/pr2874-source-repair-0920.json",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/switch2874/final.o (ignored producer worktree artifact)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 20,
+    "functions_declared": 20,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTV13daObjSwitch_c",
+        "_ZTI13daObjSwitch_c",
+        "_ZTS13daObjSwitch_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjSwitch_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjSwitch_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjSwitch_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV13daObjSwitch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109940",
+      "reason": "Text-only TU: externalize to canonical public address02109940. Independent direct payload comparison must include all136 emitted bytes starting02109938 (8-byte preamble plus128 slot bytes). The standard romdata check reports only128 public bytes; it is not whole-storage proof."
+    },
+    {
+      "symbol": "_ZTI13daObjSwitch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021098cc",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTS13daObjSwitch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021098d8",
+      "reason": "Text-only TU: externalize to canonical retail name at021098d8. All16 emitted bytes hold15 characters13daObjSwitch_c plus NUL, with no extra emitted padding. Direct byte proof includes the entire payload."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    }
+  ]
+}
