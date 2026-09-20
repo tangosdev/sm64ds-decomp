@@ -6299,6 +6299,30 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
     return btn;
 }
 
+/* THE DS'S OWN START AND SELECT, for the LEVEL path. These are RAW DS key
+   bits (0x08, 0x04), not the Ctrl-convention bits host_ds_buttons returns
+   above, so they ride beside host_btn_to_raw_keys' output and never enter
+   the Ctrl word itself. The windowed scene loop already publishes exactly
+   these two raw bits from exactly these two bindings (HOST_KEY_START /
+   HOST_PAD_START, HOST_KEY_SELECT / HOST_PAD_SELECT; see the scene loop's
+   own d-pad/Start/Select block). The level path never has, because it never
+   needed a menu -- but src/IsButtonInputValid.c's "special" branch (taken
+   whenever one of the Stage's own menu flags, data_0209f20c among them, is
+   set) answers only `val & 0xc` on PadData's pressed halfword, Start and
+   Select; A and B are a refusal beep there. Without these two bits no
+   button a player owns can answer the level-clear save menu. */
+static unsigned short host_menu_raw_keys(int pad_live, const XPad *pad)
+{
+    unsigned short raw = 0;
+    if (key_act(HOST_KEY_START))  raw |= 0x08;
+    if (key_act(HOST_KEY_SELECT)) raw |= 0x04;
+    if (pad_live) {
+        if (pad_act(pad, HOST_PAD_START))  raw |= 0x08;
+        if (pad_act(pad, HOST_PAD_SELECT)) raw |= 0x04;
+    }
+    return raw;
+}
+
 /* The save-state toast, over everything, bottom-left, and decremented as it is
    drawn rather than in the tick so a menu's pause does not freeze it. Shared
    by both loops because it is the only channel the menu's refusals have. */
@@ -11656,6 +11680,7 @@ int main(void)
                comms stash must agree bit for bit. */
             const unsigned short port_raw_bt_bits_for_mirror = (unsigned short)(
                 host_btn_to_raw_keys(btn) |
+                (menu_on ? 0 : host_menu_raw_keys(pad_live, &pad)) |
                 (menu_on ? 0 : port_input_probe_bits(
                     port_rom_frame_checked(frame, "input-probe-raw"))));
             port_raw_btn_stash(port_raw_bt_bits_for_mirror);
@@ -13427,30 +13452,12 @@ int main(void)
                 }
                 *(unsigned char *)(c + 0x71e) = 0;
             }
-            /* THE SAVE-PROMPT FLAG, and this line is a stand-in for
-               Stage::LC_Update's own clear (its case-6 arm ends with
-               data_0209f20c = 0). A star-return landing's last entrance step
-               (func_ov002_020c7350, and _020c6fe4's arm) sets the flag to
-               open the "do you want to save?" prompt, and on the ROM the
-               Stage -- whose Scene-class BeforeBehavior is not gated by it --
-               drives that prompt and clears it. The port does not tick the
-               Stage's LC machinery, so a set flag would gate
-               Actor::BeforeBehavior for every actor forever: the player
-               finishes the landing jig and the world freezes one frame before
-               step 2 (the 2026-08-07 warp-freeze session). Clearing it here,
-               before the tick, is that one statement and nothing else; the
-               prompt it would have opened is not hosted. Retiring this is the
-               same named job as the +0x13 stand-in in stage_bridges.cpp: run
-               the Stage as an actor and let LC_Update own its flag. */
-            if (data_0209f20c[0]) {
-                static int said_lc;
-                if (!said_lc) {
-                    said_lc = 1;
-                    fprintf(stderr, "[lc] save-prompt flag cleared "
-                            "(Stage::LC_Update stand-in; prompt not hosted)\n");
-                }
-                data_0209f20c[0] = 0;
-            }
+            /* THE SAVE-PROMPT FLAG stand-in is retired: Stage::Behavior's own
+               arm (src/_ZN5Stage8BehaviorEv.cpp) now runs the ROM's
+               Stage::LC_Update (src/_ZN5Stage9LC_UpdateEv.cpp) off this flag,
+               slot 6 having been seated on the ROM's own Stage::Behavior body,
+               and LC_Update's case 6 is what clears data_0209f20c when the
+               save menu is answered. Nothing here needs to touch it. */
             /* TEMPORARY: arm the buddy's talk detection before the actor tick so
                his state-0 main runs the real StartTalk. SM64DS_BUDDY_TRIGGER. */
             port_input_probe_buddy_trigger(frame);

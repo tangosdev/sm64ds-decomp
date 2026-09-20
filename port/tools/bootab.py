@@ -373,6 +373,23 @@ def run(kind, ident, label, ent=None, wdir=None):
                 # the death plane: drop below it at 200 and let
                 # func_ov002_020c5d60 -> ST_DEAD_PIT -> HitDeathPlane run
                 env["SM64DS_VOID_DROP"] = "200"
+                # THE LEVEL-CLEAR SAVE MENU can open on this arm too: a level
+                # booted directly at an entrance the game never sends a
+                # player to can end its arrival animation in the one that
+                # sets the star-get flag data_0209f20c, with no star
+                # anywhere in the row, and the menu then freezes the world
+                # before the death drop completes. The level-clear menu's
+                # third row (Continue, Don't Save, which writes no save
+                # file) is x 8..247, y 0x78..0x97 in
+                # src/_ZN5Stage9LC_UpdateEv.cpp case 3; the pause menu's
+                # four buttons are y 32-63, 72-103, 112-143 and 152-183, so
+                # y=148 is inside the level-clear row and inside no pause
+                # button, which is why every exit arm can carry the same
+                # tap. The probe's frame numbers are POLL indices rather
+                # than game frames, which is why the train is wide instead
+                # of one tap.
+                env["SM64DS_TOUCH_PROBE"] = ",".join(
+                    "%d-%d:128:148" % (f, f + 1) for f in range(100, 3000, 40))
             elif EXIT == "star":
                 # stand on the level's first PowerStar and press A through the
                 # star-get prompts
@@ -393,6 +410,21 @@ def run(kind, ident, label, ent=None, wdir=None):
                     ",".join("1000@%d-%d" % (f, f + 3)
                              for f in range(500, 1160, 60))
                     + ",4@600-1150")
+                # THE LEVEL-CLEAR SAVE MENU now opens after a star (the
+                # star-get flag data_0209f20c drives Stage::LC_Update) and
+                # freezes the world until it is answered, so this arm's own
+                # "moved N after arrival" check fails every row unless
+                # something answers it. Row three of the menu's own three
+                # touch boxes (src/_ZN5Stage9LC_UpdateEv.cpp case 3: x
+                # 8..247, y 0x78..0x97) is Continue, Don't Save, chosen over
+                # row one (Save and Quit) because that row writes no file,
+                # so a sweep leaves no saves behind in a worker's directory.
+                # The probe's frame numbers are POLL indices, not game
+                # frames, which is why this is a wide train rather than one
+                # tap: a single poll index can land off-frame and miss the
+                # menu entirely.
+                env["SM64DS_TOUCH_PROBE"] = ",".join(
+                    "%d-%d:128:148" % (f, f + 1) for f in range(300, 4000, 40))
             elif EXIT == "pause":
                 # START, then the fourth pause button (exit course). The four
                 # buttons are touch boxes x 8..247, y 0x20/0x48/0x70/0x98 each
@@ -411,7 +443,9 @@ def run(kind, ident, label, ent=None, wdir=None):
                 env["SM64DS_PROBE_INPUT"] = ",".join(
                     "%d:START" % f for f in range(200, 620, 60))
                 env["SM64DS_TOUCH_PROBE"] = ",".join(
-                    "%d-%d:128:168" % (f, f + 1) for f in range(230, 650, 60))
+                    "%d-%d:128:168" % (f, f + 1) for f in range(230, 650, 60)
+                ) + "," + ",".join(
+                    "%d-%d:128:148" % (f, f + 1) for f in range(100, 3000, 40))
             else:
                 sys.exit("unknown exit=%s (void, star, pause)" % EXIT)
     else: env["SM64DS_SCENE_FRAMES"] = FRAMES
