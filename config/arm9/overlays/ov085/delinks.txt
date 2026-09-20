@@ -167,65 +167,9 @@ src/actors/daMip_c.cpp:
     complete
     .text start:0x0212a6d4 end:0x0212cc88
 
-src/_ZN15daObj_Mip_Key_cD1Ev.cpp:
+src/actors/daObj_Mip_Key_c.cpp:
     complete
-    .text start:0x0212cc88 end:0x0212ccc0
-
-src/_ZN15daObj_Mip_Key_cD0Ev.cpp:
-    complete
-    .text start:0x0212ccc0 end:0x0212cd0c
-
-src/func_ov085_0212cd0c.cpp:
-    complete
-    .text start:0x0212cd0c end:0x0212cd80
-
-src/func_ov085_0212cd80.c:
-    complete
-    .text start:0x0212cd80 end:0x0212d038
-
-src/func_ov085_0212d038.c:
-    complete
-    .text start:0x0212d038 end:0x0212d108
-
-src/func_ov085_0212d108.c:
-    complete
-    .text start:0x0212d108 end:0x0212d24c
-
-src/func_ov085_0212d24c.c:
-    complete
-    .text start:0x0212d24c end:0x0212d268
-
-src/func_ov085_0212d268.cpp:
-    complete
-    .text start:0x0212d268 end:0x0212d2b8
-
-src/func_ov085_0212d2b8.cpp:
-    complete
-    .text start:0x0212d2b8 end:0x0212d374
-
-src/_ZN15daObj_Mip_Key_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0212d374 end:0x0212d398
-
-src/_ZN15daObj_Mip_Key_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0212d398 end:0x0212d39c
-
-src/_ZN15daObj_Mip_Key_c6RenderEv.cpp:
-    complete
-    .text start:0x0212d39c end:0x0212d3ec
-
-src/_ZN15daObj_Mip_Key_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0212d3ec end:0x0212d46c
-
-src/_ZN15daObj_Mip_Key_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212d46c end:0x0212d4e8
-
-src/d_a_obj_mip_key.c:
-    complete
-    .text start:0x0212d4e8 end:0x0212d528
+    .text start:0x0212cc88 end:0x0212d528
 
 src/_ZN11daC_Jugem_cD1Ev.cpp:
     complete

@@ -3,35 +3,32 @@
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN15daObj_Mip_Key_cD1Ev` destroys each member, and
- * `daObj_Mip_Key_c_classInit` constructs the same types at the same offsets before
- * storing `_ZTV15daObj_Mip_Key_c`. Everything this header used to restate below
- * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
- *
- * The members close on each other, which is what makes the layout a
- * reading rather than a guess:
- *
- *     0x110 Model                      0x50    -> 0x160
- *     0x160 ShadowModel                0x28    -> 0x188
- *
- * SIZE IS THE ROM'S OWN: `daObj_Mip_Key_c_classInit` calls
- * `fBase_c::operator new(416)` -- 0x1a0 -- and stores this class's
- * vtable, so that literal IS this class's sizeof.
- */
+/* ROM RTTI at ov085:0x02130194 identifies dEnemyBase_c as the base.
+ * Constructor/destructor calls place Model at 0x110 and ShadowModel at 0x160;
+ * the factory allocates 0x1a0 bytes. */
 
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 
+struct daObj_Mip_Key_c;
+typedef int (daObj_Mip_Key_c::*MipKeyPMF)();
+// Inferred state shape: sinit copies two 8-byte PMFs into each 16-byte object.
+// Field names describe their observed use, not recovered source spellings.
+struct MipKeyState {
+    MipKeyPMF enter;
+    MipKeyPMF execute;
+};
+
 struct daObj_Mip_Key_c : dEnemyBase_c {
-    Model                        mModel;                /* 0x110 */
-    ShadowModel                  mShadowModel;          /* 0x160 */
-    u8                           unk_188;               /* 0x188 */
-    u8  pad_189[0x7];
-    s32                          unk_190;               /* 0x190 */
-    u8  pad_194[0x8];
-    s32                          unk_19c;               /* 0x19c */
+    Model mModel;                         /* 0x110 */
+    ShadowModel mShadowModel;             /* 0x160 */
+    MipKeyState * mState;                 /* 0x188 */
+    Player * mPlayer;                     /* 0x18c */
+    s32 unk_190;                          /* 0x190 */
+    s32 mTalkState;                       /* 0x194 */
+    s32 mWaitForTalk;                     /* 0x198 */
+    s32 unk_19c;                          /* 0x19c */
 
     /* --- vtable --- */
     virtual ~daObj_Mip_Key_c();
