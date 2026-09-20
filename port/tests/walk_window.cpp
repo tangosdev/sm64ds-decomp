@@ -10205,7 +10205,18 @@ int main(void)
        asks for the fix-off arm. */
     port_ss_rollguard_hook(port_rollguard_stash, port_rollguard_unstash);
 
-    if ((!selftest || getenv("SM64DS_SS_DISKLOAD")) && lk7_persist_available()) {
+    /* SM64DS_SS_PLAYERBOOT=1 makes a selftest take the PLAYER's startup path
+       for the disk state instead of the selftest one. There is no headless way
+       to measure what a player's launch does with a savestate.bin otherwise:
+       the arm above is skipped in a selftest by design, and a windowed run is
+       not a proof. Unset, this reads one environment variable and changes
+       nothing, so the shipped window and every comparator run are unaffected.
+       Distinct from SM64DS_SS_DISKLOAD on purpose: DISKLOAD asks for the
+       scripted cross-restart read, this one asks for whatever the player would
+       get. */
+    const int ss_playerboot = !selftest || getenv("SM64DS_SS_PLAYERBOOT") != 0;
+
+    if ((ss_playerboot || getenv("SM64DS_SS_DISKLOAD")) && lk7_persist_available()) {
         if (lk7_persist_read()) {
             an_pivot_live = 0;   /* no ease across the load */
             ss_census("after the boot-time disk restore", player, cam);
