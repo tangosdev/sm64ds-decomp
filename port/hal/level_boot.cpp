@@ -2964,6 +2964,10 @@ extern unsigned char data_0209f26c;
 extern int data_0209f264[];          /* current entrance */
 extern unsigned char data_0209f268;  /* next entrance */
 extern int data_0209f220[];          /* current star filter */
+/* next star -- the act the level change staged, which is where the star select
+   leaves the player's pick. Declared as a byte for data_0209f26c's reason:
+   auto_bss.cpp owns the wider host allocation and the ROM reads it as one. */
+extern unsigned char data_0209f1f0;
 extern unsigned char *data_0209f344; /* VS star-order pointer (host: bob_enemy_bridges.cpp) */
 /* data_0209212c (world Y max) is DEFINED above, in the retirement block. Do
    not re-declare it here: a second declaration outside the DSSTATE pragma
@@ -3590,10 +3594,40 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
     }
     /* Star filter: the sub-table's group byte (kind >> 5) loads when it is 0
        or equal to this. ADVENTURE is 1, which is grp0 + grp1; SM64DS_STAR_FILTER
-       is the knob that reads the other halves back (0 = grp0 alone). */
+       is the knob that reads the other halves back (0 = grp0 alone).
+
+       THE SAME DEFECT THE ENTRANCE BLOCK ABOVE FIXED, AND THE SAME FIX.
+       Stage::InitResources:229 is `data_0209f220 = data_0209f1f0` -- the act
+       the level change staged -- and data_0209f1f0 is where the star select
+       leaves the player's choice (src/_ZN12dScStarSel_c8BehaviorEv.cpp:147,
+       `data_0209f1f0 = FB(this, 0x115) + 1`, after StartSceneFade(3)).
+       hal/level_change.cpp's port_level_latch makes that copy for the change,
+       but THIS block ran a moment later on every stage boot and overwrote it
+       with the knob or with a flat 1, so whichever act the player picked, the
+       course came up as act 1: the object table's group filter
+       (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp:32,
+       `if (type == 0 || type == data_0209f220)`) never saw anything else.
+       Measured on Bob-omb Battlefield before the fix: the star select's own
+       line said "the act it chose is data_0209f1f0 = 2" and four lines later
+       the course said "[adventure table branch, star=1]", with King Bob-omb on
+       the census and no Koopa the Quick.
+
+       So the knob now picks the PENDING act, exactly as SM64DS_ENTRANCE picks
+       the pending entrance, and the ROM's own line does the latching. A direct
+       boot stages no act at all, so data_0209f1f0 is still 0 from the boot
+       clear there and ADVENTURE is seated in its place: with the knob unset
+       every direct-boot row lands on the 1 it always did. */
     {
+        static bool star_knob_seated = false;
         const char *sf = std::getenv("SM64DS_STAR_FILTER");
-        data_0209f220[0] = sf ? std::atoi(sf) : 1;
+        if (!star_knob_seated) {
+            if (sf)
+                data_0209f1f0 = (unsigned char)std::atoi(sf);
+            else if (data_0209f1f0 == 0)
+                data_0209f1f0 = 1;
+        }
+        star_knob_seated = true;
+        data_0209f220[0] = data_0209f1f0;
     }
     /* SM64DS_STARS_SEED=<course>:<hex>[,<course>:<hex>...] -- the collected-star
        bitmask a loaded save file would have left in the save block, written ONCE
