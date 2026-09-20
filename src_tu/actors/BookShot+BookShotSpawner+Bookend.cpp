@@ -149,10 +149,10 @@ extern int data_ov020_02114ab0[];
 extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void LoadBlueCoinModel(void* c);
-extern int _ZN11ShadowModel12InitCylinderEv(char* self);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+extern int _ZN11ShadowModel12InitCylinderEv(ShadowModel* self);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, struct Vector3_16* f);
+extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase* self, struct BMD_File* f, int a, int b);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c* self, struct dActor_c* a, const struct Vector3& pos, int r, int h, u32 f1, u32 f2);
 extern struct M48 IDENTITY_MATRIX4X3;
 extern int data_ov020_02114ab8[];
 extern int data_ov020_02114aa0[];
@@ -323,15 +323,15 @@ int BookShot::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114ab0);
     LoadBlueCoinModel(((char*)this));
 
-    if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
+    if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)
         return 0;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x25c, (struct dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
 
     unk_438 = 0;
     unk_43c = 0;
     unk_440 = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, *(struct Vector3*)&unk_438, 0x19000, 0x32000, 0x200001, 0);
 
     unk_418 = 0;
     unk_41c = 0;
@@ -342,7 +342,7 @@ int BookShot::InitResources()
     unk_430 = mPosY;
     unk_434 = mPosZ;
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
     *(struct M48*)(&unk_1ec) = IDENTITY_MATRIX4X3;
