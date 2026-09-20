@@ -1,129 +1,31 @@
 //cpp
-/* dScMgLuigi_c -- the MG_LUIGI minigame scene class, ov006.
+/* Wanted minigame: reveal a target, move the pictures and handle touch guesses.
+ * Curtains and an iris separate rounds; correct guesses add time and mistakes
+ * show a penalty. The ROM RTTI names this scene dScMgLuigi_c.
  *
- * Reconstructed translation unit: the contiguous linker run
- * 0x020efc0c..0x020f3834, 58 functions, assembled from the 58 one-function
- * legacy sources.  The class name is the cartridge's own RTTI, not a coined
- * one: ov006 0x0213ce60 holds the NUL-terminated string "12dScMgLuigi_c" and
- * 0x0213ce54 is the __si_class_type_info record that points at it.
- *
- * ---------------------------------------------------------------------------
- * BOUNDARIES
- * ---------------------------------------------------------------------------
- * RIGHT, hard: the last function here is dScMgLuigi_c_classInit at 0x020f3800
- * (0x34 bytes), ending exactly at 0x020f3834, where _ZN13dScMgMemory_cD1Ev
- * begins -- the first byte of the already-promoted single-span TU
- * src/minigames/d_s_mg_memory.cpp.
- *
- * LEFT: the function immediately below, func_ov006_020efc08, is four bytes
- * whose only word is 0xe12fff1e (`bx lr`).  It is its own delink unit, has no
- * caller and no relocation, and nothing in the cartridge attributes it to
- * either neighbour, so it is left out.
- *
- * SELF-CONTAINED, proven twice: filtering
- * config/arm9/overlays/ov006/relocs.txt on `module:overlay(6)`, exactly 70
- * accepted rows point into this range and not one is an arm_call from outside
- * it; decoding every BL word in ov006 .text agrees, set for set.  (An
- * UNfiltered scan of the other modules' relocs.txt over the same addresses
- * yields 164 rows, 163 of which the module filter rejects -- that many phantom
- * callers.)
- *
- * ---------------------------------------------------------------------------
- * `#pragma defer_codegen off` IS LOAD-BEARING TWICE
- * ---------------------------------------------------------------------------
- *   1. it makes mwccarm 2004/b56 emit one .text section per function in SOURCE
- *      order rather than in reverse, which is why the members below run lowest
- *      ROM address first;
- *   2. it makes `opt_strength_reduction`, `opt_common_subs` and
- *      `opt_propagation` bind POSITIONALLY instead of file-global last-wins,
- *      which is what lets the seven pragma-bearing shards live in one TU.
- *      Three families are involved here: opt_strength_reduction (ordinals 5,
- *      46, 49), opt_common_subs (27, 30, 31) and opt_propagation (45), and
- *      ordinal 30 carries two at once.
- * The two halves are ONE decision: source order and the pragma have to flip
- * together or `linkcheck [4b/8]`'s ROM-ascending emission-order audit refuses
- * the result.  Do not reorder the members.
- *
- * ---------------------------------------------------------------------------
- * WHY EVERY MEMBER KEEPS ITS OWN DECLARATIONS
- * ---------------------------------------------------------------------------
- * The 58 shards were recovered independently and disagree about nine symbols --
- * data_0209f608, data_0209f60c, data_0209f648, MultiCopy_Int,
- * func_ov004_020af948, data_ov006_0213ce70, data_ov006_0213abc8,
- * data_ov006_02142254 and data_ov004_020beb68.  Merging those onto one spelling
- * is a codegen hazard, not a naming one, so each member's own view is kept:
- * shadow TYPE tags are uniquified per member with the member's address as a
- * suffix, and the declarations themselves sit at BLOCK scope inside the member
- * that recovered them.  Each member that still carries an auto-generated C name
- * is wrapped in its own file-scope `extern "C" { }` region precisely so those
- * block-scope declarations get C linkage and name the ROM symbol.
- *
- * A class member function may NOT sit inside a linkage-specification region, so
- * every C++-named member is outside one, and what they call is declared in the
- * file-scope `extern "C"` regions instead.  Writing those declarations in their
- * bodies compiles and byte-matches and then fails to link with mangled
- * undefined symbols.
- *
- * Measured at this revision, after the stage-3b naming pass: this file defines
- * 57 functions carrying 58 symbols -- the single `~dScMgLuigi_c` definition
- * emits both D1 and D0.  55 of the 58 are mangled `_ZN12dScMgLuigi_c*` members;
- * exactly 3 keep an auto-generated C name (`func_ov006_020efcf8`,
- * `func_ov006_020efdac` and `dScMgLuigi_c_classInit`).  There are 10 file-scope
- * `extern "C"` regions: 3 wrap those C-named definitions, the other 7 carry
- * only declarations and shadow structs.
- *
- * decl_common.h is deliberately NOT included: it types eight of this TU's own
- * members `void(void *)` / `void(char *)` against byte-matched definitions that
- * take `char*`, which would be eight `illegal function overloading` errors
- * pointed at the definitions rather than at the header.
- *
- * deslop (2026-09-20): 43 offset accesses became the members the header already
- * declares -- mPosX / mPosY / mVelX / mVelY / mMovePhase and the flat scalars --
- * and the two `char *` aliases this left unused were dropped. Only accesses
- * whose cast width matched the declared field width were rewritten. 58/58
- * still MATCH.
- *
- * Leftover: AddPenalty, CheckTouch, DrawTimer, StartReward, TickTimer and
- *   UpdateReward keep the offset form entirely -- the named form regresses them
- *   in both the constant and the indexed shape, so the offset expression is
- *   holding register allocation that the member name does not reproduce.
- *   Measured, not assumed.
+ * The manifest owns the 58-function text span, including both destructor
+ * variants. Keep source order and the local optimization pragmas together.
+ * Some curtain/reward storage and ResetBoard's layout remain partial views.
+ * CheckTouch retains measured offset accesses, and three tile-copy temporaries
+ * still need an ordinary matching source form. Experiments and exact limits:
+ * notes/experiments/pr2876-source-repair-0920.json.
  */
 
 #pragma defer_codegen off
 
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  17 func_ov004_* + 45 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  2 _ZN..E member call(s)       already declared -- needs the
- *                                scope-qualified spelling on a real `this`.
- *  1 _ZN..E call(s)              class header exists, member not yet
- *                                declared in it.
- *  11 _ZN..E call(s)             no include/<class>.h yet, so there is
- *                                no member to call.
- *  2 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  34 `(void *)this` launder(s)  bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  ~234 *(T *)(p + 0x..)         class layout does not name these offsets.
- *  9 unk_NN                      slot/field name not evidenced.
- */
-
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "dScMgLuigi_c.h"
+#include "Sound.h"
 #include "IRQ.h"
+
+typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
+typedef void (dScMgLuigi_c::*LuigiStateHandler)();
 
 /* Same spelling the matched IRQ::EnableIRQs / IRQ::DisableIRQs shards use. */
 #define IME (*(volatile u16 *)0x04000208)
 
-/* ---------------------------------------------------------------------------
- * Shadow types, one set per member that recovered one.  The tag suffix is the
- * member's ROM address: two members that describe the same object through
- * different windows keep both windows, because mwccarm's pointer-to-member
- * representation depends on whether the class was complete when the PMF type
- * was formed, and merging them changes it.
- * ------------------------------------------------------------------------- */
+/* Remaining local views describe storage not yet exposed by the header. */
 /* ordinal 4, func_ov006_020efdac */
 struct Record_efdac { char _pad[0x300]; };
 
@@ -135,52 +37,12 @@ struct Px_efdf0 {
 /* ordinal 8, dScMgLuigi_c::IrisHold */
 struct E_f002c { unsigned char d[0x14]; };
 
-/* ordinal 9, dScMgLuigi_c::UpdateIris */
-struct C_f0044;
-typedef void (C_f0044::*PMF_f0044)(int);
-struct Entry_f0044 { PMF_f0044 pmf[1]; };
-struct C_f0044 {
-    char pad[0x47f4];
-    unsigned char guard;
-    unsigned char idx;
-};
-
 /* ordinal 12, dScMgLuigi_c::UpdateReward */
 #define BEB68_f0274 ((char *)data_ov004_020beb68)
 
-/* ordinal 19, dScMgLuigi_c::CurtainUpdate */
-struct C_f0ba0;
-typedef void (C_f0ba0::*PMF_f0ba0)(int);
-struct Entry_f0ba0 { PMF_f0ba0 pmf; };
-struct Row_f0ba0 { unsigned char tag; char pad[0x17]; };
-struct C_f0ba0 { char pad[0x47b7]; Row_f0ba0 rows[1]; };
-
-/* ordinal 21, dScMgLuigi_c::CurtainsDone */
-struct C_f0d58;
-typedef void (C_f0d58::*PMF_f0d58)(int);
-struct Entry_f0d58 { PMF_f0d58 pmf; };
-
-/* ordinal 38, dScMgLuigi_c::WrapPicture */
-typedef struct Obj_f1dbc {
-    char _pad0[0x47f8]; /* 0x0000 */
-    int mPosX[120];     /* 0x47f8 */
-    int mPosY[120];     /* 0x49d8 */
-} Obj_f1dbc;
-
-/* ordinal 41, dScMgLuigi_c::UpdatePictures */
-struct C_f1e90;
-typedef void (C_f1e90::*PMF_f1e90)(int);
-struct Entry_f1e90 { PMF_f1e90 pmf; };
-struct C_f1e90 { char pad[1]; };
-
 struct Ctx_f2ec0;   /* completed at ordinal 48, below */
 
-/* ---------------------------------------------------------------------------
- * This TU's own members, forward declared once with each member's own
- * definition spelling, plus the one external that ordinal 2 needs before any
- * wrapped member exists to declare it.  Call sites whose caller recovered a
- * different pointer type cast at the call site; a pointer cast is free.
- * ------------------------------------------------------------------------- */
+/* C-linkage engine calls and the remaining local helpers. */
 extern "C" {
 extern int func_02053c10(int);
 /* Externals a C++-NAMED member calls.  A class member function may not sit in a
@@ -193,16 +55,15 @@ extern int RandomIntInternal(int *seed);
 extern int _ZN4cstd4sqrtEy(unsigned long long);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, unsigned int len);
 extern s32 GetGameLanguage(void);
-extern void func_ov004_020af948(void *a, int b, int c, int d);
+extern void func_ov004_020af948(void *a, int b, int c, void *matrix);
 extern char *func_ov004_020afb20(int a0, int a1, int a2, int a3, int a4, int a5, unsigned short a6);
 extern void DrawOamSprite(int p, int a, int b, int c);
 extern void func_ov004_020b2220(int a, int b, int c, int d, int e, int f, int g);
-extern void func_02012790(int x);
+extern unsigned int func_02012790(unsigned int x);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
-extern void Hud_RenderSprite(int a, int b, int c, int d, int e);
+extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern char *_ZN2G212GetBG3ScrPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b0a54(int c);
@@ -412,11 +273,10 @@ void dScMgLuigi_c::IrisHold(int idx) {
 // @symbol _ZN12dScMgLuigi_c10UpdateIrisEv
 void dScMgLuigi_c::UpdateIris()
 {
-    C_f0044 *c = (C_f0044 *)this;
-    extern Entry_f0044 data_ov006_021421ec[];
-    if (c->guard == 0) return;
-    int j = c->idx;
-    (c->*data_ov006_021421ec[j].pmf[0])(0);
+    extern LuigiSlotHandler data_ov006_021421ec[];
+    if (*(u8 *)((char *)this + 0x47f4) == 0) return;
+    int j = *(u8 *)((char *)this + 0x47f5);
+    (this->*data_ov006_021421ec[j])(0);
 }
 
 /* ------------------------------------------------------------------ */
@@ -487,7 +347,6 @@ void dScMgLuigi_c::DrawReward()
 // @symbol _ZN12dScMgLuigi_c12UpdateRewardEv
 extern "C" {
 extern void func_ov004_020adb1c(int self);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 }
 
 void dScMgLuigi_c::UpdateReward()
@@ -540,12 +399,12 @@ void dScMgLuigi_c::UpdateReward()
         *(u8 *)(s + 0x47df) += 1;
         if (*(u8 *)(s + 0x47df) < 4)
             return;
-        _ZN5Sound12PlayBank2_2DEj(0x1bc);
+        Sound::PlayBank2_2D(0x1bc);
         *(u8 *)(s + 0x47df) = 0;
         *(u8 *)(s + 0x47e2) -= 1;
-        *(u16 *)(s + 0x5172) += 1;
-        if (*(u16 *)(s + 0x5172) >= 0x32) {
-            *(u16 *)(s + 0x5172) = 0x32;
+        *(u16 *)&unk_5172 += 1;
+        if (*(u16 *)&unk_5172 >= 0x32) {
+            *(u16 *)&unk_5172 = 0x32;
             *(u8 *)(s + 0x51fb) = 0;
         }
         return;
@@ -560,10 +419,9 @@ void dScMgLuigi_c::UpdateReward()
 // @symbol _ZN12dScMgLuigi_c11StartRewardEi
 void dScMgLuigi_c::StartReward(int i) {
     char *c = (char *)this;
-    char *s = c + i*4;
     *(unsigned char *)(c + 0x47e0) = 1;
-    *(int *)(c + 0x47d0) = *(int *)(s + 0x47f8);
-    *(int *)(c + 0x47d4) = *(int *)(s + 0x49d8);
+    *(int *)(c + 0x47d0) = mPosX[i];
+    *(int *)(c + 0x47d4) = mPosY[i];
     *(unsigned char *)(c + 0x47df) = 16;
     *(unsigned char *)(c + 0x47e1) = 0;
     *(unsigned char *)(c + 0x47e3) = 1;
@@ -614,7 +472,7 @@ void dScMgLuigi_c::CurtainStateSlow(int i)
     int v;
     *ctr = *ctr + 1;
     if (*ctr == 0x1a)
-        _ZN5Sound12PlayBank2_2DEj(0x1b9);
+        Sound::PlayBank2_2D(0x1b9);
     b = (int *)(c + 0x47a8 + n);
     a = (int *)(c + 0x47a0 + n);
     *a = *a + *b;
@@ -663,7 +521,7 @@ void dScMgLuigi_c::CurtainStateFast(int i)
             *(unsigned char *)(c + n + 0x47b4) = 0;
             *(unsigned char *)(c + n + 0x47b7) = 0;
             if (i == 0)
-                _ZN5Sound12PlayBank2_2DEj(0x1b9);
+                Sound::PlayBank2_2D(0x1b9);
             return;
         }
         if (i != 0)
@@ -677,7 +535,7 @@ void dScMgLuigi_c::CurtainStateFast(int i)
             *(unsigned char *)(c + n + 0x47b7) = 0;
             if (i != 0)
                 return;
-            _ZN5Sound12PlayBank2_2DEj(0x1b9);
+            Sound::PlayBank2_2D(0x1b9);
             return;
         }
         if (i != 0)
@@ -700,7 +558,7 @@ void dScMgLuigi_c::CurtainStateHold(int i)
     int v;
     *ctr = *ctr + 1;
     if (*ctr == 0x35)
-        _ZN5Sound12PlayBank2_2DEj(0x1b9);
+        Sound::PlayBank2_2D(0x1b9);
     if (i == 0) {
         if (*ctr <= 0x35) {
             int *p = (int *)(c + 0x47ac + n);
@@ -785,9 +643,8 @@ void dScMgLuigi_c::CurtainStateBounce(int i)
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c13CurtainUpdateEi
 void dScMgLuigi_c::CurtainUpdate(int i) {
-    C_f0ba0 *c = (C_f0ba0 *)this;
-    extern Entry_f0ba0 data_ov006_0214221c[];
-    (c->*(data_ov006_0214221c[c->rows[i].tag].pmf))(i);
+    extern LuigiSlotHandler data_ov006_0214221c[];
+    (this->*(data_ov006_0214221c[*((u8 *)this + 0x47b7 + i * 0x18)]))(i);
 }
 
 /* ------------------------------------------------------------------ */
@@ -849,14 +706,13 @@ void dScMgLuigi_c::CurtainStart(int i) {
 // @symbol _ZN12dScMgLuigi_c12CurtainsDoneEv
 int dScMgLuigi_c::CurtainsDone()
 {
-    C_f0d58 *c = (C_f0d58 *)this;
-    extern Entry_f0d58 data_ov006_02142204[];
+    extern LuigiSlotHandler data_ov006_02142204[];
     int count = 0;
     int i = 0;
-    char *p = (char *)c;
+    char *p = (char *)this;
     do {
         if (*(unsigned char *)(p + 0x47b4) != 0) {
-            (c->*data_ov006_02142204[*(unsigned char *)(p + 0x47b6)].pmf)(i);
+            (this->*data_ov006_02142204[*(unsigned char *)(p + 0x47b6)])(i);
             count++;
         }
         i++;
@@ -891,11 +747,11 @@ void dScMgLuigi_c::DrawTimer() {
     char *self = (char *)this;
     extern int *data_ov006_0213ce70[];
     int idx;
-    if (*(int *)(self + 0x4f78) < 2)
+    if (unk_4f78 < 2)
         return;
     idx = GetGameLanguage();
     DrawOamSprite(*(int *)((char *)data_ov006_0213ce70[idx] + 0xc), 0x80, 0x10, 0);
-    func_ov004_020b2220(0x80, 0x28, *(unsigned short *)(self + 0x5172), 1, -1, 0x800, 0);
+    func_ov004_020b2220(0x80, 0x28, static_cast<u16>(unk_5172), 1, -1, 0x800, 0);
 }
 
 /* ------------------------------------------------------------------ */
@@ -905,7 +761,7 @@ void dScMgLuigi_c::DrawTimer() {
 void dScMgLuigi_c::TickTimer()
 {
     char *c = (char *)this;
-    if (*(u16 *)(c + 0x5172) != 0) {
+    if (*(u16 *)&unk_5172 != 0) {
         {
             u8 *q = (u8 *)(c + 0x51fb);
             *q = *q + 1;
@@ -914,19 +770,19 @@ void dScMgLuigi_c::TickTimer()
             return;
         *(u8 *)(c + 0x51fb) = 0;
         {
-            u16 *p = (u16 *)(c + 0x5172);
+            u16 *p = (u16 *)&unk_5172;
             *p = *p - 1;
         }
         if (*(s16 *)(c + 0x5172) <= 0)
             *(s16 *)(c + 0x5172) = 0;
-        if (*(u16 *)(c + 0x5172) <= 2) {
-            _ZN5Sound12PlayBank2_2DEj(0xa6);
+        if (*(u16 *)&unk_5172 <= 2) {
+            Sound::PlayBank2_2D(0xa6);
             return;
         }
-        _ZN5Sound12PlayBank2_2DEj(0xa7);
+        Sound::PlayBank2_2D(0xa7);
         return;
     }
-    _ZN5Sound12PlayBank2_2DEj((unsigned int)((*(u8 *)(c + 0x545a) << 3) + 0xc0));
+    Sound::PlayBank2_2D((unsigned int)((unk_545a << 3) + 0xc0));
     func_02012790(0xe);
     BeginCatch(0);
 }
@@ -937,7 +793,7 @@ void dScMgLuigi_c::TickTimer()
 // @symbol _ZN12dScMgLuigi_c12DrawPicturesEv
 void dScMgLuigi_c::DrawPictures() {
     char *c = (char *)this;
-    extern int data_ov006_0213abc8[];
+    extern void *data_ov006_0213abc8[];
     int i;
     if (unk_4f78 == 0)
         return;
@@ -1037,11 +893,11 @@ void dScMgLuigi_c::AddPenalty(int idx)
         *(base + i * 0x14 + 0x4670) = 1;
         *(unsigned char *)(base + i * 0x14 + 0x4671) = 1;
         *(short *)(base + i * 0x14 + 0x466c) = 0x10;
-        *(int *)(base + i * 0x14 + 0x4660) = *(int *)(base + idx * 4 + 0x47f8);
-        *(int *)(base + i * 0x14 + 0x4664) = *(int *)(base + idx * 4 + 0x49d8);
+        *(int *)(base + i * 0x14 + 0x4660) = mPosX[idx];
+        *(int *)(base + i * 0x14 + 0x4664) = mPosY[idx];
         *(int *)(base + i * 0x14 + 0x4668) = 0x1100;
         *(unsigned char *)(base + i * 0x14 + 0x4672) = 0;
-        *(unsigned short *)(base + 0x5172) -= 0xa;
+        *(u16 *)&unk_5172 -= 0xa;
         if (*(short *)(base + 0x5172) < 0)
             *(short *)(base + 0x5172) = 0;
         return;
@@ -1205,7 +1061,6 @@ void dScMgLuigi_c::MovePictureBounce(int i)
  * this replaces (div 70) had forced the first form through a u64 launder and
  * `#pragma opt_common_subs off`, which is what rotated its registers. */
 
-
 void dScMgLuigi_c::MovePictureSway(int idx)
 {
     extern int data_ov006_0212e888[];
@@ -1268,7 +1123,6 @@ void dScMgLuigi_c::MovePictureSway(int idx)
  * whole (+8 bytes) and, once that was fixed by hand, still swapped the r4/ip
  * pair in the second update. */
 
-
 void dScMgLuigi_c::MovePictureDriftRandom(int idx)
 {
     extern int data_0209d4b8;
@@ -1301,7 +1155,6 @@ void dScMgLuigi_c::MovePictureDriftRandom(int idx)
  *
  * Member access, not raw offsets, for the reason spelled out on
  * dScMgLuigi_c::MovePictureDriftRandom above. */
-
 
 void dScMgLuigi_c::MovePictureDriftByRow(int idx)
 {
@@ -1347,7 +1200,6 @@ void dScMgLuigi_c::MovePictureDriftByRow(int idx)
  * Member access, not raw offsets, for the reason spelled out on
  * dScMgLuigi_c::MovePictureDriftRandom above. */
 
-
 void dScMgLuigi_c::MovePictureDriftByColumn(int idx)
 {
     extern int data_ov006_0212e858[];
@@ -1382,7 +1234,6 @@ void dScMgLuigi_c::MovePictureDriftByColumn(int idx)
  * Member access, not raw offsets, for the reason spelled out on
  * dScMgLuigi_c::MovePictureDriftRandom above. */
 
-
 void dScMgLuigi_c::MovePictureDriftByLevel(int idx)
 {
     extern int data_ov006_0212e8d8[];
@@ -1412,7 +1263,6 @@ void dScMgLuigi_c::MovePictureDriftByLevel(int idx)
  * Member access, not raw offsets, for the reason spelled out on
  * dScMgLuigi_c::MovePictureDriftRandom above. */
 
-
 void dScMgLuigi_c::MovePictureDriftFixed(int idx)
 {
     extern int data_ov006_0212e8c8[];
@@ -1437,13 +1287,12 @@ void dScMgLuigi_c::MovePictureDriftFixed(int idx)
 // @symbol _ZN12dScMgLuigi_c11WrapPictureEi
 /* Wraps one picture's 20.12 position round the 0x110 x 0xd0 screen. Leaf. */
 void dScMgLuigi_c::WrapPicture(int i) {
-    Obj_f1dbc *self = (Obj_f1dbc *)this;
-    int x = self->mPosX[i] >> 12;
-    int y = self->mPosY[i] >> 12;
-    if (x > 0x110) self->mPosX[i] = -0x10000;
-    if (x < -0x10) self->mPosX[i] = 0x110000;
-    if (y > 0xd0)  self->mPosY[i] = -0x10000;
-    if (y < -0x10) self->mPosY[i] = 0xd0000;
+    int x = mPosX[i] >> 12;
+    int y = mPosY[i] >> 12;
+    if (x > 0x110) mPosX[i] = -0x10000;
+    if (x < -0x10) mPosX[i] = 0x110000;
+    if (y > 0xd0)  mPosY[i] = -0x10000;
+    if (y < -0x10) mPosY[i] = 0xd0000;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1476,15 +1325,14 @@ void dScMgLuigi_c::RestartPicture(int idx) {
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c14UpdatePicturesEv
 void dScMgLuigi_c::UpdatePictures() {
-    C_f1e90 *c = (C_f1e90 *)this;
-    extern Entry_f1e90 data_ov006_02142254[];
+    extern LuigiSlotHandler data_ov006_02142254[];
     int i;
-    char *base = (char *)c;
+    char *base = (char *)this;
     for (i = 0; i < 0x78; i++) {
         char *b = base + i;
         if (*(unsigned char *)(b + 0x52ed) != 0) {
             unsigned char k = *(unsigned char *)(b + 0x51fd);
-            (c->*data_ov006_02142254[k].pmf)(i);
+            (this->*data_ov006_02142254[k])(i);
         }
     }
 }
@@ -1627,7 +1475,6 @@ void dScMgLuigi_c::CheckTouch()
  *     order: j takes the low register, n the next).
  * The two tail loops keep the INLINE call: naming the result there stops
  * mwccarm hoisting the 0x7fff mask out of the loop (+33 divergences). */
-
 
 void dScMgLuigi_c::PlaceBoardLayout()
 {
@@ -1782,7 +1629,6 @@ void dScMgLuigi_c::PlaceBoardLayout()
  * `#pragma opt_propagation off` is worth 219 -> 330 aligned instructions here:
  * without it `this` colours into r6 and the whole callee-saved file permutes. */
 
-
 void dScMgLuigi_c::PlaceNextPicture()
 {
     extern int data_0209d4b8;
@@ -1932,6 +1778,7 @@ void dScMgLuigi_c::ChooseTarget()
     s32 j;
     s32 off;
     s32 nbytes;
+    /* An ordinary u16 local shortens this tile-copy loop by 8 bytes. */
     volatile u16 v;
 
     t = unk_5172;
@@ -2132,43 +1979,11 @@ void dScMgLuigi_c::ResetBoard()
 // @symbol _ZN12dScMgLuigi_c10StateCatchEv
 #pragma push
 #pragma opt_strength_reduction off
-extern "C" {
-/* This member reaches slot 18 of its own object through the dispatch table at
-   data_ov006_02142254, so the pointer-to-member has to be formed against a class
-   with that many virtuals. The slots below slot 18 are never called from here
-   and are placeholders; only the shape matters. */
-class C_f300c {
-public:
-    virtual void v00();
-    virtual void v01();
-    virtual void v02();
-    virtual void v03();
-    virtual void v04();
-    virtual void v05();
-    virtual void v06();
-    virtual void v07();
-    virtual void v08();
-    virtual void v09();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void v18(int);
-};
-
-typedef void (C_f300c::*PMF_f300c)(int);
-}
-
-
 
 void dScMgLuigi_c::StateCatch()
 {
     char *o = (char *)this;
-    extern PMF_f300c data_ov006_02142254[];
+    extern LuigiSlotHandler data_ov006_02142254[];
     int matches;
     int i;
 
@@ -2182,7 +1997,7 @@ void dScMgLuigi_c::StateCatch()
             int x = *(unsigned char *)(o + i + 0x51fd);
             if (x == 9) {
                 matches++;
-                (((C_f300c *)o)->*data_ov006_02142254[x])(i);
+                (this->*data_ov006_02142254[x])(i);
             }
         }
     }
@@ -2209,7 +2024,7 @@ void dScMgLuigi_c::StateCatch()
         while (v >= 5)
             v -= 5;
         if (v != 4)
-            ((C_f300c *)o)->v18(-1);
+            OnYoshiTryEat(-1);
         else
             func_ov004_020b0a54(1);
     } else {
@@ -2272,12 +2087,6 @@ void dScMgLuigi_c::StateSetup()
  * AFTER the last wrapped member so that none of them can see it.
  * ------------------------------------------------------------------------- */
 
-/* ordinal 55's window on the object: a 0x4f78-deep pad and one PMF, the whole
-   reason a class type is needed at all. */
-struct C_beh;
-typedef void (C_beh::*PMF_beh)();
-struct Entry_beh { PMF_beh pmf; };
-
 extern "C" {
 /* ordinal 53 -- dScMgLuigi_c::OnYoshiTryEat */
 extern void FreeGfxSlotsById(int arg);
@@ -2286,9 +2095,9 @@ extern void func_ov004_020b0cac(int, int, int, int, int, short);
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 /* ordinal 54 -- dScMgLuigi_c::Render */
-extern int func_ov004_020b1e34(void *c, int a, int b, int d);
+extern void func_ov004_020b1e34(void *c, int a, int b, int d);
 /* ordinal 55 -- dScMgLuigi_c::Behavior */
-extern Entry_beh data_ov006_02142234[];
+extern LuigiStateHandler data_ov006_02142234[];
 /* ordinal 56 -- dScMgLuigi_c::InitResources */
 extern void *data_ov006_0213cfa0;
 extern int func_ov004_020adc74(void *p);
@@ -2389,10 +2198,8 @@ s32 dScMgLuigi_c::Render()
    data_ov006_02142234, indexed by unk_4f78. */
 s32 dScMgLuigi_c::Behavior()
 {
-    struct StateView { char pad[0x4f78]; int state; };
-    StateView *c = (StateView *)this;
-    int j = c->state;
-    (((C_beh *)c)->*data_ov006_02142234[j].pmf)();
+    int j = unk_4f78;
+    (this->*data_ov006_02142234[j])();
     return 1;
 }
 
@@ -2405,8 +2212,8 @@ s32 dScMgLuigi_c::InitResources()
 {
     char *c = (char *)this;
     char *scr;
-    /* Two distinct volatile slots, not one reused: the main-screen and
-       sub-screen fills are separate stack words in the ROM's frame. */
+    /* Retained stack temporaries: ordinary u16 locals shorten this function
+       by 16 bytes under 2004/b56; see the recorded source-form experiment. */
     volatile u16 fillMain;
     volatile u16 fillSub;
     int arc;
@@ -2490,13 +2297,13 @@ s32 dScMgLuigi_c::InitResources()
 
     unk_5457 = 0;
     ResetBoard();
-    *(volatile u16 *)(c + 0x5174) = 0xff;
+    unk_5174 = 0xff;
     ChooseBoard();
 
     unk_4f78 = 0;
     Ov004_Deallocate(arc);
     func_ov004_020b04d0(0x30);
-    *(volatile u16 *)(c + 0x5172) = 0xa;
+    unk_5172 = 0xa;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
     data_ov004_020bc888 = 0x80;
     data_ov004_020bc864 = ~0x1b;
