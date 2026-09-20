@@ -393,7 +393,7 @@ int Koopa::InitResources()
         _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr *)data_ov062_0211cee8[i]);
 
     f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov062_0211ced8[mModelIndex]);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x300, f, 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, f, 1, -1) == 0)
         return 0;
 
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
@@ -422,21 +422,21 @@ int Koopa::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov062_0211cee0[mModelIndex]);
     }
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), r, h, 0x200000, 0xb6efe0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, r, h, 0x200000, 0xb6efe0);
 
     mStateTimer = 0;
-    *(short*)(((char*)this) + 0x300 + 0xc4) = 0;
+    *(short*)((char*)&mModelAnim + 0xc4) = 0;
     mState = 1;
     func_ov062_02117994(((char*)this), 0);
 
     unk_106 = 0;
-    *(short*)(((char*)this) + 0x300 + 0xca) = 0;
+    *(short*)((char*)&mModelAnim + 0xca) = 0;
     unk_39c = mPosX;
     unk_3a0 = mPosY;
     unk_3a4 = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
 
     _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
 
@@ -458,18 +458,18 @@ int Koopa::Behavior()
     int kind;
 
     if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
-            ((char *)this), ((char *)this) + 0x144, ((char *)this) + 0x300, 3) != 0)
+            ((char *)this), &mWithMeshClsn, &mModelAnim, 3) != 0)
         return 1;
 
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x110);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(this, &mdCc_c);
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char *)this), ((char *)this) + 0x144) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         int *pb0 = (int *)((char *)&mFlags);
         *pb0 = *pb0 & ~0x10000000;
-        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(((char *)this), ((char *)this) + 0x110) != 0) {
-            _ZN8dActor_c8PoofDustEv(((char *)this));
+        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(this, &mdCc_c) != 0) {
+            _ZN8dActor_c8PoofDustEv(this);
             func_ov062_021179e4(((char *)this));
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(((char *)this));
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(this);
         }
         if (mEatenByYoshi != 0)
             func_ov062_02117570(((char *)this));
@@ -490,7 +490,7 @@ int Koopa::Behavior()
     }
 
     if (mDeathState == 0) {
-        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000) != 0)
+        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000) != 0)
             return 1;
 
         {
@@ -529,11 +529,11 @@ int Koopa::Behavior()
             mWalkState = 0;
         }
         func_ov062_02117c98(((char *)this));
-        _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), ((char *)this) + 0x110);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(this, &mdCc_c);
 
         if (mDeathState == 0 && mState != 0) {
             if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
-                    ((char *)this), ((char *)this) + 0x144, 0x32000, 0x3800, 0, 1, 0x32000) != 0) {
+                    ((char *)this), &mWithMeshClsn, 0x32000, 0x3800, 0, 1, 0x32000) != 0) {
                 mPosX = unk_3a8;
                 mPosY = unk_3ac;
                 mPosZ = unk_3b0;
@@ -544,7 +544,7 @@ int Koopa::Behavior()
             }
         }
 
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), ((char *)this) + 0x144, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, &mWithMeshClsn, 0);
         func_ov062_02117570(((char *)this));
         _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (mDeathState == 0) {
@@ -555,7 +555,7 @@ int Koopa::Behavior()
             }
         }
     } else {
-        _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(((char *)this), ((char *)this) + 0x144);
+        _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(this, &mWithMeshClsn);
     }
 
     func_ov062_02118334(((char *)this));
@@ -574,11 +574,11 @@ int Koopa::Render()
   int b = (mFlags & 0x40000) != 0;
   if (b) return 1;
   if (mKoopaVariant == 1) {
-    _ZN5Model12ShowMaterialEii(((char*)this) + 0x300, 0, 1);
-    _ZN5Model12HideMaterialEii(((char*)this) + 0x300, 0, 2);
+    _ZN5Model12ShowMaterialEii(&mModelAnim, 0, 1);
+    _ZN5Model12HideMaterialEii(&mModelAnim, 0, 2);
   } else {
-    _ZN5Model12HideMaterialEii(((char*)this) + 0x300, 0, 1);
-    _ZN5Model12ShowMaterialEii(((char*)this) + 0x300, 0, 2);
+    _ZN5Model12HideMaterialEii(&mModelAnim, 0, 1);
+    _ZN5Model12ShowMaterialEii(&mModelAnim, 0, 2);
   }
   saved.x = mScaleX;
   saved.y = mScaleY;
