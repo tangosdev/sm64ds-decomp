@@ -130,12 +130,28 @@ void gx_configure_anti_aliasing(int mode);
 int gx_anti_aliasing();
 
 // What the smoothing pass has done since the program started: how many pixels
-// it rewrote, how many frames it ran on, and how many frames it stood down on
-// because the display capture unit was armed. The A/B evidence that a
-// key-absent run does no work at all, and that the pass never runs on a frame
-// the GAME reads the framebuffer back on.
+// it rewrote, how many frames it ran on, and how many it could not run on.
+// The A/B evidence that a key-absent run does no work at all.
 void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
                     unsigned long long &stood_down);
+
+// THE FRAME AS IT WAS BEFORE THE SMOOTHING PASS, or null when there is no such
+// frame (the setting is off, or gx_render has not finished one this frame).
+// Same SCREEN_W stride as the framebuffer, so an index into one indexes the
+// other.
+//
+// THIS IS WHAT KEEPS THE GAME FROM NOTICING THE SETTING, and it replaced a
+// weaker rule that measurement broke. SM64DS reads its own top screen back
+// through the DS display capture unit for the dual-screen minigames, and the
+// frame it arms that unit on is NOT always one the raster has already drawn:
+// on a running minigame the arm lands after gx_render, so refusing to smooth
+// an already-armed frame missed five hundred captured frames out of twelve
+// hundred. Instead the pass keeps the picture it started from,
+// hal/message_compositor.cpp mirrors its own writes into it so it stays a
+// finished frame, and ntr::ppu_display_capture reads it in place of the live
+// framebuffer. The game gets the setting-off picture whenever it asks, with no
+// assumption about when it asks.
+uint32_t *gx_aa_preimage();
 
 // The game path: TEXIMAGE_PARAM / PLTT_BASE writes (ports 0x2A/0x2B) bind by
 // decoding lazily out of the mapped VRAM texture/palette slot windows.

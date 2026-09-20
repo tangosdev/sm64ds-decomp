@@ -11,6 +11,10 @@
 
 #include "ntr/ppu.h"
 
+/* for ntr::gx_aa_preimage: the display capture reads the frame as it was
+   before the edge-smoothing pass, never the smoothed one. */
+#include "ntr/gx.h"
+
 #include "ntr/mmio.h"
 
 #include <cstdio>
@@ -728,6 +732,44 @@ bool ppu_capture_armed(void) {
     return (*reg & 0x80000000u) != 0;
 }
 
+/* ---- WHAT THE CAPTURE UNIT ACTUALLY DID (run hd2, lane PIC) --------------
+ * Three numbers, so the edge-smoothing pass's promise can be CHECKED rather
+ * than believed. The pass stands down on every frame it finds DISPCAPCNT
+ * armed; these say how many of those frames really went on to capture, how
+ * many were armed and then refused for one of the unit's own reasons, and
+ * what the captured bytes were.
+ *
+ * THE HASH IS THE POINT. Counting frames proves the pass was not running when
+ * the game read the screen; hashing every captured buffer, in capture order,
+ * proves the bytes the game read are the same bytes with the setting on as
+ * with it off. It is FNV-1a over exactly the halfwords written into VRAM, so
+ * two runs agree only if every captured pixel of every captured frame agrees.
+ *
+ * They cost three increments and one multiply per captured pixel on the
+ * capture path only, which is at most 49152 pixels on the frames this game
+ * actually captures, and nothing at all on a frame that captures nothing. */
+unsigned long long g_cap_performed;   /* frames a capture was written on */
+unsigned long long g_cap_refused;     /* frames armed but not written */
+/* Of the captures performed, how many read the pre-smoothing copy of the frame
+   rather than the live framebuffer. With AntiAliasing on this has to equal
+   g_cap_performed exactly: a capture that read the live framebuffer is a frame
+   the game saw the setting on. With the setting off it is 0. */
+unsigned long long g_cap_from_preimage;
+/* FNV-1a's 64-bit offset basis, 0xcbf29ce484222325. A run that captures
+   nothing prints exactly this, which is how a reader tells "no capture
+   happened" from "a capture happened and hashed to something". */
+unsigned long long g_cap_hash = 14695981039346656037ull;
+
+void ppu_capture_counters(unsigned long long &performed,
+                          unsigned long long &refused,
+                          unsigned long long &hash,
+                          unsigned long long &from_preimage) {
+    performed = g_cap_performed;
+    refused = g_cap_refused;
+    hash = g_cap_hash;
+    from_preimage = g_cap_from_preimage;
+}
+
 void ppu_display_capture(const uint32_t *src, int w, int h) {
     volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
     const uint32_t cap = *reg;
@@ -752,9 +794,10 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
                          "captured this frame.\n", cap, source);
             std::fflush(stderr);
         }
+        ++g_cap_refused;
         return;
     }
-    if (!src || w <= 0 || h <= 0) return;
+    if (!src || w <= 0 || h <= 0) { ++g_cap_refused; return; }
 
     const unsigned block = (cap >> 16) & 3;
 
@@ -802,6 +845,7 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
                          cap, block, dcnt);
             std::fflush(stderr);
         }
+        ++g_cap_refused;
         return;
     }
 
@@ -813,7 +857,10 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
 
     const uint32_t off = ((cap >> 18) & 3) * 0x8000u;
     const uint32_t need = (uint32_t)cw * (uint32_t)ch * 2u;
-    if (off + need > kBankSize) return;      // would run off the end of the bank
+    if (off + need > kBankSize) {            // would run off the end of the bank
+        ++g_cap_refused;
+        return;
+    }
 
     /* NEAREST, not averaged; see the note in ntr/ppu.h. The ratio is a whole
        number at every 4:3 extent the port can be configured at, because
@@ -848,6 +895,28 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
         }
     }
     uint16_t *dst = reinterpret_cast<uint16_t *>(lcdc_addr(block) + off);
+    /* ---- WHAT THE GAME IS ALLOWED TO READ BACK ------------------------------
+     * `src` is the live framebuffer, which may carry the AntiAliasing pass's
+     * edge smoothing. The game must not see a host picture setting, so when
+     * that pass has run this frame it also left the frame AS IT WAS BEFORE IT,
+     * finished by the 2D compositor, and THAT is what is captured. Null at
+     * every other time, which is every run with the setting off, and then this
+     * is the framebuffer it always was.
+     *
+     * IT REPLACED A WEAKER RULE. The pass used to refuse to run on a frame it
+     * found the capture unit already armed. That is true on a course and false
+     * on a running dual-screen minigame, where the arm lands after the raster:
+     * scene 372 driven past its menu captured 669 frames of 1200 while the
+     * refusal fired on 169. Reading the copy needs no assumption about when
+     * the game arms the unit. */
+    if (const uint32_t *pre = gx_aa_preimage()) {
+        src = pre;
+        ++g_cap_from_preimage;
+    }
+    /* The running hash is kept in a local across the two loops and stored once
+       at the end: a global read-modify-write per pixel would be the only thing
+       in this loop the compiler cannot keep in a register. */
+    unsigned long long h1 = g_cap_hash;
     for (int y = 0; y < ch; ++y) {
         const int sy = ry > 0 ? y * ry : (y * h) / SUB_H;
         /* w/h are the LIVE image extent; the framebuffer's row stride is always
@@ -864,11 +933,20 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
                own clear colour -- so the bit is 1 for every captured pixel
                rather than derived from a channel the host framebuffer does not
                carry a meaning for. */
-            dst[(size_t)y * cw + x] =
+            const uint16_t v =
                 (uint16_t)(0x8000u | (((p >> 3) & 0x1Fu) << 10) |
                            (((p >> 11) & 0x1Fu) << 5) | ((p >> 19) & 0x1Fu));
+            dst[(size_t)y * cw + x] = v;
+            /* FNV-1a over the halfword actually written, low byte first, in
+               capture order. Two runs of the same rows agree on this number
+               only if every captured pixel of every captured frame agrees, so
+               it is the whole of "the game read back the same picture". */
+            h1 = (h1 ^ (unsigned long long)(v & 0xFFu)) * 1099511628211ull;
+            h1 = (h1 ^ (unsigned long long)((v >> 8) & 0xFFu)) * 1099511628211ull;
         }
     }
+    g_cap_hash = h1;
+    ++g_cap_performed;
     g_cap[block].off = off;
     g_cap[block].len = need;
 }

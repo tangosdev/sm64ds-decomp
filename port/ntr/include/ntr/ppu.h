@@ -294,6 +294,29 @@ void ppu_display_capture(const uint32_t *src, int w, int h);
 // different bytes. See the definition for the whole argument.
 bool ppu_capture_armed(void);
 
+// WHAT THE CAPTURE UNIT ACTUALLY DID THIS RUN. `performed` is how many frames
+// a capture was written on; `refused` how many were armed and then turned away
+// for one of the unit's own reasons (a source this port does not model, a
+// destination that is not an LCDC block -- which is what every scene's
+// Scene::ResetHardwareRegisters write comes to -- or a size running off the
+// bank). `hash` is FNV-1a over every halfword written into VRAM, in capture
+// order, so two runs agree on it only if every captured pixel of every
+// captured frame agrees.
+//
+// They exist so the edge-smoothing pass's promise can be CHECKED rather than
+// believed. The pass stands down whenever it finds the unit armed, so
+// performed + refused is exactly the set of frames it stood down on, and the
+// hash with the setting on has to equal the hash with it off. Counted whether
+// or not anything asks; reading them costs nothing.
+// `from_preimage` is how many of the performed captures read the
+// pre-smoothing copy of the frame rather than the live framebuffer. With
+// AntiAliasing on it has to equal `performed` exactly: a capture that read
+// the live framebuffer is a frame on which the game saw the setting.
+void ppu_capture_counters(unsigned long long &performed,
+                          unsigned long long &refused,
+                          unsigned long long &hash,
+                          unsigned long long &from_preimage);
+
 // ---- WHERE A CAPTURED BANK GOES NEXT ----------------------------------------
 //
 // A DS VRAM bank is 128 KB of SRAM that appears at exactly ONE cpu address at a

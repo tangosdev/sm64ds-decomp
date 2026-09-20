@@ -2539,10 +2539,18 @@ MaskRow *g_tlattr;
  * absent holds nothing. */
 uint32_t *g_aa_src;
 
+/* AND IT IS ALSO THE PICTURE THE GAME READS BACK. See gx_aa_preimage below:
+   once the pass has filled it, g_aa_src holds the frame EXACTLY as it would
+   have been with the setting off, and the 2D compositor mirrors its own
+   writes into it, so the display capture can read a finished frame that the
+   smoothing never touched. Valid only between the pass and the next
+   gx_render. */
+int g_aa_pre_valid;
+
 int g_aa_mode = 0;                     /* 0 off, 1 edge smoothing */
 unsigned long long g_aa_changed;       /* pixels rewritten, whole run */
 unsigned long long g_aa_run_frames;    /* frames the pass ran on */
-unsigned long long g_aa_stood_down;    /* frames it refused, capture armed */
+unsigned long long g_aa_stood_down;    /* frames it refused, no buffer yet */
 unsigned g_aa_hits[64];                /* per band, summed after each pass */
 
 bool raster_buffers(void)
@@ -2583,6 +2591,22 @@ void gx_aa_counters(unsigned long long &changed, unsigned long long &frames,
     frames = g_aa_run_frames;
     stood_down = g_aa_stood_down;
 }
+
+/* THE FRAME AS IT WAS BEFORE THE SMOOTHING, or null when there is no such
+   frame (the setting is off, the pass has not run yet this frame, or it could
+   not get its buffer). Two callers and no others:
+
+   hal/message_compositor.cpp WRITES every host pixel it writes into the live
+   framebuffer here as well, so this stays a FINISHED frame -- 3D with the 2D
+   layers over it -- rather than a bare 3D picture, and reads the 3D pixel
+   from here when a semi-transparent sprite blends against it, so that blend
+   is the one the setting-off run computes.
+
+   ntr::ppu_display_capture READS it in place of the framebuffer it is handed,
+   which is what makes the picture the GAME reads back independent of this
+   setting no matter when the game arms the capture unit. Same SCREEN_W
+   stride as the framebuffer, so an index into one indexes the other. */
+uint32_t *gx_aa_preimage() { return g_aa_pre_valid ? g_aa_src : nullptr; }
 
 namespace {
 
@@ -2703,18 +2727,31 @@ void aa_band(void *ctxp, int tid, int nt) {
    compare. */
 static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
     if (!g_aa_mode || cw <= 0 || ch <= 0) return;
-    /* THE ONE THING THIS SETTING MAY NOT DO. See ntr::ppu_capture_armed: the
-       game reads this framebuffer back through the DS capture unit for the
-       dual-screen minigames, and on a frame it is going to read, the picture
-       must be the picture it would have got with the setting absent. So the
-       pass stands down rather than trying to undo itself afterwards, and the
-       capture is byte-identical by construction. */
+    /* ---- THE ONE THING THIS SETTING MAY NOT DO, AND HOW IT IS CLOSED -------
+     *
+     * The game READS THIS FRAMEBUFFER BACK through the DS display capture unit
+     * for the dual-screen minigames, so on a frame it reads, the picture must
+     * be the picture it would have got with the setting absent.
+     *
+     * THE FIRST ATTEMPT AT THIS WAS WRONG AND THE MEASUREMENT SAYS SO. It
+     * asked ntr::ppu_capture_armed() here and stood the pass down on any frame
+     * DISPCAPCNT's enable bit was already set. That assumed the game always
+     * arms the unit before the frame is rasterised. On a course it does. On a
+     * RUNNING dual-screen minigame it does not: scene 372 driven past its menu
+     * captures 669 frames out of 1200 while this test fired on only 169 of
+     * them, so five hundred frames were captured with the smoothing in them.
+     * The counters that found it are on the [aa] line below.
+     *
+     * SO THE GUARANTEE NO LONGER DEPENDS ON ORDER AT ALL. g_aa_src already
+     * holds a copy of the frame as it was before this pass, because the filter
+     * needs one to avoid feeding on its own output. That copy IS the picture
+     * the setting promises the game, so it is kept for the rest of the frame,
+     * hal/message_compositor.cpp mirrors its own writes into it, and
+     * ntr::ppu_display_capture reads it instead of the live framebuffer. The
+     * capture then samples a finished frame -- 3D plus every 2D layer over it
+     * -- that the smoothing never touched, whenever the arm happens to land.
+     */
     ++g_aa_run_frames;
-    if (ppu_capture_armed()) {
-        --g_aa_run_frames;
-        ++g_aa_stood_down;
-        return;
-    }
     if (!g_aa_src) {
         g_aa_src = (uint32_t *)std::calloc((size_t)SCREEN_W * SCREEN_H,
                                            sizeof(uint32_t));
@@ -2745,6 +2782,11 @@ static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
         pool(nt).run(aa_band, &ctx);
     }
     for (int i = 0; i < n; ++i) g_aa_changed += g_aa_hits[i];
+    /* FROM HERE TO THE NEXT gx_render, g_aa_src IS THE PICTURE WITHOUT THIS
+       PASS. The copy above was taken before a single pixel moved, so it is the
+       frame the setting promises the game; the compositor keeps it finished
+       and the capture reads it. */
+    g_aa_pre_valid = 1;
 }
 
 /* SM64DS_AA_STATS=1: what the smoothing pass has done, every 300 frames and
@@ -2762,25 +2804,46 @@ static void aa_report(void) {
     if (!at_exit_registered) {
         at_exit_registered = 1;
         std::atexit([] {
+            /* THE INVARIANT THIS LINE PRINTS, and it is the one the earlier
+               weaker rule failed. Every capture the unit performs must have
+               read the PRE-SMOOTHING copy of its frame, so with the setting on
+                   captures that read the pre-smoothing frame == captures performed
+               exactly. A capture that read the live framebuffer instead is a
+               frame on which the game saw this setting. The hash beside it is
+               the other half -- two runs agree on it only if every captured
+               pixel of every captured frame agrees -- which turns "the game
+               read the same bytes" from an argument into a comparison. */
+            unsigned long long cap = 0, ref = 0, hash = 0, pre = 0;
+            ppu_capture_counters(cap, ref, hash, pre);
             std::fprintf(stderr,
                          "[aa] final: mode %d, %llu frame(s) smoothed, %llu "
                          "frame(s) stood down for the display capture, %llu "
-                         "pixel(s) rewritten\n",
+                         "pixel(s) rewritten; captures performed %llu, armed "
+                         "but refused %llu, captures that read the "
+                         "pre-smoothing frame %llu, captured-bytes hash "
+                         "%016llx\n",
                          g_aa_mode, g_aa_run_frames, g_aa_stood_down,
-                         g_aa_changed);
+                         g_aa_changed, cap, ref, pre, hash);
             std::fflush(stderr);
         });
     }
     if ((f++ % 300) != 0) return;
+    unsigned long long cap = 0, ref = 0, hash = 0, pre = 0;
+    ppu_capture_counters(cap, ref, hash, pre);
     std::fprintf(stderr,
                  "[aa] frame %u: mode %d, %llu frame(s) smoothed, %llu stood "
-                 "down, %llu pixel(s) rewritten\n",
+                 "down, %llu pixel(s) rewritten; captures %llu, refused %llu, "
+                 "pre %llu, hash %016llx\n",
                  f - 1, g_aa_mode, g_aa_run_frames, g_aa_stood_down,
-                 g_aa_changed);
+                 g_aa_changed, cap, ref, pre, hash);
     std::fflush(stderr);
 }
 
 void gx_render(Framebuffer &fb) {
+    /* LAST FRAME'S PRE-SMOOTHING COPY STOPS BEING THIS FRAME'S HERE, before
+       anything is drawn. A capture that somehow ran against a frame this
+       function never finished would otherwise sample the frame before it. */
+    g_aa_pre_valid = 0;
     const int tm = frame_ms();
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
