@@ -1,0 +1,1640 @@
+{
+  "schema": 1,
+  "base_commit": "4407c8471ed3299ea16d9cc899020e3232ac6ee9",
+  "compiler": "2004/b56",
+  "compiler_sha256": "c6aafc210c78e91b123e8e949b8e26faa76849225b9f639780fcc9db6cdff0b7",
+  "generated_utc": "2026-09-19T18:35:21.210647+00:00",
+  "cases": [
+    {
+      "source": "src/_ZN11PowerFlower6RenderEv.cpp",
+      "symbol": "_ZN11PowerFlower6RenderEv",
+      "module": "ov002",
+      "address": "0x20b9aac",
+      "rom_size": 196,
+      "variants": [
+        {
+          "variant": "baseline",
+          "source_sha256": "42675e9e85769636b90a12d53ba735a898b74ea959d03549e38c07e59f8e479d",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 196,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN11PowerFlower6RenderEv",
+                "size": 196,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "3fd570116b6487b1f0642b9b1033adb5b55c6f948900c0f34a0aec0c99f228e2"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 196,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "3fd570116b6487b1f0642b9b1033adb5b55c6f948900c0f34a0aec0c99f228e2"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN11PowerFlower6RenderEv",
+            "module": "ov002",
+            "addr": "0x020b9aac",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN11PowerFlower6RenderEv --c src/_ZN11PowerFlower6RenderEv.cpp --addr 0x20b9aac --size 0xc4 --module ov002"
+        },
+        {
+          "variant": "candidate",
+          "source_sha256": "62b31e902fcea099f66e583f69ef67f179365a810c1b7bc4d797b6c6c92472fa",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 196,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN11PowerFlower6RenderEv",
+                "size": 196,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "3fd570116b6487b1f0642b9b1033adb5b55c6f948900c0f34a0aec0c99f228e2"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 196,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "3fd570116b6487b1f0642b9b1033adb5b55c6f948900c0f34a0aec0c99f228e2"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN11PowerFlower6RenderEv",
+            "module": "ov002",
+            "addr": "0x020b9aac",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN11PowerFlower6RenderEv --c src/_ZN11PowerFlower6RenderEv.cpp --addr 0x20b9aac --size 0xc4 --module ov002"
+        },
+        {
+          "variant": "rejected_direct_flag_test",
+          "source_sha256": "0881beb6acac3f12938a69547d5aaebf9ca931fddeb3c847422262446f66798d",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 184,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN11PowerFlower6RenderEv",
+                "size": 184,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "971eb71c6772961d808b3f1a5700bb7b00f9a44d2c9429feec40ade1195a518e"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 184,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "971eb71c6772961d808b3f1a5700bb7b00f9a44d2c9429feec40ade1195a518e"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN11PowerFlower6RenderEv",
+            "module": "ov002",
+            "addr": "0x020b9aac",
+            "verdict": "NO-REPRO",
+            "reason": "requested-size-mismatch",
+            "diffs": [],
+            "blind": 0,
+            "expected_size": 196,
+            "emitted_sizes": [
+              184
+            ]
+          },
+          "reproduce_linkcheck": "Make only attempted_change in a scratch copy of the candidate and run the same explicit linkcheck command with --c pointing to that scratch source.",
+          "attempted_change": "Replace the two-line integer flag temporary/test with if (mFlags & 0x40000) return 1; retaining all other candidate expressions."
+        }
+      ],
+      "complete_object_signature_unchanged": true
+    },
+    {
+      "source": "src/_ZN11RollingRock6RenderEv.cpp",
+      "symbol": "_ZN11RollingRock6RenderEv",
+      "module": "ov021",
+      "address": "0x211281c",
+      "rom_size": 56,
+      "variants": [
+        {
+          "variant": "baseline",
+          "source_sha256": "0b64e6bc5b2d507009e1aad587d3fef000026a7d5c79aa372366c1095da245d0",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 56,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN11RollingRock6RenderEv",
+                "size": 56,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "29a585e55c2eeb93e172c061a57803fe435d1414367b1463d60900d5b0145a6b"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 56,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "29a585e55c2eeb93e172c061a57803fe435d1414367b1463d60900d5b0145a6b"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN11RollingRock6RenderEv",
+            "module": "ov021",
+            "addr": "0x0211281c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN11RollingRock6RenderEv --c src/_ZN11RollingRock6RenderEv.cpp --addr 0x211281c --size 0x38 --module ov021"
+        },
+        {
+          "variant": "candidate",
+          "source_sha256": "b7fcbf5b9007c4dd9c267ca07a369c1133a88b85a115b4bc6dfa7d20d6db1e26",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 56,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN11RollingRock6RenderEv",
+                "size": 56,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "29a585e55c2eeb93e172c061a57803fe435d1414367b1463d60900d5b0145a6b"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 56,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "29a585e55c2eeb93e172c061a57803fe435d1414367b1463d60900d5b0145a6b"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN11RollingRock6RenderEv",
+            "module": "ov021",
+            "addr": "0x0211281c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN11RollingRock6RenderEv --c src/_ZN11RollingRock6RenderEv.cpp --addr 0x211281c --size 0x38 --module ov021"
+        }
+      ],
+      "complete_object_signature_unchanged": true
+    },
+    {
+      "source": "src/_ZN5Whomp6RenderEv.cpp",
+      "symbol": "_ZN5Whomp6RenderEv",
+      "module": "ov079",
+      "address": "0x2125f78",
+      "rom_size": 84,
+      "variants": [
+        {
+          "variant": "baseline",
+          "source_sha256": "43667ecaca08431c82dce7778999a4e3bfea341dad5e48f1c590434b25b594a0",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 84,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN5Whomp6RenderEv",
+                "size": 84,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "06e5aca5fcf4796cef941b750643dddf181fc536ee9f4c0b0b0e22d687add573"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 84,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "06e5aca5fcf4796cef941b750643dddf181fc536ee9f4c0b0b0e22d687add573"
+              }
+            ],
+            "relocations": [
+              {
+                "section": 5,
+                "offset": 48,
+                "type": 1,
+                "symbol": "_ZN15TextureSequence6UpdateER15ModelComponents",
+                "addend": -8
+              }
+            ]
+          },
+          "linkcheck": {
+            "name": "_ZN5Whomp6RenderEv",
+            "module": "ov079",
+            "addr": "0x02125f78",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN5Whomp6RenderEv --c src/_ZN5Whomp6RenderEv.cpp --addr 0x2125f78 --size 0x54 --module ov079"
+        },
+        {
+          "variant": "candidate",
+          "source_sha256": "74c6e53d8a04c74ef68c47a4b1d12b06c4567c68070d8182c078df5f80f42130",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 84,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN5Whomp6RenderEv",
+                "size": 84,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "06e5aca5fcf4796cef941b750643dddf181fc536ee9f4c0b0b0e22d687add573"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 84,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "06e5aca5fcf4796cef941b750643dddf181fc536ee9f4c0b0b0e22d687add573"
+              }
+            ],
+            "relocations": [
+              {
+                "section": 5,
+                "offset": 48,
+                "type": 1,
+                "symbol": "_ZN15TextureSequence6UpdateER15ModelComponents",
+                "addend": -8
+              }
+            ]
+          },
+          "linkcheck": {
+            "name": "_ZN5Whomp6RenderEv",
+            "module": "ov079",
+            "addr": "0x02125f78",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN5Whomp6RenderEv --c src/_ZN5Whomp6RenderEv.cpp --addr 0x2125f78 --size 0x54 --module ov079"
+        }
+      ],
+      "complete_object_signature_unchanged": true
+    },
+    {
+      "source": "src/_ZN12daBDonketu_c6RenderEv.cpp",
+      "symbol": "_ZN12daBDonketu_c6RenderEv",
+      "module": "ov064",
+      "address": "0x211764c",
+      "rom_size": 56,
+      "variants": [
+        {
+          "variant": "baseline",
+          "source_sha256": "c72007693e11f7351774d973ddbdf03db33dc20522629b9eef95ea117eaa4e44",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 56,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN12daBDonketu_c6RenderEv",
+                "size": 56,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "5a574dfe3d52bac795c99523f4f90432967c4a1e854bb90bc61b0e8af6c90f40"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 56,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "5a574dfe3d52bac795c99523f4f90432967c4a1e854bb90bc61b0e8af6c90f40"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN12daBDonketu_c6RenderEv",
+            "module": "ov064",
+            "addr": "0x0211764c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN12daBDonketu_c6RenderEv --c src/_ZN12daBDonketu_c6RenderEv.cpp --addr 0x211764c --size 0x38 --module ov064"
+        },
+        {
+          "variant": "candidate",
+          "source_sha256": "ed7921ded6e190f7f8166843507b0cddd12543bcf6b8bed56e50eeb2148f5c2c",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 56,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN12daBDonketu_c6RenderEv",
+                "size": 56,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "5a574dfe3d52bac795c99523f4f90432967c4a1e854bb90bc61b0e8af6c90f40"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 56,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "5a574dfe3d52bac795c99523f4f90432967c4a1e854bb90bc61b0e8af6c90f40"
+              }
+            ],
+            "relocations": []
+          },
+          "linkcheck": {
+            "name": "_ZN12daBDonketu_c6RenderEv",
+            "module": "ov064",
+            "addr": "0x0211764c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN12daBDonketu_c6RenderEv --c src/_ZN12daBDonketu_c6RenderEv.cpp --addr 0x211764c --size 0x38 --module ov064"
+        }
+      ],
+      "complete_object_signature_unchanged": true
+    },
+    {
+      "source": "src/_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd.cpp",
+      "symbol": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+      "module": "arm9",
+      "address": "0x2039cb8",
+      "rom_size": 256,
+      "variants": [
+        {
+          "variant": "baseline",
+          "source_sha256": "cf9c0502054dc50bd9eb467175aed7691cede448de10e36f0b1407313f952d0d",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 256,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+                "size": 256,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 256,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              },
+              {
+                "name": ".text",
+                "size": 4,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+              }
+            ],
+            "relocations": [
+              {
+                "section": 5,
+                "offset": 24,
+                "type": 1,
+                "symbol": "func_020374b8",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 112,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 128,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 148,
+                "type": 1,
+                "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 160,
+                "type": 1,
+                "symbol": "func_02035394",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 172,
+                "type": 1,
+                "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 196,
+                "type": 1,
+                "symbol": "func_02039e30",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 208,
+                "type": 1,
+                "symbol": "_ZN5dBgPiaSERKS_",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 244,
+                "type": 2,
+                "symbol": "data_020a0d0c",
+                "addend": 0
+              },
+              {
+                "section": 5,
+                "offset": 248,
+                "type": 2,
+                "symbol": "data_020a0d60",
+                "addend": 0
+              },
+              {
+                "section": 5,
+                "offset": 252,
+                "type": 2,
+                "symbol": "data_020a0d1c",
+                "addend": 0
+              }
+            ]
+          },
+          "linkcheck": {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "module": "arm9",
+            "addr": "0x02039cb8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd --c src/_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd.cpp --addr 0x2039cb8 --size 0x100 --module arm9"
+        },
+        {
+          "variant": "initial_candidate_before_direct_subobjects",
+          "source_sha256": "06c5a878ddbdf8fc6bf12401777c7045e9cfa858350a4c5f72b25450033469d5",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 256,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+                "size": 256,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 256,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              },
+              {
+                "name": ".text",
+                "size": 4,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+              }
+            ],
+            "relocations": [
+              {
+                "section": 5,
+                "offset": 24,
+                "type": 1,
+                "symbol": "func_020374b8",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 112,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 128,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 148,
+                "type": 1,
+                "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 160,
+                "type": 1,
+                "symbol": "func_02035394",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 172,
+                "type": 1,
+                "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 196,
+                "type": 1,
+                "symbol": "func_02039e30",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 208,
+                "type": 1,
+                "symbol": "_ZN5dBgPiaSERKS_",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 244,
+                "type": 2,
+                "symbol": "data_020a0d0c",
+                "addend": 0
+              },
+              {
+                "section": 5,
+                "offset": 248,
+                "type": 2,
+                "symbol": "data_020a0d60",
+                "addend": 0
+              },
+              {
+                "section": 5,
+                "offset": 252,
+                "type": 2,
+                "symbol": "data_020a0d1c",
+                "addend": 0
+              }
+            ]
+          },
+          "linkcheck": {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "module": "arm9",
+            "addr": "0x02039cb8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd --c src/_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd.cpp --addr 0x2039cb8 --size 0x100 --module arm9"
+        },
+        {
+          "variant": "candidate",
+          "source_sha256": "791bffdafc94c71550a241e7bc69a74ce89b81128c924181758c9caf6cdf8c3d",
+          "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+          "function_size": 256,
+          "object_signature": {
+            "definitions": [
+              {
+                "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+                "size": 256,
+                "bind": "STB_GLOBAL",
+                "section": ".text",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              }
+            ],
+            "alloc_sections": [
+              {
+                "name": ".text",
+                "size": 256,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+              },
+              {
+                "name": ".text",
+                "size": 4,
+                "type": "SHT_PROGBITS",
+                "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+              }
+            ],
+            "relocations": [
+              {
+                "section": 5,
+                "offset": 24,
+                "type": 1,
+                "symbol": "func_020374b8",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 112,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 128,
+                "type": 1,
+                "symbol": "func_02039e48",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 148,
+                "type": 1,
+                "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 160,
+                "type": 1,
+                "symbol": "func_02035394",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 172,
+                "type": 1,
+                "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 196,
+                "type": 1,
+                "symbol": "func_02039e30",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 208,
+                "type": 1,
+                "symbol": "_ZN5dBgPiaSERKS_",
+                "addend": -8
+              },
+              {
+                "section": 5,
+                "offset": 244,
+                "type": 2,
+                "symbol": "data_020a0d0c",
+                "addend": 0
+              },
+              {
+                "section": 5,
+                "offset": 248,
+                "type": 2,
+                "symbol": "data_020a0d0c",
+                "addend": 84
+              },
+              {
+                "section": 5,
+                "offset": 252,
+                "type": 2,
+                "symbol": "data_020a0d0c",
+                "addend": 16
+              }
+            ]
+          },
+          "linkcheck": {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "module": "arm9",
+            "addr": "0x02039cb8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          "reproduce_linkcheck": "python tools/linkcheck.py --name _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd --c src/_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd.cpp --addr 0x2039cb8 --size 0x100 --module arm9"
+        }
+      ],
+      "complete_object_signature_unchanged": false,
+      "initial_candidate_complete_object_signature_unchanged": true,
+      "final_object_note": "The final candidate replaces two interior-symbol relocations with data_020a0d0c plus the evidenced subobject offsets. Relocated ROM bytes remain exact; raw object relocation identity is intentionally different."
+    }
+  ],
+  "scope": "Fresh per-function baseline/candidate proof at the declared base; full-ROM and independent acceptance are recorded separately in the handoff/queue.",
+  "formal_acceptance": false,
+  "result": "5/5 baseline and final candidate functions VERIFIED, blind 0. Four render object signatures are unchanged. Ground probe uses direct subobjects with exact relocated bytes. Rejected flag and local scale alternatives are measured separately.",
+  "retained_form_probes": [
+    {
+      "probe": "PowerFlower-local-scale",
+      "symbol": "_ZN11PowerFlower6RenderEv",
+      "source_sha256": "6be350f220e68ece63fdb2f9a646be83daeb586269709668191a07bf57a8fa3b",
+      "replacements": [
+        {
+          "from": "  switch (mState) {",
+          "to": "  Vector3 scale;\n  scale.x = mScaleX;\n  scale.y = mScaleY;\n  scale.z = mScaleZ;\n  switch (mState) {"
+        },
+        {
+          "from": "(const Vector3 *)&mScaleX",
+          "to": "&scale"
+        }
+      ],
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "compiled": true,
+      "function_size": 212,
+      "expected_size": 196,
+      "object_signature": {
+        "definitions": [
+          {
+            "name": "_ZN11PowerFlower6RenderEv",
+            "size": 212,
+            "bind": "STB_GLOBAL",
+            "section": ".text",
+            "bytes_sha256": "b93fea8d1de724908bb5625b1bacdf70239a2ddf279c72809fc991b2845af85c"
+          }
+        ],
+        "alloc_sections": [
+          {
+            "name": ".text",
+            "size": 212,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "b93fea8d1de724908bb5625b1bacdf70239a2ddf279c72809fc991b2845af85c"
+          },
+          {
+            "name": ".text",
+            "size": 4,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+          }
+        ],
+        "relocations": []
+      },
+      "linkcheck": {
+        "name": "_ZN11PowerFlower6RenderEv",
+        "module": "ov002",
+        "addr": "0x020b9aac",
+        "verdict": "WRONG",
+        "diffs": [
+          {
+            "off": "+0x4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x10",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x14",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x18",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x1c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x20",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x24",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x28",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x2c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x30",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x34",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x38",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x3c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x40",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x44",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x48",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x4c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x50",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x54",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x58",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x5c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x60",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x64",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x68",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x6c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x70",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x74",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x78",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x7c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x80",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x84",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x88",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x8c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x90",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x94",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x98",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0x9c",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xa0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xa4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xa8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xac",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xb0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xb4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xb8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xbc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xc0",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xc4",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xc8",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xcc",
+            "sym": null,
+            "target": null
+          },
+          {
+            "off": "+0xd0",
+            "sym": null,
+            "target": null
+          }
+        ],
+        "blind": 0
+      }
+    },
+    {
+      "probe": "Ground-direct-line-end",
+      "symbol": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+      "source_sha256": "c1e1fe3b0a73d5b1b68c7ac353b2d972e8be5bacfa64c52cc4d38d9b52114010",
+      "replacements": [
+        {
+          "from": "extern Vector3   data_020a0d60;\n",
+          "to": ""
+        },
+        {
+          "from": "&data_020a0d60",
+          "to": "&data_020a0d0c.lineEnd"
+        }
+      ],
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "compiled": true,
+      "function_size": 256,
+      "expected_size": 256,
+      "object_signature": {
+        "definitions": [
+          {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "size": 256,
+            "bind": "STB_GLOBAL",
+            "section": ".text",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          }
+        ],
+        "alloc_sections": [
+          {
+            "name": ".text",
+            "size": 256,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          },
+          {
+            "name": ".text",
+            "size": 4,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+          }
+        ],
+        "relocations": [
+          {
+            "section": 5,
+            "offset": 24,
+            "type": 1,
+            "symbol": "func_020374b8",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 112,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 128,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 148,
+            "type": 1,
+            "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 160,
+            "type": 1,
+            "symbol": "func_02035394",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 172,
+            "type": 1,
+            "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 196,
+            "type": 1,
+            "symbol": "func_02039e30",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 208,
+            "type": 1,
+            "symbol": "_ZN5dBgPiaSERKS_",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 244,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 0
+          },
+          {
+            "section": 5,
+            "offset": 248,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 84
+          },
+          {
+            "section": 5,
+            "offset": 252,
+            "type": 2,
+            "symbol": "data_020a0d1c",
+            "addend": 0
+          }
+        ]
+      },
+      "linkcheck": {
+        "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+        "module": "arm9",
+        "addr": "0x02039cb8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "probe": "Ground-direct-base",
+      "symbol": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+      "source_sha256": "cafea4d2730d5624537d397e6ddf6ec3456545b8eaf77c7bb45fca3ee734ec70",
+      "replacements": [
+        {
+          "from": "extern dBgPi     data_020a0d1c;\n",
+          "to": ""
+        },
+        {
+          "from": "= data_020a0d1c;",
+          "to": "= static_cast<dBgPi &>(data_020a0d0c);"
+        }
+      ],
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "compiled": true,
+      "function_size": 256,
+      "expected_size": 256,
+      "object_signature": {
+        "definitions": [
+          {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "size": 256,
+            "bind": "STB_GLOBAL",
+            "section": ".text",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          }
+        ],
+        "alloc_sections": [
+          {
+            "name": ".text",
+            "size": 256,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          },
+          {
+            "name": ".text",
+            "size": 4,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+          }
+        ],
+        "relocations": [
+          {
+            "section": 5,
+            "offset": 24,
+            "type": 1,
+            "symbol": "func_020374b8",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 112,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 128,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 148,
+            "type": 1,
+            "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 160,
+            "type": 1,
+            "symbol": "func_02035394",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 172,
+            "type": 1,
+            "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 196,
+            "type": 1,
+            "symbol": "func_02039e30",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 208,
+            "type": 1,
+            "symbol": "_ZN5dBgPiaSERKS_",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 244,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 0
+          },
+          {
+            "section": 5,
+            "offset": 248,
+            "type": 2,
+            "symbol": "data_020a0d60",
+            "addend": 0
+          },
+          {
+            "section": 5,
+            "offset": 252,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 16
+          }
+        ]
+      },
+      "linkcheck": {
+        "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+        "module": "arm9",
+        "addr": "0x02039cb8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "probe": "Ground-direct-subobjects",
+      "symbol": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+      "source_sha256": "40b826b3e3abcde1f706567b2bdb42bbf73dd28eb8720d855274ff665aa2f3d2",
+      "replacements": [
+        {
+          "from": "extern Vector3   data_020a0d60;\n",
+          "to": ""
+        },
+        {
+          "from": "extern dBgPi     data_020a0d1c;\n",
+          "to": ""
+        },
+        {
+          "from": "&data_020a0d60",
+          "to": "&data_020a0d0c.lineEnd"
+        },
+        {
+          "from": "= data_020a0d1c;",
+          "to": "= static_cast<dBgPi &>(data_020a0d0c);"
+        }
+      ],
+      "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+      "compiled": true,
+      "function_size": 256,
+      "expected_size": 256,
+      "object_signature": {
+        "definitions": [
+          {
+            "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+            "size": 256,
+            "bind": "STB_GLOBAL",
+            "section": ".text",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          }
+        ],
+        "alloc_sections": [
+          {
+            "name": ".text",
+            "size": 256,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "7df68fa60150b81fdf93632a808f9f2f77e4b1b06a6b53cfc6603864971c6c7f"
+          },
+          {
+            "name": ".text",
+            "size": 4,
+            "type": "SHT_PROGBITS",
+            "bytes_sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+          }
+        ],
+        "relocations": [
+          {
+            "section": 5,
+            "offset": 24,
+            "type": 1,
+            "symbol": "func_020374b8",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 112,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 128,
+            "type": 1,
+            "symbol": "func_02039e48",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 148,
+            "type": 1,
+            "symbol": "_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 160,
+            "type": 1,
+            "symbol": "func_02035394",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 172,
+            "type": 1,
+            "symbol": "_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 196,
+            "type": 1,
+            "symbol": "func_02039e30",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 208,
+            "type": 1,
+            "symbol": "_ZN5dBgPiaSERKS_",
+            "addend": -8
+          },
+          {
+            "section": 5,
+            "offset": 244,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 0
+          },
+          {
+            "section": 5,
+            "offset": 248,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 84
+          },
+          {
+            "section": 5,
+            "offset": 252,
+            "type": 2,
+            "symbol": "data_020a0d0c",
+            "addend": 16
+          }
+        ]
+      },
+      "linkcheck": {
+        "name": "_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+        "module": "arm9",
+        "addr": "0x02039cb8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    }
+  ],
+  "full_rom": {
+    "base": {
+      "status": "passed",
+      "romArtifact": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      },
+      "moduleFidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "sourceBuild": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11208,
+        "compiledBytes": 2151584,
+        "sourceFunctions": 11208,
+        "sourceBytes": 2151584,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 96.13405608665892,
+        "reproducingFunctions": 11208,
+        "reproducingBytes": 2151584,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 26,
+        "sourceBssClaims": 3,
+        "sourceBssBytes": 172,
+        "reproducingDataClaims": 26,
+        "reproducingDataClaimBytes": 4984,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "romData": {
+        "symbols": 1324,
+        "verified": 753,
+        "partial": 260,
+        "differs": 3,
+        "unnamed": 308,
+        "verifiedBytes": 45516,
+        "partialBytes": 6792,
+        "verifiedRecords": 3070,
+        "partialRecords": 2319,
+        "differsRecords": 8,
+        "unnamedRecords": 851,
+        "totalRecords": 6248
+      },
+      "inheritedSymbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "newSymbolErrors": [],
+      "objectCache": {
+        "enabled": true,
+        "reused": 8111,
+        "compiled": 38,
+        "uncacheable": 0,
+        "root": "C:\\tmp\\sm64ds-five0919\\build\\objcache",
+        "tuDerived": 0
+      }
+    },
+    "final_candidate": {
+      "status": "passed",
+      "romArtifact": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      },
+      "moduleFidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "sourceBuild": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11208,
+        "compiledBytes": 2151584,
+        "sourceFunctions": 11208,
+        "sourceBytes": 2151584,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 96.13405608665892,
+        "reproducingFunctions": 11208,
+        "reproducingBytes": 2151584,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 26,
+        "sourceBssClaims": 3,
+        "sourceBssBytes": 172,
+        "reproducingDataClaims": 26,
+        "reproducingDataClaimBytes": 4984,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "romData": {
+        "symbols": 1324,
+        "verified": 753,
+        "partial": 260,
+        "differs": 3,
+        "unnamed": 308,
+        "verifiedBytes": 45516,
+        "partialBytes": 6792,
+        "verifiedRecords": 3070,
+        "partialRecords": 2319,
+        "differsRecords": 8,
+        "unnamedRecords": 851,
+        "totalRecords": 6248
+      },
+      "inheritedSymbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "newSymbolErrors": [],
+      "objectCache": {
+        "enabled": true,
+        "reused": 8148,
+        "compiled": 1,
+        "uncacheable": 0,
+        "root": "C:\\tmp\\sm64ds-five0919\\build\\objcache",
+        "tuDerived": 0
+      }
+    },
+    "same_rom_sha256": true,
+    "identical_analysis_and_romdata": true,
+    "commands": [
+      "python -u tools/rombuild.py -j16 --report-json build/five-base-rom.json (before source edits)",
+      "python -u tools/rombuild.py -j16 --report-json build/five-final-rom.json (final candidate)"
+    ],
+    "exit_codes": [
+      0,
+      0
+    ]
+  },
+  "retained_scope": {
+    "scale_view": "Existing dActor_c scalar fields mScaleX/Y/Z at 0x80/0x84/0x88 are viewed as the existing three-component Vector3 parameter; local-copy probe fails at 212/196. No shared layout reconstruction claimed.",
+    "ground_accessor": "func_020374b8(int*,int*) remains the existing C helper boundary, matching its definition and copying the three position words. Not claimed as a compiler constraint.",
+    "dependency_debt": "Unchanged func_02039e48.c and func_02039e30.c erase their output pointer to int and disagree with the actual MulVec3Mat4x3 output-pointer declaration. The current caller correctly uses Vector3*. Those helper definitions are outside this task and are not accepted as repaired."
+  }
+}

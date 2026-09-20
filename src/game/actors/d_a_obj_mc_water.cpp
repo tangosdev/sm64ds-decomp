@@ -3,7 +3,7 @@
  *
  * ov009 is mixed (DOCK_POLE / CASTLE_WATER / METAL_NET / FLAG / BIRD).
  * RTTI names this class daObjMcWater_c; the debug table names CASTLE_WATER.
- * This is the water plane, not daObjMc_Metalnet_c / daMcFlag_c / Bird.
+ * This is the water plane, not daObjMc_Metalnet_c / daMcFlag_c / daSBird_c.
  *
  * This one file is the production source for the whole class. It licenses
  * the contiguous .text run 0x02111a70..0x02111dc4 in ov009

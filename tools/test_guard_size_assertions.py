@@ -153,7 +153,7 @@ class ConditionalContext(unittest.TestCase):
         self.assertEqual(out, src)
 
     def test_the_else_of_a_host_branch_is_left_alone(self):
-        """include/ArrowSignRight.h's shape: the flat host view first, the
+        """include/daObjYajirusi_c.h's shape: the flat host view first, the
         ROM-shaped declaration and its assertion in the `#else`."""
         src = ("#if defined(" + G.GUARD + ") && defined(_MSC_VER)\n"
                "struct Player { int flat; };\n"

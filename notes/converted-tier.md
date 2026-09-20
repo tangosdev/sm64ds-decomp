@@ -123,8 +123,11 @@ the tier's binding constraint instead of `real_name`, and it **de-credits 204 of
 a 204-file backslide into a correction about method names would make one number
 answer two questions, and would bury the finding above.
 
-Each is marked `KNOWN HOLE` at its regex in `tools/tiers.py`. They want one PR each,
-with the backslide discussed on its own terms.
+The first and third are marked `KNOWN HOLE` at their regexes in `tools/tiers.py`,
+`MANGLED_REF` and `RAW_OFFSET`, which is the two this heading and the README count. The
+stand-in `struct` row carries no marker there: `shared_header` is reported as one of the
+softer readings rather than as one of the five criteria. They want one PR each, with the
+backslide discussed on its own terms.
 
 ## Consequences for the worklist
 

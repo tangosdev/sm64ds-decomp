@@ -8,7 +8,7 @@ This lane independently audits three rows ranked `high` by
 
 | Initializer | Candidate owner | Ownership verdict | Regeneration readiness |
 | --- | --- | --- | --- |
-| [__sinit_ov009_02112458](../src/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`Bird` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
+| [__sinit_ov009_02112458](../src/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
 | [__sinit_ov015_02112f9c](../src/__sinit_ov015_02112f9c.c) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
 | [__sinit_ov002_02101064](../src/__sinit_ov002_02101064.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED** | Not promotion-ready: `InitResources` is not a matching source, the PMF member names remain unknown, and [ov002](../config/arm9/overlays/ov002/symbols.txt) cannot be ordinal-partitioned |
 
@@ -40,12 +40,12 @@ The audit ran in the wired worktree
 `research/sinit-wave-resources`, based on `7b26fa34f`. The compiler canary passed
 under `mwccarm 2004/b56`.
 
-`CLAIMS.md` has only historical `done`/`released` entries relevant to Bird,
+`CLAIMS.md` has only historical `done`/`released` entries relevant to daSBird_c,
 daObjBkBillboard_c, and daObjMarioCap_c; no active span conflicts with this read-only
 audit. A claims key is absent, so this experiment could not be announced through
 the claims service. It did not claim or alter any production span.
 
-## 1. [ov009](../config/arm9/overlays/ov009/symbols.txt)/`Bird`
+## 1. [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c`
 
 ### Ownership edges
 
@@ -55,8 +55,8 @@ unmapped or external consumer:
 
 | Ownership global | Size/type | Non-initializer consumers |
 | --- | --- | --- |
-| [data_ov009_02113c20](../config/arm9/overlays/ov009/symbols.txt) | 8-byte model resource handle | `Bird::InitResources`, `Bird::CleanupResources` |
-| [data_ov009_02113c28](../config/arm9/overlays/ov009/symbols.txt) | 8-byte animation resource handle | `Bird::InitResources`, `Bird::CleanupResources` |
+| [data_ov009_02113c20](../config/arm9/overlays/ov009/symbols.txt) | 8-byte model resource handle | `daSBird_c::InitResources`, `daSBird_c::CleanupResources` |
+| [data_ov009_02113c28](../config/arm9/overlays/ov009/symbols.txt) | 8-byte animation resource handle | `daSBird_c::InitResources`, `daSBird_c::CleanupResources` |
 
 The initializer constructs asset 1080 with `func_02017acc`, registers
 `func_02017ab4` and node [data_ov009_02113c30](../config/arm9/overlays/ov009/symbols.txt), then constructs asset 1081 with
@@ -65,14 +65,14 @@ The initializer constructs asset 1080 with `func_02017acc`, registers
 
 It also initializes the 32-byte PMF table [data_ov009_02113c48](../config/arm9/overlays/ov009/symbols.txt). Every source
 descriptor is 8 bytes with one zero-addend code relocation, and every target lies
-inside the Bird span:
+inside the daSBird_c span:
 
 | Descriptor | Target |
 | --- | --- |
-| `0x02113914` | [func_ov009_021116ec](../src_tu/actors/Bird.cpp) - (ROM ordinal 6 used to assemble `Bird.cpp`) (`0x021116ec`) |
-| `0x0211390c` | [func_ov009_021115d8](../src_tu/actors/Bird.cpp) - (ROM ordinal 5 used to assemble `Bird.cpp`) (`0x021115d8`) |
-| `0x021138fc` | [func_ov009_0211145c](../src_tu/actors/Bird.cpp) - (ROM ordinal 4 used to assemble `Bird.cpp`) (`0x0211145c`) |
-| `0x02113904` | [func_ov009_02111234](../src_tu/actors/Bird.cpp) - (ROM ordinal 3 used to assemble `Bird.cpp`) (`0x02111234`) |
+| `0x02113914` | [func_ov009_021116ec](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 6 used to assemble `d_a_s_bird.cpp`) (`0x021116ec`) |
+| `0x0211390c` | [func_ov009_021115d8](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 5 used to assemble `d_a_s_bird.cpp`) (`0x021115d8`) |
+| `0x021138fc` | [func_ov009_0211145c](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 4 used to assemble `d_a_s_bird.cpp`) (`0x0211145c`) |
+| `0x02113904` | [func_ov009_02111234](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 3 used to assemble `d_a_s_bird.cpp`) (`0x02111234`) |
 
 The ROM BSS contribution `0x02113c20..0x02113c68` is exactly two 8-byte
 handles, two 12-byte registration nodes, and one 32-byte PMF table. The four PMF
@@ -83,7 +83,7 @@ descriptors occupy exactly `0x021138fc..0x0211391c` (32 data bytes).
 This is initializer ordinal 0 of 4. [.p__sinit_ov009_02112458](../config/arm9/overlays/ov009/symbols.txt) at
 `0x02112b34` points to it; the next word points to
 [__sinit_ov009_02112524](../src/__sinit_ov009_02112524.c), independently owned by daObjMcWater_c. The parallel
-TU-shaped config attributes Bird's exact `.text`, `.init`, `.ctor`, data, and
+TU-shaped config attributes daSBird_c's exact `.text`, `.init`, `.ctor`, data, and
 BSS intervals and keeps them ordered before daObjMcWater_c.
 
 With `SINIT_OWNERSHIP_PROBE`, `notes/sinit-probes/bird.cpp` organically emits:
@@ -96,7 +96,7 @@ With `SINIT_OWNERSHIP_PROBE`, `notes/sinit-probes/bird.cpp` organically emits:
 - `.bss`: 8 + 8 + 12 + 12 + 32 bytes;
 - no `.exceptix` under `-Cpp_exceptions off`.
 
-The existing Bird shadow TU remains 13/13 text-matched, objisolate-clean,
+The existing daSBird_c shadow TU remains 13/13 text-matched, objisolate-clean,
 relocation-destination-clean, and 13/13 contribution-equivalent. Promotion is
 still refused for its existing compiler-only D2/helper outputs and vtable/RTTI
 side effects; one legacy entry also lacks `complete` despite its carried asm hatch
@@ -259,19 +259,19 @@ compiled transcription with `tools.match.extract_func` produced:
 
 ```python
 daObjBkBillboard_c  size 64/64     raw_equal=True  reloc_topology_equal=True  5 relocs
-Bird           size 204/204   raw_equal=True  reloc_topology_equal=True 15 relocs
+daSBird_c           size 204/204   raw_equal=True  reloc_topology_equal=True 15 relocs
 MarioCap       size 1044/1044 raw_equal=True  reloc_topology_equal=True 80 relocs
 ```
 
 Additional scoped gates:
 
 - `python tools/tu_config.py --module ov009 --module ov015 --module ov002 ... --report`:
-  `Bird` and `daObjBkBillboard_c` receive ordered full-section intervals; [ov002](../config/arm9/overlays/ov002/symbols.txt) correctly
+  `daSBird_c` and `daObjBkBillboard_c` receive ordered full-section intervals; [ov002](../config/arm9/overlays/ov002/symbols.txt) correctly
   refuses the invalid 26-to-71 ordinal partition.
-- `python tools/tubuild.py verify ov009/Bird`: 13/13 MATCH, objisolate clean,
+- `python tools/tubuild.py verify ov009/daSBird_c`: 13/13 MATCH, objisolate clean,
   relocation destinations clean; promotion refused for pre-existing unlicensed
   output.
-- `python tools/tubuild.py partial ov009/Bird`: 13/13 contribution-equivalent.
+- `python tools/tubuild.py partial ov009/daSBird_c`: 13/13 contribution-equivalent.
 - `python tools/tu_map.py --check`: all invariants pass.
 - `python tools/port_refcheck.py`: 407 references checked, all resolve.
 - `python -m unittest tools.test_sinit_owners tools.test_tu_config`: 17 tests pass.

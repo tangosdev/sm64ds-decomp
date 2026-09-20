@@ -48,14 +48,14 @@ here, and they move independently.
 ```
 MATCHED    ██████████████████████████████  99.8%   11,368 / 11,389 functions
            of which 122 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  26.2%   2,980 / 11,385 functions
+CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  26.2%   2,982 / 11,385 functions
 LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
 ```
 <!-- tiers:end -->
 
 - **MATCHED** is source that compiles to the ROM's exact bytes, checked against the
-  cartridge. Nearly all of it is C. The rest is the small set of routines the original
-  game wrote in assembly, which count under the rule in
+  cartridge. Nearly all of it is C and C++. The rest is the small set of routines the
+  original game wrote in assembly, which count under the rule in
   [What counts as matched](#what-counts-as-matched) below. This is the bar above and
   the treemap.
 - **CONVERTED** is source-owned code a person can read without the ROM open beside
@@ -63,7 +63,10 @@ LINKED     ███████████████████████
   does not require readable code, so this tier does not move on its own and is by far
   the furthest behind.
 - **LINKED** is matched code that actually reaches the [PC port](port/)'s binary,
-  replacing the host stand-in that stood there before.
+  replacing the host stand-in that stood there before. On `main` that `port/` tree holds
+  the port's smoke-gate suite: the platform seam, the slice manifests and the native test
+  executables. The playable build is developed on the `port/*` branches, and that is what
+  the download link at the top of this file serves.
 
 They are not stages of one pipeline. A function can be matched and linked while still
 being unreadable, and converting a file never changes its matched bytes.
@@ -73,7 +76,7 @@ function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen trick
 no calls through mangled names. A merged translation unit contributes one unit per
 enrolled function, so restoring original file boundaries cannot change progress by
 itself. Most of the tree is partway there rather than nowhere near it, which the
-headline alone hides: roughly 31% of functions pass three of the five, and 32% pass
+headline alone hides: roughly 26% of functions pass three of the five, and 31% pass
 four. Run `python tools/tiers.py` for the full breakdown and two softer readings of
 the same tree.
 
@@ -105,16 +108,20 @@ The matching compiler is pinned to **mwccarm 2004/b56** with these flags (the 1.
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 ```
 
+C++ sources compile under the same pin with `-lang c++` in place of `-lang c99`, plus
+`-Cpp_exceptions off`. `tools/match.py` makes both substitutions itself for a file whose
+first line is `//cpp`.
+
 ## What counts as matched
 
 A function counts as matched when the source in this repo, compiled with the pinned
 compiler, produces exactly the bytes that are on the cartridge. Not similar bytes.
 The same bytes. If the check fails, it does not count, however close it looks.
 
-Almost all of the game was written in C, so almost all of that work is writing C. A
-small number of routines were never C. Nintendo wrote those by hand in assembly,
-because they do jobs the C language has no way to ask for: driving the chip's cache,
-calling into the DS firmware, switching the processor between modes, and a few pieces
+Almost all of the game was written in C and C++, so almost all of that work is writing
+C and C++. A small number of routines were neither. Nintendo wrote those by hand in
+assembly, because they do jobs the C language has no way to ask for: driving the chip's
+cache, calling into the DS firmware, switching the processor between modes, and a few pieces
 of the compiler's own maths library that hand back two answers at once.
 
 There is no C to find for those. The honest source for them is the same assembly, so
@@ -127,8 +134,8 @@ That exception is narrow on purpose. A function only qualifies when its body con
 an instruction C cannot express at all. If it is ordinary code that we simply cannot
 reproduce yet, writing it out as assembly proves nothing, so it does not qualify and
 does not count. Those files are marked `NONMATCHING` instead, and unmatched means just
-that: the original was C, and we do not yet have C the compiler turns into those exact
-bytes. The rule is written up in [notes/asm-policy.md](notes/asm-policy.md).
+that: the original was C or C++, and we do not yet have source the compiler turns into
+those exact bytes. The rule is written up in [notes/asm-policy.md](notes/asm-policy.md).
 
 ## How matching works
 
@@ -205,10 +212,12 @@ different object groups may correspond to different tool builds.
 
 ## Setup
 
-You supply your own cartridge dump. Full setup (Python dependencies, the proprietary
-mwccarm compiler from the DS-decomp Discord, the dsd toolkit, and unpacking your ROM)
-is in [CONTRIBUTING.md](CONTRIBUTING.md) and
-[notes/setup-mwccarm.md](notes/setup-mwccarm.md).
+You supply your own cartridge dump. Full setup (Python dependencies, both halves of the
+mwccarm install, the dsd toolkit, and unpacking your ROM) is in
+[CONTRIBUTING.md](CONTRIBUTING.md) and
+[notes/setup-mwccarm.md](notes/setup-mwccarm.md). The sweep zip is pinned in the
+DS-decomp Discord. The pinned 2004/b56 compiler is absent from that zip, and
+`python tools/recover_cw2004.py` recovers and verifies it from public archives.
 
 Short version:
 
@@ -242,8 +251,8 @@ Download it at **[tangos.dev/downloads](https://tangos.dev/downloads)**.
 > every match against the ROM before anything is pushed. The manual workflow works,
 > but tangOS is the path with guardrails.
 
-**Contributing code.** Pick a function, write C for it, verify it compiles to the same
-bytes as the ROM, then open a pull request. One function or a small related group per PR
+**Contributing code.** Pick a function, write C or C++ for it, verify it compiles to the
+same bytes as the ROM, then open a pull request. One function or a small related group per PR
 is ideal. Use only your own legally dumped ROM, and never commit it.
 
 **Coordination.** Join the [Discord](https://discord.gg/YpReERF4e3) for questions and to
@@ -286,6 +295,13 @@ static-initializer batches), contributed codegen notes on boolean materializatio
 predicated-select shapes (PR #49), and reported the scheduler bug fixed in #61.
 [Moundistz](https://github.com/Moundistz) contributed 3 matched functions and 8 nonmatching
 floor entries, plus a pass of placeholder-to-resolved callee renames across the arm9 corpus.
+[lunavyqo](https://github.com/lunavyqo) has hand-matched across ov001 and a wide spread of
+the scene overlays, and carries the class translation-unit cleanup work, promoting a folded
+actor TU and then clearing the one-function leftovers it strands.
+[ruspecial](https://github.com/ruspecial) has hand-matched large batches across ov002, ov006
+and the arm9 BIOS SVC stubs, banked 174 near-misses with the C++ exception-handling and
+split-symbol triage notes behind them (PR #806), and contributed oracle-verified host copies
+for the two Bowser ov060 holes on the port side (PR #1505).
 
 Tooling contributions: [webheadvr](https://github.com/webheadvr) made the relocation
 symbol resolver module-aware, fixing wrong-overlay symbol picks where overlay address

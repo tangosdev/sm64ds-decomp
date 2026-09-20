@@ -587,7 +587,7 @@ struct Widget {
 # The same class with its comments written as though there were no vptr.
 POLY_BROKEN = POLY_GOOD.replace("0x004", "0x000").replace("0x008", "0x004")
 
-# A flat view that declares the vptr as a REAL field; include/ArrowSignRight.h is the
+# A flat view that declares the vptr as a REAL field; include/daObjYajirusi_c.h is the
 # live instance. Its comments already count that field, so the walk must start at 0 --
 # adding 4 unconditionally would report every field of every such header 4 bytes late.
 FLAT_GOOD = """\
