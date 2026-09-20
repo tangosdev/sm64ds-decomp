@@ -76,6 +76,18 @@
  * members `void(void *)` / `void(char *)` against byte-matched definitions that
  * take `char*`, which would be eight `illegal function overloading` errors
  * pointed at the definitions rather than at the header.
+ *
+ * deslop (2026-09-20): 43 offset accesses became the members the header already
+ * declares -- mPosX / mPosY / mVelX / mVelY / mMovePhase and the flat scalars --
+ * and the two `char *` aliases this left unused were dropped. Only accesses
+ * whose cast width matched the declared field width were rewritten. 58/58
+ * still MATCH.
+ *
+ * Leftover: AddPenalty, CheckTouch, DrawTimer, StartReward, TickTimer and
+ *   UpdateReward keep the offset form entirely -- the named form regresses them
+ *   in both the constant and the indexed shape, so the offset expression is
+ *   holding register allocation that the member name does not reproduce.
+ *   Measured, not assumed.
  */
 
 #pragma defer_codegen off
@@ -927,7 +939,7 @@ void dScMgLuigi_c::DrawPictures() {
     char *c = (char *)this;
     extern int data_ov006_0213abc8[];
     int i;
-    if (*(int *)(c+0x4f78) == 0)
+    if (unk_4f78 == 0)
         return;
     for (i=0;i<0x78;i++) {
         if (*(unsigned char *)(c+i+0x53dd) == 1) {
@@ -1044,7 +1056,7 @@ void dScMgLuigi_c::DrawWantedIcon() {
     char *c = (char *)this;
     extern void *data_ov006_0213abc8[];
     if (*(unsigned short *)(c + 0x5164) == 0) return;
-    func_ov004_020af948(data_ov006_0213abc8[*(unsigned char *)(c + 0x545a)],
+    func_ov004_020af948(data_ov006_0213abc8[unk_545a],
                         *(unsigned short *)(c + 0x5166),
                         *(unsigned short *)(c + 0x5168), 0);
 }
@@ -1111,7 +1123,7 @@ void dScMgLuigi_c::MovePictureBounce(int i)
         u32 r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
         u16 val = (u16)((((r << 4) >> 15) << 12));
 
-        *(u16 *)(c + i * 2 + 0x4f7c) = val;
+        mMovePhase[i] = val;
         *started += 1;
         return;
     }
@@ -1127,14 +1139,14 @@ void dScMgLuigi_c::MovePictureBounce(int i)
         s64 prod;
         int round12 = 0x800;
 
-        phase = *(u16 *)(c + i * 2 + 0x4f7c);
+        phase = mMovePhase[i];
         a = phase >> 4;
         stepX = data_02082214[a * 2 + 1];
         speed = data_ov006_0212e8b8[speedLevel[i]];
         prod = (s64)stepX * speed;
         posX[i] += (int)((prod + round12) >> 12);
 
-        phase = *(u16 *)(c + i * 2 + 0x4f7c);
+        phase = mMovePhase[i];
         a = phase >> 4;
         stepY = data_02082214[a * 2];
         speed = data_ov006_0212e8b8[speedLevel[i]];
@@ -1142,26 +1154,26 @@ void dScMgLuigi_c::MovePictureBounce(int i)
         posY[i] += (int)((prod + round12) >> 12);
 
         {
-            int x = *(int *)(c + i * 4 + 0x47f8) >> 0xc;
-            int y = *(int *)(c + i * 4 + 0x49d8) >> 0xc;
+            int x = mPosX[i] >> 0xc;
+            int y = mPosY[i] >> 0xc;
 
             if (x > 0xf8) {
-                *(u16 *)(c + i * 2 + 0x4f7c) = 0x8000 - *(u16 *)(c + i * 2 + 0x4f7c);
-                *(int *)(c + i * 4 + 0x47f8) = 0xf8000;
+                mMovePhase[i] = 0x8000 - mMovePhase[i];
+                mPosX[i] = 0xf8000;
             } else if (x < 8) {
-                *(u16 *)(c + i * 2 + 0x4f7c) = 0x8000 - *(u16 *)(c + i * 2 + 0x4f7c);
-                *(int *)(c + i * 4 + 0x47f8) = 0x8000;
+                mMovePhase[i] = 0x8000 - mMovePhase[i];
+                mPosX[i] = 0x8000;
             }
 
             if (y > 0xb8) {
-                *(u16 *)(c + i * 2 + 0x4f7c) = -*(u16 *)(c + i * 2 + 0x4f7c);
-                *(int *)(c + i * 4 + 0x49d8) = 0xb8000;
+                mMovePhase[i] = -mMovePhase[i];
+                mPosY[i] = 0xb8000;
                 return;
             }
 
             if (y < 8) {
-                *(u16 *)(c + i * 2 + 0x4f7c) = -*(u16 *)(c + i * 2 + 0x4f7c);
-                *(int *)(c + i * 4 + 0x49d8) = 0x8000;
+                mMovePhase[i] = -mMovePhase[i];
+                mPosY[i] = 0x8000;
                 return;
             }
 
@@ -1452,7 +1464,7 @@ void dScMgLuigi_c::StopPicture(int idx) {
 void dScMgLuigi_c::RestartPicture(int idx) {
     unsigned char *self = (unsigned char *)this;
     extern unsigned char data_ov006_0213ceac[];
-    unsigned short board = *(unsigned short *)(self + 0x5174);
+    unsigned short board = unk_5174;
     self += idx;
     self[0x53dd] = 1;
     self[0x5275] = 0;
@@ -1485,10 +1497,10 @@ void dScMgLuigi_c::BeginCatch(int p1)
 {
     char *o = (char *)this;
     int v;
-    *(short *)(o + 0x5166) = (short)(((int *)(o + 0x47f8))[*(unsigned char *)(o + 0x5456) - 1] >> 0xc);
-    *(short *)(o + 0x5168) = (short)(((int *)(o + 0x49d8))[*(unsigned char *)(o + 0x5456) - 1] >> 0xc);
+    *(short *)(o + 0x5166) = (short)(((int *)(o + 0x47f8))[unk_5456 - 1] >> 0xc);
+    *(short *)(o + 0x5168) = (short)(((int *)(o + 0x49d8))[unk_5456 - 1] >> 0xc);
     *(short *)(o + 0x5164) = 0x60;
-    *(int *)(o + 0x4f78) = 3;
+    unk_4f78 = 3;
     *(short *)(o + 0x516a) = 0xc8;
     v = *(int *)(o + 0xbc);
     while (v >= 5) v -= 5;
@@ -1496,7 +1508,7 @@ void dScMgLuigi_c::BeginCatch(int p1)
         *(unsigned short *)(o + 0x516a) += 8;
     if (p1 == 0)
         *(short *)(o + 0x516a) = 0x80;
-    *(unsigned char *)(o + 0x5459) = (unsigned char)p1;
+    unk_5459 = (unsigned char)p1;
     StartIris();
     *(unsigned char *)(o + 0x47f5) = 1;
 }
@@ -1922,7 +1934,7 @@ void dScMgLuigi_c::ChooseTarget()
     s32 nbytes;
     volatile u16 v;
 
-    t = *(u16 *)(c + 0x5172);
+    t = unk_5172;
     k = 0;
     if (t >= 0x14) {
         k = 0x14;
@@ -1930,15 +1942,15 @@ void dScMgLuigi_c::ChooseTarget()
         k = 0xa;
     }
 
-    *(u8 *)(c + 0x545a) = (data_ov006_0213cec0 + k)[((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xa) >> 15];
+    unk_545a = (data_ov006_0213cec0 + k)[((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xa) >> 15];
 
-    t = *(u16 *)(c + 0x5174);
+    t = unk_5174;
     if (t == 9) {
-        *(u8 *)(c + 0x545a) = 1;
+        unk_545a = 1;
     }
     if (t == 0xe || t == 0x10 || t == 0x11 || t == 0x13) {
-        if (*(u8 *)(c + 0x545a) == 3) {
-            *(u8 *)(c + 0x545a) = (u8)((((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3)) >> 15);
+        if (unk_545a == 3) {
+            unk_545a = (u8)((((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3)) >> 15);
         }
     }
 
@@ -1967,7 +1979,7 @@ void dScMgLuigi_c::ChooseBoard()
     char *c = (char *)this;
     extern int data_0209d4b8;
     int lvl;
-    *(unsigned short *)(c + 0x5176) = *(unsigned short *)(c + 0x5174);
+    *(unsigned short *)(c + 0x5176) = unk_5174;
     lvl = *(int *)(c + 0xbc);
     if (lvl >= 0x14) {
         int pick = (int)(((((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xa) >> 0xf);
@@ -1978,7 +1990,7 @@ void dScMgLuigi_c::ChooseBoard()
         }
         lvl = pick + 0xa;
     }
-    *(unsigned short *)(c + 0x5174) = lvl;
+    unk_5174 = lvl;
 }
 
 /* ------------------------------------------------------------------ */
@@ -2192,7 +2204,7 @@ void dScMgLuigi_c::StateCatch()
     *(unsigned short *)(o + 0x516a) = 0;
     *(unsigned short *)(o + 0x5164) = 0;
 
-    if (*(unsigned char *)(o + 0x5459) != 0) {
+    if (unk_5459 != 0) {
         int v = *(int *)(o + 0xbc);
         while (v >= 5)
             v -= 5;
@@ -2212,9 +2224,8 @@ void dScMgLuigi_c::StateCatch()
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c9StatePlayEv
 void dScMgLuigi_c::StatePlay() {
-    char *c = (char *)this;
     TickTimer();
-    if (*(int *)(c + 0x4f78) == 3) return;
+    if (unk_4f78 == 3) return;
     UpdatePictures();
     CheckTouch();
     UpdatePenalties();
@@ -2231,9 +2242,9 @@ void dScMgLuigi_c::StatePlace() {
         PlaceNextPicture();
     if (CurtainsDone() == 0)
         return;
-    if (*(unsigned char *)(self + 0x5455) == 0)
+    if (unk_5455 == 0)
         return;
-    *(int *)(self + 0x4f78) = 2;
+    unk_4f78 = 2;
     *(unsigned char *)(self + 0x5458) = 0;
     *(short *)(self + 0x516c) = 0xa;
     *(short *)(self + 0x516e) = 0;
@@ -2248,7 +2259,7 @@ void dScMgLuigi_c::StateSetup()
     char *o = (char *)this;
     *(short *)(o + 0x5164) = 0;
     ResetCurtains();
-    *(int *)(o + 0x4f78) = 1;
+    unk_4f78 = 1;
     ChooseTarget();
 }
 
@@ -2320,8 +2331,8 @@ void dScMgLuigi_c::OnYoshiTryEat(int arg1)
     char *p;
     int *q;
 
-    if (*(unsigned char *)(c + 0x5459) != 0) {
-        *(unsigned char *)(c + 0x5457) += 1;
+    if (unk_5459 != 0) {
+        unk_5457 += 1;
 
         q = (int *)(c + 0xbc);
         *q += 1;
@@ -2330,7 +2341,7 @@ void dScMgLuigi_c::OnYoshiTryEat(int arg1)
     }
 
     if (arg1 == 0x12) {
-        *(short *)(c + 0x5172) = 0xa;
+        unk_5172 = 0xa;
         *(int *)(c + 0xbc) = 0;
         if ((unsigned int)*(int *)(c + 0xbc) > 0x270e)
             *(int *)(c + 0xbc) = 0x270e;
@@ -2346,7 +2357,7 @@ void dScMgLuigi_c::OnYoshiTryEat(int arg1)
     ResetBoard();
     ChooseBoard();
 
-    *(int *)(c + 0x4f78) = 0;
+    unk_4f78 = 0;
     data_0209d45c |= 4;
     data_0209d454 &= ~4;
 
@@ -2477,12 +2488,12 @@ s32 dScMgLuigi_c::InitResources()
     Deallocate((void *)objChar);
     Deallocate((void *)file);
 
-    *(u8 *)(c + 0x5457) = 0;
+    unk_5457 = 0;
     ResetBoard();
     *(volatile u16 *)(c + 0x5174) = 0xff;
     ChooseBoard();
 
-    *(int *)(c + 0x4f78) = 0;
+    unk_4f78 = 0;
     Ov004_Deallocate(arc);
     func_ov004_020b04d0(0x30);
     *(volatile u16 *)(c + 0x5172) = 0xa;
