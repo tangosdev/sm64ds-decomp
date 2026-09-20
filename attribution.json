@@ -4143,6 +4143,21 @@
     "src/actors/daPopoi_c.cpp#_ZN9daPopoi_c6RenderEv": "tangosdev",
     "src/actors/daPopoi_c.cpp#_ZN9daPopoi_c8BehaviorEv": "tangosdev",
     "src/actors/daPopoi_c.cpp#_ZN9daPopoi_c13InitResourcesEv": "tangosdev",
-    "src/actors/daPopoi_c.cpp#daPopoi_c_classInit": "tangosdev"
+    "src/actors/daPopoi_c.cpp#daPopoi_c_classInit": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_cD1Ev": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_cD0Ev": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212cd0c": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212cd80": "ruspecial",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212d038": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212d108": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212d24c": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212d268": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#func_ov085_0212d2b8": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c16OnPendingDestroyEv": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c6RenderEv": "ruspecial",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c8BehaviorEv": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObj_Mip_Key_c.cpp#daObj_Mip_Key_c_classInit": "andrewboudreau"
   }
 }
