@@ -2,8 +2,8 @@
 /* Koopa movement, shell reactions, animation, and drawing.
  * Retail RTTI identifies daNknk_c; both normal and small profiles construct it.
  * The inline destructor and ordinary factories emit the matching lifecycle.
- * This intermediate TU is not enrolled. Its manifest retains all 39 historical
- * source paths until promotion; raw helper views remain tracked by issue #2871.
+ * This text-only TU supplies all 39 functions; canonical metadata stays in ROM.
+ * The manifest preserves source lineage; remaining raw views are in issue #2871.
  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.
  */
 // Inline definitions in Koopa.h, emitted here by the two factories:
@@ -41,9 +41,6 @@ typedef int Fix12i;
 
 /* shadow typedef 'Vec3' */
 typedef struct { s32 x, y, z; } Vec3;
-
-/* shadow typedef 'V16' */
-typedef struct { s16 x, y, z; } V16;
 
 /* shadow struct 'Particle' */
 struct Particle {
@@ -90,7 +87,6 @@ extern int Vec3_Dist(void* a, void* b);
 
 void func_ov062_02117994(char* c, int idx);
 
-extern void func_ov002_020ada40(void* self, void* v, void* a, int f);
 extern void func_ov062_02117bf4(void* self);
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
@@ -1037,11 +1033,14 @@ void func_ov062_02117c98(void* self)
     r5 = (int)(((long long)(int)0));
 
     if (flags & 0x10) {
-        V16 v;
+        Vector3_16 v;
         v.x = (s16)-0x2000;
         v.y = (s16)r5;
         v.z = (s16)r5;
-        func_ov002_020ada40(self, &v, found, 0x46000);
+        // The member's unused Fix12<int> argument is one raw register word.
+        // Native aggregate passing adds a load/copy here under 2004/b56;
+        // retain decl_Enemy.h's scalar ABI bridge to the actual member symbol.
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, &v, found, 0x46000);
         return;
     }
     if (flags & 0x22400) {

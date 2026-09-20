@@ -1,9 +1,9 @@
 {
   "id": "ov062/Koopa+KoopaSmall",
   "module": "ov062",
-  "source": "src_tu/actors/Koopa+KoopaSmall.cpp",
+  "source": "src/game/actors/d_a_nknk.cpp",
   "promoted_source": "src/game/actors/d_a_nknk.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21174cc..0x211975c, 39 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -357,7 +357,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov062-Koopa+KoopaSmall/Koopa+KoopaSmall.o (gitignored)",
+    "object": "build/tu/ov062-Koopa+KoopaSmall/d_a_nknk.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 39,
     "functions_declared": 39,

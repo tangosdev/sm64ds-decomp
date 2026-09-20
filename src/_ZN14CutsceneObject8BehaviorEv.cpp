@@ -1,4 +1,5 @@
 //cpp
+#include "common.h"
 #include "types.h"
 // @symbol _ZN14CutsceneObject8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -12,19 +13,15 @@ typedef struct
   s32 y;
   s32 z;
 } Vec3;
-typedef struct 
-{
-  s32 w[12];
-} Mtx43;
 extern "C" {
 extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
-extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);
+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 }
-extern Mtx43 data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 
 int CutsceneObject::Behavior()
 {
@@ -89,11 +86,11 @@ int CutsceneObject::Behavior()
   }
   if ((*((char **) (c + 0xdc))) != 0)
   {
-    *((Mtx43 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;
+    *((Matrix4x3 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;
   }
   if ((*((char **) (c + 0xe0))) != 0)
   {
-    *((Mtx43 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;
+    *((Matrix4x3 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;
     func_ov002_020f64ac(*((char **) (c + 0xe0)), &data_ov002_0210bc88);
     func_ov002_020f65ec(*((char **) (c + 0xe0)));
   }

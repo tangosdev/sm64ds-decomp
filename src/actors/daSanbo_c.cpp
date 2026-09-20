@@ -98,8 +98,6 @@ enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 /* shadow namespace 'cstd' */
 namespace cstd { int fdiv(int,int); }
 
-/* shadow struct 'Mtx43' */
-struct Mtx43 { Fix12i a[12]; };
 
 /* shadow enum 'Bool' */
 enum Bool { FALSE, TRUE };
@@ -112,12 +110,12 @@ extern void _ZN11ShadowModelC1Ev(void *self);
 extern void _ZN7dCcAc_cC1Ev(void *self);
 extern void _ZN10dBgCh_ActrC1Ev(void *self);
 extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
-extern "C" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);
+extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
-extern struct Mtx43 data_020a0e68;
+extern struct Matrix4x3 data_020a0e68;
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const void*, const void*, int, int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern void func_ov096_02135800(char* c);
@@ -764,7 +762,7 @@ extern "C" void func_ov096_02135efc(void* cv)
             y2 = (-((daSanbo_c*)c)->OnAimedAtWithEgg()) >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
 
-            *(struct Mtx43*)(c + 0xf0) = data_020a0e68;
+            *(struct Matrix4x3*)(c + 0xf0) = data_020a0e68;
 
             *(int*)(c + 0x360) = *(int*)(c + 0x5c) >> 3;
             *(int*)(c + 0x364) = *(int*)(c + 0x60) >> 3;
@@ -830,7 +828,6 @@ void func_ov096_02135e2c(int* self, void* clsn)
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
 typedef long long s64;
 
 

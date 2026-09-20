@@ -39,9 +39,6 @@
  * Leftover: _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s stays mangled. dBgW_KcMbg.h
  *   declares ::Transform, but the definition is still a free extern-C one, so a
  *   member call would not resolve to it.
- * Leftover: Matrix4x3_FromTranslation's parameter is spelled `struct Mtx43 *`
- *   because that is what its definition spells; it is the same 0x30 bytes as
- *   Matrix4x3. Settling the two is a separate change.
  * Leftover: g_profile_KOOPA2BG lives outside this TU.
  */
 
@@ -49,11 +46,6 @@
 #include "daKpa2Bg_c.h"
 #include "SharedFilePtr.h"
 
-/* The translation-unit-local struct src/Matrix4x3_FromTranslation.c defines its
-   parameter with. Spelled here exactly as the definition spells it so
-   tools/check_decl_agreement.py sees one interface and not two; it is the same
-   0x30 bytes as Matrix4x3, which is what the rest of this file uses. */
-struct Mtx43;
 
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region, above the first @symbol marker so no
@@ -69,7 +61,7 @@ extern SharedFilePtr daKpa2Bg_c_ClsnFile;
 extern Matrix4x3 data_020a0e68;
 
 int Sound_PlayIfNotActive(int handle, int a, int b, int c);
-void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);
+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 ang);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 ang);
 void Vec3_Asr(void *dst, void *src, int shift);
@@ -165,7 +157,7 @@ void func_ov060_02117ae0(char *self)
 {
     int pos[4];
     Vec3_Asr(&pos, self + 0x5c, 3);
-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68, pos[0], pos[1],
+    Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1],
                               pos[2]);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(self + 0x90));
@@ -177,7 +169,7 @@ void func_ov060_02117ae0(char *self)
 // @symbol func_ov060_02117a64
 void func_ov060_02117a64(char *self)
 {
-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68,
+    Matrix4x3_FromTranslation(&data_020a0e68,
                               *(int *)(self + 0x5c), *(int *)(self + 0x60),
                               *(int *)(self + 0x64));
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));

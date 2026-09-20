@@ -16,7 +16,6 @@ typedef struct
   int z;
 } Vec3;
 struct Matrix4x3;
-struct Mtx43;
 extern struct Matrix4x3 data_020a0e68;
 extern struct Matrix4x3 data_0209b3ec;
 extern unsigned short data_ov006_0212e060[];
@@ -24,7 +23,7 @@ extern unsigned short data_ov006_0212e068[];
 extern int data_ov006_0212e0b0[];
 extern void *data_ov006_02140844;
 extern void *data_ov006_02140814;
-extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);
+extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 extern void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);
 extern void func_020553a4(int *m);
@@ -38,7 +37,7 @@ void func_ov006_020cf2fc(char *obj)
   int zero2;
   int m2[12];
   int m1[12];
-  Matrix4x3_FromTranslation((struct Mtx43 *) &data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));
+  Matrix4x3_FromTranslation(&data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));
   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m1);
   Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, *((int *) (obj + 0x2c)), *((int *) (obj + 0x30)), *((int *) (obj + 0x34)));
   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m2);

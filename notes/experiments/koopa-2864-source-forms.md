@@ -1,5 +1,11 @@
 # Koopa PR #2864: bounded shadow-TU source forms
 
+This records the historical shadow input below. The three caller bodies now live
+in `src/game/actors/d_a_nknk.cpp`; the identity and production promotion evidence
+is in [the later handoff](../agents/handoffs/pr2864-identity-promotion-0920.md).
+The older compiler results and limitations below remain evidence for their pinned
+input, not claims about the promoted candidate.
+
 Input: `74796d608f77ca9351bb6b2c907104edd615976c`; parent/base:
 `9022c77b3834c5ee77c31b4fb4af587418137d6c`. This experiment repairs the existing
 unpromoted shadow TU. It does not establish whole-TU enrollment or source acceptance.
@@ -62,15 +68,15 @@ recorded caller. All four incoming ov062 relocation sites are:
 
 | Caller and enrolled source | Call site(s) | Following instructions |
 | --- | --- | --- |
-| `func_ov062_021183e0`, `src/func_ov062_021183e0.c` | 0x0211856c | restore registers; return |
-| `func_ov062_02118cdc`, `src/func_ov062_02118cdc.c` | 0x02118dd0 | restore stack/registers; return |
-| `func_ov062_02118de8`, `src/func_ov062_02118de8.cpp` | 0x02118e64, 0x02118ef0 | restore registers; return |
+| `func_ov062_021183e0`, `src/game/actors/d_a_nknk.cpp` (formerly `func_ov062_021183e0.c`) | 0x0211856c | restore registers; return |
+| `func_ov062_02118cdc`, `src/game/actors/d_a_nknk.cpp` (formerly `func_ov062_02118cdc.c`) | 0x02118dd0 | restore stack/registers; return |
+| `func_ov062_02118de8`, `src/game/actors/d_a_nknk.cpp` (formerly `func_ov062_02118de8.cpp`) | 0x02118e64, 0x02118ef0 | restore registers; return |
 
 The source search and all module-qualified config relocation records agree on
 these three callers/four calls. Each caller is itself void and discards the
-call result. The production shards still declare the old int return and retain
-their old definition: this task changes only the shadow TU. Before a later
-promotion, repair/remove the superseded shards and declarations under owned scope.
+call result. At the pinned experiment input, the production shards still declared the old int
+return and retained their old definition: that stage changed only the shadow TU.
+The later owned promotion retires those superseded shards and declarations.
 Six unchanged production controls also strictly verify: the three callers,
 `func_ov062_02118058`, `func_ov062_021180d4`, and ModelAnim::SetAnim.
 

@@ -90,7 +90,6 @@
 #include "decl_SaveData.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
-#include "private/mtx43.h"
 
 /* ==========================================================================
  * The eleven state-entry members.
@@ -1412,9 +1411,9 @@ int func_ov030_02113324(void* thiz)
     extern void func_ov030_021141a8(char* c, int v);
     extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
     extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-    extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43* m, short angY);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);
+    extern void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);
+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);
+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
     extern int func_0201267c(int a, void* b);
     extern int _ZN6Player12GetTalkStateEv(void* self);
@@ -1424,7 +1423,7 @@ int func_ov030_02113324(void* thiz)
     extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 
     extern void* data_0209f318;
-    extern Mtx43 data_020a0e68;
+    extern Matrix4x3 data_020a0e68;
     extern unsigned char data_0209d684;
     char *c = (char*)thiz;
 
@@ -1486,9 +1485,9 @@ skip_raycast:
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);
 
                 Vector3 msgPos;
-                msgPos.x = data_020a0e68.a[9];
-                msgPos.y = data_020a0e68.a[10];
-                msgPos.z = data_020a0e68.a[11];
+                msgPos.x = data_020a0e68.t.x;
+                msgPos.y = data_020a0e68.t.y;
+                msgPos.z = data_020a0e68.t.z;
                 msgPos.y = *(int*)(c + 0x60) + 0x64000;
 
                 if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
@@ -1570,9 +1569,9 @@ int func_ov030_021136b0(char *c)
         const void *rot, int areaID, int deathTableID);
     extern void func_02012790(int arg);
     extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-    extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
+    extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
         void *self, void *actor, unsigned int msgId, const Vector3 *pos,
         unsigned int d, unsigned int e);
@@ -1586,7 +1585,7 @@ int func_ov030_021136b0(char *c)
     extern void _ZN5dCc_c5ClearEv(void *self);
 
     extern void *data_0209f318;
-    extern Mtx43 data_020a0e68;
+    extern Matrix4x3 data_020a0e68;
     int msg;
     s16 a = *(s16 *)(*(char **)(c + 0x3a8) + 0x8e);
     *(s16 *)(c + 0x8e) = a;
@@ -1652,9 +1651,9 @@ int func_ov030_021136b0(char *c)
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);
         {
             int msgArg = ((int)msg << 16) >> 16;
-            int my = data_020a0e68.a[10];
-            int mx = data_020a0e68.a[9];
-            int mz = data_020a0e68.a[11];
+            int my = data_020a0e68.t.y;
+            int mx = data_020a0e68.t.x;
+            int mz = data_020a0e68.t.z;
             msgPos.x = mx;
             msgPos.y = my;
             msgPos.z = mz;
