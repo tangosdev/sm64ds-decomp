@@ -38,6 +38,8 @@
 #include "port_d16.h"
 
 #include <cstdio>
+#include <cstring>
+#include "ntr/gx.h"
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -223,12 +225,73 @@ static void pt_fill_shared(void **vt)
    arithmetic itself (delta 0, complete class), so the thunk is a plain forward.
    OnPendingDestroy is an empty body; the ROM's slot-12 override is present so a
    painting does not fall to ActorBase::OnPendingDestroy. */
+/* SM64DS_PAINT_TEX=1: what the painting's polygons are actually sampling, off
+   unless set. Painting::InitResources stores func_ov080_02125630's five-word
+   material record at this+0x1a8. That function is a CACHE keyed on an ov080
+   bss byte (data_ov080_0212869c[0x18*i]): on the first call it uploads and
+   writes the record, on every later call it hands the record back untouched.
+   Word 0 of the record is Model::LoadCompressedTextureToVram's return, which
+   is the texture VRAM bump cursor data_020a4bc8 at upload time -- an offset
+   into a cursor every level boot rewinds. */
+static int pt_tex_probe(void)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_PAINT_TEX") != 0;
+    return on;
+}
+extern "C" unsigned char data_ov080_0212869c[];
+extern "C" unsigned char data_ov080_02128688[];
+
+/* THE CACHE BLOCK, sized from the ROM's own symbol table rather than guessed.
+   config/arm9/overlays/ov080/symbols.txt has data_ov080_02128688 and
+   data_ov080_0212869c as kind:bss, 0x14 apart and both indexed by 0x18*i, so
+   each element is 0x18 bytes: twenty bytes of record then the loaded flag at
+   +0x14. The slot count is the length of the SharedFilePtr array
+   func_ov080_02125630 indexes with the same i -- data_ov080_0212775c runs to
+   data_ov080_021277a8, 0x4c bytes, 19 pointers. */
+enum { PT_TEX_SLOTS = 19, PT_TEX_STRIDE = 0x18 };
+
+/* WHAT THE CARTRIDGE'S OVERLAY LOAD DOES TO THAT BLOCK, which this port was
+   not doing. UnloadLevelOverlays then LoadLevelOverlays run on every level
+   change, level 2's object overlays are 63/80/85/89/94/100 and Bob-omb
+   Battlefield's are 62/69/78/84/91/95/100, so ov080 comes off and goes back
+   on around a course -- and FS_LoadOverlay clears the overlay's bss. The
+   cartridge therefore starts every castle entry with the flag at 0 and
+   re-uploads the picture to the current cursor. The port's LoadOverlay face
+   is empty and is never called at all, so the flag stayed 1 for the life of
+   the process and the second visit re-bound the first visit's dead offset:
+   the frame drew right and the picture was whatever the course had left in
+   that VRAM. Called from hal/level_boot.cpp's port_stage_boot_body, which is
+   this port's Stage::InitResources, at the ROM's own position for the call. */
+extern "C" void port_painting_texcache_overlay_load(int id)
+{
+    if (id != 80) return;
+    std::memset(data_ov080_02128688, 0, PT_TEX_SLOTS * PT_TEX_STRIDE);
+    if (pt_tex_probe()) {
+        std::fprintf(stderr, "[painttex] overlay load %d: texture cache "
+                     "cleared (%d slots)\n", id, (int)PT_TEX_SLOTS);
+        std::fflush(stderr);
+    }
+}
+
 static int __fastcall pt_init(void *s, void *)
 {
     int r = _ZN8Painting13InitResourcesEv(s);
     fprintf(stderr, "[paint] init: obj=%p buf=%p n=%u\n", s,
             *(void **)((char *)s + 0x1a0),
             *(unsigned short *)((char *)s + 0x1b8));
+    if (pt_tex_probe()) {
+        const unsigned char *rec = *(const unsigned char **)((char *)s + 0x1a8);
+        const int slot = rec ? (int)((rec - data_ov080_02128688) / PT_TEX_STRIDE) : -1;
+        std::fprintf(stderr, "[painttex] init obj=%p texslot=%d "
+                     "record vram=%08x pal=%08x w=%08x h=%08x fmt=%08x\n",
+                     s, slot,
+                     rec ? *(const unsigned *)(rec + 0) : 0u,
+                     rec ? *(const unsigned *)(rec + 4) : 0u,
+                     rec ? *(const unsigned *)(rec + 8) : 0u,
+                     rec ? *(const unsigned *)(rec + 0xc) : 0u,
+                     rec ? *(const unsigned *)(rec + 0x10) : 0u);
+    }
     fflush(stderr);
     return r;
 }
@@ -258,7 +321,49 @@ static int __fastcall pt_behavior(void *s, void *)
    all it reads when SM64DS_ACTOR_PROBE names this class. */
 static int __fastcall pt_render(void *s, void *)
 { port_actor_render_probe("PAINTING", s);
-  return _ZN8Painting6RenderEv(s); }
+  if (!pt_tex_probe())
+      return _ZN8Painting6RenderEv(s);
+  std::size_t before = 0, after = 0;
+  ntr::gx_polygons(before);
+  const int r = _ZN8Painting6RenderEv(s);
+  const ntr::GxTriangle *t = ntr::gx_polygons(after);
+  const std::size_t n = after > before ? after - before : 0;
+  float mnx = 1e30f, mxx = -1e30f, mny = 1e30f, mxy = -1e30f;
+  unsigned amin = 255, amax = 0, tex_param = 0;
+  int textured = 0, tw = 0, th = 0;
+  unsigned long long sum = 0;
+  for (std::size_t i = before; i < after; ++i) {
+      for (int v = 0; v < 3; ++v) {
+          const float X = t[i].v[v].x, Y = t[i].v[v].y;
+          if (X < mnx) mnx = X;
+          if (X > mxx) mxx = X;
+          if (Y < mny) mny = Y;
+          if (Y > mxy) mxy = Y;
+      }
+      if (t[i].alpha < amin) amin = t[i].alpha;
+      if (t[i].alpha > amax) amax = t[i].alpha;
+      if (t[i].tex) {
+          ++textured;
+          if (!tex_param) {
+              tex_param = t[i].dbg_tex;
+              tw = t[i].tw; th = t[i].th;
+              const long px = (long)tw * th;
+              for (long k = 0; k < px; ++k)
+                  sum = sum * 1000003ull + t[i].tex[k];
+          }
+      }
+  }
+  static int call;
+  if (n == 0)
+      std::fprintf(stderr, "[painttex] render %d obj=%p: 0 triangles\n", call++, s);
+  else
+      std::fprintf(stderr, "[painttex] render %d obj=%p: %u tris screen "
+                   "x[%.0f..%.0f] y[%.0f..%.0f] alpha %u..%u textured %d "
+                   "teximage=%08x tex=%dx%d texelsum=%016llx\n",
+                   call++, s, (unsigned)n, mnx, mxx, mny, mxy, amin, amax,
+                   textured, tex_param, tw, th, sum);
+  std::fflush(stderr);
+  return r; }
 static int __fastcall pt_pdes(void *, void *)
 { _ZN8Painting16OnPendingDestroyEv(); return 0; }
 static int __fastcall pt_d1(void *s, void *)

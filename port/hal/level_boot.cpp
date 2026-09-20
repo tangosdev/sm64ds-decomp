@@ -3416,6 +3416,10 @@ extern "C" int port_intro_wants_play(void)
    block further down, past this function. */
 extern "C" int data_0208ee44;
 
+/* hal/actor_classes_painting.cpp: the bss clear the cartridge's overlay load
+   performs on ov080, which the port's empty LoadOverlay face does not. */
+extern "C" void port_painting_texcache_overlay_load(int id);
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3453,6 +3457,15 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        run this half once a process, from hal_sub_screen_init at boot, and a
        level reached by a level change kept the first level's bring-up. */
     hal_sub_screen_level_init();
+
+    /* The ROM calls LoadLevelOverlays here (src/_ZN5Stage13InitResourcesEv.cpp
+       :328, inside the same :262-351 span the line above stands for, and
+       before Stage::LoadModel at :361 spawns the paintings), and on the
+       cartridge that load clears the loaded overlays' bss. ov080's bss holds
+       the painting texture cache, so the cartridge starts every castle entry
+       with it cold and re-uploads the picture to the current VRAM cursor.
+       hal/actor_classes_painting.cpp has the whole reading. */
+    port_painting_texcache_overlay_load(80);
 
     /* STAGE B: THE TABLES ARE BACK ON. Stage A1 zeroed the Entrance, Door and
        Exit counts in the host copy of the overlay and dropped the sub-table
