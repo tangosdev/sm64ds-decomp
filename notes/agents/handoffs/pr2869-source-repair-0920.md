@@ -37,8 +37,10 @@ remain partial, and the accepted header comment is unchanged. Remaining work is
 [issue #2872](https://github.com/tangosdev/sm64ds-decomp/issues/2872), next owner
 `codex-integrator-0920`. The issue does not waive correctness or provenance.
 
-Only the existing shadow TU and these two owned evidence documents are new work.
-No headers, layouts, manifests, ledgers or enrollment are changed relative to d160.
+Only the existing shadow TU and these two owned evidence documents are new work
+by this producer. The later accepted manifest-note correction described below is
+inherited through its original commit; headers, layouts, ledgers, enrollment and
+every non-note manifest field remain unchanged.
 No full-ROM result is claimed for an unenrolled shadow. Static checks and their
 exact final commit are recorded in queue evidence after freezing this commit.
 The declaration scanner excludes src_tu; a green ratchet cannot certify these
@@ -48,3 +50,27 @@ Next: an independent verifier reviews the exact output, contracts, inherited
 findings, complete-object limits and tested base. Root remains the sole original
 PR publisher/merger. This producer handoff has `formal_acceptance: false` and does
 not publish a source branch. No private inputs, object files or receipts are tracked.
+
+
+## Accepted conflict-note continuation
+
+The original source candidate `102d3df731a9cfc7e217a7042f7e761c6bb8d15a` is
+preserved on `fix/pr2869-bookshot-decls0920`. This continuation is on
+`fix/pr2869-bookshot-notes0920` and merges independently accepted metadata commit
+`2de630659a82f027501fe66792068c97ff18f0b6`, task `pr2868-conflict-notes-0920`.
+Root authored that metadata repair; `codex-bookmeta-review-0920` independently
+accepted it before this merge. No receipt or source reservation was transferred.
+
+BOOK2868-06 remains a provenance finding and is fixed by the six exact RESOLVED
+prefixes. The original warning text remains; 13 unresolved notes still correspond
+to 13 source markers. These six stale records made CI fail even though all byte
+checks passed. `check_tubuild_conflicts.py --list` is now explicitly required in
+the final producer gates. All source/header/compiler inputs and non-note manifest
+fields are unchanged from the frozen source candidate; the full accepted finding
+is retained in the experiment and will be carried into independent review.
+
+The running task's original two predecessor IDs remain immutable. The later
+accepted dependency above is explicitly recorded here and in producer evidence;
+current v2 amendment supports resource additions, not predecessor edits. This is
+still an unpublished producer checkpoint awaiting the integrator's final current
+main revision. No passing source acceptance or current-main completion is claimed.

@@ -13,7 +13,7 @@
   "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
   "source": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp",
   "manifest": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
-  "source_result": "Real ShadowModel::InitCylinder; named collision members and typed scalar bridges; the C cylinder bridge takes const Vector3* as its actual definition does. All accepted2868 fixes, genuine SetFile calls, source/header/config blobs outside this TU and author ancestry are preserved.",
+  "source_result": "Real ShadowModel::InitCylinder; named collision members and typed scalar bridges; the C cylinder bridge takes const Vector3* as its actual definition does. All accepted2868 source/header fixes, genuine SetFile calls and author ancestry are preserved. Independently accepted manifest-note reconciliation is inherited separately; non-note manifest inputs are unchanged.",
   "strict_result": {
     "functions": 31,
     "function_bytes": 6040,
@@ -53,7 +53,8 @@
     "BOOK2868-02": "Partial reconstruction remains; two measured cylinder Init member-call forms fail by 16 bytes and the mesh method has an unresolved declaration boundary. No claim that all genuine source forms fail.",
     "BOOK2868-03": "17 unlicensed outputs, three policy failures and destructor ordinal pairs [0,1]/[2,3] remain; unenrolled shadow only.",
     "BOOK2868-04": "All nine accepted contract-family repairs remain unchanged.",
-    "BOOK2868-05": "Accepted constructor-order header comment remains byte-for-byte unchanged."
+    "BOOK2868-05": "Accepted constructor-order header comment remains byte-for-byte unchanged.",
+    "BOOK2868-06": "Provenance fixed by independently accepted six RESOLVED prefixes at2de63065. All other notes and all compiler inputs remain unchanged."
   },
   "probes": [
     {
@@ -171,5 +172,31 @@
     "No class/layout/header/manifest/ledger/enrollment edit, source promotion or metadata licensing.",
     "No full-ROM claim: the shadow is unenrolled. All complete-object failures are retained.",
     "Producer proof is not independent source acceptance."
-  ]
+  ],
+  "metadata_adoption": {
+    "previous_source_candidate": "102d3df731a9cfc7e217a7042f7e761c6bb8d15a",
+    "accepted_metadata_commit": "2de630659a82f027501fe66792068c97ff18f0b6",
+    "accepted_metadata_task": "pr2868-conflict-notes-0920",
+    "changed_before_owned_document_update": [
+      "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+      "notes/agents/handoffs/pr2868-conflict-notes-0920.md"
+    ],
+    "source_and_all_other_compiler_input_blobs_unchanged": true,
+    "manifest_non_note_fields_unchanged": true,
+    "resolved_note_prefixes": 6,
+    "open_notes": 13,
+    "source_markers": 13,
+    "accepted_finding": {
+      "id": "BOOK2868-06",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json:252-256,260",
+      "summary": "The six stale open-conflict records are now explicitly resolved while preserving historical warning text.",
+      "reason": "Independently inspected each real definition and repaired call population. Exact successor changes only the six approved RESOLVED prefixes and its handoff; actual full conflicts check passes with13 remaining open notes and13 markers. All previous findings and partial issue ownership are retained.",
+      "prior_review_limit": "Earlier exact d160 Source review did not run check_tubuild_conflicts.py; its byte and source-contract proofs remain valid, but did not cover this stale manifest accounting. This continuation is required for CI.",
+      "preflight_artifact": "build/reviewer-0919/pr2868-conflicts-independent-preflight.json"
+    },
+    "independent_metadata_evidence": "pr2868-conflict-notes-independent-review.json",
+    "protocol_note": "Existing task predecessors are immutable in current v2; amend only extends resources. Adopt this later accepted dependency and preserve its finding explicitly in producer evidence and final independent review; do not reuse another session receipt."
+  }
 }
