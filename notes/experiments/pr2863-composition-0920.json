@@ -1,0 +1,415 @@
+{
+  "schema": 1,
+  "task": "pr2863-composition-0920",
+  "producer_session": "codex-shadow-composer-0920",
+  "harness": "Codex",
+  "formal_acceptance": false,
+  "completion": "partial",
+  "predecessor_task": "pr2863-source-repair-0920",
+  "accepted_source_commit": "51683149abf9a2da651321adcb016f00b1cf045c",
+  "accepted_source_review_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
+  "independent_source_reviewer": "codex-spiny-formal-review-0920",
+  "composition_merge_commit": "faa5aeabdd1e6a9a6754eb7601a39ef84fa7a712",
+  "tested_base": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "live_main_at_composition": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "stable_target_at_composition": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "accepted_base_window_at_composition": [
+    "c04f97677c3c30b269354a36435c027bdd0afd5f"
+  ],
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "report_scope": "Composition producer evidence only. The predecessor source acceptance is retained as history; it does not accept this changed base. Independent composition verification must follow.",
+  "changes": "No manual source/header/config/ledger edits. Clean --no-ff merge of pinned main preserves repaired input blobs and every unrelated current-main blob. Only this report and its owned handoff are added afterward.",
+  "input_blob_identity": [
+    {
+      "path": "src_tu/actors/Spiny.cpp",
+      "accepted_blob": "43c97ef34298a76d3a69b3adbff244075d578ac4",
+      "composition_blob": "43c97ef34298a76d3a69b3adbff244075d578ac4"
+    },
+    {
+      "path": "include/Spiny.h",
+      "accepted_blob": "d419c31569c13d79410204b9f5e25acbd80d8d60",
+      "composition_blob": "d419c31569c13d79410204b9f5e25acbd80d8d60"
+    },
+    {
+      "path": "config/tu_manifest.d/ov077/Spiny.json",
+      "accepted_blob": "5efb23e55a2a87cde80c07a94b7e40de841025e3",
+      "composition_blob": "5efb23e55a2a87cde80c07a94b7e40de841025e3"
+    },
+    {
+      "path": "notes/experiments/pr2863-source-repair-0920.json",
+      "accepted_blob": "76ebbd3aa7ba2aa3ec6af0c3a848dbe9ada7d247",
+      "composition_blob": "76ebbd3aa7ba2aa3ec6af0c3a848dbe9ada7d247"
+    },
+    {
+      "path": "notes/agents/handoffs/pr2863-source-repair-0920.md",
+      "accepted_blob": "20920943ed698fa24c9b2f43f1a32d6bd80dc96d",
+      "composition_blob": "20920943ed698fa24c9b2f43f1a32d6bd80dc96d"
+    }
+  ],
+  "all_unrelated_main_blobs_preserved": true,
+  "merge_conflicts": false,
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\pr2863-composition\\manifest.json verify ov077/Spiny",
+  "tubuild_exit_code": 1,
+  "strict_verified": 34,
+  "function_bytes": 5864,
+  "strict_diffs": [],
+  "strict_blind": 0,
+  "object_bytes": 21528,
+  "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+  "whole_object_identical_to_accepted": true,
+  "function_results": [
+    {
+      "symbol": "_ZN5SpinyD1Ev",
+      "address": "0x02124b64",
+      "size": "0x00000050",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5SpinyD0Ev",
+      "address": "0x02124bb4",
+      "size": "0x00000064",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
+      "address": "0x02124c18",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
+      "address": "0x02124c20",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124c28",
+      "address": "0x02124c28",
+      "size": "0x000000bc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124ce4",
+      "address": "0x02124ce4",
+      "size": "0x00000024",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124d08",
+      "address": "0x02124d08",
+      "size": "0x000001a8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124eb0",
+      "address": "0x02124eb0",
+      "size": "0x000001f8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021250a8",
+      "address": "0x021250a8",
+      "size": "0x00000128",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021251d0",
+      "address": "0x021251d0",
+      "size": "0x000000c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125290",
+      "address": "0x02125290",
+      "size": "0x00000074",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125304",
+      "address": "0x02125304",
+      "size": "0x000000a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021253a4",
+      "address": "0x021253a4",
+      "size": "0x000000dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125480",
+      "address": "0x02125480",
+      "size": "0x000000d0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125550",
+      "address": "0x02125550",
+      "size": "0x00000164",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021256b4",
+      "address": "0x021256b4",
+      "size": "0x0000017c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125830",
+      "address": "0x02125830",
+      "size": "0x000000ac",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021258dc",
+      "address": "0x021258dc",
+      "size": "0x0000002c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125908",
+      "address": "0x02125908",
+      "size": "0x00000104",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a0c",
+      "address": "0x02125a0c",
+      "size": "0x00000048",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a54",
+      "address": "0x02125a54",
+      "size": "0x000000c8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125b1c",
+      "address": "0x02125b1c",
+      "size": "0x00000098",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125bb4",
+      "address": "0x02125bb4",
+      "size": "0x00000220",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125dd4",
+      "address": "0x02125dd4",
+      "size": "0x0000004c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e20",
+      "address": "0x02125e20",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e5c",
+      "address": "0x02125e5c",
+      "size": "0x00000038",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e94",
+      "address": "0x02125e94",
+      "size": "0x0000001c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16CleanupResourcesEv",
+      "address": "0x02125eb0",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnPendingDestroyEv",
+      "address": "0x02125eec",
+      "size": "0x00000004",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny6RenderEv",
+      "address": "0x02125ef0",
+      "size": "0x00000078",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny8BehaviorEv",
+      "address": "0x02125f68",
+      "size": "0x000000f0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13InitResourcesEv",
+      "address": "0x02126058",
+      "size": "0x0000013c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
+      "address": "0x02126194",
+      "size": "0x00000060",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daTgz_c_classInit",
+      "address": "0x021261f4",
+      "size": "0x00000058",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "inherited_limits": {
+    "unlicensed_outputs": 9,
+    "policy_reasons": [],
+    "bad_ordinal_pairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "unenrolled_shadow": true,
+    "promotion_ready": false,
+    "full_rom_run": false
+  },
+  "inherited_findings": [
+    {
+      "id": "SP2863-01",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "summary": "The state helper uses one truthful two-argument void contract.",
+      "reason": "All12module-qualified calls in eight shadow functions agree; ROM callee overwrites incoming r2. All34strict checks and complete-object identity confirm the repair. Unchanged enrolled InitResources shard remains outside this shadow task."
+    },
+    {
+      "id": "SP2863-02",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "summary": "Both Render calls use the genuine existing Model and ModelAnim methods.",
+      "reason": "The fabricated six-slot interface is removed; actual const Vector3* virtual methods retain slot5 calls and complete-object identity. This does not assert reconstruction of other raw helper interfaces."
+    },
+    {
+      "id": "SP2863-03",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "The matrix is still a byte member plus padding accessed through an M48 view.",
+      "reason": "Actual issue2870 assigns the remaining real-field/layout reconstruction and consumer proof to codex-integrator-0920. The reviewed repair does not claim a recovered matrix type.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2870",
+      "owner": "codex-integrator-0920"
+    },
+    {
+      "id": "SP2863-04",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Complete output ownership, class identity and remaining raw helper/lifecycle reconstruction are unfinished.",
+      "reason": "Nine unlicensed metadata outputs and reversed destructor pair[0,1] remain; community Spiny RTTI is not retail daTgz_c identity. Actual issue2870 owns these prerequisites. Source remains an unenrolled shadow, with no complete-object/promotion or full-ROM coverage claim.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2870",
+      "owner": "codex-integrator-0920"
+    },
+    {
+      "id": "SP2863-05",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "summary": "All nine reported call-contract families now agree with their actual definitions or genuine member interfaces.",
+      "reason": "Independently checked NewSimple result, short ApproachLinear result, func02010844 result, genuine DetectRaycastClsn, Hurt flags/result, SetAnim frame width, DropShadow opacity, and both sound wrappers. All10sound declarations and11views are corrected. Fresh34strict and whole-object identity pass; no targeted diagnostic remains. Opaque shared scalar/member representations are not falsely claimed complete."
+    },
+    {
+      "id": "SP2863-06",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "summary": "The false recovered daJgm_c_Kill/vtable claim is replaced by the observed state3 PMF relationship.",
+      "reason": "Verified relocation021278e8->021258dc and initializer assignment to02127c28+0x30. No original private name or virtual-table identity is invented; unchanged legacy prose remains outside this owned shadow."
+    }
+  ],
+  "followup_issue": {
+    "url": "https://github.com/tangosdev/sm64ds-decomp/issues/2870",
+    "owner": "codex-integrator-0920",
+    "published": true
+  },
+  "declaration_gate": {
+    "command": "python tools/check_decl_agreement.py --changed c04f97677c3c30b269354a36435c027bdd0afd5f",
+    "exit_code": 0,
+    "log": "check_decl_agreement: 3 file(s) added or modified vs c04f97677c3c30b269354a36435c027bdd0afd5f, 0 of them a src/ or include/ source and no changed row in 0 config symbols.txt file(s) -- nothing for this gate to check.\n",
+    "limit": "Normal scanner excludes src_tu. This scoped ratchet result is not a new audit or acceptance of every inherited shadow interface."
+  },
+  "static_checks": "git diff --check and check_dead_references.py are run after these two docs are written and before the final local commit; actual logs are retained in ignored build.",
+  "source_branch_preservation": {
+    "repair_branch": "review/pr2863-repair0920",
+    "repair_head": "51683149abf9a2da651321adcb016f00b1cf045c",
+    "composition_branch": "review/pr2863-composition0920"
+  },
+  "next_action": "Publish only owned compose stage with own receipt, then independent exact-current-base verify. Root remains sole original-PR publisher and merger."
+}

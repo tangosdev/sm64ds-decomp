@@ -26538,13 +26538,13 @@
    "start": "0x211975c",
    "end": "0x211af38",
    "classes": [
-    "KoopaTheQuick"
+    "daRNk_c"
    ],
    "n_functions_map": 18,
    "n_files": 18,
    "files": [
-    "src/_ZN13KoopaTheQuickD1Ev.cpp",
-    "src/_ZN13KoopaTheQuickD0Ev.cpp",
+    "src/_ZN7daRNk_cD1Ev.cpp",
+    "src/_ZN7daRNk_cD0Ev.cpp",
     "src/func_ov062_02119800.cpp",
     "src/func_ov062_02119954.c",
     "src/func_ov062_021199ac.c",
@@ -26556,10 +26556,10 @@
     "src/func_ov062_0211a740.cpp",
     "src/func_ov062_0211a9c4.c",
     "src/func_ov062_0211aac0.c",
-    "src/_ZN13KoopaTheQuick6RenderEv.cpp",
-    "src/_ZN13KoopaTheQuick8BehaviorEv.cpp",
-    "src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp",
-    "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp",
+    "src/_ZN7daRNk_c6RenderEv.cpp",
+    "src/_ZN7daRNk_c8BehaviorEv.cpp",
+    "src/_ZN7daRNk_c16CleanupResourcesEv.cpp",
+    "src/_ZN7daRNk_c13InitResourcesEv.cpp",
     "src/d_a_r_nk.c"
    ],
    "ext_mix": {

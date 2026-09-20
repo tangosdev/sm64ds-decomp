@@ -1,0 +1,475 @@
+{
+  "schema": 1,
+  "task": "pr2868-composition-0920",
+  "producer_session": "codex-shadow-composer-0920",
+  "harness": "Codex",
+  "formal_acceptance": false,
+  "completion": "partial",
+  "predecessor_task": "pr2868-source-repair-0920",
+  "accepted_source_commit": "86fe1c844f285c9e044a4654b7a5617f78415dba",
+  "accepted_source_review_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
+  "independent_source_reviewer": "codex-bookshot-formal-review-0920",
+  "composition_merge_commit": "cb444989cc208c31e71a199a09e9e48e849fe153",
+  "tested_base": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "live_main_at_composition": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "stable_target_at_composition": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "accepted_base_window_at_composition": [
+    "c04f97677c3c30b269354a36435c027bdd0afd5f"
+  ],
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "report_scope": "Composition producer evidence only. The predecessor source acceptance is retained as history; it does not accept this changed base. Independent composition verification must follow.",
+  "changes": "No manual source/header/config/ledger edits. Clean --no-ff merge of pinned main preserves repaired input blobs and every unrelated current-main blob. Only this report and its owned handoff are added afterward.",
+  "input_blob_identity": [
+    {
+      "path": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp",
+      "accepted_blob": "957997ee6ee8ef1664cc32f9dc6ed5916db4bf55",
+      "composition_blob": "957997ee6ee8ef1664cc32f9dc6ed5916db4bf55"
+    },
+    {
+      "path": "include/BookShot.h",
+      "accepted_blob": "4564bbe0848741077d60b5cbab70327f27eacd65",
+      "composition_blob": "4564bbe0848741077d60b5cbab70327f27eacd65"
+    },
+    {
+      "path": "include/BookShotSpawner.h",
+      "accepted_blob": "e70ffdc6417f080aa4104fd80f5b381a7d3eaff3",
+      "composition_blob": "e70ffdc6417f080aa4104fd80f5b381a7d3eaff3"
+    },
+    {
+      "path": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+      "accepted_blob": "77b9d431d74f67f8d748367dd25c8725cf8f314c",
+      "composition_blob": "77b9d431d74f67f8d748367dd25c8725cf8f314c"
+    },
+    {
+      "path": "notes/experiments/pr2868-source-repair-0920.json",
+      "accepted_blob": "d61e8490c475036d8c4b3a58afa4c0538f9d1665",
+      "composition_blob": "d61e8490c475036d8c4b3a58afa4c0538f9d1665"
+    },
+    {
+      "path": "notes/agents/handoffs/pr2868-source-repair-0920.md",
+      "accepted_blob": "23255f2563787f420f9152705ee2e3c6a6efde1a",
+      "composition_blob": "23255f2563787f420f9152705ee2e3c6a6efde1a"
+    }
+  ],
+  "all_unrelated_main_blobs_preserved": true,
+  "merge_conflicts": false,
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\pr2868-composition\\manifest.json verify ov020/BookShot+BookShotSpawner+Bookend",
+  "tubuild_exit_code": 1,
+  "strict_verified": 31,
+  "function_bytes": 6040,
+  "strict_diffs": [],
+  "strict_blind": 0,
+  "object_bytes": 22376,
+  "object_sha256": "05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688",
+  "whole_object_identical_to_accepted": true,
+  "function_results": [
+    {
+      "symbol": "_ZN8BookShotD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000050",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShotD0Ev",
+      "address": "0x021111f0",
+      "size": "0x00000064",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN15BookShotSpawnerD1Ev",
+      "address": "0x02111254",
+      "size": "0x00000024",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN15BookShotSpawnerD0Ev",
+      "address": "0x02111278",
+      "size": "0x00000038",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_021112b0",
+      "address": "0x021112b0",
+      "size": "0x00000090",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111340",
+      "address": "0x02111340",
+      "size": "0x000000d8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111418",
+      "address": "0x02111418",
+      "size": "0x00000194",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_021115ac",
+      "address": "0x021115ac",
+      "size": "0x000001a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_0211174c",
+      "address": "0x0211174c",
+      "size": "0x00000290",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_021119dc",
+      "address": "0x021119dc",
+      "size": "0x000000cc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111aa8",
+      "address": "0x02111aa8",
+      "size": "0x00000080",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111b28",
+      "address": "0x02111b28",
+      "size": "0x00000108",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111c30",
+      "address": "0x02111c30",
+      "size": "0x000002b0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111ee0",
+      "address": "0x02111ee0",
+      "size": "0x000000e4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02111fc4",
+      "address": "0x02111fc4",
+      "size": "0x000000bc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02112080",
+      "address": "0x02112080",
+      "size": "0x00000090",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_02112110",
+      "address": "0x02112110",
+      "size": "0x0000005c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov020_0211216c",
+      "address": "0x0211216c",
+      "size": "0x000000d8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot16CleanupResourcesEv",
+      "address": "0x02112244",
+      "size": "0x0000004c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN15BookShotSpawner16CleanupResourcesEv",
+      "address": "0x02112290",
+      "size": "0x00000034",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot6RenderEv",
+      "address": "0x021122c4",
+      "size": "0x00000078",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot8BehaviorEv",
+      "address": "0x0211233c",
+      "size": "0x000000dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN15BookShotSpawner8BehaviorEv",
+      "address": "0x02112418",
+      "size": "0x000000cc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot13InitResourcesEv",
+      "address": "0x021124e4",
+      "size": "0x00000284",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN15BookShotSpawner13InitResourcesEv",
+      "address": "0x02112768",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot16OnAimedAtWithEggEv",
+      "address": "0x021127a4",
+      "size": "0x00000028",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN8BookShot13OnYoshiTryEatEv",
+      "address": "0x021127cc",
+      "size": "0x00000028",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daBook_c_classInit_BOOK_SWITCH",
+      "address": "0x021127f4",
+      "size": "0x0000005c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daBookGen_c_classInit",
+      "address": "0x02112850",
+      "size": "0x00000030",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daBook_c_classInit_KILLER_BOOK",
+      "address": "0x02112880",
+      "size": "0x0000005c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daBook_c_classInit_SHOOT_BOOK",
+      "address": "0x021128dc",
+      "size": "0x0000005c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "inherited_limits": {
+    "unlicensed_outputs": 17,
+    "policy_reasons": [
+      "unlicensed function _ZN15BookShotSpawnerD2Ev has no compiler_only_output policy",
+      "unlicensed function _ZN7Vector3D1Ev has no compiler_only_output policy",
+      "unlicensed function _ZN8BookShotD2Ev has no compiler_only_output policy"
+    ],
+    "bad_ordinal_pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "unenrolled_shadow": true,
+    "promotion_ready": false,
+    "full_rom_run": false
+  },
+  "inherited_findings": [
+    {
+      "id": "BOOK2868-01",
+      "kind": "reconstruction",
+      "disposition": "fixed",
+      "summary": "The original member-offset cleanup is retained and correctly identifies the embedded objects.",
+      "reason": "Source observation accepted as fixed reconstruction for schema vocabulary only: actual offsets/layout witnesses agree, original author ancestry is retained, and fresh31strict plus complete-object identity confirm preservation."
+    },
+    {
+      "id": "BOOK2868-02",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "Raw matrix/vector overlays and other helper/interface reconstruction remain partial.",
+      "reason": "Actual issue2872 assigns the real-field and ordinary-interface work to codex-integrator-0920. Correct scalar SetAnim/DropShadow bridges are retained after documented valid ordinary-member probes enlarged affected functions; those bounded measurements do not claim all cleaner forms impossible.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
+      "owner": "codex-integrator-0920"
+    },
+    {
+      "id": "BOOK2868-03",
+      "kind": "reconstruction",
+      "disposition": "deferred",
+      "summary": "The complete emitted object still fails ownership/policy/order requirements for promotion.",
+      "reason": "Fresh gate exits1:17unlicensed outputs(3functions+14objects), missing BookShotD2/BookShotSpawnerD2/Vector3D1 policies, and destructor order pairs[0,1]/[2,3]. These are reconstruction prerequisites under actual issue2872, explicitly deferred for this unenrolled shadow. No full-output or promotion pass is claimed.",
+      "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
+      "owner": "codex-integrator-0920"
+    },
+    {
+      "id": "BOOK2868-04",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "summary": "All nine reported contradictory call-contract families are repaired.",
+      "reason": "Verified genuine ClosestPlayer, UpdatePos, SetFile, Spawn and both ApproachLinear overloads; void state helper has one result-discarding caller. Short angle plus genuine GetSubtraction preserves correct int comparison. Sound, Hurt/Bounce, SetAnim and DropShadow scalar bridges agree with actual pinned definitions. All31strict pass, complete object identical, targeted diagnostics empty. Correctness is fixed rather than deferred."
+    },
+    {
+      "id": "BOOK2868-05",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "summary": "The factory-order comment now states that members are constructed after the derived vptr store.",
+      "reason": "Only before->after changed. Non-comment header text is identical and all eight production consumers strictly verify. Actual factory bytes still match; retail daBook_c identity and member-layout evidence are preserved."
+    }
+  ],
+  "followup_issue": {
+    "url": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
+    "owner": "codex-integrator-0920",
+    "published": true
+  },
+  "declaration_gate": {
+    "command": "python tools/check_decl_agreement.py --changed c04f97677c3c30b269354a36435c027bdd0afd5f",
+    "exit_code": 0,
+    "log": "check_decl_agreement: 8763 file(s), 38520 extern declaration(s) of 13939 distinct symbol(s), 10610 of which the tree also defines; 2 unparsed declarator(s)\n  17156 disagreement(s) across 3780 symbol(s)   arity=1133  kind=333  linkage=1  mangled=53  param=8035  return=7601\n  --changed c04f97677c3c30b269354a36435c027bdd0afd5f: 1 source file(s) changed defining 0 symbol(s), 0 symbol(s) named by a changed config row, 6 file(s) reached through 3 changed type name(s); 7 file(s) in scope once every declaration of those is folded in; 18 disagreement(s) among them\n  no new declaration disagreements\n",
+    "limit": "Normal scanner excludes src_tu. This scoped ratchet result is not a new audit or acceptance of every inherited shadow interface."
+  },
+  "static_checks": "git diff --check and check_dead_references.py are run after these two docs are written and before the final local commit; actual logs are retained in ignored build.",
+  "source_branch_preservation": {
+    "repair_branch": "review/pr2868-repair0920",
+    "repair_head": "86fe1c844f285c9e044a4654b7a5617f78415dba",
+    "composition_branch": "review/pr2868-composition0920"
+  },
+  "next_action": "Publish only owned compose stage with own receipt, then independent exact-current-base verify. Root remains sole original-PR publisher and merger.",
+  "header_consumers": {
+    "count": 8,
+    "results": [
+      {
+        "file": "src/_ZN8BookShot13InitResourcesEv.cpp",
+        "name": "_ZN8BookShot13InitResourcesEv",
+        "module": "ov020",
+        "addr": "0x21124e4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShot13OnYoshiTryEatEv.cpp",
+        "name": "_ZN8BookShot13OnYoshiTryEatEv",
+        "module": "ov020",
+        "addr": "0x21127cc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShot16CleanupResourcesEv.cpp",
+        "name": "_ZN8BookShot16CleanupResourcesEv",
+        "module": "ov020",
+        "addr": "0x2112244",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShot16OnAimedAtWithEggEv.cpp",
+        "name": "_ZN8BookShot16OnAimedAtWithEggEv",
+        "module": "ov020",
+        "addr": "0x21127a4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShot6RenderEv.cpp",
+        "name": "_ZN8BookShot6RenderEv",
+        "module": "ov020",
+        "addr": "0x21122c4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShot8BehaviorEv.cpp",
+        "name": "_ZN8BookShot8BehaviorEv",
+        "module": "ov020",
+        "addr": "0x211233c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShotD0Ev.cpp",
+        "name": "_ZN8BookShotD0Ev",
+        "module": "ov020",
+        "addr": "0x21111f0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN8BookShotD1Ev.cpp",
+        "name": "_ZN8BookShotD1Ev",
+        "module": "ov020",
+        "addr": "0x21111a0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      }
+    ],
+    "header_delta_from_main": "Only the accepted before -> after factory-order comment; entire accepted header blob preserved."
+  }
+}

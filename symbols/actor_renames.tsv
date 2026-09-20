@@ -1702,12 +1702,12 @@ ov062	0x021196bc	func_ov062_021196bc	KoopaSmall_Spawn	spawnfunc
 ov062	0x021196bc	KoopaSmall_Spawn	daNknk_c_classInit_NOKONOKO_S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211970c	func_ov062_0211970c	Koopa_Spawn	spawnfunc
 ov062	0x0211970c	Koopa_Spawn	daNknk_c_classInit_NOKONOKO	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov062	0x0211975c	func_ov062_0211975c	_ZN13KoopaTheQuickD1Ev	vtable slot 16
-ov062	0x021197a4	func_ov062_021197a4	_ZN13KoopaTheQuickD0Ev	vtable slot 17
-ov062	0x0211ab50	func_ov062_0211ab50	_ZN13KoopaTheQuick6RenderEv	vtable slot 9
-ov062	0x0211ab88	func_ov062_0211ab88	_ZN13KoopaTheQuick8BehaviorEv	vtable slot 6
-ov062	0x0211ac10	func_ov062_0211ac10	_ZN13KoopaTheQuick16CleanupResourcesEv	vtable slot 3
-ov062	0x0211ac94	func_ov062_0211ac94	_ZN13KoopaTheQuick13InitResourcesEv	vtable slot 0
+ov062	0x0211975c	func_ov062_0211975c	_ZN7daRNk_cD1Ev	vtable slot 16
+ov062	0x021197a4	func_ov062_021197a4	_ZN7daRNk_cD0Ev	vtable slot 17
+ov062	0x0211ab50	func_ov062_0211ab50	_ZN7daRNk_c6RenderEv	vtable slot 9
+ov062	0x0211ab88	func_ov062_0211ab88	_ZN7daRNk_c8BehaviorEv	vtable slot 6
+ov062	0x0211ac10	func_ov062_0211ac10	_ZN7daRNk_c16CleanupResourcesEv	vtable slot 3
+ov062	0x0211ac94	func_ov062_0211ac94	_ZN7daRNk_c13InitResourcesEv	vtable slot 0
 ov062	0x0211aee0	func_ov062_0211aee0	KoopaTheQuick_Spawn	spawnfunc
 ov062	0x0211aee0	KoopaTheQuick_Spawn	daRNk_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211af38	func_ov062_0211af38	_ZN9KoopaFlagD1Ev	vtable slot 16
@@ -1737,7 +1737,7 @@ ov062	0x0211da90	KoopaSmall_SpawnInfo	g_profile_NOKONOKO_S	reconstructed profile
 ov062	0x0211dab4	data_ov062_0211dab4	_ZTV5Koopa	vtable alloc=0x3d0
 ov062	0x0211db78	data_ov062_0211db78	KoopaTheQuick_SpawnInfo	spawninfo
 ov062	0x0211db78	KoopaTheQuick_SpawnInfo	g_profile_RACE_NOKO	reconstructed profile global; literal ROM ID RACE_NOKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov062	0x0211db9c	data_ov062_0211db9c	_ZTV13KoopaTheQuick	vtable alloc=0x3e0
+ov062	0x0211db9c	data_ov062_0211db9c	_ZTV7daRNk_c	vtable alloc=0x3e0
 ov062	0x0211dc30	data_ov062_0211dc30	KoopaFlag_SpawnInfo	spawninfo
 ov062	0x0211dc30	KoopaFlag_SpawnInfo	g_profile_RACE_FLAG	reconstructed profile global; literal ROM ID RACE_FLAG+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211dc54	data_ov062_0211dc54	_ZTV9KoopaFlag	vtable alloc=0x174

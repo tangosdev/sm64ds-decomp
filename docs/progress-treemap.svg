@@ -35429,11 +35429,11 @@ matched: yes</title></rect><rect x="1322.75" y="306.21" width="5.45" height="7.4
 module: ov062
 addr: 0x0211970c
 size: 80 bytes
-matched: yes</title></rect><rect x="1328.20" y="306.21" width="4.90" height="7.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuickD1Ev
+matched: yes</title></rect><rect x="1328.20" y="306.21" width="4.90" height="7.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_cD1Ev
 module: ov062
 addr: 0x0211975c
 size: 72 bytes
-matched: yes</title></rect><rect x="1333.10" y="306.21" width="6.26" height="7.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuickD0Ev
+matched: yes</title></rect><rect x="1333.10" y="306.21" width="6.26" height="7.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_cD0Ev
 module: ov062
 addr: 0x021197a4
 size: 92 bytes
@@ -35481,19 +35481,19 @@ matched: yes</title></rect><rect x="1381.94" y="313.69" width="7.68" height="9.5
 module: ov062
 addr: 0x0211aac0
 size: 144 bytes
-matched: yes</title></rect><rect x="1389.63" y="313.69" width="2.99" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuick6RenderEv
+matched: yes</title></rect><rect x="1389.63" y="313.69" width="2.99" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_c6RenderEv
 module: ov062
 addr: 0x0211ab50
 size: 56 bytes
-matched: yes</title></rect><rect x="1392.61" y="313.69" width="7.26" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuick8BehaviorEv
+matched: yes</title></rect><rect x="1392.61" y="313.69" width="7.26" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_c8BehaviorEv
 module: ov062
 addr: 0x0211ab88
 size: 136 bytes
-matched: yes</title></rect><rect x="1399.87" y="313.69" width="7.04" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuick16CleanupResourcesEv
+matched: yes</title></rect><rect x="1399.87" y="313.69" width="7.04" height="9.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_c16CleanupResourcesEv
 module: ov062
 addr: 0x0211ac10
 size: 132 bytes
-matched: yes</title></rect><rect x="1334.13" y="323.23" width="34.63" height="8.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13KoopaTheQuick13InitResourcesEv
+matched: yes</title></rect><rect x="1334.13" y="323.23" width="34.63" height="8.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daRNk_c13InitResourcesEv
 module: ov062
 addr: 0x0211ac94
 size: 588 bytes

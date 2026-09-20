@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "task": "pr2869-source-repair-0920",
+  "producer": "codex-bookshot-decls-0920",
+  "completion": "partial",
+  "formal_acceptance": false,
+  "author_input": "348405c2e4640d1c48c45f1f0f0af6c27345a065",
+  "accepted_input": "d160ad64587d3dceac98d5099e113d42de56b59c",
+  "historical_composition_base": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+  "original_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
+  "final_source_sha256": "b9f53448016cc1da2d7527f4e9ac3407c87d0f2b5dabe03e11d2456ebd6b4ca0",
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "source": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp",
+  "manifest": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+  "source_result": "Real ShadowModel::InitCylinder; named collision members and typed scalar bridges; the C cylinder bridge takes const Vector3* as its actual definition does. All accepted2868 source/header fixes, genuine SetFile calls and author ancestry are preserved. Independently accepted manifest-note reconciliation is inherited separately; non-note manifest inputs are unchanged.",
+  "strict_result": {
+    "functions": 31,
+    "function_bytes": 6040,
+    "differences": 0,
+    "blind": 0,
+    "whole_object_bytes": 22376,
+    "whole_object_sha256": "05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688",
+    "controls": "Fresh original author input and accepted d160 source controls independently equal the final entire object."
+  },
+  "contracts": [
+    {
+      "interface": "ShadowModel::InitCylinder",
+      "definition": "src/_ZN11ShadowModel12InitCylinderEv.cpp",
+      "result": "The actual int-returning method matches; erased free declaration removed."
+    },
+    {
+      "interface": "dCcAcPos_c scalar Init bridge",
+      "definition": "src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp",
+      "result": "Definition accepts dCcAcPos_c*, dActor_c*, const Vector3*, int, int, u32, u32. Author const-reference redeclaration was ABI-compatible at this call but disagreed with that C definition; final uses its typed pointer contract."
+    },
+    {
+      "interface": "dBgCh_Actr scalar Init bridge",
+      "definition": "src/_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_.c",
+      "result": "Typed this, actor and two Vector3_16 pointers agree with mangled identity and project declaration semantics; the legacy C body stores actor/rotation arguments through integer views. Do not copy those erased integer views into a new declaration. Current header method uses scalar Fix12i (typedef s32), so a direct call produces a different, unmapped symbol; no header reconciliation is claimed."
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "BOOK2869-01",
+      "kind": "correctness",
+      "status": "fixed",
+      "summary": "The authored const-reference C declaration disagreed with the actual cylinder initializer pointer definition. Retain const and concrete types while matching the actual scalar bridge."
+    }
+  ],
+  "inherited_findings": {
+    "BOOK2868-01": "Original named-member cleanup retained.",
+    "BOOK2868-02": "Partial reconstruction remains; two measured cylinder Init member-call forms fail by 16 bytes and the mesh method has an unresolved declaration boundary. No claim that all genuine source forms fail.",
+    "BOOK2868-03": "17 unlicensed outputs, three policy failures and destructor ordinal pairs [0,1]/[2,3] remain; unenrolled shadow only.",
+    "BOOK2868-04": "All nine accepted contract-family repairs remain unchanged.",
+    "BOOK2868-05": "Accepted constructor-order header comment remains byte-for-byte unchanged.",
+    "BOOK2868-06": "Provenance fixed by independently accepted six RESOLVED prefixes at2de63065. All other notes and all compiler inputs remain unchanged."
+  },
+  "probes": [
+    {
+      "label": "typed-composition",
+      "source_sha256": "7cfe7483e96516321eca845d680cb58560aecea70fee5f8ab5d91bc1f094729a",
+      "source_patch_from_final": "--- src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n+++ src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n@@ -146,14 +146,9 @@\n extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void LoadBlueCoinModel(void* c);\n-/* Scalar collision bridges; measured member-call forms are recorded in\n- * notes/experiments/pr2869-source-repair-0920.json. */\n-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(\n-    dBgCh_Actr* self, dActor_c* actor, int radius, int height,\n-    Vector3_16* first, Vector3_16* second);\n-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(\n-    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,\n-    int radius, int height, u32 flags, u32 vulnFlags);\n+extern int _ZN11ShadowModel12InitCylinderEv(ShadowModel* self);\n+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr* self, dActor_c* actor, int radius, int height, Vector3_16* firstRotation, Vector3_16* secondRotation);\n+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c* self, dActor_c* actor, const Vector3* offset, int radius, int height, u32 flags, u32 vulnFlags);\n extern struct M48 IDENTITY_MATRIX4X3;\n extern int data_ov020_02114ab8[];\n extern int data_ov020_02114aa0[];\n@@ -318,7 +313,7 @@\n     _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114ab0);\n     LoadBlueCoinModel(((char*)this));\n \n-    if (mShadowModel.InitCylinder() == 0)\n+    if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)\n         return 0;\n \n     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);\n",
+      "object_sha256": "05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688",
+      "object_bytes": 22376,
+      "strict_verified": 31,
+      "whole_object_identical_to_accepted2868": true,
+      "unlicensed_outputs": 17,
+      "mesh_init_symbols": [
+        "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_"
+      ],
+      "nonmatching": []
+    },
+    {
+      "label": "shadow-member",
+      "source_sha256": "8e7a65db78cc8730e6633c9b3d4dc678a5feac033307132fc1869cccbac70f58",
+      "source_patch_from_final": "--- src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n+++ src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n@@ -146,14 +146,8 @@\n extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void LoadBlueCoinModel(void* c);\n-/* Scalar collision bridges; measured member-call forms are recorded in\n- * notes/experiments/pr2869-source-repair-0920.json. */\n-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(\n-    dBgCh_Actr* self, dActor_c* actor, int radius, int height,\n-    Vector3_16* first, Vector3_16* second);\n-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(\n-    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,\n-    int radius, int height, u32 flags, u32 vulnFlags);\n+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr* self, dActor_c* actor, int radius, int height, Vector3_16* firstRotation, Vector3_16* secondRotation);\n+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c* self, dActor_c* actor, const Vector3* offset, int radius, int height, u32 flags, u32 vulnFlags);\n extern struct M48 IDENTITY_MATRIX4X3;\n extern int data_ov020_02114ab8[];\n extern int data_ov020_02114aa0[];\n",
+      "object_sha256": "05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688",
+      "object_bytes": 22376,
+      "strict_verified": 31,
+      "whole_object_identical_to_accepted2868": true,
+      "unlicensed_outputs": 17,
+      "mesh_init_symbols": [
+        "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_"
+      ],
+      "nonmatching": []
+    },
+    {
+      "label": "collision-member",
+      "source_sha256": "afd2c9382c8c252af45251f7a384eb7ba91e271f918bcd01d6bdc96c3bd0acc9",
+      "source_patch_from_final": "--- src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n+++ src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n@@ -146,14 +146,7 @@\n extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void LoadBlueCoinModel(void* c);\n-/* Scalar collision bridges; measured member-call forms are recorded in\n- * notes/experiments/pr2869-source-repair-0920.json. */\n-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(\n-    dBgCh_Actr* self, dActor_c* actor, int radius, int height,\n-    Vector3_16* first, Vector3_16* second);\n-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(\n-    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,\n-    int radius, int height, u32 flags, u32 vulnFlags);\n+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr* self, dActor_c* actor, int radius, int height, Vector3_16* firstRotation, Vector3_16* secondRotation);\n extern struct M48 IDENTITY_MATRIX4X3;\n extern int data_ov020_02114ab8[];\n extern int data_ov020_02114aa0[];\n@@ -326,7 +319,9 @@\n     unk_438 = 0;\n     unk_43c = 0;\n     unk_440 = 0;\n-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, (const Vector3*)&unk_438, 0x19000, 0x32000, 0x200001, 0);\n+    Fix12<int> radius = {0x19000};\n+    Fix12<int> height = {0x32000};\n+    mdCcAcPos_c.Init(this, *(const Vector3*)&unk_438, radius, height, 0x200001, 0);\n \n     unk_418 = 0;\n     unk_41c = 0;\n",
+      "object_sha256": "2032a4d2b11447c5c40887d90f57bbd2a3b4e9e9c4f510ba6992d3f3fbaec507",
+      "object_bytes": 22568,
+      "strict_verified": 30,
+      "whole_object_identical_to_accepted2868": false,
+      "unlicensed_outputs": 19,
+      "mesh_init_symbols": [
+        "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_"
+      ],
+      "nonmatching": [
+        {
+          "symbol": "_ZN8BookShot13InitResourcesEv",
+          "rom_size": "0x00000284",
+          "compiled_size": "0x294",
+          "verdict": "WRONG",
+          "blind": 2,
+          "difference_count": 133
+        }
+      ]
+    },
+    {
+      "label": "collision-member-assigned",
+      "source_sha256": "b20bbbca3a6bf2ad0556686c85ac1279999d062c5214b146d189a8a1b6ecf117",
+      "source_patch_from_final": "--- src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n+++ src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n@@ -146,14 +146,7 @@\n extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void LoadBlueCoinModel(void* c);\n-/* Scalar collision bridges; measured member-call forms are recorded in\n- * notes/experiments/pr2869-source-repair-0920.json. */\n-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(\n-    dBgCh_Actr* self, dActor_c* actor, int radius, int height,\n-    Vector3_16* first, Vector3_16* second);\n-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(\n-    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,\n-    int radius, int height, u32 flags, u32 vulnFlags);\n+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr* self, dActor_c* actor, int radius, int height, Vector3_16* firstRotation, Vector3_16* secondRotation);\n extern struct M48 IDENTITY_MATRIX4X3;\n extern int data_ov020_02114ab8[];\n extern int data_ov020_02114aa0[];\n@@ -326,7 +319,9 @@\n     unk_438 = 0;\n     unk_43c = 0;\n     unk_440 = 0;\n-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, (const Vector3*)&unk_438, 0x19000, 0x32000, 0x200001, 0);\n+    Fix12<int> radius; radius.val = 0x19000;\n+    Fix12<int> height; height.val = 0x32000;\n+    mdCcAcPos_c.Init(this, *(const Vector3*)&unk_438, radius, height, 0x200001, 0);\n \n     unk_418 = 0;\n     unk_41c = 0;\n",
+      "object_sha256": "7e67e9ae86e7a9bedc05667ac8bf0410eaa02ecaba793830cf08cf76943cade6",
+      "object_bytes": 22392,
+      "strict_verified": 30,
+      "whole_object_identical_to_accepted2868": false,
+      "unlicensed_outputs": 17,
+      "mesh_init_symbols": [
+        "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_"
+      ],
+      "nonmatching": [
+        {
+          "symbol": "_ZN8BookShot13InitResourcesEv",
+          "rom_size": "0x00000284",
+          "compiled_size": "0x294",
+          "verdict": "WRONG",
+          "blind": 0,
+          "difference_count": 136
+        }
+      ]
+    },
+    {
+      "label": "mesh-member",
+      "source_sha256": "61e7d3efe187e6e17a919f786ae0e64259f62946278b5d9d45f130d29adfeeba",
+      "source_patch_from_final": "--- src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n+++ src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp\n@@ -146,14 +146,7 @@\n extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);\n extern void LoadBlueCoinModel(void* c);\n-/* Scalar collision bridges; measured member-call forms are recorded in\n- * notes/experiments/pr2869-source-repair-0920.json. */\n-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(\n-    dBgCh_Actr* self, dActor_c* actor, int radius, int height,\n-    Vector3_16* first, Vector3_16* second);\n-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(\n-    dCcAcPos_c* self, dActor_c* actor, const Vector3* offset,\n-    int radius, int height, u32 flags, u32 vulnFlags);\n+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c* self, dActor_c* actor, const Vector3* offset, int radius, int height, u32 flags, u32 vulnFlags);\n extern struct M48 IDENTITY_MATRIX4X3;\n extern int data_ov020_02114ab8[];\n extern int data_ov020_02114aa0[];\n@@ -321,7 +314,7 @@\n     if (mShadowModel.InitCylinder() == 0)\n         return 0;\n \n-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);\n+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);\n \n     unk_438 = 0;\n     unk_43c = 0;\n",
+      "object_sha256": "d08b215cfb3ede5ee5e1197e4ca8b1c069d93ba894b4ff4641a6f07b17dfb132",
+      "object_bytes": 22360,
+      "strict_verified": 30,
+      "whole_object_identical_to_accepted2868": false,
+      "unlicensed_outputs": 17,
+      "mesh_init_symbols": [
+        "_ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_"
+      ],
+      "nonmatching": [
+        {
+          "symbol": "_ZN8BookShot13InitResourcesEv",
+          "rom_size": "0x00000284",
+          "compiled_size": "0x284",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "difference_count": 0
+        }
+      ]
+    }
+  ],
+  "reproduction": {
+    "command": "python <path-to-retained-driver>/pr2869-check.py <label> <scratch-source.cpp>",
+    "driver": "import contextlib, hashlib, io, json, pathlib, subprocess, sys\nsys.path.insert(0, 'tools')\nimport match as M, build_pin as B, tubuild as T, objisolate as O, linkcheck as L, reloc_audit as R\n\nlabel=sys.argv[1]\nsource=pathlib.Path(sys.argv[2] if len(sys.argv)>2 else 'src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp')\nout=pathlib.Path('build/book2869')/label; out.mkdir(parents=True,exist_ok=True)\nentry=json.loads(pathlib.Path('config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json').read_text())\nversion,note=T.resolve_tu_version(entry); assert version=='2004/b56' and note is None\nlog=io.StringIO()\nwith contextlib.redirect_stdout(log),contextlib.redirect_stderr(log):obj=M.compile_c(source,version,B.flags_for(source))\n(out/'compile.log').write_text(log.getvalue())\nreport={'label':label,'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'source':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'compiler':version,'flags':B.flags_for(source),'compiled':bool(obj),'formal_acceptance':False}\nif obj:\n    (out/'complete-object.o').write_bytes(obj)\n    index=R.build_name_index();rows=[]\n    for f in entry['functions']:\n        part,_=O.derive(obj,f['symbol'])\n        strict=L.linkcheck(f['symbol'],int(f['address'],0),int(f['size'],0),entry['module'],index,obj=part,sym=f['symbol'])\n        code,_=M.extract_func(obj,f['symbol'])\n        rows.append(dict(f,compiled_size=len(code),strict=strict))\n    inv=T.elf_inventory(obj);audited,policy,reasons=T.apply_compiler_only_policy(obj,entry)\n    extras=T.unlicensed_inventory(entry,T.elf_inventory(audited) if audited else inv)\n    order=[(f['ordinal'],next(s['shndx'] for s in inv['symbols'] if s['name']==f['symbol'])) for f in sorted(entry['functions'],key=lambda f:f['ordinal'])]\n    bad=[[order[i][0],order[i+1][0]] for i in range(len(order)-1) if order[i][1]>=order[i+1][1]]\n    report.update({'object_sha256':hashlib.sha256(obj).hexdigest(),'object_bytes':len(obj),'strict_verified':sum(r['strict']['verdict']=='VERIFIED' and not r['strict']['diffs'] and r['strict']['blind']==0 for r in rows),'function_bytes':sum(int(f['size'],0) for f in entry['functions']),'functions':rows,'unlicensed_outputs':sum(map(len,extras)),'policy_reasons':reasons,'bad_ordinal_pairs':bad,'object_identical_to_accepted2868':hashlib.sha256(obj).hexdigest()=='05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688'})\n(out/'proof.json').write_text(json.dumps(report,indent=2)+'\\n')\nprint(json.dumps({k:report.get(k) for k in ['label','compiled','object_sha256','object_bytes','strict_verified','object_identical_to_accepted2868','unlicensed_outputs','bad_ordinal_pairs']},indent=2))\nif obj:\n    for r in rows:\n        if r['strict']['verdict']!='VERIFIED':print(r['symbol'],r['compiled_size'],json.dumps(r['strict']))\n",
+    "steps": [
+      "Check out this commit in a wired worktree; copy the committed TU into ignored build storage.",
+      "Apply one source_patch_from_final to that scratch TU (ordinary unified diff).",
+      "Run the retained driver text from the worktree root with the scratch source path. This compiles the full TU, derives all31 functions and runs strict module-aware linkcheck.",
+      "Complete-output verification uses an ignored manifest copy with its source set to the scratch TU: python tools/tubuild.py --manifest <scratch-manifest.json> verify ov020/BookShot+BookShotSpawner+Bookend. Expect inherited complete-output refusal; never update the tracked manifest to hide it."
+    ]
+  },
+  "followup_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
+  "next_owner": "codex-integrator-0920",
+  "limits": [
+    "Final composition uses actual BookShot-merged main a3776dc057779c652309ab5de764061c63a426ad. Any later review-relevant main movement needs renewed exact composition acceptance.",
+    "No class/layout/header/manifest/ledger/enrollment edit, source promotion or metadata licensing.",
+    "No full-ROM claim: the shadow is unenrolled. All complete-object failures are retained.",
+    "Producer proof is not independent source acceptance."
+  ],
+  "metadata_adoption": {
+    "previous_source_candidate": "102d3df731a9cfc7e217a7042f7e761c6bb8d15a",
+    "accepted_metadata_commit": "2de630659a82f027501fe66792068c97ff18f0b6",
+    "accepted_metadata_task": "pr2868-conflict-notes-0920",
+    "changed_before_owned_document_update": [
+      "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+      "notes/agents/handoffs/pr2868-conflict-notes-0920.md"
+    ],
+    "source_and_all_other_compiler_input_blobs_unchanged": true,
+    "manifest_non_note_fields_unchanged": true,
+    "resolved_note_prefixes": 6,
+    "open_notes": 13,
+    "source_markers": 13,
+    "accepted_finding": {
+      "id": "BOOK2868-06",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json:252-256,260",
+      "summary": "The six stale open-conflict records are now explicitly resolved while preserving historical warning text.",
+      "reason": "Independently inspected each real definition and repaired call population. Exact successor changes only the six approved RESOLVED prefixes and its handoff; actual full conflicts check passes with13 remaining open notes and13 markers. All previous findings and partial issue ownership are retained.",
+      "prior_review_limit": "Earlier exact d160 Source review did not run check_tubuild_conflicts.py; its byte and source-contract proofs remain valid, but did not cover this stale manifest accounting. This continuation is required for CI.",
+      "preflight_artifact": "build/reviewer-0919/pr2868-conflicts-independent-preflight.json"
+    },
+    "independent_metadata_evidence": "pr2868-conflict-notes-independent-review.json",
+    "protocol_note": "Existing task predecessors are immutable in current v2; amend only extends resources. Adopt this later accepted dependency and preserve its finding explicitly in producer evidence and final independent review; do not reuse another session receipt."
+  },
+  "final_composition": {
+    "base": "a3776dc057779c652309ab5de764061c63a426ad",
+    "previous_frozen_candidate": "a4b060303b55e0f34334a765c6a31d8764e0afc6",
+    "accepted_metadata_commit": "2de630659a82f027501fe66792068c97ff18f0b6",
+    "source_blob": "fdb05af48d31496f85de068a1a8a26de8921f48d",
+    "incoming_source_blob": "957997ee6ee8ef1664cc32f9dc6ed5916db4bf55",
+    "source_unchanged_from_previous_candidate": true,
+    "all_unrelated_main_paths_preserved": true,
+    "conflict_resolution": "Only this owned TU declaration hunk conflicted. Incoming main source exactly equals accepted2de/d160; preserve entire preflighted a4 source after that identity check. No source edits were needed.",
+    "new_delta_from_main": [
+      "notes/agents/handoffs/pr2869-source-repair-0920.md",
+      "notes/experiments/pr2869-source-repair-0920.json",
+      "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp"
+    ]
+  }
+}
