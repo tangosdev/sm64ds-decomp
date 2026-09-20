@@ -1557,8 +1557,21 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                             color = blend_alpha(color, g_a[py][px].color,
                                                 bl.eva, bl.evb);
                     } else if (bl.second & 1u) {   // BG0 (3D) is a 2nd target
-                        color = blend_alpha(color, fb.px[py * yscale][px * xscale],
-                                            bl.eva, bl.evb);
+                        /* THE 3D PIXEL THIS SPRITE BLENDS AGAINST, read from
+                           the pre-smoothing copy when there is one (ntr/gx.h
+                           gx_aa_preimage). A semi-transparent sprite over a
+                           smoothed edge would otherwise carry the smoothing
+                           into the blend, and this blend is written into the
+                           frame the display capture reads, so the game would
+                           see the setting through it. Null -- the default --
+                           is the framebuffer, unchanged. */
+                        const uint32_t *pre3d = ntr::gx_aa_preimage();
+                        const int by = py * yscale, bx = px * xscale;
+                        color = blend_alpha(
+                            color,
+                            pre3d ? pre3d[(size_t)by * ntr::SCREEN_W + bx]
+                                  : fb.px[by][bx],
+                            bl.eva, bl.evb);
                     }
                 }
                 g_a[py][px].color = color;
@@ -2086,6 +2099,15 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     const bool honour3d = shown3d && !prio3d_off_env();
     const int p3d = bg0_3d_priority();
     const uint8_t *cover = shown3d ? ntr::gx_coverage() : nullptr;
+    /* THE PRE-SMOOTHING COPY OF THIS FRAME, or null when the AntiAliasing
+       setting is off -- which is the default and is every run that has not
+       asked for it. See ntr/gx.h's gx_aa_preimage: the game reads its own top
+       screen back through the DS display capture unit, and that copy is the
+       picture the setting promises it. Every host pixel written below goes
+       there too, so what the capture reads is a FINISHED frame -- this unit's
+       2D layers over the 3D -- that the smoothing never touched. One extra
+       store per composited pixel, and only when the setting is on. */
+    uint32_t *const pre = ntr::gx_aa_preimage();
     uint32_t kept = 0, buried = 0;
     for (int y = 0; y < 192; ++y) {
         for (int x = 0; x < 256; ++x) {
@@ -2164,6 +2186,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                         const int hy = y * sy + dy, hx = hx0 + dx;
                         if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
                         fb.px[hy][hx] = c;
+                        if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                     }
                 continue;
             }
@@ -2173,6 +2196,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                     const int hy = y * sy + dy, hx = hx0 + dx;
                     if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
                     fb.px[hy][hx] = c;
+                    if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                 }
         }
     }

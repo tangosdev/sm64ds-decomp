@@ -20,6 +20,7 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -1329,8 +1330,97 @@ struct TexEntry {
     std::vector<uint32_t> px;
     int w = 0, h = 0;
     uint8_t scale = 1;
+    /* THE MIP CHAIN, and it exists only under TextureFilter 2 (run hd2).
+       mip[0] is the picture at half width and half height, mip[1] a quarter,
+       and so on down to 1x1, so mip[k] is level k+1 and px above is level 0.
+       Built ONCE, when the texture enters the cache, never per frame and
+       never per triangle. Empty at every other filter mode, so a default run
+       holds not one extra byte. */
+    std::vector<std::vector<uint32_t>> mip;
 };
 std::map<TexKey, TexEntry> g_vram_tex_cache;
+
+/* THE BOUND BUFFER BACK TO ITS CACHE ENTRY. The raster is handed a plain
+   `const uint32_t *` on GxTriangle::tex and the mip chain hangs off the entry,
+   so trilinear needs the way back. Keyed on the pixel buffer's address, which
+   is stable for the life of the entry (a std::map node does not move), and
+   filled as each entry is created. Only ever read under TextureFilter 2, and
+   only once per triangle per frame -- never per pixel. */
+std::map<const uint32_t *, const TexEntry *> g_tex_by_px;
+
+/* 0 nearest, 1 bilinear, 2 trilinear. Latched by gx_configure_texture_filter
+   at boot and read-only afterwards, so the cache cannot end a run with chains
+   for some of its entries and not others. */
+int g_tex_filter = 0;
+
+/* ONE 2x2 BOX TAP, IN PREMULTIPLIED ALPHA. Averaging four texels' colours
+   without weighting them by their own alpha drags the colour of a fully
+   transparent texel into the result, and on a DS cut-out -- a fence, a leaf,
+   the A3I5 gradients -- that colour is whatever the artist left in the
+   transparent part of the picture, usually black. So each colour is weighted
+   by its texel's alpha, the sum is divided by the summed alpha, and a texel
+   at alpha 0 contributes nothing at all. The output alpha is the plain
+   average, because alpha is a coverage and averaging coverages is right.
+   All four taps zero means a transparent texel, which is the one case with no
+   colour to carry, and the sampler's own alpha test then drops the pixel. */
+uint32_t box4(uint32_t p0, uint32_t p1, uint32_t p2, uint32_t p3) {
+    const uint32_t a0 = p0 >> 24, a1 = p1 >> 24, a2 = p2 >> 24, a3 = p3 >> 24;
+    const uint32_t as = a0 + a1 + a2 + a3;
+    if (!as) return 0;
+    const uint32_t a = (as + 2) / 4;
+    const uint32_t r = (((p0 >> 16) & 0xFF) * a0 + ((p1 >> 16) & 0xFF) * a1 +
+                        ((p2 >> 16) & 0xFF) * a2 + ((p3 >> 16) & 0xFF) * a3 +
+                        as / 2) / as;
+    const uint32_t g = (((p0 >> 8) & 0xFF) * a0 + ((p1 >> 8) & 0xFF) * a1 +
+                        ((p2 >> 8) & 0xFF) * a2 + ((p3 >> 8) & 0xFF) * a3 +
+                        as / 2) / as;
+    const uint32_t b = ((p0 & 0xFF) * a0 + (p1 & 0xFF) * a1 +
+                        (p2 & 0xFF) * a2 + (p3 & 0xFF) * a3 + as / 2) / as;
+    return (a << 24) | (r << 16) | (g << 8) | b;
+}
+
+/* Build the whole chain off the entry's own picture, halving until 1x1. An
+   ODD dimension halves by dropping to floor and clamping the second tap to
+   the last row or column, which is what every box reducer does with an odd
+   edge; DS textures are powers of two and an HD replacement is a whole
+   multiple of one, so this is the safety net rather than the usual path.
+   THE CHAIN IS BUILT FROM WHATEVER IS BOUND, so with an HD pack it is built
+   from the REPLACEMENT at the replacement's own size, which is the only
+   reading that makes the level-of-detail arithmetic mean anything. */
+void build_mip_chain(TexEntry &e) {
+    if (!e.mip.empty() || e.w <= 0 || e.h <= 0) return;
+    const uint32_t *src = e.px.data();
+    int sw = e.w, sh = e.h;
+    while (sw > 1 || sh > 1) {
+        const int dw = sw > 1 ? sw / 2 : 1;
+        const int dh = sh > 1 ? sh / 2 : 1;
+        std::vector<uint32_t> lvl((size_t)dw * dh);
+        for (int y = 0; y < dh; ++y) {
+            const int y0 = sh > 1 ? y * 2 : 0;
+            const int y1 = (y0 + 1 < sh) ? y0 + 1 : y0;
+            for (int x = 0; x < dw; ++x) {
+                const int x0 = sw > 1 ? x * 2 : 0;
+                const int x1 = (x0 + 1 < sw) ? x0 + 1 : x0;
+                lvl[(size_t)y * dw + x] =
+                    box4(src[(size_t)y0 * sw + x0], src[(size_t)y0 * sw + x1],
+                         src[(size_t)y1 * sw + x0], src[(size_t)y1 * sw + x1]);
+            }
+        }
+        e.mip.push_back(std::move(lvl));
+        src = e.mip.back().data();
+        sw = dw;
+        sh = dh;
+    }
+}
+
+/* How much memory every chain in the cache is holding, for the report: the
+   chain of a WxH picture is about a third of WxH again. */
+size_t mip_bytes_held() {
+    size_t n = 0;
+    for (const auto &kv : g_vram_tex_cache)
+        for (const auto &l : kv.second.mip) n += l.size() * sizeof(uint32_t);
+    return n;
+}
 
 uint32_t probe_word(const uint8_t *p, int32_t len, int32_t off) {
     if (!p || off < 0 || off + 4 > len) return 0;
@@ -1456,6 +1546,15 @@ void bind_from_vram() {
         }
         if (entry.px.empty()) entry.px = std::move(rgba);
         it = g_vram_tex_cache.emplace(key, std::move(entry)).first;
+        /* THE CHAIN AND THE WAY BACK TO IT, ON THE MISS AND NOWHERE ELSE
+           (run hd2). Both hang off the cache miss for hdtex's reason one
+           block up: the cost is then proportional to the number of DISTINCT
+           textures a level has rather than to the hundreds of binds a frame
+           makes. Under TextureFilter 0 or 1 neither line does any work worth
+           naming -- the registry insert is one pointer into a map, and the
+           chain is not built at all. */
+        if (g_tex_filter >= 2) build_mip_chain(it->second);
+        g_tex_by_px[it->second.px.data()] = &it->second;
     }
     /* The bound buffer's REAL dimensions, which are the DS texture's unless a
        pack replaced it; the scale beside them is what lets the sampler put the
@@ -1573,7 +1672,49 @@ void gx_write_port(uint32_t addr, uint32_t value) {
    probe can tell apart, or that just want the memory back, say so here; the
    soaks do, once per model. SM64DS_TEX_NOCACHE=1 restores the old
    clear-every-reset behaviour for an A/B. */
-void gx_invalidate_textures() { g_vram_tex_cache.clear(); }
+void gx_invalidate_textures() {
+    /* THE REGISTRY GOES WITH THE CACHE. It holds addresses of buffers the
+       clear below is about to free, so an entry left behind would hand the
+       raster a mip chain that no longer exists. Cleared first for the same
+       reason. */
+    g_tex_by_px.clear();
+    g_vram_tex_cache.clear();
+}
+
+/* ---- THE TWO PICTURE-SMOOTHING SETTINGS' LATCHES (run hd2) ---------------
+   Both are called once at boot from walk_window, beside ntr::configure_aspect,
+   and both clamp here as well as at the settings accessor: a caller that
+   reaches this entry from anywhere else (a smoke, a harness) cannot hand the
+   raster a mode it has no body for. */
+void gx_configure_texture_filter(int mode) {
+    g_tex_filter = mode < 0 ? 0 : (mode > 2 ? 2 : mode);
+}
+
+int gx_texture_filter() { return g_tex_filter; }
+
+/* SM64DS_TEX_MIPS=1: how much the chains are holding, once every 300 frames,
+   which is the answer to "what does trilinear cost in memory over a level".
+   Off by default, and at filter 0 or 1 there are no chains to report. */
+void gx_mip_report() {
+    static int want = -1;
+    if (want < 0) want = getenv("SM64DS_TEX_MIPS") ? 1 : 0;
+    if (!want) return;
+    static unsigned f;
+    if ((f++ % 300) != 0) return;
+    size_t chains = 0;
+    size_t base = 0;
+    for (const auto &kv : g_vram_tex_cache) {
+        if (!kv.second.mip.empty()) ++chains;
+        base += kv.second.px.size() * sizeof(uint32_t);
+    }
+    const size_t mips = mip_bytes_held();
+    std::fprintf(stderr,
+                 "[mips] frame %u: %zu cached texture(s), %zu with a chain; "
+                 "base %zu bytes, chains %zu bytes (%.1f%% on top)\n",
+                 f - 1, g_vram_tex_cache.size(), chains, base, mips,
+                 base ? 100.0 * (double)mips / (double)base : 0.0);
+    std::fflush(stderr);
+}
 
 void gx_reset() {
     ++g_resets;
@@ -2040,8 +2181,7 @@ static void texpx_report() {
 // repeat mirrors every other tile. `repeat && !flip` is the exact expression
 // the raster used before wrap modes existed, so nothing that binds through
 // gx_bind_texture moves a pixel.
-static int tex_coord(float f, int size, bool repeat, bool flip) {
-    int i = static_cast<int>(std::floor(f));
+static int tex_coord_i(int i, int size, bool repeat, bool flip) {
     if (!repeat) return i < 0 ? 0 : (i >= size ? size - 1 : i);
     if (!flip) {
         i %= size;
@@ -2052,6 +2192,190 @@ static int tex_coord(float f, int size, bool repeat, bool flip) {
     if (i < 0) i += period;
     return i < size ? i : period - 1 - i;
 }
+
+/* The float entry, which is what the nearest sampler has always called. The
+   body above used to be inline here; splitting the integer half out is what
+   lets a filtered tap put each of its four texel indices through the SAME
+   wrap, clamp and flip rule, per axis, instead of approximating it. Floor
+   then the identical integer arithmetic: the nearest path samples the texel
+   it always sampled. */
+static int tex_coord(float f, int size, bool repeat, bool flip) {
+    return tex_coord_i(static_cast<int>(std::floor(f)), size, repeat, flip);
+}
+
+/* ---- THE FILTERED SAMPLER (run hd2) ---------------------------------------
+   One texture level, so bilinear and trilinear can say "this size" without
+   caring whether it came from the cache entry or its chain. */
+struct TexLevel {
+    const uint32_t *px;
+    int w, h;
+};
+
+/* FOUR TAPS, THE HALF-TEXEL CENTRE CONVENTION, EVERY TAP THROUGH THE WRAP
+   RULE. u and v arrive in this level's texel units with the texel CENTRE at
+   x + 0.5, so the four neighbours of the sample point are found by stepping
+   back half a texel and taking floor and floor+1 on each axis. Each of those
+   four indices goes through tex_coord_i separately, per axis, which is the
+   whole reason the integer half exists: a CLAMPED edge must clamp its own tap
+   rather than reach round to the opposite edge, and a repeating floor must
+   wrap rather than clamp, or the seam shows up exactly where the tiling meets.
+
+   THE BLEND IS IN PREMULTIPLIED ALPHA, box4's reason above: a fully
+   transparent texel has no colour to contribute, and weighting by alpha is
+   what stops the black inside a cut-out from being dragged out along the
+   fence, the leaf and the A3I5 gradient strips. The returned alpha is the
+   plain bilinear average, so the sampler's own "alpha 0 means no pixel" test
+   keeps working and an edge fades out rather than stepping out. */
+static uint32_t sample_bilinear(const TexLevel &L, float u, float v,
+                                bool rs, bool rt, bool fs, bool ft) {
+    const float fu = u - 0.5f, fv = v - 0.5f;
+    const float flu = std::floor(fu), flv = std::floor(fv);
+    const int iu = static_cast<int>(flu), iv = static_cast<int>(flv);
+    const float du = fu - flu, dv = fv - flv;
+    const int x0 = tex_coord_i(iu, L.w, rs, fs);
+    const int x1 = tex_coord_i(iu + 1, L.w, rs, fs);
+    const int y0 = tex_coord_i(iv, L.h, rt, ft);
+    const int y1 = tex_coord_i(iv + 1, L.h, rt, ft);
+    const uint32_t p00 = L.px[(size_t)y0 * L.w + x0];
+    const uint32_t p10 = L.px[(size_t)y0 * L.w + x1];
+    const uint32_t p01 = L.px[(size_t)y1 * L.w + x0];
+    const uint32_t p11 = L.px[(size_t)y1 * L.w + x1];
+    const float w00 = (1.0f - du) * (1.0f - dv);
+    const float w10 = du * (1.0f - dv);
+    const float w01 = (1.0f - du) * dv;
+    const float w11 = du * dv;
+    const float a00 = (float)(p00 >> 24) * w00;
+    const float a10 = (float)(p10 >> 24) * w10;
+    const float a01 = (float)(p01 >> 24) * w01;
+    const float a11 = (float)(p11 >> 24) * w11;
+    const float asum = a00 + a10 + a01 + a11;
+    if (asum <= 0.0f) return 0;
+    const float inv = 1.0f / asum;
+    auto ch = [&](int sh) {
+        const float s = (float)((p00 >> sh) & 0xFF) * a00 +
+                        (float)((p10 >> sh) & 0xFF) * a10 +
+                        (float)((p01 >> sh) & 0xFF) * a01 +
+                        (float)((p11 >> sh) & 0xFF) * a11;
+        const int i = (int)(s * inv + 0.5f);
+        return (uint32_t)(i < 0 ? 0 : (i > 255 ? 255 : i));
+    };
+    const int ai = (int)(asum + 0.5f);
+    const uint32_t a = (uint32_t)(ai < 0 ? 0 : (ai > 255 ? 255 : ai));
+    return (a << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/* WHAT A TRIANGLE NEEDS TO SAMPLE, resolved ONCE PER TRIANGLE PER FRAME and
+   never per pixel: which cache entry the bound buffer belongs to, which two
+   chain levels the surface's distance lands between, and how far between.
+   Only filled under TextureFilter 2; bilinear needs none of it. */
+struct TriTex {
+    const TexEntry *e;    /* null: not a cache entry, so no chain -- bilinear */
+    int lod;              /* the coarser-or-equal level, 0 is the full size */
+    float frac;           /* 0..1 towards lod + 1 */
+};
+
+/* One level of a triangle's texture. Level 0 is the bound buffer itself, so a
+   triangle whose buffer never entered the cache (the BMD harness path through
+   gx_bind_texture) still samples correctly -- it simply has no chain and
+   every level request lands on level 0, which makes trilinear fall back to
+   bilinear for it rather than refusing to draw. */
+static TexLevel tex_level(const TriTex &tt, const uint32_t *base, int w, int h,
+                          int lvl) {
+    if (lvl <= 0 || !tt.e || (size_t)lvl > tt.e->mip.size())
+        return TexLevel{base, w, h};
+    int lw = w, lh = h;
+    for (int i = 0; i < lvl; ++i) {
+        lw = lw > 1 ? lw / 2 : 1;
+        lh = lh > 1 ? lh / 2 : 1;
+    }
+    return TexLevel{tt.e->mip[(size_t)lvl - 1].data(), lw, lh};
+}
+
+/* The pixel's colour under a filter mode, chosen at COMPILE time so the
+   nearest body never carries a test for it. u and v are already in the bound
+   buffer's own pixel units (the caller multiplied by GxTriangle::tex_scale).
+   Trilinear blends the two chain levels the triangle landed between; with no
+   chain, or with the triangle sitting at full size, the second tap is the
+   same level and the lerp costs one multiply. */
+template <int FILTER>
+static uint32_t sample_filtered(const TriTex &tt, const uint32_t *base, int w,
+                                int h, float u, float v, bool rs, bool rt,
+                                bool fs, bool ft) {
+    if (FILTER == 1) {
+        const TexLevel L{base, w, h};
+        return sample_bilinear(L, u, v, rs, rt, fs, ft);
+    }
+    const TexLevel L0 = tex_level(tt, base, w, h, tt.lod);
+    const float s0 = (float)L0.w / (float)w, t0 = (float)L0.h / (float)h;
+    const uint32_t c0 = sample_bilinear(L0, u * s0, v * t0, rs, rt, fs, ft);
+    if (tt.frac <= 0.0f) return c0;
+    const TexLevel L1 = tex_level(tt, base, w, h, tt.lod + 1);
+    if (L1.px == L0.px) return c0;
+    const float s1 = (float)L1.w / (float)w, t1 = (float)L1.h / (float)h;
+    const uint32_t c1 = sample_bilinear(L1, u * s1, v * t1, rs, rt, fs, ft);
+    /* THE TWO LEVELS BLEND IN PREMULTIPLIED ALPHA TOO, for sample_bilinear's
+       reason: a coarse level of a cut-out is mostly transparent, and mixing
+       its colour in unweighted would grey the sharp level's edge. */
+    const float f1 = tt.frac, f0 = 1.0f - f1;
+    const float a0 = (float)(c0 >> 24) * f0, a1 = (float)(c1 >> 24) * f1;
+    const float asum = a0 + a1;
+    if (asum <= 0.0f) return 0;
+    const float inv = 1.0f / asum;
+    auto ch = [&](int sh) {
+        const float s = (float)((c0 >> sh) & 0xFF) * a0 +
+                        (float)((c1 >> sh) & 0xFF) * a1;
+        const int i = (int)(s * inv + 0.5f);
+        return (uint32_t)(i < 0 ? 0 : (i > 255 ? 255 : i));
+    };
+    const int ai = (int)(asum + 0.5f);
+    const uint32_t a = (uint32_t)(ai < 0 ? 0 : (ai > 255 ? 255 : ai));
+    return (a << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/* THE LEVEL OF DETAIL, ONE PER TRIANGLE, from the ratio of its area in texels
+   to its area in pixels. A triangle covering a quarter of the pixels its
+   texels would fill is half the size in each direction, which is one level
+   down; the square root of the area ratio is that factor and half its base-2
+   logarithm is the level. Per triangle rather than per pixel deliberately:
+   the derivative work a per-pixel level needs is two more divides and a
+   logarithm on every pixel of every textured polygon, on a rasteriser that is
+   already fill-bound, and the game's polygons are small.
+   WITH AN HD PACK the areas are in the REPLACEMENT'S texels (tsc has already
+   been applied), which is what makes the chain of a 4x image pick its own
+   fourth level rather than the DS texture's first. */
+static TriTex lod_for(const GxTriangle &t, float area2) {
+    TriTex r{nullptr, 0, 0.0f};
+    if (!t.tex) return r;
+    auto f = g_tex_by_px.find(t.tex);
+    if (f == g_tex_by_px.end() || f->second->mip.empty()) return r;
+    r.e = f->second;
+    const float tsc = (float)(t.tex_scale ? t.tex_scale : 1);
+    const float du1 = (t.v[1].u - t.v[0].u) * tsc;
+    const float dv1 = (t.v[1].v - t.v[0].v) * tsc;
+    const float du2 = (t.v[2].u - t.v[0].u) * tsc;
+    const float dv2 = (t.v[2].v - t.v[0].v) * tsc;
+    /* BOTH AREAS ARE DOUBLED (a cross product, not a triangle area), which
+       cancels in the ratio below. `screen2` is spelt out rather than shortened
+       because the obvious short spelling collides with a Windows common-dialog
+       control id from the SDK's dlgs.h, which this file reaches through
+       windows.h. */
+    const float tex2 = std::fabs(du1 * dv2 - dv1 * du2);
+    const float screen2 = std::fabs(area2);
+    if (tex2 <= 0.0f || screen2 <= 1e-6f) return r;
+    const float lodf = 0.5f * std::log2(tex2 / screen2);
+    const int top = (int)r.e->mip.size();
+    if (lodf <= 0.0f) return r;                 /* level 0, no blend */
+    if (lodf >= (float)top) { r.lod = top; r.frac = 0.0f; return r; }
+    r.lod = (int)lodf;
+    r.frac = lodf - (float)r.lod;
+    return r;
+}
+
+/* One entry per triangle of the frame, filled once at the head of gx_render
+   and read-only while the raster bands run, so every thread shares one answer
+   per triangle instead of each looking the chain up for itself. Only touched
+   under TextureFilter 2; it never grows under any other mode. */
+static std::vector<TriTex> g_tritex;
 
 /* n/255.0f for every byte. The texel-modulate step did this divide three
    times per pixel; the table holds the identical float, so the product is
@@ -2202,6 +2526,32 @@ MaskRow *g_tlattr;
    carried on would fault somewhere else entirely and look like a render bug.
    About 12.6 MB at this tier's allocation, so in practice this does not fail
    on any machine that can open the window. */
+/* ---- THE EDGE-SMOOTHING PASS'S OWN BUFFER (run hd2) ----------------------
+ * The pass reads the picture and writes the picture, so it cannot read what
+ * it has already written: a filter fed on its own output smears instead of
+ * smoothing. One scratch copy of the frame solves it -- read from the copy,
+ * write to the framebuffer -- and it is the reason this is a buffer and not a
+ * three-row window: the raster's row bands are INTERLEAVED (a thread owns
+ * rows tid, tid+nt, ...), so a thread's neighbours are always another
+ * thread's rows.
+ * ON THE HEAP for the raster buffers' reason one block down, and allocated
+ * only on the first frame the setting is actually on, so a run with the key
+ * absent holds nothing. */
+uint32_t *g_aa_src;
+
+/* AND IT IS ALSO THE PICTURE THE GAME READS BACK. See gx_aa_preimage below:
+   once the pass has filled it, g_aa_src holds the frame EXACTLY as it would
+   have been with the setting off, and the 2D compositor mirrors its own
+   writes into it, so the display capture can read a finished frame that the
+   smoothing never touched. Valid only between the pass and the next
+   gx_render. */
+int g_aa_pre_valid;
+
+int g_aa_mode = 0;                     /* 0 off, 1 edge smoothing */
+unsigned long long g_aa_changed;       /* pixels rewritten, whole run */
+unsigned long long g_aa_run_frames;    /* frames the pass ran on */
+unsigned g_aa_hits[64];                /* per band, summed after each pass */
+
 bool raster_buffers(void)
 {
     if (g_depth) return true;
@@ -2228,12 +2578,289 @@ const uint8_t *gx_coverage()
     return &g_cover[0][0];
 }
 
+void gx_configure_anti_aliasing(int mode) {
+    g_aa_mode = mode < 0 ? 0 : (mode > 1 ? 1 : mode);
+}
+
+int gx_anti_aliasing() { return g_aa_mode; }
+
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames) {
+    changed = g_aa_changed;
+    frames = g_aa_run_frames;
+}
+
+/* THE FRAME AS IT WAS BEFORE THE SMOOTHING, or null when there is no such
+   frame (the setting is off, the pass has not run yet this frame, or it could
+   not get its buffer). Two callers and no others:
+
+   hal/message_compositor.cpp WRITES every host pixel it writes into the live
+   framebuffer here as well, so this stays a FINISHED frame -- 3D with the 2D
+   layers over it -- rather than a bare 3D picture, and reads the 3D pixel
+   from here when a semi-transparent sprite blends against it, so that blend
+   is the one the setting-off run computes.
+
+   ntr::ppu_display_capture READS it in place of the framebuffer it is handed,
+   which is what makes the picture the GAME reads back independent of this
+   setting no matter when the game arms the capture unit. Same SCREEN_W
+   stride as the framebuffer, so an index into one indexes the other. */
+uint32_t *gx_aa_preimage() { return g_aa_pre_valid ? g_aa_src : nullptr; }
+
+namespace {
+
+/* Rec.601 luma, the channel weighting every edge filter of this family uses,
+   on the 0..255 scale the framebuffer already holds. */
+inline float luma(uint32_t p) {
+    return 0.299f * (float)((p >> 16) & 0xFF) +
+           0.587f * (float)((p >> 8) & 0xFF) +
+           0.114f * (float)(p & 0xFF);
+}
+
+/* Blend two pixels, t of b. The alpha byte is left at 0xFF: every pixel in
+   this framebuffer is opaque by the time the raster is finished, and the 2D
+   compositor reads the coverage mask rather than the alpha byte. */
+inline uint32_t mix2(uint32_t a, uint32_t b, float t) {
+    const float s = 1.0f - t;
+    auto ch = [&](int sh) {
+        const float v = (float)((a >> sh) & 0xFF) * s +
+                        (float)((b >> sh) & 0xFF) * t;
+        const int i = (int)(v + 0.5f);
+        return (uint32_t)(i < 0 ? 0 : (i > 255 ? 255 : i));
+    };
+    return 0xFF000000u | (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/* ---- ONE BAND OF THE EDGE-SMOOTHING PASS ---------------------------------
+ *
+ * WHAT IT DOES, in the order it does it. For every pixel of the picture:
+ *
+ *   1. IT WRITES ONLY WHERE THE 3D ENGINE DREW. The coverage mask is the
+ *      test, and it is the whole of the promise that this setting cannot
+ *      touch text, the HUD or the touch-screen art: those are drawn by
+ *      hal/message_compositor.cpp and hal/sub_screen.cpp, both of which run
+ *      AFTER gx_render returns, so at this moment they are not in the
+ *      framebuffer at all and every pixel this pass can reach is either a
+ *      pixel this engine drew or the frame's own clear colour.
+ *   2. It reads the four neighbours whether they are covered or not, for
+ *      that same reason: an uncovered neighbour is the clear colour behind
+ *      the model, and a silhouette against the background is exactly the
+ *      edge worth softening. Reads are clamped to the picture.
+ *   3. THE CONTRAST TEST. The local luma range must clear both an absolute
+ *      floor and a fraction of the brightest neighbour, which is the pair
+ *      every filter of this family uses: the absolute floor keeps the pass
+ *      out of flat shading noise and the relative one keeps it out of dark
+ *      areas where a few levels of difference are not an edge.
+ *   4. THE DIRECTION. The second difference across x and across y says which
+ *      way the step runs; the pass blends along the axis with the larger one,
+ *      which is the axis the staircase is climbing.
+ *   5. HOW FAR. How far this pixel's own luma sits from the average of its
+ *      four neighbours, as a fraction of the local range, squared so that
+ *      only a pixel that really sticks out moves much, and capped at half.
+ *      A pixel in the middle of a smooth gradient has an average close to
+ *      itself and does not move at all.
+ *
+ * Contiguous row chunks rather than the raster's interleaved bands: this pass
+ * reads a row above and a row below, and contiguous chunks keep those reads
+ * in the same part of the scratch buffer. Every row is written by exactly one
+ * band, so the framebuffer needs no locking, exactly as the raster does not.
+ */
+struct AaCtx {
+    Framebuffer *fb;
+    int w, h;
+};
+
+void aa_band(void *ctxp, int tid, int nt) {
+    const AaCtx &c = *static_cast<AaCtx *>(ctxp);
+    const int y0 = (int)((long long)c.h * tid / nt);
+    const int y1 = (int)((long long)c.h * (tid + 1) / nt);
+    const uint32_t *const src = g_aa_src;
+    unsigned hits = 0;
+    for (int y = y0; y < y1; ++y) {
+        const uint8_t *crow = g_cover[y];
+        uint32_t *frow = c.fb->px[y];
+        const uint32_t *rm = src + (size_t)y * SCREEN_W;
+        const uint32_t *rn = src + (size_t)(y > 0 ? y - 1 : 0) * SCREEN_W;
+        const uint32_t *rs = src + (size_t)(y + 1 < c.h ? y + 1 : y) * SCREEN_W;
+        for (int x = 0; x < c.w; ++x) {
+            if (!crow[x]) continue;
+            const int xw = x > 0 ? x - 1 : 0;
+            const int xe = x + 1 < c.w ? x + 1 : x;
+            const uint32_t pM = rm[x], pN = rn[x], pS = rs[x];
+            const uint32_t pW = rm[xw], pE = rm[xe];
+            const float lM = luma(pM), lN = luma(pN), lS = luma(pS);
+            const float lW = luma(pW), lE = luma(pE);
+            float lo = lM, hi = lM;
+            const float ls[4] = {lN, lS, lW, lE};
+            for (int i = 0; i < 4; ++i) {
+                if (ls[i] < lo) lo = ls[i];
+                if (ls[i] > hi) hi = ls[i];
+            }
+            const float range = hi - lo;
+            /* 8 of 255 absolute, an eighth of the brightest relative */
+            if (range < 8.0f || range < hi * 0.125f) continue;
+            const float d2x = std::fabs(lW + lE - 2.0f * lM);
+            const float d2y = std::fabs(lN + lS - 2.0f * lM);
+            const uint32_t n1 = (d2x >= d2y) ? pW : pN;
+            const uint32_t n2 = (d2x >= d2y) ? pE : pS;
+            const float avg = 0.25f * (lN + lS + lW + lE);
+            float t = std::fabs(avg - lM) / range;
+            t = t * t;
+            if (t > 0.5f) t = 0.5f;
+            if (t <= 0.002f) continue;
+            const uint32_t nb = mix2(n1, n2, 0.5f);
+            const uint32_t out = mix2(pM, nb, t);
+            if (out != pM) {
+                frow[x] = out;
+                ++hits;
+            }
+        }
+    }
+    g_aa_hits[tid & 63] = hits;
+}
+
+}  // namespace
+
+/* THE PASS ITSELF, run at the end of gx_render. Returns at once when the
+   setting is off, which is the default, so a key-absent frame pays one
+   compare. */
+static void aa_pass(Framebuffer &fb, int cw, int ch, int nt) {
+    if (!g_aa_mode || cw <= 0 || ch <= 0) return;
+    /* ---- THE ONE THING THIS SETTING MAY NOT DO, AND HOW IT IS CLOSED -------
+     *
+     * The game READS THIS FRAMEBUFFER BACK through the DS display capture unit
+     * for the dual-screen minigames, so on a frame it reads, the picture must
+     * be the picture it would have got with the setting absent.
+     *
+     * THE FIRST ATTEMPT AT THIS WAS WRONG AND THE MEASUREMENT SAYS SO. It
+     * read DISPCAPCNT's enable bit here and stood the pass down on any frame
+     * that bit was already set. That assumed the game always
+     * arms the unit before the frame is rasterised. On a course it does. On a
+     * RUNNING dual-screen minigame it does not: scene 372 driven past its menu
+     * captures 669 frames out of 1200 while this test fired on only 169 of
+     * them, so five hundred frames were captured with the smoothing in them.
+     * The counters that found it are on the [aa] line below.
+     *
+     * SO THE GUARANTEE NO LONGER DEPENDS ON ORDER AT ALL. g_aa_src already
+     * holds a copy of the frame as it was before this pass, because the filter
+     * needs one to avoid feeding on its own output. That copy IS the picture
+     * the setting promises the game, so it is kept for the rest of the frame,
+     * hal/message_compositor.cpp mirrors its own writes into it, and
+     * ntr::ppu_display_capture reads it instead of the live framebuffer. The
+     * capture then samples a finished frame -- 3D plus every 2D layer over it
+     * -- that the smoothing never touched, whenever the arm happens to land.
+     */
+    ++g_aa_run_frames;
+    if (!g_aa_src) {
+        g_aa_src = (uint32_t *)std::calloc((size_t)SCREEN_W * SCREEN_H,
+                                           sizeof(uint32_t));
+        if (!g_aa_src) {
+            std::fprintf(stderr,
+                         "[aa] no memory for the %d x %d scratch picture; edge "
+                         "smoothing is off for this run.\n", SCREEN_W, SCREEN_H);
+            std::fflush(stderr);
+            g_aa_mode = 0;
+            --g_aa_run_frames;
+            return;
+        }
+    }
+    for (int y = 0; y < ch; ++y)
+        std::memcpy(g_aa_src + (size_t)y * SCREEN_W, fb.px[y],
+                    (size_t)cw * sizeof(uint32_t));
+    AaCtx ctx{&fb, cw, ch};
+    /* THE SAME THREAD COUNT THE RASTER JUST USED, and through the same pool.
+       RasterPool::run hands every band the width it was started at, so asking
+       for a different one here would leave bands unaccounted for and the wait
+       short. The counters array is indexed by band and the pool is capped at
+       eight workers, so 64 slots is room to spare. */
+    const int n = nt < 1 ? 1 : (nt > 64 ? 64 : nt);
+    for (int i = 0; i < n; ++i) g_aa_hits[i] = 0;
+    if (nt <= 1) {
+        aa_band(&ctx, 0, 1);
+    } else {
+        pool(nt).run(aa_band, &ctx);
+    }
+    for (int i = 0; i < n; ++i) g_aa_changed += g_aa_hits[i];
+    /* FROM HERE TO THE NEXT gx_render, g_aa_src IS THE PICTURE WITHOUT THIS
+       PASS. The copy above was taken before a single pixel moved, so it is the
+       frame the setting promises the game; the compositor keeps it finished
+       and the capture reads it. */
+    g_aa_pre_valid = 1;
+}
+
+/* SM64DS_AA_STATS=1: what the smoothing pass has done, every 300 frames and
+   once more at the end of the run. Off by default.
+
+   IT IS THE EVIDENCE FOR TWO CLAIMS THAT CANNOT BE READ OFF A PICTURE.
+
+   The first is that a key-absent run does NO work at all: every number zero.
+
+   The second is that the GAME reads back the same picture either way, and the
+   line carries it as the two capture numbers side by side -- captures
+   PERFORMED against captures that READ THE PRE-SMOOTHING FRAME. With the
+   setting on those two must be equal, because what the capture unit reads is
+   the copy taken before this pass touched a pixel (gx_aa_preimage above), and
+   a capture that read the live framebuffer instead is exactly a frame on
+   which the game saw the setting. Pair them with the captured-bytes hash,
+   which has to match between a setting-off and a setting-on run of the same
+   rows.
+
+   THE NUMBERS ARE A CHECK, NOT A DESCRIPTION OF WHEN THE PASS RUNS: it runs
+   on every frame. An earlier version of this file gated it on whether the
+   capture unit was already armed, and these counters are what proved that
+   wrong -- the measurement is written up at ntr::ppu_display_capture. */
+static void aa_report(void) {
+    static int want = -1;
+    if (want < 0) want = getenv("SM64DS_AA_STATS") ? 1 : 0;
+    if (!want) return;
+    static unsigned f;
+    static int at_exit_registered;
+    if (!at_exit_registered) {
+        at_exit_registered = 1;
+        std::atexit([] {
+            /* THE INVARIANT THIS LINE PRINTS, and it is the one the earlier
+               weaker rule failed. Every capture the unit performs must have
+               read the PRE-SMOOTHING copy of its frame, so with the setting on
+                   captures that read the pre-smoothing frame == captures performed
+               exactly. A capture that read the live framebuffer instead is a
+               frame on which the game saw this setting. The hash beside it is
+               the other half -- two runs agree on it only if every captured
+               pixel of every captured frame agrees -- which turns "the game
+               read the same bytes" from an argument into a comparison. */
+            unsigned long long cap = 0, ref = 0, hash = 0, pre = 0;
+            ppu_capture_counters(cap, ref, hash, pre);
+            std::fprintf(stderr,
+                         "[aa] final: mode %d, %llu frame(s) smoothed, %llu "
+                         "pixel(s) rewritten; captures performed %llu, armed "
+                         "but refused %llu, captures that read the "
+                         "pre-smoothing frame %llu, captured-bytes hash "
+                         "%016llx\n",
+                         g_aa_mode, g_aa_run_frames, g_aa_changed, cap, ref,
+                         pre, hash);
+            std::fflush(stderr);
+        });
+    }
+    if ((f++ % 300) != 0) return;
+    unsigned long long cap = 0, ref = 0, hash = 0, pre = 0;
+    ppu_capture_counters(cap, ref, hash, pre);
+    std::fprintf(stderr,
+                 "[aa] frame %u: mode %d, %llu frame(s) smoothed, %llu "
+                 "pixel(s) rewritten; captures %llu, refused %llu, pre %llu, "
+                 "hash %016llx\n",
+                 f - 1, g_aa_mode, g_aa_run_frames, g_aa_changed, cap, ref,
+                 pre, hash);
+    std::fflush(stderr);
+}
+
 void gx_render(Framebuffer &fb) {
+    /* LAST FRAME'S PRE-SMOOTHING COPY STOPS BEING THIS FRAME'S HERE, before
+       anything is drawn. A capture that somehow ran against a frame this
+       function never finished would otherwise sample the frame before it. */
+    g_aa_pre_valid = 0;
     const int tm = frame_ms();
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
     texpx_report();
+    gx_mip_report();
     mat_report();
     mtx_report(false);
     /* ---- THE PER-FRAME CLEARS ARE OVER THE LIVE PICTURE, NOT THE BUFFER ----
@@ -2389,6 +3016,27 @@ void gx_render(Framebuffer &fb) {
         }
     }
 
+    /* ---- THE FRAME'S LEVELS OF DETAIL, ONCE, ON THIS THREAD (run hd2) -----
+       Trilinear needs to know, for each triangle, which two sizes of its
+       texture the surface sits between. That is a map lookup and a logarithm
+       per triangle; doing it inside the bands would do it once per triangle
+       PER THREAD, and doing it per pixel would put a logarithm in the fill
+       loop. So it happens here, single-threaded, before any band starts, and
+       the bands only read it. Nothing below runs at filter 0 or 1: the vector
+       is never even sized. */
+    const int filt = g_tex_filter;
+    if (filt == 2) {
+        g_tritex.assign(g.tris.size(), TriTex{nullptr, 0, 0.0f});
+        for (size_t i = 0; i < g.tris.size(); ++i) {
+            const GxTriangle &t = g.tris[i];
+            if (!t.tex || t.tw <= 0 || t.th <= 0) continue;
+            const GxVertex &a = t.v[0], &b = t.v[1], &c = t.v[2];
+            const float ar =
+                (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+            g_tritex[i] = lod_for(t, ar);
+        }
+    }
+
     /* One row band. tid picks the rows: tid, tid+nt, tid+2nt...
        TWO PASSES, the hardware's own order: every opaque polygon first,
        then the translucent ones, submission order kept within each pass.
@@ -2397,7 +3045,14 @@ void gx_render(Framebuffer &fb) {
        over the already-blended surface. Rows are disjoint across threads,
        so each thread runs both passes over its own rows and never sees
        another thread's pixels. */
-    auto band = [&](int tid, int nt) {
+    auto band_impl = [&](int tid, int nt, auto ftag) {
+    /* THE SAMPLER'S MODE IS A COMPILE-TIME CONSTANT IN HERE, which is the
+       whole point of the shape (run hd2). The body below is instantiated once
+       per mode and the mode is chosen once per band, so the nearest body --
+       the one every run with the key absent takes -- carries no test for a
+       filter, no branch per pixel and no call through a pointer: it is the
+       instruction stream it was before filtering existed. */
+    constexpr int FILTER = decltype(ftag)::value;
     bool prev_mask = false;
     for (int pass = 0; pass < 2; ++pass)
     for (const GxTriangle &t : g.tris) {
@@ -2474,6 +3129,13 @@ void gx_render(Framebuffer &fb) {
            multiply by exactly 1.0f returns its operand bit for bit, so the
            default run samples the texel it always sampled. */
         const float tsc = (float)(t.tex_scale ? t.tex_scale : 1);
+        /* WHICH CHAIN LEVELS THIS TRIANGLE SITS BETWEEN, looked up rather than
+           computed: the head of gx_render already resolved it once for every
+           triangle in the frame. Nothing here runs at any other filter mode --
+           FILTER is a constant, so the whole statement folds away. */
+        TriTex tt{nullptr, 0, 0.0f};
+        if (FILTER == 2 && textured)
+            tt = g_tritex[(size_t)(&t - g.tris.data())];
         const float acol[3] = {(float)((a.color >> 16) & 0xFF),
                                (float)((a.color >> 8) & 0xFF),
                                (float)(a.color & 0xFF)};
@@ -2633,9 +3295,20 @@ void gx_render(Framebuffer &fb) {
                         uu = l0 * a.u + l1 * b.u + l2 * c.u;
                         vv = l0 * a.v + l1 * b.v + l2 * c.v;
                     }
-                    const int ui = tex_coord(uu * tsc, t.tw, rep_s, flip_s);
-                    const int vi = tex_coord(vv * tsc, t.th, rep_t, flip_t);
-                    texel = t.tex[vi * t.tw + ui];
+                    /* THE ONE SAMPLING DECISION IN THE WHOLE RASTER, and it
+                       is made by the compiler rather than by this pixel:
+                       FILTER is a constant in this instantiation, so the
+                       nearest body below is exactly the two tex_coord calls
+                       and the one load it always was, with nothing added. */
+                    if constexpr (FILTER == 0) {
+                        const int ui = tex_coord(uu * tsc, t.tw, rep_s, flip_s);
+                        const int vi = tex_coord(vv * tsc, t.th, rep_t, flip_t);
+                        texel = t.tex[vi * t.tw + ui];
+                    } else {
+                        texel = sample_filtered<FILTER>(
+                            tt, t.tex, t.tw, t.th, uu * tsc, vv * tsc, rep_s,
+                            rep_t, flip_s, flip_t);
+                    }
                     if ((texel >> 24) == 0) continue;      // transparent texel
                 }
 
@@ -2695,7 +3368,25 @@ void gx_render(Framebuffer &fb) {
             }
         }
     }
-    };  // band
+    };  // band_impl
+
+    /* ONE BAND ENTRY, THREE BODIES BEHIND IT. The switch runs once per band
+       per frame -- at most eight times a frame -- and hands the raster a body
+       with the filter mode already resolved. The pool below still sees a
+       plain two-argument callable, so nothing about the threading changed. */
+    auto band = [&](int tid, int nt) {
+        switch (filt) {
+        case 1:
+            band_impl(tid, nt, std::integral_constant<int, 1>{});
+            break;
+        case 2:
+            band_impl(tid, nt, std::integral_constant<int, 2>{});
+            break;
+        default:
+            band_impl(tid, nt, std::integral_constant<int, 0>{});
+            break;
+        }
+    };
 
     /* Small scenes (the smokes, a single model) are not worth waking anyone
        up for; the handover costs more than the fill. */
@@ -2707,6 +3398,18 @@ void gx_render(Framebuffer &fb) {
         pool(nt).run([](void *p, int tid, int n) { (*static_cast<B *>(p))(tid, n); },
                      &band);
     }
+
+    /* EDGE SMOOTHING, LAST, AND STILL INSIDE gx_render (run hd2). Here rather
+       than at present time because here is the only moment the framebuffer
+       holds the 3D picture and nothing else: hal/message_compositor.cpp puts
+       engine A's 2D layers over it, hal/sub_screen.cpp drops the bottom-screen
+       panel in and walk_window applies the fade, and all three run after this
+       function returns. So a pass that runs here cannot read a HUD pixel,
+       cannot write one, and needs no list of regions to avoid.
+       Inside the timed section deliberately: it is part of what a frame costs
+       when the setting is on, and the perf line should say so. */
+    aa_pass(fb, cw, ch, nt);
+    aa_report();
 
     if (tm) {
         using clk = std::chrono::steady_clock;

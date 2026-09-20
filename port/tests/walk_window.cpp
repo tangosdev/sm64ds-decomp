@@ -8686,6 +8686,23 @@ int main(void)
     ntr::hdtex_configure(host_setting_hd_textures(),
                          host_setting_hd_textures_dir());
     ntr::smooth_configure(host_setting_smooth_models());
+    /* AND RUN hd2's SAMPLING MODE, in the same place and for the same reason:
+       it decides whether the texture cache builds a mip chain as each texture
+       enters it, so it has to be settled before the first bind. At 0 -- the
+       key absent -- no chain is built and the raster runs the body it ran
+       before this call existed. */
+    ntr::gx_configure_texture_filter(host_setting_texture_filter());
+    if (ntr::gx_texture_filter())
+        fprintf(stderr, "[render] TextureFilter %d: textures are sampled %s\n",
+                ntr::gx_texture_filter(),
+                ntr::gx_texture_filter() >= 2 ? "trilinear" : "bilinear");
+    /* AND THE EDGE-SMOOTHING PASS, beside it: it sizes a scratch copy of the
+       picture on its first frame, and it is off by default. */
+    ntr::gx_configure_anti_aliasing(host_setting_anti_aliasing());
+    if (ntr::gx_anti_aliasing())
+        fprintf(stderr, "[render] AntiAliasing %d: the edges of the 3D picture "
+                "are smoothed after it is drawn, before anything 2D goes over "
+                "it\n", ntr::gx_anti_aliasing());
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address
@@ -15445,6 +15462,37 @@ int main(void)
             fprintf(stderr, "[layout] dsstate=%p..%p\n",
                     (void *)&dsstate_lo, (void *)&dsstate_hi);
             ntr::ppu_write_bmp("walk_window_selftest.bmp", fb);
+            /* SM64DS_COVER_DUMP=1 (run hd2): the 3D coverage mask of this very
+               frame, beside the picture, as a plain binary PGM at the live
+               extent -- 255 where the 3D engine wrote a pixel, 0 where it left
+               the framebuffer alone.
+
+               IT EXISTS TO MAKE ONE CLAIM MEASURABLE RATHER THAN ARGUED. The
+               AntiAliasing pass writes only where this mask is set, which is
+               how it can promise that text, the HUD and the touch-screen art
+               are untouched. With this dump, that promise stops being a
+               sentence about the source and becomes a comparison: every pixel
+               that differs between an AA-off and an AA-on run of the same row
+               must have a 255 here, and any pixel with a 0 here must be
+               identical in the two pictures. Nothing at all without the
+               variable. */
+            if (getenv("SM64DS_COVER_DUMP")) {
+                const uint8_t *cov = ntr::gx_coverage();
+                if (FILE *cf = fopen("walk_window_selftest_cover.pgm", "wb")) {
+                    fprintf(cf, "P5\n%d %d\n255\n", ntr::active_w,
+                            ntr::active_h);
+                    for (int cy = 0; cy < ntr::active_h; ++cy)
+                        for (int cx = 0; cx < ntr::active_w; ++cx) {
+                            const unsigned char v =
+                                cov[(size_t)cy * ntr::SCREEN_W + cx] ? 255 : 0;
+                            fwrite(&v, 1, 1, cf);
+                        }
+                    fclose(cf);
+                    fprintf(stderr, "[cover] wrote the %dx%d 3D coverage mask "
+                            "beside the selftest picture\n",
+                            ntr::active_w, ntr::active_h);
+                }
+            }
             /* SM64DS_PRESENT_BENCH: the two StretchDIBits scalers timed on
                this very frame and written out as two BMPs. Nothing at all
                without the variable, so every existing selftest is unchanged.

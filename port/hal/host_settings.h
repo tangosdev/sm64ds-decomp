@@ -710,6 +710,38 @@ int host_setting_hd_textures(void);
 const char *host_setting_hd_textures_dir(void);
 int host_setting_smooth_models(void);
 
+/* ---- THE TWO PICTURE-SMOOTHING KEYS (run hd2) ---------------------------
+   The same promise as the block above and the same grammar: absent means the
+   picture the build without them produced, byte for byte where it can be
+   measured, and both are opt-in host renderer settings rather than fixes to
+   anything the ROM does.
+
+   TextureFilter: HOW A TEXEL IS CHOSEN when the raster samples a texture.
+   0 is the default and is the sampler the port has always used -- nearest,
+   one texel per pixel, the DS's own look. 1 is bilinear: the four texels
+   around the sample point, blended. 2 is trilinear: bilinear plus a chain of
+   progressively halved copies of each texture, with the two nearest sizes
+   blended, which is what stops a floor running away into the distance from
+   sparkling. Absent, unparseable and negative read as 0 and anything above 2
+   is clamped to 2, the Aspect rule. At 0 no chain is built and no extra
+   memory is held. SM64DS_TEXTURE_FILTER overrides the file.
+
+   AntiAliasing: HOW THE STAIRCASE ALONG A POLYGON EDGE IS SOFTENED.
+   0 is the default and is no pass at all. 1 is edge smoothing: after the 3D
+   picture is drawn and before any 2D layer is composited over it, a filter
+   walks the pixels the 3D engine drew, finds the ones on a contrast edge and
+   blends them along it. It touches only pixels the 3D engine drew, so text,
+   the HUD and the touch-screen art are untouched. Absent, unparseable and
+   negative read as 0 and anything above 1 is clamped to 1.
+   SM64DS_ANTI_ALIASING overrides the file.
+
+   Both are read once and latched, for the reason the block above is: the
+   filter mode sizes the texture cache's mip chains at the first bind and the
+   smoothing pass sizes a full-picture scratch buffer, so both are settled
+   before the first frame and the launcher's rows promise a restart. */
+int host_setting_texture_filter(void);
+int host_setting_anti_aliasing(void);
+
 #ifdef __cplusplus
 }
 #endif
