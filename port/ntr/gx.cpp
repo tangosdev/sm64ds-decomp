@@ -397,7 +397,92 @@ int stargeo_on() {
 Mat g_mtx_seen_pos, g_mtx_seen_vec;
 uint32_t g_mtx_gen = 0;      // bumped whenever either matrix changes
 int g_mtx_similar = 0;       // pos is a similarity AND vec agrees with it
-float g_mtx_scale = 1.0f;    // the uniform scale, local units -> view units
+
+/* THE LAST FEW MATRICES, kept so a triangle replays through the matrix its
+   OWN CORNERS rode rather than through whatever happens to be live when the
+   third corner arrives. The two are usually the same, and the first version
+   of this code simply required it -- and refused 236 triangles a frame on
+   castle grounds, nearly half of everything otherwise eligible, because a
+   quad and a quad strip each emit a triangle whose last named corner is not
+   the last vertex submitted. Eight slots is far more than the one or two a
+   primitive ever spans, and a slot is used only while its generation still
+   matches, so a matrix that has aged out is a miss and never a wrong
+   answer. */
+enum { MTX_RING = 8 };
+Mat g_mtx_ring[MTX_RING];
+uint32_t g_mtx_ring_gen[MTX_RING];
+int g_mtx_ring_sim[MTX_RING];
+
+/* Is the live position matrix a similarity, and does the vector matrix carry
+   the same rotation? Runs once per matrix change, never per vertex. */
+int mtx_similar_check() {
+    /* mul(v, m) forms out_j = sum_i v_i * m[4i + j], so the image of basis
+       vector e_i is the row (m[4i], m[4i+1], m[4i+2]). A similarity is three
+       mutually orthogonal images of equal length.
+
+       THE TOLERANCE IS NOT COSMETIC, and the first version of it cost the
+       whole feature. A DS matrix is 1.19.12 fixed point, so every component
+       the cartridge authored is quantised to a 4096th. A rotation stored that
+       way has row lengths that disagree by up to about eight parts in ten
+       thousand, and rows whose dot product misses zero by about as much,
+       before the engine multiplies two of them together. One part in ten
+       thousand -- which is what this read first -- therefore refuses almost
+       every real model matrix in the game: castle grounds took the stored
+       path exactly zero times. One part in a hundred admits the quantisation
+       with room to spare, and what it lets through is a non-uniform scale or
+       a shear of half a percent, which moves a patch by half a percent of a
+       bulge that is itself about a sixth of the triangle. What actually gets
+       through is then measured against the live patch by the
+       SM64DS_SMOOTH_ABDIFF arm, so this number is checked and not argued. */
+    const float *m = g.pos.m;
+    float u[3][3];
+    for (int i = 0; i < 3; ++i)
+        for (int k = 0; k < 3; ++k) u[i][k] = m[i * 4 + k];
+    const float l0 = u[0][0]*u[0][0] + u[0][1]*u[0][1] + u[0][2]*u[0][2];
+    const float l1 = u[1][0]*u[1][0] + u[1][1]*u[1][1] + u[1][2]*u[1][2];
+    const float l2 = u[2][0]*u[2][0] + u[2][1]*u[2][1] + u[2][2]*u[2][2];
+    if (l0 <= 1e-12f) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_LEN, 1);
+        return 0;
+    }
+    const float eps = 1e-2f;                 // relative, on the squared length
+    if (std::fabs(l1 - l0) > eps * l0 || std::fabs(l2 - l0) > eps * l0) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_LEN, 1);
+        return 0;
+    }
+    const float d01 = u[0][0]*u[1][0] + u[0][1]*u[1][1] + u[0][2]*u[1][2];
+    const float d02 = u[0][0]*u[2][0] + u[0][1]*u[2][1] + u[0][2]*u[2][2];
+    const float d12 = u[1][0]*u[2][0] + u[1][1]*u[2][1] + u[1][2]*u[2][2];
+    if (std::fabs(d01) > eps * l0 || std::fabs(d02) > eps * l0 ||
+        std::fabs(d12) > eps * l0) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_ORTHO, 1);
+        return 0;
+    }
+
+    /* And the VECTOR matrix has to carry the SAME ROTATION, or the normals
+       the live path lights with are not the normals a stored patch was
+       curved by. It need not carry the same SCALE: a transformed normal is
+       normalised, so any positive multiple of the rotation gives the same
+       unit normal. The two are therefore compared as directions, each row
+       divided by its own matrix's scale, rather than as numbers. */
+    const float *w = g.vec.m;
+    const float k0 = w[0]*w[0] + w[1]*w[1] + w[2]*w[2];
+    if (k0 <= 1e-12f) {
+        smooth_store_count(SMOOTH_STORE_NONSIM_VEC, 1);
+        return 0;
+    }
+    const float sp = std::sqrt(l0), sv = std::sqrt(k0);
+    for (int i = 0; i < 3; ++i)
+        for (int kk = 0; kk < 3; ++kk) {
+            const float a = m[i * 4 + kk] / sp;
+            const float b = w[i * 4 + kk] / sv;
+            if (std::fabs(a - b) > eps) {
+                smooth_store_count(SMOOTH_STORE_NONSIM_VEC, 1);
+                return 0;
+            }
+        }
+    return 1;
+}
 
 void mtx_gen_update() {
     const Mat &P = g.pos;
@@ -407,43 +492,19 @@ void mtx_gen_update() {
     g_mtx_seen_pos = P;
     g_mtx_seen_vec = g.vec;
     ++g_mtx_gen;
-    g_mtx_similar = 0;
-    g_mtx_scale = 1.0f;
+    g_mtx_similar = mtx_similar_check();
+    const int slot = static_cast<int>(g_mtx_gen & (MTX_RING - 1));
+    g_mtx_ring[slot] = P;
+    g_mtx_ring_gen[slot] = g_mtx_gen;
+    g_mtx_ring_sim[slot] = g_mtx_similar;
+}
 
-    /* mul(v, m) forms out_j = sum_i v_i * m[4i + j], so the image of basis
-       vector e_i is the row (m[4i], m[4i+1], m[4i+2]). A similarity is three
-       mutually orthogonal images of equal length. */
-    const float *m = P.m;
-    float u[3][3];
-    for (int i = 0; i < 3; ++i)
-        for (int k = 0; k < 3; ++k) u[i][k] = m[i * 4 + k];
-    const float l0 = u[0][0]*u[0][0] + u[0][1]*u[0][1] + u[0][2]*u[0][2];
-    const float l1 = u[1][0]*u[1][0] + u[1][1]*u[1][1] + u[1][2]*u[1][2];
-    const float l2 = u[2][0]*u[2][0] + u[2][1]*u[2][1] + u[2][2]*u[2][2];
-    if (l0 <= 1e-12f) return;
-    const float eps = 1e-4f;                 // relative, on the squared length
-    if (std::fabs(l1 - l0) > eps * l0) return;
-    if (std::fabs(l2 - l0) > eps * l0) return;
-    const float d01 = u[0][0]*u[1][0] + u[0][1]*u[1][1] + u[0][2]*u[1][2];
-    const float d02 = u[0][0]*u[2][0] + u[0][1]*u[2][1] + u[0][2]*u[2][2];
-    const float d12 = u[1][0]*u[2][0] + u[1][1]*u[2][1] + u[1][2]*u[2][2];
-    if (std::fabs(d01) > eps * l0) return;
-    if (std::fabs(d02) > eps * l0) return;
-    if (std::fabs(d12) > eps * l0) return;
-
-    /* And the VECTOR matrix has to carry the same rotation, or the normals
-       the live path lights with are not the normals a stored patch was
-       curved by. Same numbers is the sufficient condition and the one the
-       engine actually produces; anything else stands down. */
-    const float *w = g.vec.m;
-    for (int i = 0; i < 3; ++i)
-        for (int k = 0; k < 3; ++k) {
-            const float a = m[i * 4 + k], b = w[i * 4 + k];
-            if (std::fabs(a - b) > 1e-4f * (1.0f + std::fabs(a))) return;
-        }
-
-    g_mtx_scale = std::sqrt(l0);
-    g_mtx_similar = 1;
+/* The matrix generation `gen` rode, or null if it has aged out of the ring or
+   was not one a stored patch may be replayed through. */
+const Mat *mtx_for_gen(uint32_t gen) {
+    const int slot = static_cast<int>(gen & (MTX_RING - 1));
+    if (g_mtx_ring_gen[slot] != gen || !g_mtx_ring_sim[slot]) return 0;
+    return &g_mtx_ring[slot];
 }
 
 /* VIEW SPACE -> CLIP SPACE, factored out of project() and out of nothing
@@ -833,23 +894,45 @@ bool store_eligible(const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     }
     /* Corners from different matrices have no shared local space at all.
        That is the bone joint, and it is why the live path stays. */
-    if (ra.mgen != rb.mgen || rb.mgen != rc.mgen ||
-        ra.ngen != ra.mgen || rb.ngen != rb.mgen || rc.ngen != rc.mgen ||
-        rc.mgen != g_mtx_gen) {
+    if (ra.mgen != rb.mgen || rb.mgen != rc.mgen) {
         smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_CORNER, 1);
         return false;
     }
-    if (!g_mtx_similar) {
-        smooth_store_count(SMOOTH_STORE_NONSIM, 1);
+    /* A normal latched before the matrix moved is in the wrong space for the
+       position beside it. Counted apart from the joint above, because the two
+       want different answers: this one could be fixed by keeping the raw
+       normal per vertex rather than as a latch, the one above cannot. */
+    if (ra.ngen != ra.mgen || rb.ngen != rb.mgen || rc.ngen != rc.mgen) {
+        smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_NORMAL, 1);
+        return false;
+    }
+    /* The matrix those corners rode has to still be in the ring AND have
+       passed the similarity check. mtx_for_gen answers both, and the replay
+       uses the matrix it hands back rather than whatever is live now. */
+    if (!mtx_for_gen(rc.mgen)) {
+        smooth_store_count(SMOOTH_STORE_CROSSMTX, 1);
+        smooth_store_count(SMOOTH_STORE_CROSS_STALE, 1);
         return false;
     }
     return true;
 }
 
-/* THE STORED PATH: look the shape up by the triangle's raw input, build it
-   once if it is new, and replay it through the matrix that is live now. */
+/* THE STORED PATH. The verdict has already been taken, LIVE, by the caller:
+   all this does is find the tessellation for a shape that has been seen
+   before, or build it once if it has not, and replay it through the matrix
+   the three corners rode. Returns 0 when it could not, and the caller falls
+   through to building the grid in view space. */
 int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
-                     const GxRaw &rc, const SmoothPolicy &pol, int prof) {
+                     const GxRaw &rc, int tf, const SmoothPolicy &pol,
+                     int prof) {
+    const Mat *xform = mtx_for_gen(rc.mgen);
+    if (!xform) {
+        smooth_store_count(SMOOTH_STORE_NONSIM, 1);
+        return 0;
+    }
+
     SmoothKey key;
     const GxRaw *r[3] = {&ra, &rb, &rc};
     for (int i = 0; i < 3; ++i) {
@@ -858,15 +941,15 @@ int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
     }
     key.level = static_cast<uint32_t>(pol.level);
 
-    const long long t_pol = prof ? smooth_prof_ticks() : 0;
+    const long long t_sub = prof ? smooth_prof_ticks() : 0;
     const SmoothEntry *e = smooth_store_find(key);
     if (!e) {
         /* THE ONCE. Build the corners in the model's own space out of the
-           display list's own numbers, the same FX12 scaling project() puts
-           on a VTX coordinate and the raw NORMAL payload, measure the shape
-           and tessellate it. Texel coordinates and colour are deliberately
-           left at zero: they are live state, and the replay interpolates
-           the current ones at the same weights. */
+           display list's own numbers -- the same FX12 scaling project() puts
+           on a VTX coordinate, and the raw NORMAL payload -- and tessellate.
+           Texel coordinates and colour are deliberately left at zero: they
+           are live state, and the replay interpolates the current ones at
+           the same barycentric weights. */
         SmoothVertex l[3];
         for (int i = 0; i < 3; ++i) {
             l[i].x = r[i]->x * FX12;
@@ -875,32 +958,12 @@ int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
             raw_normal(r[i]->nrm, l[i].nx, l[i].ny, l[i].nz);
             l[i].u = 0.0f; l[i].v = 0.0f; l[i].color = 0;
         }
-        SmoothShape sh;
-        smooth_shape(l[0], l[1], l[2], pol, sh);
         float pts[SMOOTH_MAX_GRID * 3];
-        const int tf_build =
-            (!sh.no_normal && sh.curved) ? (1 << pol.level) : 1;
-        if (tf_build > 1)
-            smooth_grid_positions(l[0], l[1], l[2], tf_build, pts);
-        e = smooth_store_add(key, tf_build, sh, tf_build > 1 ? pts : 0);
-        if (!e) return 0;   /* the store refused outright: emit it unchanged */
+        smooth_grid_positions(l[0], l[1], l[2], tf, pts);
+        e = smooth_store_add(key, tf, pts);
+        if (!e) return 0;
     }
-
-    /* The two caps are LENGTHS and the shape was measured in local units, so
-       they are compared against it at the matrix's own scale. The rest of
-       the verdict, no-normal and flat, is scale-free and was settled when
-       the shape was measured. */
-    int why = SMOOTH_WHY_OK;
-    const int tf = smooth_shape_factor(e->shape, pol, g_mtx_scale, &why);
-    if (prof) smooth_prof_add(SMOOTH_PROF_POLICY,
-                              smooth_prof_ticks() - t_pol, 1);
-    if (smooth_census_on()) smooth_census_tri(s[0], s[1], s[2], tf);
-    if (tf <= 1) {
-        smooth_counters_for(why);
-        return 0;
-    }
-
-    smooth_count(SMOOTH_COUNT_SUBDIVIDED, 1);
+    if (e->tf != tf) return 0;     /* built at another level: rebuild live */
     const float *grid = smooth_store_grid(e);
     if (!grid) return 0;
 
@@ -909,30 +972,24 @@ int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
            far the two land apart. In exact arithmetic they are the same
            patch; this is the number that says how close the machine gets. */
         float liveg[SMOOTH_MAX_GRID * 3];
-        SmoothShape lsh;
-        smooth_shape(s[0], s[1], s[2], pol, lsh);
-        int lwhy = SMOOTH_WHY_OK;
-        const int ltf = smooth_shape_factor(lsh, pol, 1.0f, &lwhy);
+        smooth_grid_positions(s[0], s[1], s[2], tf, liveg);
+        const int npts = smooth_grid_points(tf);
         float worst = 0.0f;
-        if (ltf == tf) {
-            smooth_grid_positions(s[0], s[1], s[2], tf, liveg);
-            const int npts = smooth_grid_points(tf);
-            for (int i = 0; i < npts; ++i) {
-                const Vec4 lv{grid[i * 3], grid[i * 3 + 1], grid[i * 3 + 2],
-                              1.0f};
-                const Vec4 w = mul(lv, g.pos);
-                const float dx = w.x - liveg[i * 3];
-                const float dy = w.y - liveg[i * 3 + 1];
-                const float dz = w.z - liveg[i * 3 + 2];
-                const float d = std::sqrt(dx * dx + dy * dy + dz * dz);
-                if (d > worst) worst = d;
-            }
+        for (int i = 0; i < npts; ++i) {
+            const Vec4 lv{grid[i * 3], grid[i * 3 + 1], grid[i * 3 + 2], 1.0f};
+            const Vec4 w = mul(lv, *xform);
+            const float dx = w.x - liveg[i * 3];
+            const float dy = w.y - liveg[i * 3 + 1];
+            const float dz = w.z - liveg[i * 3 + 2];
+            const float d = std::sqrt(dx * dx + dy * dy + dz * dz);
+            if (d > worst) worst = d;
         }
-        smooth_abdiff_add(ltf != tf, worst, lsh.longest);
+        float e0[3] = {s[1].x - s[0].x, s[1].y - s[0].y, s[1].z - s[0].z};
+        smooth_abdiff_add(0, worst,
+                          std::sqrt(e0[0]*e0[0] + e0[1]*e0[1] + e0[2]*e0[2]));
     }
 
-    const long long t_sub = prof ? smooth_prof_ticks() : 0;
-    smooth_emit_grid(grid, tf, s, &g.pos);
+    smooth_emit_grid(grid, tf, s, xform);
     if (prof) smooth_prof_add(SMOOTH_PROF_SUBDIV,
                               smooth_prof_ticks() - t_sub, 1);
     return 1;
@@ -978,16 +1035,12 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
        when SmoothModels is on. */
     const int prof = smooth_prof_on();
 
-    /* THE STORED PATH, which is what a default run takes. */
-    if (!smooth_live_mode() && store_eligible(ra, rb, rc))
-        return smooth_try_store(s, ra, rb, rc, pol, prof);
-
-    /* AND THE PATH FOR EVERYTHING ELSE: a bone joint, a matrix that is not a
-       similarity, or the A/B switch. The patch is rebuilt from the
-       view-space corners, every frame, exactly as 0.4.0 did it. */
-    smooth_store_count(SMOOTH_STORE_LIVE, 1);
-    /* Say WHY, so the measurement table can separate "the feature did nothing
-       because the scene is flat" from "the caps are too tight". */
+    /* THE VERDICT IS ALWAYS LIVE, and it is 0.4.0's own call on 0.4.0's own
+       inputs: the view-space corners, this frame. Nothing about which
+       triangles get smoothed is remembered, for the reason written out over
+       SmoothEntry in ntr/smooth.h. Say WHY, so the measurement table can
+       separate "the feature did nothing because the scene is flat" from "the
+       caps are too tight". */
     int why = SMOOTH_WHY_OK;
     const long long t_pol = prof ? smooth_prof_ticks() : 0;
     const int tf = smooth_tess_factor(s[0], s[1], s[2], pol, &why);
@@ -1000,6 +1053,17 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
     }
 
     smooth_count(SMOOTH_COUNT_SUBDIVIDED, 1);
+
+    /* THE GEOMETRY is what the store remembers, and this is where a triangle
+       that has been seen before costs a lookup instead of a patch. */
+    if (!smooth_live_mode() && store_eligible(ra, rb, rc) &&
+        smooth_try_store(s, ra, rb, rc, tf, pol, prof))
+        return 1;
+
+    /* AND THE PATH FOR EVERYTHING ELSE: a bone joint, a matrix that is not a
+       similarity, a shape the store would not take, or the A/B switch. The
+       patch is rebuilt from the view-space corners, every frame. */
+    smooth_store_count(SMOOTH_STORE_LIVE, 1);
     const long long t_sub = prof ? smooth_prof_ticks() : 0;
     if (smooth_live_mode()) {
         smooth_subdivide(s[0], s[1], s[2], tf, smooth_sink, 0);
@@ -1520,9 +1584,21 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
         case 0x40:                                               // BEGIN_VTXS
             g.prim = p[0] & 3;
             g.strip.clear();
+            /* MDL2: the parallel raw strip is indexed with this one, so it
+               empties with it. Leaving it behind here silently offset every
+               raw record by however many vertices the previous primitive had
+               left, which is the shape store keying a patch on another
+               triangle's coordinates -- the SM64DS_SMOOTH_ABDIFF arm
+               measured that as a thousand view units of separation before
+               this line existed. */
+            g.strip_raw.clear();
             g.strip_parity = 0;
             break;
-        case 0x41: g.prim = -1; g.strip.clear(); break;          // END_VTXS
+        case 0x41:                                               // END_VTXS
+            g.prim = -1;
+            g.strip.clear();
+            g.strip_raw.clear();
+            break;
         case 0x50:                                               // SWAP_BUFFERS
             /* rung R3b/BSWAP: latch, do not act. See THE PENDING SWAP above. */
             g_swap_pending = 1;

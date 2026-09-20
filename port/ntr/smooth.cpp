@@ -757,6 +757,16 @@ void counters_report(uint64_t frame) {
             (unsigned long long)s.skip_crossmtx,
             (unsigned long long)s.skip_nonsim,
             (unsigned long long)s.skip_zeronrm);
+    fprintf(stderr,
+            "[smoothwhy] f%llu cross corner %llu normal %llu stale %llu | "
+            "nonsim len %llu ortho %llu vec %llu\n",
+            (unsigned long long)frame,
+            (unsigned long long)s.cross_corner,
+            (unsigned long long)s.cross_normal,
+            (unsigned long long)s.cross_stale,
+            (unsigned long long)s.nonsim_len,
+            (unsigned long long)s.nonsim_ortho,
+            (unsigned long long)s.nonsim_vec);
 }
 
 }  // namespace
@@ -864,7 +874,7 @@ const SmoothEntry *smooth_store_find(const SmoothKey &k) {
 }
 
 const SmoothEntry *smooth_store_add(const SmoothKey &k, int tf,
-                                    const SmoothShape &sh, const float *grid) {
+                                    const float *grid) {
     const int npts = (tf > 1 && grid) ? smooth_grid_points(tf) : 0;
     const size_t add = sizeof(SmoothEntry) + (size_t)npts * 3 * sizeof(float);
     /* EVICTION IS A CLEAR. Every entry is equally cheap to rebuild (one patch
@@ -880,7 +890,6 @@ const SmoothEntry *smooth_store_add(const SmoothKey &k, int tf,
 
     SmoothEntry e;
     e.key = k;
-    e.shape = sh;
     e.tf = npts ? tf : 1;
     e.off = (uint32_t)g_st_pool.size();
     if (npts) g_st_pool.insert(g_st_pool.end(), grid, grid + npts * 3);
@@ -914,6 +923,12 @@ void smooth_store_count(int which, uint64_t n) {
         case SMOOTH_STORE_NONSIM:   g_st.skip_nonsim += n; break;
         case SMOOTH_STORE_ZERONRM:  g_st.skip_zeronrm += n; break;
         case SMOOTH_STORE_LIVE:     g_st.live_calls += n; break;
+        case SMOOTH_STORE_CROSS_CORNER: g_st.cross_corner += n; break;
+        case SMOOTH_STORE_CROSS_NORMAL: g_st.cross_normal += n; break;
+        case SMOOTH_STORE_CROSS_STALE:  g_st.cross_stale += n; break;
+        case SMOOTH_STORE_NONSIM_LEN:   g_st.nonsim_len += n; break;
+        case SMOOTH_STORE_NONSIM_ORTHO: g_st.nonsim_ortho += n; break;
+        case SMOOTH_STORE_NONSIM_VEC:   g_st.nonsim_vec += n; break;
         default: break;
     }
 }

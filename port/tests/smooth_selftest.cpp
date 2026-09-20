@@ -583,9 +583,7 @@ static void test_store_keymtx() {
     k.level = 2;
     const int tf = 4;
     std::vector<float> grid(ntr::smooth_grid_points(tf) * 3, 0.25f);
-    ntr::SmoothShape sh;
-    sh.no_normal = 0; sh.curved = 1; sh.longest = 2.0f; sh.tightest = 3.0f;
-    ntr::smooth_store_add(k, tf, sh, &grid[0]);
+    ntr::smooth_store_add(k, tf, &grid[0]);
 
     // The same raw triangle, seen again on a later frame under a completely
     // different matrix: the caller forms the same key, because the key never
@@ -613,8 +611,6 @@ static void test_store_collide() {
     const int tf = 2;
     const int npts = ntr::smooth_grid_points(tf);
     std::vector<float> grid((size_t)npts * 3, 0.0f);
-    ntr::SmoothShape sh;
-    sh.no_normal = 0; sh.curved = 1; sh.longest = 1.0f; sh.tightest = 9.0f;
 
     for (int i = 0; i < N; ++i) {
         ntr::SmoothKey k;
@@ -626,7 +622,7 @@ static void test_store_collide() {
         }
         k.level = 1;
         grid[0] = (float)i;            // the sentinel: which entry this is
-        ntr::smooth_store_add(k, tf, sh, &grid[0]);
+        ntr::smooth_store_add(k, tf, &grid[0]);
     }
 
     int wrong = 0, missing = 0;
@@ -674,8 +670,6 @@ static void test_store_cap() {
     const int tf = 8;                       // the biggest grid, 45 points
     const int npts = ntr::smooth_grid_points(tf);
     std::vector<float> grid((size_t)npts * 3, 1.0f);
-    ntr::SmoothShape sh;
-    sh.no_normal = 0; sh.curved = 1; sh.longest = 1.0f; sh.tightest = 9.0f;
 
     uint64_t peak = 0;
     for (int i = 0; i < 20000; ++i) {
@@ -687,7 +681,7 @@ static void test_store_cap() {
             k.n[c] = (uint32_t)(i * 7919u + (uint32_t)c);
         }
         k.level = 3;
-        ntr::smooth_store_add(k, tf, sh, &grid[0]);
+        ntr::smooth_store_add(k, tf, &grid[0]);
         ntr::smooth_store_stats(after);
         if (after.bytes > peak) peak = after.bytes;
         if (after.clears > before.clears + 1) break;

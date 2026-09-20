@@ -323,18 +323,31 @@ struct SmoothKey {
 
 struct SmoothEntry {
     SmoothKey key;
-    SmoothShape shape;   // measured in local units; the caps are applied live
-    int32_t tf;          // the factor the grid was built at, 1 if none was
+    int32_t tf;          // the factor the grid was built at
     uint32_t off;        // first float of this entry's grid in the pool
 };
 
+// WHAT IS DELIBERATELY NOT IN HERE: the policy verdict. An earlier version of
+// this store remembered all of it, including whether the three corner normals
+// agreed, and measured a DIFFERENT set of smoothed triangles from 0.4.0 --
+// 742 a frame against 721 on Bob-omb Battlefield. The reason is worth keeping
+// written down. The flat test compares corner normals at about one degree,
+// and a position matrix is only a similarity to within the DS's own 1.19.12
+// quantisation, so the angle between two nearly-equal normals is not quite
+// the same before and after it. Asking in the model's space and asking in
+// view space are therefore two slightly different questions near that
+// threshold, and the picture may only change if nothing does.
+// So the policy runs LIVE, on the view-space corners, every frame, through
+// the same smooth_tess_factor 0.4.0 called. It is also the cheap half: the
+// step-0 profiler measured it at 64 ms of 1206 ms on castle grounds against
+// 415 ms for the patch maths this store does remove.
+
 // Null on a miss. The returned pointer is valid until the next add.
 const SmoothEntry *smooth_store_find(const SmoothKey &k);
-// Insert. `grid` is smooth_grid_points(tf)*3 floats, or null when tf <= 1
-// (a refused shape is worth remembering too: it is the policy work saved).
-// Null only when the store refused the insert outright.
+// Insert. `grid` is smooth_grid_points(tf)*3 floats. Null only when the
+// store refused the insert outright.
 const SmoothEntry *smooth_store_add(const SmoothKey &k, int tf,
-                                    const SmoothShape &sh, const float *grid);
+                                    const float *grid);
 const float *smooth_store_grid(const SmoothEntry *e);
 // Drop everything. Called when the level changes, since a level is the
 // natural end of a set of models, and by the cap when the pool is full.
@@ -346,6 +359,14 @@ struct SmoothStoreStats {
     uint64_t skip_nonsim;     // position matrix is not a similarity
     uint64_t skip_zeronrm;    // a raw NORMAL payload was zero
     uint64_t live_calls;      // triangles that took the 0.4.0 path instead
+    /* The two refusals above, broken down. Each one is a different thing to
+       fix, and lumping them together hid which was costing the hit rate. */
+    uint64_t cross_corner;    // two corners genuinely under different matrices
+    uint64_t cross_normal;    // a NORMAL latched under a different matrix
+    uint64_t cross_stale;     // the matrix moved between the last vertex and here
+    uint64_t nonsim_len;      // the three basis images are not the same length
+    uint64_t nonsim_ortho;    // they are not mutually perpendicular
+    uint64_t nonsim_vec;      // the vector matrix carries a different rotation
     uint64_t entries;
     uint64_t bytes, cap_bytes;
 };
@@ -356,7 +377,13 @@ enum {
     SMOOTH_STORE_CROSSMTX = 0,
     SMOOTH_STORE_NONSIM,
     SMOOTH_STORE_ZERONRM,
-    SMOOTH_STORE_LIVE
+    SMOOTH_STORE_LIVE,
+    SMOOTH_STORE_CROSS_CORNER,
+    SMOOTH_STORE_CROSS_NORMAL,
+    SMOOTH_STORE_CROSS_STALE,
+    SMOOTH_STORE_NONSIM_LEN,
+    SMOOTH_STORE_NONSIM_ORTHO,
+    SMOOTH_STORE_NONSIM_VEC
 };
 void smooth_store_count(int which, uint64_t n);
 
