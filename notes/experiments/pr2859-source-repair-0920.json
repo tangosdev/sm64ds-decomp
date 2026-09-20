@@ -1,0 +1,1516 @@
+{
+  "schema": 2,
+  "task": "pr2859-source-repair-0920",
+  "input_commit": "166dffa1d0767416bd386294a324f00ec267fcc9",
+  "source_base": "4407c8471ed3299ea16d9cc899020e3232ac6ee9",
+  "toolchain": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "scope": {
+    "module": "ov062",
+    "start": "0x0211975c",
+    "end": "0x0211af38",
+    "functions": 18,
+    "bytes": 6108
+  },
+  "status": "Producer candidate; independent current-base acceptance remains pending",
+  "replay": "Start baseline from input_commit source/header. Each experiment patches its named parent; patches are ordered so the parent is already available. Compile .cpp with recorded flags, the scratch header directory and repository include path. Match all 18 manifest functions; use final official relocation/TU/ROM evidence for acceptance.",
+  "limits": "Masked matches are screening only. different_words=999 means unequal sizes, not 999 changed words. Invalid source probes and the superseded one-sided angle cast are not compiler barriers.",
+  "whole_object": {
+    "baseline": {
+      "complete_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd",
+      "normalized_signature_sha256": "59ee51dc27c907d1f7f3c65d4295525701d3de115ec34c6852b5eac3201d9f4d",
+      "allocated_sections": 30,
+      "global_weak_definitions": 30,
+      "relocations": 235,
+      "function_section_order": [
+        "_ZN7daRNk_cD1Ev",
+        "_ZN7daRNk_cD0Ev",
+        "func_ov062_02119800",
+        "func_ov062_02119954",
+        "func_ov062_021199ac",
+        "func_ov062_02119af0",
+        "func_ov062_02119be0",
+        "func_ov062_0211a0f0",
+        "func_ov062_0211a168",
+        "func_ov062_0211a1f4",
+        "func_ov062_0211a740",
+        "_ZN7Vector3D1Ev",
+        "func_ov062_0211a9c4",
+        "func_ov062_0211aac0",
+        "_ZN7daRNk_c6RenderEv",
+        "_ZN7daRNk_c8BehaviorEv",
+        "_ZN7daRNk_c16CleanupResourcesEv",
+        "_ZN7daRNk_c13InitResourcesEv",
+        "daRNk_c_classInit"
+      ]
+    },
+    "final": {
+      "complete_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f",
+      "normalized_signature_sha256": "59ee51dc27c907d1f7f3c65d4295525701d3de115ec34c6852b5eac3201d9f4d",
+      "allocated_sections": 30,
+      "global_weak_definitions": 30,
+      "relocations": 235,
+      "function_section_order": [
+        "_ZN7daRNk_cD1Ev",
+        "_ZN7daRNk_cD0Ev",
+        "func_ov062_02119800",
+        "func_ov062_02119954",
+        "func_ov062_021199ac",
+        "func_ov062_02119af0",
+        "func_ov062_02119be0",
+        "_ZN7Vector3D1Ev",
+        "func_ov062_0211a0f0",
+        "func_ov062_0211a168",
+        "func_ov062_0211a1f4",
+        "func_ov062_0211a740",
+        "func_ov062_0211a9c4",
+        "func_ov062_0211aac0",
+        "_ZN7daRNk_c6RenderEv",
+        "_ZN7daRNk_c8BehaviorEv",
+        "_ZN7daRNk_c16CleanupResourcesEv",
+        "_ZN7daRNk_c13InitResourcesEv",
+        "daRNk_c_classInit"
+      ]
+    },
+    "normalized_equal": true,
+    "normalization": "Every allocated section body hash, global/weak definition, and relocation is keyed by the section owning symbols, then sorted; section indices are excluded only from the normalized form. The complete signature retains original indices. Only the licensed Vector3 destructor moves earlier; every retained function/data body and relocation agrees."
+  },
+  "experiments": [
+    {
+      "id": "field-widths",
+      "description": "Widen the two 32-bit position components; retain all subsequent offsets and total size.",
+      "parent": "baseline",
+      "source_patch": "",
+      "header_patch": "--- parent/daRNk_c.h\n+++ probe/daRNk_c.h\n@@ -50,6 +50,6 @@\n     s32                          unk_39c;               /* 0x39c */\n     s32                          unk_3a0;               /* 0x3a0 */\n-    u8                           unk_3a4;               /* 0x3a4 */\n-    u8  pad_3a5[0x5];\n+    s32                          unk_3a4;               /* 0x3a4 */\n+    u8  pad_3a8[0x2];\n     s16                          unk_3aa;               /* 0x3aa */\n     u8                           mHasPlayerUsedCannon;               /* 0x3ac */\n@@ -68,6 +68,5 @@\n     s32                          unk_3c0;               /* 0x3c0 */\n     s32                          unk_3c4;               /* 0x3c4 */\n-    u8                           unk_3c8;               /* 0x3c8 */\n-    u8  pad_3c9[0x3];\n+    s32                          unk_3c8;               /* 0x3c8 */\n     Vector3                      mPathTarget;           /* 0x3cc */\n     PathPtr                      mPathPtr;              /* 0x3d8 */\n",
+      "compiled": true,
+      "source_sha256": "e592e9f49af9c6b7a1acf7df1a8da4e56cf1827a421ab293dd4735ec4b77fdd8",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "simple-stack-assignment",
+      "description": "Replace the identical conditional branches with the common expression.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -964,5 +964,5 @@\n     x = *(int *)(self + 0x5c);\n     /* Use kind right after x so cmp lands after both loads of ang and x */\n-    stack[0] = (kind > 8) ? x : x;\n+    stack[0] = x;\n     y = *(int *)(self + 0x60);\n     ang = (short)(ang + 0x4000);\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "54ad58004792d47de3cbc7690b34f89a58d963bbeeabdbcd3b106c9e6f8c8f6a",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": false,
+      "changed_functions": [
+        {
+          "symbol": "func_ov062_02119800",
+          "expected_size": 340,
+          "compiled_size": 340,
+          "masked_match": false,
+          "different_words": 6
+        }
+      ],
+      "normalized_object_matches_baseline": false,
+      "object_signature_sha256": "d7ae12b445bbbf5eb504fa77b40c842a51d6a53e7e8b183255c769e15a0f2368"
+    },
+    {
+      "id": "ordinary-stack-arrays",
+      "description": "Use ordinary local coordinates instead of volatile stack arrays in the two particle paths.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -504,5 +504,5 @@\n     int r4;\n     int r7;\n-    volatile int tmp[3];\n+    int tmp[3];\n \n     switch (*(u8 *)(a + 0x390)) {\n@@ -939,5 +939,5 @@\n extern \"C\" void func_ov062_02119800(char *c)\n {\n-    volatile int stack[3];\n+    int stack[3];\n     char *self = c;\n     unsigned int kind = ((unsigned int)(*(int *)(self + 0x358) << 4)) >> 16;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "c9654ab17e320c6e9fbb83d85cca9040def831033a3bba1f1d634dc933fb9081",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": false,
+      "changed_functions": [
+        {
+          "symbol": "func_ov062_02119800",
+          "expected_size": 340,
+          "compiled_size": 296,
+          "masked_match": false,
+          "different_words": 999
+        },
+        {
+          "symbol": "func_ov062_0211a1f4",
+          "expected_size": 1356,
+          "compiled_size": 1340,
+          "masked_match": false,
+          "different_words": 999
+        }
+      ],
+      "normalized_object_matches_baseline": false,
+      "object_signature_sha256": "1fc118b38a06823a5a439098106a92229970d5004d41a523690833b99c8fcf97"
+    },
+    {
+      "id": "real-timer",
+      "description": "Use the existing Timer type and real member calls for the race timer global.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -56,4 +56,5 @@\n #include \"decl_Player.h\"\n #include \"decl_Timer.h\"\n+#include \"Timer.h\"\n #include \"decl_common.h\"\n #include \"decl_PathPtr.h\"\n@@ -138,5 +139,5 @@\n void _ZN5Timer10ResetTimerEv(void* self);\n extern u8 data_0209d684;\n-extern char data_0209d4c8[];\n+extern Timer data_0209d4c8;\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);\n@@ -479,5 +480,5 @@\n         *(u8*)(c + 0x390) = 0;\n         *(int*)(c + 0x98) = 0;\n-        _ZN5Timer10ResetTimerEv(data_0209d4c8);\n+        data_0209d4c8.ResetTimer();\n         return;\n     default:\n@@ -522,5 +523,5 @@\n         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e014[1], 0x40000000, 0x1000, 0);\n         data_ov002_02111184 = 1;\n-        _ZN5Timer10StartTimerEv(&data_0209d4c8);\n+        data_0209d4c8.StartTimer();\n         func_0201267c(0x4d, a + 0x74);\n         return;\n@@ -538,5 +539,5 @@\n             *(int *)(a + 0x38c) = 3;\n             *(u8 *)(a + 0x390) = 0;\n-            _ZN5Timer9StopTimerEv(&data_0209d4c8);\n+            data_0209d4c8.StopTimer();\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n             *(u8 *)(o + 0x16e) = 1;\n@@ -600,5 +601,5 @@\n             *(int *)(a + 0x38c) = 3;\n             *(u8 *)(a + 0x390) = 0;\n-            _ZN5Timer9StopTimerEv(&data_0209d4c8);\n+            data_0209d4c8.StopTimer();\n             o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "fd3336b746b8e7e59f3e841df276e44762952eb344a89faefdb6f8555f73edee",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-file-release",
+      "description": "Use the real opaque SharedFilePtr interface and Release member instead of a fabricated sixteen-byte layout.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -63,4 +63,5 @@\n #include \"decl_dCcAc_c.h\"\n #include \"decl_ShadowModel.h\"\n+#include \"SharedFilePtr.h\"\n #include \"decl_dBgCh_Actr.h\"\n \n@@ -102,5 +103,5 @@\n /* (Vector3: real header type in scope; Vec3 typedef'd above) */\n /* shadow struct 'SharedFilePtr' */\n-struct SharedFilePtr { unsigned int data[4]; };\n+\n \n extern \"C\" {\n@@ -281,12 +282,12 @@\n int daRNk_c::CleanupResources()\n {\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e00c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e014);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e024);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e01c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e034);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e03c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e02c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e004);\n+    ((SharedFilePtr *)&data_ov062_0211e00c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e014)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e024)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e01c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e034)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e03c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e02c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e004)->Release();\n     if (mIsRacing) _ZN5Sound22StopLoadedMusic_Layer2Ev();\n     return 1;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "c74f191c91819b6184454f52b1a1129be5d4ec0ebfb734720769b22627416d18",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "direct-init-fields",
+      "description": "Use declared members and subobjects directly in InitResources instead of casts back to their storage.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -228,46 +228,46 @@\n     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e02c);\n     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e004);\n-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii((char *)((void *)this) + 0x300, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n         return 0;\n-    if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)\n+    if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)\n         return 0;\n-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)((void *)this) + 0x300, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n-    *(int *)((char *)&mScaleX) = 0x14cc;\n-    *(int *)((char *)&mScaleY) = 0x14cc;\n-    *(int *)((char *)&mScaleZ) = 0x14cc;\n-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((char *)((void *)this) + 0x110, ((void *)this), 0x78000, 0x12c000, 0x800004, 0);\n+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n+    mScaleX = 0x14cc;\n+    mScaleY = 0x14cc;\n+    mScaleZ = 0x14cc;\n+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x78000, 0x12c000, 0x800004, 0);\n     zero = 0;\n-    *(int *)((char *)&mState) = zero;\n-    *(s16 *)((char *)&unk_3aa) = (s16)zero;\n-    *(unsigned char *)((char *)&mHasFinished) = (unsigned char)zero;\n-    *(int *)((char *)&unk_39c) = *(int *)((char *)&mPosX);\n-    *(int *)((char *)&unk_3a0) = *(int *)((char *)&mPosY);\n-    *(int *)((char *)&unk_3a4) = *(int *)((char *)&mPosZ);\n-    *(int *)((char *)&mVertAccel) = -0x2000;\n-    *(int *)((char *)&mTerminalVelocity) = -0x3c000;\n-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)((void *)this) + 0x144, ((void *)this), 0x78000, 0x78000, 0, 0);\n-    _ZN7PathPtr6FromIDEj((char *)((void *)this) + 0x3d8, *(unsigned int *)((char *)&param1) & 0xf);\n-    *(int *)((char *)&mNumPathPts) = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);\n-    *(int *)((char *)&mCurPathPt) = zero;\n-    *(int *)((char *)&unk_3c0) = *(int *)((char *)&mPosX);\n-    *(int *)((char *)&unk_3c4) = *(int *)((char *)&mPosY);\n-    *(int *)((char *)&unk_3c8) = *(int *)((char *)&mPosZ);\n-    _ZNK7PathPtr7GetNodeER7Vector3j((char *)((void *)this) + 0x3d8, (char *)((void *)this) + 0x3cc, *(unsigned int *)((char *)&mCurPathPt));\n-    *(unsigned char *)((char *)&mHasPlayerUsedCannon) = (unsigned char)zero;\n-    b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 4) + 1) & 0x3f);\n-    *(unsigned char *)((char *)&mPathPtToJumpAt1) = b;\n-    b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 10) + 1) & 0x3f);\n-    *(unsigned char *)((char *)&mPathPtToJumpAt2) = b;\n-    if (*(unsigned char *)((char *)&mPathPtToJumpAt1) <= 1)\n-        *(unsigned char *)((char *)&mPathPtToJumpAt1) = 0xff;\n-    if (*(unsigned char *)((char *)&mPathPtToJumpAt2) <= 1)\n-        *(unsigned char *)((char *)&mPathPtToJumpAt2) = 0xff;\n-    *(unsigned char *)((char *)&mStarID) = (unsigned char)(*(s16 *)((char *)&mAngleX) & 0xf);\n-    b = *(unsigned char *)((char *)&mStarID);\n-    *(unsigned char *)((char *)&mTrackedStar) = _ZN8dActor_c9TrackStarEjj(((void *)this), b, 2);\n-    *(int *)((char *)&mFlagID) = zero;\n-    *(int *)((char *)&mPlayer) = zero;\n-    *(unsigned char *)((char *)&mIsRacing) = (unsigned char)zero;\n-    *(unsigned char *)((char *)&mIsTalkingToMario) = (unsigned char)zero;\n+    mState = zero;\n+    unk_3aa = (s16)zero;\n+    mHasFinished = (unsigned char)zero;\n+    unk_39c = mPosX;\n+    unk_3a0 = mPosY;\n+    unk_3a4 = mPosZ;\n+    mVertAccel = -0x2000;\n+    mTerminalVelocity = -0x3c000;\n+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x78000, 0x78000, 0, 0);\n+    _ZN7PathPtr6FromIDEj(&mPathPtr, param1 & 0xf);\n+    mNumPathPts = _ZNK7PathPtr8NumNodesEv(&mPathPtr);\n+    mCurPathPt = zero;\n+    unk_3c0 = mPosX;\n+    unk_3c4 = mPosY;\n+    unk_3c8 = mPosZ;\n+    _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mPathTarget, mCurPathPt);\n+    mHasPlayerUsedCannon = (unsigned char)zero;\n+    b = (unsigned char)((((unsigned int)param1 >> 4) + 1) & 0x3f);\n+    mPathPtToJumpAt1 = b;\n+    b = (unsigned char)((((unsigned int)param1 >> 10) + 1) & 0x3f);\n+    mPathPtToJumpAt2 = b;\n+    if (mPathPtToJumpAt1 <= 1)\n+        mPathPtToJumpAt1 = 0xff;\n+    if (mPathPtToJumpAt2 <= 1)\n+        mPathPtToJumpAt2 = 0xff;\n+    mStarID = (unsigned char)(mAngleX & 0xf);\n+    b = mStarID;\n+    mTrackedStar = _ZN8dActor_c9TrackStarEjj(this, b, 2);\n+    mFlagID = zero;\n+    mPlayer = zero;\n+    mIsRacing = (unsigned char)zero;\n+    mIsTalkingToMario = (unsigned char)zero;\n     return 1;\n }\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "fa25a2a38e2eb4f3e6c79aff17659ce38f8b4381aa76eadca666ce6e0754bd99",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-behavior-calls",
+      "description": "Use inherited actor and member animation/collision methods in Behavior.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -309,10 +309,10 @@\n   else fn=*(void**)ent;\n   ((void(*)(char*))fn)(self);\n-  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);\n+  mModelAnim.Advance();\n   mAngleY = mPrevAngleY;\n-  _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this)+0x110);\n-  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this)+0x144, 0);\n-  _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);\n-  _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);\n+  UpdatePos(&mdCcAc_c);\n+  UpdateWMClsn(mWithMeshClsn, 0);\n+  mdCcAc_c.Clear();\n+  mdCcAc_c.Update();\n   func_ov062_0211aac0(((char*)this));\n   return 1;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "d86b2db201f3c92eb29e12c55e68f47b4216102d552c29d4f8e249dc3fdce822",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "local-render-scale",
+      "description": "Build an ordinary Vector3 scale instead of viewing the three inherited scalar fields as one vector.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -329,5 +329,9 @@\n {\n   mModelAnim.HideMaterial(0, 1);\n-  mModelAnim.Render((const Vector3*)((char*)&mScaleX));\n+  Vector3 scale;\n+  scale.x = mScaleX;\n+  scale.y = mScaleY;\n+  scale.z = mScaleZ;\n+  mModelAnim.Render(&scale);\n   return 1;\n }\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "71c4b862a128e641da8c54c17a41bfb340fa798aafe550b102c0861dd0240fca",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": false,
+      "changed_functions": [
+        {
+          "symbol": "_ZN7daRNk_c6RenderEv",
+          "expected_size": 56,
+          "compiled_size": 88,
+          "masked_match": false,
+          "different_words": 999
+        }
+      ],
+      "normalized_object_matches_baseline": false,
+      "object_signature_sha256": "06bf6e1d903f9ee0f7f541be272320e23b131b71a9cb74749b4bd37249c0d3bc"
+    },
+    {
+      "id": "real-setanim",
+      "description": "Call the declared ModelAnim::SetAnim with its real Fix12<int> parameter in InitResources.",
+      "parent": "field-widths",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -232,5 +232,5 @@\n     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)\n         return 0;\n-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)((void *)this) + 0x300, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n+    mModelAnim.SetAnim(*(BCA_File **)(data_ov062_0211e034 + 4), 0, Fix12<int>(0x1000), 0);\n     *(int *)((char *)&mScaleX) = 0x14cc;\n     *(int *)((char *)&mScaleY) = 0x14cc;\n",
+      "header_patch": "",
+      "compiled": false,
+      "source_sha256": "3848e40503fb20b45e8cf0b9edd17557a5d0c9db9e345667aa970431b10b6d3a",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "compiler_diagnostic": "  ! compile failed (2004/b56): mwccarm.exe: warning: Environment variable 'MWCIncludes' not found\nbuild\\pr2859-probes\\real-setanim\\daRNk_c.cpp:234: illegal implicit conversion from 'int' to\nbuild\\pr2859-probes\\real-setanim\\daRNk_c.cpp:234: 'Fix12<int>'\nErrors caused tool to abort.\n",
+      "disposition": "Invalid/incomplete source probe, not evidence of a compiler constraint."
+    },
+    {
+      "id": "combined-natural",
+      "description": "Combine measured field widths, direct field/subobject access and real Timer/SharedFilePtr/Behavior member calls.",
+      "parent": "direct-init-fields",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -55,5 +55,5 @@\n #include \"common.h\"\n #include \"decl_Player.h\"\n-#include \"decl_Timer.h\"\n+#include \"Timer.h\"\n #include \"decl_common.h\"\n #include \"decl_PathPtr.h\"\n@@ -63,4 +63,5 @@\n #include \"decl_dCcAc_c.h\"\n #include \"decl_ShadowModel.h\"\n+#include \"SharedFilePtr.h\"\n #include \"decl_dBgCh_Actr.h\"\n \n@@ -102,5 +103,5 @@\n /* (Vector3: real header type in scope; Vec3 typedef'd above) */\n /* shadow struct 'SharedFilePtr' */\n-struct SharedFilePtr { unsigned int data[4]; };\n+\n \n extern \"C\" {\n@@ -138,5 +139,5 @@\n void _ZN5Timer10ResetTimerEv(void* self);\n extern u8 data_0209d684;\n-extern char data_0209d4c8[];\n+extern Timer data_0209d4c8;\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);\n@@ -281,12 +282,12 @@\n int daRNk_c::CleanupResources()\n {\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e00c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e014);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e024);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e01c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e034);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e03c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e02c);\n-    _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)&data_ov062_0211e004);\n+    ((SharedFilePtr *)&data_ov062_0211e00c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e014)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e024)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e01c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e034)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e03c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e02c)->Release();\n+    ((SharedFilePtr *)&data_ov062_0211e004)->Release();\n     if (mIsRacing) _ZN5Sound22StopLoadedMusic_Layer2Ev();\n     return 1;\n@@ -309,10 +310,10 @@\n   else fn=*(void**)ent;\n   ((void(*)(char*))fn)(self);\n-  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);\n+  mModelAnim.Advance();\n   mAngleY = mPrevAngleY;\n-  _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this)+0x110);\n-  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this)+0x144, 0);\n-  _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);\n-  _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);\n+  UpdatePos(&mdCcAc_c);\n+  UpdateWMClsn(mWithMeshClsn, 0);\n+  mdCcAc_c.Clear();\n+  mdCcAc_c.Update();\n   func_ov062_0211aac0(((char*)this));\n   return 1;\n@@ -479,5 +480,5 @@\n         *(u8*)(c + 0x390) = 0;\n         *(int*)(c + 0x98) = 0;\n-        _ZN5Timer10ResetTimerEv(data_0209d4c8);\n+        data_0209d4c8.ResetTimer();\n         return;\n     default:\n@@ -522,5 +523,5 @@\n         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e014[1], 0x40000000, 0x1000, 0);\n         data_ov002_02111184 = 1;\n-        _ZN5Timer10StartTimerEv(&data_0209d4c8);\n+        data_0209d4c8.StartTimer();\n         func_0201267c(0x4d, a + 0x74);\n         return;\n@@ -538,5 +539,5 @@\n             *(int *)(a + 0x38c) = 3;\n             *(u8 *)(a + 0x390) = 0;\n-            _ZN5Timer9StopTimerEv(&data_0209d4c8);\n+            data_0209d4c8.StopTimer();\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n             *(u8 *)(o + 0x16e) = 1;\n@@ -600,5 +601,5 @@\n             *(int *)(a + 0x38c) = 3;\n             *(u8 *)(a + 0x390) = 0;\n-            _ZN5Timer9StopTimerEv(&data_0209d4c8);\n+            data_0209d4c8.StopTimer();\n             o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "11b268a512611d2f1ea7ca0b8cad7c04a83286ec04f296e924b0867ff008134e",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-setanim-aggregate",
+      "description": "Use a valid aggregate Fix12<int> speed argument with real ModelAnim::SetAnim in InitResources.",
+      "parent": "combined-natural",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -233,5 +233,6 @@\n     if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)\n         return 0;\n-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n+    Fix12<int> animSpeed = { 0x1000 };\n+    mModelAnim.SetAnim(*(BCA_File **)(data_ov062_0211e034 + 4), 0, animSpeed, 0);\n     mScaleX = 0x14cc;\n     mScaleY = 0x14cc;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "8061ff3d903f177eaa49cb54d1ac80a0c2616e94d7328deb2725192974717aa9",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": false,
+      "changed_functions": [
+        {
+          "symbol": "_ZN7daRNk_c13InitResourcesEv",
+          "expected_size": 588,
+          "compiled_size": 596,
+          "masked_match": false,
+          "different_words": 999
+        }
+      ],
+      "normalized_object_matches_baseline": false,
+      "object_signature_sha256": "155a41e9bb85d7f35e74e1641730326d5ea34239c404a297f4b92141683662a7",
+      "disposition": "Measured nonmatch only. The actual scalar callee takes u16 startFrame whereas the class header has u32; external interface disagreement must be resolved before treating this as a definitive method-call barrier."
+    },
+    {
+      "id": "real-state-dispatch",
+      "description": "Use the C++ member-function-pointer operation for the two-word race state table.",
+      "parent": "combined-natural",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -302,12 +302,7 @@\n int daRNk_c::Behavior()\n {\n-  int idx = mState;\n-  char* ent = (char*)&data_ov062_0211e0a4[idx*2];\n-  int adj = *(int*)(ent+4);\n-  char* self = ((char*)this) + (adj>>1);\n-  void* fn;\n-  if(adj&1){ void* vt=*(void**)self; fn=*(void**)((char*)vt + *(int*)ent); }\n-  else fn=*(void**)ent;\n-  ((void(*)(char*))fn)(self);\n+  typedef void (daRNk_c::*StateFunc)();\n+  StateFunc *states = (StateFunc *)data_ov062_0211e0a4;\n+  (this->*states[mState])();\n   mModelAnim.Advance();\n   mAngleY = mPrevAngleY;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "95b0c52c444770e3c590bf233a392118ad9fd580c47d1ea15f44938de20ee0d1",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-init-methods",
+      "description": "Use ModelBase::SetFile, ShadowModel::InitCylinder and PathPtr methods with their real interfaces.",
+      "parent": "combined-natural",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -229,7 +229,7 @@\n     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e02c);\n     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e004);\n-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n+    if (mModelAnim.SetFile(*(BMD_File **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n         return 0;\n-    if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)\n+    if (mShadowModel.InitCylinder() == 0)\n         return 0;\n     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n@@ -248,11 +248,11 @@\n     mTerminalVelocity = -0x3c000;\n     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x78000, 0x78000, 0, 0);\n-    _ZN7PathPtr6FromIDEj(&mPathPtr, param1 & 0xf);\n-    mNumPathPts = _ZNK7PathPtr8NumNodesEv(&mPathPtr);\n+    mPathPtr.FromID(param1 & 0xf);\n+    mNumPathPts = mPathPtr.NumNodes();\n     mCurPathPt = zero;\n     unk_3c0 = mPosX;\n     unk_3c4 = mPosY;\n     unk_3c8 = mPosZ;\n-    _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mPathTarget, mCurPathPt);\n+    mPathPtr.GetNode(mPathTarget, mCurPathPt);\n     mHasPlayerUsedCannon = (unsigned char)zero;\n     b = (unsigned char)((((unsigned int)param1 >> 4) + 1) & 0x3f);\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "0bdac8589126b1ced99b66ead54c7f51030ccd02b4cefd5a3f94c1305ea9c5fa",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-file-loaders",
+      "description": "Use real static Model and Animation loaders on the opaque shared file handles.",
+      "parent": "combined-natural",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -221,12 +221,12 @@\n     int zero;\n \n-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov062_0211e00c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e014);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e024);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e01c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e034);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e03c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e02c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e004);\n+    Model::LoadFile(*(SharedFilePtr *)data_ov062_0211e00c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e014);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e024);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e01c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e034);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e03c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e02c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e004);\n     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n         return 0;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "b16ca422521e5e555f69f627fe896cb0c873404f3686a34b78f13d4934153e61",
+      "header_sha256": "e872b5bb328c890a8623f2721c8700e13546e30887d48afa637978fec1fcf8ec",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-player-pointer",
+      "description": "Give the stored Player object pointer its correct pointer type in the class layout.",
+      "parent": "combined-natural",
+      "source_patch": "",
+      "header_patch": "--- parent/daRNk_c.h\n+++ probe/daRNk_c.h\n@@ -39,4 +39,6 @@\n #include \"dBgCh_Actr.h\"\n \n+struct Player;\n+\n struct daRNk_c : dEnemyBase_c {\n     dCcAc_c           mdCcAc_c;   /* 0x110 */\n@@ -47,5 +49,5 @@\n     u8  pad_390[0x4];\n     s32                          mFlagID;               /* 0x394 */\n-    s32                          mPlayer;               /* 0x398 */\n+    Player *                     mPlayer;               /* 0x398 */\n     s32                          unk_39c;               /* 0x39c */\n     s32                          unk_3a0;               /* 0x3a0 */\n",
+      "compiled": false,
+      "source_sha256": "11b268a512611d2f1ea7ca0b8cad7c04a83286ec04f296e924b0867ff008134e",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "compiler_diagnostic": "  ! compile failed (2004/b56): mwccarm.exe: warning: Environment variable 'MWCIncludes' not found\nbuild\\pr2859-probes\\real-player-pointer\\daRNk_c.cpp:270: illegal implicit conversion from 'int' to\nbuild\\pr2859-probes\\real-player-pointer\\daRNk_c.cpp:270: 'Player *'\nErrors caused tool to abort.\n",
+      "disposition": "Invalid/incomplete source probe, not evidence of a compiler constraint."
+    },
+    {
+      "id": "selected-code",
+      "description": "Combine all accepted real methods and state dispatch, with the stored Player pointer explicitly null-initialized.",
+      "parent": "real-init-methods",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -221,12 +221,12 @@\n     int zero;\n \n-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov062_0211e00c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e014);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e024);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e01c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e034);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e03c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e02c);\n-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e004);\n+    Model::LoadFile(*(SharedFilePtr *)data_ov062_0211e00c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e014);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e024);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e01c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e034);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e03c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e02c);\n+    Animation::LoadFile(*(SharedFilePtr *)data_ov062_0211e004);\n     if (mModelAnim.SetFile(*(BMD_File **)(data_ov062_0211e00c + 4), 1, -1) == 0)\n         return 0;\n@@ -268,5 +268,5 @@\n     mTrackedStar = _ZN8dActor_c9TrackStarEjj(this, b, 2);\n     mFlagID = zero;\n-    mPlayer = zero;\n+    mPlayer = 0;\n     mIsRacing = (unsigned char)zero;\n     mIsTalkingToMario = (unsigned char)zero;\n@@ -302,12 +302,7 @@\n int daRNk_c::Behavior()\n {\n-  int idx = mState;\n-  char* ent = (char*)&data_ov062_0211e0a4[idx*2];\n-  int adj = *(int*)(ent+4);\n-  char* self = ((char*)this) + (adj>>1);\n-  void* fn;\n-  if(adj&1){ void* vt=*(void**)self; fn=*(void**)((char*)vt + *(int*)ent); }\n-  else fn=*(void**)ent;\n-  ((void(*)(char*))fn)(self);\n+  typedef void (daRNk_c::*StateFunc)();\n+  StateFunc *states = (StateFunc *)data_ov062_0211e0a4;\n+  (this->*states[mState])();\n   mModelAnim.Advance();\n   mAngleY = mPrevAngleY;\n",
+      "header_patch": "--- parent/daRNk_c.h\n+++ probe/daRNk_c.h\n@@ -39,4 +39,6 @@\n #include \"dBgCh_Actr.h\"\n \n+struct Player;\n+\n struct daRNk_c : dEnemyBase_c {\n     dCcAc_c           mdCcAc_c;   /* 0x110 */\n@@ -47,5 +49,5 @@\n     u8  pad_390[0x4];\n     s32                          mFlagID;               /* 0x394 */\n-    s32                          mPlayer;               /* 0x398 */\n+    Player *                     mPlayer;               /* 0x398 */\n     s32                          unk_39c;               /* 0x39c */\n     s32                          unk_3a0;               /* 0x3a0 */\n",
+      "compiled": true,
+      "source_sha256": "ade1343b554a6982ad8486c0232001a5507d92107ae565260827940bc35aa328",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "real-vector-type",
+      "description": "Use the existing Vector3 type for all local coordinate values and ABI view casts.",
+      "parent": "selected-code",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -82,7 +82,5 @@\n \n /* shadow typedef 'Vec3' */\n-typedef struct Vec3 {\n-    int x, y, z;\n-} Vec3;\n+typedef Vector3 Vec3;\n \n /* shadow struct 'VVec3' */\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "8bd337174a73fd137274f618284f8d2e263e00721c8fb10f1f708903efe55e17",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "pointer-call-contracts",
+      "description": "Remove integer-disguised Player pointers at the race-helper call boundary.",
+      "parent": "selected-code",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -133,5 +133,5 @@\n extern char *_ZN8dActor_c10FindWithIDEj(u32 id);\n extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);\n-extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n+extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);\n void func_02012790(int a);\n@@ -492,7 +492,6 @@\n {\n     /* block-scope views this body's bytes require (hide the file-scope canon) */\n-    extern int _ZN6Player12GetTalkStateEv(int p);\n     extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int anim, u32 b, int e);\n-    extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n+    extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n     extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);  /* 3rd arg int here: the ROM passes it unextended */\n     int r6;\n@@ -509,5 +508,5 @@\n     case 1:\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);\n-        if (_ZN6Player12GetTalkStateEv(*(int *)(a + 0x398)) != -1)\n+        if (_ZN6Player12GetTalkStateEv(*(void **)(a + 0x398)) != -1)\n             return;\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);\n@@ -546,5 +545,5 @@\n             r7 = 0x1000;\n         if (*(u8 *)(a + 0x3ac) == 0)\n-            *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(int *)(a + 0x398));\n+            *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(void **)(a + 0x398));\n         r5 = 4;\n         if (*(int *)(a + 0x394) != 0) {\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "78dfc356cfe28f55e0789d6f7b3218452c9dfc571c82156353b4fb01c9276874",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "setanim-pointer-contract",
+      "description": "Use the file-scope animation pointer declaration instead of hiding it with a block-local integer view.",
+      "parent": "selected-code",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -493,5 +493,4 @@\n     /* block-scope views this body's bytes require (hide the file-scope canon) */\n     extern int _ZN6Player12GetTalkStateEv(int p);\n-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int anim, u32 b, int e);\n     extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n     extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);  /* 3rd arg int here: the ROM passes it unextended */\n@@ -516,5 +515,5 @@\n         *(u8 *)(a + 0x3b5) = 1;\n         (*(u8 *)(((int)a + 0x390)))++;\n-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e014[1], 0x40000000, 0x1000, 0);\n+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e014[1], 0x40000000, 0x1000, 0);\n         data_ov002_02111184 = 1;\n         data_0209d4c8.StartTimer();\n@@ -570,5 +569,5 @@\n             if (_ZN9Animation8FinishedEv(a + 0x350) != 0 &&\n                 (*(int *)(a + 0x360) == data_ov062_0211e014[1] || *(int *)(a + 0x360) == data_ov062_0211e004[1]))\n-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e024[1], 0, 0x1000, 0);\n+                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e024[1], 0, 0x1000, 0);\n         }\n         if (r6 == 1 && (*(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ad) || *(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ae))) {\n@@ -586,5 +585,5 @@\n         if (_ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x144) != 0)\n             return;\n-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);\n+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);\n         *(int *)(a + 0xa8) = 0xa000;\n         *(int *)(a + 0x98) = (int)(((long long)*(int *)(a + 0x98) * 0xd00 + 0x800) >> 12);\n@@ -600,5 +599,5 @@\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n             *(u8 *)(o + 0x16e) = 1;\n-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e004[1], 0x40000000, 0x1000, 0);\n+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e004[1], 0x40000000, 0x1000, 0);\n             return;\n         }\n@@ -608,5 +607,5 @@\n         *(u8 *)(a + 0x390) = 2;\n         *(int *)(a + 0x9c) = -0x2000;\n-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e004[1], 0x40000000, 0x1000, 0);\n+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e004[1], 0x40000000, 0x1000, 0);\n         *(int *)(a + 0x358) = 0;\n         tmp[0] = *(int *)(a + 0x5c);\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "273bce812bee310e576536824957405782d392e38b863df77554ac0e17d226a0",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "13a4f3a79cfc5b3c55601f3c937c97bf3c35482ff945844d37d77b34fb870cbd"
+    },
+    {
+      "id": "subtraction-short-contract",
+      "description": "Use the declared signed-short angle contract explicitly at the atan2 call result.",
+      "parent": "selected-code",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -495,5 +495,4 @@\n     extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int anim, u32 b, int e);\n     extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n-    extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);  /* 3rd arg int here: the ROM passes it unextended */\n     int r6;\n     int r5;\n@@ -541,5 +540,5 @@\n         r4 = func_ov062_021199ac(a);\n         if (_ZN8dActor_c14GetSubtractionEss(a, *(s16 *)(a + 0x94),\n-                _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(a + 0xd4), *(int *)(a + 0xdc))) >= 0x6000)\n+                (s16)_ZN4cstd5atan2E5Fix12IiES1_(*(int *)(a + 0xd4), *(int *)(a + 0xdc))) >= 0x6000)\n             r7 = *(int *)(a + 0xd8) * 7 - 0x6000;\n         else\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "b0974b38d1152993a57afa1b4b0b061158188f1d429e25088b28acf9a6a6bc83",
+      "header_sha256": "369a0080b5b0143a8b485a90351fc5ba4082138e4d1330f0a5b71f0d15869cb5",
+      "all_18_masked_matches": false,
+      "changed_functions": [
+        {
+          "symbol": "func_ov062_0211a1f4",
+          "expected_size": 1356,
+          "compiled_size": 1360,
+          "masked_match": false,
+          "different_words": 999
+        }
+      ],
+      "normalized_object_matches_baseline": false,
+      "object_signature_sha256": "7b1d1d992a7337c8dd6b0ffc663c263bff28bbe0ab901c53592b1408e4886ad6",
+      "disposition": "Superseded by correct-angle-contracts. This one-sided edit was not a valid compiler constraint: it left atan2 incorrectly returning int."
+    },
+    {
+      "id": "selected-clean-source",
+      "description": "Adopt all successful natural forms, real Vector3 and pointer call contracts, complete markers and truthful production provenance.",
+      "parent": "setanim-pointer-contract",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -1,54 +1,14 @@\n //cpp\n-/* SHADOW translation unit -- generated by tools/tubuild.py create.\n- * ov062/daRNk_c  (18 function(s))\n+/* Koopa the Quick (ROM RTTI: daRNk_c), overlay 62.\n+ * This production TU owns the 18 functions at 0x0211975c..0x0211af38.\n+ * Class identity, lifecycle and four actor overrides are reconstructed; the\n+ * remaining address-named helpers still retain some raw field and ABI views.\n+ * Their original source lineage is recorded in the TU manifest.\n  *\n- * NOT ENROLLED, NOT CANONICAL. This file contributes nothing to the ROM\n- * build. It is a STARTING POINT (plan sec 7.3): local shadow declarations\n- * below were carried verbatim from the legacy files, not reconciled against\n- * real project headers -- that judgement call is left to a human/LLM review,\n- * the way pilot #1 reconciled daObjKm2_Ami_Bou_c::Render and ::CleanupResources by hand\n- * (see notes/tu-reconstruction-pilot-report.md sec 5.2).\n- *\n- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56\n- * emits one .text section per function, in the REVERSE of source order, so\n- * the highest-address ROM function is written FIRST here. Do not reorder;\n- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented\n- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).\n- *\n- * Assembled from these legacy one-function sources (ROM address order):\n- *   [0] 0x0211975c  src/_ZN7daRNk_cD1Ev.cpp\n- *   [1] 0x021197a4  src/_ZN7daRNk_cD0Ev.cpp\n- *   [2] 0x02119800  src/func_ov062_02119800.cpp\n- *   [3] 0x02119954  src/func_ov062_02119954.c\n- *   [4] 0x021199ac  src/func_ov062_021199ac.c\n- *   [5] 0x02119af0  src/func_ov062_02119af0.cpp\n- *   [6] 0x02119be0  src/func_ov062_02119be0.c\n- *   [7] 0x0211a0f0  src/func_ov062_0211a0f0.c\n- *   [8] 0x0211a168  src/func_ov062_0211a168.c\n- *   [9] 0x0211a1f4  src/func_ov062_0211a1f4.c\n- *   [10] 0x0211a740  src/func_ov062_0211a740.cpp\n- *   [11] 0x0211a9c4  src/func_ov062_0211a9c4.c\n- *   [12] 0x0211aac0  src/func_ov062_0211aac0.c\n- *   [13] 0x0211ab50  src/_ZN7daRNk_c6RenderEv.cpp\n- *   [14] 0x0211ab88  src/_ZN7daRNk_c8BehaviorEv.cpp\n- *   [15] 0x0211ac10  src/_ZN7daRNk_c16CleanupResourcesEv.cpp\n- *   [16] 0x0211ac94  src/_ZN7daRNk_c13InitResourcesEv.cpp\n- *   [17] 0x0211aee0  src/d_a_r_nk.c\n+ * The pinned compiler emits these functions in reverse source order. The\n+ * inline destructor and factory supply the retail D1/D0 order and class data;\n+ * the text-only manifest verifies and externalizes the emitted RTTI/vtable.\n+ * Measured source-form constraints: notes/experiments/pr2859-source-repair-0920.json.\n  */\n-\n-/* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources\n- * of this TU. `#pragma long_calls` is POSITIONAL in mwccarm 2004/b56 and is\n- * carried verbatim before its own member below, bracketed with `off` so it\n- * cannot leak into later members (dropping it silently costs the pooled\n- * cross-overlay tail-call -- a byte diff; see daObjBSwdoor_c in ov014).\n- * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,\n- * optimize_for_size) and is still left out: carried into a merged TU it\n- * would silently recompile every other member. Decide those by hand:\n- *   func_ov062_02119af0: #pragma opt_propagation off   [NOT carried -- review]\n- */\n-\n-/* Includes: union of the legacy files', first-seen in ROM-ascending\n- * processing order. NOT verified for header ordering constraints (e.g. a\n- * common.h-before-X rule) -- watch for new compile errors after this. */\n #include \"daRNk_c.h\"\n #include \"types.h\"\n@@ -66,12 +26,4 @@\n #include \"decl_dBgCh_Actr.h\"\n \n-/* Local shadow declarations carried from the legacy files verbatim.\n- * NOT reconciled against real project headers -- check include/*.h for\n- * each of these before compiling; a real header should usually win. */\n-/* shadow struct 'S' */\n-struct S { int w[2]; };\n-\n-/* shadow namespace 'cstd' */\n-namespace cstd { int atan2(int y, int x);\n /* Signature deliberately copied from the local declaration above: the\n    ROM name carries by-value class parameters (e.g. Fix12<int>), which\n@@ -79,29 +31,4 @@\n    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */\n extern \"C\" int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);\n- }\n-\n-/* shadow typedef 'Vec3' */\n-typedef struct Vec3 {\n-    int x, y, z;\n-} Vec3;\n-\n-/* shadow struct 'VVec3' */\n-struct VVec3 { volatile int x, y, z; };\n-\n-/* shadow typedef 's16' */\n-typedef short s16;\n-\n-/* shadow typedef 'u16' */\n-typedef unsigned short u16;\n-\n-/* shadow typedef 'u8' */\n-typedef unsigned char u8;\n-\n-/* shadow typedef 's8' */\n-typedef signed char s8;\n-\n-/* (Vector3: real header type in scope; Vec3 typedef'd above) */\n-/* shadow struct 'SharedFilePtr' */\n-\n \n extern \"C\" {\n@@ -118,9 +45,9 @@\n extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);\n extern int _ZN6Player12GetTalkStateEv(void* player);\n-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);\n+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msg, Vector3* pos, unsigned int a, unsigned int b);\n extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);\n extern unsigned int func_0201277c(int id); /* decl_common's view */\n extern int _Z14ApproachLinearRsss(short* val, short target, short step);\n-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);\n+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vector3* pos, unsigned int arg);\n extern signed char data_0209f2f8;\n extern int _Z14ApproachLinearRiii(int* val, int target, int step);\n@@ -133,9 +60,8 @@\n extern char *_ZN8dActor_c10FindWithIDEj(u32 id);\n extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);\n-extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n+extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);\n void func_02012790(int a);\n int _ZN6Player18HasFinishedTalkingEv(void* self);\n-void _ZN5Timer10ResetTimerEv(void* self);\n extern u8 data_0209d684;\n extern Timer data_0209d4c8;\n@@ -145,17 +71,6 @@\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);\n extern struct Matrix4x3 data_020a0e68;\n-extern void _ZN9Animation7AdvanceEv(void* p);\n-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);\n-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* a, void* b, unsigned int j);\n-extern void _ZN5dCc_c5ClearEv(void* p);\n-extern void _ZN5dCc_c6UpdateEv(void* p);\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n-extern void _ZN5Model8LoadFileER13SharedFilePtr(void *f);\n-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);\n-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);\n-extern int _ZN11ShadowModel12InitCylinderEv(void *self);\n extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);\n extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);\n-extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);\n extern unsigned char _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);\n extern char data_ov062_0211e00c[];\n@@ -167,31 +82,4 @@\n extern int data_ov062_0211e02c[];  /* int[]: [1] must fold into the load offset (char[] costs an extra add) */\n extern int data_ov062_0211e004[];  /* int[]: [1] must fold into the load offset (char[] costs an extra add) */\n-extern void _ZN7PathPtrC1Ev(void *);\n-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov062_02119af0, NOT applied: extern \"C\" int Vec3_Dist(const Vector3 *a, const Vector3 *b); */\n-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov062_02119be0, NOT applied: extern int Vec3_Dist(Vec3* a, Vec3* b); */\n-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_02119be0, NOT applied: extern short Vec3_HorzAngle(Vec3* a, Vec3* b); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov062_02119be0, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int idx, int speed, unsigned int flags); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov062_0211a0f0, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* file, int a, int b, unsigned int u); */\n-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov062_0211a168, NOT applied: extern void _Z14ApproachLinearRiii(int* x, int target, int step); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov062_0211a168, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* self, void* bca, int a, int fix, unsigned int j); */\n-/* TUBUILD CONFLICT -- alternate declaration of data_0209f2f8, from the legacy file for func_ov062_0211a1f4, NOT applied: extern s8 data_0209f2f8; */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player12GetTalkStateEv, from the legacy file for func_ov062_0211a1f4, NOT applied: extern int _ZN6Player12GetTalkStateEv(int p); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov062_0211a1f4, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int a, u32 b, int e); */\n-/* TUBUILD CONFLICT -- alternate declaration of func_0201267c, from the legacy file for func_ov062_0211a1f4, NOT applied: extern void func_0201267c(u32 a, void *b); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c14GetSubtractionEss, from the legacy file for func_ov062_0211a1f4, NOT applied: extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b); */\n-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov062_0211a1f4, NOT applied: extern int Vec3_Dist(const void *a, const void *b); */\n-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov062_0211a1f4, NOT applied: extern void _Z14ApproachLinearRiii(int *r, int a, int b); */\n-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov062_0211a1f4, NOT applied: extern void _Z14ApproachLinearRsss(s16 *r, s16 a, s16 b); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov062_0211a1f4, NOT applied: extern int _ZN9Animation8FinishedEv(void *a); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_, from the legacy file for func_ov062_0211a1f4, NOT applied: extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int x, int y, int z); */\n-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov062_0211a740, NOT applied: int _Z14ApproachLinearRsss(s16* v, s16 target, s16 step); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov062_0211a740, NOT applied: void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int i, int fix, unsigned int a); */\n-/* TUBUILD CONFLICT -- alternate declaration of func_0201267c, from the legacy file for func_ov062_0211a740, NOT applied: void func_0201267c(int a, void* p); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player12GetTalkStateEv, from the legacy file for func_ov062_0211a740, NOT applied: int _ZN6Player12GetTalkStateEv(void* self); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, from the legacy file for func_ov062_0211a740, NOT applied: int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const Vector3* v, unsigned int a, unsigned int b); */\n-/* TUBUILD CONFLICT -- alternate declaration of data_0209f2f8, from the legacy file for func_ov062_0211a740, NOT applied: extern s8 data_0209f2f8; */\n-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e02c, from the legacy file for _ZN7daRNk_c16CleanupResourcesEv, NOT applied: extern struct SharedFilePtr data_ov062_0211e02c; */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for _ZN7daRNk_c13InitResourcesEv, NOT applied: extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int n, int speed, unsigned int flags); */\n-/* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for _ZN7daRNk_c13InitResourcesEv, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx); */\n }\n \n@@ -200,7 +88,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol daRNk_c_classInit\n-/* recovered: vtable identified, globals resolved, declarations from a shared header */\n-/* recovered: vtable identified, globals resolved */\n-/* resolved: VT0 = _ZTV7daRNk_c */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n int *daRNk_c_classInit(void)\n@@ -214,6 +99,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN7daRNk_c13InitResourcesEv\n-/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n-/* recovered: named members + shared header, real C++ method */\n int daRNk_c::InitResources()\n {\n@@ -278,6 +161,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN7daRNk_c16CleanupResourcesEv\n-/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n-/* recovered: named members + shared header, real C++ method */\n int daRNk_c::CleanupResources()\n {\n@@ -298,6 +179,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN7daRNk_c8BehaviorEv\n-/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n-/* recovered: named members + shared header, real C++ method */\n int daRNk_c::Behavior()\n {\n@@ -319,5 +198,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN7daRNk_c6RenderEv\n-/* recovered: named members + shared header, real C++ method */\n /* Model is the real class now, through daRNk_c.h: HideMaterial is its own\n    non-virtual and the slot-5 virtual is Render, which ModelAnim overrides. */\n@@ -325,5 +203,5 @@\n {\n   mModelAnim.HideMaterial(0, 1);\n-  mModelAnim.Render((const Vector3*)((char*)&mScaleX));\n+  mModelAnim.Render((const Vector3 *)&mScaleX);\n   return 1;\n }\n@@ -333,5 +211,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_0211aac0\n-/* recovered: shared common types */\n namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n@@ -351,18 +228,16 @@\n /* ROM ordinal 11 -- func_ov062_0211a9c4, 0x0211a9c4, size 0xfc */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_0211a9c4\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n-/* (its local struct Vec3 body folded into the file-scope typedef above) */\n extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);\n-/* (Vec3_Dist: canonical void* declaration above) */\n extern int _ZN6Player9StartTalkER7fBase_cb(void *thiz, void *ref, int b);\n extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned id, void *p);\n-/* (Vec3_HorzAngle: canonical void* declaration above) */\n \n void func_ov062_0211a9c4(char *c)\n {\n     unsigned short val;\n-    struct Vec3 v;\n+    struct Vector3 v;\n     char *a;\n-    struct Vec3 *sp;\n+    struct Vector3 *sp;\n \n     val = *(unsigned short *)(c + 0x100);\n@@ -376,10 +251,10 @@\n         return;\n \n-    sp = (struct Vec3 *)((int)*(void **)(c + 0x398) + 0x5c);\n+    sp = (struct Vector3 *)((int)*(void **)(c + 0x398) + 0x5c);\n     v.x = sp->x;\n     v.y = sp->y;\n     v.z = sp->z;\n \n-    if (Vec3_Dist((struct Vec3 *)(c + 0x5c), &v) >= 0xc8000)\n+    if (Vec3_Dist((struct Vector3 *)(c + 0x5c), &v) >= 0xc8000)\n         return;\n \n@@ -396,5 +271,5 @@\n     {\n         char *base = c + 0x300;\n-        *(short *)(base + 0xa8) = Vec3_HorzAngle((struct Vec3 *)(c + 0x5c), &v);\n+        *(short *)(base + 0xa8) = Vec3_HorzAngle((struct Vector3 *)(c + 0x5c), &v);\n     }\n     *(unsigned char *)(c + 0x390) = 0;\n@@ -406,7 +281,5 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_0211a740\n-// recovered name: Koopa_Kill\n-/* recovered: shared common types, renamed to Class_Method */\n-/* daNknk_c::Kill - recovered from vtable slot identity */\n+/* Offer the race after the player finishes talking. */\n extern \"C\" void func_ov062_0211a740(char* c)\n {\n@@ -446,5 +319,5 @@\n                 v.z = z;\n             }\n-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x398), c, msg, (Vec3*)&v, 1, 0) != 0)\n+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x398), c, msg, (Vector3*)&v, 1, 0) != 0)\n                 *(u8*)(c + 0x390) += 1;\n         }\n@@ -486,12 +359,10 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_0211a1f4\n-/* recovered: shared common types, declarations from a shared header */\n-/* recovered: shared common types */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_0211a1f4(char *a)\n {\n-    /* block-scope views this body's bytes require (hide the file-scope canon) */\n-    extern int _ZN6Player12GetTalkStateEv(int p);\n-    extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);\n+    /* Passing the atan2 result unextended matches this call. The explicit\n+       signed-short alternative adds four bytes; see the pinned experiment. */\n+    extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n     extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);  /* 3rd arg int here: the ROM passes it unextended */\n     int r6;\n@@ -508,5 +379,5 @@\n     case 1:\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);\n-        if (_ZN6Player12GetTalkStateEv(*(int *)(a + 0x398)) != -1)\n+        if (_ZN6Player12GetTalkStateEv(*(void **)(a + 0x398)) != -1)\n             return;\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);\n@@ -545,5 +416,5 @@\n             r7 = 0x1000;\n         if (*(u8 *)(a + 0x3ac) == 0)\n-            *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(int *)(a + 0x398));\n+            *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(void **)(a + 0x398));\n         r5 = 4;\n         if (*(int *)(a + 0x394) != 0) {\n@@ -625,4 +496,5 @@\n /* ROM ordinal 8 -- func_ov062_0211a168, 0x0211a168, size 0x8c */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_0211a168\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_0211a168(char* r4){\n@@ -640,4 +512,5 @@\n /* ROM ordinal 7 -- func_ov062_0211a0f0, 0x0211a0f0, size 0x78 */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_0211a0f0\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_0211a0f0(char* c)\n@@ -655,10 +528,11 @@\n /* ROM ordinal 6 -- func_ov062_02119be0, 0x02119be0, size 0x510 */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_02119be0\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_02119be0(char* self)\n {\n-    Vec3 playerPos;\n-    Vec3 msgPos;\n-    Vec3 starPos;\n+    Vector3 playerPos;\n+    Vector3 msgPos;\n+    Vector3 starPos;\n     unsigned int msg;\n     unsigned short t;\n@@ -680,14 +554,14 @@\n             return;\n         {\n-            Vec3* pp = (Vec3*)(((int)*(char**)(self + 0x398) + 0x5c));\n+            Vector3* pp = (Vector3*)(((int)*(char**)(self + 0x398) + 0x5c));\n             playerPos.x = pp->x;\n             playerPos.y = pp->y;\n             playerPos.z = pp->z;\n         }\n-        if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)\n+        if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)\n             return;\n         if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 1) == 0)\n             return;\n-        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vec3*)(self + 0x5c), &playerPos);\n+        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), &playerPos);\n         (*(unsigned char*)(((int)self + 0x390)))++;\n         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void**)(data_ov062_0211e03c + 4), 0, 0x1000, 0);\n@@ -731,5 +605,5 @@\n         msgPos.y = y;\n         msgPos.z = z;\n-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vec3*)&msgPos, 0, 0) != 0)\n+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vector3*)&msgPos, 0, 0) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         return;\n@@ -755,10 +629,10 @@\n     case 4:\n         {\n-            Vec3* pp = (Vec3*)(((int)*(char**)(self + 0x398) + 0x5c));\n+            Vector3* pp = (Vector3*)(((int)*(char**)(self + 0x398) + 0x5c));\n             playerPos.x = pp->x;\n             playerPos.y = pp->y;\n             playerPos.z = pp->z;\n         }\n-        if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)\n+        if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)\n             return;\n         if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 0) != 0)\n@@ -768,5 +642,5 @@\n         if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0)\n             return;\n-        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vec3*)(self + 0x5c), (Vec3*)(*(char**)(self + 0x398) + 0x5c));\n+        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)(*(char**)(self + 0x398) + 0x5c));\n         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void**)(data_ov062_0211e03c + 4), 0, 0x1000, 0);\n         (*(unsigned char*)(((int)self + 0x390)))++;\n@@ -794,5 +668,5 @@\n         msgPos.y = y;\n         msgPos.z = z;\n-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vec3*)&msgPos, 0, 0) != 0)\n+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vector3*)&msgPos, 0, 0) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         return;\n@@ -811,5 +685,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_02119af0\n-/* recovered: shared common types */\n extern \"C\" int func_ov062_02119af0(char *p) {\n     int dxc;\n@@ -834,5 +707,5 @@\n     dz = nd4 - n64;\n     dzc = nd4 - nc8;\n-    *(short *)(p + 0x3a8) = (short)cstd::_ZN4cstd5atan2E5Fix12IiES1_(dx, dz);\n+    *(short *)(p + 0x3a8) = (short)_ZN4cstd5atan2E5Fix12IiES1_(dx, dz);\n     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);\n     if (dot <= 0 || Vec3_Dist((Vector3 *)(p + 0x5c), (Vector3 *)(p + 0x3cc)) < (*(int *)(p + 0x98) >> 1)) {\n@@ -858,5 +731,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_021199ac\n-/* recovered: shared common types */\n namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n@@ -918,4 +790,5 @@\n /* ROM ordinal 3 -- func_ov062_02119954, 0x02119954, size 0x58 */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_02119954\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_02119954(void *c)\n@@ -931,4 +804,5 @@\n /* ROM ordinal 2 -- func_ov062_02119800, 0x02119800, size 0x154 */\n /* -------------------------------------------------------------------------- */\n+// @symbol func_ov062_02119800\n namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" void func_ov062_02119800(char *c)\n@@ -958,5 +832,6 @@\n     ang = *(short *)(self + 0x8e);\n     x = *(int *)(self + 0x5c);\n-    /* Use kind right after x so cmp lands after both loads of ang and x */\n+    /* Keep the comparison at this load boundary: the direct assignment\n+       moves six instructions under 2004/b56 (see the pinned experiment). */\n     stack[0] = (kind > 8) ? x : x;\n     y = *(int *)(self + 0x60);\n@@ -1003,5 +878,4 @@\n /* ROM ordinal 1 -- _ZN7daRNk_cD0Ev, 0x021197a4, size 0x5c */\n /* -------------------------------------------------------------------------- */\n-// @symbol _ZN7daRNk_cD0Ev\n /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c\n  * chain) then return the object to its heap via an inline operator delete.\n@@ -1012,5 +886,4 @@\n /* ROM ordinal 0 -- _ZN7daRNk_cD1Ev, 0x0211975c, size 0x48 */\n /* -------------------------------------------------------------------------- */\n-// @symbol _ZN7daRNk_cD1Ev\n /* D1 is emitted from the inline destructor in daRNk_c.h alongside D0\n  * (class-form skill); this marker at D1's ROM ordinal keeps the\n",
+      "header_patch": "--- parent/daRNk_c.h\n+++ probe/daRNk_c.h\n@@ -32,5 +32,4 @@\n \n #include \"dEnemyBase_c.h\"\n-#include \"BlendModelAnim.h\"\n #include \"ModelAnim.h\"\n #include \"dCcAc_c.h\"\n@@ -42,41 +41,39 @@\n \n struct daRNk_c : dEnemyBase_c {\n-    dCcAc_c           mdCcAc_c;   /* 0x110 */\n-    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */\n-    ModelAnim                    mModelAnim;            /* 0x300 */\n-    ShadowModel                  mShadowModel;          /* 0x364 */\n-    s32                          mState;               /* 0x38c */\n+    dCcAc_c         mdCcAc_c                ; /* 0x110 */\n+    dBgCh_Actr      mWithMeshClsn           ; /* 0x144 */\n+    ModelAnim       mModelAnim              ; /* 0x300 */\n+    ShadowModel     mShadowModel            ; /* 0x364 */\n+    s32             mState                  ; /* 0x38c */\n     u8  pad_390[0x4];\n-    s32                          mFlagID;               /* 0x394 */\n-    Player *                     mPlayer;               /* 0x398 */\n-    s32                          unk_39c;               /* 0x39c */\n-    s32                          unk_3a0;               /* 0x3a0 */\n-    s32                          unk_3a4;               /* 0x3a4 */\n+    s32             mFlagID                 ; /* 0x394 */\n+    Player *        mPlayer                 ; /* 0x398 */\n+    s32             unk_39c                 ; /* 0x39c */\n+    s32             unk_3a0                 ; /* 0x3a0 */\n+    s32             unk_3a4                 ; /* 0x3a4 */\n     u8  pad_3a8[0x2];\n-    s16                          unk_3aa;               /* 0x3aa */\n-    u8                           mHasPlayerUsedCannon;               /* 0x3ac */\n-    u8                           mPathPtToJumpAt1;               /* 0x3ad */\n-    u8                           mPathPtToJumpAt2;               /* 0x3ae */\n+    s16             unk_3aa                 ; /* 0x3aa */\n+    u8              mHasPlayerUsedCannon    ; /* 0x3ac */\n+    u8              mPathPtToJumpAt1        ; /* 0x3ad */\n+    u8              mPathPtToJumpAt2        ; /* 0x3ae */\n     u8  pad_3af[0x1];\n-    u8                           mTrackedStar;               /* 0x3b0 */\n-    u8                           mStarID;               /* 0x3b1 */\n+    u8              mTrackedStar            ; /* 0x3b0 */\n+    u8              mStarID                 ; /* 0x3b1 */\n     u8  pad_3b2[0x2];\n-    u8                           mHasFinished;               /* 0x3b4 */\n-    u8                           mIsRacing;               /* 0x3b5 */\n-    u8                           mIsTalkingToMario;               /* 0x3b6 */\n+    u8              mHasFinished            ; /* 0x3b4 */\n+    u8              mIsRacing               ; /* 0x3b5 */\n+    u8              mIsTalkingToMario       ; /* 0x3b6 */\n     u8  pad_3b7[0x1];\n-    s32                          mNumPathPts;               /* 0x3b8 */\n-    s32                          mCurPathPt;               /* 0x3bc */\n-    s32                          unk_3c0;               /* 0x3c0 */\n-    s32                          unk_3c4;               /* 0x3c4 */\n-    s32                          unk_3c8;               /* 0x3c8 */\n-    Vector3                      mPathTarget;           /* 0x3cc */\n-    PathPtr                      mPathPtr;              /* 0x3d8 */\n+    s32             mNumPathPts             ; /* 0x3b8 */\n+    s32             mCurPathPt              ; /* 0x3bc */\n+    s32             unk_3c0                 ; /* 0x3c0 */\n+    s32             unk_3c4                 ; /* 0x3c4 */\n+    s32             unk_3c8                 ; /* 0x3c8 */\n+    Vector3         mPathTarget             ; /* 0x3cc */\n+    PathPtr         mPathPtr                ; /* 0x3d8 */\n \n     /* --- vtable --- */\n-    /* Inline and first: measured (class-form skill) that mwccarm 2004/b56\n-       emits the retail D1-then-D0 pair in ROM order plus _ZTV/_ZTI/_ZTS\n-       homed in the instantiating TU, and no leaf D2. Out-of-line emits\n-       D0 before D1, which the production isolate refuses. */\n+    /* The inline destructor and factory emit D1 then D0 under 2004/b56.\n+       The complete emitted object is checked by the TU manifest. */\n     virtual ~daRNk_c() {}\n \n",
+      "compiled": true,
+      "source_sha256": "400ec0fa903b9fa72385493191faa18242c80082ea2dc3b92d382a425b56e79f",
+      "header_sha256": "b614fa4eb4ee21e80f7075f2663140c62e0580da08a369be83b2243c98ccda0c",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "real-message-star-contracts",
+      "description": "Use the real Player::ShowMessage and dActor_c::UntrackAndSpawnStar reference/const/byte parameter contracts.",
+      "parent": "selected-clean-source",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -12,4 +12,5 @@\n  */\n #include \"daRNk_c.h\"\n+#include \"Player.h\"\n #include \"types.h\"\n #include \"common.h\"\n@@ -45,9 +46,7 @@\n extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);\n extern int _ZN6Player12GetTalkStateEv(void* player);\n-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msg, Vector3* pos, unsigned int a, unsigned int b);\n extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);\n extern unsigned int func_0201277c(int id); /* decl_common's view */\n extern int _Z14ApproachLinearRsss(short* val, short target, short step);\n-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vector3* pos, unsigned int arg);\n extern signed char data_0209f2f8;\n extern int _Z14ApproachLinearRiii(int* val, int target, int step);\n@@ -319,5 +318,5 @@\n                 v.z = z;\n             }\n-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x398), c, msg, (Vector3*)&v, 1, 0) != 0)\n+            if (((Player *)*(void **)(c + 0x398))->ShowMessage(*(fBase_c *)c, msg, &v, 1, 0) != 0)\n                 *(u8*)(c + 0x390) += 1;\n         }\n@@ -605,5 +604,5 @@\n         msgPos.y = y;\n         msgPos.z = z;\n-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vector3*)&msgPos, 0, 0) != 0)\n+        if (((Player *)*(void **)(self + 0x398))->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         return;\n@@ -619,5 +618,5 @@\n             starPos.z = *(int*)(self + 0x64);\n             starPos.y += 0x64000;\n-            _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);\n+            ((dActor_c *)self)->UntrackAndSpawnStar(*(signed char *)(self + 0x3b0), *(unsigned char *)(self + 0x3b1), starPos, 4);\n             return;\n         }\n@@ -668,5 +667,5 @@\n         msgPos.y = y;\n         msgPos.z = z;\n-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, (Vector3*)&msgPos, 0, 0) != 0)\n+        if (((Player *)*(void **)(self + 0x398))->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         return;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "df656ec4c8d79cf648a456afdd6e34f724ae671d0be0b8248bf8fdded16559cc",
+      "header_sha256": "b614fa4eb4ee21e80f7075f2663140c62e0580da08a369be83b2243c98ccda0c",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "checkpoint",
+      "description": "Owned-source checkpoint before adding the two external Timer consumers.",
+      "parent": "real-message-star-contracts",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -27,13 +27,11 @@\n #include \"decl_dBgCh_Actr.h\"\n \n-/* Signature deliberately copied from the local declaration above: the\n-   ROM name carries by-value class parameters (e.g. Fix12<int>), which\n-   mwccarm passes differently at the call site, so declaring the true\n-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */\n+/* Scalar fixed-point ABI entry; the class-valued form still needs\n+   caller reconstruction under the pinned compiler. */\n extern \"C\" int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);\n \n extern \"C\" {\n-extern \"C\" void func_0201267c(unsigned int id, void *p);\n-extern \"C\" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);\n+extern void func_0201267c(unsigned int id, void *p);\n+extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);\n extern short data_02082214[];\n extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);\n@@ -42,6 +40,5 @@\n extern s32 Vec3_Dist(const void *a, const void *b);\n extern s32 _ZN8dActor_c14GetSubtractionEss(void *thiz, s16 a, s16 b);\n-extern s16 data_02082214[];\n-extern \"C\" void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);\n+extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);\n extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);\n extern int _ZN6Player12GetTalkStateEv(void* player);\n@@ -58,5 +55,4 @@\n extern void func_02012694(u32 a, void *b);\n extern char *_ZN8dActor_c10FindWithIDEj(u32 id);\n-extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);\n extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);\n",
+      "header_patch": "--- parent/daRNk_c.h\n+++ probe/daRNk_c.h\n@@ -41,35 +41,35 @@\n \n struct daRNk_c : dEnemyBase_c {\n-    dCcAc_c         mdCcAc_c                ; /* 0x110 */\n-    dBgCh_Actr      mWithMeshClsn           ; /* 0x144 */\n-    ModelAnim       mModelAnim              ; /* 0x300 */\n-    ShadowModel     mShadowModel            ; /* 0x364 */\n-    s32             mState                  ; /* 0x38c */\n+    dCcAc_c         mdCcAc_c;                        /* 0x110 */\n+    dBgCh_Actr      mWithMeshClsn;                   /* 0x144 */\n+    ModelAnim       mModelAnim;                      /* 0x300 */\n+    ShadowModel     mShadowModel;                    /* 0x364 */\n+    s32             mState;                          /* 0x38c */\n     u8  pad_390[0x4];\n-    s32             mFlagID                 ; /* 0x394 */\n-    Player *        mPlayer                 ; /* 0x398 */\n-    s32             unk_39c                 ; /* 0x39c */\n-    s32             unk_3a0                 ; /* 0x3a0 */\n-    s32             unk_3a4                 ; /* 0x3a4 */\n+    s32             mFlagID;                         /* 0x394 */\n+    Player *        mPlayer;                         /* 0x398 */\n+    s32             unk_39c;                         /* 0x39c */\n+    s32             unk_3a0;                         /* 0x3a0 */\n+    s32             unk_3a4;                         /* 0x3a4 */\n     u8  pad_3a8[0x2];\n-    s16             unk_3aa                 ; /* 0x3aa */\n-    u8              mHasPlayerUsedCannon    ; /* 0x3ac */\n-    u8              mPathPtToJumpAt1        ; /* 0x3ad */\n-    u8              mPathPtToJumpAt2        ; /* 0x3ae */\n+    s16             unk_3aa;                         /* 0x3aa */\n+    u8              mHasPlayerUsedCannon;            /* 0x3ac */\n+    u8              mPathPtToJumpAt1;                /* 0x3ad */\n+    u8              mPathPtToJumpAt2;                /* 0x3ae */\n     u8  pad_3af[0x1];\n-    u8              mTrackedStar            ; /* 0x3b0 */\n-    u8              mStarID                 ; /* 0x3b1 */\n+    u8              mTrackedStar;                    /* 0x3b0 */\n+    u8              mStarID;                         /* 0x3b1 */\n     u8  pad_3b2[0x2];\n-    u8              mHasFinished            ; /* 0x3b4 */\n-    u8              mIsRacing               ; /* 0x3b5 */\n-    u8              mIsTalkingToMario       ; /* 0x3b6 */\n+    u8              mHasFinished;                    /* 0x3b4 */\n+    u8              mIsRacing;                       /* 0x3b5 */\n+    u8              mIsTalkingToMario;               /* 0x3b6 */\n     u8  pad_3b7[0x1];\n-    s32             mNumPathPts             ; /* 0x3b8 */\n-    s32             mCurPathPt              ; /* 0x3bc */\n-    s32             unk_3c0                 ; /* 0x3c0 */\n-    s32             unk_3c4                 ; /* 0x3c4 */\n-    s32             unk_3c8                 ; /* 0x3c8 */\n-    Vector3         mPathTarget             ; /* 0x3cc */\n-    PathPtr         mPathPtr                ; /* 0x3d8 */\n+    s32             mNumPathPts;                     /* 0x3b8 */\n+    s32             mCurPathPt;                      /* 0x3bc */\n+    s32             unk_3c0;                         /* 0x3c0 */\n+    s32             unk_3c4;                         /* 0x3c4 */\n+    s32             unk_3c8;                         /* 0x3c8 */\n+    Vector3         mPathTarget;                     /* 0x3cc */\n+    PathPtr         mPathPtr;                        /* 0x3d8 */\n \n     /* --- vtable --- */\n",
+      "compiled": true,
+      "source_sha256": "8042805b06133db8e59a3de97c8460fffd770b9d8524f63ae314652ede050cf6",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "correct-angle-contracts",
+      "description": "Correct atan2 to its actual signed-short result and call real GetSubtraction(short,short), together; supersedes the misleading one-sided cast experiment.",
+      "parent": "checkpoint",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -29,5 +29,5 @@\n /* Scalar fixed-point ABI entry; the class-valued form still needs\n    caller reconstruction under the pinned compiler. */\n-extern \"C\" int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);\n+extern \"C\" s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);\n \n extern \"C\" {\n@@ -39,5 +39,4 @@\n extern s16 Vec3_HorzAngle(const void *v0, const void *v1);\n extern s32 Vec3_Dist(const void *a, const void *b);\n-extern s32 _ZN8dActor_c14GetSubtractionEss(void *thiz, s16 a, s16 b);\n extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);\n extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);\n@@ -357,8 +356,5 @@\n void func_ov062_0211a1f4(char *a)\n {\n-    /* Passing the atan2 result unextended matches this call. The explicit\n-       signed-short alternative adds four bytes; see the pinned experiment. */\n     extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n-    extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);  /* 3rd arg int here: the ROM passes it unextended */\n     int r6;\n     int r5;\n@@ -405,5 +401,5 @@\n         }\n         r4 = func_ov062_021199ac(a);\n-        if (_ZN8dActor_c14GetSubtractionEss(a, *(s16 *)(a + 0x94),\n+        if (((dActor_c *)a)->GetSubtraction(*(s16 *)(a + 0x94),\n                 _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(a + 0xd4), *(int *)(a + 0xdc))) >= 0x6000)\n             r7 = *(int *)(a + 0xd8) * 7 - 0x6000;\n@@ -756,5 +752,5 @@\n     fixed1 = (s32)(((long long)otherK * tableVal + 0x800) >> 12);\n \n-    r = _ZN8dActor_c14GetSubtractionEss(self, selfAngle, angle);\n+    r = ((dActor_c *)self)->GetSubtraction(selfAngle, angle);\n     if (r < 0x4000) {\n         s32 selfK;\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "e45b6d1003645868e70b7355218aef4f291119bdc7334cbc86051ff22fe6d6e2",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "audited-call-contracts",
+      "description": "Correct direct call return/parameter types to observed definitions; use real Player and actor methods and remove the conflicting shared declaration views.",
+      "parent": "correct-angle-contracts",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -15,15 +15,22 @@\n #include \"types.h\"\n #include \"common.h\"\n-#include \"decl_Player.h\"\n #include \"Timer.h\"\n-#include \"decl_common.h\"\n-#include \"decl_PathPtr.h\"\n-#include \"decl_ActorBase.h\"\n-#include \"decl_Enemy.h\"\n-#include \"decl_ModelAnim.h\"\n-#include \"decl_dCcAc_c.h\"\n-#include \"decl_ShadowModel.h\"\n #include \"SharedFilePtr.h\"\n-#include \"decl_dBgCh_Actr.h\"\n+\n+extern \"C\" {\n+void func_ov062_02119800(char *self);\n+void func_ov062_02119954(void *self);\n+int func_ov062_021199ac(char *self);\n+int func_ov062_02119af0(char *self);\n+void func_ov062_02119be0(char *self);\n+void func_ov062_0211a0f0(char *self);\n+void func_ov062_0211a168(char *self);\n+void func_ov062_0211a1f4(char *self);\n+void func_ov062_0211a740(char *self);\n+void func_ov062_0211a9c4(char *self);\n+void func_ov062_0211aac0(char *self);\n+extern int data_ov062_0211e0a4[];\n+void _ZN5Sound22LoadAndSetMusic_Layer2Ej(u32 id);\n+}\n \n /* Scalar fixed-point ABI entry; the class-valued form still needs\n@@ -33,39 +40,32 @@\n extern \"C\" {\n extern void func_0201267c(unsigned int id, void *p);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);\n+extern void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);\n extern short data_02082214[];\n extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);\n-extern void *_ZN8dActor_c18ClosestWithActorIDEj(void *thiz, u32 id);\n extern s16 Vec3_HorzAngle(const void *v0, const void *v1);\n extern s32 Vec3_Dist(const void *a, const void *b);\n extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);\n-extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);\n-extern int _ZN6Player12GetTalkStateEv(void* player);\n extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);\n-extern unsigned int func_0201277c(int id); /* decl_common's view */\n+extern unsigned int func_0201277c(unsigned int id);\n extern int _Z14ApproachLinearRsss(short* val, short target, short step);\n extern signed char data_0209f2f8;\n extern int _Z14ApproachLinearRiii(int* val, int target, int step);\n extern int _ZN9Animation8FinishedEv(void* anim);\n-extern int _ZNK9Animation13GetFrameCountEv(char* anim);\n-extern int _ZNK9Animation12WillHitFrameEi(char* anim, int frame);\n+extern unsigned int _ZNK9Animation13GetFrameCountEv(void *anim);\n+extern bool _ZNK9Animation12WillHitFrameEi(void *anim, int frame);\n extern s8 data_ov002_02111184;\n-extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);\n+extern bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);\n extern void func_02012694(u32 a, void *b);\n-extern char *_ZN8dActor_c10FindWithIDEj(u32 id);\n-extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);\n-void func_02012790(int a);\n-int _ZN6Player18HasFinishedTalkingEv(void* self);\n+unsigned int func_02012790(unsigned int id);\n extern u8 data_0209d684;\n extern Timer data_0209d4c8;\n-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n+extern void Vec3_Asr(void *destination, void *source, int shift);\n extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);\n extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);\n-extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);\n+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned char g);\n extern struct Matrix4x3 data_020a0e68;\n extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);\n extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);\n-extern unsigned char _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);\n extern char data_ov062_0211e00c[];\n extern int data_ov062_0211e014[];  /* int[]: [1] must fold into the load offset (char[] costs an extra add) */\n@@ -143,5 +143,5 @@\n     mStarID = (unsigned char)(mAngleX & 0xf);\n     b = mStarID;\n-    mTrackedStar = _ZN8dActor_c9TrackStarEjj(this, b, 2);\n+    mTrackedStar = TrackStar(b, 2);\n     mFlagID = zero;\n     mPlayer = 0;\n@@ -205,5 +205,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_0211aac0\n-namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_0211aac0(char* r6){\n@@ -217,5 +216,4 @@\n }\n }\n-}  /* namespace tu */\n \n /* -------------------------------------------------------------------------- */\n@@ -224,7 +222,4 @@\n // @symbol func_ov062_0211a9c4\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n-extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);\n-extern int _ZN6Player9StartTalkER7fBase_cb(void *thiz, void *ref, int b);\n-extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned id, void *p);\n \n void func_ov062_0211a9c4(char *c)\n@@ -241,5 +236,5 @@\n     }\n \n-    *(void **)(c + 0x398) = _ZN8dActor_c13ClosestPlayerEv(c);\n+    *(void **)(c + 0x398) = ((dActor_c *)c)->ClosestPlayer();\n     if (*(void **)(c + 0x398) == 0)\n         return;\n@@ -256,5 +251,5 @@\n         return;\n \n-    a = (char *)_ZN8dActor_c15FindWithActorIDEjPS_(0xcd, 0);\n+    a = (char *)dActor_c::FindWithActorID(0xcd, 0);\n     if (a == 0)\n         return;\n@@ -292,5 +287,5 @@\n         return;\n     case 1:\n-        if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x398)) != 0)\n+        if (((Player *)*(void **)(c + 0x398))->GetTalkState() != 0)\n             return;\n         {\n@@ -318,5 +313,5 @@\n         return;\n     case 2:\n-        if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x398)) != 2)\n+        if (((Player *)*(void **)(c + 0x398))->GetTalkState() != 2)\n             return;\n         if (*(u8*)(c + 0x3b6) != 0) {\n@@ -330,5 +325,5 @@\n                 *(int*)(c + 0x38c) = 0;\n                 *(u16*)(c + 0x100) = 0x3c;\n-                _ZN6Player18HasFinishedTalkingEv(*(void**)(c + 0x398));\n+                ((Player *)*(void **)(c + 0x398))->HasFinishedTalking();\n                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n                 *(u8*)(c + 0x3b6) = 0;\n@@ -337,5 +332,5 @@\n             *(int*)(c + 0x38c) = 0;\n             *(u16*)(c + 0x100) = 0x3c;\n-            _ZN6Player18HasFinishedTalkingEv(*(void**)(c + 0x398));\n+            ((Player *)*(void **)(c + 0x398))->HasFinishedTalking();\n             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n         }\n@@ -356,6 +351,5 @@\n void func_ov062_0211a1f4(char *a)\n {\n-    extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *p);\n-    int r6;\n+        int r6;\n     int r5;\n     int r4;\n@@ -365,10 +359,10 @@\n     switch (*(u8 *)(a + 0x390)) {\n     case 0:\n-        if (_ZN6Player12Unk_020c4f40Et(*(int *)(a + 0x398), 0x5a) != 0)\n+        if (((Player *)*(void **)(a + 0x398))->Unk_020c4f40(0x5a) != 0)\n             (*(u8 *)(((int)a + 0x390)))++;\n         return;\n     case 1:\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);\n-        if (_ZN6Player12GetTalkStateEv(*(void **)(a + 0x398)) != -1)\n+        if (((Player *)*(void **)(a + 0x398))->GetTalkState() != -1)\n             return;\n         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);\n@@ -390,5 +384,5 @@\n             if (*(int *)(a + 0x394) == 0)\n                 return;\n-            o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));\n+            o = (char *)dActor_c::FindWithID(*(int *)(a + 0x394));\n             if (o == 0)\n                 return;\n@@ -407,8 +401,8 @@\n             r7 = 0x1000;\n         if (*(u8 *)(a + 0x3ac) == 0)\n-            *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(void **)(a + 0x398));\n+            *(u8 *)(a + 0x3ac) = ((Player *)*(void **)(a + 0x398))->IsBeingShotOutOfCannon();\n         r5 = 4;\n         if (*(int *)(a + 0x394) != 0) {\n-            char *o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));\n+            char *o = (char *)dActor_c::FindWithID(*(int *)(a + 0x394));\n             if (o != 0) {\n                 if (*(u8 *)(o + 0x16e) != 0 &&\n@@ -458,5 +452,5 @@\n             *(u8 *)(a + 0x390) = 0;\n             data_0209d4c8.StopTimer();\n-            o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));\n+            o = (char *)dActor_c::FindWithID(*(int *)(a + 0x394));\n             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;\n             *(u8 *)(o + 0x16e) = 1;\n@@ -552,5 +546,5 @@\n         if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)\n             return;\n-        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 1) == 0)\n+        if (((Player *)*(void **)(self + 0x398))->StartTalk(*(fBase_c *)self, 1) == 0)\n             return;\n         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), &playerPos);\n@@ -587,5 +581,5 @@\n             msg = 0x9f;\n         }\n-        x = _ZN6Player12GetTalkStateEv(*(void**)(self + 0x398));\n+        x = ((Player *)*(void **)(self + 0x398))->GetTalkState();\n         if (x != 0)\n             return;\n@@ -600,5 +594,5 @@\n         return;\n     case 3:\n-        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0xFFFFFFFF)\n+        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0xFFFFFFFF)\n             return;\n         (*(unsigned char*)(((int)self + 0x390)))++;\n@@ -627,9 +621,9 @@\n         if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)\n             return;\n-        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 0) != 0)\n+        if (((Player *)*(void **)(self + 0x398))->StartTalk(*(fBase_c *)self, 0) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         return;\n     case 5:\n-        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0)\n+        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0)\n             return;\n         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)(*(char**)(self + 0x398) + 0x5c));\n@@ -649,5 +643,5 @@\n             else\n                 msg = 0xa1;\n-            x = _ZN6Player12GetTalkStateEv(p);\n+            x = ((Player *)p)->GetTalkState();\n             if (x != 0)\n                 return;\n@@ -663,5 +657,5 @@\n         return;\n     case 8:\n-        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0xFFFFFFFF)\n+        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0xFFFFFFFF)\n             return;\n         *(unsigned char*)(self + 0x390) = 4;\n@@ -722,5 +716,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_021199ac\n-namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n int func_ov062_021199ac(char *self)\n@@ -737,5 +730,5 @@\n     s32 r;\n \n-    other = (char *)_ZN8dActor_c18ClosestWithActorIDEj(self, 0xdc);\n+    other = (char *)((dActor_c *)self)->ClosestWithActorID(0xdc);\n     if (other == 0)\n         goto ret0;\n@@ -776,5 +769,4 @@\n }\n }\n-}  /* namespace tu */\n \n /* -------------------------------------------------------------------------- */\n@@ -796,5 +788,4 @@\n /* -------------------------------------------------------------------------- */\n // @symbol func_ov062_02119800\n-namespace tu {  /* namespaced: decl_common holds a (void*) view of this symbol */\n extern \"C\" void func_ov062_02119800(char *c)\n {\n@@ -864,5 +855,4 @@\n     *(unsigned char *)(self + 0x3b2) = 0;\n }\n-}  /* namespace tu */\n \n /* -------------------------------------------------------------------------- */\n",
+      "header_patch": "",
+      "compiled": false,
+      "source_sha256": "05ffa015b285c96fc21b5d49a7aec2e0bdf9c8364197836660c7bfa95896dfca",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "compiler_diagnostic": "  ! compile failed (2004/b56): mwccarm.exe: warning: Environment variable 'MWCIncludes' not found\nbuild\\pr2859-probes\\audited-call-contracts\\daRNk_c.cpp:250: undefined identifier '_ZN6Player9StartTalkER7fBase_cb'\nErrors caused tool to abort.\n",
+      "disposition": "Invalid/incomplete source probe, not evidence of a compiler constraint."
+    },
+    {
+      "id": "audited-call-contracts-complete",
+      "description": "Complete the real StartTalk conversion and compile the audited call-contract candidate.",
+      "parent": "audited-call-contracts",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -248,5 +248,5 @@\n         return;\n \n-    if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x398), c, 1) == 0)\n+    if (((Player *)*(void **)(c + 0x398))->StartTalk(*(fBase_c *)c, true) == 0)\n         return;\n \n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "b894cddb2de68989cfe0900023abb37de6f425e05674e1601c342eb64940da33",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "native-reference-method-calls",
+      "description": "Use native ApproachLinear references and PathPtr/Animation/collision methods with their real return types.",
+      "parent": "audited-call-contracts-complete",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -18,4 +18,7 @@\n #include \"SharedFilePtr.h\"\n \n+int ApproachLinear(short &value, short target, short step);\n+int ApproachLinear(int &value, int target, int step);\n+\n extern \"C\" {\n void func_ov062_02119800(char *self);\n@@ -45,17 +48,10 @@\n extern s16 Vec3_HorzAngle(const void *v0, const void *v1);\n extern s32 Vec3_Dist(const void *a, const void *b);\n-extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);\n extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);\n extern unsigned int func_0201277c(unsigned int id);\n-extern int _Z14ApproachLinearRsss(short* val, short target, short step);\n extern signed char data_0209f2f8;\n-extern int _Z14ApproachLinearRiii(int* val, int target, int step);\n-extern int _ZN9Animation8FinishedEv(void* anim);\n-extern unsigned int _ZNK9Animation13GetFrameCountEv(void *anim);\n-extern bool _ZNK9Animation12WillHitFrameEi(void *anim, int frame);\n extern s8 data_ov002_02111184;\n extern bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);\n extern void func_02012694(u32 a, void *b);\n-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);\n unsigned int func_02012790(unsigned int id);\n extern u8 data_0209d684;\n@@ -275,5 +271,5 @@\n     switch (*(u8*)(c + 0x390)) {\n     case 0:\n-        if (_Z14ApproachLinearRsss((s16*)(c + 0x94), *(s16*)(c + 0x3a8), 0x800) != 0) {\n+        if (ApproachLinear(*(s16*)(c + 0x94), *(s16*)(c + 0x3a8), 0x800) != 0) {\n             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e03c + 4), 0, 0x1000, 0);\n             *(u8*)(c + 0x390) += 1;\n@@ -415,13 +411,13 @@\n         {\n             int acc = r5 * 0x6000;\n-            _Z14ApproachLinearRiii((int *)(a + 0x98),\n+            ApproachLinear(*(int *)(a + 0x98),\n                 (int)(((long long)acc * r7 + 0x800) >> 12), r5 * 0x19a);\n         }\n-        _Z14ApproachLinearRsss((s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);\n+        ApproachLinear(*(s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);\n         if (*(int *)(a + 0x360) == data_ov062_0211e024[1]) {\n             *(int *)(a + 0x35c) = *(int *)(a + 0x98) >> 3;\n         } else {\n             *(int *)(a + 0x35c) = 0x1000;\n-            if (_ZN9Animation8FinishedEv(a + 0x350) != 0 &&\n+            if (((Animation *)(a + 0x350))->Finished() != 0 &&\n                 (*(int *)(a + 0x360) == data_ov062_0211e014[1] || *(int *)(a + 0x360) == data_ov062_0211e004[1]))\n                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e024[1], 0, 0x1000, 0);\n@@ -439,5 +435,5 @@\n             return;\n         }\n-        if (_ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x144) != 0)\n+        if (((dBgCh_Actr *)(a + 0x144))->IsOnGround() != 0)\n             return;\n         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);\n@@ -458,6 +454,6 @@\n             return;\n         }\n-        _Z14ApproachLinearRsss((s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);\n-        if (_ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x144) == 0)\n+        ApproachLinear(*(s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);\n+        if (((dBgCh_Actr *)(a + 0x144))->IsOnGround() == 0)\n             return;\n         *(u8 *)(a + 0x390) = 2;\n@@ -484,7 +480,7 @@\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n void func_ov062_0211a168(char* r4){\n-  _Z14ApproachLinearRiii((int*)(r4 + 0x98), 0x3000, 0x1000);\n-  if (_ZNK9Animation12WillHitFrameEi((char*)(r4 + 0x350),\n-        (unsigned short)(_ZNK9Animation13GetFrameCountEv((char*)(r4 + 0x350)) - 1)) == 0) return;\n+  ApproachLinear(*(int*)(r4 + 0x98), 0x3000, 0x1000);\n+  if (((Animation *)(r4 + 0x350))->WillHitFrame(\n+        (unsigned short)(((Animation *)(r4 + 0x350))->GetFrameCount() - 1)) == 0) return;\n   *(int*)(r4 + 0x38c) = 4;\n   *(int*)(r4 + 0x98) = 0x3000;\n@@ -501,6 +497,6 @@\n void func_ov062_0211a0f0(char* c)\n {\n-    _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x4000);\n-    if (!_ZN9Animation8FinishedEv(c + 0x350)) return;\n+    ApproachLinear(*(int*)(c + 0x98), 0, 0x4000);\n+    if (!((Animation *)(c + 0x350))->Finished()) return;\n     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);\n     *(int*)(c + 0x38c) = 5;\n@@ -560,5 +556,5 @@\n         return;\n     case 1:\n-        if (_Z14ApproachLinearRsss((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)\n+        if (ApproachLinear(*(short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         *(short*)(self + 0x8e) = *(short*)(self + 0x94);\n@@ -632,5 +628,5 @@\n         return;\n     case 6:\n-        if (_Z14ApproachLinearRsss((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)\n+        if (ApproachLinear(*(short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)\n             (*(unsigned char*)(((int)self + 0x390)))++;\n         *(short*)(self + 0x8e) = *(short*)(self + 0x94);\n@@ -706,5 +702,5 @@\n         int idx = *(int *)(p + 0x3bc);\n         if (idx == 0) return -1;\n-        _ZNK7PathPtr7GetNodeER7Vector3j(p + 0x3d8, (Vector3 *)(p + 0x3cc), (unsigned)idx);\n+        ((PathPtr *)(p + 0x3d8))->GetNode(*(Vector3 *)(p + 0x3cc), (unsigned)idx);\n         return 1;\n     }\n@@ -868,5 +864,4 @@\n /* -------------------------------------------------------------------------- */\n /* D1 is emitted from the inline destructor in daRNk_c.h alongside D0\n- * (class-form skill); this marker at D1's ROM ordinal keeps the\n- * accounting naming it. Members are destroyed in reverse declaration\n+ * alongside D0. Members are destroyed in reverse declaration\n  * order, then dEnemyBase_c::~dEnemyBase_c. */\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "192a621e11e47aace19094db042aaa53a84b2874eb23f7ecfe355410670dfda5",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "final",
+      "description": "Final bounded source repair; all accepted contract corrections applied.",
+      "parent": "native-reference-method-calls",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -45,5 +45,7 @@\n extern void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);\n extern short data_02082214[];\n-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);\n+/* This scalar entry follows its C definition, including u16 startFrame.\n+   ModelAnim.h instead declares u32; that shared contract is still unresolved. */\n+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, u16);\n extern s16 Vec3_HorzAngle(const void *v0, const void *v1);\n extern s32 Vec3_Dist(const void *a, const void *b);\n@@ -63,4 +65,6 @@\n extern struct Matrix4x3 data_020a0e68;\n extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);\n+/* The existing C initializer erases pointer slots to integers. Keep the\n+   evidenced actor view here; repairing the shared initializer is separate. */\n extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);\n extern char data_ov062_0211e00c[];\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "a3f7a5c0cc1eaa920bc85d3026fb52719e8304329d9c608aea6e85ea6d155883",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    },
+    {
+      "id": "typed-vector-contracts-exact",
+      "description": "Actual const Vector3 pointer parameters plus typed position views at the one previously untyped call; existing scalar mPosX/Y/Z layout is not changed.",
+      "parent": "final",
+      "source_patch": "--- parent/daRNk_c.cpp\n+++ probe/daRNk_c.cpp\n@@ -48,6 +48,6 @@\n    ModelAnim.h instead declares u32; that shared contract is still unresolved. */\n extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, u16);\n-extern s16 Vec3_HorzAngle(const void *v0, const void *v1);\n-extern s32 Vec3_Dist(const void *a, const void *b);\n+extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);\n+extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);\n extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);\n extern unsigned int func_0201277c(unsigned int id);\n@@ -407,5 +407,6 @@\n             if (o != 0) {\n                 if (*(u8 *)(o + 0x16e) != 0 &&\n-                    Vec3_Dist(a + 0x5c, *(char **)(a + 0x398) + 0x5c) > 0x7d0000)\n+                    Vec3_Dist((const Vector3 *)(a + 0x5c),\n+                              (const Vector3 *)(*(char **)(a + 0x398) + 0x5c)) > 0x7d0000)\n                     r5 = 8;\n                 else if (data_0209f2f8 == 0x18)\n",
+      "header_patch": "",
+      "compiled": true,
+      "source_sha256": "0542a3528a3634525f0c8bee25f2018dc479e30c0493c0ad6ffc742d0f444ca2",
+      "header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+      "all_18_masked_matches": true,
+      "changed_functions": [],
+      "normalized_object_matches_baseline": true,
+      "object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f"
+    }
+  ],
+  "timer_consumers": [
+    {
+      "source": "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+      "symbol": "_ZN3HUD15RenderTimeTimerEv",
+      "module": "ov002",
+      "address": "0x20fb96c",
+      "size": 1088,
+      "baseline_sha256": "1d4ef5690b6afdface389eb064759b1bcfaac9ccb9990671e3366a12fdcb5fef",
+      "candidate_sha256": "34a3bd8c907bc4e07d5ad95dc4d9c180f7d72d05446921890d3ef8de018e35cb",
+      "full_object_signature_identical": true,
+      "old_source": "//cpp\n// @symbol _ZN3HUD15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"decl_Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"HUD.h\"\n// _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern int data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid HUD::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = _ZN5Timer7GetTimeEv(&data_0209d4c8) << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n",
+      "new_source": "//cpp\n// @symbol _ZN3HUD15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"HUD.h\"\n// _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern Timer data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid HUD::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = data_0209d4c8.GetTime() << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n"
+    },
+    {
+      "source": "src/__sinit_02074dc4.c",
+      "symbol": "__sinit_02074dc4",
+      "module": "arm9",
+      "address": "0x2074dc4",
+      "size": 72,
+      "baseline_sha256": "a67af851b102c62f931ba43ea67a5d9baf7db5f97072d2743f7f84a1ca42542f",
+      "candidate_sha256": "a330ff4b7c4ca2cc1ae0e72b9638c840b3f8d43d24fae5107745b2815ee0b498",
+      "full_object_signature_identical": true,
+      "old_source": "extern int data_0209d4b8;\nextern int data_0209d4bc;\nextern int data_0209d4c8;\nextern void func_0201973c(void);\n\nextern void func_0203b9b4(int *p, int v);\nextern void func_020731dc(int a, int b, void **node);\nextern int func_0201964c(int *__this);\n\nvoid __sinit_02074dc4(void)\n{\n    func_0203b9b4(&data_0209d4b8, 1);\n    func_020731dc((int)&data_0209d4b8, (int)&func_0201973c, (void**)&data_0209d4bc);\n    func_0201964c(&data_0209d4c8);\n}\n",
+      "new_source": "#include \"Timer.h\"\n\nextern int data_0209d4b8;\nextern int data_0209d4bc;\nextern struct Timer data_0209d4c8;\nextern void func_0201973c(void);\n\nextern void func_0203b9b4(int *p, int v);\nextern void func_020731dc(int a, int b, void **node);\nextern struct Timer *func_0201964c(struct Timer *timer);\n\nvoid __sinit_02074dc4(void)\n{\n    func_0203b9b4(&data_0209d4b8, 1);\n    func_020731dc((int)&data_0209d4b8, (int)&func_0201973c, (void**)&data_0209d4bc);\n    func_0201964c(&data_0209d4c8);\n}\n"
+    }
+  ],
+  "findings": [
+    {
+      "id": "RNK-01",
+      "disposition": "fixed",
+      "detail": "Truthful production scope; all 18 stale legacy paths removed from code comments."
+    },
+    {
+      "id": "RNK-02",
+      "disposition": "fixed",
+      "detail": "Removed unsupported daNknk_c::Kill/vtable provenance."
+    },
+    {
+      "id": "RNK-03",
+      "disposition": "fixed",
+      "detail": "All 16 non-destructor definitions have unique symbol markers; inline lifecycle is manifest-owned."
+    },
+    {
+      "id": "RNK-04",
+      "disposition": "fixed",
+      "detail": "Word-sized coordinate fields and Player pointer have evidenced types; 0x3e0 layout preserved."
+    },
+    {
+      "id": "RNK-05",
+      "disposition": "fixed",
+      "detail": "Real Timer in TU/HUD/initializer, real GetTime and accurate Timer*(Timer*) initializer contract. Both consumer objects are identical."
+    },
+    {
+      "id": "RNK-06",
+      "disposition": "partial",
+      "detail": "Real vectors, file handles, state dispatch, references, Player/actor/animation/collision calls replace substantial scaffolding. Eleven raw-offset helpers and scalar ABI/data views remain. Exact particle/scale constraints are measured; broader reconstruction and external interface defects require a follow-up owner."
+    },
+    {
+      "id": "RNK-07",
+      "disposition": "fixed",
+      "detail": "Correct s16 atan2 result plus genuine GetSubtraction(short,short) exactly reproduces; removed contradictory block-local override. Direct return/parameter audit also corrected PlaySub, NewSimple, TrackStar, unsigned sound helpers and Animation contracts."
+    }
+  ],
+  "external_dependencies": [
+    {
+      "paths": [
+        "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c",
+        "include/ModelAnim.h"
+      ],
+      "detail": "Actual scalar C definition uses u16 startFrame; class header/mangled j indicate u32. Owned bridge follows the definition. All calls pass zero. This is external interface debt, not an accepted compiler wall."
+    },
+    {
+      "paths": [
+        "src/_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_.c",
+        "include/dBgCh_Actr.h"
+      ],
+      "detail": "Existing C definition erases actor and vector-pointer slots to ints; header/mangled signature evidence pointers. Header scalar Fix12i also cannot produce the recorded real-method mangling. Owned scalar bridge retains the actor pointer view and passes null optional addresses; no integer actor type was invented."
+    }
+  ],
+  "checks": {
+    "pristine_full_rom": {
+      "command": "python -u tools/rombuild.py -j16 --no-rom --report-json build/pr2859-baseline-rom.json",
+      "exit": 0,
+      "module_fidelity": "106/106 exact",
+      "reproducing_functions": 11208,
+      "mismatching_functions": 0,
+      "source_data": "754 verified,261 partial,3 differ,306 unnamed",
+      "log": "build/pr2859-baseline-rom.log"
+    },
+    "complete_tu": {
+      "command": "python tools/tubuild.py verify ov062/daRNk_c",
+      "exit": 0,
+      "result": "18/18 MATCH, objisolate clean, relocation destinations clean, expected retained function order",
+      "log": "build/pr2859-final-tu.log"
+    },
+    "metadata": {
+      "command": "python tools/romdata_check.py --files src/actors/daRNk_c.cpp --json build/pr2859-final-data.json",
+      "exit": 0,
+      "result": "6 VERIFIED/180 bytes,5 PARTIAL/44 bytes,0 DIFFERS,0 UNNAMED"
+    },
+    "layout": {
+      "command": "python tools/check_header_offsets.py include/daRNk_c.h",
+      "exit": 0,
+      "result": "26 commented fields,0 mismatches,0 unparsed,0x3e0 span"
+    },
+    "consumer_scope": {
+      "command": "python tools/affected_src.py include/daRNk_c.h",
+      "exit": 0,
+      "sources": [
+        "src/actors/daRNk_c.cpp"
+      ]
+    },
+    "declarations": {
+      "command": "python tools/check_decl_agreement.py --changed 166dffa1d0767416bd386294a324f00ec267fcc9",
+      "exit": 0,
+      "result": "No new declaration disagreements. Banked entries are not blanket source acceptance."
+    },
+    "candidate_full_rom": {
+      "command": "python -u tools/rombuild.py -j16 --no-rom --report-json build/pr2859-final-rom.json",
+      "exit": 0,
+      "module_fidelity": "106/106 exact",
+      "reproducing_functions": 11208,
+      "mismatching_functions": 0,
+      "source_data": "754 verified,261 partial,3 differ,306 unnamed; unchanged from pristine input",
+      "source_data_claims": "26/26 reproduce",
+      "log": "build/pr2859-final-rom.log",
+      "tested_revision": "9a5fd9eb95b59e3576ee972bf9ff12c66daa3912; the later two-vector-declaration repair preserves the complete allocated object signature, verified separately below"
+    },
+    "formal_acceptance": false,
+    "strict_relocations": {
+      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp src/_ZN3HUD15RenderTimeTimerEv.cpp src/__sinit_02074dc4.c --json build/pr2859-final-links.json",
+      "exit": 0,
+      "result": "20 VERIFIED, zero warnings or blockers; every blind=0 and diffs=[]"
+    },
+    "converted": {
+      "command": "python tools/tiers_ratchet.py --check",
+      "exit": 0,
+      "result": "2973 baseline,2982 current,+9 unbanked; no baseline file edited"
+    },
+    "port_references": {
+      "command": "python tools/port_refcheck.py",
+      "exit": 0,
+      "result": "423 references,0 stale"
+    },
+    "dead_references": {
+      "command": "python tools/check_dead_references.py",
+      "exit": 0,
+      "result": "No new dead references; no broken Markdown links"
+    },
+    "queue": {
+      "command": "python tools/queue_audit.py --check",
+      "exit": 1,
+      "comparison": {
+        "input_commit": "166dffa1d0767416bd386294a324f00ec267fcc9",
+        "audit_exit": 1,
+        "method": "Execute the unchanged queue_audit.run derivation with a return before reporting/writing. Baseline uses an in-memory git-show overlay for every changed tracked file. Config, path inventory and freshly generated ROM-derived inputs are identical; no TSV write occurs.",
+        "changed_tracked_paths": [
+          "config/tu_manifest.d/ov062/daRNk_c.json",
+          "include/daRNk_c.h",
+          "notes/agents/handoffs/pr2859-source-repair-0920.md",
+          "notes/experiments/pr2859-source-repair-0920.json",
+          "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+          "src/__sinit_02074dc4.c",
+          "src/actors/daRNk_c.cpp"
+        ],
+        "baseline_stale_counts": {
+          "shard_count": 39,
+          "total_lines": 48,
+          "compiler-only": 17,
+          "classif:no-header": 1
+        },
+        "candidate_stale_counts": {
+          "shard_count": 39,
+          "total_lines": 48,
+          "compiler-only": 17,
+          "classif:no-header": 1
+        },
+        "candidate_vs_baseline_rows": [],
+        "koopa_rows": [],
+        "hud_row": {
+          "stored": {
+            "class_name": "HUD",
+            "shard_count": "19",
+            "total_lines": "1364",
+            "overlay": "ov002",
+            "has_header": "yes",
+            "already_promoted": "no",
+            "blockers": "compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1)",
+            "sibling_oracle": "daBar_c",
+            "promotion_route": "text-only"
+          },
+          "baseline_derived": {
+            "class_name": "HUD",
+            "shard_count": "19",
+            "total_lines": "1364",
+            "overlay": "ov002",
+            "has_header": "yes",
+            "already_promoted": "no",
+            "blockers": "compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1)",
+            "sibling_oracle": "daBar_c",
+            "promotion_route": "text-only"
+          },
+          "candidate_derived": {
+            "class_name": "HUD",
+            "shard_count": "19",
+            "total_lines": "1364",
+            "overlay": "ov002",
+            "has_header": "yes",
+            "already_promoted": "no",
+            "blockers": "compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1)",
+            "sibling_oracle": "daBar_c",
+            "promotion_route": "text-only"
+          }
+        },
+        "proposal": "No queue row value changes between the original PR input and this repair. No daRNk_c or KoopaTheQuick identity exists in this queue; HUD measured values also remain identical. All reported stale cells are present at the input. No repair-specific TSV edit is proposed; rerun the full audit after coordinator current-main composition."
+      }
+    }
+  },
+  "final_source_sha256": "0542a3528a3634525f0c8bee25f2018dc479e30c0493c0ad6ffc742d0f444ca2",
+  "final_header_sha256": "10d02b114030579e3b08686f1990050bc253a80b4dc1afbe7deaa4e371f29d07",
+  "final_strict_function_results": [
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_cD1Ev",
+      "module": "ov062",
+      "addr": "0x211975c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 72,
+      "section_bytes_sha256": "0284672b4d2c6a61d5e601eed603c12e550cd8c758fd10f79bfb1ccdcb9b68a9"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_cD0Ev",
+      "module": "ov062",
+      "addr": "0x21197a4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 92,
+      "section_bytes_sha256": "6d40ea87e21bfb6b7d4545055efa255213a8609b55276daa9071e8d4bb1ad42d"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_02119800",
+      "module": "ov062",
+      "addr": "0x2119800",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 340,
+      "section_bytes_sha256": "26fb745b149745ce4c7ab7e7a812ea575e8e1b8dc23fbb7debb7d10fbe770faf"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_02119954",
+      "module": "ov062",
+      "addr": "0x2119954",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 88,
+      "section_bytes_sha256": "58949ddf318a3484038904d73ab3080edec5b1d8c5dbab60d393e6af77cc2180"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_021199ac",
+      "module": "ov062",
+      "addr": "0x21199ac",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 324,
+      "section_bytes_sha256": "f958977da0cb30356da31c14b81ebbdfbdaaa1d3a73beea75882e52cd45f4cbc"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_02119af0",
+      "module": "ov062",
+      "addr": "0x2119af0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 240,
+      "section_bytes_sha256": "a6ec4090309cbd4ceb5330348499133205a38d4fa4b7a06b799f72afff475ea7"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_02119be0",
+      "module": "ov062",
+      "addr": "0x2119be0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 1296,
+      "section_bytes_sha256": "24cd9d2499991e3134a6dd60e46da826a284c549588edf3f05f52cc8f8095d0f"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211a0f0",
+      "module": "ov062",
+      "addr": "0x211a0f0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 120,
+      "section_bytes_sha256": "89c2087a2ff9344ba1cf9964316b97247e82aa757a76d29800bb9a5bd8003671"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211a168",
+      "module": "ov062",
+      "addr": "0x211a168",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 140,
+      "section_bytes_sha256": "b6026d53f02b064a7da53b94e4e6bd18307c6419527dd773672e3c8f7353fd7a"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211a1f4",
+      "module": "ov062",
+      "addr": "0x211a1f4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 1356,
+      "section_bytes_sha256": "98a29c0c5362f0602dac6bb7da0ac17b701c3c93b06c36461702d1383609f67e"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211a740",
+      "module": "ov062",
+      "addr": "0x211a740",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 644,
+      "section_bytes_sha256": "c51fdc6256ee6f6c0f9566975cba211db245a15b036d4409cce3063c38772405"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211a9c4",
+      "module": "ov062",
+      "addr": "0x211a9c4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 252,
+      "section_bytes_sha256": "578d2bb1e8485aeeebad958332573887580e7a11753c77991dd3f3f177dbd9ee"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "func_ov062_0211aac0",
+      "module": "ov062",
+      "addr": "0x211aac0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 144,
+      "section_bytes_sha256": "ba9e506e0b5adb9b2aad9df783064046177db27071582e163984e3e8a0f31e8e"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_c6RenderEv",
+      "module": "ov062",
+      "addr": "0x211ab50",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 56,
+      "section_bytes_sha256": "3c1410f246328ae5210ba352f4da2b673ed572a66c39a5fb007870eb791b25e5"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_c8BehaviorEv",
+      "module": "ov062",
+      "addr": "0x211ab88",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 136,
+      "section_bytes_sha256": "d6dd3cea74298350b9123290606233199e26ef319f11771e0c18ee9f424f3213"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_c16CleanupResourcesEv",
+      "module": "ov062",
+      "addr": "0x211ac10",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 132,
+      "section_bytes_sha256": "a94f075f57aa739a03716e3360731c2f53af9cb77ef212fcfcbfce41630dd5c4"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "_ZN7daRNk_c13InitResourcesEv",
+      "module": "ov062",
+      "addr": "0x211ac94",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 588,
+      "section_bytes_sha256": "be28a57a8fc48f085e20267e0275853aaeda6f64d54cd3890ebbf106bd49d851"
+    },
+    {
+      "file": "src/actors/daRNk_c.cpp",
+      "name": "daRNk_c_classInit",
+      "module": "ov062",
+      "addr": "0x211aee0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": [],
+      "compiled_size": 88,
+      "section_bytes_sha256": "1bbdf15e90a6b2c7347da25c62fca20232dcd761de42f0ec04c1336972dc8acc"
+    },
+    {
+      "file": "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+      "name": "_ZN3HUD15RenderTimeTimerEv",
+      "module": "ov002",
+      "addr": "0x20fb96c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/__sinit_02074dc4.c",
+      "name": "__sinit_02074dc4",
+      "module": "arm9",
+      "addr": "0x2074dc4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    }
+  ],
+  "direct_declaration_inventory": {
+    "method": "Every direct extern parsed from the owned TU is paired with its current definition. Scalar ABI bridges are recorded explicitly; this is evidence, not blanket acceptance of shared contracts.",
+    "records": [
+      {
+        "symbol": "func_ov062_02119800",
+        "owned_line": 24,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 790,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_02119954",
+        "owned_line": 25,
+        "owned_contract": "void (void *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 777,
+            "contract": "void (void *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_021199ac",
+        "owned_line": 26,
+        "owned_contract": "int (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 719,
+            "contract": "int (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_02119af0",
+        "owned_line": 27,
+        "owned_contract": "int (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 672,
+            "contract": "int (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_02119be0",
+        "owned_line": 28,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 517,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211a0f0",
+        "owned_line": 29,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 501,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211a168",
+        "owned_line": 30,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 485,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211a1f4",
+        "owned_line": 31,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 351,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211a740",
+        "owned_line": 32,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 273,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211a9c4",
+        "owned_line": 33,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 225,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_ov062_0211aac0",
+        "owned_line": 34,
+        "owned_contract": "void (char *)",
+        "definitions": [
+          {
+            "path": "src/actors/daRNk_c.cpp",
+            "line": 208,
+            "contract": "void (char *)"
+          }
+        ]
+      },
+      {
+        "symbol": "data_ov062_0211e0a4",
+        "owned_line": 35,
+        "owned_contract": "int []",
+        "definitions": []
+      },
+      {
+        "symbol": "_ZN5Sound22LoadAndSetMusic_Layer2Ej",
+        "owned_line": 36,
+        "owned_contract": "void (unsigned int)",
+        "definitions": [
+          {
+            "path": "src/_ZN5Sound22LoadAndSetMusic_Layer2Ej.cpp",
+            "line": 26,
+            "contract": "void (unsigned int)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN4cstd5atan2E5Fix12IiES1_",
+        "owned_line": 41,
+        "owned_contract": "short (int, int)",
+        "definitions": [
+          {
+            "path": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+            "line": 13,
+            "contract": "short (int, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_0201267c",
+        "owned_line": 44,
+        "owned_contract": "void (unsigned int, void *)",
+        "definitions": [
+          {
+            "path": "src/func_0201267c.cpp",
+            "line": 8,
+            "contract": "void (unsigned int, const Vector3 *)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+        "owned_line": 45,
+        "owned_contract": "void * (unsigned int, int, int, int)",
+        "definitions": [
+          {
+            "path": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
+            "line": 9,
+            "contract": "void * (unsigned int, int, int, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "data_02082214",
+        "owned_line": 46,
+        "owned_contract": "short []",
+        "definitions": []
+      },
+      {
+        "symbol": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+        "owned_line": 49,
+        "owned_contract": "void (void *, void *, int, int, unsigned short)",
+        "definitions": [
+          {
+            "path": "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c",
+            "line": 26,
+            "contract": "void (ModelAnim *, BCA_File *, int, int, unsigned short)"
+          }
+        ]
+      },
+      {
+        "symbol": "Vec3_HorzAngle",
+        "owned_line": 50,
+        "owned_contract": "short (const Vector3 *, const Vector3 *)",
+        "definitions": [
+          {
+            "path": "src/Vec3_HorzAngle.c",
+            "line": 8,
+            "contract": "short (const Vector3 *, const Vector3 *)"
+          }
+        ]
+      },
+      {
+        "symbol": "Vec3_Dist",
+        "owned_line": 51,
+        "owned_contract": "int (const Vector3 *, const Vector3 *)",
+        "definitions": [
+          {
+            "path": "src/Vec3_Dist.c",
+            "line": 15,
+            "contract": "int (const Vector3 *, const Vector3 *)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN5Sound22StopLoadedMusic_Layer2Ev",
+        "owned_line": 52,
+        "owned_contract": "void (void)",
+        "definitions": [
+          {
+            "path": "src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp",
+            "line": 17,
+            "contract": "void (void)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_0201277c",
+        "owned_line": 53,
+        "owned_contract": "unsigned int (unsigned int)",
+        "definitions": [
+          {
+            "path": "src/func_0201277c.c",
+            "line": 3,
+            "contract": "unsigned int (unsigned int)"
+          }
+        ]
+      },
+      {
+        "symbol": "data_0209f2f8",
+        "owned_line": 54,
+        "owned_contract": "signed char",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov002_02111184",
+        "owned_line": 55,
+        "owned_contract": "signed char",
+        "definitions": []
+      },
+      {
+        "symbol": "_ZN5Sound7PlaySubEjjj5Fix12IiEb",
+        "owned_line": 56,
+        "owned_contract": "bool (unsigned int, unsigned int, unsigned int, int, int)",
+        "definitions": [
+          {
+            "path": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
+            "line": 11,
+            "contract": "bool (unsigned int, unsigned int, unsigned int, int, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_02012694",
+        "owned_line": 57,
+        "owned_contract": "void (unsigned int, void *)",
+        "definitions": [
+          {
+            "path": "src/func_02012694.cpp",
+            "line": 8,
+            "contract": "void (unsigned int, const Vector3 *)"
+          }
+        ]
+      },
+      {
+        "symbol": "func_02012790",
+        "owned_line": 58,
+        "owned_contract": "unsigned int (unsigned int)",
+        "definitions": [
+          {
+            "path": "src/func_02012790.c",
+            "line": 3,
+            "contract": "unsigned int (unsigned int)"
+          }
+        ]
+      },
+      {
+        "symbol": "data_0209d684",
+        "owned_line": 59,
+        "owned_contract": "unsigned char",
+        "definitions": []
+      },
+      {
+        "symbol": "data_0209d4c8",
+        "owned_line": 60,
+        "owned_contract": "Timer",
+        "definitions": []
+      },
+      {
+        "symbol": "Vec3_Asr",
+        "owned_line": 61,
+        "owned_contract": "void (void *, void *, int)",
+        "definitions": [
+          {
+            "path": "src/Vec3_Asr.c",
+            "line": 2,
+            "contract": "void (Vec3 *, Vec3 *, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "Matrix4x3_FromTranslation",
+        "owned_line": 62,
+        "owned_contract": "void (void *, int, int, int)",
+        "definitions": [
+          {
+            "path": "src/Matrix4x3_FromTranslation.c",
+            "line": 2,
+            "contract": "void (Mtx43 *, int, int, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "Matrix4x3_ApplyInPlaceToRotationY",
+        "owned_line": 63,
+        "owned_contract": "void (void *, short)",
+        "definitions": [
+          {
+            "path": "src/Matrix4x3_ApplyInPlaceToRotationY.c",
+            "line": 10,
+            "contract": "void (Matrix4x3 *, short)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+        "owned_line": 64,
+        "owned_contract": "void (void *, void *, void *, int, int, unsigned char)",
+        "definitions": [
+          {
+            "path": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp",
+            "line": 17,
+            "contract": "void (dActor_c *, ShadowModel *, Matrix4x3 *, int, int, unsigned char)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj",
+        "owned_line": 66,
+        "owned_contract": "void (void *, void *, int, int, unsigned int, unsigned int)",
+        "definitions": [
+          {
+            "path": "src/_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj.cpp",
+            "line": 11,
+            "contract": "void (dCcAc_c *, dActor_c *, int, int, unsigned int, unsigned int)"
+          }
+        ]
+      },
+      {
+        "symbol": "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_",
+        "owned_line": 69,
+        "owned_contract": "void (void *, void *, int, int, void *, int)",
+        "definitions": [
+          {
+            "path": "src/_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_.c",
+            "line": 4,
+            "contract": "void (dBgCh_Actr *, int, int, int, int, int)"
+          }
+        ]
+      },
+      {
+        "symbol": "data_ov062_0211e00c",
+        "owned_line": 70,
+        "owned_contract": "char []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e014",
+        "owned_line": 71,
+        "owned_contract": "int []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e024",
+        "owned_line": 72,
+        "owned_contract": "int []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e01c",
+        "owned_line": 73,
+        "owned_contract": "char []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e034",
+        "owned_line": 74,
+        "owned_contract": "char []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e03c",
+        "owned_line": 75,
+        "owned_contract": "char []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e02c",
+        "owned_line": 76,
+        "owned_contract": "int []",
+        "definitions": []
+      },
+      {
+        "symbol": "data_ov062_0211e004",
+        "owned_line": 77,
+        "owned_contract": "int []",
+        "definitions": []
+      }
+    ]
+  },
+  "corrected_contract_provenance": [
+    {
+      "symbol": "_ZN4cstd5atan2E5Fix12IiES1_",
+      "definition": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+      "contract": "s16(s32 y,s32 x)",
+      "paired_definition": "src/_ZN8dActor_c14GetSubtractionEss.cpp",
+      "paired_contract": "int dActor_c::GetSubtraction(short,short)",
+      "result": "Correcting both boundaries permits the real member call with exact bytes. The earlier one-sided cast failure is superseded."
+    },
+    {
+      "symbol": "_ZN5Sound7PlaySubEjjj5Fix12IiEb",
+      "definition": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
+      "contract": "bool(unsigned,unsigned,unsigned,int,int)"
+    },
+    {
+      "symbol": "func_0201277c",
+      "definition": "src/func_0201277c.c",
+      "contract": "unsigned(unsigned)"
+    },
+    {
+      "symbol": "func_02012790",
+      "definition": "src/func_02012790.c",
+      "contract": "unsigned(unsigned)"
+    },
+    {
+      "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+      "definition": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
+      "contract": "void*(u32,s32,s32,s32)"
+    },
+    {
+      "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+      "definition": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp",
+      "contract": "void(dActor_c*,ShadowModel*,Matrix4x3*,int,int,u8)"
+    },
+    {
+      "symbol": "_ZNK9Animation13GetFrameCountEv",
+      "definition": "src/_ZNK9Animation13GetFrameCountEv.cpp",
+      "contract": "u32 Animation::GetFrameCount() const; final caller uses real method"
+    },
+    {
+      "symbol": "_ZNK9Animation12WillHitFrameEi",
+      "definition": "src/_ZNK9Animation12WillHitFrameEi.cpp",
+      "contract": "bool Animation::WillHitFrame(int) const; final caller uses real method"
+    },
+    {
+      "symbol": "func_0201964c",
+      "definition": "src/func_0201964c.c",
+      "contract": "struct Timer*(struct Timer*)"
+    },
+    {
+      "symbol": "Vec3_HorzAngle",
+      "definition": "src/Vec3_HorzAngle.c",
+      "contract": "s16(const Vector3*,const Vector3*)"
+    },
+    {
+      "symbol": "Vec3_Dist",
+      "definition": "src/Vec3_Dist.c",
+      "contract": "s32(const Vector3*,const Vector3*)"
+    }
+  ],
+  "final_candidate_experiment": "typed-vector-contracts-exact",
+  "post_review_vector_contracts": {
+    "input_commit": "9a5fd9eb95b59e3576ee972bf9ff12c66daa3912",
+    "scope": "Only Vec3_HorzAngle/Vec3_Dist declarations and two typed position arguments at the sole previously untyped call. No shared header or other interface changes.",
+    "before_source_sha256": "a3f7a5c0cc1eaa920bc85d3026fb52719e8304329d9c608aea6e85ea6d155883",
+    "after_source_sha256": "0542a3528a3634525f0c8bee25f2018dc479e30c0493c0ad6ffc742d0f444ca2",
+    "before_whole_object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f",
+    "after_whole_object_signature_sha256": "111f9f24a9170fc667bc4a0739f248900e79ce57e1012dad20ce63a9dc00f54f",
+    "complete_object_signature_identical": true,
+    "allocated_sections": 30,
+    "global_weak_definitions": 30,
+    "relocations": 235,
+    "note": "Unlike the initial Vector3 reconstruction, this repair changes no section order. Every allocated section byte, global/weak definition, and relocation record is identical, including section indices.",
+    "discarded_invalid_attempt": "A scratch attempt used mPos aggregate members, which do not exist in the shared dActor_c layout (it declares mPosX/Y/Z). It did not compile and was not applied; it is not a compiler constraint. The accepted minimal casts express the actual Vector3 pointer contracts without modifying that layout.",
+    "complete_tu": {
+      "command": "python tools/tubuild.py verify ov062/daRNk_c",
+      "exit": 0,
+      "result": "18/18 MATCH,6108 bytes,objisolate clean,relocation destinations clean,all18 retained functions in expected order",
+      "log": "build/pr2859-vector-tu.log"
+    },
+    "strict_relocations": {
+      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp --json build/pr2859-vector-links.json",
+      "exit": 0,
+      "result": "18 VERIFIED; every blind=0,diffs=[];0 warnings,0 blockers",
+      "symbols": [
+        "_ZN7daRNk_cD1Ev",
+        "_ZN7daRNk_cD0Ev",
+        "func_ov062_02119800",
+        "func_ov062_02119954",
+        "func_ov062_021199ac",
+        "func_ov062_02119af0",
+        "func_ov062_02119be0",
+        "func_ov062_0211a0f0",
+        "func_ov062_0211a168",
+        "func_ov062_0211a1f4",
+        "func_ov062_0211a740",
+        "func_ov062_0211a9c4",
+        "func_ov062_0211aac0",
+        "_ZN7daRNk_c6RenderEv",
+        "_ZN7daRNk_c8BehaviorEv",
+        "_ZN7daRNk_c16CleanupResourcesEv",
+        "_ZN7daRNk_c13InitResourcesEv",
+        "daRNk_c_classInit"
+      ]
+    },
+    "declarations": {
+      "command": "python tools/check_decl_agreement.py --changed 9a5fd9eb95b59e3576ee972bf9ff12c66daa3912",
+      "exit": 0,
+      "result": "No new disagreements; whole-tree disagreement count reduces17142 to17138"
+    },
+    "formal_acceptance": false
+  }
+}

@@ -1,0 +1,796 @@
+{
+  "schema": 1,
+  "task": "pr2863-source-repair-0920",
+  "producer_session": "codex-spiny-producer-0920",
+  "harness": "Codex",
+  "input_commit": "ae60f78461fd392862059377bb452143a4f3bd7c",
+  "source_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src_tu/actors/Spiny.cpp",
+  "source_sha256_lf": "66dafd2704e8525086252c4811fea41c423b836db588ddfe8d0f6cf2746d6541",
+  "scope": "Bounded shadow-TU state/render and independently requested call-contract/provenance repairs. No promotion, header, manifest, symbols, enrollment or ledger change.",
+  "formal_acceptance": false,
+  "completion": "partial",
+  "independence": "The agent that first tested these scratch forms is now their producer. A different reviewer must independently accept this committed repair.",
+  "findings": [
+    {
+      "id": "SP2863-01",
+      "kind": "correctness",
+      "disposition": "fixed locally; independent acceptance pending",
+      "reason": "The namespaced int(void*,int,int) declaration and its unsupported byte-requires-third-argument claim are removed. InitResources now calls the same void(void*,int) contract as the actual TU definition. mDespawnTimer assignment is unchanged.",
+      "evidence": "The honest call alone and the combined repair preserve the entire emitted object, including every relocation; all 34 functions verify strictly."
+    },
+    {
+      "id": "SP2863-02",
+      "kind": "reconstruction",
+      "disposition": "fixed locally; independent acceptance pending",
+      "reason": "The fabricated six-slot Obj class is removed. Calls use the existing Model::Render(const Vector3*) and ModelAnim::Render(const Vector3*) virtual interfaces with null scale.",
+      "evidence": "Each ordinary Render call selects the existing slot 5; isolated and combined repairs preserve the complete object and all 34 strict function results."
+    },
+    {
+      "id": "SP2863-03",
+      "kind": "reconstruction",
+      "disposition": "open",
+      "reason": "The u8 mMatrix member plus padding and its M48 aggregate view remain. This task does not change shared layout or claim recovered matrix typing."
+    },
+    {
+      "id": "SP2863-04",
+      "kind": "reconstruction",
+      "disposition": "open",
+      "reason": "The shadow retains nine unlicensed metadata outputs and reversed destructor ordinal pair [0,1]. Existing raw helper fields, free-function bridges and lifecycle forms are not accepted by this narrow repair. A follow-up issue has not been posted."
+    },
+    {
+      "id": "SP2863-05",
+      "kind": "correctness",
+      "disposition": "fixed locally; renewed independent acceptance pending",
+      "reason": "All nine reviewed contract families are repaired in the owned shadow. NewSimple returns void*, short ApproachLinear returns int, func_02010844 returns s32. DetectRaycastClsn uses the actual bool/bool member and Vector3 references. The existing scalar Player::Hurt bridges return int and take three u8 flags; SetAnim startFrame is u16; DropShadow opacity is u8. The independent successor review additionally identified two sound wrappers, func_0201267c and func_02012694. All ten local declarations now use void(unsigned int,const Vector3*); all eleven calls explicitly view the existing three-coordinate storage as const Vector3.",
+      "evidence": "Fresh whole-TU object is identical to the prior repair, input and actual base. All 34 functions strictly verify; the targeted definition audit has no diagnostics for these seven symbols. The independent reviewer originally compiled six definition controls; this producer additionally compiled DropShadow strictly with zero differences/blind. The expanded sound correction also preserves the entire object; fresh34 strict proof has zero differences/blind. All existing calls use positive constant IDs."
+    },
+    {
+      "id": "SP2863-06",
+      "kind": "provenance",
+      "disposition": "fixed locally; renewed independent acceptance pending",
+      "reason": "Removed false recovered daJgm_c_Kill / vtable identity comments. The replacement states only the evidenced state3-entry PMF relationship: data_ov077_021278e8 is copied into data_ov077_02127c28+0x30 by __sinit_ov077_0212749c. No original private method name or class rename is claimed.",
+      "evidence": "ov077 relocs.txt records data_ov077_021278e8 -> func_ov077_021258dc. __sinit_ov077_0212749c.c assigns p6 from that 8-byte PMF; func_ov077_02125e94 selects states with i << 4. The body clears its collider and sets state3. The unchanged production shard retains its legacy prose; only the owned shadow is repaired."
+    }
+  ],
+  "compiler": "2004/b56",
+  "compiler_selection": "Derived independently from all 34 legacy manifest entries; wired-worktree canary returned True/2004/b56.",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+  "object_bytes": 21528,
+  "base_and_input_control": "The actual input parent is source_base. Independently compiling both complete shadow TUs gives byte-for-byte identical objects. The repaired object is also identical to both.",
+  "patch_from_input": "diff --git a/src_tu/actors/Spiny.cpp b/src_tu/actors/Spiny.cpp\nindex 378d31769..43c97ef34 100644\n--- a/src_tu/actors/Spiny.cpp\n+++ b/src_tu/actors/Spiny.cpp\n@@ -111,11 +111,11 @@ struct Vector3_16;\n extern \"C\" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);\n extern \"C\" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);\n extern \"C\" BCA_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);\n-extern \"C\" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned int c);\n+extern \"C\" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, u16 c);\n extern \"C\" int _ZN11ShadowModel12InitCylinderEv(void *self);\n extern \"C\" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);\n extern \"C\" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);\n-namespace three_arg_e94 { extern \"C\" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */\n+extern \"C\" void func_ov077_02125e94(void *c, int state);\n \n extern SharedFilePtr data_ov077_02127b48;\n extern SharedFilePtr data_ov077_02127b38;\n@@ -141,7 +141,7 @@ int Spiny::InitResources()\n     mScaleY = 0x1000;\n     mScaleZ = 0x1000;\n     mDespawnTimer = 0x2c;\n-    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);\n+    func_ov077_02125e94(this, 0);\n     *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;\n     func_ov077_02125304((char *)this);\n     return 1;\n@@ -163,7 +163,7 @@ void func_ov077_02125e20(void* c);\n void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* c, void* cyl);\n void func_ov077_02125304(char* c);\n void _ZN8dActor_c8PoofDustEv(void* c);\n-void func_02012694(int a, void* p);\n+void func_02012694(unsigned int id, const Vector3* pos);\n \n extern signed char data_0209f2f8;\n }\n@@ -187,7 +187,7 @@ int Spiny::Behavior()\n     func_ov077_02125304((char *)this);\n     if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {\n         _ZN8dActor_c8PoofDustEv(this);\n-        func_02012694(0xc4, &mCamSpacePosX);\n+        func_02012694(0xc4, (const Vector3*)&mCamSpacePosX);\n         _ZN7fBase_c18MarkForDestructionEv(this);\n     }\n done:\n@@ -200,17 +200,13 @@ done:\n // @symbol _ZN5Spiny6RenderEv\n /* recovered: named members + shared header, real C++ method */\n #include \"Spiny.h\"\n-struct Obj {\n-  virtual void m0(); virtual void m1(); virtual void m2();\n-  virtual void m3(); virtual void m4(); virtual void doit(int);\n-};\n \n int Spiny::Render()\n {\n   if((mFlags & 0x40000) ? 1 : 0) return 1;\n   int s=mState;\n-  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);\n-  else ((Obj*)&mModelAnim)->doit(0);\n+  if(s==0 || s==4) mModel.Render(0);\n+  else mModelAnim.Render(0);\n   return 1;\n }\n \n@@ -298,7 +294,7 @@ typedef int Fix12i;\n \n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);\n extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);\n-extern void func_02012694(int id, void *pos);\n+extern void func_02012694(unsigned int id, const Vector3* pos);\n extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(\n     unsigned int uniqueID, unsigned int effectID,\n     Fix12i x, Fix12i y, Fix12i z,\n@@ -307,8 +303,8 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);\n extern void _ZN8dActor_c8PoofDustEv(void *c);\n extern void _ZN7fBase_c18MarkForDestructionEv(void *c);\n extern void func_ov077_02125e94(void *c, int a);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);\n-extern void func_0201267c(int id, void *pos);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);\n+extern void func_0201267c(unsigned int id, const Vector3* pos);\n extern void _ZN5dCc_c5ClearEv(void *p);\n extern void _ZN5dCc_c6UpdateEv(void *p);\n \n@@ -330,7 +326,7 @@ int func_ov077_02125bb4(char *c)\n     r4 = func_ov077_02124ce4(c);\n     if (r4) {\n         if (*(unsigned char *)(c + 0x3e4) == 0) {\n-            func_02012694(0xe2, c + 0x74);\n+            func_02012694(0xe2, (const Vector3*)(c + 0x74));\n             _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(\n                 *(int *)(c + 0x5c), data_0209f32c, *(int *)(c + 0x64));\n             *(unsigned int *)(c + 0x3e0) =\n@@ -354,7 +350,7 @@ int func_ov077_02125bb4(char *c)\n         d = *(int *)(c + 0x3dc) ? *(int *)(c + 0x60) - *(int *)(c + 0x3dc) : 0;\n         if (d < -0xc8000) {\n             _ZN8dActor_c8PoofDustEv(c);\n-            func_02012694(0x166, c + 0x74);\n+            func_02012694(0x166, (const Vector3*)(c + 0x74));\n             _ZN7fBase_c18MarkForDestructionEv(c);\n         } else if (*(int *)(c + 0xa8) < 0xa000) {\n             *(int *)(c + 0xa8) = 0;\n@@ -372,7 +368,7 @@ int func_ov077_02125bb4(char *c)\n             ((int *)&vec)[1] = y;\n             ((int *)&vec)[2] = z;\n             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, vec.x, vec.y, vec.z);\n-            func_0201267c(0x109, c + 0x74);\n+            func_0201267c(0x109, (const Vector3*)(c + 0x74));\n         }\n     }\n \n@@ -386,7 +382,7 @@ int func_ov077_02125bb4(char *c)\n /* ROM ordinal 21 -- func_ov077_02125b1c, 0x02125b1c, size 0x98 */\n /* -------------------------------------------------------------------------- */\n extern \"C\" {\n-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, unsigned int j);\n+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u16 j);\n extern void func_02035684(int* p, int v);\n extern int RandomIntInternal(int* seed);\n extern int data_0209e650;\n@@ -407,11 +403,11 @@ void func_ov077_02125b1c(char* c) {\n /* ROM ordinal 20 -- func_ov077_02125a54, 0x02125a54, size 0xc8 */\n /* -------------------------------------------------------------------------- */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n-extern void _Z14ApproachLinearRsss(short *a, short b, short c);\n+extern int _Z14ApproachLinearRsss(short *a, short b, short c);\n extern void _ZN9Animation7AdvanceEv(void *);\n extern void func_ov077_02124eb0(void *c);\n extern void _ZN8dActor_c8PoofDustEv(void *);\n-extern void func_02012694(int a, void *b);\n+extern void func_02012694(unsigned int id, const Vector3* pos);\n extern void _ZN7fBase_c18MarkForDestructionEv(void *);\n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);\n extern void func_ov077_02124d08(void *c, void *p);\n@@ -432,7 +428,7 @@ int func_ov077_02125a54(char *c){\n     d = 0;\n   if(d < -0xc8000){\n     _ZN8dActor_c8PoofDustEv(c);\n-    func_02012694(0x166, c + 0x74);\n+    func_02012694(0x166, (const Vector3*)(c + 0x74));\n     _ZN7fBase_c18MarkForDestructionEv(c);\n   }\n   _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);\n@@ -476,7 +472,7 @@ extern void _ZN9Animation7AdvanceEv(void *p);\n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *p, void *cc);\n extern void _ZN5dCc_c5ClearEv(void *p);\n extern void _ZN5dCc_c6UpdateEv(void *p);\n-extern void func_02012694(int a, void *b);\n+extern void func_02012694(unsigned int id, const Vector3* pos);\n extern void func_ov077_02125e94(void *p, int v);\n extern void func_ov077_02124eb0(void *p);\n \n@@ -506,7 +502,7 @@ int func_ov077_02125908(char *c)\n     if (v < -0xc8000)\n     {\n         _ZN8dActor_c8PoofDustEv(c);\n-        func_02012694(0x166, c + 0x74);\n+        func_02012694(0x166, (const Vector3*)(c + 0x74));\n         _ZN7fBase_c18MarkForDestructionEv(c);\n     }\n \n@@ -524,9 +520,8 @@ int func_ov077_02125908(char *c)\n /* -------------------------------------------------------------------------- */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n // @symbol func_ov077_021258dc\n-// recovered name: daJgm_c_Kill\n-/* recovered: renamed to Class_Method */\n-/* daJgm_c::Kill - recovered from vtable slot identity */\n+/* State 3 entry handler: PMF record data_ov077_021278e8 is copied into\n+ * data_ov077_02127c28 at +0x30 by __sinit_ov077_0212749c. */\n extern void _ZN5dCc_c5ClearEv(void *);\n int func_ov077_021258dc(char *c)\n {\n@@ -580,7 +575,6 @@ extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n /* recovered: shared common types */\n #include \"common.h\"\n extern s16 data_02082214[];\n-extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);\n #define LA(p) ((int)(p))\n int func_ov077_021256b4(char *o)\n {\n@@ -639,7 +633,7 @@ int func_ov077_021256b4(char *o)\n         v.x = tx; v.y = ty2; v.z = tz;\n     }\n \n-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(o, &v, (struct Vector3 *)(o + 0x5c), one);\n+    ((dActor_c*)o)->DetectRaycastClsn(v, *(Vector3*)(o + 0x5c), one);\n \n     *(int *)(o + 0xd0) = 0;\n     _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);\n@@ -664,11 +658,11 @@ extern \"C\" {\n extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);\n extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);\n extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* p);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n-extern void func_0201267c(int a, void* p);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n+extern void func_0201267c(unsigned int id, const Vector3* pos);\n extern void func_ov077_02125e94(void* c, int a);\n extern void _ZN8dActor_c8PoofDustEv(void* c);\n-extern void func_02012694(int a, void* p);\n+extern void func_02012694(unsigned int id, const Vector3* pos);\n extern void _ZN7fBase_c18MarkForDestructionEv(void* c);\n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* p);\n extern void _ZN5dCc_c5ClearEv(void* p);\n@@ -699,7 +693,7 @@ extern \"C\" int func_ov077_02125550(char* c)\n             ((int*)&vec)[1] = y;\n             ((int*)&vec)[2] = z;\n             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, vec.x, vec.y, vec.z);\n-            func_0201267c(0x109, c + 0x74);\n+            func_0201267c(0x109, (const Vector3*)(c + 0x74));\n         } else {\n             *(int*)(c + 0xa8) = 0;\n             *(short*)(c + 0x8c) = 0;\n@@ -711,7 +705,7 @@ extern \"C\" int func_ov077_02125550(char* c)\n     d = *(int*)(c + 0x3dc) ? *(int*)(c + 0x60) - *(int*)(c + 0x3dc) : 0;\n     if (d < -0xc8000) {\n         _ZN8dActor_c8PoofDustEv(c);\n-        func_02012694(0x166, c + 0x74);\n+        func_02012694(0x166, (const Vector3*)(c + 0x74));\n         _ZN7fBase_c18MarkForDestructionEv(c);\n     }\n \n@@ -731,8 +725,8 @@ extern \"C\" int func_ov077_02125550(char* c)\n extern \"C\" {\n \n extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);\n-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, u16 e);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n }\n \n struct Base {\n@@ -803,7 +797,7 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);\n extern unsigned char DecIfAbove0_Byte(unsigned char* p);\n extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);\n extern void _ZN8dActor_c8PoofDustEv(void*);\n-extern void func_02012694(int a, void* b);\n+extern void func_02012694(unsigned int id, const Vector3* pos);\n extern void _ZN7fBase_c18MarkForDestructionEv(void*);\n \n int func_ov077_021253a4(char* c)\n@@ -825,7 +819,7 @@ int func_ov077_021253a4(char* c)\n         v.z = *(int*)(c + 0x64);\n         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, 1, 0x2000, 0);\n         _ZN8dActor_c8PoofDustEv(c);\n-        func_02012694(0xc4, c + 0x74);\n+        func_02012694(0xc4, (const Vector3*)(c + 0x74));\n         _ZN7fBase_c18MarkForDestructionEv(c);\n     }\n     return 1;\n@@ -838,7 +832,7 @@ int func_ov077_021253a4(char* c)\n extern \"C\" {\n void func_ov077_021251d0(void *t);\n void func_ov077_02125290(char *t);\n-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);\n+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, u8 j);\n void func_ov077_02125304(char *c) {\n     int b = (int)((*(int*)(c+0xb0) & 0x40000) != 0);\n     if (b != 0) return;\n@@ -912,7 +906,7 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);\n void func_ov077_02125e94(void* c, int a);\n short Vec3_HorzAngle(void* a, void* b);\n void _ZN6Player16IncMegaKillCountEv(void* p);\n-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);\n+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, u8 d, u8 e, u8 f);\n \n void func_ov077_021250a8(void* vc){\n   char* c = (char*)vc;\n@@ -950,7 +944,7 @@ void func_ov077_021250a8(void* vc){\n extern \"C\" int _ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn); /* decl_Actor.h view */\n extern \"C\" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const Vector3 *pos, unsigned int a, int fix, short b);\n extern \"C\" void _ZN8dActor_c8PoofDustEv(void *self);\n-extern \"C\" void func_02012694(int a, void *pos);\n+extern \"C\" void func_02012694(unsigned int id, const Vector3* pos);\n extern \"C\" void _ZN7fBase_c18MarkForDestructionEv(void *self);\n extern \"C\" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);\n extern \"C\" void func_ov077_02125e94(void *c, int i);\n@@ -958,7 +952,7 @@ extern \"C\" int _ZN6Player9IsOnShellEv(void *p);\n extern \"C\" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3 &pos);\n extern \"C\" short Vec3_HorzAngle(void *a, void *b);\n extern \"C\" void _ZN6Player16IncMegaKillCountEv(void *p);\n-extern \"C\" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);\n+extern \"C\" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 cc, u8 d);\n \n extern \"C\" void func_ov077_02124eb0(void *thiz)\n {\n@@ -973,7 +967,7 @@ extern \"C\" void func_ov077_02124eb0(void *thiz)\n         v[2] = *(int *)(c + 0x64);\n         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, (const Vector3 *)v, 1, 0x2000, 0);\n         _ZN8dActor_c8PoofDustEv(c);\n-        func_02012694(0xc4, c + 0x74);\n+        func_02012694(0xc4, (const Vector3*)(c + 0x74));\n         _ZN7fBase_c18MarkForDestructionEv(c);\n         return;\n     }\n@@ -1051,13 +1045,13 @@ extern \"C\" void _ZN5dBgCh19StartDetectingToxicEv(void* self);\n extern \"C\" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);\n extern \"C\" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);\n extern \"C\" void _ZN8dActor_c8PoofDustEv(void* self);\n-extern \"C\" void func_02012694(int a, void* b);\n+extern \"C\" void func_02012694(unsigned int id, const Vector3* pos);\n extern \"C\" void _ZN7fBase_c18MarkForDestructionEv(void* self);\n extern \"C\" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);\n extern \"C\" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);\n extern \"C\" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);\n extern \"C\" int _ZN4cstd4fdivEii(int a, int b);\n-extern \"C\" s16 func_02010844(void* unused, Vector3* v, s16 angle);\n+extern \"C\" s32 func_02010844(void* unused, Vector3* v, s16 angle);\n extern \"C\" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);\n \n extern \"C\" void func_ov077_02124d08(void* va, void* vw) {\n@@ -1083,7 +1077,7 @@ extern \"C\" void func_ov077_02124d08(void* va, void* vw) {\n         if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {\n             if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {\n                 _ZN8dActor_c8PoofDustEv(a);\n-                func_02012694(0xc4, a+0x74);\n+                func_02012694(0xc4, (const Vector3*)(a+0x74));\n                 _ZN7fBase_c18MarkForDestructionEv(a);\n                 _ZN9dBgCh_GndD1Ev(&rc);\n                 return;\n",
+  "measurements": [
+    {
+      "variant": "control",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "real_render",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truthful_call",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truthful_and_render",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truth_timer_first",
+      "compiled": true,
+      "object_sha256": "146acd03f98ae4be23962122849a0ccffd75a9cd4868f26491386456a22e216e",
+      "whole_object_identical_to_input": false,
+      "nonmatching_functions": [
+        {
+          "symbol": "_ZN5Spiny13InitResourcesEv",
+          "rom_size": 316,
+          "compiled_size": 316,
+          "masked_word_diffs": 7
+        }
+      ]
+    },
+    {
+      "variant": "truth_scale_chain",
+      "compiled": true,
+      "object_sha256": "2a477620df0f69180223dddd8d9cda628189824e689d25190975dcf3f33cc101",
+      "whole_object_identical_to_input": false,
+      "nonmatching_functions": [
+        {
+          "symbol": "_ZN5Spiny13InitResourcesEv",
+          "rom_size": 316,
+          "compiled_size": 324,
+          "masked_word_diffs": 999
+        }
+      ]
+    },
+    {
+      "variant": "truth_timer_local",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truth_state_local",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    }
+  ],
+  "unsuccessful_forms": {
+    "truth_timer_first": "Move mDespawnTimer = 0x2c before the three scale stores: InitResources remains 0x13c but seven words differ.",
+    "truth_scale_chain": "mScaleX = mScaleY = mScaleZ = 0x1000 before timer/state initialization: InitResources becomes 0x144 versus retail 0x13c.",
+    "interpretation": "Only these particular forms failed. The simple truthful two-argument call matches without any workaround, so no compiler constraint is claimed."
+  },
+  "successful_forms": {
+    "truthful_call": "extern \"C\" void func_ov077_02125e94(void*, int); then mDespawnTimer = 0x2c; func_ov077_02125e94(this, 0);",
+    "real_render": "Remove struct Obj and replace both casts/doit calls with mModel.Render(0) and mModelAnim.Render(0).",
+    "truth_timer_local": "An ordinary unsigned char despawnTimer = 0x2c local before the scale stores also matches, but is unnecessary and not retained.",
+    "truth_state_local": "An ordinary int initialState = 0 local before the scale stores also matches, but is unnecessary and not retained."
+  },
+  "fresh_applied_source_result": {
+    "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-sound-repair\\manifest.json verify ov077/Spiny",
+    "exit_code": 1,
+    "strict_verified": 34,
+    "function_bytes": 5864,
+    "strict_diffs": [],
+    "strict_blind": 0,
+    "whole_object_identical_to_input_and_base": true,
+    "compiler_only_policy": {
+      "requested": [
+        "_ZN5SpinyD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN5SpinyD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        19,
+        20,
+        29
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "compiler_only_policy_reasons": [],
+    "unlicensed_metadata_symbols": [
+      "_ZTS5Spiny",
+      "_ZTI7fBase_c",
+      "_ZTS7fBase_c",
+      "_ZTS7dBase_c",
+      "_ZTS8dActor_c",
+      "_ZTI5Spiny",
+      "_ZTI8dActor_c",
+      "_ZTI7dBase_c",
+      "_ZTV5Spiny"
+    ],
+    "bad_ordinal_pairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "verdict": "Text/function proof passes; promotion is refused. Exit1 is the inherited nine unlicensed metadata outputs, not a new function mismatch. The historical preflight count of eleven was stale.",
+    "whole_object_identical_to_prior_repair_input_and_base": true
+  },
+  "functions": [
+    {
+      "symbol": "_ZN5SpinyD1Ev",
+      "address": "0x02124b64",
+      "size": "0x00000050",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5SpinyD0Ev",
+      "address": "0x02124bb4",
+      "size": "0x00000064",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
+      "address": "0x02124c18",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
+      "address": "0x02124c20",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124c28",
+      "address": "0x02124c28",
+      "size": "0x000000bc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124ce4",
+      "address": "0x02124ce4",
+      "size": "0x00000024",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124d08",
+      "address": "0x02124d08",
+      "size": "0x000001a8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124eb0",
+      "address": "0x02124eb0",
+      "size": "0x000001f8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021250a8",
+      "address": "0x021250a8",
+      "size": "0x00000128",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021251d0",
+      "address": "0x021251d0",
+      "size": "0x000000c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125290",
+      "address": "0x02125290",
+      "size": "0x00000074",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125304",
+      "address": "0x02125304",
+      "size": "0x000000a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021253a4",
+      "address": "0x021253a4",
+      "size": "0x000000dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125480",
+      "address": "0x02125480",
+      "size": "0x000000d0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125550",
+      "address": "0x02125550",
+      "size": "0x00000164",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021256b4",
+      "address": "0x021256b4",
+      "size": "0x0000017c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125830",
+      "address": "0x02125830",
+      "size": "0x000000ac",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021258dc",
+      "address": "0x021258dc",
+      "size": "0x0000002c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125908",
+      "address": "0x02125908",
+      "size": "0x00000104",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a0c",
+      "address": "0x02125a0c",
+      "size": "0x00000048",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a54",
+      "address": "0x02125a54",
+      "size": "0x000000c8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125b1c",
+      "address": "0x02125b1c",
+      "size": "0x00000098",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125bb4",
+      "address": "0x02125bb4",
+      "size": "0x00000220",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125dd4",
+      "address": "0x02125dd4",
+      "size": "0x0000004c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e20",
+      "address": "0x02125e20",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e5c",
+      "address": "0x02125e5c",
+      "size": "0x00000038",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e94",
+      "address": "0x02125e94",
+      "size": "0x0000001c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16CleanupResourcesEv",
+      "address": "0x02125eb0",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnPendingDestroyEv",
+      "address": "0x02125eec",
+      "size": "0x00000004",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny6RenderEv",
+      "address": "0x02125ef0",
+      "size": "0x00000078",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny8BehaviorEv",
+      "address": "0x02125f68",
+      "size": "0x000000f0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13InitResourcesEv",
+      "address": "0x02126058",
+      "size": "0x0000013c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
+      "address": "0x02126194",
+      "size": "0x00000060",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daTgz_c_classInit",
+      "address": "0x021261f4",
+      "size": "0x00000058",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "reproduction_python": [
+    "import pathlib, json, sys, hashlib",
+    "sys.path.insert(0, \"tools\")",
+    "import tubuild as T, build_pin as B, match as M, reloc_audit as R, objisolate as O, linkcheck as L",
+    "src = pathlib.Path(\"src_tu/actors/Spiny.cpp\")",
+    "entry = json.loads(pathlib.Path(\"config/tu_manifest.d/ov077/Spiny.json\").read_text())",
+    "version, note = T.resolve_tu_version(entry)",
+    "assert version == \"2004/b56\" and note is None",
+    "obj = M.compile_c(src, version, B.flags_for(src)); assert obj",
+    "assert hashlib.sha256(obj).hexdigest() == \"c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659\"",
+    "index = R.build_name_index()",
+    "for f in entry[\"functions\"]:",
+    "    isolated, _ = O.derive(obj, f[\"symbol\"])",
+    "    r = L.linkcheck(f[\"symbol\"], int(f[\"address\"], 0), int(f[\"size\"], 0), \"ov077\", index, obj=isolated, sym=f[\"symbol\"])",
+    "    assert r[\"verdict\"] == \"VERIFIED\" and r[\"blind\"] == 0 and not r[\"diffs\"], r",
+    "audited, policy, reasons = T.apply_compiler_only_policy(obj, entry)",
+    "assert not reasons",
+    "extra = T.unlicensed_inventory(entry, T.elf_inventory(audited))",
+    "assert not extra[0] and len(extra[1]) == 9 and not extra[2]",
+    "print(\"34 strict functions pass; nine inherited metadata outputs still prevent promotion\")"
+  ],
+  "coverage_limits": [
+    "No full-ROM build: this source remains unenrolled and a normal production build would not exercise its edits.",
+    "No header changed; all headers/configuration are byte-identical to the actual input/base for this repair.",
+    "No data/license policy was repaired. No declaration-baseline expansion was made.",
+    "Private PR validation on the input reported noverify; it is not substituted for the explicit independent and fresh producer compiles above.",
+    "A follow-up issue and independent partial-source judgment remain pending. No formal pass is asserted."
+  ],
+  "static_checks": [
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "No whitespace errors."
+    },
+    {
+      "command": "python tools/check_decl_agreement.py --changed 9022c77b3834c5ee77c31b4fb4af587418137d6c",
+      "exit_code": 0,
+      "result": "No src/ or include/ source or symbol configuration changed; this gate checks no shadow source and is not evidence for its declarations."
+    },
+    {
+      "command": "python tools/check_dead_references.py",
+      "exit_code": 0,
+      "result": "No new dead references; 1971 Markdown links checked, zero broken. Existing baseline debt unchanged."
+    },
+    {
+      "command": "Execute reproduction_python from this experiment record under python -X utf8",
+      "exit_code": 0,
+      "result": "Replay independently recompiled the applied source, asserted exact object SHA, and verified all 34 functions with the recorded policy limits."
+    }
+  ],
+  "prior_repair_commit": "fb82671cd8affb9faa26c6d5f33a9062b55429e3",
+  "review_followup": {
+    "reviewed_commit": "3568a524fe60c5dfa2f3d4ff83451a1b3d11515a",
+    "independent_reviewer": "codex-spiny-independent-0920",
+    "original_new_findings": [
+      {
+        "id": "SP2863-05",
+        "kind": "correctness",
+        "disposition": "open_blocking",
+        "introduced_by_repair": false,
+        "location": "src_tu/actors/Spiny.cpp declarations listed in contract_families",
+        "summary": "Inherited local declarations still contradict actual called definitions; a clean byte result cannot establish source-level call agreement.",
+        "contract_families": [
+          {
+            "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+            "source_lines": [
+              306,
+              663,
+              731
+            ],
+            "source_contract": "void (u32,int,int,int)",
+            "actual_definition": "void* (u32,int,int,int)",
+            "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+            "used_by": [
+              "func_ov077_02125bb4",
+              "func_ov077_02125550",
+              "func_ov077_02125480"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_Z14ApproachLinearRsss",
+            "source_lines": [
+              406
+            ],
+            "source_contract": "void (short*,short,short)",
+            "actual_definition": "int ApproachLinear(short&,short,short)",
+            "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+            "used_by": [
+              "func_ov077_02125a54"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "func_02010844",
+            "source_lines": [
+              1056
+            ],
+            "source_contract": "s16 (void*,Vector3*,s16)",
+            "actual_definition": "s32 (void*,Vector3*,s16)",
+            "reference": "src/func_02010844.c:17",
+            "used_by": [
+              "func_ov077_02124d08"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+            "source_lines": [
+              579
+            ],
+            "source_contract": "int (void*,Vector3*,Vector3*,int)",
+            "actual_definition": "bool dActor_c::DetectRaycastClsn(Vector3&,Vector3&,bool)",
+            "reference": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp:7",
+            "used_by": [
+              "func_ov077_021256b4"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+            "source_lines": [
+              911,
+              957
+            ],
+            "source_contract": "void return; last three flags unsigned int",
+            "actual_definition": "int return; last three flags u8",
+            "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+            "used_by": [
+              "func_ov077_021250a8",
+              "func_ov077_02124eb0"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+            "source_lines": [
+              114,
+              385,
+              730
+            ],
+            "source_contract": "fifth explicit argument unsigned int",
+            "actual_definition": "current scalar C definition reads u16 startFrame",
+            "reference": "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c:26",
+            "used_by": [
+              "Spiny::InitResources",
+              "func_ov077_02125b1c",
+              "func_ov077_02125480"
+            ],
+            "callee_strict": "VERIFIED",
+            "boundary": "Shared ModelAnim member declaration retains u32 startFrame and Fix12 speed; distinguish the genuine member interface from the existing scalar bridge, do not claim all types are recovered."
+          },
+          {
+            "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+            "source_lines": [
+              837
+            ],
+            "source_contract": "last explicit argument unsigned int",
+            "actual_definition": "current scalar C definition takes u8 opacity",
+            "reference": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp:17",
+            "used_by": [
+              "func_ov077_02125304"
+            ],
+            "callee_strict": "Not separately rerun; definition inspected",
+            "boundary": "Shared real member declaration and scalar definition remain different representations; choose and document the actual called contract rather than silently keeping incompatible bridge declarations."
+          }
+        ],
+        "required_action": "Producer repairs truthful interfaces/bridge contracts with per-site and full34strict proof. Do not place these correctness defects in the reconstruction follow-up or force good typed interfaces to match erroneous legacy definitions. Signedness/opaque-view diagnostics need manual disposition, not blind mass rewriting."
+      },
+      {
+        "id": "SP2863-06",
+        "kind": "provenance",
+        "disposition": "open_blocking",
+        "introduced_by_repair": false,
+        "location": "src_tu/actors/Spiny.cpp:523-525",
+        "quotes": [
+          "// recovered name: daJgm_c_Kill",
+          "/* daJgm_c::Kill - recovered from vtable slot identity */"
+        ],
+        "evidence": "Actual symbol func_ov077_021258dc is referenced by data_ov077_021278e8, an 8-byte PMF record after the Lakitu table whose last slot is021278e4. __sinit_ov077_0212749c.c:47 copies it to Spiny data02127c28.p6, the state3 enter handler selected by func02125e94. It clears the collider and stores state3. This is not a recovered Lakitu virtual Kill method.",
+        "required_action": "Remove or replace this owned-TU comment with bounded observed state-handler behavior; do not rename code or claim an original private name. Keep the unchanged legacy shard context explicit."
+      }
+    ],
+    "actual_contract_references": [
+      {
+        "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+        "source_lines": [
+          306,
+          663,
+          731
+        ],
+        "source_contract": "void (u32,int,int,int)",
+        "actual_definition": "void* (u32,int,int,int)",
+        "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+        "used_by": [
+          "func_ov077_02125bb4",
+          "func_ov077_02125550",
+          "func_ov077_02125480"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_Z14ApproachLinearRsss",
+        "source_lines": [
+          406
+        ],
+        "source_contract": "void (short*,short,short)",
+        "actual_definition": "int ApproachLinear(short&,short,short)",
+        "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+        "used_by": [
+          "func_ov077_02125a54"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "func_02010844",
+        "source_lines": [
+          1056
+        ],
+        "source_contract": "s16 (void*,Vector3*,s16)",
+        "actual_definition": "s32 (void*,Vector3*,s16)",
+        "reference": "src/func_02010844.c:17",
+        "used_by": [
+          "func_ov077_02124d08"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+        "source_lines": [
+          579
+        ],
+        "source_contract": "int (void*,Vector3*,Vector3*,int)",
+        "actual_definition": "bool dActor_c::DetectRaycastClsn(Vector3&,Vector3&,bool)",
+        "reference": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp:7",
+        "used_by": [
+          "func_ov077_021256b4"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "source_lines": [
+          911,
+          957
+        ],
+        "source_contract": "void return; last three flags unsigned int",
+        "actual_definition": "int return; last three flags u8",
+        "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+        "used_by": [
+          "func_ov077_021250a8",
+          "func_ov077_02124eb0"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+        "source_lines": [
+          114,
+          385,
+          730
+        ],
+        "source_contract": "fifth explicit argument unsigned int",
+        "actual_definition": "current scalar C definition reads u16 startFrame",
+        "reference": "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c:26",
+        "used_by": [
+          "Spiny::InitResources",
+          "func_ov077_02125b1c",
+          "func_ov077_02125480"
+        ],
+        "callee_strict": "VERIFIED",
+        "boundary": "Shared ModelAnim member declaration retains u32 startFrame and Fix12 speed; distinguish the genuine member interface from the existing scalar bridge, do not claim all types are recovered."
+      },
+      {
+        "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+        "source_lines": [
+          837
+        ],
+        "source_contract": "last explicit argument unsigned int",
+        "actual_definition": "current scalar C definition takes u8 opacity",
+        "reference": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp:17",
+        "used_by": [
+          "func_ov077_02125304"
+        ],
+        "callee_strict": "Not separately rerun; definition inspected",
+        "boundary": "Shared real member declaration and scalar definition remain different representations; choose and document the actual called contract rather than silently keeping incompatible bridge declarations."
+      }
+    ],
+    "fresh_command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-review-repair\\manifest.json verify ov077/Spiny",
+    "fresh_exit_code": 1,
+    "fresh_whole_object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+    "whole_object_identical_to_prior_repair_input_and_base": true,
+    "strict_verified": 34,
+    "strict_differences": [],
+    "strict_blind": 0,
+    "definition_audit": "Explicit src_tu source versus srcpath-resolved actual definitions; reviewed seven-symbol diagnostic list is now empty. This is not a claim that all inherited declarations agree.",
+    "scalar_bridge_boundary": "SetAnim, DropShadow and Player::Hurt bridge changes follow the actual currently compiled scalar definitions. The real shared member forms are not rewritten to match them, and their aggregate/scalar/source-contract reconciliation remains future reconstruction. Opaque object pointer views are not claimed to be reconstructed by these scalar corrections.",
+    "drop_shadow_control_command": "python tools/linkcheck.py --name _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j --c src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp --addr 0x02010be8 --size 0x48 --module arm9",
+    "drop_shadow_control": {
+      "name": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+      "module": "arm9",
+      "addr": "0x02010be8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "no_correctness_or_provenance_deferral": true
+  },
+  "sound_review_followup": {
+    "reviewed_commit": "fb82671cd8affb9faa26c6d5f33a9062b55429e3",
+    "reviewer": "codex-spiny-independent-0920",
+    "finding_id": "SP2863-05",
+    "kind": "correctness",
+    "disposition": "fixed locally; independent successor review pending",
+    "definitions": [
+      "src/func_0201267c.cpp:8",
+      "src/func_02012694.cpp:8"
+    ],
+    "contract": "void(unsigned int,const Vector3*) for both current scalar definitions",
+    "source_declarations_corrected": 10,
+    "call_views_corrected": 11,
+    "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-sound-repair\\manifest.json verify ov077/Spiny",
+    "strict_verified": 34,
+    "diffs": [],
+    "blind": 0,
+    "whole_object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+    "identical_to_original_input_and_base": true,
+    "no_deferral": true
+  }
+}

@@ -4158,6 +4158,24 @@
     "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c6RenderEv": "ruspecial",
     "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c8BehaviorEv": "tangosdev",
     "src/actors/daObj_Mip_Key_c.cpp#_ZN15daObj_Mip_Key_c13InitResourcesEv": "tangosdev",
-    "src/actors/daObj_Mip_Key_c.cpp#daObj_Mip_Key_c_classInit": "andrewboudreau"
+    "src/actors/daObj_Mip_Key_c.cpp#daObj_Mip_Key_c_classInit": "andrewboudreau",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_cD1Ev": "tangosdev",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_cD0Ev": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_02119800": "lunavyqo",
+    "src/actors/daRNk_c.cpp#func_ov062_02119954": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_021199ac": "andrewboudreau",
+    "src/actors/daRNk_c.cpp#func_ov062_02119af0": "lunavyqo",
+    "src/actors/daRNk_c.cpp#func_ov062_02119be0": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_0211a0f0": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_0211a168": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_0211a1f4": "tangosdev",
+    "src/actors/daRNk_c.cpp#func_ov062_0211a740": "lunavyqo",
+    "src/actors/daRNk_c.cpp#func_ov062_0211a9c4": "lunavyqo",
+    "src/actors/daRNk_c.cpp#func_ov062_0211aac0": "tangosdev",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_c6RenderEv": "tangosdev",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_c8BehaviorEv": "tangosdev",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daRNk_c.cpp#_ZN7daRNk_c13InitResourcesEv": "tangosdev",
+    "src/actors/daRNk_c.cpp#daRNk_c_classInit": "tangosdev"
   }
 }

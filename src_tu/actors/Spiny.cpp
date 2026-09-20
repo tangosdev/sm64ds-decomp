@@ -111,11 +111,11 @@ struct Vector3_16;
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" BCA_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned int c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, u16 c);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
-namespace three_arg_e94 { extern "C" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */
+extern "C" void func_ov077_02125e94(void *c, int state);
 
 extern SharedFilePtr data_ov077_02127b48;
 extern SharedFilePtr data_ov077_02127b38;
@@ -128,22 +128,22 @@ int Spiny::InitResources()
 {
     BMD_File *bmd;
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b48);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b38);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x124, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov077_02127c14);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x124, *(BCA_File **)((char *)&data_ov077_02127c14 + 4), 0, 0x1000, 0);
-    if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel))
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File **)((char *)&data_ov077_02127c14 + 4), 0, 0x1000, 0);
+    if (!_ZN11ShadowModel12InitCylinderEv(&mShadowModel))
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x1b0, (dActor_c *)((char *)this), 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x1e4, (dActor_c *)((char *)this), 0x2d000, 0, (Vector3_16 *)((char *)&mPrevAngleX), (Vector3_16 *)((char *)&mAngleX));
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x2d000, 0, (Vector3_16 *)&mPrevAngleX, (Vector3_16 *)&mAngleX);
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
-    three_arg_e94::func_ov077_02125e94(((char *)this), 0, 0x2c);
-    *(M48 *)((char *)&mMatrix) = *(M48 *)&IDENTITY_MATRIX4X3;
-    func_ov077_02125304(((char *)this));
+    func_ov077_02125e94(this, 0);
+    *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;
+    func_ov077_02125304((char *)this);
     return 1;
 }
 
@@ -163,7 +163,7 @@ void func_ov077_02125e20(void* c);
 void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* c, void* cyl);
 void func_ov077_02125304(char* c);
 void _ZN8dActor_c8PoofDustEv(void* c);
-void func_02012694(int a, void* p);
+void func_02012694(unsigned int id, const Vector3* pos);
 
 extern signed char data_0209f2f8;
 }
@@ -171,24 +171,24 @@ extern signed char data_0209f2f8;
 int Spiny::Behavior()
 {
     int s = mState;
-    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
+    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv(&mWithMeshClsn)) {
         s = mState;
-        if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
-            if (DecIfAbove0_Byte((unsigned char*)((char*)&mDespawnTimer)) == 0) {
-                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+        if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000)) {
+            if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+                _ZN7fBase_c18MarkForDestructionEv(this);
                 return 1;
             }
             goto done;
         }
     }
-    func_ov077_02124c28(((char*)this));
-    func_ov077_02125e20(((char*)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x1b0);
-    func_ov077_02125304(((char*)this));
+    func_ov077_02124c28(this);
+    func_ov077_02125e20(this);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(this, &mdCcAc_c);
+    func_ov077_02125304((char *)this);
     if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {
-        _ZN8dActor_c8PoofDustEv(((char*)this));
-        func_02012694(0xc4, ((char*)this) + 0x74);
-        _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+        _ZN8dActor_c8PoofDustEv(this);
+        func_02012694(0xc4, (const Vector3*)&mCamSpacePosX);
+        _ZN7fBase_c18MarkForDestructionEv(this);
     }
 done:
     return 1;
@@ -200,17 +200,13 @@ done:
 // @symbol _ZN5Spiny6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "Spiny.h"
-struct Obj {
-  virtual void m0(); virtual void m1(); virtual void m2();
-  virtual void m3(); virtual void m4(); virtual void doit(int);
-};
 
 int Spiny::Render()
 {
   if((mFlags & 0x40000) ? 1 : 0) return 1;
   int s=mState;
-  if(s==0 || s==4) ((Obj*)((char *)&mModel))->doit(0);
-  else ((Obj*)((char *)&mModelAnim))->doit(0);
+  if(s==0 || s==4) mModel.Render(0);
+  else mModelAnim.Render(0);
   return 1;
 }
 
@@ -298,7 +294,7 @@ typedef int Fix12i;
 
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-extern void func_02012694(int id, void *pos);
+extern void func_02012694(unsigned int id, const Vector3* pos);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     Fix12i x, Fix12i y, Fix12i z,
@@ -307,8 +303,8 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
-extern void func_0201267c(int id, void *pos);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
+extern void func_0201267c(unsigned int id, const Vector3* pos);
 extern void _ZN5dCc_c5ClearEv(void *p);
 extern void _ZN5dCc_c6UpdateEv(void *p);
 
@@ -330,7 +326,7 @@ int func_ov077_02125bb4(char *c)
     r4 = func_ov077_02124ce4(c);
     if (r4) {
         if (*(unsigned char *)(c + 0x3e4) == 0) {
-            func_02012694(0xe2, c + 0x74);
+            func_02012694(0xe2, (const Vector3*)(c + 0x74));
             _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(
                 *(int *)(c + 0x5c), data_0209f32c, *(int *)(c + 0x64));
             *(unsigned int *)(c + 0x3e0) =
@@ -354,7 +350,7 @@ int func_ov077_02125bb4(char *c)
         d = *(int *)(c + 0x3dc) ? *(int *)(c + 0x60) - *(int *)(c + 0x3dc) : 0;
         if (d < -0xc8000) {
             _ZN8dActor_c8PoofDustEv(c);
-            func_02012694(0x166, c + 0x74);
+            func_02012694(0x166, (const Vector3*)(c + 0x74));
             _ZN7fBase_c18MarkForDestructionEv(c);
         } else if (*(int *)(c + 0xa8) < 0xa000) {
             *(int *)(c + 0xa8) = 0;
@@ -372,7 +368,7 @@ int func_ov077_02125bb4(char *c)
             ((int *)&vec)[1] = y;
             ((int *)&vec)[2] = z;
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, vec.x, vec.y, vec.z);
-            func_0201267c(0x109, c + 0x74);
+            func_0201267c(0x109, (const Vector3*)(c + 0x74));
         }
     }
 
@@ -386,7 +382,7 @@ int func_ov077_02125bb4(char *c)
 /* ROM ordinal 21 -- func_ov077_02125b1c, 0x02125b1c, size 0x98 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, unsigned int j);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u16 j);
 extern void func_02035684(int* p, int v);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
@@ -407,11 +403,11 @@ void func_ov077_02125b1c(char* c) {
 /* ROM ordinal 20 -- func_ov077_02125a54, 0x02125a54, size 0xc8 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-extern void _Z14ApproachLinearRsss(short *a, short b, short c);
+extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
 extern void _ZN8dActor_c8PoofDustEv(void *);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int id, const Vector3* pos);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern void func_ov077_02124d08(void *c, void *p);
@@ -432,7 +428,7 @@ int func_ov077_02125a54(char *c){
     d = 0;
   if(d < -0xc8000){
     _ZN8dActor_c8PoofDustEv(c);
-    func_02012694(0x166, c + 0x74);
+    func_02012694(0x166, (const Vector3*)(c + 0x74));
     _ZN7fBase_c18MarkForDestructionEv(c);
   }
   _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
@@ -476,7 +472,7 @@ extern void _ZN9Animation7AdvanceEv(void *p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *p, void *cc);
 extern void _ZN5dCc_c5ClearEv(void *p);
 extern void _ZN5dCc_c6UpdateEv(void *p);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int id, const Vector3* pos);
 extern void func_ov077_02125e94(void *p, int v);
 extern void func_ov077_02124eb0(void *p);
 
@@ -506,7 +502,7 @@ int func_ov077_02125908(char *c)
     if (v < -0xc8000)
     {
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0x166, c + 0x74);
+        func_02012694(0x166, (const Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
@@ -524,9 +520,8 @@ int func_ov077_02125908(char *c)
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov077_021258dc
-// recovered name: daJgm_c_Kill
-/* recovered: renamed to Class_Method */
-/* daJgm_c::Kill - recovered from vtable slot identity */
+/* State 3 entry handler: PMF record data_ov077_021278e8 is copied into
+ * data_ov077_02127c28 at +0x30 by __sinit_ov077_0212749c. */
 extern void _ZN5dCc_c5ClearEv(void *);
 int func_ov077_021258dc(char *c)
 {
@@ -580,7 +575,6 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: shared common types */
 #include "common.h"
 extern s16 data_02082214[];
-extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 #define LA(p) ((int)(p))
 int func_ov077_021256b4(char *o)
 {
@@ -639,7 +633,7 @@ int func_ov077_021256b4(char *o)
         v.x = tx; v.y = ty2; v.z = tz;
     }
 
-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(o, &v, (struct Vector3 *)(o + 0x5c), one);
+    ((dActor_c*)o)->DetectRaycastClsn(v, *(Vector3*)(o + 0x5c), one);
 
     *(int *)(o + 0xd0) = 0;
     _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);
@@ -664,11 +658,11 @@ extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
 extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* p);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern void func_0201267c(int a, void* p);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
+extern void func_0201267c(unsigned int id, const Vector3* pos);
 extern void func_ov077_02125e94(void* c, int a);
 extern void _ZN8dActor_c8PoofDustEv(void* c);
-extern void func_02012694(int a, void* p);
+extern void func_02012694(unsigned int id, const Vector3* pos);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* p);
 extern void _ZN5dCc_c5ClearEv(void* p);
@@ -699,7 +693,7 @@ extern "C" int func_ov077_02125550(char* c)
             ((int*)&vec)[1] = y;
             ((int*)&vec)[2] = z;
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, vec.x, vec.y, vec.z);
-            func_0201267c(0x109, c + 0x74);
+            func_0201267c(0x109, (const Vector3*)(c + 0x74));
         } else {
             *(int*)(c + 0xa8) = 0;
             *(short*)(c + 0x8c) = 0;
@@ -711,7 +705,7 @@ extern "C" int func_ov077_02125550(char* c)
     d = *(int*)(c + 0x3dc) ? *(int*)(c + 0x60) - *(int*)(c + 0x3dc) : 0;
     if (d < -0xc8000) {
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0x166, c + 0x74);
+        func_02012694(0x166, (const Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
@@ -731,8 +725,8 @@ extern "C" int func_ov077_02125550(char* c)
 extern "C" {
 
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, u16 e);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 }
 
 struct Base {
@@ -803,7 +797,7 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);
 extern void _ZN8dActor_c8PoofDustEv(void*);
-extern void func_02012694(int a, void* b);
+extern void func_02012694(unsigned int id, const Vector3* pos);
 extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 
 int func_ov077_021253a4(char* c)
@@ -825,7 +819,7 @@ int func_ov077_021253a4(char* c)
         v.z = *(int*)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, 1, 0x2000, 0);
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0xc4, c + 0x74);
+        func_02012694(0xc4, (const Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
     return 1;
@@ -838,7 +832,7 @@ int func_ov077_021253a4(char* c)
 extern "C" {
 void func_ov077_021251d0(void *t);
 void func_ov077_02125290(char *t);
-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, u8 j);
 void func_ov077_02125304(char *c) {
     int b = (int)((*(int*)(c+0xb0) & 0x40000) != 0);
     if (b != 0) return;
@@ -912,7 +906,7 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov077_02125e94(void* c, int a);
 short Vec3_HorzAngle(void* a, void* b);
 void _ZN6Player16IncMegaKillCountEv(void* p);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);
+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, u8 d, u8 e, u8 f);
 
 void func_ov077_021250a8(void* vc){
   char* c = (char*)vc;
@@ -950,7 +944,7 @@ void func_ov077_021250a8(void* vc){
 extern "C" int _ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn); /* decl_Actor.h view */
 extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const Vector3 *pos, unsigned int a, int fix, short b);
 extern "C" void _ZN8dActor_c8PoofDustEv(void *self);
-extern "C" void func_02012694(int a, void *pos);
+extern "C" void func_02012694(unsigned int id, const Vector3* pos);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void func_ov077_02125e94(void *c, int i);
@@ -958,7 +952,7 @@ extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3 &pos);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
 extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
-extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
+extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 cc, u8 d);
 
 extern "C" void func_ov077_02124eb0(void *thiz)
 {
@@ -973,7 +967,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         v[2] = *(int *)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, (const Vector3 *)v, 1, 0x2000, 0);
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0xc4, c + 0x74);
+        func_02012694(0xc4, (const Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
@@ -1051,13 +1045,13 @@ extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void* self);
 extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);
 extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 extern "C" void _ZN8dActor_c8PoofDustEv(void* self);
-extern "C" void func_02012694(int a, void* b);
+extern "C" void func_02012694(unsigned int id, const Vector3* pos);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern "C" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
-extern "C" s16 func_02010844(void* unused, Vector3* v, s16 angle);
+extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle);
 extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 
 extern "C" void func_ov077_02124d08(void* va, void* vw) {
@@ -1083,7 +1077,7 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {
             if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {
                 _ZN8dActor_c8PoofDustEv(a);
-                func_02012694(0xc4, a+0x74);
+                func_02012694(0xc4, (const Vector3*)(a+0x74));
                 _ZN7fBase_c18MarkForDestructionEv(a);
                 _ZN9dBgCh_GndD1Ev(&rc);
                 return;

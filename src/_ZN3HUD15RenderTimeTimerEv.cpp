@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN3HUD15RenderTimeTimerEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_Timer.h"
+#include "Timer.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HUD.h"
@@ -11,7 +11,7 @@ struct OamAttr;
 extern "C" {
 
 extern unsigned char data_ov002_02111184;
-extern int data_0209d4c8;
+extern Timer data_0209d4c8;
 
 extern struct OamAttr data_ov002_0210ce80;
 extern struct OamAttr _ZN3OAM4TIMEE;
@@ -35,7 +35,7 @@ void HUD::RenderTimeTimer()
     if (data_ov002_02111184 == 0)
         return;
 
-    t = _ZN5Timer7GetTimeEv(&data_0209d4c8) << 6;
+    t = data_0209d4c8.GetTime() << 6;
     sec = t / 33514000;
     centi = t / 33514 % 1000 / 10;
     min = sec / 60;
