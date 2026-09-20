@@ -1,0 +1,1959 @@
+{
+  "task": "pr2864-identity-promotion-0920",
+  "stage": "reconstruct",
+  "producer_session": "codex-koopa-identity-producer-0920",
+  "actual_child": "/root/repair2747",
+  "previous_session": "codex-repair-koopa2864-0920",
+  "formal_acceptance": false,
+  "input_commit": "c4689132a00f3953e13bfac312a9443c5a604493",
+  "tested_base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+  "composition_checkpoint": "0cbfad427b5c2a219cd05caf847e06eca2658199",
+  "workflow_policy": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "canary": {"symbol": "func_ov006_020cb030", "module": "ov006", "address": "0x020cb030", "size": "0x104", "verified": true},
+  "source_hashes": {
+    "config/arm9/overlays/ov062/symbols.txt": "de19855897b2f8022cce54c0a685735dc9b590d06bd56b91a5207ada67cea368",
+    "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json": "56f8936f2e15a1e93024fa3302363574e6e9ae345c897306b9759ce5543d42f8",
+    "include/Koopa.h": "5541a7d3d7db281ad7e9345dd8a5c020d80b664adfa27dfd48072f2d6c570695",
+    "src/UnloadBlueCoinModel.c": "1171e16a7174078dc2c4b06f0df177dfe166efe42192e1c4e424f79a73bd161e",
+    "src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp": "1b0493881d6b2d4db5b85cd521020bc99879eb1278d11a8e873296fdfe1b7d2b",
+    "src/_ZN3MrI16CleanupResourcesEv.cpp": "99bd5ce5a7257fe1bb1a7c1d65cc1aec6678fc4b1c379674bcd9ba4b3c6b24e9",
+    "src/_ZN9daMenbo_c8BehaviorEv.cpp": "2b42e4b0dc2a6a09350d21171b74680b05c36d648617063d4adefe9053f038aa",
+    "src/actors/daKrb_c.cpp": "bcffbe6d53b97aede5f56eb6c78d3772824ecd53ecdd6e90ff2a73e1bc5277db",
+    "src/actors/daYurei_Mucho_c.cpp": "7517ad4881845440ce97ac71bb7662073af319148677309119d6ddbcd2ba00c7",
+    "src/func_ov002_020aea30.cpp": "e639788d4cb08a92d74b16785cd05171249f1b8a58e7ac1e98c51ae13fd46d77",
+    "src/func_ov065_0211704c.c": "7bd86713c7f5eae5ce789172a2f7eeb9f406296cd71a0664cd409b7b832cd23a",
+    "src/func_ov081_021243cc.cpp": "cfc1ee0aa8c700f77960367173742c9a64cf7a0a2566fae5f562bff4156e9f15",
+    "src/func_ov090_021310b4.c": "49c4668d52c58bac946a0b3212bc31ca1a1e5d7e9e26b15032b8cad814c845b5",
+    "src/func_ov091_021339fc.c": "13b865a168dc527feeda832504cafe57dbd1115d349cd116c720e392cf9406f3",
+    "src/game/actors/d_a_propeller_heyho.cpp": "41ac6eae864ae5d9b303be74ba31876d38d26c2c9c60680ed7632e1abfd459ae",
+    "src_tu/actors/Koopa+KoopaSmall.cpp": "55ed46b64a7a1eb59d232584e97e1ccf03fa4644566d01cccdd702a73cf85b4e",
+    "symbols/actor_renames.tsv": "32e2a331dce09efe2b93d532b837302d3a1f122a9b173d9c724aae62686999a2"
+  },
+  "source_control": {"raw_object_sha256": "24100cde460a1703e174ef4c0ec071463ec51e669d0ca8b62625f8f16d11a041", "size": 26664, "strict": 39, "unlicensed": 13, "policy_errors": 2, "order_error": [0, 1]},
+  "native_candidate": {
+    "raw_object_sha256": "d8768734b754cadfe65e74495e2131d5262b8fdc0f3f104799d91e74b63de7e1",
+    "size": 26376,
+    "strict": [
+      {"symbol": "_ZN8daNknk_cD1Ev", "module": "ov062", "address": "0x021174cc", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_cD0Ev", "module": "ov062", "address": "0x02117514", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117570", "module": "ov062", "address": "0x02117570", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_021175c0", "module": "ov062", "address": "0x021175c0", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117724", "module": "ov062", "address": "0x02117724", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117994", "module": "ov062", "address": "0x02117994", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_021179e4", "module": "ov062", "address": "0x021179e4", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117a3c", "module": "ov062", "address": "0x02117a3c", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117acc", "module": "ov062", "address": "0x02117acc", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117b48", "module": "ov062", "address": "0x02117b48", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117b60", "module": "ov062", "address": "0x02117b60", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117b9c", "module": "ov062", "address": "0x02117b9c", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117bf4", "module": "ov062", "address": "0x02117bf4", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02117c98", "module": "ov062", "address": "0x02117c98", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118004", "module": "ov062", "address": "0x02118004", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118058", "module": "ov062", "address": "0x02118058", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_021180d4", "module": "ov062", "address": "0x021180d4", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_0211811c", "module": "ov062", "address": "0x0211811c", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_021181a0", "module": "ov062", "address": "0x021181a0", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118258", "module": "ov062", "address": "0x02118258", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118334", "module": "ov062", "address": "0x02118334", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_021183e0", "module": "ov062", "address": "0x021183e0", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118588", "module": "ov062", "address": "0x02118588", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118718", "module": "ov062", "address": "0x02118718", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118a00", "module": "ov062", "address": "0x02118a00", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118a50", "module": "ov062", "address": "0x02118a50", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118b4c", "module": "ov062", "address": "0x02118b4c", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118cdc", "module": "ov062", "address": "0x02118cdc", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "func_ov062_02118de8", "module": "ov062", "address": "0x02118de8", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c16CleanupResourcesEv", "module": "ov062", "address": "0x02118f04", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c16OnPendingDestroyEv", "module": "ov062", "address": "0x02118f80", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c6RenderEv", "module": "ov062", "address": "0x02118f84", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c8BehaviorEv", "module": "ov062", "address": "0x021190ec", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c13InitResourcesEv", "module": "ov062", "address": "0x02119420", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c16OnAimedAtWithEggEv", "module": "ov062", "address": "0x02119608", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "module": "ov062", "address": "0x02119628", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c13OnYoshiTryEatEv", "module": "ov062", "address": "0x021196a8", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "daNknk_c_classInit_NOKONOKO_S", "module": "ov062", "address": "0x021196bc", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "daNknk_c_classInit_NOKONOKO", "module": "ov062", "address": "0x0211970c", "verdict": "VERIFIED", "blind": 0, "diffs": []}
+    ],
+    "D1_section": 22,
+    "D0_section": 24,
+    "D2_emitted": false,
+    "entire_object_unchanged_by_subsequent_contract_repairs": true,
+    "defined_symbols": [
+      {"name": "_ZTI7fBase_c", "size": 8, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 5},
+      {"name": "_ZTS7fBase_c", "size": 9, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 8},
+      {"name": "_ZTS7dBase_c", "size": 9, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 7},
+      {"name": "_ZTS8dActor_c", "size": 10, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 9},
+      {"name": "_ZTS8daNknk_c", "size": 10, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 10},
+      {"name": "_ZTI12dEnemyBase_c", "size": 12, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 11},
+      {"name": "_ZTS12dEnemyBase_c", "size": 15, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 19},
+      {"name": "_ZTI8dActor_c", "size": 12, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 15},
+      {"name": "_ZTI7dBase_c", "size": 12, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 13},
+      {"name": "_ZTI8daNknk_c", "size": 12, "type": "STT_OBJECT", "binding": "STB_LOPROC", "section": 17},
+      {"name": "_ZTV8daNknk_c", "size": 132, "type": "STT_OBJECT", "binding": "STB_GLOBAL", "section": 20},
+      {"name": "_ZN8daNknk_cD0Ev", "size": 92, "type": "STT_FUNC", "binding": "STB_LOPROC", "section": 24},
+      {"name": "_ZN8daNknk_c6RenderEv", "size": 360, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 83},
+      {"name": "_ZN8daNknk_c16OnPendingDestroyEv", "size": 4, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 82},
+      {"name": "_ZN8daNknk_c13InitResourcesEv", "size": 488, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 87},
+      {"name": "_ZN8daNknk_c16CleanupResourcesEv", "size": 124, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 80},
+      {"name": "_ZN8daNknk_c8BehaviorEv", "size": 820, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 85},
+      {"name": "_ZN8daNknk_c16OnAimedAtWithEggEv", "size": 32, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 89},
+      {"name": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "size": 128, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 90},
+      {"name": "_ZN8daNknk_c13OnYoshiTryEatEv", "size": 20, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 92},
+      {"name": "_ZN8daNknk_cD1Ev", "size": 72, "type": "STT_FUNC", "binding": "STB_LOPROC", "section": 22},
+      {"name": "func_ov062_02117570", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 26},
+      {"name": "func_ov062_021175c0", "size": 356, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 28},
+      {"name": "_ZN7Vector3D1Ev", "size": 4, "type": "STT_FUNC", "binding": "STB_LOPROC", "section": 30},
+      {"name": "func_ov062_02117724", "size": 624, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 31},
+      {"name": "func_ov062_02117994", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 33},
+      {"name": "func_ov062_021179e4", "size": 88, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 35},
+      {"name": "func_ov062_02117a3c", "size": 144, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 37},
+      {"name": "func_ov062_02118a00", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 70},
+      {"name": "func_ov062_02118718", "size": 744, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 68},
+      {"name": "func_ov062_02118588", "size": 400, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 66},
+      {"name": "func_ov062_02118de8", "size": 284, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 78},
+      {"name": "func_ov062_021183e0", "size": 424, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 64},
+      {"name": "func_ov062_02117acc", "size": 124, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 39},
+      {"name": "func_ov062_02118cdc", "size": 268, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 76},
+      {"name": "func_ov062_02118b4c", "size": 400, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 74},
+      {"name": "func_ov062_02118a50", "size": 252, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 72},
+      {"name": "func_ov062_02117b48", "size": 24, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 41},
+      {"name": "func_ov062_02117b60", "size": 60, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 42},
+      {"name": "func_ov062_02117b9c", "size": 88, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 44},
+      {"name": "func_ov062_02117bf4", "size": 164, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 46},
+      {"name": "func_ov062_02117c98", "size": 876, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 48},
+      {"name": "func_ov062_02118004", "size": 84, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 50},
+      {"name": "func_ov062_02118058", "size": 124, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 52},
+      {"name": "func_ov062_021180d4", "size": 72, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 54},
+      {"name": "func_ov062_0211811c", "size": 132, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 56},
+      {"name": "func_ov062_021181a0", "size": 184, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 58},
+      {"name": "func_ov062_02118258", "size": 220, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 60},
+      {"name": "func_ov062_02118334", "size": 172, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 62},
+      {"name": "daNknk_c_classInit_NOKONOKO_S", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 93},
+      {"name": "daNknk_c_classInit_NOKONOKO", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 95}
+    ]
+  },
+  "metadata": {
+    "object_sha256": "d8768734b754cadfe65e74495e2131d5262b8fdc0f3f104799d91e74b63de7e1",
+    "metadata": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "address_point": "0x2086d70",
+        "storage_start": "0x2086d70",
+        "size": 8,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "74a70902606e0802",
+        "retail_hex": "74a70902606e0802",
+        "relocations": [{"off": 4, "type": 2, "sym": "_ZTS7fBase_c", "addr": 34106976, "add": 0}, {"off": 0, "type": 2, "sym": "_ZTVN3abi17__class_type_infoE", "addr": 34187124, "add": 0}]
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "address_point": "0x2086e60",
+        "storage_start": "0x2086e60",
+        "size": 9,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "3766426173655f6300",
+        "retail_hex": "3766426173655f6300",
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "address_point": "0x2086e54",
+        "storage_start": "0x2086e54",
+        "size": 9,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "3764426173655f6300",
+        "retail_hex": "3764426173655f6300",
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "address_point": "0x208e384",
+        "storage_start": "0x208e384",
+        "size": 10,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "38644163746f725f6300",
+        "retail_hex": "38644163746f725f6300",
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTS8daNknk_c",
+        "module": "ov062",
+        "address_point": "0x211da5c",
+        "storage_start": "0x211da5c",
+        "size": 10,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "3864614e6b6e6b5f6300",
+        "retail_hex": "3864614e6b6e6b5f6300",
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTI12dEnemyBase_c",
+        "module": "ov002",
+        "address_point": "0x21081c0",
+        "storage_start": "0x21081c0",
+        "size": 12,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "64a70902cc81100290e30802",
+        "retail_hex": "64a70902cc81100290e30802",
+        "relocations": [
+          {"off": 4, "type": 2, "sym": "_ZTS12dEnemyBase_c", "addr": 34636236, "add": 0},
+          {"off": 8, "type": 2, "sym": "_ZTI8dActor_c", "addr": 34136976, "add": 0},
+          {"off": 0, "type": 2, "sym": "_ZTVN3abi20__si_class_type_infoE", "addr": 34187108, "add": 0}
+        ]
+      },
+      {
+        "symbol": "_ZTS12dEnemyBase_c",
+        "module": "ov002",
+        "address_point": "0x21081cc",
+        "storage_start": "0x21081cc",
+        "size": 15,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "313264456e656d79426173655f6300",
+        "retail_hex": "313264456e656d79426173655f6300",
+        "relocations": []
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "address_point": "0x208e390",
+        "storage_start": "0x208e390",
+        "size": 12,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "64a7090284e30802786e0802",
+        "retail_hex": "64a7090284e30802786e0802",
+        "relocations": [
+          {"off": 4, "type": 2, "sym": "_ZTS8dActor_c", "addr": 34136964, "add": 0},
+          {"off": 8, "type": 2, "sym": "_ZTI7dBase_c", "addr": 34107000, "add": 0},
+          {"off": 0, "type": 2, "sym": "_ZTVN3abi20__si_class_type_infoE", "addr": 34187108, "add": 0}
+        ]
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "address_point": "0x2086e78",
+        "storage_start": "0x2086e78",
+        "size": 12,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "64a70902546e0802706d0802",
+        "retail_hex": "64a70902546e0802706d0802",
+        "relocations": [
+          {"off": 4, "type": 2, "sym": "_ZTS7dBase_c", "addr": 34106964, "add": 0},
+          {"off": 8, "type": 2, "sym": "_ZTI7fBase_c", "addr": 34106736, "add": 0},
+          {"off": 0, "type": 2, "sym": "_ZTVN3abi20__si_class_type_infoE", "addr": 34187108, "add": 0}
+        ]
+      },
+      {
+        "symbol": "_ZTI8daNknk_c",
+        "module": "ov062",
+        "address_point": "0x211da68",
+        "storage_start": "0x211da68",
+        "size": 12,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "64a709025cda1102c0811002",
+        "retail_hex": "64a709025cda1102c0811002",
+        "relocations": [
+          {"off": 4, "type": 2, "sym": "_ZTS8daNknk_c", "addr": 34724444, "add": 0},
+          {"off": 8, "type": 2, "sym": "_ZTI12dEnemyBase_c", "addr": 34636224, "add": 0},
+          {"off": 0, "type": 2, "sym": "_ZTVN3abi20__si_class_type_infoE", "addr": 34187108, "add": 0}
+        ]
+      },
+      {
+        "symbol": "_ZTV8daNknk_c",
+        "module": "ov062",
+        "address_point": "0x211dab4",
+        "storage_start": "0x211daac",
+        "size": 132,
+        "blind": [],
+        "exact_all_bytes": true,
+        "emitted_linked_hex": "0000000068da1102209411026812010244120102048f11022012010214120102ec901102d40f0102c80f0102848f1102780f01026c0f0102808f11027c3504029c34040294340402cc74110214751102a8961102289611024c0101024801010244010102400101023c0101023801010234010102300101022c01010208961102dc000102",
+        "retail_hex": "0000000068da1102209411026812010244120102048f11022012010214120102ec901102d40f0102c80f0102848f1102780f01026c0f0102808f11027c3504029c34040294340402cc74110214751102a8961102289611024c0101024801010244010102400101023c0101023801010234010102300101022c01010208961102dc000102",
+        "relocations": [
+          {"off": 4, "type": 2, "sym": "_ZTI8daNknk_c", "addr": 34724456, "add": 0},
+          {"off": 68, "type": 2, "sym": "_ZN7fBase_c13OnHeapCreatedEv", "addr": 33830036, "add": 0},
+          {"off": 64, "type": 2, "sym": "_ZN7fBase_c9Virtual38Ejj", "addr": 33830044, "add": 0},
+          {"off": 60, "type": 2, "sym": "_ZN7fBase_c9Virtual34Ejj", "addr": 33830268, "add": 0},
+          {"off": 128, "type": 2, "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv", "addr": 33620188, "add": 0},
+          {"off": 120, "type": 2, "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_", "addr": 33620268, "add": 0},
+          {"off": 116, "type": 2, "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player", "addr": 33620272, "add": 0},
+          {"off": 112, "type": 2, "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_", "addr": 33620276, "add": 0},
+          {"off": 108, "type": 2, "sym": "_ZN8dActor_c8OnPushedERS_", "addr": 33620280, "add": 0},
+          {"off": 104, "type": 2, "sym": "_ZN8dActor_c8OnKickedERS_", "addr": 33620284, "add": 0},
+          {"off": 100, "type": 2, "sym": "_ZN8dActor_c11OnAttacked2ERS_", "addr": 33620288, "add": 0},
+          {"off": 96, "type": 2, "sym": "_ZN8dActor_c11OnAttacked1ERS_", "addr": 33620292, "add": 0},
+          {"off": 92, "type": 2, "sym": "_ZN8dActor_c15OnGroundPoundedERS_", "addr": 33620296, "add": 0},
+          {"off": 88, "type": 2, "sym": "_ZN8dActor_c9Virtual50Ev", "addr": 33620300, "add": 0},
+          {"off": 52, "type": 2, "sym": "_ZN8dActor_c11AfterRenderEj", "addr": 33623916, "add": 0},
+          {"off": 48, "type": 2, "sym": "_ZN8dActor_c12BeforeRenderEv", "addr": 33623928, "add": 0},
+          {"off": 40, "type": 2, "sym": "_ZN8dActor_c13AfterBehaviorEj", "addr": 33624008, "add": 0},
+          {"off": 36, "type": 2, "sym": "_ZN8dActor_c14BeforeBehaviorEv", "addr": 33624020, "add": 0},
+          {"off": 28, "type": 2, "sym": "_ZN8dActor_c21AfterCleanupResourcesEj", "addr": 33624596, "add": 0},
+          {"off": 24, "type": 2, "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv", "addr": 33624608, "add": 0},
+          {"off": 16, "type": 2, "sym": "_ZN8dActor_c18AfterInitResourcesEj", "addr": 33624644, "add": 0},
+          {"off": 12, "type": 2, "sym": "_ZN8dActor_c19BeforeInitResourcesEv", "addr": 33624680, "add": 0},
+          {"off": 76, "type": 2, "sym": "_ZN8daNknk_cD0Ev", "addr": 34698516, "add": 0},
+          {"off": 44, "type": 2, "sym": "_ZN8daNknk_c6RenderEv", "addr": 34705284, "add": 0},
+          {"off": 56, "type": 2, "sym": "_ZN8daNknk_c16OnPendingDestroyEv", "addr": 34705280, "add": 0},
+          {"off": 8, "type": 2, "sym": "_ZN8daNknk_c13InitResourcesEv", "addr": 34706464, "add": 0},
+          {"off": 20, "type": 2, "sym": "_ZN8daNknk_c16CleanupResourcesEv", "addr": 34705156, "add": 0},
+          {"off": 32, "type": 2, "sym": "_ZN8daNknk_c8BehaviorEv", "addr": 34705644, "add": 0},
+          {"off": 124, "type": 2, "sym": "_ZN8daNknk_c16OnAimedAtWithEggEv", "addr": 34706952, "add": 0},
+          {"off": 84, "type": 2, "sym": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "addr": 34706984, "add": 0},
+          {"off": 80, "type": 2, "sym": "_ZN8daNknk_c13OnYoshiTryEatEv", "addr": 34707112, "add": 0},
+          {"off": 72, "type": 2, "sym": "_ZN8daNknk_cD1Ev", "addr": 34698444, "add": 0}
+        ]
+      }
+    ],
+    "weak_duplicate": {"name": "_ZN7Vector3D1Ev", "module": "arm9", "addr": "0x020072c0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+    "policy": {
+      "requested": ["_ZN7Vector3D1Ev"],
+      "deadstripped": ["_ZN7Vector3D1Ev"],
+      "droppedSections": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daNknk_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI8daNknk_c",
+        "_ZTV8daNknk_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daNknk_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daNknk_c",
+        "_ZTV8daNknk_c"
+      ]
+    },
+    "policy_errors": [],
+    "unlicensed": [[], [], []]
+  },
+  "complete_output": {
+    "functions": 39,
+    "all_criteria": "PASS",
+    "unlicensed_functions": [],
+    "unlicensed_objects": [],
+    "unlicensed_sections": [],
+    "policy_errors": [],
+    "emission_order": "all39 ROM order",
+    "data": [],
+    "bss": []
+  },
+  "external_repairs": [
+    {
+      "path": "src/actors/daKrb_c.cpp",
+      "object_sha256": "91df62ca7d1029f7f29406e06ca8613021a43856f7e5f3a2a51b492c5257f189",
+      "control_object_sha256": "91df62ca7d1029f7f29406e06ca8613021a43856f7e5f3a2a51b492c5257f189",
+      "whole_object_identical": true,
+      "strict_count": 35,
+      "strict": [
+        {"name": "_ZN7daKrb_cD1Ev", "module": "ov084", "addr": "0x02129020", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_cD0Ev", "module": "ov084", "addr": "0x02129070", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_021290d4", "module": "ov084", "addr": "0x021290d4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129168", "module": "ov084", "addr": "0x02129168", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129238", "module": "ov084", "addr": "0x02129238", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212934c", "module": "ov084", "addr": "0x0212934c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129498", "module": "ov084", "addr": "0x02129498", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_021294d0", "module": "ov084", "addr": "0x021294d0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_021296b0", "module": "ov084", "addr": "0x021296b0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_021296cc", "module": "ov084", "addr": "0x021296cc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129864", "module": "ov084", "addr": "0x02129864", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_021298d0", "module": "ov084", "addr": "0x021298d0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129a00", "module": "ov084", "addr": "0x02129a00", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129c9c", "module": "ov084", "addr": "0x02129c9c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129cf4", "module": "ov084", "addr": "0x02129cf4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_02129ed4", "module": "ov084", "addr": "0x02129ed4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212a580", "module": "ov084", "addr": "0x0212a580", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212a6f8", "module": "ov084", "addr": "0x0212a6f8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212a774", "module": "ov084", "addr": "0x0212a774", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212aab0", "module": "ov084", "addr": "0x0212aab0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212ab48", "module": "ov084", "addr": "0x0212ab48", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212abd4", "module": "ov084", "addr": "0x0212abd4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212af74", "module": "ov084", "addr": "0x0212af74", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov084_0212b2dc", "module": "ov084", "addr": "0x0212b2dc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c16OnAimedAtWithEggEv", "module": "ov084", "addr": "0x0212b30c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c13OnTurnIntoEggER6Player", "module": "ov084", "addr": "0x0212b344", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c16CleanupResourcesEv", "module": "ov084", "addr": "0x0212b510", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c16OnPendingDestroyEv", "module": "ov084", "addr": "0x0212b5b8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c6RenderEv", "module": "ov084", "addr": "0x0212b5bc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c8BehaviorEv", "module": "ov084", "addr": "0x0212b6ec", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c13InitResourcesEv", "module": "ov084", "addr": "0x0212bc30", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c13OnYoshiTryEatEv", "module": "ov084", "addr": "0x0212bfc0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "daKrb_c_classInit_KURIBO_L", "module": "ov084", "addr": "0x0212bff8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "daKrb_c_classInit_KURIBO_S", "module": "ov084", "addr": "0x0212c054", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "daKrb_c_classInit_KURIBO", "module": "ov084", "addr": "0x0212c0b0", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+      ],
+      "policy": {
+        "requested": ["_ZN7daKrb_cD2Ev", "_ZN7Vector3D1Ev"],
+        "deadstripped": ["_ZN7Vector3D1Ev", "_ZN7daKrb_cD2Ev"],
+        "droppedSections": [9, 10, 16, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTI7dBase_c",
+          "_ZTS7dBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS8dActor_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTI11dCapEnemy_c",
+          "_ZTS11dCapEnemy_c",
+          "_ZTI7daKrb_c",
+          "_ZTS7daKrb_c",
+          "_ZTV7daKrb_c"
+        ],
+        "dataExternalized": [
+          "_ZTI11dCapEnemy_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7daKrb_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS11dCapEnemy_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7daKrb_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c",
+          "_ZTV7daKrb_c"
+        ]
+      },
+      "policy_errors": [],
+      "unlicensed": [[], [], []]
+    },
+    {
+      "path": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+      "object_sha256": "5f47c13e9f4389f80ab4dc22456ed43f905f84f456c818cc43e98e4d1277641f",
+      "control_object_sha256": "5f47c13e9f4389f80ab4dc22456ed43f905f84f456c818cc43e98e4d1277641f",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "_ZN9daMenbo_c8BehaviorEv", "module": "ov090", "addr": "0x02131f88", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/func_ov065_0211704c.c",
+      "object_sha256": "ff4fde95b28c5d590b145a91fbb3d3b4e56677deaec11c0fc8e11fe29165b1ec",
+      "control_object_sha256": "ff4fde95b28c5d590b145a91fbb3d3b4e56677deaec11c0fc8e11fe29165b1ec",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "func_ov065_0211704c", "module": "ov065", "addr": "0x0211704c", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/func_ov081_021243cc.cpp",
+      "object_sha256": "f4c0c6f37f49c9c21b3fc8da14dd8dc4c2e4c2cdeb72363b85dc93b8a4e15481",
+      "control_object_sha256": "f4c0c6f37f49c9c21b3fc8da14dd8dc4c2e4c2cdeb72363b85dc93b8a4e15481",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "func_ov081_021243cc", "module": "ov081", "addr": "0x021243cc", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/func_ov091_021339fc.c",
+      "object_sha256": "62ef27c795617f6ce3ec9a135fefc3328be0adc3cfcad5c2b3b293b8919c9732",
+      "control_object_sha256": "62ef27c795617f6ce3ec9a135fefc3328be0adc3cfcad5c2b3b293b8919c9732",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "func_ov091_021339fc", "module": "ov091", "addr": "0x021339fc", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/actors/daYurei_Mucho_c.cpp",
+      "object_sha256": "04dc54d928a32efd2f05316c4e811c2d5e86d0da2d4649363e9d55050bf71ccd",
+      "control_object_sha256": "04dc54d928a32efd2f05316c4e811c2d5e86d0da2d4649363e9d55050bf71ccd",
+      "whole_object_identical": true,
+      "strict_count": 23,
+      "strict": [
+        {"name": "_ZN15daYurei_Mucho_cD1Ev", "module": "ov065", "addr": "0x02115ee0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_cD0Ev", "module": "ov065", "addr": "0x02115f28", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02115f84", "module": "ov065", "addr": "0x02115f84", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02115ff0", "module": "ov065", "addr": "0x02115ff0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_021162c0", "module": "ov065", "addr": "0x021162c0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02116328", "module": "ov065", "addr": "0x02116328", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02116364", "module": "ov065", "addr": "0x02116364", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02116588", "module": "ov065", "addr": "0x02116588", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_021165d8", "module": "ov065", "addr": "0x021165d8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_0211672c", "module": "ov065", "addr": "0x0211672c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_02116744", "module": "ov065", "addr": "0x02116744", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_021168a8", "module": "ov065", "addr": "0x021168a8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_0211691c", "module": "ov065", "addr": "0x0211691c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov065_0211696c", "module": "ov065", "addr": "0x0211696c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c16CleanupResourcesEv", "module": "ov065", "addr": "0x02116ae8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c16OnPendingDestroyEv", "module": "ov065", "addr": "0x02116b30", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c6RenderEv", "module": "ov065", "addr": "0x02116b34", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c8BehaviorEv", "module": "ov065", "addr": "0x02116b84", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c13InitResourcesEv", "module": "ov065", "addr": "0x02116e10", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv", "module": "ov065", "addr": "0x02116f0c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player", "module": "ov065", "addr": "0x02116f14", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c13OnYoshiTryEatEv", "module": "ov065", "addr": "0x02116f40", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "daYurei_Mucho_c_classInit", "module": "ov065", "addr": "0x02116f48", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+      ],
+      "policy": {
+        "requested": ["_ZN7Vector3D1Ev", "_ZN7V3QuintD1Ev"],
+        "deadstripped": ["_ZN7V3QuintD1Ev", "_ZN7Vector3D1Ev"],
+        "droppedSections": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 36],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTI8dActor_c",
+          "_ZTI15daYurei_Mucho_c",
+          "_ZTS15daYurei_Mucho_c",
+          "_ZTV15daYurei_Mucho_c"
+        ],
+        "dataExternalized": [
+          "_ZTI12dEnemyBase_c",
+          "_ZTI15daYurei_Mucho_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS15daYurei_Mucho_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c",
+          "_ZTV15daYurei_Mucho_c"
+        ]
+      },
+      "policy_errors": [],
+      "unlicensed": [[], [], []]
+    },
+    {
+      "path": "src/func_ov090_021310b4.c",
+      "object_sha256": "fb80edbe15dd30effb86fe51708105bbe05d101898eda0763034226bcfea5498",
+      "control_object_sha256": "fb80edbe15dd30effb86fe51708105bbe05d101898eda0763034226bcfea5498",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "func_ov090_021310b4", "module": "ov090", "addr": "0x021310b4", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/game/actors/d_a_propeller_heyho.cpp",
+      "object_sha256": "6e430b7a5b328ee6eb71156a53431a54a2bb1de0f961c4ea86b6af54f0c686e1",
+      "control_object_sha256": "6e430b7a5b328ee6eb71156a53431a54a2bb1de0f961c4ea86b6af54f0c686e1",
+      "whole_object_identical": true,
+      "strict_count": 27,
+      "strict": [
+        {"name": "_ZN19daPropeller_Heyho_cD1Ev", "module": "ov070", "addr": "0x0211f000", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_cD0Ev", "module": "ov070", "addr": "0x0211f048", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f0a4", "module": "ov070", "addr": "0x0211f0a4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f100", "module": "ov070", "addr": "0x0211f100", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f368", "module": "ov070", "addr": "0x0211f368", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f450", "module": "ov070", "addr": "0x0211f450", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f48c", "module": "ov070", "addr": "0x0211f48c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f5f0", "module": "ov070", "addr": "0x0211f5f0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f62c", "module": "ov070", "addr": "0x0211f62c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f694", "module": "ov070", "addr": "0x0211f694", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211f6e0", "module": "ov070", "addr": "0x0211f6e0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211fa80", "module": "ov070", "addr": "0x0211fa80", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211fae4", "module": "ov070", "addr": "0x0211fae4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211fd60", "module": "ov070", "addr": "0x0211fd60", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211fd98", "module": "ov070", "addr": "0x0211fd98", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_0211ffa8", "module": "ov070", "addr": "0x0211ffa8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "FlyGuy_ChangeState", "module": "ov070", "addr": "0x02120020", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "func_ov070_02120070", "module": "ov070", "addr": "0x02120070", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv", "module": "ov070", "addr": "0x02120150", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv", "module": "ov070", "addr": "0x021201bc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c6RenderEv", "module": "ov070", "addr": "0x021201c0", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c8BehaviorEv", "module": "ov070", "addr": "0x02120210", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c13InitResourcesEv", "module": "ov070", "addr": "0x021203b4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv", "module": "ov070", "addr": "0x021204e4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player", "module": "ov070", "addr": "0x021204ec", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv", "module": "ov070", "addr": "0x02120518", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "daPropeller_Heyho_c_classInit", "module": "ov070", "addr": "0x02120520", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+      ],
+      "policy": {"requested": ["_ZN7Vector3D1Ev"], "deadstripped": ["_ZN7Vector3D1Ev"], "droppedSections": [30], "data": [], "dataExternalized": []},
+      "policy_errors": [],
+      "unlicensed": [
+        [],
+        [
+          {"name": "_ZTI7fBase_c", "shndx": 5, "value": 0, "size": 8, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTS7fBase_c", "shndx": 8, "value": 0, "size": 9, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTS7dBase_c", "shndx": 7, "value": 0, "size": 9, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTS8dActor_c", "shndx": 9, "value": 0, "size": 10, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTI7dBase_c", "shndx": 10, "value": 0, "size": 12, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTI12dEnemyBase_c", "shndx": 12, "value": 0, "size": 12, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTS12dEnemyBase_c", "shndx": 18, "value": 0, "size": 15, "bind": "STB_LOPROC", "type": "STT_OBJECT"},
+          {"name": "_ZTI8dActor_c", "shndx": 14, "value": 0, "size": 12, "bind": "STB_LOPROC", "type": "STT_OBJECT"}
+        ],
+        []
+      ]
+    },
+    {
+      "path": "src/UnloadBlueCoinModel.c",
+      "object_sha256": "f18d5a6e9dcac1214cb72e6c8b78a4eb29f77cd780d58701414321018745e9e1",
+      "control_object_sha256": "f18d5a6e9dcac1214cb72e6c8b78a4eb29f77cd780d58701414321018745e9e1",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "UnloadBlueCoinModel", "module": "arm9", "addr": "0x0200fe70", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/_ZN3MrI16CleanupResourcesEv.cpp",
+      "object_sha256": "72d561bde19ab5b5724458f73f15a87700da4923dae2f38648d3deddc0ff9b07",
+      "control_object_sha256": "72d561bde19ab5b5724458f73f15a87700da4923dae2f38648d3deddc0ff9b07",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "_ZN3MrI16CleanupResourcesEv", "module": "ov071", "addr": "0x02121650", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/func_ov002_020aea30.cpp",
+      "object_sha256": "d2d1b111e930219ec8bbef2230b7f5199bcd18eae9e56eb1f78728233f00fc4b",
+      "control_object_sha256": "d2d1b111e930219ec8bbef2230b7f5199bcd18eae9e56eb1f78728233f00fc4b",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "func_ov002_020aea30", "module": "ov002", "addr": "0x020aea30", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    },
+    {
+      "path": "src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp",
+      "object_sha256": "fe841f610ff8411e863618926cc70080f0f0e28d4fad86cc936c99c2d5051cf7",
+      "control_object_sha256": "fe841f610ff8411e863618926cc70080f0f0e28d4fad86cc936c99c2d5051cf7",
+      "whole_object_identical": true,
+      "strict_count": 1,
+      "strict": [{"name": "_ZN15BookShotSpawner16CleanupResourcesEv", "module": "ov020", "addr": "0x02112290", "verdict": "VERIFIED", "diffs": [], "blind": 0}]
+    }
+  ],
+  "external_strict_total": 94,
+  "combined_strict_total": 133,
+  "source_form_probes": {
+    "spawn_initial_forms": [
+      {
+        "tag": "spawn_init",
+        "form": "    Vector3 pos = {c->mPosX, c->mPosY + 0x78000, c->mPosZ};",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null},
+            {"off": "+0x24", "sym": null, "target": null},
+            {"off": "+0x28", "sym": null, "target": null},
+            {"off": "+0x2c", "sym": null, "target": null},
+            {"off": "+0x30", "sym": null, "target": null},
+            {"off": "+0x34", "sym": null, "target": null},
+            {"off": "+0x38", "sym": null, "target": null},
+            {"off": "+0x3c", "sym": null, "target": null}
+          ],
+          "blind": 0
+        },
+        "object_sha256": "0c98f2d42c8eeee630151b4691e8d38907a472ec3bb319cf08b914feba13ebcd"
+      },
+      {
+        "tag": "spawn_locals",
+        "form": "    int x = c->mPosX, y = c->mPosY + 0x78000, z = c->mPosZ;\n    Vector3 pos;\n    pos.x=x; pos.y=y; pos.z=z;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null}
+          ],
+          "blind": 0
+        },
+        "object_sha256": "e728add55a33ac04e8ecdc4f816bc928ec28928b5a350490ac4fab58bf034293"
+      },
+      {
+        "tag": "spawn_yzx",
+        "form": "    int y=c->mPosY, z=c->mPosZ, x=c->mPosX;\n    Vector3 pos;\n    pos.y=y+0x78000; pos.z=z; pos.x=x;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null}
+          ],
+          "blind": 0
+        },
+        "object_sha256": "6a0fbf137be790e4847fdadb0610908503d08f55c05b86a4948ad49219bf0efa"
+      },
+      {
+        "tag": "spawn_copy",
+        "form": "    Vector3 pos = *(const Vector3*)&c->mPosX;\n    pos.y += 0x78000;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null},
+            {"off": "+0x24", "sym": null, "target": null},
+            {"off": "+0x28", "sym": null, "target": null},
+            {"off": "+0x2c", "sym": null, "target": null},
+            {"off": "+0x30", "sym": null, "target": null},
+            {"off": "+0x38", "sym": null, "target": null},
+            {"off": "+0x3c", "sym": null, "target": null},
+            {"off": "+0x40", "sym": null, "target": null},
+            {"off": "+0x44", "sym": null, "target": null},
+            {"off": "+0x48", "sym": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as", "target": "0x02010e2c"},
+            {"off": "+0x4c", "sym": null, "target": null},
+            {"off": "+0x50", "sym": null, "target": null},
+            {"off": "+0x54", "sym": null, "target": null},
+            {"off": "+0x58", "sym": null, "target": null}
+          ],
+          "blind": 0
+        },
+        "object_sha256": "706b03fb15346587b16f3937c0e0c72bde0fb54f74157e0e5b0535b669a627ec"
+      },
+      {
+        "tag": "unload_noarg",
+        "check": {
+          "name": "_ZN8daNknk_c16CleanupResourcesEv",
+          "module": "ov062",
+          "addr": "0x02118f04",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x0", "sym": null, "target": null},
+            {"off": "+0x4", "sym": null, "target": null},
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null},
+            {"off": "+0x24", "sym": null, "target": null},
+            {"off": "+0x28", "sym": null, "target": null},
+            {"off": "+0x2c", "sym": null, "target": null},
+            {"off": "+0x30", "sym": "_ZN13SharedFilePtr7ReleaseEv", "target": "0x02017b64"},
+            {"off": "+0x34", "sym": null, "target": null},
+            {"off": "+0x38", "sym": null, "target": null},
+            {"off": "+0x3c", "sym": null, "target": null},
+            {"off": "+0x40", "sym": "_ZN13SharedFilePtr7ReleaseEv", "target": "0x02017b64"},
+            {"off": "+0x44", "sym": null, "target": null},
+            {"off": "+0x48", "sym": null, "target": null},
+            {"off": "+0x4c", "sym": null, "target": null},
+            {"off": "+0x50", "sym": "_ZN13SharedFilePtr7ReleaseEv", "target": "0x02017b64"},
+            {"off": "+0x54", "sym": null, "target": null},
+            {"off": "+0x58", "sym": null, "target": null},
+            {"off": "+0x5c", "sym": null, "target": null},
+            {"off": "+0x68", "sym": null, "target": null},
+            {"off": "+0x6c", "sym": null, "target": null},
+            {"off": "+0x70", "sym": null, "target": null},
+            {"off": "+0x74", "sym": "data_ov062_0211cee0", "target": "0x0211cee0"},
+            {"off": "+0x78", "sym": "data_ov062_0211ced8", "target": "0x0211ced8"},
+            {"off": "+0x7c", "sym": "data_ov062_0211cee8", "target": "0x0211cee8"}
+          ],
+          "blind": 0
+        },
+        "object_sha256": "0cee941d822e8e303f381ab55313af9a1cde5390a724d72d1f09e58930ca5163"
+      }
+    ],
+    "spawn_local_orders": [
+      {
+        "tag": "spawn_order_xyzxyz",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.x = x;\n    pos.y = y;\n    pos.z = z;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null}
+          ],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xyzxzy",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.x = x;\n    pos.z = z;\n    pos.y = y;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null}
+          ],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xyzyxz",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.y = y;\n    pos.x = x;\n    pos.z = z;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null}
+          ],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xyzyzx",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.y = y;\n    pos.z = z;\n    pos.x = x;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null}
+          ],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xyzzxy",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.z = z;\n    pos.x = x;\n    pos.y = y;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null}
+          ],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xyzzyx",
+        "form": "    int x = c->mPosX;\n    int y = c->mPosY + 0x78000;\n    int z = c->mPosZ;\n    Vector3 pos;\n    pos.z = z;\n    pos.y = y;\n    pos.x = x;",
+        "check": {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "WRONG",
+          "diffs": [{"off": "+0xc", "sym": null, "target": null}, {"off": "+0x10", "sym": null, "target": null}, {"off": "+0x1c", "sym": null, "target": null}, {"off": "+0x20", "sym": null, "target": null}],
+          "blind": 0
+        }
+      },
+      {
+        "tag": "spawn_order_xzyxyz",
+        "form": "    int x = c->mPosX;\n    int z = c->mPosZ;\n    int y = c->mPosY + 0x78000;\n    Vector3 pos;\n    pos.x = x;\n    pos.y = y;\n    pos.z = z;",
+        "check": {"name": "func_ov062_021179e4", "module": "ov062", "addr": "0x021179e4", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+      }
+    ],
+    "retained_member_bridges": [
+      {
+        "tag": "genuine_setanim_current",
+        "target": "func_ov062_02117994",
+        "changed_form": "void func_ov062_02117994(char *c, int idx) {\n    daNknk_c *koopa = (daNknk_c*)c;\n    Fix12<int> speed = {koopa->mAnimSpeed};\n    koopa->mModelAnim.SetAnim((BCA_File*)data_ov062_0211cee8[idx]->file,\n                            data_ov062_0211cf0c[idx], speed, 0);\n    *(u8*)(c + 0x398) = (u8)idx;\n}",
+        "object_sha256": "3f39b8f9ca1404f2ae11049e56a696db4d7df7ac63d89dac053d8064b87e6729",
+        "size": "0x5c",
+        "target_check": {
+          "name": "func_ov062_02117994",
+          "module": "ov062",
+          "addr": "0x02117994",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x4", "sym": null, "target": null},
+            {"off": "+0x8", "sym": null, "target": null},
+            {"off": "+0xc", "sym": null, "target": null},
+            {"off": "+0x10", "sym": null, "target": null},
+            {"off": "+0x14", "sym": null, "target": null},
+            {"off": "+0x18", "sym": null, "target": null},
+            {"off": "+0x1c", "sym": null, "target": null},
+            {"off": "+0x20", "sym": null, "target": null},
+            {"off": "+0x24", "sym": null, "target": null},
+            {"off": "+0x28", "sym": null, "target": null},
+            {"off": "+0x2c", "sym": null, "target": null},
+            {"off": "+0x30", "sym": null, "target": null},
+            {"off": "+0x34", "sym": null, "target": null},
+            {"off": "+0x38", "sym": null, "target": null},
+            {"off": "+0x3c", "sym": null, "target": null},
+            {"off": "+0x40", "sym": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj", "target": "0x02016748"},
+            {"off": "+0x44", "sym": null, "target": null},
+            {"off": "+0x48", "sym": null, "target": null},
+            {"off": "+0x4c", "sym": null, "target": null},
+            {"off": "+0x50", "sym": null, "target": null},
+            {"off": "+0x54", "sym": "data_ov062_0211cee8", "target": "0x0211cee8"},
+            {"off": "+0x58", "sym": "data_ov062_0211cf0c", "target": "0x0211cf0c"}
+          ],
+          "blind": 0
+        },
+        "other_manifest_functions": {"count": 38, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "tag": "genuine_shadow_current",
+        "target": "func_ov062_02118334",
+        "changed_form": "Fix12<int> radius = {0x50000};\n  Fix12<int> depth = {0x50000};\n  ((daNknk_c*)c)->DropShadowRadHeight(((daNknk_c*)c)->mShadowModel,\n      *(Matrix4x3*)(c + 0x31c), radius, depth, 0xf);",
+        "object_sha256": "e049df500fce5eff341da85d0b18a78626cc48dac16ce9cf0de813a2fed05045",
+        "size": "0xc0",
+        "target_check": {
+          "name": "func_ov062_02118334",
+          "module": "ov062",
+          "addr": "0x02118334",
+          "verdict": "WRONG",
+          "diffs": [
+            {"off": "+0x28", "sym": null, "target": null},
+            {"off": "+0x34", "sym": null, "target": null},
+            {"off": "+0x3c", "sym": null, "target": null},
+            {"off": "+0x7c", "sym": null, "target": null},
+            {"off": "+0x80", "sym": null, "target": null},
+            {"off": "+0x84", "sym": null, "target": null},
+            {"off": "+0x88", "sym": null, "target": null},
+            {"off": "+0x8c", "sym": null, "target": null},
+            {"off": "+0x90", "sym": null, "target": null},
+            {"off": "+0x94", "sym": null, "target": null},
+            {"off": "+0x98", "sym": null, "target": null},
+            {"off": "+0x9c", "sym": null, "target": null},
+            {"off": "+0xa0", "sym": null, "target": null},
+            {"off": "+0xa4", "sym": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j", "target": "0x02010be8"},
+            {"off": "+0xa8", "sym": null, "target": null},
+            {"off": "+0xac", "sym": null, "target": null},
+            {"off": "+0xb0", "sym": null, "target": null},
+            {"off": "+0xb4", "sym": "data_020a0e68", "target": "0x020a0e68"}
+          ],
+          "blind": 2
+        },
+        "other_manifest_functions": {"count": 38, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      }
+    ],
+    "interpretation": "Ordinary real daNknk_c/Vector3 Spawn helper matches with x,z,y declaration order and x,y,z stores; no fake type, volatile, assembly, compatibility wrapper or instruction patch. SetAnim0x50->0x5c and DropShadow helper0xac->0xc0 are two measured genuine Fix12 member forms, not absolute compiler limitations.",
+    "shadow_baseline_size": "0x000000ac"
+  },
+  "external_contract_probe_summary": {
+    "callee_controls": {
+      "probes": [
+        {
+          "symbol": "UnloadBlueCoinModel",
+          "path": "src/UnloadBlueCoinModel.c",
+          "config": [["config\\arm9\\symbols.txt", "UnloadBlueCoinModel kind:function(arm,size=0x2c) addr:0x0200fe70"]],
+          "tag": "control",
+          "check": {"name": "UnloadBlueCoinModel", "module": "arm9", "addr": "0x0200fe70", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+          "sha256": "f18d5a6e9dcac1214cb72e6c8b78a4eb29f77cd780d58701414321018745e9e1"
+        },
+        {
+          "symbol": "UnloadBlueCoinModel",
+          "path": "src/UnloadBlueCoinModel.c",
+          "config": [["config\\arm9\\symbols.txt", "UnloadBlueCoinModel kind:function(arm,size=0x2c) addr:0x0200fe70"]],
+          "tag": "unused_context",
+          "check": {"name": "UnloadBlueCoinModel", "module": "arm9", "addr": "0x0200fe70", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+          "sha256": "f18d5a6e9dcac1214cb72e6c8b78a4eb29f77cd780d58701414321018745e9e1"
+        },
+        {
+          "symbol": "func_ov002_020aea30",
+          "path": "src/func_ov002_020aea30.cpp",
+          "config": [["config\\arm9\\overlays\\ov002\\symbols.txt", "func_ov002_020aea30 kind:function(arm,size=0x8c) addr:0x020aea30"]],
+          "tag": "control",
+          "check": {"name": "func_ov002_020aea30", "module": "ov002", "addr": "0x020aea30", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+          "sha256": "d2d1b111e930219ec8bbef2230b7f5199bcd18eae9e56eb1f78728233f00fc4b"
+        },
+        {
+          "symbol": "func_ov002_020aea30",
+          "path": "src/func_ov002_020aea30.cpp",
+          "config": [["config\\arm9\\overlays\\ov002\\symbols.txt", "func_ov002_020aea30 kind:function(arm,size=0x8c) addr:0x020aea30"]],
+          "tag": "three_scalar",
+          "check": {"name": "func_ov002_020aea30", "module": "ov002", "addr": "0x020aea30", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+          "sha256": "d2d1b111e930219ec8bbef2230b7f5199bcd18eae9e56eb1f78728233f00fc4b"
+        },
+        {
+          "symbol": "func_ov002_020aea30",
+          "path": "src/func_ov002_020aea30.cpp",
+          "config": [["config\\arm9\\overlays\\ov002\\symbols.txt", "func_ov002_020aea30 kind:function(arm,size=0x8c) addr:0x020aea30"]],
+          "tag": "three_typed",
+          "check": {"name": "func_ov002_020aea30", "module": "ov002", "addr": "0x020aea30", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+          "sha256": "d2d1b111e930219ec8bbef2230b7f5199bcd18eae9e56eb1f78728233f00fc4b"
+        }
+      ],
+      "population": [
+        {
+          "symbol": "UnloadBlueCoinModel",
+          "definitions": [{"file": "src/UnloadBlueCoinModel.c", "line": 9, "spelling": "void (void)"}],
+          "declarations": [
+            {"file": "src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp", "line": 11, "spelling": "void (char *)"},
+            {"file": "src/_ZN19FirePiranhaPlantBig16CleanupResourcesEv.cpp", "line": 9, "spelling": "void (void *)"},
+            {"file": "src/_ZN3MrI16CleanupResourcesEv.cpp", "line": 6, "spelling": "void (void)"},
+            {"file": "src/_ZN5Koopa16CleanupResourcesEv.cpp", "line": 7, "spelling": "void (void *)"},
+            {"file": "src/_ZN8BookShot16CleanupResourcesEv.cpp", "line": 7, "spelling": "void (void *)"},
+            {"file": "src/_ZN8YoshiEgg16CleanupResourcesEv.cpp", "line": 8, "spelling": "void (void *)"},
+            {"file": "src/actors/daKrb_c.cpp", "line": 206, "spelling": "void (void *)"},
+            {"file": "src/actors/daPkn_c.cpp", "line": 87, "spelling": "void (void *)"},
+            {"file": "src/actors/daSanbo_c.cpp", "line": 142, "spelling": "void (void *)"},
+            {"file": "src/game/actors/daTrs_c/d_a_trs_cleanup_render.cpp", "line": 34, "spelling": "void (void *)"}
+          ]
+        },
+        {
+          "symbol": "func_ov002_020aea30",
+          "definitions": [{"file": "src/func_ov002_020aea30.cpp", "line": 41, "spelling": "void (C *, int, int, int)"}],
+          "declarations": [
+            {"file": "src/_ZN9daMenbo_c8BehaviorEv.cpp", "line": 48, "spelling": "void (void *, void *, int)"},
+            {"file": "src/actors/daKrb_c.cpp", "line": 152, "spelling": "void (void *, void *, void *, ...)"},
+            {"file": "src/actors/daYurei_Mucho_c.cpp", "line": 99, "spelling": "void (void *, void *, int, int)"},
+            {"file": "src/func_ov062_02117c98.c", "line": 10, "spelling": "void (void *, void *, int)"},
+            {"file": "src/func_ov065_0211704c.c", "line": 6, "spelling": "void (char *, char *, int)"},
+            {"file": "src/func_ov081_021243cc.cpp", "line": 9, "spelling": "void (void *, void *, int)"},
+            {"file": "src/func_ov090_021310b4.c", "line": 8, "spelling": "void (char *, void *, int, int)"},
+            {"file": "src/func_ov091_021339fc.c", "line": 8, "spelling": "void (void *, void *, unsigned int)"},
+            {"file": "src/game/actors/d_a_propeller_heyho.cpp", "line": 906, "spelling": "int (void *, void *, int, int)"}
+          ]
+        }
+      ]
+    },
+    "all_callers": [
+      {
+        "path": "src/actors/daKrb_c.cpp",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [
+          {"symbol": "func_ov084_02129a00", "module": "ov084", "start": "0x2129a00", "end": "0x2129c9c", "size": "0x29c"},
+          {"symbol": "func_ov084_02129ed4", "module": "ov084", "start": "0x2129ed4", "end": "0x212a580", "size": "0x6ac"},
+          {"symbol": "func_ov084_0212a774", "module": "ov084", "start": "0x212a774", "end": "0x212aab0", "size": "0x33c"}
+        ],
+        "strict": {"count": 3, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/actors/daKrb_c.cpp",
+        "form": "opaque_pointer",
+        "changed_calls": 3,
+        "compile_ok": true,
+        "ranges": [
+          {"symbol": "func_ov084_02129a00", "module": "ov084", "start": "0x2129a00", "end": "0x2129c9c", "size": "0x29c"},
+          {"symbol": "func_ov084_02129ed4", "module": "ov084", "start": "0x2129ed4", "end": "0x212a580", "size": "0x6ac"},
+          {"symbol": "func_ov084_0212a774", "module": "ov084", "start": "0x212a774", "end": "0x212aab0", "size": "0x33c"}
+        ],
+        "strict": {"count": 3, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/actors/daKrb_c.cpp",
+        "form": "typed_pointers",
+        "changed_calls": 3,
+        "compile_ok": true,
+        "ranges": [
+          {"symbol": "func_ov084_02129a00", "module": "ov084", "start": "0x2129a00", "end": "0x2129c9c", "size": "0x29c"},
+          {"symbol": "func_ov084_02129ed4", "module": "ov084", "start": "0x2129ed4", "end": "0x212a580", "size": "0x6ac"},
+          {"symbol": "func_ov084_0212a774", "module": "ov084", "start": "0x212a774", "end": "0x212aab0", "size": "0x33c"}
+        ],
+        "strict": {"count": 3, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "_ZN9daMenbo_c8BehaviorEv", "module": "ov090", "start": "0x2131f88", "end": "0x213235c", "size": "0x3d4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+        "form": "opaque_pointer",
+        "changed_calls": 2,
+        "compile_ok": true,
+        "ranges": [{"symbol": "_ZN9daMenbo_c8BehaviorEv", "module": "ov090", "start": "0x2131f88", "end": "0x213235c", "size": "0x3d4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+        "form": "typed_pointers",
+        "changed_calls": 2,
+        "compile_ok": true,
+        "ranges": [{"symbol": "_ZN9daMenbo_c8BehaviorEv", "module": "ov090", "start": "0x2131f88", "end": "0x213235c", "size": "0x3d4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov065_0211704c.c",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_0211704c", "module": "ov065", "start": "0x211704c", "end": "0x2117404", "size": "0x3b8"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov065_0211704c.c",
+        "form": "opaque_pointer",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_0211704c", "module": "ov065", "start": "0x211704c", "end": "0x2117404", "size": "0x3b8"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov065_0211704c.c",
+        "form": "typed_pointers",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_0211704c", "module": "ov065", "start": "0x211704c", "end": "0x2117404", "size": "0x3b8"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov081_021243cc.cpp",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov081_021243cc", "module": "ov081", "start": "0x21243cc", "end": "0x21245e8", "size": "0x21c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov081_021243cc.cpp",
+        "form": "opaque_pointer",
+        "changed_calls": 3,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov081_021243cc", "module": "ov081", "start": "0x21243cc", "end": "0x21245e8", "size": "0x21c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov081_021243cc.cpp",
+        "form": "typed_pointers",
+        "changed_calls": 3,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov081_021243cc", "module": "ov081", "start": "0x21243cc", "end": "0x21245e8", "size": "0x21c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov091_021339fc.c",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov091_021339fc", "module": "ov091", "start": "0x21339fc", "end": "0x2133c6c", "size": "0x270"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov091_021339fc.c",
+        "form": "opaque_pointer",
+        "changed_calls": 1,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov091_021339fc", "module": "ov091", "start": "0x21339fc", "end": "0x2133c6c", "size": "0x270"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov091_021339fc.c",
+        "form": "typed_pointers",
+        "changed_calls": 1,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov091_021339fc", "module": "ov091", "start": "0x21339fc", "end": "0x2133c6c", "size": "0x270"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov062_02117c98.c",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov062_02117c98", "module": "ov062", "start": "0x2117c98", "end": "0x2118004", "size": "0x36c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov062_02117c98.c",
+        "form": "opaque_pointer",
+        "changed_calls": 5,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov062_02117c98", "module": "ov062", "start": "0x2117c98", "end": "0x2118004", "size": "0x36c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov062_02117c98.c",
+        "form": "typed_pointers",
+        "changed_calls": 5,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov062_02117c98", "module": "ov062", "start": "0x2117c98", "end": "0x2118004", "size": "0x36c"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/actors/daYurei_Mucho_c.cpp",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_02115ff0", "module": "ov065", "start": "0x2115ff0", "end": "0x21162c0", "size": "0x2d0"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/actors/daYurei_Mucho_c.cpp",
+        "form": "opaque_pointer",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_02115ff0", "module": "ov065", "start": "0x2115ff0", "end": "0x21162c0", "size": "0x2d0"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/actors/daYurei_Mucho_c.cpp",
+        "form": "typed_pointers",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov065_02115ff0", "module": "ov065", "start": "0x2115ff0", "end": "0x21162c0", "size": "0x2d0"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov090_021310b4.c",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov090_021310b4", "module": "ov090", "start": "0x21310b4", "end": "0x2131378", "size": "0x2c4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov090_021310b4.c",
+        "form": "opaque_pointer",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov090_021310b4", "module": "ov090", "start": "0x21310b4", "end": "0x2131378", "size": "0x2c4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/func_ov090_021310b4.c",
+        "form": "typed_pointers",
+        "changed_calls": 6,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov090_021310b4", "module": "ov090", "start": "0x21310b4", "end": "0x2131378", "size": "0x2c4"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/game/actors/d_a_propeller_heyho.cpp",
+        "form": "control",
+        "changed_calls": 0,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov070_0211f100", "module": "ov070", "start": "0x211f100", "end": "0x211f368", "size": "0x268"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/game/actors/d_a_propeller_heyho.cpp",
+        "form": "opaque_pointer",
+        "changed_calls": 2,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov070_0211f100", "module": "ov070", "start": "0x211f100", "end": "0x211f368", "size": "0x268"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      },
+      {
+        "path": "src/game/actors/d_a_propeller_heyho.cpp",
+        "form": "typed_pointers",
+        "changed_calls": 2,
+        "compile_ok": true,
+        "ranges": [{"symbol": "func_ov070_0211f100", "module": "ov070", "start": "0x211f100", "end": "0x211f368", "size": "0x268"}],
+        "strict": {"count": 1, "verdict": "VERIFIED", "blind": 0, "diffs": []}
+      }
+    ],
+    "context_and_fourth_argument_calls": [
+      {
+        "path": "src/_ZN3MrI16CleanupResourcesEv.cpp",
+        "symbol": "_ZN3MrI16CleanupResourcesEv",
+        "module": "ov071",
+        "address": "0x2121650",
+        "size": "0x64",
+        "changed_calls": 1,
+        "variants": [
+          {
+            "tag": "control",
+            "object_sha256": "72d561bde19ab5b5724458f73f15a87700da4923dae2f38648d3deddc0ff9b07",
+            "emitted_size": "0x64",
+            "strict": {"name": "_ZN3MrI16CleanupResourcesEv", "module": "ov071", "addr": "0x02121650", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          },
+          {
+            "tag": "corrected",
+            "object_sha256": "72d561bde19ab5b5724458f73f15a87700da4923dae2f38648d3deddc0ff9b07",
+            "emitted_size": "0x64",
+            "strict": {"name": "_ZN3MrI16CleanupResourcesEv", "module": "ov071", "addr": "0x02121650", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          }
+        ]
+      },
+      {
+        "path": "src/actors/daYurei_Mucho_c.cpp",
+        "symbol": "func_ov065_02115ff0",
+        "module": "ov065",
+        "address": "0x2115ff0",
+        "size": "0x2d0",
+        "changed_calls": 6,
+        "variants": [
+          {
+            "tag": "control",
+            "object_sha256": "04dc54d928a32efd2f05316c4e811c2d5e86d0da2d4649363e9d55050bf71ccd",
+            "emitted_size": "0x2d0",
+            "strict": {"name": "func_ov065_02115ff0", "module": "ov065", "addr": "0x02115ff0", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          },
+          {
+            "tag": "corrected",
+            "object_sha256": "04dc54d928a32efd2f05316c4e811c2d5e86d0da2d4649363e9d55050bf71ccd",
+            "emitted_size": "0x2d0",
+            "strict": {"name": "func_ov065_02115ff0", "module": "ov065", "addr": "0x02115ff0", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          }
+        ]
+      },
+      {
+        "path": "src/func_ov090_021310b4.c",
+        "symbol": "func_ov090_021310b4",
+        "module": "ov090",
+        "address": "0x21310b4",
+        "size": "0x2c4",
+        "changed_calls": 6,
+        "variants": [
+          {
+            "tag": "control",
+            "object_sha256": "fb80edbe15dd30effb86fe51708105bbe05d101898eda0763034226bcfea5498",
+            "emitted_size": "0x2c4",
+            "strict": {"name": "func_ov090_021310b4", "module": "ov090", "addr": "0x021310b4", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          },
+          {
+            "tag": "corrected",
+            "object_sha256": "fb80edbe15dd30effb86fe51708105bbe05d101898eda0763034226bcfea5498",
+            "emitted_size": "0x2c4",
+            "strict": {"name": "func_ov090_021310b4", "module": "ov090", "addr": "0x021310b4", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          }
+        ]
+      },
+      {
+        "path": "src/game/actors/d_a_propeller_heyho.cpp",
+        "symbol": "func_ov070_0211f100",
+        "module": "ov070",
+        "address": "0x211f100",
+        "size": "0x268",
+        "changed_calls": 2,
+        "variants": [
+          {
+            "tag": "control",
+            "object_sha256": "6e430b7a5b328ee6eb71156a53431a54a2bb1de0f961c4ea86b6af54f0c686e1",
+            "emitted_size": "0x268",
+            "strict": {"name": "func_ov070_0211f100", "module": "ov070", "addr": "0x0211f100", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          },
+          {
+            "tag": "corrected",
+            "object_sha256": "6e430b7a5b328ee6eb71156a53431a54a2bb1de0f961c4ea86b6af54f0c686e1",
+            "emitted_size": "0x268",
+            "strict": {"name": "func_ov070_0211f100", "module": "ov070", "addr": "0x0211f100", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+          }
+        ]
+      }
+    ],
+    "prototype_ceiling": "Three-register reconstructed interface: receiver, attacker and nullable collision pointer. All implemented callers and callee match. Incoming r3 is overwritten, but this does not uniquely prove the original C++ prototype. Handler/sinit files are unchanged.",
+    "register_evidence": [
+      {"symbol": "func_ov062_02117c98", "call": "0x02117d4c", "r3": "5 also stored to receiver+0x10c before call"},
+      {"symbol": "func_ov062_02117c98", "call": "0x02117e14", "r3": "not set after previous calls; only r0-r2 established"},
+      {"symbol": "func_ov062_02117c98", "call": "0x02117e74", "r3": "6 also stored as state before call"},
+      {"symbol": "func_ov062_02117c98", "call": "0x02117f00", "r3": "1 also stored as state before call"},
+      {"symbol": "func_ov062_02117c98", "call": "0x02117fd8", "r3": "not set after call at0x02117fc8; r2=receiver+0x144"},
+      {"symbol": "func_ov084_02129ed4", "call": "0x0212a500", "r3": "not set after a clobbering call; only r0-r2 established"}
+    ],
+    "full_disassembly_artifacts": "Ignored build/koopa-identity/external/caller-probes.json retains full probe and retail disassemblies; this durable record retains exact source forms, object hashes, function ranges, strict results and the relevant register evidence."
+  },
+  "header_consumers": [
+    {
+      "path": "src/_ZN5KoopaD1Ev.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_cD1Ev",
+      "compile_ok": false,
+      "diagnostic": "  ! compile failed (2004/b56): mwccarm.exe: warning: Environment variable 'MWCIncludes' not found\nsrc\\_ZN5KoopaD1Ev.cpp:14: declaration syntax error\nsrc\\_ZN5KoopaD1Ev.cpp:15: object 'daNknk_c::~daNknk_c()' redefined\nErrors caused tool to abort.\n"
+    },
+    {
+      "path": "src/_ZN5KoopaD0Ev.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_cD0Ev",
+      "compile_ok": false,
+      "diagnostic": "  ! compile failed (2004/b56): mwccarm.exe: warning: Environment variable 'MWCIncludes' not found\nsrc\\_ZN5KoopaD0Ev.cpp:15: declaration syntax error\nsrc\\_ZN5KoopaD0Ev.cpp:16: object 'daNknk_c::~daNknk_c()' redefined\nErrors caused tool to abort.\n"
+    },
+    {
+      "path": "src/_ZN5Koopa16CleanupResourcesEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c16CleanupResourcesEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {
+        "keep": 5,
+        "drop": [],
+        "externalise": [],
+        "dead": [],
+        "referenced": ["UnloadBlueCoinModel", "_ZN13SharedFilePtr7ReleaseEv", "data_ov062_0211ced8", "data_ov062_0211cee0", "data_ov062_0211cee8"],
+        "error": null
+      },
+      "strict": {"name": "_ZN8daNknk_c16CleanupResourcesEv", "module": "ov062", "addr": "0x02118f04", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa16OnPendingDestroyEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c16OnPendingDestroyEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {"keep": 5, "drop": [], "externalise": [], "dead": [], "referenced": [], "error": null},
+      "strict": {"name": "_ZN8daNknk_c16OnPendingDestroyEv", "module": "ov062", "addr": "0x02118f80", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa6RenderEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c6RenderEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {"keep": 5, "drop": [], "externalise": [], "dead": [], "referenced": ["_ZN5Model12HideMaterialEii", "_ZN5Model12ShowMaterialEii"], "error": null},
+      "strict": {"name": "_ZN8daNknk_c6RenderEv", "module": "ov062", "addr": "0x02118f84", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa8BehaviorEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c8BehaviorEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {
+        "keep": 5,
+        "drop": [],
+        "externalise": [],
+        "dead": [],
+        "referenced": [
+          "_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr",
+          "_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj",
+          "_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr",
+          "_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi",
+          "_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj",
+          "_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c",
+          "_ZN5dCc_c5ClearEv",
+          "_ZN5dCc_c6UpdateEv",
+          "_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c",
+          "_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE",
+          "_ZN8dActor_c24KillAndTrackInDeathTableEv",
+          "_ZN8dActor_c8PoofDustEv",
+          "_ZN8dActor_c9UpdatePosEP5dCc_c",
+          "_ZN9Animation7AdvanceEv",
+          "_ZNK10dBgCh_Actr10IsOnGroundEv",
+          "func_ov062_02117570",
+          "func_ov062_021179e4",
+          "func_ov062_02117a3c",
+          "func_ov062_02117acc",
+          "func_ov062_02117c98",
+          "func_ov062_02118258",
+          "func_ov062_02118334"
+        ],
+        "error": null
+      },
+      "strict": {"name": "_ZN8daNknk_c8BehaviorEv", "module": "ov062", "addr": "0x021190ec", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa13InitResourcesEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c13InitResourcesEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {
+        "keep": 5,
+        "drop": [],
+        "externalise": [],
+        "dead": [],
+        "referenced": [
+          "LoadBlueCoinModel",
+          "_ZN10dBgCh_Actr19StartDetectingWaterEv",
+          "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_",
+          "_ZN11ShadowModel12InitCylinderEv",
+          "_ZN5Model8LoadFileER13SharedFilePtr",
+          "_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj",
+          "_ZN9Animation8LoadFileER13SharedFilePtr",
+          "_ZN9ModelBase7SetFileEP8BMD_Fileii",
+          "data_ov062_0211ced8",
+          "data_ov062_0211cee0",
+          "data_ov062_0211cee8",
+          "func_ov062_02117994"
+        ],
+        "error": null
+      },
+      "strict": {"name": "_ZN8daNknk_c13InitResourcesEv", "module": "ov062", "addr": "0x02119420", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa16OnAimedAtWithEggEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {"keep": 5, "drop": [], "externalise": [], "dead": [], "referenced": [], "error": null},
+      "strict": {"name": "_ZN8daNknk_c16OnAimedAtWithEggEv", "module": "ov062", "addr": "0x02119608", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {
+        "keep": 5,
+        "drop": [],
+        "externalise": [],
+        "dead": [],
+        "referenced": ["_ZN6Player15IsCollectingCapEv", "_ZN6Player20RegisterEggCoinCountEjbb", "_ZN8dActor_c15GivePlayerCoinsER6Playerhj", "_ZN8dActor_c24KillAndTrackInDeathTableEv"],
+        "error": null
+      },
+      "strict": {"name": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "module": "ov062", "addr": "0x02119628", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    },
+    {
+      "path": "src/_ZN5Koopa13OnYoshiTryEatEv.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c13OnYoshiTryEatEv",
+      "compile_ok": true,
+      "diagnostic": "",
+      "isolation": {
+        "keep": 26,
+        "drop": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+        "externalise": [],
+        "dead": [
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "_ZN8daNknk_cD0Ev",
+          "_ZN8daNknk_cD1Ev",
+          "_ZTI12dEnemyBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTI8daNknk_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c",
+          "_ZTS8daNknk_c",
+          "_ZTV8daNknk_c"
+        ],
+        "referenced": [],
+        "error": null
+      },
+      "strict": {"name": "_ZN8daNknk_c13OnYoshiTryEatEv", "module": "ov062", "addr": "0x021196a8", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+    }
+  ],
+  "expected_intermediate_failures": [
+    "Both old Koopa destructor source files redeclare the now-inline destructor and fail compilation. The eight other legacy method consumers strictly verify under daNknk_c names. Root must retire all39 shards before production acceptance.",
+    "Declaration gate exits1 with six diagnostics: five untouched inherited-main fingerprints and one changed legacy Koopa third-argument declaration that disappears only after planned retirement. No baseline edits or production full-ROM pass claimed."
+  ],
+  "inherited_declaration_control": {
+    "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+    "files": [
+      {"path": "src/_ZN6Player12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
+      {"path": "src/__sinit_ov090_02133f4c.c", "same_non_line_ending_text": true},
+      {"path": "src/actors/Eyerok.cpp", "same_non_line_ending_text": true},
+      {"path": "src/actors/daPukupuku_c.cpp", "same_non_line_ending_text": true},
+      {"path": "src/func_ov002_020e8ef0.cpp", "same_non_line_ending_text": true},
+      {"path": "src/func_ov065_021183c8.c", "same_non_line_ending_text": true},
+      {"path": "src/func_ov089_02131df4.c", "same_non_line_ending_text": true},
+      {"path": "src/game/actors/d_a_ch_scene.cpp", "same_non_line_ending_text": true},
+      {"path": "src/game/actors/d_a_wanwan.cpp", "same_non_line_ending_text": true}
+    ],
+    "all_population_files_unchanged": true,
+    "findings_before": [
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "line": 17,
+        "decl": "void (void *, unsigned char, int, unsigned char)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/actors/Eyerok.cpp",
+        "line": 177,
+        "decl": "void (void *, unsigned char, int, unsigned char)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov002_020e8ef0.cpp",
+        "line": 11,
+        "decl": "int (void *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov002_020e8ef0.cpp",
+        "line": 11,
+        "decl": "int (void *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov065_021183c8.c",
+        "line": 16,
+        "decl": "int (char *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov065_021183c8.c",
+        "line": 16,
+        "decl": "int (char *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "data_ov090_0213455c",
+        "kind": "return",
+        "file": "src/__sinit_ov090_02133f4c.c",
+        "line": 9,
+        "decl": "int []",
+        "got": "int []",
+        "want": "AnimFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daPukupuku_c.cpp",
+        "ref_line": 162,
+        "ref": "AnimFilePtr"
+      },
+      {
+        "symbol": "data_ov090_02134564",
+        "kind": "return",
+        "file": "src/__sinit_ov090_02133f4c.c",
+        "line": 7,
+        "decl": "int []",
+        "got": "int []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daPukupuku_c.cpp",
+        "ref_line": 156,
+        "ref": "SharedFilePtr"
+      }
+    ],
+    "findings_after": [
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "line": 17,
+        "decl": "void (void *, unsigned char, int, unsigned char)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/actors/Eyerok.cpp",
+        "line": 177,
+        "decl": "void (void *, unsigned char, int, unsigned char)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov002_020e8ef0.cpp",
+        "line": 11,
+        "decl": "int (void *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov002_020e8ef0.cpp",
+        "line": 11,
+        "decl": "int (void *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov065_021183c8.c",
+        "line": 16,
+        "decl": "int (char *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/func_ov065_021183c8.c",
+        "line": 16,
+        "decl": "int (char *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "return",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "void",
+        "want": "int",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "#2 int",
+        "want": "#2 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "kind": "param",
+        "file": "src/game/actors/d_a_ch_scene.cpp",
+        "line": 42,
+        "decl": "void (void *, int, int, int)",
+        "got": "#4 int",
+        "want": "#4 unsigned char",
+        "basis": "plurality",
+        "ref_file": "src/func_ov089_02131df4.c",
+        "ref_line": 1,
+        "ref": "int (void *, unsigned char, int, unsigned char)"
+      },
+      {
+        "symbol": "data_ov090_0213455c",
+        "kind": "return",
+        "file": "src/__sinit_ov090_02133f4c.c",
+        "line": 9,
+        "decl": "int []",
+        "got": "int []",
+        "want": "AnimFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daPukupuku_c.cpp",
+        "ref_line": 162,
+        "ref": "AnimFilePtr"
+      },
+      {
+        "symbol": "data_ov090_02134564",
+        "kind": "return",
+        "file": "src/__sinit_ov090_02133f4c.c",
+        "line": 7,
+        "decl": "int []",
+        "got": "int []",
+        "want": "SharedFilePtr",
+        "basis": "plurality",
+        "ref_file": "src/actors/daPukupuku_c.cpp",
+        "ref_line": 156,
+        "ref": "SharedFilePtr"
+      }
+    ],
+    "identical_findings": true
+  },
+  "checks": {
+    "tubuild": "PASS39/order/output/relocation destinations",
+    "conflicts": "PASS four affected entries; Koopa18resolved32open/32markers",
+    "port": "PASS418 references",
+    "references": "PASS no new dead references or broken markdown links",
+    "declarations": "FAIL six as explicitly classified; five are in independently captured exact-main actual_keys",
+    "diff_check": "PASS"
+  },
+  "findings": [
+    {
+      "id": "KP2864-01",
+      "kind": "correctness",
+      "introduced_by_current_diff": true,
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:428,433; include/Koopa.h; include/ModelAnim.h",
+      "summary": "The new ModelAnim-relative writes point outside the 0x64-byte member.",
+      "evidence": "mModelAnim starts at Koopa+0x300; +0xc4 and +0xca address Koopa+0x3c4 and +0x3ca, already declared as u16 mWalkState and mInvincibleTimer. ModelAnim ends at Koopa+0x364, so these are not unknown ModelAnim fields.",
+      "repair": "Use mWalkState = 0 and mInvincibleTimer = 0; rerun the full shadow TU byte/relocation check. Correct the PR body's claim that ModelAnim's layout is unrecovered.",
+      "current_local_status": "fixed_in_candidate_source_pending_pr_body_correction",
+      "independent_assessment": "Named u16 mWalkState/+0x3c4 and mInvincibleTimer/+0x3ca replace expressions extending beyond ModelAnim/+0x300..0x364. The original PR body must also drop its false unrecovered-ModelAnim-layout statement when the candidate is published.",
+      "current_source_disposition": "Fixed in preserved c468 and this source: real u16 actor members replace out-of-ModelAnim stores. Root must correct original PR body during publication."
+    },
+    {
+      "id": "KP2864-02",
+      "kind": "correctness",
+      "introduced_by_current_diff": false,
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:165-170,1102,1119,1401",
+      "summary": "Namespace aliases hide contradictory call contracts for the same C symbol.",
+      "evidence": "func_ov062_02117994 is defined void(char*,int), declared as void(void*,int,int) under kv3, and int(void*,int) under kvi. One call supplies an extra argument and another returns an alleged value from the void callee.",
+      "repair": "Reconstruct one truthful helper contract and its two inconsistent callers together, with byte/relocation proof. Do not treat this as harmless style or bank a declaration mismatch.",
+      "current_local_status": "fixed_within_shadow_scope",
+      "independent_assessment": "One void(char*,int) animation helper replaces incompatible namespace declarations. Incoming r2 is overwritten at 0x021179a0 before use. The transition helper now returns void, with all four recorded incoming calls in three void callers discarding its result. Unused results and exact bytes support this reconstruction but do not uniquely prove the historical return type. The unchanged production shards and ModelAnim shared-header/scalar-definition boundary still require closure before promotion.",
+      "current_source_disposition": "Fixed in the owned source and twelve scoped external files: genuine interfaces and correct widths/results; coherent three-pointer death helper and context-taking unload routine. The old Koopa declaration is deliberately preserved in a shard that root must retire. SetAnim calls the actual void/scalar/u16 definition; the unused shared member declaration remains an explicitly unused reconstruction seam, not an active mismatched call."
+    },
+    {
+      "id": "KP2864-03",
+      "kind": "reconstruction",
+      "introduced_by_current_diff": false,
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp:120-126,591 and the 27 free helpers",
+      "summary": "The TU still contains fabricated virtual dispatch and substantial shadow scaffolding.",
+      "evidence": "Render casts mModelAnim to a fake six-slot Mdl and calls slot5 even though ModelAnim::Render exists. The TU also keeps shadow aggregates, manual constructors, raw offsets, volatile artifacts, manual PMF decoding, mangled free calls and unreconciled declaration conflict comments.",
+      "repair": "Replace viable forms with existing real interfaces; retain only specifically measured compiler constraints. Give remaining reconstruction a concrete issue and owner if partial acceptance is intended.",
+      "current_local_status": "partially_repaired_open_reconstruction",
+      "independent_assessment": "The fabricated six-slot Mdl is removed in favor of real ModelAnim::Render. Raw offsets, shadow aggregates, manual factories/PMF decoding, volatile Render storage and address-named helpers remain. A real issue and owner are required for any accepted partial scope; none is posted for this review. The documented genuine SetAnim source form is valid and its 0x50-to-0x5c failure is producer-reported, not independently rerun here.",
+      "current_source_disposition": "Partial reconstruction remains under actual issue2871, owner codex-integrator-0920. Real Render, factories and numerous actor/model calls adopted; 27 address-named helpers, raw field views, volatile Render/dust forms, local matrix block copy and measured Fix12 scalar bridges remain. No claim that all cleaner alternatives are impossible."
+    },
+    {
+      "id": "KP2864-04",
+      "kind": "promotion",
+      "introduced_by_current_diff": false,
+      "location": "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json:verification",
+      "summary": "Stored verification is text-only and explicitly not a complete-object promotion pass.",
+      "evidence": "The manifest records 13 unlicensed sections/symbols, two compiler-only policy errors, unhandled _ZN5KoopaD2Ev and _ZN7Vector3D1Ev, and destructor ordinal pair (0,1) in the wrong order. There is no recorded full-ROM linkcheck result. These are stored facts, not fresh compiler measurements by this reviewer.",
+      "repair": "Fix lifecycle emission/order and account for every emitted function/data section with legitimate metadata proof before full linkcheck. Preserve addresses and bounds. A text-only match or scratch partitioned result does not establish promotion readiness.",
+      "current_local_status": "open_hard_promotion_blocker",
+      "independent_assessment": "Fresh candidate/input/base measurements reproduce 13 unlicensed outputs, two missing compiler-only policies and destructor order pair [0,1]. Every complete-TU verify exits 1. Function isolation does not establish complete-object acceptance.",
+      "current_source_disposition": "Source emission/output/order blocker fixed: D1 thenD0, noD2; all39 text functions in ROM order, no unlicensed output after twelve exact policies; eleven metadata records including complete preamble/string tails and canonical Vector3 duplicate independently compared locally. Promotion/full-ROM acceptance remains for compose and independent verify."
+    },
+    {
+      "id": "KP2864-05",
+      "kind": "provenance",
+      "introduced_by_current_diff": false,
+      "location": "include/Koopa.h; config/arm9/overlays/ov062/symbols.txt:165-170",
+      "summary": "The coined Koopa class identity does not reproduce the ROM RTTI identity.",
+      "evidence": "ROM metadata names _ZTS8daNknk_c and _ZTI8daNknk_c. The class emits Koopa RTTI instead; symbols contain duplicate _ZTV5Koopa and _ZTV8daNknk_c aliases at the same 0x0211dab4 address.",
+      "repair": "Reconcile the class with evidenced daNknk_c identity, symbols, declarations and consumers. Do not move the vtable address or invent RTTI homes to license mismatching metadata.",
+      "current_local_status": "open_identity_provenance_blocker_before_promotion",
+      "independent_assessment": "Independent object/retail reads confirm emitted 5Koopa versus retail 8daNknk_c at 0x0211da5c. The mismatch is NOT fixed, relabeled or accepted as deferred reconstruction. Candidate comments explicitly disclose community naming and unaccepted metadata; unchanged Koopa.h already names daNknk_c and the manifest explicitly says text-verified with failures. No remaining false claim of verified retail RTTI was identified. This finding arose in a NOT_READY_FOR_PROMOTION preflight. The actual mismatch remains a production prerequisite; it is not evidence that the newly truthful, byte-neutral shadow repairs regress identity. This scope assessment is not a formal disposition authorizing omission of KP2864-05 from a later acceptance record.",
+      "current_source_disposition": "Provenance repaired: compiler class identity daNknk_c matches retail RTTI, leaf vtable and all inherited metadata. Ten method names derived from emitted symbols; English member names/signatures remain inferred. No compiler-owned profile/BSS/initializer or contiguous-data claim."
+    },
+    {
+      "id": "KP2864-06",
+      "kind": "provenance",
+      "introduced_by_current_diff": false,
+      "location": "src_tu/actors/Koopa+KoopaSmall.cpp and promotion ledgers",
+      "summary": "Accounting and source ownership still describe the unpromoted shadow.",
+      "evidence": "24 explicit helper definitions have no unique symbol marker; 39 legacy files remain enrolled; the production destination is absent from delinks. The manifest and source carry unresolved generator warnings.",
+      "repair": "Add correct definition boundaries, resolve relevant warnings, preserve every symbol's attribution, migrate CONVERTED identities as a set and update invalidated prose/references during the actual promotion.",
+      "current_local_status": "open_promotion_accounting_prerequisite",
+      "independent_assessment": "39 legacy functions remain enrolled; the shadow is unenrolled and 24 explicit helpers lack symbol markers. No attribution, converted, manifest, declaration baseline or enrollment change is claimed. The bookkeeping truthfully describes an unpromoted shadow. Preserve this provenance finding for actual promotion; it is neither fixed nor deferred by this repair.",
+      "current_source_disposition": "Source accounting repaired:39 markers;50 historical conflicts retained as18 individually resolved/32open and32markers. All39 historical legacy_source paths/files remain; source is explicitly unenrolled until root compose updates enrollment, credits, counters and current source wording."
+    }
+  ],
+  "followup_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2871",
+  "followup_owner": "codex-integrator-0920",
+  "reproduction": [
+    "Compile manifest.source once with match.compile_c(source, \"2004/b56\", build_pin.flags_for(source)). For each manifest function derive via objisolate.derive and call linkcheck.linkcheck at its exact module/address/size. Require VERIFIED, blind0, diffs[].",
+    "Copy the manifest into ignored scratch {schema_version:1, entries:[entry]} then python tools/tubuild.py --manifest build/koopa-identity/manifest.json verify ov062/Koopa+KoopaSmall. This records all five criteria without rewriting a shared manifest during independent review.",
+    "For each emitted STT_OBJECT, resolve its configured canonical home; take exact st_size bytes from raw ELF, apply linkcheck.func_relocs_typed/link_function (adjust raw vtable target addends by eight), and compare every byte using build_pin.target_bytes. For _ZTV use addresspoint minus8 and include the preamble. Require zero blind words and exact payload equality; do not round strings to words. All linked/retail hex and relocations are retained above.",
+    "For every changed external file compile actual candidate and exact2705 git blob under the same basename/flags. Compare entire objects, then verify every manifest function for promoted TUs and each other changed body. All12 object pairs and94 functions pass.",
+    "python tools/check_tubuild_conflicts.py ov062/Koopa+KoopaSmall ov084/daKrb_c ov065/daYurei_Mucho_c ov070/daPropeller_Heyho_c; python tools/port_refcheck.py; python tools/check_dead_references.py; python tools/check_decl_agreement.py --changed 2705c624d2554ee8d21a56641275a2b85cce3a8b"
+  ],
+  "reconstruction_limits": "Ten native method/destructor symbols, two real factories and27 address-named helper functions. Output is text-only; retail owns the profiles between RTTI and vtable and every data/BSS initializer. Root composes production/enrollment/credit under its own stage and independent review follows."
+}

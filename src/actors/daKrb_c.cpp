@@ -23,8 +23,7 @@
  *   DestroyIfCapNotNeeded / GetCapState / RenderCapModel.
  * - Animation::Advance stays this+0x160 (named mModelAnim.Advance
  *   this-adjusts). Behavior / func_ov084_021298d0.
- * - func_ov002_020aea30 stays variadic: 0212a774 passes r3=7;
- *   02129ed4 sets only r0/r1/r2.
+ * - The death helper uses receiver, attacker, and nullable collision pointers.
  * - func_ov084_* helpers stay offset soup. InitResources /
  *   OnTurnIntoEgg keep `char *c = (char *)this` (named fields CSE
  *   the +8 param word).
@@ -145,11 +144,8 @@ extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f,
 extern void _ZN5dCc_c5ClearEv(void *self);
 extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void *self, void *clsn);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-/* VARIADIC on purpose. src/func_ov002_020aea30.cpp records FOUR parameters, and
-   func_ov084_0212a774 passes a literal 7 in r3 -- but the ROM's call in
-   func_ov084_02129ed4 at 0x0212a4f4 sets only r0/r1/r2. `...` lets each call
-   site materialise exactly the registers the ROM materialises. */
-extern void func_ov002_020aea30(void *self, void *actor, void *clsn, ...);
+/* Three-register reconstructed interface; death-state stores also use r3. */
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 extern void func_ov084_0212a580(char *self);
 extern void func_ov084_021294d0(char *self);
@@ -630,7 +626,7 @@ int func_ov084_02129a00(char *self) {
     if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(self, self + 0x180) != 0) {
         void *actor = _ZN8dActor_c10FindWithIDEj(*(int *)(self + 0x1a4));
         *(int *)(self + 0x10c) = 7;
-        func_ov002_020aea30(self, actor, self + 0x1b4, 7);
+        func_ov002_020aea30(self, actor, self + 0x1b4);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
         *(int *)(((int)self + 0x198)) |= 1;
         return 1;
@@ -1076,7 +1072,7 @@ void func_ov084_0212a774(char *c)
     if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(c, c + 0x180) != 0) {
         void *a = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x1a4));
         *(s32 *)(c + 0x10c) = 7;
-        func_ov002_020aea30(c, a, c + 0x1b4, 7);
+        func_ov002_020aea30(c, a, c + 0x1b4);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
         {
             s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)));

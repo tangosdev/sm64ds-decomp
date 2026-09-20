@@ -903,7 +903,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern "C" {
 extern dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern int func_ov002_020aea30(void* c, void* p, int a, int b);
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, s32 f);
 extern void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void* enemy, void* actor, char* s);
@@ -933,7 +933,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     }
     if (r4 & 0x20) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0, 1);
+        func_ov002_020aea30(c, r5, 0);
         return;
     }
     if (r4 & 0x67c0) {
@@ -953,7 +953,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, r5)) {
         _ZN6Player10SpinBounceE5Fix12IiE(r5, 0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0, 1);
+        func_ov002_020aea30(c, r5, 0);
         return;
     }
 

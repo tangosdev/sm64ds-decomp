@@ -45,7 +45,7 @@ void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cyl);
 int  func_02035638(u8* p);
 void* _ZN8dActor_c13ClosestPlayerEv(void* self);
-void func_ov002_020aea30(void* self, void* p, int n);
+void func_ov002_020aea30(void *self, void *actor, void *collision);
 u16  DecIfAbove0_Short(u16* p);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov090_021310b4(void* c);

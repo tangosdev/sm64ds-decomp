@@ -6,7 +6,7 @@
 extern "C" {
     void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, void* v);
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
-    void func_ov002_020aea30(void* self, void* a, int b);
+    void func_ov002_020aea30(void *self, void *actor, void *collision);
     s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
     void func_02012694(int a, void* p);
     void func_ov081_02125488(void* self, void* p);
@@ -39,7 +39,7 @@ extern "C" void func_ov081_021243cc(void* self)
 
     if (flags & 0x2000) {
         *(s32*)(c+0x10c) = 2;
-        func_ov002_020aea30(self, found, hit);
+        func_ov002_020aea30(self, found, (void*)hit);
         *(u16*)(c+0x94) = (u16)(_ZN8dActor_c18HorzAngleToCPlayerEv(self) + 0x8000);
         hit = 1;
     }

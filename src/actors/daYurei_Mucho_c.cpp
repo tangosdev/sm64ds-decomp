@@ -96,7 +96,7 @@ extern short data_02082214[];
 /* ov002 -- 6az KillByInvincibleChar; unnamed particle helper. */
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(
     void *self, const void *v, void *p, int a);
-extern void func_ov002_020aea30(void *self, void *p, int a, int b);
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 
 /* The four shared-file handles and four State records remain ROM-supplied BSS.
    __sinit_ov065_0211c110 initializes the handles and copies the eight PMF
@@ -652,19 +652,19 @@ void func_ov065_02115ff0(char *self)
 
     if (flags & 0x40000) {
         c->mDeathState = 4;
-        func_ov002_020aea30(c, p, 0, 4);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }
     if (flags & 0x2400) {
         c->mDeathState = 2;
-        func_ov002_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }
     if (flags & 0x4380) {
         c->mDeathState = 3;
-        func_ov002_020aea30(c, p, 0, 3);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }
@@ -683,13 +683,13 @@ void func_ov065_02115ff0(char *self)
     }
     if (flags & 0x40) {
         c->mDeathState = 2;
-        func_ov002_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }
     if (flags & 0x20) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }
@@ -704,7 +704,7 @@ void func_ov065_02115ff0(char *self)
     if (c->JumpedOnByPlayer(c->mdCcAc_c, *p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x11e, &c->mCamSpacePosX);
         return;
     }

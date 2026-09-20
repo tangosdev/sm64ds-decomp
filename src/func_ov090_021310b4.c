@@ -5,7 +5,7 @@
 // ==0xbf bool (moveq #1/movne #0/cmp) instead of jump-threading.
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void func_ov002_020aea30(char* c, void* p, int a, int b);
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, void* cyl, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, void* v, void* p, int a);
@@ -44,23 +44,23 @@ void func_ov090_021310b4(char* c)
 
     if (flags & 0x2400) {
         *(int*)(c + 0x10c) = 2;
-        func_ov002_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     if (flags & 0x40000) {
         *(int*)(c + 0x10c) = 4;
-        func_ov002_020aea30(c, p, 0, 4);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     if (flags & 0x40) {
         *(int*)(c + 0x10c) = 2;
-        func_ov002_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
-        func_ov002_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -69,7 +69,7 @@ void func_ov090_021310b4(char* c)
         *(int*)(c + 0xa8) = 0;
         *(int*)(c + 0xac) = 0;
         *(int*)(c + 0x10c) = 1;
-        func_ov002_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -83,7 +83,7 @@ void func_ov090_021310b4(char* c)
     if (flags & 0x4380) {
         *(unsigned char*)(c + 0x3a1) = 3;
         *(int*)(c + 0x10c) = 3;
-        func_ov002_020aea30(c, p, 0, 3);
+        func_ov002_020aea30(c, p, 0);
         return;
     }
     {

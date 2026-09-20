@@ -3,7 +3,7 @@ typedef int Fix12i;
 
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* m, void* f, int a, Fix12i fix, unsigned sp0);
-extern void func_ov002_020aea30(char* c, char* p, int r2);
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern void func_02012694(int a, char* b);
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, short* v, char* p);
 extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(char* c, char* p);

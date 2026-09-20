@@ -8,7 +8,7 @@ public:
 };
 
 extern "C" {
-extern void UnloadBlueCoinModel(char *c);
+extern void UnloadBlueCoinModel(void *c);
 }
 extern int data_ov020_02114aa0;
 extern int data_ov020_02114ab8;

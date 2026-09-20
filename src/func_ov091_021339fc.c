@@ -5,7 +5,7 @@
 #include "decl_SaveData.h"
 
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern void func_ov002_020aea30(void *c, void *a, u32 unused);
+extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern void _ZN8dActor_c8PoofDustEv(void *a);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
