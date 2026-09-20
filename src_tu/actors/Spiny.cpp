@@ -111,7 +111,7 @@ struct Vector3_16;
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" BCA_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned int c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, u16 c);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
@@ -303,7 +303,7 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(int id, void *pos);
 extern void _ZN5dCc_c5ClearEv(void *p);
 extern void _ZN5dCc_c6UpdateEv(void *p);
@@ -382,7 +382,7 @@ int func_ov077_02125bb4(char *c)
 /* ROM ordinal 21 -- func_ov077_02125b1c, 0x02125b1c, size 0x98 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, unsigned int j);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u16 j);
 extern void func_02035684(int* p, int v);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
@@ -403,7 +403,7 @@ void func_ov077_02125b1c(char* c) {
 /* ROM ordinal 20 -- func_ov077_02125a54, 0x02125a54, size 0xc8 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-extern void _Z14ApproachLinearRsss(short *a, short b, short c);
+extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
 extern void _ZN8dActor_c8PoofDustEv(void *);
@@ -520,9 +520,8 @@ int func_ov077_02125908(char *c)
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov077_021258dc
-// recovered name: daJgm_c_Kill
-/* recovered: renamed to Class_Method */
-/* daJgm_c::Kill - recovered from vtable slot identity */
+/* State 3 entry handler: PMF record data_ov077_021278e8 is copied into
+ * data_ov077_02127c28 at +0x30 by __sinit_ov077_0212749c. */
 extern void _ZN5dCc_c5ClearEv(void *);
 int func_ov077_021258dc(char *c)
 {
@@ -576,7 +575,6 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: shared common types */
 #include "common.h"
 extern s16 data_02082214[];
-extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 #define LA(p) ((int)(p))
 int func_ov077_021256b4(char *o)
 {
@@ -635,7 +633,7 @@ int func_ov077_021256b4(char *o)
         v.x = tx; v.y = ty2; v.z = tz;
     }
 
-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(o, &v, (struct Vector3 *)(o + 0x5c), one);
+    ((dActor_c*)o)->DetectRaycastClsn(v, *(Vector3*)(o + 0x5c), one);
 
     *(int *)(o + 0xd0) = 0;
     _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);
@@ -660,7 +658,7 @@ extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
 extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* p);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern void func_0201267c(int a, void* p);
 extern void func_ov077_02125e94(void* c, int a);
 extern void _ZN8dActor_c8PoofDustEv(void* c);
@@ -727,8 +725,8 @@ extern "C" int func_ov077_02125550(char* c)
 extern "C" {
 
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, u16 e);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 }
 
 struct Base {
@@ -834,7 +832,7 @@ int func_ov077_021253a4(char* c)
 extern "C" {
 void func_ov077_021251d0(void *t);
 void func_ov077_02125290(char *t);
-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, u8 j);
 void func_ov077_02125304(char *c) {
     int b = (int)((*(int*)(c+0xb0) & 0x40000) != 0);
     if (b != 0) return;
@@ -908,7 +906,7 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov077_02125e94(void* c, int a);
 short Vec3_HorzAngle(void* a, void* b);
 void _ZN6Player16IncMegaKillCountEv(void* p);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);
+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, u8 d, u8 e, u8 f);
 
 void func_ov077_021250a8(void* vc){
   char* c = (char*)vc;
@@ -954,7 +952,7 @@ extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3 &pos);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
 extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
-extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
+extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 cc, u8 d);
 
 extern "C" void func_ov077_02124eb0(void *thiz)
 {
@@ -1053,7 +1051,7 @@ extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern "C" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
-extern "C" s16 func_02010844(void* unused, Vector3* v, s16 angle);
+extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle);
 extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 
 extern "C" void func_ov077_02124d08(void* va, void* vw) {

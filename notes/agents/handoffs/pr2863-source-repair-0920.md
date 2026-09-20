@@ -28,13 +28,40 @@ The code calls the existing `Model` and `ModelAnim` `Render(0)` methods. Those r
 slot-5 virtual calls preserve the entire object in isolation and in combination
 with the helper correction.
 
+Independent review of prior repair `3568a524fe60c5dfa2f3d4ff83451a1b3d11515a`
+identified two additional blockers, preserved here as SP2863-05 and SP2863-06.
+
+SP2863-05 is fixed locally across all seven reported contract families:
+
+- `Particle::System::NewSimple` bridges return `void*` at all three declarations.
+- The short-reference `ApproachLinear` bridge returns `int`.
+- `func_02010844` returns `s32`; assignment still performs the needed short store.
+- `DetectRaycastClsn` uses the existing genuine member and reference interface.
+- The scalar `Player::Hurt` bridges return `int` and use three `u8` flags.
+- The scalar `ModelAnim::SetAnim` bridges take a `u16` start frame.
+- The scalar `DropShadowRadHeight` bridge takes `u8` opacity.
+
+These scalar bridges follow their actual current definitions. This does not
+reconcile their shared aggregate/member declarations, reconstruct opaque object
+views, or claim other inherited declarations are correct. No shared header is
+changed. The explicit shadow-versus-definition audit now has no diagnostics for
+these seven symbols. DropShadow's actual definition also received a fresh strict
+relocation check, with empty differences and zero blind checks.
+
+SP2863-06 is fixed locally: the false recovered `daJgm_c_Kill` / vtable claim is
+replaced by the evidenced state3-entry PMF relationship. Relocations point from
+`data_ov077_021278e8` to `func_ov077_021258dc`; the initializer copies that record
+to `data_ov077_02127c28+0x30`, selected by the state helper's `state << 4` indexing.
+No original private method name is invented. The unchanged enrolled legacy shard
+still contains its old comment; this repair covers the owned shadow source.
+
 The original author's cleanup and commit ancestry are retained. No functions or
 symbols are moved or renamed, and no attribution, enrollment, header, manifest,
 or shared ledger changes belong to this repair.
 
 ## Measured proof
 
-The actual PR base, PR head, and repaired source compile to the identical
+The actual PR base, PR head, prior repair, and revised source compile to the identical
 21,528-byte object under `2004/b56`, SHA256
 `c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659`.
 Fresh producer verification of the applied source covers all 34 functions /
@@ -43,17 +70,17 @@ isolation and module-aware relocation linking. Exact commands, flags, replay
 source, per-function results, and unsuccessful alternatives are committed in the
 experiment record. No workaround or compiler limitation is claimed.
 
-`tubuild.py --manifest build/spiny2863-producer/manifest.json verify ov077/Spiny`
+`tubuild.py --manifest build/spiny2863-review-repair/manifest.json verify ov077/Spiny`
 returns **1**: the functions match, but nine emitted metadata symbols remain
 unlicensed, so promotion is refused. Existing policies remove the Spiny D2 and
 Vector3 D1; there are zero compiler-only policy errors. The D1/D0 ordinal pair
 `[0, 1]` remains reversed. These outputs and ordering are unchanged from both
 controls. The earlier stored count of eleven was stale; the fresh count is nine.
 
-Reference checks report no new dead paths and zero broken Markdown links among
-1,971 checked links. `git diff --check` passes. The declaration ratchet exits 0
-but explicitly checks no `src_tu` source here; it does not validate this helper
-contract. The committed Python replay recipe was executed successfully.
+The prior repair passed reference checks and its committed Python replay. This
+successor also passed the durable replay, reference check and git diff --check;
+their local logs remain with its proof. The ordinary declaration ratchet excludes `src_tu`,
+so the targeted audit above supplies the bounded contract check instead.
 
 The source remains an unenrolled shadow. A normal full-ROM build would not
 exercise this edit, so one was not used as its proof. Shared-header consumer
@@ -65,8 +92,9 @@ scratch sources, and receipts remain under the worktree's ignored `build/`.
 Reconstruction is **partial**. SP2863-03 remains open: `mMatrix` is still a byte
 member plus padding accessed through an M48 aggregate. SP2863-04 records the nine
 unlicensed metadata outputs and remaining helper/lifecycle reconstruction.
-Other inherited raw field views and call bridges were not accepted by these two
-repairs. No follow-up issue has been posted, and this document does not turn that
+Other inherited raw field views and call bridges were not accepted by these
+bounded repairs. The new correctness/provenance findings were repaired; neither
+is placed in a reconstruction follow-up. No follow-up issue has been posted, and this document does not turn that
 remaining work into an accepted deferral.
 
 The integrator should review this exact candidate, arrange an independently

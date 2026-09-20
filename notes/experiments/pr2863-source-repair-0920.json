@@ -7,8 +7,8 @@
   "source_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
   "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
   "source": "src_tu/actors/Spiny.cpp",
-  "source_sha256_lf": "dcf58402b3deec1e752daca24d81d887e7330a145d60592ce853ca114df83f62",
-  "scope": "Two bounded shadow-TU repairs. No promotion, header, manifest, symbols, enrollment or ledger change.",
+  "source_sha256_lf": "e9cbbe62403faf9eb6f5492ab096da17e463abb5360bf743465806ff7bb1d729",
+  "scope": "Bounded shadow-TU state/render and independently requested call-contract/provenance repairs. No promotion, header, manifest, symbols, enrollment or ledger change.",
   "formal_acceptance": false,
   "completion": "partial",
   "independence": "The agent that first tested these scratch forms is now their producer. A different reviewer must independently accept this committed repair.",
@@ -38,6 +38,20 @@
       "kind": "reconstruction",
       "disposition": "open",
       "reason": "The shadow retains nine unlicensed metadata outputs and reversed destructor ordinal pair [0,1]. Existing raw helper fields, free-function bridges and lifecycle forms are not accepted by this narrow repair. A follow-up issue has not been posted."
+    },
+    {
+      "id": "SP2863-05",
+      "kind": "correctness",
+      "disposition": "fixed locally; renewed independent acceptance pending",
+      "reason": "All seven reviewed contract families are repaired in the owned shadow. NewSimple returns void*, short ApproachLinear returns int, func_02010844 returns s32. DetectRaycastClsn uses the actual bool/bool member and Vector3 references. The existing scalar Player::Hurt bridges return int and take three u8 flags; SetAnim startFrame is u16; DropShadow opacity is u8.",
+      "evidence": "Fresh whole-TU object is identical to the prior repair, input and actual base. All 34 functions strictly verify; the targeted definition audit has no diagnostics for these seven symbols. The independent reviewer originally compiled six definition controls; this producer additionally compiled DropShadow strictly with zero differences/blind."
+    },
+    {
+      "id": "SP2863-06",
+      "kind": "provenance",
+      "disposition": "fixed locally; renewed independent acceptance pending",
+      "reason": "Removed false recovered daJgm_c_Kill / vtable identity comments. The replacement states only the evidenced state3-entry PMF relationship: data_ov077_021278e8 is copied into data_ov077_02127c28+0x30 by __sinit_ov077_0212749c. No original private method name or class rename is claimed.",
+      "evidence": "ov077 relocs.txt records data_ov077_021278e8 -> func_ov077_021258dc. __sinit_ov077_0212749c.c assigns p6 from that 8-byte PMF; func_ov077_02125e94 selects states with i << 4. The body clears its collider and sets state3. The unchanged production shard retains its legacy prose; only the owned shadow is repaired."
     }
   ],
   "compiler": "2004/b56",
@@ -46,7 +60,7 @@
   "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
   "object_bytes": 21528,
   "base_and_input_control": "The actual input parent is source_base. Independently compiling both complete shadow TUs gives byte-for-byte identical objects. The repaired object is also identical to both.",
-  "patch_from_input": "--- a/src_tu/actors/Spiny.cpp\n+++ b/src_tu/actors/Spiny.cpp\n@@ -115,7 +115,7 @@\n extern \"C\" int _ZN11ShadowModel12InitCylinderEv(void *self);\n extern \"C\" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);\n extern \"C\" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);\n-namespace three_arg_e94 { extern \"C\" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */\n+extern \"C\" void func_ov077_02125e94(void *c, int state);\n \n extern SharedFilePtr data_ov077_02127b48;\n extern SharedFilePtr data_ov077_02127b38;\n@@ -141,7 +141,7 @@\n     mScaleY = 0x1000;\n     mScaleZ = 0x1000;\n     mDespawnTimer = 0x2c;\n-    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);\n+    func_ov077_02125e94(this, 0);\n     *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;\n     func_ov077_02125304((char *)this);\n     return 1;\n@@ -200,17 +200,13 @@\n // @symbol _ZN5Spiny6RenderEv\n /* recovered: named members + shared header, real C++ method */\n #include \"Spiny.h\"\n-struct Obj {\n-  virtual void m0(); virtual void m1(); virtual void m2();\n-  virtual void m3(); virtual void m4(); virtual void doit(int);\n-};\n \n int Spiny::Render()\n {\n   if((mFlags & 0x40000) ? 1 : 0) return 1;\n   int s=mState;\n-  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);\n-  else ((Obj*)&mModelAnim)->doit(0);\n+  if(s==0 || s==4) mModel.Render(0);\n+  else mModelAnim.Render(0);\n   return 1;\n }\n \n",
+  "patch_from_input": "diff --git a/src_tu/actors/Spiny.cpp b/src_tu/actors/Spiny.cpp\nindex 378d31769..a2be199a1 100644\n--- a/src_tu/actors/Spiny.cpp\n+++ b/src_tu/actors/Spiny.cpp\n@@ -111,11 +111,11 @@ struct Vector3_16;\n extern \"C\" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);\n extern \"C\" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);\n extern \"C\" BCA_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);\n-extern \"C\" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned int c);\n+extern \"C\" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, u16 c);\n extern \"C\" int _ZN11ShadowModel12InitCylinderEv(void *self);\n extern \"C\" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);\n extern \"C\" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);\n-namespace three_arg_e94 { extern \"C\" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */\n+extern \"C\" void func_ov077_02125e94(void *c, int state);\n \n extern SharedFilePtr data_ov077_02127b48;\n extern SharedFilePtr data_ov077_02127b38;\n@@ -141,7 +141,7 @@ int Spiny::InitResources()\n     mScaleY = 0x1000;\n     mScaleZ = 0x1000;\n     mDespawnTimer = 0x2c;\n-    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);\n+    func_ov077_02125e94(this, 0);\n     *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;\n     func_ov077_02125304((char *)this);\n     return 1;\n@@ -200,17 +200,13 @@ done:\n // @symbol _ZN5Spiny6RenderEv\n /* recovered: named members + shared header, real C++ method */\n #include \"Spiny.h\"\n-struct Obj {\n-  virtual void m0(); virtual void m1(); virtual void m2();\n-  virtual void m3(); virtual void m4(); virtual void doit(int);\n-};\n \n int Spiny::Render()\n {\n   if((mFlags & 0x40000) ? 1 : 0) return 1;\n   int s=mState;\n-  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);\n-  else ((Obj*)&mModelAnim)->doit(0);\n+  if(s==0 || s==4) mModel.Render(0);\n+  else mModelAnim.Render(0);\n   return 1;\n }\n \n@@ -307,7 +303,7 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);\n extern void _ZN8dActor_c8PoofDustEv(void *c);\n extern void _ZN7fBase_c18MarkForDestructionEv(void *c);\n extern void func_ov077_02125e94(void *c, int a);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);\n extern void func_0201267c(int id, void *pos);\n extern void _ZN5dCc_c5ClearEv(void *p);\n extern void _ZN5dCc_c6UpdateEv(void *p);\n@@ -386,7 +382,7 @@ int func_ov077_02125bb4(char *c)\n /* ROM ordinal 21 -- func_ov077_02125b1c, 0x02125b1c, size 0x98 */\n /* -------------------------------------------------------------------------- */\n extern \"C\" {\n-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, unsigned int j);\n+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u16 j);\n extern void func_02035684(int* p, int v);\n extern int RandomIntInternal(int* seed);\n extern int data_0209e650;\n@@ -407,7 +403,7 @@ void func_ov077_02125b1c(char* c) {\n /* ROM ordinal 20 -- func_ov077_02125a54, 0x02125a54, size 0xc8 */\n /* -------------------------------------------------------------------------- */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n-extern void _Z14ApproachLinearRsss(short *a, short b, short c);\n+extern int _Z14ApproachLinearRsss(short *a, short b, short c);\n extern void _ZN9Animation7AdvanceEv(void *);\n extern void func_ov077_02124eb0(void *c);\n extern void _ZN8dActor_c8PoofDustEv(void *);\n@@ -524,9 +520,8 @@ int func_ov077_02125908(char *c)\n /* -------------------------------------------------------------------------- */\n extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n // @symbol func_ov077_021258dc\n-// recovered name: daJgm_c_Kill\n-/* recovered: renamed to Class_Method */\n-/* daJgm_c::Kill - recovered from vtable slot identity */\n+/* State 3 entry handler: PMF record data_ov077_021278e8 is copied into\n+ * data_ov077_02127c28 at +0x30 by __sinit_ov077_0212749c. */\n extern void _ZN5dCc_c5ClearEv(void *);\n int func_ov077_021258dc(char *c)\n {\n@@ -580,7 +575,6 @@ extern \"C\" {  /* .c-derived member: C linkage for the whole block */\n /* recovered: shared common types */\n #include \"common.h\"\n extern s16 data_02082214[];\n-extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);\n #define LA(p) ((int)(p))\n int func_ov077_021256b4(char *o)\n {\n@@ -639,7 +633,7 @@ int func_ov077_021256b4(char *o)\n         v.x = tx; v.y = ty2; v.z = tz;\n     }\n \n-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(o, &v, (struct Vector3 *)(o + 0x5c), one);\n+    ((dActor_c*)o)->DetectRaycastClsn(v, *(Vector3*)(o + 0x5c), one);\n \n     *(int *)(o + 0xd0) = 0;\n     _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);\n@@ -664,7 +658,7 @@ extern \"C\" {\n extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);\n extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);\n extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* p);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n extern void func_0201267c(int a, void* p);\n extern void func_ov077_02125e94(void* c, int a);\n extern void _ZN8dActor_c8PoofDustEv(void* c);\n@@ -731,8 +725,8 @@ extern \"C\" int func_ov077_02125550(char* c)\n extern \"C\" {\n \n extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);\n-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);\n-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, u16 e);\n+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);\n }\n \n struct Base {\n@@ -838,7 +832,7 @@ int func_ov077_021253a4(char* c)\n extern \"C\" {\n void func_ov077_021251d0(void *t);\n void func_ov077_02125290(char *t);\n-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);\n+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, u8 j);\n void func_ov077_02125304(char *c) {\n     int b = (int)((*(int*)(c+0xb0) & 0x40000) != 0);\n     if (b != 0) return;\n@@ -912,7 +906,7 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);\n void func_ov077_02125e94(void* c, int a);\n short Vec3_HorzAngle(void* a, void* b);\n void _ZN6Player16IncMegaKillCountEv(void* p);\n-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);\n+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, u8 d, u8 e, u8 f);\n \n void func_ov077_021250a8(void* vc){\n   char* c = (char*)vc;\n@@ -958,7 +952,7 @@ extern \"C\" int _ZN6Player9IsOnShellEv(void *p);\n extern \"C\" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3 &pos);\n extern \"C\" short Vec3_HorzAngle(void *a, void *b);\n extern \"C\" void _ZN6Player16IncMegaKillCountEv(void *p);\n-extern \"C\" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);\n+extern \"C\" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 cc, u8 d);\n \n extern \"C\" void func_ov077_02124eb0(void *thiz)\n {\n@@ -1057,7 +1051,7 @@ extern \"C\" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);\n extern \"C\" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);\n extern \"C\" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);\n extern \"C\" int _ZN4cstd4fdivEii(int a, int b);\n-extern \"C\" s16 func_02010844(void* unused, Vector3* v, s16 angle);\n+extern \"C\" s32 func_02010844(void* unused, Vector3* v, s16 angle);\n extern \"C\" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);\n \n extern \"C\" void func_ov077_02124d08(void* va, void* vw) {\n",
   "measurements": [
     {
       "variant": "control",
@@ -131,7 +145,7 @@
     "truth_state_local": "An ordinary int initialState = 0 local before the scale stores also matches, but is unnecessary and not retained."
   },
   "fresh_applied_source_result": {
-    "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-producer\\manifest.json verify ov077/Spiny",
+    "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-review-repair\\manifest.json verify ov077/Spiny",
     "exit_code": 1,
     "strict_verified": 34,
     "function_bytes": 5864,
@@ -173,7 +187,8 @@
         1
       ]
     ],
-    "verdict": "Text/function proof passes; promotion is refused. Exit1 is the inherited nine unlicensed metadata outputs, not a new function mismatch. The historical preflight count of eleven was stale."
+    "verdict": "Text/function proof passes; promotion is refused. Exit1 is the inherited nine unlicensed metadata outputs, not a new function mismatch. The historical preflight count of eleven was stale.",
+    "whole_object_identical_to_prior_repair_input_and_base": true
   },
   "functions": [
     {
@@ -498,5 +513,263 @@
       "exit_code": 0,
       "result": "Replay independently recompiled the applied source, asserted exact object SHA, and verified all 34 functions with the recorded policy limits."
     }
-  ]
+  ],
+  "prior_repair_commit": "3568a524fe60c5dfa2f3d4ff83451a1b3d11515a",
+  "review_followup": {
+    "reviewed_commit": "3568a524fe60c5dfa2f3d4ff83451a1b3d11515a",
+    "independent_reviewer": "codex-spiny-independent-0920",
+    "original_new_findings": [
+      {
+        "id": "SP2863-05",
+        "kind": "correctness",
+        "disposition": "open_blocking",
+        "introduced_by_repair": false,
+        "location": "src_tu/actors/Spiny.cpp declarations listed in contract_families",
+        "summary": "Inherited local declarations still contradict actual called definitions; a clean byte result cannot establish source-level call agreement.",
+        "contract_families": [
+          {
+            "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+            "source_lines": [
+              306,
+              663,
+              731
+            ],
+            "source_contract": "void (u32,int,int,int)",
+            "actual_definition": "void* (u32,int,int,int)",
+            "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+            "used_by": [
+              "func_ov077_02125bb4",
+              "func_ov077_02125550",
+              "func_ov077_02125480"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_Z14ApproachLinearRsss",
+            "source_lines": [
+              406
+            ],
+            "source_contract": "void (short*,short,short)",
+            "actual_definition": "int ApproachLinear(short&,short,short)",
+            "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+            "used_by": [
+              "func_ov077_02125a54"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "func_02010844",
+            "source_lines": [
+              1056
+            ],
+            "source_contract": "s16 (void*,Vector3*,s16)",
+            "actual_definition": "s32 (void*,Vector3*,s16)",
+            "reference": "src/func_02010844.c:17",
+            "used_by": [
+              "func_ov077_02124d08"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+            "source_lines": [
+              579
+            ],
+            "source_contract": "int (void*,Vector3*,Vector3*,int)",
+            "actual_definition": "bool dActor_c::DetectRaycastClsn(Vector3&,Vector3&,bool)",
+            "reference": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp:7",
+            "used_by": [
+              "func_ov077_021256b4"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+            "source_lines": [
+              911,
+              957
+            ],
+            "source_contract": "void return; last three flags unsigned int",
+            "actual_definition": "int return; last three flags u8",
+            "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+            "used_by": [
+              "func_ov077_021250a8",
+              "func_ov077_02124eb0"
+            ],
+            "callee_strict": "VERIFIED"
+          },
+          {
+            "symbol": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+            "source_lines": [
+              114,
+              385,
+              730
+            ],
+            "source_contract": "fifth explicit argument unsigned int",
+            "actual_definition": "current scalar C definition reads u16 startFrame",
+            "reference": "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c:26",
+            "used_by": [
+              "Spiny::InitResources",
+              "func_ov077_02125b1c",
+              "func_ov077_02125480"
+            ],
+            "callee_strict": "VERIFIED",
+            "boundary": "Shared ModelAnim member declaration retains u32 startFrame and Fix12 speed; distinguish the genuine member interface from the existing scalar bridge, do not claim all types are recovered."
+          },
+          {
+            "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+            "source_lines": [
+              837
+            ],
+            "source_contract": "last explicit argument unsigned int",
+            "actual_definition": "current scalar C definition takes u8 opacity",
+            "reference": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp:17",
+            "used_by": [
+              "func_ov077_02125304"
+            ],
+            "callee_strict": "Not separately rerun; definition inspected",
+            "boundary": "Shared real member declaration and scalar definition remain different representations; choose and document the actual called contract rather than silently keeping incompatible bridge declarations."
+          }
+        ],
+        "required_action": "Producer repairs truthful interfaces/bridge contracts with per-site and full34strict proof. Do not place these correctness defects in the reconstruction follow-up or force good typed interfaces to match erroneous legacy definitions. Signedness/opaque-view diagnostics need manual disposition, not blind mass rewriting."
+      },
+      {
+        "id": "SP2863-06",
+        "kind": "provenance",
+        "disposition": "open_blocking",
+        "introduced_by_repair": false,
+        "location": "src_tu/actors/Spiny.cpp:523-525",
+        "quotes": [
+          "// recovered name: daJgm_c_Kill",
+          "/* daJgm_c::Kill - recovered from vtable slot identity */"
+        ],
+        "evidence": "Actual symbol func_ov077_021258dc is referenced by data_ov077_021278e8, an 8-byte PMF record after the Lakitu table whose last slot is021278e4. __sinit_ov077_0212749c.c:47 copies it to Spiny data02127c28.p6, the state3 enter handler selected by func02125e94. It clears the collider and stores state3. This is not a recovered Lakitu virtual Kill method.",
+        "required_action": "Remove or replace this owned-TU comment with bounded observed state-handler behavior; do not rename code or claim an original private name. Keep the unchanged legacy shard context explicit."
+      }
+    ],
+    "actual_contract_references": [
+      {
+        "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
+        "source_lines": [
+          306,
+          663,
+          731
+        ],
+        "source_contract": "void (u32,int,int,int)",
+        "actual_definition": "void* (u32,int,int,int)",
+        "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+        "used_by": [
+          "func_ov077_02125bb4",
+          "func_ov077_02125550",
+          "func_ov077_02125480"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_Z14ApproachLinearRsss",
+        "source_lines": [
+          406
+        ],
+        "source_contract": "void (short*,short,short)",
+        "actual_definition": "int ApproachLinear(short&,short,short)",
+        "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+        "used_by": [
+          "func_ov077_02125a54"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "func_02010844",
+        "source_lines": [
+          1056
+        ],
+        "source_contract": "s16 (void*,Vector3*,s16)",
+        "actual_definition": "s32 (void*,Vector3*,s16)",
+        "reference": "src/func_02010844.c:17",
+        "used_by": [
+          "func_ov077_02124d08"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+        "source_lines": [
+          579
+        ],
+        "source_contract": "int (void*,Vector3*,Vector3*,int)",
+        "actual_definition": "bool dActor_c::DetectRaycastClsn(Vector3&,Vector3&,bool)",
+        "reference": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp:7",
+        "used_by": [
+          "func_ov077_021256b4"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "source_lines": [
+          911,
+          957
+        ],
+        "source_contract": "void return; last three flags unsigned int",
+        "actual_definition": "int return; last three flags u8",
+        "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+        "used_by": [
+          "func_ov077_021250a8",
+          "func_ov077_02124eb0"
+        ],
+        "callee_strict": "VERIFIED"
+      },
+      {
+        "symbol": "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj",
+        "source_lines": [
+          114,
+          385,
+          730
+        ],
+        "source_contract": "fifth explicit argument unsigned int",
+        "actual_definition": "current scalar C definition reads u16 startFrame",
+        "reference": "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c:26",
+        "used_by": [
+          "Spiny::InitResources",
+          "func_ov077_02125b1c",
+          "func_ov077_02125480"
+        ],
+        "callee_strict": "VERIFIED",
+        "boundary": "Shared ModelAnim member declaration retains u32 startFrame and Fix12 speed; distinguish the genuine member interface from the existing scalar bridge, do not claim all types are recovered."
+      },
+      {
+        "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+        "source_lines": [
+          837
+        ],
+        "source_contract": "last explicit argument unsigned int",
+        "actual_definition": "current scalar C definition takes u8 opacity",
+        "reference": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp:17",
+        "used_by": [
+          "func_ov077_02125304"
+        ],
+        "callee_strict": "Not separately rerun; definition inspected",
+        "boundary": "Shared real member declaration and scalar definition remain different representations; choose and document the actual called contract rather than silently keeping incompatible bridge declarations."
+      }
+    ],
+    "fresh_command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-review-repair\\manifest.json verify ov077/Spiny",
+    "fresh_exit_code": 1,
+    "fresh_whole_object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+    "whole_object_identical_to_prior_repair_input_and_base": true,
+    "strict_verified": 34,
+    "strict_differences": [],
+    "strict_blind": 0,
+    "definition_audit": "Explicit src_tu source versus srcpath-resolved actual definitions; reviewed seven-symbol diagnostic list is now empty. This is not a claim that all inherited declarations agree.",
+    "scalar_bridge_boundary": "SetAnim, DropShadow and Player::Hurt bridge changes follow the actual currently compiled scalar definitions. The real shared member forms are not rewritten to match them, and their aggregate/scalar/source-contract reconciliation remains future reconstruction. Opaque object pointer views are not claimed to be reconstructed by these scalar corrections.",
+    "drop_shadow_control_command": "python tools/linkcheck.py --name _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j --c src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp --addr 0x02010be8 --size 0x48 --module arm9",
+    "drop_shadow_control": {
+      "name": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+      "module": "arm9",
+      "addr": "0x02010be8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "no_correctness_or_provenance_deferral": true
+  }
 }
