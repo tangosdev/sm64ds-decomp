@@ -3,16 +3,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Spiny.h"
 extern "C" {
-int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* c, int d);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
-void _ZN7fBase_c18MarkForDestructionEv(void* c);
-void func_ov077_02124c28(void* c);
+int func_ov077_02124c28(char* c);
 void func_ov077_02125e20(void* c);
-void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* c, void* cyl);
 void func_ov077_02125304(char* c);
-void _ZN8dActor_c8PoofDustEv(void* c);
-void func_02012694(int a, void* p);
+void func_02012694(unsigned int soundID, const Vector3* cameraPosition);
 
 extern signed char data_0209f2f8;
 }
@@ -20,11 +16,11 @@ extern signed char data_0209f2f8;
 int Spiny::Behavior()
 {
     int s = mState;
-    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
+    if (s != 1 || mWithMeshClsn.IsOnGround()) {
         s = mState;
         if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
-            if (DecIfAbove0_Byte((unsigned char*)((char*)&mDespawnTimer)) == 0) {
-                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+            if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+                MarkForDestruction();
                 return 1;
             }
             goto done;
@@ -32,12 +28,12 @@ int Spiny::Behavior()
     }
     func_ov077_02124c28(((char*)this));
     func_ov077_02125e20(((char*)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x1b0);
+    MakeVanishLuigiWork(mdCcAc_c);
     func_ov077_02125304(((char*)this));
     if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {
-        _ZN8dActor_c8PoofDustEv(((char*)this));
-        func_02012694(0xc4, ((char*)this) + 0x74);
-        _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+        PoofDust();
+        func_02012694(0xc4, (const Vector3*)&mCamSpacePosX);
+        MarkForDestruction();
     }
 done:
     return 1;

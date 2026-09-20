@@ -5,17 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BookShot.h"
 extern "C" {
-extern void func_0200f760(void* a, void* b);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* thiz, void* w);
-extern void _ZN5dCc_c5ClearEv(void* thiz);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* thiz, const Vector3& v);
-extern void _ZN5dCc_c6UpdateEv(void* thiz);
+extern void func_0200f760(void* self, char* actor);
 }
 
 int BookShot::Behavior()
 {
-    func_0200f760(((char*)this), ((char*)this) + 0x21c);
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x25c) != 0) {
+    func_0200f760(this, (char*)&mdCcAcPos_c);
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         if (mEatenByYoshi != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;
@@ -35,8 +31,8 @@ int BookShot::Behavior()
         break;
     }
     func_ov020_0211216c(((char*)this));
-    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x21c, *(Vector3*)((char*)&unk_438));
-    _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.SetPosRelativeToActor(*(const Vector3*)&unk_438);
+    mdCcAcPos_c.Update();
     return 1;
 }
