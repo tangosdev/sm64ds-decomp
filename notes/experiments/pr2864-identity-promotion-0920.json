@@ -8361,7 +8361,7 @@
     "rom": {
       "stage": "rom",
       "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
-      "head_before": "c4668008f8dfefbc92380491494bafae56a6742e",
+      "head_before": "a6010eab4cda2b87890559f8b7a079b60f1714b9",
       "gates": [
         {
           "name": "rombuild",
@@ -8377,7 +8377,7 @@
             "build/koopa-production/data.json"
           ],
           "exit_code": 0,
-          "seconds": 135.73,
+          "seconds": 138.39,
           "log": "build/koopa-production/rombuild.log"
         },
         {
@@ -8393,7 +8393,7 @@
             "build/koopa-production/prepush-linkcheck.json"
           ],
           "exit_code": 0,
-          "seconds": 157.5,
+          "seconds": 153.19,
           "log": "build/koopa-production/prepush-linkcheck.log"
         },
         {
@@ -8417,7 +8417,7 @@
     "static": {
       "stage": "static",
       "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
-      "head_before": "c4668008f8dfefbc92380491494bafae56a6742e",
+      "head_before": "a6010eab4cda2b87890559f8b7a079b60f1714b9",
       "gates": [
         {
           "name": "coverage",
@@ -8431,7 +8431,7 @@
             "2705c624d2554ee8d21a56641275a2b85cce3a8b"
           ],
           "exit_code": 0,
-          "seconds": 0.41,
+          "seconds": 0.42,
           "log": "build/koopa-production/coverage.log"
         },
         {
@@ -8443,7 +8443,7 @@
             "tools/layout_check.py"
           ],
           "exit_code": 0,
-          "seconds": 0.39,
+          "seconds": 0.36,
           "log": "build/koopa-production/layout.log"
         },
         {
@@ -8456,7 +8456,7 @@
             "--list"
           ],
           "exit_code": 0,
-          "seconds": 0.19,
+          "seconds": 0.17,
           "log": "build/koopa-production/conflicts.log"
         },
         {
@@ -8468,7 +8468,7 @@
             "tools/check_dead_references.py"
           ],
           "exit_code": 0,
-          "seconds": 6.11,
+          "seconds": 6.03,
           "log": "build/koopa-production/references.log"
         },
         {
@@ -8480,7 +8480,7 @@
             "tools/port_refcheck.py"
           ],
           "exit_code": 0,
-          "seconds": 0.95,
+          "seconds": 0.92,
           "log": "build/koopa-production/port.log"
         },
         {
@@ -8494,7 +8494,7 @@
             "2705c624d2554ee8d21a56641275a2b85cce3a8b"
           ],
           "exit_code": 0,
-          "seconds": 8.49,
+          "seconds": 8.42,
           "log": "build/koopa-production/declarations.log"
         },
         {
@@ -8510,7 +8510,7 @@
             "HEAD"
           ],
           "exit_code": 0,
-          "seconds": 63.55,
+          "seconds": 63.83,
           "log": "build/koopa-production/attribution.log"
         },
         {
@@ -8522,9 +8522,50 @@
             "tools/tiers_ratchet.py",
             "--check"
           ],
-          "exit_code": 1,
-          "seconds": 3.72,
+          "exit_code": 0,
+          "seconds": 3.76,
           "log": "build/koopa-production/converted.log"
+        },
+        {
+          "name": "queue",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/queue_audit.py",
+            "--check-promoted"
+          ],
+          "exit_code": 0,
+          "seconds": 0.08,
+          "log": "build/koopa-production/queue.log"
+        },
+        {
+          "name": "offsets",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_header_offsets.py",
+            "--changed",
+            "2705c624d2554ee8d21a56641275a2b85cce3a8b"
+          ],
+          "exit_code": 0,
+          "seconds": 0.38,
+          "log": "build/koopa-production/offsets.log"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/langmode_audit.py",
+            "--check",
+            "build/main2705-langmode.json"
+          ],
+          "exit_code": 0,
+          "seconds": 6.16,
+          "log": "build/koopa-production/langmode.log"
         }
       ]
     }
@@ -8569,5 +8610,3892 @@
     "cause": "The already-enrolled branch of tubuild.cmd_linkcheck forces intact-object preparation for any enrolled candidate, even when this manifest has only text and no production_mode:intact-object. Normal rombuild enables intact preparation only for explicit intact-object manifests.",
     "proof_required_instead": "Normal production rombuild with full source-function accounting, actual linked39-function span, exact ROM, strict relocations, all emitted metadata and complete raw output/order/policy audit. The refused invocation is not reported as a linkcheck pass.",
     "tooling_changes": null
+  },
+  "final_production_proof": {
+    "tested_commit": "a6010eab4cda2b87890559f8b7a079b60f1714b9",
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11208,
+      "compiledBytes": 2151584,
+      "sourceFunctions": 11208,
+      "sourceBytes": 2151584,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 96.13405608665892,
+      "reproducingFunctions": 11208,
+      "reproducingBytes": 2151584,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 26,
+      "sourceBssClaims": 3,
+      "sourceBssBytes": 172,
+      "reproducingDataClaims": 26,
+      "reproducingDataClaimBytes": 4984,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "rom_artifact": {
+      "path": "C:\\tmp\\sm64ds-koopaintegrate0920\\build\\sm64ds.nds",
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "rom_data": {
+      "symbols": 1324,
+      "verified": 758,
+      "partial": 265,
+      "differs": 3,
+      "unnamed": 298,
+      "verifiedBytes": 45576,
+      "partialBytes": 6840,
+      "differingSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "addr": 34137860,
+          "bytes": 16
+        },
+        {
+          "module": "ov002",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "addr": 34650812,
+          "bytes": 24
+        },
+        {
+          "module": "ov002",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "addr": 34650876,
+          "bytes": 24
+        }
+      ],
+      "verifiedRecords": 3045,
+      "partialRecords": 2298,
+      "differsRecords": 8,
+      "unnamedRecords": 831,
+      "totalRecords": 6182,
+      "differing": [
+        {
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN8daDemo_c10anmModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c10anmModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        }
+      ]
+    },
+    "strict_relocations": [
+      {
+        "file": "src/Matrix4x3_FromTranslation.c",
+        "name": "Matrix4x3_FromTranslation",
+        "module": "arm9",
+        "addr": "0x203bf44",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/UnloadBlueCoinModel.c",
+        "name": "UnloadBlueCoinModel",
+        "module": "arm9",
+        "addr": "0x200fe70",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN14CutsceneObject8BehaviorEv.cpp",
+        "name": "_ZN14CutsceneObject8BehaviorEv",
+        "module": "ov002",
+        "addr": "0x20f81c4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp",
+        "name": "_ZN15BookShotSpawner16CleanupResourcesEv",
+        "module": "ov020",
+        "addr": "0x2112290",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN3MrI16CleanupResourcesEv.cpp",
+        "name": "_ZN3MrI16CleanupResourcesEv",
+        "module": "ov071",
+        "addr": "0x2121650",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+        "name": "_ZN9daMenbo_c8BehaviorEv",
+        "module": "ov090",
+        "addr": "0x2131f88",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "_ZN10daKpa2Bg_cD1Ev",
+        "module": "ov060",
+        "addr": "0x2117980",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "_ZN10daKpa2Bg_cD0Ev",
+        "module": "ov060",
+        "addr": "0x21179d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "func_ov060_02117a3c",
+        "module": "ov060",
+        "addr": "0x2117a3c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "func_ov060_02117a64",
+        "module": "ov060",
+        "addr": "0x2117a64",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "func_ov060_02117ae0",
+        "module": "ov060",
+        "addr": "0x2117ae0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "_ZN10daKpa2Bg_c16CleanupResourcesEv",
+        "module": "ov060",
+        "addr": "0x2117b58",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "_ZN10daKpa2Bg_c6RenderEv",
+        "module": "ov060",
+        "addr": "0x2117b9c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKpa2Bg_c.cpp",
+        "name": "_ZN10daKpa2Bg_c8BehaviorEv",
+        "module": "ov060",
+        "addr": "0x2117bc8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_cD1Ev",
+        "module": "ov084",
+        "addr": "0x2129020",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_cD0Ev",
+        "module": "ov084",
+        "addr": "0x2129070",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_021290d4",
+        "module": "ov084",
+        "addr": "0x21290d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129168",
+        "module": "ov084",
+        "addr": "0x2129168",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129238",
+        "module": "ov084",
+        "addr": "0x2129238",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212934c",
+        "module": "ov084",
+        "addr": "0x212934c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129498",
+        "module": "ov084",
+        "addr": "0x2129498",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_021294d0",
+        "module": "ov084",
+        "addr": "0x21294d0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_021296b0",
+        "module": "ov084",
+        "addr": "0x21296b0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_021296cc",
+        "module": "ov084",
+        "addr": "0x21296cc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129864",
+        "module": "ov084",
+        "addr": "0x2129864",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_021298d0",
+        "module": "ov084",
+        "addr": "0x21298d0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129a00",
+        "module": "ov084",
+        "addr": "0x2129a00",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129c9c",
+        "module": "ov084",
+        "addr": "0x2129c9c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129cf4",
+        "module": "ov084",
+        "addr": "0x2129cf4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_02129ed4",
+        "module": "ov084",
+        "addr": "0x2129ed4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212a580",
+        "module": "ov084",
+        "addr": "0x212a580",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212a6f8",
+        "module": "ov084",
+        "addr": "0x212a6f8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212a774",
+        "module": "ov084",
+        "addr": "0x212a774",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212aab0",
+        "module": "ov084",
+        "addr": "0x212aab0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212ab48",
+        "module": "ov084",
+        "addr": "0x212ab48",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212abd4",
+        "module": "ov084",
+        "addr": "0x212abd4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212af74",
+        "module": "ov084",
+        "addr": "0x212af74",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "func_ov084_0212b2dc",
+        "module": "ov084",
+        "addr": "0x212b2dc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c16OnAimedAtWithEggEv",
+        "module": "ov084",
+        "addr": "0x212b30c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c13OnTurnIntoEggER6Player",
+        "module": "ov084",
+        "addr": "0x212b344",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c16CleanupResourcesEv",
+        "module": "ov084",
+        "addr": "0x212b510",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c16OnPendingDestroyEv",
+        "module": "ov084",
+        "addr": "0x212b5b8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c6RenderEv",
+        "module": "ov084",
+        "addr": "0x212b5bc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c8BehaviorEv",
+        "module": "ov084",
+        "addr": "0x212b6ec",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c13InitResourcesEv",
+        "module": "ov084",
+        "addr": "0x212bc30",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "_ZN7daKrb_c13OnYoshiTryEatEv",
+        "module": "ov084",
+        "addr": "0x212bfc0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "daKrb_c_classInit_KURIBO_L",
+        "module": "ov084",
+        "addr": "0x212bff8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "daKrb_c_classInit_KURIBO_S",
+        "module": "ov084",
+        "addr": "0x212c054",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daKrb_c.cpp",
+        "name": "daKrb_c_classInit_KURIBO",
+        "module": "ov084",
+        "addr": "0x212c0b0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_cD1Ev",
+        "module": "ov030",
+        "addr": "0x2111688",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_cD0Ev",
+        "module": "ov030",
+        "addr": "0x21116d0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c13OnYoshiTryEatEv",
+        "module": "ov030",
+        "addr": "0x211172c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111734",
+        "module": "ov030",
+        "addr": "0x2111734",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111890",
+        "module": "ov030",
+        "addr": "0x2111890",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111908",
+        "module": "ov030",
+        "addr": "0x2111908",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111a00",
+        "module": "ov030",
+        "addr": "0x2111a00",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111b20",
+        "module": "ov030",
+        "addr": "0x2111b20",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111bc4",
+        "module": "ov030",
+        "addr": "0x2111bc4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111dd0",
+        "module": "ov030",
+        "addr": "0x2111dd0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111ea4",
+        "module": "ov030",
+        "addr": "0x2111ea4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02111f6c",
+        "module": "ov030",
+        "addr": "0x2111f6c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02112094",
+        "module": "ov030",
+        "addr": "0x2112094",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_021122b0",
+        "module": "ov030",
+        "addr": "0x21122b0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c12EnterState10Ev",
+        "module": "ov030",
+        "addr": "0x21123a4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02112400",
+        "module": "ov030",
+        "addr": "0x2112400",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState9Ev",
+        "module": "ov030",
+        "addr": "0x2112560",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02112578",
+        "module": "ov030",
+        "addr": "0x2112578",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState8Ev",
+        "module": "ov030",
+        "addr": "0x2112a14",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02112a84",
+        "module": "ov030",
+        "addr": "0x2112a84",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState7Ev",
+        "module": "ov030",
+        "addr": "0x2112c14",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02112da0",
+        "module": "ov030",
+        "addr": "0x2112da0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState6Ev",
+        "module": "ov030",
+        "addr": "0x2112ff8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02113094",
+        "module": "ov030",
+        "addr": "0x2113094",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState5Ev",
+        "module": "ov030",
+        "addr": "0x21132d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02113324",
+        "module": "ov030",
+        "addr": "0x2113324",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState4Ev",
+        "module": "ov030",
+        "addr": "0x211360c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_021136b0",
+        "module": "ov030",
+        "addr": "0x21136b0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState3Ev",
+        "module": "ov030",
+        "addr": "0x2113a80",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02113b38",
+        "module": "ov030",
+        "addr": "0x2113b38",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState2Ev",
+        "module": "ov030",
+        "addr": "0x2113be8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02113d20",
+        "module": "ov030",
+        "addr": "0x2113d20",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState1Ev",
+        "module": "ov030",
+        "addr": "0x2113fd8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02113ff0",
+        "module": "ov030",
+        "addr": "0x2113ff0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c11EnterState0Ev",
+        "module": "ov030",
+        "addr": "0x2114124",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02114134",
+        "module": "ov030",
+        "addr": "0x2114134",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_02114170",
+        "module": "ov030",
+        "addr": "0x2114170",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "func_ov030_021141a8",
+        "module": "ov030",
+        "addr": "0x21141a8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c16CleanupResourcesEv",
+        "module": "ov030",
+        "addr": "0x21141c4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c16OnPendingDestroyEv",
+        "module": "ov030",
+        "addr": "0x211422c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c6RenderEv",
+        "module": "ov030",
+        "addr": "0x2114230",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c8BehaviorEv",
+        "module": "ov030",
+        "addr": "0x2114278",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c13InitResourcesEv",
+        "module": "ov030",
+        "addr": "0x2114378",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daMky_c.cpp",
+        "name": "_ZN7daMky_c13OnTurnIntoEggER6Player",
+        "module": "ov030",
+        "addr": "0x21145d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_cD1Ev",
+        "module": "ov096",
+        "addr": "0x2135700",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_cD0Ev",
+        "module": "ov096",
+        "addr": "0x2135748",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c13OnYoshiTryEatEv",
+        "module": "ov096",
+        "addr": "0x21357a4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c16OnAimedAtWithEggEv",
+        "module": "ov096",
+        "addr": "0x21357ac",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021357b4",
+        "module": "ov096",
+        "addr": "0x21357b4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135800",
+        "module": "ov096",
+        "addr": "0x2135800",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135838",
+        "module": "ov096",
+        "addr": "0x2135838",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_0213585c",
+        "module": "ov096",
+        "addr": "0x213585c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135878",
+        "module": "ov096",
+        "addr": "0x2135878",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021358c8",
+        "module": "ov096",
+        "addr": "0x21358c8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135948",
+        "module": "ov096",
+        "addr": "0x2135948",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135e2c",
+        "module": "ov096",
+        "addr": "0x2135e2c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02135efc",
+        "module": "ov096",
+        "addr": "0x2135efc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021360c4",
+        "module": "ov096",
+        "addr": "0x21360c4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136134",
+        "module": "ov096",
+        "addr": "0x2136134",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136264",
+        "module": "ov096",
+        "addr": "0x2136264",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021363b4",
+        "module": "ov096",
+        "addr": "0x21363b4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021363c4",
+        "module": "ov096",
+        "addr": "0x21363c4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_0213640c",
+        "module": "ov096",
+        "addr": "0x213640c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136434",
+        "module": "ov096",
+        "addr": "0x2136434",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136534",
+        "module": "ov096",
+        "addr": "0x2136534",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021365d4",
+        "module": "ov096",
+        "addr": "0x21365d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_0213670c",
+        "module": "ov096",
+        "addr": "0x213670c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136754",
+        "module": "ov096",
+        "addr": "0x2136754",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021368a4",
+        "module": "ov096",
+        "addr": "0x21368a4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021368b4",
+        "module": "ov096",
+        "addr": "0x21368b4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_021368f0",
+        "module": "ov096",
+        "addr": "0x21368f0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "func_ov096_02136928",
+        "module": "ov096",
+        "addr": "0x2136928",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c16CleanupResourcesEv",
+        "module": "ov096",
+        "addr": "0x2136944",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c16OnPendingDestroyEv",
+        "module": "ov096",
+        "addr": "0x21369b0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c6RenderEv",
+        "module": "ov096",
+        "addr": "0x21369fc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c8BehaviorEv",
+        "module": "ov096",
+        "addr": "0x2136a50",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c13InitResourcesEv",
+        "module": "ov096",
+        "addr": "0x2136ab0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "_ZN9daSanbo_c13OnTurnIntoEggER6Player",
+        "module": "ov096",
+        "addr": "0x2136cd0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "daSanbo_c_classInit_SANBO_BODY",
+        "module": "ov096",
+        "addr": "0x2136d10",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daSanbo_c.cpp",
+        "name": "daSanbo_c_classInit_SANBO",
+        "module": "ov096",
+        "addr": "0x2136d60",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_cD1Ev",
+        "module": "ov065",
+        "addr": "0x2115ee0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_cD0Ev",
+        "module": "ov065",
+        "addr": "0x2115f28",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02115f84",
+        "module": "ov065",
+        "addr": "0x2115f84",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02115ff0",
+        "module": "ov065",
+        "addr": "0x2115ff0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_021162c0",
+        "module": "ov065",
+        "addr": "0x21162c0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02116328",
+        "module": "ov065",
+        "addr": "0x2116328",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02116364",
+        "module": "ov065",
+        "addr": "0x2116364",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02116588",
+        "module": "ov065",
+        "addr": "0x2116588",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_021165d8",
+        "module": "ov065",
+        "addr": "0x21165d8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_0211672c",
+        "module": "ov065",
+        "addr": "0x211672c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_02116744",
+        "module": "ov065",
+        "addr": "0x2116744",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_021168a8",
+        "module": "ov065",
+        "addr": "0x21168a8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_0211691c",
+        "module": "ov065",
+        "addr": "0x211691c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "func_ov065_0211696c",
+        "module": "ov065",
+        "addr": "0x211696c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c16CleanupResourcesEv",
+        "module": "ov065",
+        "addr": "0x2116ae8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c16OnPendingDestroyEv",
+        "module": "ov065",
+        "addr": "0x2116b30",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c6RenderEv",
+        "module": "ov065",
+        "addr": "0x2116b34",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c8BehaviorEv",
+        "module": "ov065",
+        "addr": "0x2116b84",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c13InitResourcesEv",
+        "module": "ov065",
+        "addr": "0x2116e10",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv",
+        "module": "ov065",
+        "addr": "0x2116f0c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player",
+        "module": "ov065",
+        "addr": "0x2116f14",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "_ZN15daYurei_Mucho_c13OnYoshiTryEatEv",
+        "module": "ov065",
+        "addr": "0x2116f40",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/actors/daYurei_Mucho_c.cpp",
+        "name": "daYurei_Mucho_c_classInit",
+        "module": "ov065",
+        "addr": "0x2116f48",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov002_020aea30.cpp",
+        "name": "func_ov002_020aea30",
+        "module": "ov002",
+        "addr": "0x20aea30",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov002_020bafc0.c",
+        "name": "func_ov002_020bafc0",
+        "module": "ov002",
+        "addr": "0x20bafc0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov002_020f8b24.c",
+        "name": "func_ov002_020f8b24",
+        "module": "ov002",
+        "addr": "0x20f8b24",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov060_0211577c.c",
+        "name": "func_ov060_0211577c",
+        "module": "ov060",
+        "addr": "0x211577c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov065_0211704c.c",
+        "name": "func_ov065_0211704c",
+        "module": "ov065",
+        "addr": "0x211704c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov065_02117994.c",
+        "name": "func_ov065_02117994",
+        "module": "ov065",
+        "addr": "0x2117994",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov079_02124188.c",
+        "name": "func_ov079_02124188",
+        "module": "ov079",
+        "addr": "0x2124188",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov081_021237ec.cpp",
+        "name": "func_ov081_021237ec",
+        "module": "ov081",
+        "addr": "0x21237ec",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov081_021243cc.cpp",
+        "name": "func_ov081_021243cc",
+        "module": "ov081",
+        "addr": "0x21243cc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov090_021310b4.c",
+        "name": "func_ov090_021310b4",
+        "module": "ov090",
+        "addr": "0x21310b4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov090_02132b14.c",
+        "name": "func_ov090_02132b14",
+        "module": "ov090",
+        "addr": "0x2132b14",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov091_021339fc.c",
+        "name": "func_ov091_021339fc",
+        "module": "ov091",
+        "addr": "0x21339fc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/func_ov094_021361d8.c",
+        "name": "func_ov094_021361d8",
+        "module": "ov094",
+        "addr": "0x21361d8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_cD1Ev",
+        "module": "ov062",
+        "addr": "0x21174cc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_cD0Ev",
+        "module": "ov062",
+        "addr": "0x2117514",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117570",
+        "module": "ov062",
+        "addr": "0x2117570",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_021175c0",
+        "module": "ov062",
+        "addr": "0x21175c0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117724",
+        "module": "ov062",
+        "addr": "0x2117724",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117994",
+        "module": "ov062",
+        "addr": "0x2117994",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_021179e4",
+        "module": "ov062",
+        "addr": "0x21179e4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117a3c",
+        "module": "ov062",
+        "addr": "0x2117a3c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117acc",
+        "module": "ov062",
+        "addr": "0x2117acc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117b48",
+        "module": "ov062",
+        "addr": "0x2117b48",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117b60",
+        "module": "ov062",
+        "addr": "0x2117b60",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117b9c",
+        "module": "ov062",
+        "addr": "0x2117b9c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117bf4",
+        "module": "ov062",
+        "addr": "0x2117bf4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02117c98",
+        "module": "ov062",
+        "addr": "0x2117c98",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118004",
+        "module": "ov062",
+        "addr": "0x2118004",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118058",
+        "module": "ov062",
+        "addr": "0x2118058",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_021180d4",
+        "module": "ov062",
+        "addr": "0x21180d4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_0211811c",
+        "module": "ov062",
+        "addr": "0x211811c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_021181a0",
+        "module": "ov062",
+        "addr": "0x21181a0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118258",
+        "module": "ov062",
+        "addr": "0x2118258",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118334",
+        "module": "ov062",
+        "addr": "0x2118334",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_021183e0",
+        "module": "ov062",
+        "addr": "0x21183e0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118588",
+        "module": "ov062",
+        "addr": "0x2118588",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118718",
+        "module": "ov062",
+        "addr": "0x2118718",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118a00",
+        "module": "ov062",
+        "addr": "0x2118a00",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118a50",
+        "module": "ov062",
+        "addr": "0x2118a50",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118b4c",
+        "module": "ov062",
+        "addr": "0x2118b4c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118cdc",
+        "module": "ov062",
+        "addr": "0x2118cdc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "func_ov062_02118de8",
+        "module": "ov062",
+        "addr": "0x2118de8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c16CleanupResourcesEv",
+        "module": "ov062",
+        "addr": "0x2118f04",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c16OnPendingDestroyEv",
+        "module": "ov062",
+        "addr": "0x2118f80",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c6RenderEv",
+        "module": "ov062",
+        "addr": "0x2118f84",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c8BehaviorEv",
+        "module": "ov062",
+        "addr": "0x21190ec",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c13InitResourcesEv",
+        "module": "ov062",
+        "addr": "0x2119420",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+        "module": "ov062",
+        "addr": "0x2119608",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+        "module": "ov062",
+        "addr": "0x2119628",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "_ZN8daNknk_c13OnYoshiTryEatEv",
+        "module": "ov062",
+        "addr": "0x21196a8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "daNknk_c_classInit_NOKONOKO_S",
+        "module": "ov062",
+        "addr": "0x21196bc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_nknk.cpp",
+        "name": "daNknk_c_classInit_NOKONOKO",
+        "module": "ov062",
+        "addr": "0x211970c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_cD1Ev",
+        "module": "ov070",
+        "addr": "0x211f000",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_cD0Ev",
+        "module": "ov070",
+        "addr": "0x211f048",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f0a4",
+        "module": "ov070",
+        "addr": "0x211f0a4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f100",
+        "module": "ov070",
+        "addr": "0x211f100",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f368",
+        "module": "ov070",
+        "addr": "0x211f368",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f450",
+        "module": "ov070",
+        "addr": "0x211f450",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f48c",
+        "module": "ov070",
+        "addr": "0x211f48c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f5f0",
+        "module": "ov070",
+        "addr": "0x211f5f0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f62c",
+        "module": "ov070",
+        "addr": "0x211f62c",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f694",
+        "module": "ov070",
+        "addr": "0x211f694",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211f6e0",
+        "module": "ov070",
+        "addr": "0x211f6e0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211fa80",
+        "module": "ov070",
+        "addr": "0x211fa80",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211fae4",
+        "module": "ov070",
+        "addr": "0x211fae4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211fd60",
+        "module": "ov070",
+        "addr": "0x211fd60",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211fd98",
+        "module": "ov070",
+        "addr": "0x211fd98",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_0211ffa8",
+        "module": "ov070",
+        "addr": "0x211ffa8",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "FlyGuy_ChangeState",
+        "module": "ov070",
+        "addr": "0x2120020",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "func_ov070_02120070",
+        "module": "ov070",
+        "addr": "0x2120070",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+        "module": "ov070",
+        "addr": "0x2120150",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+        "module": "ov070",
+        "addr": "0x21201bc",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c6RenderEv",
+        "module": "ov070",
+        "addr": "0x21201c0",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c8BehaviorEv",
+        "module": "ov070",
+        "addr": "0x2120210",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+        "module": "ov070",
+        "addr": "0x21203b4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+        "module": "ov070",
+        "addr": "0x21204e4",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+        "module": "ov070",
+        "addr": "0x21204ec",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+        "module": "ov070",
+        "addr": "0x2120518",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      },
+      {
+        "file": "src/game/actors/d_a_propeller_heyho.cpp",
+        "name": "daPropeller_Heyho_c_classInit",
+        "module": "ov070",
+        "addr": "0x2120520",
+        "verdict": "VERIFIED",
+        "blind": 0,
+        "diffs": []
+      }
+    ],
+    "ordinary_koopa_metadata": {
+      "symbols": 11,
+      "verified": 6,
+      "partial": 5,
+      "differs": 0,
+      "unnamed": 0,
+      "verifiedBytes": 180,
+      "partialBytes": 44,
+      "verifiedSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTI7dBase_c",
+          "addr": 34107000,
+          "bytes": 12
+        },
+        {
+          "module": "arm9",
+          "symbol": "_ZTI7fBase_c",
+          "addr": 34106736,
+          "bytes": 8
+        },
+        {
+          "module": "arm9",
+          "symbol": "_ZTI8dActor_c",
+          "addr": 34136976,
+          "bytes": 12
+        },
+        {
+          "module": "ov002",
+          "symbol": "_ZTI12dEnemyBase_c",
+          "addr": 34636224,
+          "bytes": 12
+        },
+        {
+          "module": "ov062",
+          "symbol": "_ZTI8daNknk_c",
+          "addr": 34724456,
+          "bytes": 12
+        },
+        {
+          "module": "ov062",
+          "symbol": "_ZTV8daNknk_c",
+          "addr": 34724532,
+          "bytes": 124
+        }
+      ],
+      "differingSymbols": [],
+      "verifiedRecords": 6,
+      "partialRecords": 5,
+      "differsRecords": 0,
+      "unnamedRecords": 0,
+      "totalRecords": 11,
+      "differing": [],
+      "sourcesChecked": 1
+    },
+    "independent_raw_proof": {
+      "schema": 1,
+      "head": "a6010eab4cda2b87890559f8b7a079b60f1714b9",
+      "tested_base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+      "formal_acceptance": false,
+      "reviewer": "review_mip_final",
+      "worktree": "C:\\tmp\\sm64ds-koopa2864-review0920",
+      "compiler": [
+        "2004/b56",
+        null
+      ],
+      "raw_object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+      "raw_object_size": 26424,
+      "source_blob": "e20c12af1b21be351b0220a0b53bf0c612d32295",
+      "manifest_blob": "76176c146c104c7a3792993d7b4a0d9d758983db",
+      "strict_functions": [
+        {
+          "name": "_ZN8daNknk_cD1Ev",
+          "module": "ov062",
+          "addr": "0x021174cc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_cD0Ev",
+          "module": "ov062",
+          "addr": "0x02117514",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117570",
+          "module": "ov062",
+          "addr": "0x02117570",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_021175c0",
+          "module": "ov062",
+          "addr": "0x021175c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117724",
+          "module": "ov062",
+          "addr": "0x02117724",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117994",
+          "module": "ov062",
+          "addr": "0x02117994",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_021179e4",
+          "module": "ov062",
+          "addr": "0x021179e4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117a3c",
+          "module": "ov062",
+          "addr": "0x02117a3c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117acc",
+          "module": "ov062",
+          "addr": "0x02117acc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117b48",
+          "module": "ov062",
+          "addr": "0x02117b48",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117b60",
+          "module": "ov062",
+          "addr": "0x02117b60",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117b9c",
+          "module": "ov062",
+          "addr": "0x02117b9c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117bf4",
+          "module": "ov062",
+          "addr": "0x02117bf4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02117c98",
+          "module": "ov062",
+          "addr": "0x02117c98",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118004",
+          "module": "ov062",
+          "addr": "0x02118004",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118058",
+          "module": "ov062",
+          "addr": "0x02118058",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_021180d4",
+          "module": "ov062",
+          "addr": "0x021180d4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_0211811c",
+          "module": "ov062",
+          "addr": "0x0211811c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_021181a0",
+          "module": "ov062",
+          "addr": "0x021181a0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118258",
+          "module": "ov062",
+          "addr": "0x02118258",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118334",
+          "module": "ov062",
+          "addr": "0x02118334",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_021183e0",
+          "module": "ov062",
+          "addr": "0x021183e0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118588",
+          "module": "ov062",
+          "addr": "0x02118588",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118718",
+          "module": "ov062",
+          "addr": "0x02118718",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118a00",
+          "module": "ov062",
+          "addr": "0x02118a00",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118a50",
+          "module": "ov062",
+          "addr": "0x02118a50",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118b4c",
+          "module": "ov062",
+          "addr": "0x02118b4c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118cdc",
+          "module": "ov062",
+          "addr": "0x02118cdc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov062_02118de8",
+          "module": "ov062",
+          "addr": "0x02118de8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c16CleanupResourcesEv",
+          "module": "ov062",
+          "addr": "0x02118f04",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c16OnPendingDestroyEv",
+          "module": "ov062",
+          "addr": "0x02118f80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c6RenderEv",
+          "module": "ov062",
+          "addr": "0x02118f84",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c8BehaviorEv",
+          "module": "ov062",
+          "addr": "0x021190ec",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c13InitResourcesEv",
+          "module": "ov062",
+          "addr": "0x02119420",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+          "module": "ov062",
+          "addr": "0x02119608",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+          "module": "ov062",
+          "addr": "0x02119628",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN8daNknk_c13OnYoshiTryEatEv",
+          "module": "ov062",
+          "addr": "0x021196a8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "daNknk_c_classInit_NOKONOKO_S",
+          "module": "ov062",
+          "addr": "0x021196bc",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "daNknk_c_classInit_NOKONOKO",
+          "module": "ov062",
+          "addr": "0x0211970c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "strict_verified": 39,
+      "complete_function_order": [
+        {
+          "ordinal": 0,
+          "symbol": "_ZN8daNknk_cD1Ev",
+          "section": 22,
+          "address": "0x021174cc",
+          "size": "0x00000048"
+        },
+        {
+          "ordinal": 1,
+          "symbol": "_ZN8daNknk_cD0Ev",
+          "section": 24,
+          "address": "0x02117514",
+          "size": "0x0000005c"
+        },
+        {
+          "ordinal": 2,
+          "symbol": "func_ov062_02117570",
+          "section": 26,
+          "address": "0x02117570",
+          "size": "0x00000050"
+        },
+        {
+          "ordinal": 3,
+          "symbol": "func_ov062_021175c0",
+          "section": 28,
+          "address": "0x021175c0",
+          "size": "0x00000164"
+        },
+        {
+          "ordinal": 4,
+          "symbol": "func_ov062_02117724",
+          "section": 31,
+          "address": "0x02117724",
+          "size": "0x00000270"
+        },
+        {
+          "ordinal": 5,
+          "symbol": "func_ov062_02117994",
+          "section": 33,
+          "address": "0x02117994",
+          "size": "0x00000050"
+        },
+        {
+          "ordinal": 6,
+          "symbol": "func_ov062_021179e4",
+          "section": 35,
+          "address": "0x021179e4",
+          "size": "0x00000058"
+        },
+        {
+          "ordinal": 7,
+          "symbol": "func_ov062_02117a3c",
+          "section": 37,
+          "address": "0x02117a3c",
+          "size": "0x00000090"
+        },
+        {
+          "ordinal": 8,
+          "symbol": "func_ov062_02117acc",
+          "section": 39,
+          "address": "0x02117acc",
+          "size": "0x0000007c"
+        },
+        {
+          "ordinal": 9,
+          "symbol": "func_ov062_02117b48",
+          "section": 41,
+          "address": "0x02117b48",
+          "size": "0x00000018"
+        },
+        {
+          "ordinal": 10,
+          "symbol": "func_ov062_02117b60",
+          "section": 42,
+          "address": "0x02117b60",
+          "size": "0x0000003c"
+        },
+        {
+          "ordinal": 11,
+          "symbol": "func_ov062_02117b9c",
+          "section": 44,
+          "address": "0x02117b9c",
+          "size": "0x00000058"
+        },
+        {
+          "ordinal": 12,
+          "symbol": "func_ov062_02117bf4",
+          "section": 46,
+          "address": "0x02117bf4",
+          "size": "0x000000a4"
+        },
+        {
+          "ordinal": 13,
+          "symbol": "func_ov062_02117c98",
+          "section": 48,
+          "address": "0x02117c98",
+          "size": "0x0000036c"
+        },
+        {
+          "ordinal": 14,
+          "symbol": "func_ov062_02118004",
+          "section": 50,
+          "address": "0x02118004",
+          "size": "0x00000054"
+        },
+        {
+          "ordinal": 15,
+          "symbol": "func_ov062_02118058",
+          "section": 52,
+          "address": "0x02118058",
+          "size": "0x0000007c"
+        },
+        {
+          "ordinal": 16,
+          "symbol": "func_ov062_021180d4",
+          "section": 54,
+          "address": "0x021180d4",
+          "size": "0x00000048"
+        },
+        {
+          "ordinal": 17,
+          "symbol": "func_ov062_0211811c",
+          "section": 56,
+          "address": "0x0211811c",
+          "size": "0x00000084"
+        },
+        {
+          "ordinal": 18,
+          "symbol": "func_ov062_021181a0",
+          "section": 58,
+          "address": "0x021181a0",
+          "size": "0x000000b8"
+        },
+        {
+          "ordinal": 19,
+          "symbol": "func_ov062_02118258",
+          "section": 60,
+          "address": "0x02118258",
+          "size": "0x000000dc"
+        },
+        {
+          "ordinal": 20,
+          "symbol": "func_ov062_02118334",
+          "section": 62,
+          "address": "0x02118334",
+          "size": "0x000000ac"
+        },
+        {
+          "ordinal": 21,
+          "symbol": "func_ov062_021183e0",
+          "section": 64,
+          "address": "0x021183e0",
+          "size": "0x000001a8"
+        },
+        {
+          "ordinal": 22,
+          "symbol": "func_ov062_02118588",
+          "section": 66,
+          "address": "0x02118588",
+          "size": "0x00000190"
+        },
+        {
+          "ordinal": 23,
+          "symbol": "func_ov062_02118718",
+          "section": 68,
+          "address": "0x02118718",
+          "size": "0x000002e8"
+        },
+        {
+          "ordinal": 24,
+          "symbol": "func_ov062_02118a00",
+          "section": 70,
+          "address": "0x02118a00",
+          "size": "0x00000050"
+        },
+        {
+          "ordinal": 25,
+          "symbol": "func_ov062_02118a50",
+          "section": 72,
+          "address": "0x02118a50",
+          "size": "0x000000fc"
+        },
+        {
+          "ordinal": 26,
+          "symbol": "func_ov062_02118b4c",
+          "section": 74,
+          "address": "0x02118b4c",
+          "size": "0x00000190"
+        },
+        {
+          "ordinal": 27,
+          "symbol": "func_ov062_02118cdc",
+          "section": 76,
+          "address": "0x02118cdc",
+          "size": "0x0000010c"
+        },
+        {
+          "ordinal": 28,
+          "symbol": "func_ov062_02118de8",
+          "section": 78,
+          "address": "0x02118de8",
+          "size": "0x0000011c"
+        },
+        {
+          "ordinal": 29,
+          "symbol": "_ZN8daNknk_c16CleanupResourcesEv",
+          "section": 80,
+          "address": "0x02118f04",
+          "size": "0x0000007c"
+        },
+        {
+          "ordinal": 30,
+          "symbol": "_ZN8daNknk_c16OnPendingDestroyEv",
+          "section": 82,
+          "address": "0x02118f80",
+          "size": "0x00000004"
+        },
+        {
+          "ordinal": 31,
+          "symbol": "_ZN8daNknk_c6RenderEv",
+          "section": 83,
+          "address": "0x02118f84",
+          "size": "0x00000168"
+        },
+        {
+          "ordinal": 32,
+          "symbol": "_ZN8daNknk_c8BehaviorEv",
+          "section": 85,
+          "address": "0x021190ec",
+          "size": "0x00000334"
+        },
+        {
+          "ordinal": 33,
+          "symbol": "_ZN8daNknk_c13InitResourcesEv",
+          "section": 87,
+          "address": "0x02119420",
+          "size": "0x000001e8"
+        },
+        {
+          "ordinal": 34,
+          "symbol": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+          "section": 89,
+          "address": "0x02119608",
+          "size": "0x00000020"
+        },
+        {
+          "ordinal": 35,
+          "symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+          "section": 90,
+          "address": "0x02119628",
+          "size": "0x00000080"
+        },
+        {
+          "ordinal": 36,
+          "symbol": "_ZN8daNknk_c13OnYoshiTryEatEv",
+          "section": 92,
+          "address": "0x021196a8",
+          "size": "0x00000014"
+        },
+        {
+          "ordinal": 37,
+          "symbol": "daNknk_c_classInit_NOKONOKO_S",
+          "section": 93,
+          "address": "0x021196bc",
+          "size": "0x00000050"
+        },
+        {
+          "ordinal": 38,
+          "symbol": "daNknk_c_classInit_NOKONOKO",
+          "section": 95,
+          "address": "0x0211970c",
+          "size": "0x00000050"
+        }
+      ],
+      "owned_text_bytes": 8848,
+      "metadata": [
+        {
+          "symbol": "_ZTI7fBase_c",
+          "module": "arm9",
+          "address_point": "0x2086d70",
+          "storage_start": "0x2086d70",
+          "size": 8,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b",
+          "retail_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS7fBase_c",
+              "addr": 34106976,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi17__class_type_infoE",
+              "addr": 34187124,
+              "add": 0
+            }
+          ]
+        },
+        {
+          "symbol": "_ZTS7fBase_c",
+          "module": "arm9",
+          "address_point": "0x2086e60",
+          "storage_start": "0x2086e60",
+          "size": 9,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5",
+          "retail_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5",
+          "relocations": []
+        },
+        {
+          "symbol": "_ZTS7dBase_c",
+          "module": "arm9",
+          "address_point": "0x2086e54",
+          "storage_start": "0x2086e54",
+          "size": 9,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "d9acdee869d9b5dbf6014803046897175bf581be7fb2f0217f2cea2b3d7b9810",
+          "retail_sha256": "d9acdee869d9b5dbf6014803046897175bf581be7fb2f0217f2cea2b3d7b9810",
+          "relocations": []
+        },
+        {
+          "symbol": "_ZTS8dActor_c",
+          "module": "arm9",
+          "address_point": "0x208e384",
+          "storage_start": "0x208e384",
+          "size": 10,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "d5ce7a534a1f393c9cdd42f0926198d7e3c3af5c8f925274128ceb748d61825d",
+          "retail_sha256": "d5ce7a534a1f393c9cdd42f0926198d7e3c3af5c8f925274128ceb748d61825d",
+          "relocations": []
+        },
+        {
+          "symbol": "_ZTS8daNknk_c",
+          "module": "ov062",
+          "address_point": "0x211da5c",
+          "storage_start": "0x211da5c",
+          "size": 10,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "164fabe65d99277e7c7881acab18f464377753b705fc3c1ba681048b2a0524fd",
+          "retail_sha256": "164fabe65d99277e7c7881acab18f464377753b705fc3c1ba681048b2a0524fd",
+          "relocations": []
+        },
+        {
+          "symbol": "_ZTI12dEnemyBase_c",
+          "module": "ov002",
+          "address_point": "0x21081c0",
+          "storage_start": "0x21081c0",
+          "size": 12,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "15e1e4299df1c5cccd2356cf5fe0303ccc1fa61c74e8f492df518a54f6e63473",
+          "retail_sha256": "15e1e4299df1c5cccd2356cf5fe0303ccc1fa61c74e8f492df518a54f6e63473",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS12dEnemyBase_c",
+              "addr": 34636236,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZTI8dActor_c",
+              "addr": 34136976,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi20__si_class_type_infoE",
+              "addr": 34187108,
+              "add": 0
+            }
+          ]
+        },
+        {
+          "symbol": "_ZTS12dEnemyBase_c",
+          "module": "ov002",
+          "address_point": "0x21081cc",
+          "storage_start": "0x21081cc",
+          "size": 15,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "1bbb0a2900ea156737c9323e474300f34d949457a4dc7acb0a234a78a0bacd69",
+          "retail_sha256": "1bbb0a2900ea156737c9323e474300f34d949457a4dc7acb0a234a78a0bacd69",
+          "relocations": []
+        },
+        {
+          "symbol": "_ZTI8dActor_c",
+          "module": "arm9",
+          "address_point": "0x208e390",
+          "storage_start": "0x208e390",
+          "size": 12,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "d19e416e02da5c59b99dc09934f8864149582f20362fa93518d5dfab4b66c9b1",
+          "retail_sha256": "d19e416e02da5c59b99dc09934f8864149582f20362fa93518d5dfab4b66c9b1",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS8dActor_c",
+              "addr": 34136964,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZTI7dBase_c",
+              "addr": 34107000,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi20__si_class_type_infoE",
+              "addr": 34187108,
+              "add": 0
+            }
+          ]
+        },
+        {
+          "symbol": "_ZTI7dBase_c",
+          "module": "arm9",
+          "address_point": "0x2086e78",
+          "storage_start": "0x2086e78",
+          "size": 12,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "fd0848355676e8686547afdf07cbe080cd5f6a99377ea4dfecb3cec72ff1bf17",
+          "retail_sha256": "fd0848355676e8686547afdf07cbe080cd5f6a99377ea4dfecb3cec72ff1bf17",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS7dBase_c",
+              "addr": 34106964,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZTI7fBase_c",
+              "addr": 34106736,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi20__si_class_type_infoE",
+              "addr": 34187108,
+              "add": 0
+            }
+          ]
+        },
+        {
+          "symbol": "_ZTI8daNknk_c",
+          "module": "ov062",
+          "address_point": "0x211da68",
+          "storage_start": "0x211da68",
+          "size": 12,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "8000d6ca5049cc3773b87cf7b43693274f5ff5bf87b9af342dda7ea6fe4b8f0f",
+          "retail_sha256": "8000d6ca5049cc3773b87cf7b43693274f5ff5bf87b9af342dda7ea6fe4b8f0f",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTS8daNknk_c",
+              "addr": 34724444,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZTI12dEnemyBase_c",
+              "addr": 34636224,
+              "add": 0
+            },
+            {
+              "off": 0,
+              "type": 2,
+              "sym": "_ZTVN3abi20__si_class_type_infoE",
+              "addr": 34187108,
+              "add": 0
+            }
+          ]
+        },
+        {
+          "symbol": "_ZTV8daNknk_c",
+          "module": "ov062",
+          "address_point": "0x211dab4",
+          "storage_start": "0x211daac",
+          "size": 132,
+          "blind": [],
+          "equal_full_body": true,
+          "linked_sha256": "ca36d339d3ce662dfa595f5ac2f012cf9aa402425e9395dee2e3fd14e4adeb6e",
+          "retail_sha256": "ca36d339d3ce662dfa595f5ac2f012cf9aa402425e9395dee2e3fd14e4adeb6e",
+          "relocations": [
+            {
+              "off": 4,
+              "type": 2,
+              "sym": "_ZTI8daNknk_c",
+              "addr": 34724456,
+              "add": 0
+            },
+            {
+              "off": 68,
+              "type": 2,
+              "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+              "addr": 33830036,
+              "add": 0
+            },
+            {
+              "off": 64,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual38Ejj",
+              "addr": 33830044,
+              "add": 0
+            },
+            {
+              "off": 60,
+              "type": 2,
+              "sym": "_ZN7fBase_c9Virtual34Ejj",
+              "addr": 33830268,
+              "add": 0
+            },
+            {
+              "off": 128,
+              "type": 2,
+              "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+              "addr": 33620188,
+              "add": 0
+            },
+            {
+              "off": 120,
+              "type": 2,
+              "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+              "addr": 33620268,
+              "add": 0
+            },
+            {
+              "off": 116,
+              "type": 2,
+              "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+              "addr": 33620272,
+              "add": 0
+            },
+            {
+              "off": 112,
+              "type": 2,
+              "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+              "addr": 33620276,
+              "add": 0
+            },
+            {
+              "off": 108,
+              "type": 2,
+              "sym": "_ZN8dActor_c8OnPushedERS_",
+              "addr": 33620280,
+              "add": 0
+            },
+            {
+              "off": 104,
+              "type": 2,
+              "sym": "_ZN8dActor_c8OnKickedERS_",
+              "addr": 33620284,
+              "add": 0
+            },
+            {
+              "off": 100,
+              "type": 2,
+              "sym": "_ZN8dActor_c11OnAttacked2ERS_",
+              "addr": 33620288,
+              "add": 0
+            },
+            {
+              "off": 96,
+              "type": 2,
+              "sym": "_ZN8dActor_c11OnAttacked1ERS_",
+              "addr": 33620292,
+              "add": 0
+            },
+            {
+              "off": 92,
+              "type": 2,
+              "sym": "_ZN8dActor_c15OnGroundPoundedERS_",
+              "addr": 33620296,
+              "add": 0
+            },
+            {
+              "off": 88,
+              "type": 2,
+              "sym": "_ZN8dActor_c9Virtual50Ev",
+              "addr": 33620300,
+              "add": 0
+            },
+            {
+              "off": 52,
+              "type": 2,
+              "sym": "_ZN8dActor_c11AfterRenderEj",
+              "addr": 33623916,
+              "add": 0
+            },
+            {
+              "off": 48,
+              "type": 2,
+              "sym": "_ZN8dActor_c12BeforeRenderEv",
+              "addr": 33623928,
+              "add": 0
+            },
+            {
+              "off": 40,
+              "type": 2,
+              "sym": "_ZN8dActor_c13AfterBehaviorEj",
+              "addr": 33624008,
+              "add": 0
+            },
+            {
+              "off": 36,
+              "type": 2,
+              "sym": "_ZN8dActor_c14BeforeBehaviorEv",
+              "addr": 33624020,
+              "add": 0
+            },
+            {
+              "off": 28,
+              "type": 2,
+              "sym": "_ZN8dActor_c21AfterCleanupResourcesEj",
+              "addr": 33624596,
+              "add": 0
+            },
+            {
+              "off": 24,
+              "type": 2,
+              "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+              "addr": 33624608,
+              "add": 0
+            },
+            {
+              "off": 16,
+              "type": 2,
+              "sym": "_ZN8dActor_c18AfterInitResourcesEj",
+              "addr": 33624644,
+              "add": 0
+            },
+            {
+              "off": 12,
+              "type": 2,
+              "sym": "_ZN8dActor_c19BeforeInitResourcesEv",
+              "addr": 33624680,
+              "add": 0
+            },
+            {
+              "off": 76,
+              "type": 2,
+              "sym": "_ZN8daNknk_cD0Ev",
+              "addr": 34698516,
+              "add": 0
+            },
+            {
+              "off": 44,
+              "type": 2,
+              "sym": "_ZN8daNknk_c6RenderEv",
+              "addr": 34705284,
+              "add": 0
+            },
+            {
+              "off": 56,
+              "type": 2,
+              "sym": "_ZN8daNknk_c16OnPendingDestroyEv",
+              "addr": 34705280,
+              "add": 0
+            },
+            {
+              "off": 8,
+              "type": 2,
+              "sym": "_ZN8daNknk_c13InitResourcesEv",
+              "addr": 34706464,
+              "add": 0
+            },
+            {
+              "off": 20,
+              "type": 2,
+              "sym": "_ZN8daNknk_c16CleanupResourcesEv",
+              "addr": 34705156,
+              "add": 0
+            },
+            {
+              "off": 32,
+              "type": 2,
+              "sym": "_ZN8daNknk_c8BehaviorEv",
+              "addr": 34705644,
+              "add": 0
+            },
+            {
+              "off": 124,
+              "type": 2,
+              "sym": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+              "addr": 34706952,
+              "add": 0
+            },
+            {
+              "off": 84,
+              "type": 2,
+              "sym": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+              "addr": 34706984,
+              "add": 0
+            },
+            {
+              "off": 80,
+              "type": 2,
+              "sym": "_ZN8daNknk_c13OnYoshiTryEatEv",
+              "addr": 34707112,
+              "add": 0
+            },
+            {
+              "off": 72,
+              "type": 2,
+              "sym": "_ZN8daNknk_cD1Ev",
+              "addr": 34698444,
+              "add": 0
+            }
+          ]
+        }
+      ],
+      "metadata_full_bytes_verified": 11,
+      "weak_duplicate": {
+        "name": "_ZN7Vector3D1Ev",
+        "module": "arm9",
+        "addr": "0x020072c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      "compiler_only_policy": {
+        "requested": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "deadstripped": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          30
+        ],
+        "data": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTS8daNknk_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTI8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI8daNknk_c",
+          "_ZTV8daNknk_c"
+        ],
+        "dataExternalized": [
+          "_ZTI12dEnemyBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTI8daNknk_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c",
+          "_ZTS8daNknk_c",
+          "_ZTV8daNknk_c"
+        ]
+      },
+      "policy_errors": [],
+      "unlicensed_outputs": [
+        [],
+        [],
+        []
+      ],
+      "actual_member_import_present": true,
+      "obsolete_import_absent": true,
+      "production_mode": "text-only; metadata proved before externalization, not claimed as compiler-owned production data",
+      "tracked_clean": true
+    },
+    "independent_production_control": {
+      "schema": 1,
+      "formal_acceptance": false,
+      "head": "c4668008f8dfefbc92380491494bafae56a6742e",
+      "tested_base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+      "reviewer": "review_mip_final",
+      "worktree": "C:\\tmp\\sm64ds-koopa2864-review0920",
+      "command": "python tools/rombuild.py -j16 --report-json build/koopa2864-c466-independent/rom.json --data-json build/koopa2864-c466-independent/data.json",
+      "command_exit": 0,
+      "raw_reports": [
+        {
+          "path": "C:\\tmp\\sm64ds-koopa2864-review0920\\build\\koopa2864-c466-independent\\rom.json",
+          "sha256": "2c32642d5c6f1e74e6f00cba8bfdd1a36545bae2bd2bc058849b1c8b03bf3a06"
+        },
+        {
+          "path": "C:\\tmp\\sm64ds-koopa2864-review0920\\build\\koopa2864-c466-independent\\data.json",
+          "sha256": "1820d8b9cd4b4bf3c3043adab6c45ccb84cb7655429e72693ab03b7ad5170f05"
+        }
+      ],
+      "stock_rom_sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "rom_bytes": 16777216,
+      "module_fidelity": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11208,
+        "compiledBytes": 2151584,
+        "sourceFunctions": 11208,
+        "sourceBytes": 2151584,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 96.13405608665892,
+        "reproducingFunctions": 11208,
+        "reproducingBytes": 2151584,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 26,
+        "sourceBssClaims": 3,
+        "sourceBssBytes": 172,
+        "reproducingDataClaims": 26,
+        "reproducingDataClaimBytes": 4984,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "layout": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0,
+        "L4": 0,
+        "L5": 101,
+        "waived": 0
+      },
+      "data_summary": {
+        "symbols": 1324,
+        "verified": 758,
+        "partial": 265,
+        "differs": 3,
+        "unnamed": 298,
+        "verifiedBytes": 45576,
+        "partialBytes": 6840,
+        "verifiedRecords": 3045,
+        "partialRecords": 2298,
+        "differsRecords": 8,
+        "unnamedRecords": 831,
+        "totalRecords": 6182
+      },
+      "same_eight_inherited_metadata_negatives": [
+        {
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "bytes": 16,
+          "emitted": 16,
+          "romExtent": 16,
+          "blindWords": 0,
+          "verdict": "DIFFERS",
+          "differingBytes": 4,
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp"
+        },
+        {
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "bytes": 16,
+          "emitted": 16,
+          "romExtent": 16,
+          "blindWords": 0,
+          "verdict": "DIFFERS",
+          "differingBytes": 4,
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 36,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZN8daDemo_c10anmModel_cD1Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 36,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZN8daDemo_c10anmModel_cD0Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 32,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 32,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 36,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp"
+        },
+        {
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "bytes": 24,
+          "emitted": 32,
+          "romExtent": 36,
+          "blindWords": 2,
+          "verdict": "DIFFERS",
+          "differingBytes": 8,
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp"
+        }
+      ],
+      "new_symbol_errors": [],
+      "same_inherited_symbol_errors": true,
+      "mod_gap_fallbacks": [],
+      "koopa_linked_functions": [
+        {
+          "symbol": "_ZN8daNknk_cD1Ev",
+          "address": "0x21174cc",
+          "size": 72,
+          "equal_retail": true,
+          "sha256": "d7eb096f99a1f22326d86f27467da724d0bca4446bd1f88aea913c0a7869499c"
+        },
+        {
+          "symbol": "_ZN8daNknk_cD0Ev",
+          "address": "0x2117514",
+          "size": 92,
+          "equal_retail": true,
+          "sha256": "597f994b6a3f097baaee99481bfab044c5b5c2350667943e7368a4ccbf791c1b"
+        },
+        {
+          "symbol": "func_ov062_02117570",
+          "address": "0x2117570",
+          "size": 80,
+          "equal_retail": true,
+          "sha256": "965625197e074e9dd3ff500a9f93735790af2f8e6c4439e3c8e536de55d630ee"
+        },
+        {
+          "symbol": "func_ov062_021175c0",
+          "address": "0x21175c0",
+          "size": 356,
+          "equal_retail": true,
+          "sha256": "f81bb1702cbb08c123529580c55f50196f454cc85d6b954f79f81aad6a1cc280"
+        },
+        {
+          "symbol": "func_ov062_02117724",
+          "address": "0x2117724",
+          "size": 624,
+          "equal_retail": true,
+          "sha256": "f917ef0c5eb93878f5f2267ea1853f940f191a76734a1793b78ffeabc946a867"
+        },
+        {
+          "symbol": "func_ov062_02117994",
+          "address": "0x2117994",
+          "size": 80,
+          "equal_retail": true,
+          "sha256": "1ea56eaf93f7593863656a0ca898bb7375afad6b078de0750e66769c8b38a786"
+        },
+        {
+          "symbol": "func_ov062_021179e4",
+          "address": "0x21179e4",
+          "size": 88,
+          "equal_retail": true,
+          "sha256": "f87bb500025db9d7052ae3d4587274ebe7ff185215936d84b34969167baa97b7"
+        },
+        {
+          "symbol": "func_ov062_02117a3c",
+          "address": "0x2117a3c",
+          "size": 144,
+          "equal_retail": true,
+          "sha256": "9f59a68160d68105105462f2c70e0c9810f55bd42c87c200859e662d60f7b7d6"
+        },
+        {
+          "symbol": "func_ov062_02117acc",
+          "address": "0x2117acc",
+          "size": 124,
+          "equal_retail": true,
+          "sha256": "c8fea99adfd772120c214aefca399ce941d060b54645d684811ab6e9afb293a1"
+        },
+        {
+          "symbol": "func_ov062_02117b48",
+          "address": "0x2117b48",
+          "size": 24,
+          "equal_retail": true,
+          "sha256": "5121aac6d6ce79040231cc8a2e117d0b1fee1e269c7e5058651c6acd4750984f"
+        },
+        {
+          "symbol": "func_ov062_02117b60",
+          "address": "0x2117b60",
+          "size": 60,
+          "equal_retail": true,
+          "sha256": "9de81c31a8b57ff9091c905ae5ce98c712839ab6985603ff29a212c3e3624e1f"
+        },
+        {
+          "symbol": "func_ov062_02117b9c",
+          "address": "0x2117b9c",
+          "size": 88,
+          "equal_retail": true,
+          "sha256": "f7a5163d1b907efb88b22b281dc13696d94bdc41afce42d75f21c3697877bd4c"
+        },
+        {
+          "symbol": "func_ov062_02117bf4",
+          "address": "0x2117bf4",
+          "size": 164,
+          "equal_retail": true,
+          "sha256": "212cbd6fbe296d3414974af128e009746aa73464bfe8272afcef0049f433f5e9"
+        },
+        {
+          "symbol": "func_ov062_02117c98",
+          "address": "0x2117c98",
+          "size": 876,
+          "equal_retail": true,
+          "sha256": "5b339c67530c7f7c1748432063aa0114a73fb0d2c72ec9ac7788712959d9f69f"
+        },
+        {
+          "symbol": "func_ov062_02118004",
+          "address": "0x2118004",
+          "size": 84,
+          "equal_retail": true,
+          "sha256": "d90d1041a783eb8745158f165f4e81607361f8ab7f4fe145b77106c5622ea96c"
+        },
+        {
+          "symbol": "func_ov062_02118058",
+          "address": "0x2118058",
+          "size": 124,
+          "equal_retail": true,
+          "sha256": "2a5e4c2abf45d319b404c65f881fa551485be2be628492fd846195dba362bad0"
+        },
+        {
+          "symbol": "func_ov062_021180d4",
+          "address": "0x21180d4",
+          "size": 72,
+          "equal_retail": true,
+          "sha256": "cffae370aef458b2a6af8e53b550f87f2f2fd6aa1272fbde5c7d5edc1e50d3c1"
+        },
+        {
+          "symbol": "func_ov062_0211811c",
+          "address": "0x211811c",
+          "size": 132,
+          "equal_retail": true,
+          "sha256": "adac49673cc8b5b0603702dab4019ffc4e34bd0097c1b62c659cb357bc3052f8"
+        },
+        {
+          "symbol": "func_ov062_021181a0",
+          "address": "0x21181a0",
+          "size": 184,
+          "equal_retail": true,
+          "sha256": "498e913563d490482063de235ff0c54a8148e6fe4e04e6fe726e29d924e39236"
+        },
+        {
+          "symbol": "func_ov062_02118258",
+          "address": "0x2118258",
+          "size": 220,
+          "equal_retail": true,
+          "sha256": "fd43ded20f46e1495fb8487ab35a7574ff75ae77995690bcb883164bfd549fc1"
+        },
+        {
+          "symbol": "func_ov062_02118334",
+          "address": "0x2118334",
+          "size": 172,
+          "equal_retail": true,
+          "sha256": "9e0be57d5c1aee297cb26a1a481154e55354ea4fcd95fcd6b0e3952432f37054"
+        },
+        {
+          "symbol": "func_ov062_021183e0",
+          "address": "0x21183e0",
+          "size": 424,
+          "equal_retail": true,
+          "sha256": "2c2fa47272e1eddbc5253b457b2ec216b048e22a23ea13ce115d0afd557f0d5b"
+        },
+        {
+          "symbol": "func_ov062_02118588",
+          "address": "0x2118588",
+          "size": 400,
+          "equal_retail": true,
+          "sha256": "96e01f4fec130bc03d5ec3c2b46b81da14b9c1586210ab378d42ead034927455"
+        },
+        {
+          "symbol": "func_ov062_02118718",
+          "address": "0x2118718",
+          "size": 744,
+          "equal_retail": true,
+          "sha256": "318fe4dd29109fdf98827b997e2acf6d053f67d73cf0bf104fb8da89bad85b79"
+        },
+        {
+          "symbol": "func_ov062_02118a00",
+          "address": "0x2118a00",
+          "size": 80,
+          "equal_retail": true,
+          "sha256": "03585dda039e1e59dd45b2969195e593a26dc86dc4ac2715037af336d8417ea8"
+        },
+        {
+          "symbol": "func_ov062_02118a50",
+          "address": "0x2118a50",
+          "size": 252,
+          "equal_retail": true,
+          "sha256": "fae1e224d7e6485787b72acb8168e277426b87a6d246f3579c27897b4a1f1bcb"
+        },
+        {
+          "symbol": "func_ov062_02118b4c",
+          "address": "0x2118b4c",
+          "size": 400,
+          "equal_retail": true,
+          "sha256": "5c5cba06c197aac8fa0c9d7683893bd93c1b420feb1d5e66f249448b107d90f3"
+        },
+        {
+          "symbol": "func_ov062_02118cdc",
+          "address": "0x2118cdc",
+          "size": 268,
+          "equal_retail": true,
+          "sha256": "1c0857ba06b8ffe96b541c6ab4e7ad2c20bb9de040650101ad84e6d83c8d3fa3"
+        },
+        {
+          "symbol": "func_ov062_02118de8",
+          "address": "0x2118de8",
+          "size": 284,
+          "equal_retail": true,
+          "sha256": "c05d8dd517a22ea03c97791bdbd851662085c675d3292f14f53b91e2b2f73643"
+        },
+        {
+          "symbol": "_ZN8daNknk_c16CleanupResourcesEv",
+          "address": "0x2118f04",
+          "size": 124,
+          "equal_retail": true,
+          "sha256": "5b4943c18b873ed09fa3f7044881d8d22215151773ce7fa06f009961d7275fb3"
+        },
+        {
+          "symbol": "_ZN8daNknk_c16OnPendingDestroyEv",
+          "address": "0x2118f80",
+          "size": 4,
+          "equal_retail": true,
+          "sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+        },
+        {
+          "symbol": "_ZN8daNknk_c6RenderEv",
+          "address": "0x2118f84",
+          "size": 360,
+          "equal_retail": true,
+          "sha256": "e1c955d0379f5792124c765f771e5f15ab2d2fbf830fd77262a42873be84067f"
+        },
+        {
+          "symbol": "_ZN8daNknk_c8BehaviorEv",
+          "address": "0x21190ec",
+          "size": 820,
+          "equal_retail": true,
+          "sha256": "c9384120e85e65d14f7e992098706c04b6b28a817487b835471199d87c5e6d60"
+        },
+        {
+          "symbol": "_ZN8daNknk_c13InitResourcesEv",
+          "address": "0x2119420",
+          "size": 488,
+          "equal_retail": true,
+          "sha256": "859a8bc5fa04c51c580d8184eb3f234471e34f398d805eedb998d3625dc10611"
+        },
+        {
+          "symbol": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+          "address": "0x2119608",
+          "size": 32,
+          "equal_retail": true,
+          "sha256": "60ed7210ccc9da54313b6e4af35560da9cfedf9b7c57762ea8abbb562c9a9abc"
+        },
+        {
+          "symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+          "address": "0x2119628",
+          "size": 128,
+          "equal_retail": true,
+          "sha256": "b3fd34afc96fde02f37740a203eda1f6465d828504b3a280ae6bb6585a942326"
+        },
+        {
+          "symbol": "_ZN8daNknk_c13OnYoshiTryEatEv",
+          "address": "0x21196a8",
+          "size": 20,
+          "equal_retail": true,
+          "sha256": "ee062395ecd686d5a816c74ef13aaf342f9c436948263a592399fa0007d9661f"
+        },
+        {
+          "symbol": "daNknk_c_classInit_NOKONOKO_S",
+          "address": "0x21196bc",
+          "size": 80,
+          "equal_retail": true,
+          "sha256": "46de0deca054cda28e31ae2d9b2307c20f9f1f7293c83bab8927e3fe7b0359de"
+        },
+        {
+          "symbol": "daNknk_c_classInit_NOKONOKO",
+          "address": "0x211970c",
+          "size": 80,
+          "equal_retail": true,
+          "sha256": "49793c159f8de68d5f32a747c701958d187de01421e3e518a440aa7ab9dd8067"
+        }
+      ],
+      "koopa_source_object": {
+        "sha256": "8e8912563b3d9d111f7bbccca478d52efd81bce638d59d212c12327af7df4b50",
+        "function_count": 39,
+        "function_bytes": 8848,
+        "only_manifest_functions": true
+      },
+      "complete_enrollment": true,
+      "one_lcf_selector": true,
+      "one_compiled_object": true,
+      "actual_member_resolved": {
+        "symbol": "_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE",
+        "address": "0x020ada40"
+      },
+      "obsolete_member_import_absent": true,
+      "limits": [
+        "c466 is an immutable control before the pending native Release and lifecycle-marker corrections; no formal queue acceptance.",
+        "Text-only promotion: metadata is independently proved before externalization, not produced by this object in the final ROM.",
+        "Normal ROM production pass is distinct from the failed intact-mode tubuild candidate command; that refusal is retained by the integrator."
+      ],
+      "running_processes": [],
+      "tracked_clean": true
+    },
+    "control_binding": "The independent a601 recheck reproduced the entire raw object byte-for-byte from the c466 full production control. Only the Koopa compiler input changed between those source anchors. Root also reran the actual normal full production build at a601.",
+    "historical_compile_group": "The compile group predates the final source anchor and includes the documented mode refusal. Its stock-link-control label refers to the then-current candidate tree, not clean main. Final normal-production proof and the separately identified clean-main control govern acceptance."
   }
 }
