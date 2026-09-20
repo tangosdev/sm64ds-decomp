@@ -31,7 +31,7 @@ with the helper correction.
 Independent review of prior repair `3568a524fe60c5dfa2f3d4ff83451a1b3d11515a`
 identified two additional blockers, preserved here as SP2863-05 and SP2863-06.
 
-SP2863-05 is fixed locally across all seven reported contract families:
+SP2863-05 is fixed locally across the first seven reported contract families:
 
 - `Particle::System::NewSimple` bridges return `void*` at all three declarations.
 - The short-reference `ApproachLinear` bridge returns `int`.
@@ -47,6 +47,15 @@ views, or claim other inherited declarations are correct. No shared header is
 changed. The explicit shadow-versus-definition audit now has no diagnostics for
 these seven symbols. DropShadow's actual definition also received a fresh strict
 relocation check, with empty differences and zero blind checks.
+
+A second independent review at `fb82671cd8affb9faa26c6d5f33a9062b55429e3`
+expanded SP2863-05 with two sound wrappers. Every local declaration of
+`func_0201267c` and `func_02012694` now follows their actual definitions:
+`void(unsigned int, const Vector3*)`. The ten declarations and eleven existing
+coordinate views are corrected together. All IDs at these call sites are positive
+constants. Fresh all34 strict checks and complete-object identity pass after this
+additional repair; it remains part of the same correctness finding, not a deferred
+follow-up. The shared headers and enrolled definitions are unchanged.
 
 SP2863-06 is fixed locally: the false recovered `daJgm_c_Kill` / vtable claim is
 replaced by the evidenced state3-entry PMF relationship. Relocations point from
@@ -70,7 +79,7 @@ isolation and module-aware relocation linking. Exact commands, flags, replay
 source, per-function results, and unsuccessful alternatives are committed in the
 experiment record. No workaround or compiler limitation is claimed.
 
-`tubuild.py --manifest build/spiny2863-review-repair/manifest.json verify ov077/Spiny`
+`tubuild.py --manifest build/spiny2863-sound-repair/manifest.json verify ov077/Spiny`
 returns **1**: the functions match, but nine emitted metadata symbols remain
 unlicensed, so promotion is refused. Existing policies remove the Spiny D2 and
 Vector3 D1; there are zero compiler-only policy errors. The D1/D0 ordinal pair
