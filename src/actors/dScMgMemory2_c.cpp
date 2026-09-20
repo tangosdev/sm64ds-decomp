@@ -86,11 +86,29 @@
  *  3 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
  *                                in C++ source; only a real ctor emits it.
  *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  41 `(void *)this` launder(s)  bisect before removing -- some are free,
+ *  34 `(char *)this` launder(s)  bisect before removing -- some are free,
  *                                some hold the register allocation.
- *  ~228 *(T *)(p + 0x..)         class layout does not name these offsets.
+ *  138 *(T *)(p + 0x..)          class layout does not name these offsets.
  *  2 shadow struct(s)            fake interfaces for the real classes:
  *                                B, Sound
+ *
+ * deslop (2026-09-20): 58 of the offset accesses became the named members the
+ * header already declares -- mCards[i] / mPlayers[i] / mCursor / mShared and
+ * the flat scalars above mState -- and the eight `char *` aliases and one
+ * `int o = i * 0x18` that this left unused were dropped. Every cast width
+ * agreed with the declared field width before the rewrite, which is what made
+ * the mapping mechanical rather than a guess. 52/52 still MATCH.
+ *
+ * Leftover: eleven members keep the offset form because the named form moves
+ *   codegen, each measured rather than assumed. DrawCards, UpdateCards,
+ *   ResultTurnCards, ResultWait, RoundWaitDeal, RoundReadyCards, ShuffleCards
+ *   and ResetGame re-sized outright; PlayerDrop, JudgePair and CardMove keep
+ *   their constant-offset rewrite but regress on the indexed `mCards[i]` form
+ *   by 8 / 12 / 2 words. All eleven loop over the card or player arrays, so
+ *   the offset expression is doing register-allocation work that the array
+ *   subscript does not reproduce.
+ * Leftover: base-class fields (0xa8, 0xac, 0xb4, 0xc0, 0xc3, 0xc4, 0x3d0..0x40c)
+ *   belong to dScMgSingle3DBase_c and are not this header's to name.
  */
 
 #include "dScMgMemory2_c.h"
@@ -298,7 +316,7 @@ dScMgMemory2_c::~dScMgMemory2_c()
 void dScMgMemory2_c::DrawMessage()
 {
     char *thiz = (char *)this;
-    if (*(unsigned char *)(thiz + 0x540b) == 0) return;
+    if (mMessageVisible == 0) return;
     func_ov004_020b1e34(thiz, 0xe0, 0x14, 1);
 }
 
@@ -307,7 +325,7 @@ void dScMgMemory2_c::DrawMessage()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::DrawCursor() {
     char *c = (char *)this;
-    if (*(unsigned char *)(c + 0x53d2) == 0) return;
+    if (mCursor.enabled == 0) return;
     func_ov004_020b0d8c(c, 0xe0, 0xa0);
 }
 
@@ -316,7 +334,7 @@ void dScMgMemory2_c::DrawCursor() {
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::UpdateCursor() {
   char *c = (char *)this;
-  if (*(unsigned char*)(c + 0x5000 + 0x3d0) == 0) return;
+  if (mCursor.visible == 0) return;
   {
     unsigned short* h = (unsigned short*)(c + 0x53cc);
     *h = *h + 1;
@@ -335,13 +353,12 @@ void dScMgMemory2_c::UpdateCursor() {
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::ShowCursor()
 {
-    char *p = (char *)this;
-    *(char *)(p + 0x53d0) = 1;
-    *(char *)(p + 0x53d2) = 1;
-    *(int *)(p + 0x53c4) = 966656;
-    *(int *)(p + 0x53c8) = 688128;
-    *(short *)(p + 0x53cc) = 0;
-    *(char *)(p + 0x53d1) = 0;
+    mCursor.visible = 1;
+    mCursor.enabled = 1;
+    mCursor.x = 966656;
+    mCursor.y = 688128;
+    mCursor.angle = 0;
+    mCursor.frame = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -349,9 +366,8 @@ void dScMgMemory2_c::ShowCursor()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::HideCursor()
 {
-    char *p = (char *)this;
-    *(char *)(p + 0x53d0) = 0;
-    *(char *)(p + 0x53d2) = 0;
+    mCursor.visible = 0;
+    mCursor.enabled = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -433,7 +449,7 @@ void dScMgMemory2_c::InitPlayers()
 
     entry = self;
     i = 0;
-    *(unsigned char *)(self + 0x5409) = (unsigned char)n;
+    mMaxMisses = (unsigned char)n;
     if (n <= 0)
         return;
 
@@ -484,10 +500,10 @@ void dScMgMemory2_c::JudgePair()
     char *c = (char *)this;
     int a, b;
     unsigned char *sa, *sb;
-    if (*(unsigned char *)(c + 0x5406) < 2) return;
-    a = *(unsigned char *)(c + 0x53f0);
+    if (mSelectedCount < 2) return;
+    a = mSelectedCards[0];
     sa = (unsigned char *)(c + 0x51bc + a * 0x18);
-    b = *(unsigned char *)(c + 0x53f1);
+    b = mSelectedCards[1];
     if (*sa != 4) return;
     sb = (unsigned char *)(c + 0x51bc + b * 0x18);
     if (*sb != 4) return;
@@ -500,16 +516,16 @@ void dScMgMemory2_c::JudgePair()
         func_02012790(0x26);
         Sound::PlayBank2_2D(0x13d);
         *(unsigned char *)(((int)c + 0x5405)) += 1;
-        *(unsigned char *)(c + 0x5406) = 0;
+        mSelectedCount = 0;
     } else {
         func_02012790(0xe);
         Sound::PlayBank2_2D(0x13e);
         *(unsigned char *)(((int)c + 0x5408)) += 1;
         func_ov004_020b5dd4();
-        if (*(unsigned char *)(c + 0x5408) < *(unsigned char *)(c + 0x5409)) {
+        if (mMisses < mMaxMisses) {
             *sa = 5;
             *sb = 5;
-            *(unsigned char *)(c + 0x5406) = 0;
+            mSelectedCount = 0;
         }
     }
 }
@@ -616,17 +632,15 @@ void dScMgMemory2_c::CardFlyAway(int idx)
 /* ROM ordinal 16 -- func_ov006_020f5de0, 0x020f5de0, size 0x90 */
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::CardFlipDown(int i){
-    char *c = (char *)this;
-    int o = i * 0x18;
     unsigned short cnt;
-    *(unsigned short*)(c + 0x51b6 + o) += 1;
-    cnt = *(unsigned short*)(c + 0x51b6 + o);
-    if(cnt < (data_ov006_0213d344[*(unsigned char*)(c + 0x5000 + o + 0x1bd)] & 0xff))
+    mCards[i].animTimer += 1;
+    cnt = mCards[i].animTimer;
+    if(cnt < (data_ov006_0213d344[mCards[i].frame] & 0xff))
         return;
-    *(unsigned short*)(c + 0x51b6 + o) = 0;
-    *(unsigned char*)(c + 0x51bd + o) -= 1;
-    if(*(unsigned char*)(c + 0x51bd + o) == 0)
-        *(unsigned char*)(c + 0x5000 + o + 0x1bc) = 2;
+    mCards[i].animTimer = 0;
+    mCards[i].frame -= 1;
+    if(mCards[i].frame == 0)
+        mCards[i].state = 2;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -649,7 +663,7 @@ void dScMgMemory2_c::CardFlipUp(int idx){
   *st = *st + 1;
   if (*st > 4) {
     *st = 4;
-    *(unsigned char*)(base + idx*0x18 + 0x5000 + 0x1bc) = 4;
+    mCards[idx].state = 4;
   }
 }
 
@@ -665,7 +679,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     int n;
     int v, w;
 
-    e = *(u8*)(self + 0x5406);
+    e = mSelectedCount;
     if (e >= 2) return;
 
     i = data_020a0e40;
@@ -687,7 +701,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     if (w > 0x16) return;
 
     *(u8*)(self + 0x53ee + e) = *(u8*)(self + 0x51b8 + n);
-    *(u8*)(self + 0x53f0 + *(u8*)(self + 0x5406)) = (u8)idx;
+    *(u8*)(self + 0x53f0 + mSelectedCount) = (u8)idx;
     {
         u8 *pc = (u8*)(self + 0x5406);
         *pc = *pc + 1;
@@ -695,7 +709,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     *(u8*)(self + 0x51bc + n) = 3;
     func_02012718(0x143, *(int*)(self + 0x51a8 + n));
 
-    if (*(u8*)(self + 0x540c) != 0) return;
+    if (mInputSeen != 0) return;
     {
         u8 *pd = (u8*)(self + 0x540c);
         *pd = *pd + 1;
@@ -717,7 +731,7 @@ void dScMgMemory2_c::CardMove(int i)
 {
     char *self = (char *)this;
     int i2 = i * 2;
-    u16* row = data_ov006_0213d338[*(u8*)(self + 0x540a)];
+    u16* row = data_ov006_0213d338[mDifficulty];
     int i18 = i * 0x18;
     int dx, dy, a, b;
     a = row[i2];
@@ -769,7 +783,7 @@ void dScMgMemory2_c::ResultFinish()
     UpdateCards();
     UpdateCursor();
 
-    if (*(unsigned short *)(p + 0x53e2) != 0) {
+    if (mCardTimer != 0) {
         q = (unsigned short *)(unsigned int)(p + 0x53e2);
         *q = *q - 1;
         return;
@@ -789,25 +803,25 @@ void dScMgMemory2_c::ResultFinish()
     func_02012790(0x62);
 
     if (*(int *)(p + 0xa8) == 0) {
-        for (i = 0; i < data_ov006_0212e8e8[*(unsigned char *)(p + 0x540a)]; i++) {
+        for (i = 0; i < data_ov006_0212e8e8[mDifficulty]; i++) {
             best = 0xff;
             j = 0;
-            n = data_ov006_0212e8f4[*(unsigned char *)(p + 0x540a)];
-            for (; j < data_ov006_0212e8f4[*(unsigned char *)(p + 0x540a)]; j++) {
+            n = data_ov006_0212e8f4[mDifficulty];
+            for (; j < data_ov006_0212e8f4[mDifficulty]; j++) {
                 if (*(unsigned char *)(p + 0x51bb + (i * n + j) * 0x18) != 0) {
                     best = j;
                     best = best + i * n;
                 }
             }
             if (best != 0xff) {
-                *(unsigned char *)(p + 0x51bc + best * 0x18) = 6;
+                mCards[best].state = 6;
             }
         }
-        *(unsigned char *)(p + 0x540b) = 0;
+        mMessageVisible = 0;
     }
 
     HideCursor();
-    *(int *)(p + 0x53d4) = 4;
+    mState = 4;
 }
 #pragma pop
 
@@ -1112,8 +1126,8 @@ void dScMgMemory2_c::RoundShowCards()
         _ZN5Sound12PlayBank2_2DEj(0x146);
     if (cntA != 0)
         return;
-    *(int *)(c + 0x53d8) = 6;
-    *(short *)(c + 0x53ec) = *(unsigned char *)(c + 0x540a) * 20 + 0x50;
+    mSubstate = 6;
+    mPreviewTimer = mDifficulty * 20 + 0x50;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1150,13 +1164,12 @@ void dScMgMemory2_c::RoundDealFourth()
  * set state 5 (mode 1) or 4 (otherwise). */
 void dScMgMemory2_c::RoundDealHard()
 {
-    char *c = (char *)this;
     Work* w = (Work*)this;
     u8 mode;
     if (w->ready < 3)
         return;
     w->slots[w->total * 2 - 1 - w->count].done = 1;
-    (*(short*)(c + 0x53e8))++;
+    (mDealCount)++;
     mode = w->mode;
     if (w->count < data_ov006_0212e93c[mode])
         return;
@@ -1224,14 +1237,14 @@ void dScMgMemory2_c::RoundDealEasy()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::RoundStart(){
     char *c = (char *)this;
-    *(short*)(c+0x53e6) = 0;
-    *(short*)(c+0x53e8) = 0;
-    if (*(unsigned char*)(c+0x540a) == 1)
+    mReadyCount = 0;
+    mDealCount = 0;
+    if (mDifficulty == 1)
         func_ov006_020c1604(c+0x4f38, 4, 3, (int)(c+0x53e6));
     else
         func_ov006_020c1604(c+0x4f38, 4, 4, (int)(c+0x53e6));
-    *(short*)(c+0x511e) = 1;
-    *(int*)(c+0x53d8) = 1;
+    mShared.ready = 1;
+    mSubstate = 1;
     if (*(unsigned char*)(c+0xc4) == 0) {
         *(unsigned char*)(c+0xc3) = 1;
         *(unsigned char*)(c+0xc4) = 1;
@@ -1341,7 +1354,7 @@ void dScMgMemory2_c::ShuffleCards()
 void dScMgMemory2_c::ChoosePreviewCards()
 {
     char *obj = (char *)this;
-    int idx = *(unsigned char *)(obj + 0x5000 + 0x40a);
+    int idx = mDifficulty;
     int n = data_ov006_0212e900[idx];
     int mul = data_ov006_0212e90c[idx];
     int i;
@@ -1447,10 +1460,9 @@ void dScMgMemory2_c::ResetGame()
 // laundered RMW pool-loads the offset for the predicated tail.
 void dScMgMemory2_c::StateExit()
 {
-    char *self = (char *)this;
     UpdateCards();
-    if (*(unsigned short *)(self + 0x53e2))
-        *(unsigned short *)(self + 0x53e2) -= 1;
+    if (mCardTimer)
+        mCardTimer -= 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1487,7 +1499,7 @@ void dScMgMemory2_c::StateSetup(){
     ShuffleCards();
     FreeGfxSlotsById(0x1d);
     func_ov006_020c1764(c + 0x4f38);
-    *(int*)(c + 0x53d4) = 1;
+    mState = 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1495,17 +1507,17 @@ void dScMgMemory2_c::StateSetup(){
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::SetupDifficulty() {
     char *c = (char *)this;
-    *(unsigned char*)(c + 0x540a) = 0;
-    *(unsigned short*)(c + 0x53ea) = 8;
+    mDifficulty = 0;
+    mTargetPairs = 8;
     int x = *(int*)(c + 0xb4);
     if (x >= 0xa) {
-        *(unsigned char*)(c + 0x540a) = 2;
-        *(unsigned short*)(c + 0x53ea) = 0xa;
+        mDifficulty = 2;
+        mTargetPairs = 0xa;
         return;
     }
     if (x >= 5) {
-        *(unsigned char*)(c + 0x540a) = 1;
-        *(unsigned short*)(c + 0x53ea) = 9;
+        mDifficulty = 1;
+        mTargetPairs = 9;
     }
 }
 
@@ -1518,7 +1530,6 @@ void dScMgMemory2_c::SetupDifficulty() {
 // tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnGroundPounded()
 {
-    char *p = (char *)this;
 
     func_ov004_020b63a0(mMaxMisses);
 }
@@ -1550,7 +1561,6 @@ int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 // tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
 {
-    char *c = (char *)this;
 
     char *o;
     int v;
@@ -1656,7 +1666,7 @@ s32 dScMgMemory2_c::InitResources()
     *(int *)(self + 0xb4) = func_ov004_020ad878();
     func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;
-    *(u8 *)(self + 0x5409) = 5;
+    mMaxMisses = 5;
     func_ov004_020b04d0(0x20);
     func_ov004_020b682c();
     return 1;
