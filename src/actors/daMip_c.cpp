@@ -120,14 +120,14 @@ void  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, u32);
 int   _ZN6Player7TryGrabER8dActor_c(void *, void *);
 int   _ZN6Player9StartTalkER7fBase_cb(void *, void *, int);
 int   _ZN6Player12GetTalkStateEv(void *);
-void  _ZN6Player9DropActorEv(void *);
+int   _ZN6Player9DropActorEv(void *);
 int   _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *, void *, u32, const void *, u32, u32);
 int   _ZN6Player14IsFrontSlidingEv(void *);
 int   _ZN6Player17LostGrabbedObjectEv(void *);
 void  _ZN7Message7EndTalkEv(void);
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
    `void` spelling three of the four legacy files used cannot be the one. */
-int   _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, s32, int);
+bool  _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, s32, int);
 int   _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
 
 /* model / animation / shadow */
@@ -137,7 +137,7 @@ void  _ZN9ModelAnimC1Ev(void *);
 int   _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
 void  _ZN9ModelBase12ApplyOpacityEj(void *, u32, u32);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
-void  _ZN9Animation8LoadFileER13SharedFilePtr(void *);
+char *_ZN9Animation8LoadFileER13SharedFilePtr(void *);
 int   _ZN9Animation8FinishedEv(void *);
 void  _ZN9Animation7AdvanceEv(void *);
 int   _ZN11ShadowModel12InitCylinderEv(void *);
@@ -147,7 +147,7 @@ void  _ZN11ShadowModelC1Ev(void *);
 void  _ZN7PathPtrC1Ev(void *);
 void  _ZN7PathPtr6FromIDEj(void *, u32);
 void  _ZNK7PathPtr7GetNodeER7Vector3j(void *, void *, u32);
-void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32, u32, s32, s32, s32, void *, void *);
+int   _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32, u32, s32, s32, s32, void *, void *);
 void *_ZN7fBase_cnwEj(u32);
 void  _ZN12dEnemyBase_cC2Ev(void *);
 void  _ZN7dCcAc_cC1Ev(void *);
@@ -163,7 +163,7 @@ void  Vec3_Asr(void *, void *, int);
 void  SubVec3(void *, void *, void *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
-void  ApproachAngle(void *, s16, int, int, int);
+int   ApproachAngle(void *, s16, int, int, int);
 /* Same as Sound::PlaySub: StateTalkMain guards on the result. */
 int   _Z14ApproachLinearRsss(s16 *, s16, s16);
 int   _ZN4cstd4fdivEii(int, int);
@@ -179,12 +179,12 @@ u32   RandomIntInternal(int *);
 u8    NumStars(void);
 u16   DecIfAbove0_Short(void *);
 int   func_02013890(int, int);
-int   func_02013944(void);
+void  func_02013944(void);
 void  func_02012694(int, void *);
-void  func_02012790(int);
+unsigned int func_02012790(unsigned int);
 void  func_02016acc(void *, int);
 void  func_02016b24(void *, int);
-void  func_02022a4c(s32, s32, s32);
+u32   func_02022a4c(s32, s32, s32);
 u32   func_02022cbc(int, int, s32, s32, s32, const void *);
 void  func_0203c178(void *, int, int, int);
 
@@ -1544,7 +1544,7 @@ int daMip_c::Behavior()
         pv.y = mPosY;
         pv.z = mPosZ;
         pv.y = mPosY + 0x3c000;
-        *(void**)&mGlowParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mGlowParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             *(volatile u32*)&mGlowParticle, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
     }
 

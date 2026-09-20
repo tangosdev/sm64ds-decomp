@@ -177,9 +177,9 @@ int   _ZN8SaveData16HasPlayerLostCapEv(void);
 short Vec3_HorzAngle(const void *a, const void *b);
 int   Vec3_Dist(const void *a, const void *b);
 void  _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
-int   _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
+void  _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
 void  _ZN8dActor_c13SpawnSoundObjEj(void *self, unsigned int id);
-int   _ZN5dCc_c5ClearEv(void *self);
+void  _ZN5dCc_c5ClearEv(void *self);
 void  _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 int   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, void *a, void *out, int flag);
 void  func_0201267c(int a, void *b);
@@ -855,7 +855,7 @@ int func_ov030_02112578(void *arg0)
     void _ZN6Player18HasFinishedTalkingEv(void *player);
     int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
     int _ZN9Animation8FinishedEv(void *thiz);
-    void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
+    bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
     u8 DecIfAbove0_Byte(u8 *p);
     void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
     void _ZN9Animation7AdvanceEv(void *thiz);
@@ -1178,7 +1178,7 @@ int func_ov030_02112da0(char *a) {
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
     extern void func_0201267c(int, void *);
     extern int _ZN6Player12GetTalkStateEv(void *p);
-    extern void _ZN6Player9DropActorEv(void *p);
+    extern int _ZN6Player9DropActorEv(void *p);
     extern u8 DecIfAbove0_Byte(u8 *p);
     extern u8 data_0209d684;
     int b = (int)((*(u32 *)(a + 0xb0) & 0x40000) != 0);
@@ -1303,7 +1303,7 @@ int func_ov030_02113094(char* self)
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
     extern void func_0201267c(u32 id, char* p);
     extern int _ZN6Player12GetTalkStateEv(char* p);
-    extern void _ZN6Player9DropActorEv(char* p);
+    extern int _ZN6Player9DropActorEv(char* p);
     extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
     extern void _ZN7fBase_c18MarkForDestructionEv(char* self);
     {
@@ -1417,7 +1417,7 @@ int func_ov030_02113324(void* thiz)
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
     extern int func_0201267c(int a, void* b);
     extern int _ZN6Player12GetTalkStateEv(void* self);
-    extern void _ZN6Player9DropActorEv(void* self);
+    extern int _ZN6Player9DropActorEv(void* self);
     extern void _ZN9Animation7AdvanceEv(void* self);
     extern void _ZN5dCc_c5ClearEv(void* self);
     extern unsigned char DecIfAbove0_Byte(unsigned char* p);
@@ -1567,7 +1567,7 @@ int func_ov030_021136b0(char *c)
     extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 param1, const Vector3 *pos,
         const void *rot, int areaID, int deathTableID);
-    extern void func_02012790(int arg);
+    extern unsigned int func_02012790(unsigned int arg);
     extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
     extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
@@ -1577,7 +1577,7 @@ int func_ov030_021136b0(char *c)
         unsigned int d, unsigned int e);
     extern void func_0201267c(int a, void *b);
     extern int _ZN6Player12GetTalkStateEv(void *self);
-    extern void _ZN6Player9DropActorEv(void *self);
+    extern int _ZN6Player9DropActorEv(void *self);
     extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
     extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
     extern void func_ov030_021141a8(char *c, int v);
