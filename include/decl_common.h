@@ -497,7 +497,7 @@ extern int _ZTV12daStarBase_c[];
 extern int _ZTV13BigBrickBlock[];
 extern int _ZTV13FortressTower[];
 extern int _ZTV10daCamTag_c[];
-extern int _ZTV13KoopaTheQuick[];
+extern int _ZTV7daRNk_c[];
 extern int _ZTV13MontyMoleRock[];
 extern int _ZTV13PeachPainting[];
 extern int _ZTV14KnockDownPlank[];

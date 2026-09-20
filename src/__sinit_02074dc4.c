@@ -1,11 +1,13 @@
+#include "Timer.h"
+
 extern int data_0209d4b8;
 extern int data_0209d4bc;
-extern int data_0209d4c8;
+extern struct Timer data_0209d4c8;
 extern void func_0201973c(void);
 
 extern void func_0203b9b4(int *p, int v);
 extern void func_020731dc(int a, int b, void **node);
-extern int func_0201964c(int *__this);
+extern struct Timer *func_0201964c(struct Timer *timer);
 
 void __sinit_02074dc4(void)
 {
