@@ -1691,13 +1691,13 @@ ov062	0x0211707c	func_ov062_0211707c	_ZN10daHolhei_c8BehaviorEv	vtable slot 6
 ov062	0x02117334	func_ov062_02117334	_ZN10daHolhei_c13InitResourcesEv	vtable slot 0
 ov062	0x02117478	func_ov062_02117478	daHolhei_c_Spawn	spawnfunc
 ov062	0x02117478	daHolhei_c_Spawn	daHolhei_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov062	0x021174cc	func_ov062_021174cc	_ZN5KoopaD1Ev	vtable slot 16
-ov062	0x02117514	func_ov062_02117514	_ZN5KoopaD0Ev	vtable slot 17
-ov062	0x02118f04	func_ov062_02118f04	_ZN5Koopa16CleanupResourcesEv	vtable slot 3
-ov062	0x02118f80	func_ov062_02118f80	_ZN5Koopa16OnPendingDestroyEv	vtable slot 12
-ov062	0x02118f84	func_ov062_02118f84	_ZN5Koopa6RenderEv	vtable slot 9
-ov062	0x021190ec	func_ov062_021190ec	_ZN5Koopa8BehaviorEv	vtable slot 6
-ov062	0x02119420	func_ov062_02119420	_ZN5Koopa13InitResourcesEv	vtable slot 0
+ov062	0x021174cc	func_ov062_021174cc	_ZN8daNknk_cD1Ev	vtable slot 16
+ov062	0x02117514	func_ov062_02117514	_ZN8daNknk_cD0Ev	vtable slot 17
+ov062	0x02118f04	func_ov062_02118f04	_ZN8daNknk_c16CleanupResourcesEv	vtable slot 3
+ov062	0x02118f80	func_ov062_02118f80	_ZN8daNknk_c16OnPendingDestroyEv	vtable slot 12
+ov062	0x02118f84	func_ov062_02118f84	_ZN8daNknk_c6RenderEv	vtable slot 9
+ov062	0x021190ec	func_ov062_021190ec	_ZN8daNknk_c8BehaviorEv	vtable slot 6
+ov062	0x02119420	func_ov062_02119420	_ZN8daNknk_c13InitResourcesEv	vtable slot 0
 ov062	0x021196bc	func_ov062_021196bc	KoopaSmall_Spawn	spawnfunc
 ov062	0x021196bc	KoopaSmall_Spawn	daNknk_c_classInit_NOKONOKO_S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211970c	func_ov062_0211970c	Koopa_Spawn	spawnfunc

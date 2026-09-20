@@ -12497,5 +12497,73 @@
     },
     "control_binding": "The independent a601 recheck reproduced the entire raw object byte-for-byte from the c466 full production control. Only the Koopa compiler input changed between those source anchors. Root also reran the actual normal full production build at a601.",
     "historical_compile_group": "The compile group predates the final source anchor and includes the documented mode refusal. Its stock-link-control label refers to the then-current candidate tree, not clean main. Final normal-production proof and the separately identified clean-main control govern acceptance."
+  },
+  "rename_ledger_repair": {
+    "rejected_commit": "15919caaee54118c8cc8b4f0c96e74a57b42ff6f",
+    "finding": {
+      "id": "KP2864-10",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "symbols/actor_renames.tsv:1694-1700",
+      "summary": "Seven live ledger lookups retained the old Koopa manglings after native identity restoration.",
+      "reason": "The seven current-name columns now exactly name the daNknk_c method symbols at their existing ov062 addresses. Historical names, row order, factories and every unrelated row remain unchanged. check_rename_ledger passes; no compiler input changes."
+    },
+    "changes": [
+      {
+        "row": 1694,
+        "module": "ov062",
+        "address": "0x021174cc",
+        "old": "_ZN5KoopaD1Ev",
+        "new": "_ZN8daNknk_cD1Ev"
+      },
+      {
+        "row": 1695,
+        "module": "ov062",
+        "address": "0x02117514",
+        "old": "_ZN5KoopaD0Ev",
+        "new": "_ZN8daNknk_cD0Ev"
+      },
+      {
+        "row": 1696,
+        "module": "ov062",
+        "address": "0x02118f04",
+        "old": "_ZN5Koopa16CleanupResourcesEv",
+        "new": "_ZN8daNknk_c16CleanupResourcesEv"
+      },
+      {
+        "row": 1697,
+        "module": "ov062",
+        "address": "0x02118f80",
+        "old": "_ZN5Koopa16OnPendingDestroyEv",
+        "new": "_ZN8daNknk_c16OnPendingDestroyEv"
+      },
+      {
+        "row": 1698,
+        "module": "ov062",
+        "address": "0x02118f84",
+        "old": "_ZN5Koopa6RenderEv",
+        "new": "_ZN8daNknk_c6RenderEv"
+      },
+      {
+        "row": 1699,
+        "module": "ov062",
+        "address": "0x021190ec",
+        "old": "_ZN5Koopa8BehaviorEv",
+        "new": "_ZN8daNknk_c8BehaviorEv"
+      },
+      {
+        "row": 1700,
+        "module": "ov062",
+        "address": "0x02119420",
+        "old": "_ZN5Koopa13InitResourcesEv",
+        "new": "_ZN8daNknk_c13InitResourcesEv"
+      }
+    ],
+    "check": {
+      "command": "python tools/check_rename_ledger.py --repo .",
+      "exit_code": 0,
+      "output": "check_rename_ledger: every mangled/vtable row agrees with its module's symbols.txt\n  checked 2202 mangled/vtable row(s); 1520 coined row(s) are out of scope and unchecked"
+    },
+    "proof_binding": "Only this lookup ledger and evidence change. All source, headers, symbol definitions, enrollment, manifests and accounting blobs remain identical to the verified a601 anchor."
   }
 }

@@ -75,3 +75,10 @@ as a tool-mode limitation, not a passing linkcheck. Actual normal production
 linking, full-ROM comparison, exact source-span accounting and the complete raw
 object audit provide the applicable promotion proof; no tool or data claim was
 changed to bypass the refusal.
+
+CI and independent review caught seven stale current-name lookups in the rename
+ledger after the native identity change (KP2864-10). Those seven fourth-column
+values now agree with the canonical ov062 symbols; historical inputs and all
+unrelated rows are unchanged. The rename-ledger gate passes. Compiler inputs and
+all previously verified output remain unchanged. The rejected candidate and review
+remain in queue history; this successor requires fresh exact-head acceptance.
