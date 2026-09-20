@@ -742,6 +742,49 @@ int host_setting_smooth_models(void);
 int host_setting_texture_filter(void);
 int host_setting_anti_aliasing(void);
 
+/* ---- THE THREE PRESENT KEYS (run hd2, lane GPU1) ------------------------
+   The same promise as the two blocks above and the same grammar: absent means
+   the picture the build without them produced, byte for byte where it can be
+   measured. These three are not about what the picture IS, only about how the
+   finished picture reaches the screen.
+
+   PresentBackend: WHICH PATH HANDS THE FINISHED PICTURE OVER. 0 is the
+   default and is the one the port has always used -- one GDI call,
+   StretchDIBits, straight into the window. 1 is Direct3D 11: the same
+   finished picture is uploaded to the graphics card and drawn once as a
+   rectangle, which is what makes a real vsync and a real scaling filter
+   possible at all. Absent, unparseable, 0 itself and negative read as 0 and
+   anything above 1 is clamped to 1, the Aspect rule. It NEVER FAILS: if the
+   card, the driver or the swap chain will not have it, the run says so in one
+   plain line and finishes on the GDI path. SM64DS_PRESENT_BACKEND overrides.
+
+   PresentFilter: HOW THE PICTURE IS STRETCHED to the window, and READ ONLY
+   WHEN THE BACKEND IS 1. 0 is the default and is nearest, the DS's hard pixel
+   edges, which is what the GDI path does today. 1 is smooth, an ordinary
+   bilinear stretch. 2 is sharp: the picture is blown up by a whole number
+   with hard edges first and only the leftover fraction is blended, which
+   keeps the blocky look at a window size that is not a whole multiple.
+   Clamped into 0..2. SM64DS_PRESENT_FILTER_D3D overrides -- NOT
+   SM64DS_PRESENT_FILTER, which has belonged to the GDI path's halftone knob
+   since before this key existed.
+
+   VSync: WHETHER THE PICTURE WAITS FOR THE MONITOR, and READ ONLY WHEN THE
+   BACKEND IS 1, because the GDI path has no vsync to switch on. 0 is the
+   default and is no wait, which is what the port has always done. 1 waits,
+   which removes tearing. Clamped into 0..1. SM64DS_VSYNC overrides.
+   IT CAN STAND ITSELF DOWN: this game advances one fixed step per tick and
+   never catches up, so a wait that does not fit inside the frame's budget
+   would slow the GAME rather than drop a picture. The present path measures
+   that and switches the wait off, with one line, rather than let it happen.
+   It also stands down for the whole run when FrameRate is set, because that
+   key presents the same picture several times inside one tick.
+
+   All three are read once and latched, like the blocks above, and the
+   launcher's rows promise a restart. */
+int host_setting_present_backend(void);
+int host_setting_present_filter(void);
+int host_setting_vsync(void);
+
 #ifdef __cplusplus
 }
 #endif

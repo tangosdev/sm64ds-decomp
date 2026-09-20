@@ -94,6 +94,18 @@ def main():
         e["SM64DS_TEXTURE_FILTER"] = os.environ["SM64DS_TEXTURE_FILTER"]
     if os.environ.get("SM64DS_ANTI_ALIASING"):
         e["SM64DS_ANTI_ALIASING"] = os.environ["SM64DS_ANTI_ALIASING"]
+    # Run hd2, lane GPU1: the present backend and its knobs carry through for
+    # the same reason as the four above. Which path hands the finished picture
+    # to the screen is presentation only, so the opening must take the same
+    # distinct positions with the graphics-card path on as with it absent, and
+    # there is no way to ask that question without passing the keys. With the
+    # variables unset these lines do nothing.
+    for _k in ("SM64DS_PRESENT_BACKEND", "SM64DS_PRESENT_FILTER_D3D",
+               "SM64DS_VSYNC", "SM64DS_PRESENT_DEVICE",
+               "SM64DS_PRESENT_OFFSCREEN", "SM64DS_PRESENT_OFFSCREEN_SIZE",
+               "SM64DS_PRESENT_ADDRCHECK"):
+        if os.environ.get(_k):
+            e[_k] = os.environ[_k]
     log = out / "run.log"
     with log.open("wb") as f:
         # The quiet spawner every other launcher in port/tools uses (battery.py's

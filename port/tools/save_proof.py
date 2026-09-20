@@ -80,6 +80,20 @@ def run(exe, root, rundir, name, mode, frames, extra=None):
     os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
     log = os.path.join(d, "run.log")
     e = M.env_base(root, d, name)
+    # Run hd2, lane GPU1: the present backend's keys are the one group this
+    # proof has to be able to carry through env_base's scrub, because the gate
+    # is run BOTH with them absent and with the graphics-card path on. The
+    # save-state arena claims a fixed host address lazily and a graphics driver
+    # is the one thing in this process big enough to take it, so "the save path
+    # still works with a Direct3D device alive" is a question only a carried
+    # key can ask. With the variables unset this loop does nothing and the
+    # proof is byte-identical to one from before it existed.
+    for _k in ("SM64DS_PRESENT_BACKEND", "SM64DS_PRESENT_FILTER_D3D",
+               "SM64DS_VSYNC", "SM64DS_PRESENT_DEVICE",
+               "SM64DS_PRESENT_OFFSCREEN", "SM64DS_PRESENT_OFFSCREEN_SIZE",
+               "SM64DS_PRESENT_ADDRCHECK"):
+        if os.environ.get(_k):
+            e[_k] = os.environ[_k]
     e.pop("SM64DS_LEVEL", None)
     e["SM64DS_SCENE"] = "1"                       # the title, where the probe ticks
     e["SM64DS_WINDOW_SELFTEST"] = str(frames)

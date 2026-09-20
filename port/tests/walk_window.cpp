@@ -416,6 +416,7 @@ static bool winapi_load(void)
    contract and in hal/comms_conductor.cpp. */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
+#include "hal/gpu_present.h"      /* run hd2 lane GPU1: the optional D3D11 present */
 
 /* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
    harness computes them to where hal/comms_conductor.cpp publishes them into
@@ -6190,8 +6191,17 @@ static void present(void)
     /* MINIMISED is a zero-by-zero client area, and every arithmetic step
        below divides by one of them. Nothing to present to, so nothing is
        presented -- and no StretchDIBits with a zero destination, which is
-       what a restore used to come back through. */
-    if (cw <= 0 || ch <= 0) return;
+       what a restore used to come back through.
+
+       run hd2 lane GPU1: the offscreen proof mode is the one caller that has
+       work to do without a client area -- it draws the identical upload, quad
+       and filter into a target of its own so the graphics-card path can be
+       checked byte for byte without a window existing anywhere. The call is a
+       cached int that is 0 in every run nobody asked, which is every run a
+       player ever makes, so with the setting absent this is the same early
+       return it has always been. */
+    const int gpu_offscreen = port_gpu_present_offscreen_mode();
+    if ((cw <= 0 || ch <= 0) && !gpu_offscreen) return;
 
     /* WHICH IMAGE IS BEING PRESENTED. Everything below is the same fit, the
        same bars and the same blit whichever it is; only the source pointer,
@@ -6225,11 +6235,41 @@ static void present(void)
         sw = ntr::active_w;
         sh = ntr::active_h;
     }
+    /* run hd2 lane GPU1: the offscreen proof mode, which presents to nothing
+       and is the only path here that does not need a window. It reads the
+       same three numbers the blit below reads -- the pixels, the DIB's width
+       as a row stride and the live sub-rectangle -- so what it checks is what
+       would have been shown. */
+    if (gpu_offscreen) {
+        port_gpu_present_offscreen_frame(bits, bi->bmiHeader.biWidth, sw, sh);
+        return;
+    }
+    if (cw <= 0 || ch <= 0) return;
+
     /* the largest sw:sh rectangle inside cw x ch, via hal_present_fit (the
        one copy of this arithmetic; see port/hal/sub_screen.cpp, next to
        hal_present_set_rect). The layout selftest drives the same code. */
     int dw, dh, dx, dy;
     hal_present_fit(cw, ch, sw, sh, &dx, &dy, &dw, &dh);
+
+    /* run hd2 lane GPU1: THE GRAPHICS CARD, when the player asked for it.
+       Same picture, same destination rectangle -- the four numbers above are
+       handed over rather than recomputed, so there is no second copy of the
+       fit -- and the black bars are that path's clear colour instead of four
+       PatBlts. A 0 back means the backend is off or has just fallen back, and
+       then the GDI blit below runs for this very frame: no picture is ever
+       lost to it. The two extra arguments are for the vsync rule, which has
+       to know how long this frame's budget is (the ROM's own vblank divider)
+       and whether the presentation clock is running; both are read only when
+       the backend is on, because port_gpu_present_enabled short-circuits. */
+    if (port_gpu_present_enabled() &&
+        port_gpu_present_frame(g_present_hwnd, bits, bi->bmiHeader.biWidth,
+                               sw, sh, dx, dy, dw, dh, cw, ch,
+                               PORT_VBLANK_MS * port_frame_divider(),
+                               port_frame_rate_target())) {
+        hal_present_set_rect(dx, dy, dw, dh, sw, sh);
+        return;
+    }
 
     /* the four strips around it, black. Written before the picture so a
        stretch that lands a pixel wide of the arithmetic covers the bar
