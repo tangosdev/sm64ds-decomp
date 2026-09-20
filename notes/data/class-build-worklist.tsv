@@ -286,7 +286,7 @@ daObjSimpleBg_c	DONE	include\FortressTower.h  [alias: header uses pre-rename nam
 daObjSimpleLift_c	DONE	include\SlidingPlatformWf.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
 daObjSlIceBlock_c	DONE	include\SlidingIce.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov027	7
 daObjSm_Lift_c	PARTIAL	include\daObjSm_Lift_c.h	dBgActor_c	0	ov018	7
-daObjSwitch_c	DONE	include\StarSwitch.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov002	7
+daObjSwitch_c	DONE	include\daObjSwitch_c.h	dBgActor_c	0	ov002	7
 daObjTatefuda_c	DONE	include\SignPost.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov002	10
 daObjTdFuta_c	DONE	include\daObjTdFuta_c.h	dBgActor_c	0	ov032	6
 daObjTdWater_c	DONE	include\daObjTdWater_c.h	dBgActor_c	0	ov032	6

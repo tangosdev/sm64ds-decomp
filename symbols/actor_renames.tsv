@@ -163,12 +163,12 @@ ov002	0x020b9b70	func_ov002_020b9b70	_ZN11PowerFlower8BehaviorEv	vtable slot 6 (
 ov002	0x020b9c00	func_ov002_020b9c00	_ZN11PowerFlower13InitResourcesEv	vtable slot 0 (was _ZN16daObjPushblock_c13InitResourcesEv)
 ov002	0x020b9e0c	func_ov002_020b9e0c	PowerFlower_Spawn	spawnfunc
 ov002	0x020b9e0c	PowerFlower_Spawn	daObjPowerUpItem_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x020b9e64	func_ov002_020b9e64	_ZN10StarSwitchD1Ev	vtable slot 16
-ov002	0x020b9ea8	func_ov002_020b9ea8	_ZN10StarSwitchD0Ev	vtable slot 17
-ov002	0x020ba568	func_ov002_020ba568	_ZN10StarSwitch16CleanupResourcesEv	vtable slot 3
-ov002	0x020ba5f4	func_ov002_020ba5f4	_ZN10StarSwitch6RenderEv	vtable slot 9
-ov002	0x020ba624	func_ov002_020ba624	_ZN10StarSwitch8BehaviorEv	vtable slot 6
-ov002	0x020ba83c	func_ov002_020ba83c	_ZN10StarSwitch13InitResourcesEv	vtable slot 0
+ov002	0x020b9e64	func_ov002_020b9e64	_ZN13daObjSwitch_cD1Ev	vtable slot 16
+ov002	0x020b9ea8	func_ov002_020b9ea8	_ZN13daObjSwitch_cD0Ev	vtable slot 17
+ov002	0x020ba568	func_ov002_020ba568	_ZN13daObjSwitch_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020ba5f4	func_ov002_020ba5f4	_ZN13daObjSwitch_c6RenderEv	vtable slot 9
+ov002	0x020ba624	func_ov002_020ba624	_ZN13daObjSwitch_c8BehaviorEv	vtable slot 6
+ov002	0x020ba83c	func_ov002_020ba83c	_ZN13daObjSwitch_c13InitResourcesEv	vtable slot 0
 ov002	0x020baaac	func_ov002_020baaac	StarSwitch_Spawn	spawnfunc
 ov002	0x020baaac	StarSwitch_Spawn	daObjSwitch_c_classInit_STAR_SWITCH	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020baadc	func_ov002_020baadc	ExclamationSwitch_Spawn	spawnfunc
@@ -400,7 +400,7 @@ ov002	0x02109900	data_ov002_02109900	ExclamationSwitch_SpawnInfo	spawninfo
 ov002	0x02109900	ExclamationSwitch_SpawnInfo	g_profile_HANSWITCH	reconstructed profile global; literal ROM ID HANSWITCH+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x0210991c	data_ov002_0210991c	StarSwitch_SpawnInfo	spawninfo
 ov002	0x0210991c	StarSwitch_SpawnInfo	g_profile_STAR_SWITCH	reconstructed profile global; literal ROM ID STAR_SWITCH+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x02109940	data_ov002_02109940	_ZTV10StarSwitch	vtable alloc=0x354
+ov002	0x02109940	data_ov002_02109940	_ZTV13daObjSwitch_c	vtable alloc=0x354
 ov002	0x02109ad4	data_ov002_02109ad4	SignPost_SpawnInfo	spawninfo
 ov002	0x02109ad4	SignPost_SpawnInfo	g_profile_TATEFUDA	reconstructed profile global; literal ROM ID TATEFUDA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02109af8	data_ov002_02109af8	_ZTV8SignPost	vtable alloc=?

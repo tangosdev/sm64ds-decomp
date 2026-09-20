@@ -947,16 +947,16 @@
    "start": "0x20b9e64",
    "end": "0x20baadc",
    "classes": [
-    "StarSwitch"
+    "daObjSwitch_c"
    ],
    "n_functions_map": 23,
    "n_files": 23,
    "files": [
-    "src/_ZN10StarSwitchD1Ev.cpp",
-    "src/_ZN10StarSwitchD0Ev.cpp",
+    "src/_ZN13daObjSwitch_cD1Ev.cpp",
+    "src/_ZN13daObjSwitch_cD0Ev.cpp",
     "src/func_ov002_020b9f00.c",
     "src/func_ov002_020b9f80.cpp",
-    "src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c.cpp",
     "src/func_ov002_020ba01c.cpp",
     "src/func_ov002_020ba0bc.c",
     "src/func_ov002_020ba0f8.cpp",
@@ -968,10 +968,10 @@
     "src/func_ov002_020ba4c0.c",
     "src/func_ov002_020ba4d8.cpp",
     "src/func_ov002_020ba520.cpp",
-    "src/_ZN10StarSwitch16CleanupResourcesEv.cpp",
-    "src/_ZN10StarSwitch6RenderEv.cpp",
-    "src/_ZN10StarSwitch8BehaviorEv.cpp",
-    "src/_ZN10StarSwitch13InitResourcesEv.cpp",
+    "src/_ZN13daObjSwitch_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjSwitch_c6RenderEv.cpp",
+    "src/_ZN13daObjSwitch_c8BehaviorEv.cpp",
+    "src/_ZN13daObjSwitch_c13InitResourcesEv.cpp",
     "src/func_ov002_020baa2c.c",
     "src/func_ov002_020baa98.c",
     "src/d_a_obj_switch_star_switch.c"
@@ -37689,14 +37689,14 @@
    "start": "0x20b9e64",
    "end": "0x20baadc",
    "classes": [
-    "StarSwitch"
+    "daObjSwitch_c"
    ],
    "files": [
-    "src/_ZN10StarSwitchD1Ev.cpp",
-    "src/_ZN10StarSwitchD0Ev.cpp",
+    "src/_ZN13daObjSwitch_cD1Ev.cpp",
+    "src/_ZN13daObjSwitch_cD0Ev.cpp",
     "src/func_ov002_020b9f00.c",
     "src/func_ov002_020b9f80.cpp",
-    "src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c.cpp",
     "src/func_ov002_020ba01c.cpp",
     "src/func_ov002_020ba0bc.c",
     "src/func_ov002_020ba0f8.cpp",
@@ -37708,10 +37708,10 @@
     "src/func_ov002_020ba4c0.c",
     "src/func_ov002_020ba4d8.cpp",
     "src/func_ov002_020ba520.cpp",
-    "src/_ZN10StarSwitch16CleanupResourcesEv.cpp",
-    "src/_ZN10StarSwitch6RenderEv.cpp",
-    "src/_ZN10StarSwitch8BehaviorEv.cpp",
-    "src/_ZN10StarSwitch13InitResourcesEv.cpp",
+    "src/_ZN13daObjSwitch_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjSwitch_c6RenderEv.cpp",
+    "src/_ZN13daObjSwitch_c8BehaviorEv.cpp",
+    "src/_ZN13daObjSwitch_c13InitResourcesEv.cpp",
     "src/func_ov002_020baa2c.c",
     "src/func_ov002_020baa98.c",
     "src/d_a_obj_switch_star_switch.c"

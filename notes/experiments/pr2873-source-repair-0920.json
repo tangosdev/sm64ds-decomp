@@ -1,0 +1,2665 @@
+{
+  "schema": "bounded-source-repair-evidence-v1",
+  "task_id": "pr2873-source-repair-0920",
+  "session": "codex-axle-source-0920",
+  "source_commit": "this commit",
+  "input_commit": "9d889e90b7a71db67a9af73221844979c97011a8",
+  "base_commit": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "formal_acceptance": false,
+  "source_completion": "partial",
+  "findings": [
+    {
+      "id": "KJ2873-01",
+      "kind": "provenance",
+      "status": "open",
+      "location": "src/actors/daObjKurumajiku_c.cpp:24,132-135",
+      "summary": "The helper writes the model matrix, but the source calls it a collision matrix and invents a field name/offset.",
+      "evidence": "include/dBgActor_c.h:28-32 puts mModel at0xd4 and mClsnMat at0x2ec. include/Model.h:44-46 puts Model::mat4x3 at+0x1c, hence actor+0xf0 is mModel.mat4x3 and actor+0x114 is that matrix's translation row. The promoted helper writes exactly those offsets. src/actors/dBgActor_c.cpp independently implements model translation at1/8 scale, then a separate UpdateClsnPosAndRot copies to mClsnMat and uses full actor position. There is no dBgActor_c::mClsnMtx at0xf0.",
+      "required_action": "Correct the source description to model transform/translation. A field-based source rewrite can use this actual layout after byte measurement; do not rename a collision member to fit the comment.",
+      "producer_status": "fixed",
+      "producer_disposition": "Correct model-transform prose and real mModel.mat4x3 fields; strict 4/4."
+    },
+    {
+      "id": "KJ2873-02",
+      "kind": "provenance",
+      "status": "open",
+      "location": "src/actors/daObjKurumajiku_c.cpp:56-58",
+      "summary": "The retained IsClsnInRange bridge is justified with an inaccurate by-value Fix12 claim.",
+      "evidence": "The actual definition src/actors/dBgActor_c.cpp:113 is int(dBgActor_c*, int radius, int yOffset), matching this TU's scalar bridge. include/dBgActor_c.h:62-65 explicitly distinguishes the proven by-value UpdateKillByMegaChar case from IsClsnInRange symbols whose bodies refuse that by-value claim. A mangled spelling alone does not prove the original parameter representation.",
+      "required_action": "Describe the actual scalar bridge and scoped unresolved interface accurately; keep the currently truthful scalar call contract unless a genuine method is measured and coordinated.",
+      "producer_status": "fixed",
+      "producer_disposition": "Describe the actual scalar bridge; remove false by-value Fix12 assertion."
+    },
+    {
+      "id": "KJ2873-03",
+      "kind": "correctness",
+      "status": "open_contract_reconciliation",
+      "location": "src/actors/daObjKurumajiku_c.cpp:121; config/decl-agreement-baseline.json func_ov002_020b6ac8; both promoted descendant sources",
+      "summary": "Promotion changes the helper's first-parameter definition from void* to base-class*, while both external C declarations remain distinct derived-class* contracts; new baseline rows bank that disagreement.",
+      "evidence": "Deleted src/func_ov002_020b6ac8.cpp defines int(void*,void*). The new definition is int(daObjKurumajiku_c*,void*). The ov043 and ov047 promoted descendants declare int(daObjKm1_Kurumajiku_c*,ResourceDescriptor*) and int(daObjKm3_Kurumajiku_c*,ResourceDescriptor*) respectively. The diff adds both new param:#1 declaration fingerprints. Their resource descriptors both visibly contain two SharedFilePtr pointers plus CLPS, although the new source says only callers know the shape.",
+      "required_action": "Establish one truthful compatible declaration boundary and verify all affected callers; do not treat baseline additions as source acceptance. Existing pointer views do not by themselves prove a runtime ABI failure, so no miscompile is asserted here. Any descendant/shared-header edits need their own exact resource authorization; the ov043 source remains reserved by an older task.",
+      "producer_status": "source_fixed_integration_pending",
+      "producer_disposition": "Restore inherited opaque C boundary and use local real base/descriptor views; both unchanged descendant Cleanup callers strict. Integrator must prune exactly the two new receiver fingerprints; this is not canonical typed API agreement."
+    },
+    {
+      "id": "KJ2873-04",
+      "kind": "reconstruction",
+      "status": "actionable_measurement_needed",
+      "location": "src/actors/daObjKurumajiku_c.cpp:74-103,121-144; manifest notes154",
+      "summary": "The promoted helpers still use raw layout access where real fields already exist, and the typed helper was changed back to char* solely to follow a placeholder declaration.",
+      "evidence": "mMeshCollider is already a real member at0x124; mModel.mat4x3 and actor angles/position already exist. Cleanup uses repeated casts to self+0x124 and raw descriptor loads. Matrix helper uses char*/offsets; Behavior adds a char* cast for it. The manifest cites decl_common's legacy spelling and a byte-free cast, but provides no compiler evidence that ordinary field access cannot match. Behavior also retains a pointer to mAngleZ and an int temporary for the flag test.",
+      "required_action": "Measure small ordinary C++ alternatives: named mesh/model members, real actor fields, direct angle update/flag test, and a truthful shared descriptor/view. Retain only measured necessary forms with bounded evidence; use a partial reconstruction issue if work remains. This preflight has not compiled alternatives and does not promise byte identity.",
+      "producer_status": "measured_constraint",
+      "producer_disposition": "Named fields and direct compound angle update adopted. Integer comparison temporary retained after measured direct/bool/masked tests shorten Behavior by twelve bytes. Narrow opaque/char*/scalar interface debt remains explicit."
+    },
+    {
+      "id": "KJ2873-05",
+      "kind": "provenance",
+      "status": "open_bookkeeping",
+      "location": "notes/data/tu-promotion-queue.tsv daObjKurumajiku_c row",
+      "summary": "The touched promotion row still reports six source files and168 lines after consolidation.",
+      "evidence": "The original six-function run is now owned by three source files: D0 legacy29 lines, D1 legacy33 lines, promoted TU145 lines =207. queue_audit.py defines shard_count as distinct src files covering the run and total_lines as the sum of those files. --check-promoted explicitly checks only the yes/no column, so its green result does not validate6/168.",
+      "required_action": "Reconcile only this generated row using the authoritative current run measurement; expected exact inspected source count3 and line count207 before any further repair changes.",
+      "producer_status": "integration_pending",
+      "producer_disposition": "No queue TSV permission in producer stage. Final three-owner line measurement is included below; integrator must update only this actor's row."
+    },
+    {
+      "id": "KJ2873-06",
+      "kind": "provenance",
+      "status": "bounded_claim_and_proof_needed",
+      "location": "PR body; src/actors/daObjKurumajiku_c.cpp:29-37; manifest boundary_evidence and destructor grid",
+      "summary": "The destructor exclusion is explicit and can be a valid partial promotion, but universal wording exceeds the recorded bounded grid and the final production proof is not yet independently established.",
+      "evidence": "The manifest lists14 forms and says every visible-body source form emits D1,D0. No separate committed experiment with exact variants/object results accompanies this PR; listed experiments are producer claims in the manifest. The four declared functions total0x1d4 bytes. The complete object also needs exact proof for the excluded D0/D1 duplicates, Vector3 duplicate, 11 metadata objects including vtable preamble and all string tails, and surviving relocation safety. The manifest's tubuild verify record establishes only the producer's text check; full ROM/private validation is pending.",
+      "required_action": "Limit prose to the tested forms, preserve reproducible bounded measurements, independently verify the full object/policies and exact two retained destructor controls plus production enrollment. Do not demand an unmeasured destructor rewrite, and do not treat similarity to landed daObjKuruma_c as proof.",
+      "producer_status": "source_fixed_integration_pending",
+      "producer_disposition": "Universal destructor language removed. Current form, all duplicates, complete metadata/preamble/string tails and production controls independently measured by this source producer. Current-main composition and different-session acceptance remain required."
+    }
+  ],
+  "experiments": [
+    {
+      "id": "control",
+      "source_sha256": "11e92b42c243a7a86515c8b2d3b8791b0330f76979e334659a6e66df172918b1",
+      "patch_from_input": "",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "opaque",
+      "source_sha256": "358a2cf27092f1ab1b21c9b51c2f8d1f2f057372bc1331569c8d3ce028962698",
+      "patch_from_input": "--- input\n+++ opaque\n@@ -51,7 +51,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -118,8 +118,9 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n     char *r4 = (char *)descriptor;\n     if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n         ((dBgW *)((char *)self + 0x124))->Disable();\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "mesh",
+      "source_sha256": "ddbc0112da174d282cfd007d15105eab246703b222fdee5f352e23b3af672b65",
+      "patch_from_input": "--- input\n+++ mesh\n@@ -51,7 +51,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -118,11 +118,12 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n     char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n     ((SharedFilePtr *)(*(void **)r4))->Release();\n     ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n     return 1;\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "descriptor",
+      "source_sha256": "b1075ca058f9833186961b2ee814ca021365b7fe13df5b5374782964513c4e58",
+      "patch_from_input": "--- input\n+++ descriptor\n@@ -41,6 +41,12 @@\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n+struct AxleResources {\n+    SharedFilePtr *model;\n+    SharedFilePtr *collision;\n+    CLPS_Block *clps;\n+};\n+\n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n extern char data_020a0e68[0x30];\n@@ -51,7 +57,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -118,13 +124,14 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n-    char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n-    ((SharedFilePtr *)(*(void **)r4))->Release();\n-    ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n+    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n+    resources->model->Release();\n+    resources->collision->Release();\n     return 1;\n }\n \n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "matrix",
+      "source_sha256": "983448f058940dbb5b7a4071e3fb32258bec5c3ded677235f55c805f6de1c669",
+      "patch_from_input": "--- input\n+++ matrix\n@@ -135,11 +135,11 @@\n    dBgActor_c's mClsnMtx (0xf0) and its position row (0x114). */\n extern \"C\" int func_ov002_020b6a80(char *self)\n {\n-    char *c = self;\n-    Matrix4x3_FromRotationZXYExt(c + 0xf0, 0, *(short *)(c + 0x8e), *(short *)(c + 0x90));\n-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;\n-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;\n-    int z = *(int *)(c + 0x64) >> 3;\n-    *(int *)(c + 0x11c) = z;\n+    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n+    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n+    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n+    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n+    int z = actor->mPosZ >> 3;\n+    actor->mModel.mat4x3.m[11] = z;\n     return z;\n }\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "angle",
+      "source_sha256": "9140538fc8da0aaa3e8056e251cab719fb8a64801b2d80a8ea233a2700a39a05",
+      "patch_from_input": "--- input\n+++ angle\n@@ -74,9 +74,7 @@\n     int i;\n     Vector3 mid;\n     Vector3 res;\n-    s16 *rzp = &mAngleZ;\n-\n-    *rzp = *rzp + 0x100;\n+    mAngleZ += 0x100;\n     {\n         int suppressed = (int)((mFlags & 8) != 0);\n         if (suppressed != 0)\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "angle_assign",
+      "source_sha256": "c25d54c4f48fa60d43d32b54e66546f8a74c6b6b0e002bc5a12b9662e1a11c60",
+      "patch_from_input": "--- input\n+++ angle_assign\n@@ -74,9 +74,7 @@\n     int i;\n     Vector3 mid;\n     Vector3 res;\n-    s16 *rzp = &mAngleZ;\n-\n-    *rzp = *rzp + 0x100;\n+    mAngleZ = mAngleZ + 0x100;\n     {\n         int suppressed = (int)((mFlags & 8) != 0);\n         if (suppressed != 0)\n",
+      "compiled": true,
+      "object_sha256": "ed9f24735554b8ff855fd2465be8bff2382a25e2bbf3f054eb6f519b49b824a0",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "NO-REPRO",
+          "reason": "requested-size-mismatch",
+          "diffs": [],
+          "blind": 0,
+          "expected_size": 284,
+          "emitted_sizes": [
+            280
+          ]
+        }
+      ],
+      "all_four_exact": false,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 280,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "flag",
+      "source_sha256": "5cbe4a2cddd54798bc24638556c9e3439c3960d4b916e2d10ab85ba7f2a91ddd",
+      "patch_from_input": "--- input\n+++ flag\n@@ -77,11 +77,8 @@\n     s16 *rzp = &mAngleZ;\n \n     *rzp = *rzp + 0x100;\n-    {\n-        int suppressed = (int)((mFlags & 8) != 0);\n-        if (suppressed != 0)\n-            return 1;\n-    }\n+    if (mFlags & 8)\n+        return 1;\n     for (i = 0; i < 4; i++) {\n         if (mMountedActorIds[i]) {\n             dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);\n",
+      "compiled": true,
+      "object_sha256": "218421e9ce9712d4defd7fba71f5bda1ac5cde4c995c542fe978c7af3e3104c8",
+      "object_bytes": 6592,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "NO-REPRO",
+          "reason": "requested-size-mismatch",
+          "diffs": [],
+          "blind": 0,
+          "expected_size": 284,
+          "emitted_sizes": [
+            272
+          ]
+        }
+      ],
+      "all_four_exact": false,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 272,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "named_combined",
+      "source_sha256": "546d07d4972388667e2f7ca9e6db82b92a9c30a945c6d869546243e88d6da663",
+      "patch_from_input": "--- input\n+++ named_combined\n@@ -41,6 +41,12 @@\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n+struct AxleResources {\n+    SharedFilePtr *model;\n+    SharedFilePtr *collision;\n+    CLPS_Block *clps;\n+};\n+\n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n extern char data_020a0e68[0x30];\n@@ -51,7 +57,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -118,13 +124,14 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n-    char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n-    ((SharedFilePtr *)(*(void **)r4))->Release();\n-    ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n+    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n+    resources->model->Release();\n+    resources->collision->Release();\n     return 1;\n }\n \n@@ -135,11 +142,11 @@\n    dBgActor_c's mClsnMtx (0xf0) and its position row (0x114). */\n extern \"C\" int func_ov002_020b6a80(char *self)\n {\n-    char *c = self;\n-    Matrix4x3_FromRotationZXYExt(c + 0xf0, 0, *(short *)(c + 0x8e), *(short *)(c + 0x90));\n-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;\n-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;\n-    int z = *(int *)(c + 0x64) >> 3;\n-    *(int *)(c + 0x11c) = z;\n+    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n+    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n+    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n+    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n+    int z = actor->mPosZ >> 3;\n+    actor->mModel.mat4x3.m[11] = z;\n     return z;\n }\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "named_angle",
+      "source_sha256": "efbd5558c51ad178d9d0a726ced7a7a834ef4b6e344561a345449f81f1f1a60d",
+      "patch_from_input": "--- input\n+++ named_angle\n@@ -41,6 +41,12 @@\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n+struct AxleResources {\n+    SharedFilePtr *model;\n+    SharedFilePtr *collision;\n+    CLPS_Block *clps;\n+};\n+\n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n extern char data_020a0e68[0x30];\n@@ -51,7 +57,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -74,9 +80,7 @@\n     int i;\n     Vector3 mid;\n     Vector3 res;\n-    s16 *rzp = &mAngleZ;\n-\n-    *rzp = *rzp + 0x100;\n+    mAngleZ += 0x100;\n     {\n         int suppressed = (int)((mFlags & 8) != 0);\n         if (suppressed != 0)\n@@ -118,13 +122,14 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n-    char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n-    ((SharedFilePtr *)(*(void **)r4))->Release();\n-    ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n+    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n+    resources->model->Release();\n+    resources->collision->Release();\n     return 1;\n }\n \n@@ -135,11 +140,11 @@\n    dBgActor_c's mClsnMtx (0xf0) and its position row (0x114). */\n extern \"C\" int func_ov002_020b6a80(char *self)\n {\n-    char *c = self;\n-    Matrix4x3_FromRotationZXYExt(c + 0xf0, 0, *(short *)(c + 0x8e), *(short *)(c + 0x90));\n-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;\n-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;\n-    int z = *(int *)(c + 0x64) >> 3;\n-    *(int *)(c + 0x11c) = z;\n+    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n+    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n+    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n+    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n+    int z = actor->mPosZ >> 3;\n+    actor->mModel.mat4x3.m[11] = z;\n     return z;\n }\n",
+      "compiled": true,
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      ],
+      "all_four_exact": true,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 284,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    },
+    {
+      "id": "named_angle_assign",
+      "source_sha256": "1644a1aaeaaf86ed8c14999cbfc664d19b994ccd534a4996adb3d232e4ba76ed",
+      "patch_from_input": "--- input\n+++ named_angle_assign\n@@ -41,6 +41,12 @@\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n+struct AxleResources {\n+    SharedFilePtr *model;\n+    SharedFilePtr *collision;\n+    CLPS_Block *clps;\n+};\n+\n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n extern char data_020a0e68[0x30];\n@@ -51,7 +57,7 @@\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n /* Carries Fix12<int> by value, so its definition stays a mangled free\n    function -- see include/ShadowModel.h. A call is unaffected. */\n@@ -74,9 +80,7 @@\n     int i;\n     Vector3 mid;\n     Vector3 res;\n-    s16 *rzp = &mAngleZ;\n-\n-    *rzp = *rzp + 0x100;\n+    mAngleZ = mAngleZ + 0x100;\n     {\n         int suppressed = (int)((mFlags & 8) != 0);\n         if (suppressed != 0)\n@@ -118,13 +122,14 @@\n    release the descriptor's model and collision SharedFilePtrs. The\n    descriptor stays void * here because only the two callers know its shape;\n    ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n-    char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n-    ((SharedFilePtr *)(*(void **)r4))->Release();\n-    ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n+    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n+    resources->model->Release();\n+    resources->collision->Release();\n     return 1;\n }\n \n@@ -135,11 +140,11 @@\n    dBgActor_c's mClsnMtx (0xf0) and its position row (0x114). */\n extern \"C\" int func_ov002_020b6a80(char *self)\n {\n-    char *c = self;\n-    Matrix4x3_FromRotationZXYExt(c + 0xf0, 0, *(short *)(c + 0x8e), *(short *)(c + 0x90));\n-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;\n-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;\n-    int z = *(int *)(c + 0x64) >> 3;\n-    *(int *)(c + 0x11c) = z;\n+    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n+    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n+    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n+    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n+    int z = actor->mPosZ >> 3;\n+    actor->mModel.mat4x3.m[11] = z;\n     return z;\n }\n",
+      "compiled": true,
+      "object_sha256": "ed9f24735554b8ff855fd2465be8bff2382a25e2bbf3f054eb6f519b49b824a0",
+      "object_bytes": 6608,
+      "strict": [
+        {
+          "name": "func_ov002_020b6a80",
+          "module": "ov002",
+          "addr": "0x020b6a80",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "module": "ov002",
+          "addr": "0x020b6ac8",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "module": "ov002",
+          "addr": "0x020b6b10",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "module": "ov002",
+          "addr": "0x020b6b38",
+          "verdict": "NO-REPRO",
+          "reason": "requested-size-mismatch",
+          "diffs": [],
+          "blind": 0,
+          "expected_size": 284,
+          "emitted_sizes": [
+            280
+          ]
+        }
+      ],
+      "all_four_exact": false,
+      "function_sizes": {
+        "_ZN17daObjKurumajiku_cD0Ev": 88,
+        "_ZN17daObjKurumajiku_c6RenderEv": 40,
+        "_ZN17daObjKurumajiku_c8BehaviorEv": 280,
+        "_ZN17daObjKurumajiku_cD1Ev": 68,
+        "func_ov002_020b6a80": 72,
+        "func_ov002_020b6ac8": 72,
+        "_ZN7Vector3D1Ev": 4
+      }
+    }
+  ],
+  "flag_experiments": [
+    {
+      "id": "int_compare",
+      "patch_from_named_angle": "--- named_angle\n+++ int_compare\n@@ -81,11 +81,9 @@\n     Vector3 mid;\n     Vector3 res;\n     mAngleZ += 0x100;\n-    {\n-        int suppressed = (int)((mFlags & 8) != 0);\n-        if (suppressed != 0)\n-            return 1;\n-    }\n+    int suppressed = (mFlags & 8) != 0;\n+    if (suppressed)\n+        return 1;\n     for (i = 0; i < 4; i++) {\n         if (mMountedActorIds[i]) {\n             dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);\n",
+      "source_sha256": "ad6d5ee372375b8e7ee91678fc3162a0edf02af6b40202461b26ddd7b73100bd",
+      "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+      "behavior_bytes": 284,
+      "masked_differing_words": 0,
+      "strict": {
+        "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+        "module": "ov002",
+        "addr": "0x020b6b38",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    },
+    {
+      "id": "bool_compare",
+      "patch_from_named_angle": "--- named_angle\n+++ bool_compare\n@@ -81,11 +81,9 @@\n     Vector3 mid;\n     Vector3 res;\n     mAngleZ += 0x100;\n-    {\n-        int suppressed = (int)((mFlags & 8) != 0);\n-        if (suppressed != 0)\n-            return 1;\n-    }\n+    bool suppressed = (mFlags & 8) != 0;\n+    if (suppressed)\n+        return 1;\n     for (i = 0; i < 4; i++) {\n         if (mMountedActorIds[i]) {\n             dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);\n",
+      "source_sha256": "d637625d9928eb7c7f5c98123e6b92fa61145d1f2e90d6258c63c9397d77782b",
+      "object_sha256": "218421e9ce9712d4defd7fba71f5bda1ac5cde4c995c542fe978c7af3e3104c8",
+      "behavior_bytes": 272,
+      "masked_differing_words": 999,
+      "strict": {
+        "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+        "module": "ov002",
+        "addr": "0x020b6b38",
+        "verdict": "NO-REPRO",
+        "reason": "requested-size-mismatch",
+        "diffs": [],
+        "blind": 0,
+        "expected_size": 284,
+        "emitted_sizes": [
+          272
+        ]
+      }
+    },
+    {
+      "id": "int_mask",
+      "patch_from_named_angle": "--- named_angle\n+++ int_mask\n@@ -81,11 +81,9 @@\n     Vector3 mid;\n     Vector3 res;\n     mAngleZ += 0x100;\n-    {\n-        int suppressed = (int)((mFlags & 8) != 0);\n-        if (suppressed != 0)\n-            return 1;\n-    }\n+    int suppressed = mFlags & 8;\n+    if (suppressed)\n+        return 1;\n     for (i = 0; i < 4; i++) {\n         if (mMountedActorIds[i]) {\n             dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);\n",
+      "source_sha256": "547cfe14fce44ed86af126a75f6ea49e288ce409ff578e3955ef0aa73bf087f1",
+      "object_sha256": "218421e9ce9712d4defd7fba71f5bda1ac5cde4c995c542fe978c7af3e3104c8",
+      "behavior_bytes": 272,
+      "masked_differing_words": 999,
+      "strict": {
+        "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+        "module": "ov002",
+        "addr": "0x020b6b38",
+        "verdict": "NO-REPRO",
+        "reason": "requested-size-mismatch",
+        "diffs": [],
+        "blind": 0,
+        "expected_size": 284,
+        "emitted_sizes": [
+          272
+        ]
+      }
+    }
+  ],
+  "proof": {
+    "input_commit": "9d889e90b7a71db67a9af73221844979c97011a8",
+    "tested_base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+    "formal_acceptance": false,
+    "compiler": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "source_sha256_lf": "5596a27d666cc516f3f7b66fc48800f981ed6d684db435f3b67809aeb7c7417c",
+    "object_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+    "object_bytes": 6608,
+    "object_signature": "8363470d3f1f6c72e3e25e3971552eaa0c38567022aa1fb74ddefc7b77bc3814",
+    "control_signature": "8363470d3f1f6c72e3e25e3971552eaa0c38567022aa1fb74ddefc7b77bc3814",
+    "functions": [
+      {
+        "name": "func_ov002_020b6a80",
+        "module": "ov002",
+        "addr": "0x020b6a80",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "func_ov002_020b6ac8",
+        "module": "ov002",
+        "addr": "0x020b6ac8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN17daObjKurumajiku_c6RenderEv",
+        "module": "ov002",
+        "addr": "0x020b6b10",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+        "module": "ov002",
+        "addr": "0x020b6b38",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "duplicates": [
+      {
+        "emitted": {
+          "name": "_ZN7Vector3D1Ev",
+          "module": "arm9",
+          "addr": "0x020072c0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "emitted": {
+          "name": "_ZN17daObjKurumajiku_cD0Ev",
+          "module": "ov002",
+          "addr": "0x020b69e4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "retained_source": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+        "retained_strict": {
+          "name": "_ZN17daObjKurumajiku_cD0Ev",
+          "module": "ov002",
+          "addr": "0x020b69e4",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "emitted": {
+          "name": "_ZN17daObjKurumajiku_cD1Ev",
+          "module": "ov002",
+          "addr": "0x020b6a3c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        },
+        "retained_source": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+        "retained_strict": {
+          "name": "_ZN17daObjKurumajiku_cD1Ev",
+          "module": "ov002",
+          "addr": "0x020b6a3c",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+        "source_git_blob": "41f76ec5892182f1fe0423177418db8bbc0a9cb8",
+        "object_sha256": "b51cd38bae6e4b81900782493e5b850020bfa24ef778d1bf901b5d48f564b2c0",
+        "strict": {
+          "name": "_ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv",
+          "module": "ov043",
+          "addr": "0x021114b0",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "source": "src/game/actors/d_a_obj_km3_kurumajiku.cpp",
+        "source_git_blob": "d1e8f3f0128a3e8c0aeeba0cad7ab52c49201ac5",
+        "object_sha256": "1eda735c814def8c6f54bea45d1e0ebd99889f5e47183650aeb4299abe5b64a2",
+        "strict": {
+          "name": "_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv",
+          "module": "ov047",
+          "addr": "0x02111254",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      },
+      {
+        "source": "src/func_ov002_020b6c54.c",
+        "source_git_blob": "0f0b7a1a5bd64294df6cee41bf58080fb35c37f2",
+        "strict": {
+          "name": "func_ov002_020b6c54",
+          "module": "ov002",
+          "addr": "0x020b6c54",
+          "verdict": "VERIFIED",
+          "diffs": [],
+          "blind": 0
+        }
+      }
+    ],
+    "metadata": [
+      {
+        "symbol": "_ZTI7fBase_c",
+        "module": "arm9",
+        "storage_start": "0x2086d70",
+        "public_address": "0x2086d70",
+        "size": 8,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7fBase_c",
+            "addr": 34106976,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi17__class_type_infoE",
+            "addr": 34187124,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b",
+        "retail_sha256": "39f79d4d5b6c41e7d4c54ed04d1651545b39f777e23266ae31b48870bdf7317b",
+        "standard_report": {
+          "symbol": "_ZTI7fBase_c",
+          "module": "arm9",
+          "addr": 34106736,
+          "bytes": 8,
+          "emitted": 8,
+          "romExtent": 8,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        }
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "module": "arm9",
+        "storage_start": "0x2086e60",
+        "public_address": "0x2086e60",
+        "size": 9,
+        "relocations": [],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5",
+        "retail_sha256": "5cfafe50bce0f8a1bbf72273ce4858cdd54dbfb20ac88c2d0b562f8d5f4165d5",
+        "standard_report": {
+          "symbol": "_ZTS7fBase_c",
+          "module": "arm9",
+          "addr": 34106976,
+          "bytes": 8,
+          "emitted": 9,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "PARTIAL"
+        },
+        "payload_bytes": 9,
+        "emitted_padding_bytes": 0,
+        "payload_text": "7fBase_c",
+        "configured_extent": 12,
+        "unemitted_retail_tail_hex": "000000"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "module": "arm9",
+        "storage_start": "0x2086e54",
+        "public_address": "0x2086e54",
+        "size": 9,
+        "relocations": [],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "d9acdee869d9b5dbf6014803046897175bf581be7fb2f0217f2cea2b3d7b9810",
+        "retail_sha256": "d9acdee869d9b5dbf6014803046897175bf581be7fb2f0217f2cea2b3d7b9810",
+        "standard_report": {
+          "symbol": "_ZTS7dBase_c",
+          "module": "arm9",
+          "addr": 34106964,
+          "bytes": 8,
+          "emitted": 9,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "PARTIAL"
+        },
+        "payload_bytes": 9,
+        "emitted_padding_bytes": 0,
+        "payload_text": "7dBase_c",
+        "configured_extent": 12,
+        "unemitted_retail_tail_hex": "000000"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "module": "arm9",
+        "storage_start": "0x208e384",
+        "public_address": "0x208e384",
+        "size": 10,
+        "relocations": [],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "d5ce7a534a1f393c9cdd42f0926198d7e3c3af5c8f925274128ceb748d61825d",
+        "retail_sha256": "d5ce7a534a1f393c9cdd42f0926198d7e3c3af5c8f925274128ceb748d61825d",
+        "standard_report": {
+          "symbol": "_ZTS8dActor_c",
+          "module": "arm9",
+          "addr": 34136964,
+          "bytes": 8,
+          "emitted": 10,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "PARTIAL"
+        },
+        "payload_bytes": 10,
+        "emitted_padding_bytes": 0,
+        "payload_text": "8dActor_c",
+        "configured_extent": 12,
+        "unemitted_retail_tail_hex": "0000"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "module": "arm9",
+        "storage_start": "0x2086e78",
+        "public_address": "0x2086e78",
+        "size": 12,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS7dBase_c",
+            "addr": 34106964,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI7fBase_c",
+            "addr": 34106736,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "fd0848355676e8686547afdf07cbe080cd5f6a99377ea4dfecb3cec72ff1bf17",
+        "retail_sha256": "fd0848355676e8686547afdf07cbe080cd5f6a99377ea4dfecb3cec72ff1bf17",
+        "standard_report": {
+          "symbol": "_ZTI7dBase_c",
+          "module": "arm9",
+          "addr": 34107000,
+          "bytes": 12,
+          "emitted": 12,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        }
+      },
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "module": "ov002",
+        "storage_start": "0x21089ec",
+        "public_address": "0x21089ec",
+        "size": 12,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS10dBgActor_c",
+            "addr": 34638340,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI8dActor_c",
+            "addr": 34136976,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "fe123fed1f98107d52f6099e88de25a40fc65c60424a146ef95ce1edb17ef1f1",
+        "retail_sha256": "fe123fed1f98107d52f6099e88de25a40fc65c60424a146ef95ce1edb17ef1f1",
+        "standard_report": {
+          "symbol": "_ZTI10dBgActor_c",
+          "module": "ov002",
+          "addr": 34638316,
+          "bytes": 12,
+          "emitted": 12,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        }
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "module": "ov002",
+        "storage_start": "0x2108a04",
+        "public_address": "0x2108a04",
+        "size": 13,
+        "relocations": [],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "a5857a3f023ed08e6aec7e31c64750c8c6872ab71b9fc01baefded9ad7657426",
+        "retail_sha256": "a5857a3f023ed08e6aec7e31c64750c8c6872ab71b9fc01baefded9ad7657426",
+        "standard_report": {
+          "symbol": "_ZTS10dBgActor_c",
+          "module": "ov002",
+          "addr": 34638340,
+          "bytes": 12,
+          "emitted": 13,
+          "romExtent": 16,
+          "blindWords": 0,
+          "verdict": "PARTIAL"
+        },
+        "payload_bytes": 13,
+        "emitted_padding_bytes": 0,
+        "payload_text": "10dBgActor_c",
+        "configured_extent": 16,
+        "unemitted_retail_tail_hex": "000000"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "module": "arm9",
+        "storage_start": "0x208e390",
+        "public_address": "0x208e390",
+        "size": 12,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS8dActor_c",
+            "addr": 34136964,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI7dBase_c",
+            "addr": 34107000,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "d19e416e02da5c59b99dc09934f8864149582f20362fa93518d5dfab4b66c9b1",
+        "retail_sha256": "d19e416e02da5c59b99dc09934f8864149582f20362fa93518d5dfab4b66c9b1",
+        "standard_report": {
+          "symbol": "_ZTI8dActor_c",
+          "module": "arm9",
+          "addr": 34136976,
+          "bytes": 12,
+          "emitted": 12,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        }
+      },
+      {
+        "symbol": "_ZTI17daObjKurumajiku_c",
+        "module": "ov002",
+        "storage_start": "0x21092f8",
+        "public_address": "0x21092f8",
+        "size": 12,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTS17daObjKurumajiku_c",
+            "addr": 34640644,
+            "add": 0
+          },
+          {
+            "off": 8,
+            "type": 2,
+            "sym": "_ZTI10dBgActor_c",
+            "addr": 34638316,
+            "add": 0
+          },
+          {
+            "off": 0,
+            "type": 2,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addr": 34187108,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "9fb073c47a3e51fe012890a012497c85c2420f6fbabeadc42c31fb0fd448625a",
+        "retail_sha256": "9fb073c47a3e51fe012890a012497c85c2420f6fbabeadc42c31fb0fd448625a",
+        "standard_report": {
+          "symbol": "_ZTI17daObjKurumajiku_c",
+          "module": "ov002",
+          "addr": 34640632,
+          "bytes": 12,
+          "emitted": 12,
+          "romExtent": 12,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        }
+      },
+      {
+        "symbol": "_ZTS17daObjKurumajiku_c",
+        "module": "ov002",
+        "storage_start": "0x2109304",
+        "public_address": "0x2109304",
+        "size": 20,
+        "relocations": [],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "4ce8cedcc815f03a0c41ec2749bf93b2674cb460b29b78ed5d2d4fb07b9e2c40",
+        "retail_sha256": "4ce8cedcc815f03a0c41ec2749bf93b2674cb460b29b78ed5d2d4fb07b9e2c40",
+        "standard_report": {
+          "symbol": "_ZTS17daObjKurumajiku_c",
+          "module": "ov002",
+          "addr": 34640644,
+          "bytes": 20,
+          "emitted": 20,
+          "romExtent": 20,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        },
+        "payload_bytes": 20,
+        "emitted_padding_bytes": 0,
+        "payload_text": "17daObjKurumajiku_c",
+        "configured_extent": 20
+      },
+      {
+        "symbol": "_ZTV17daObjKurumajiku_c",
+        "module": "ov002",
+        "storage_start": "0x2109318",
+        "public_address": "0x2109320",
+        "size": 136,
+        "relocations": [
+          {
+            "off": 4,
+            "type": 2,
+            "sym": "_ZTI17daObjKurumajiku_c",
+            "addr": 34640632,
+            "add": 0
+          },
+          {
+            "off": 68,
+            "type": 2,
+            "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+            "addr": 33830036,
+            "add": 0
+          },
+          {
+            "off": 64,
+            "type": 2,
+            "sym": "_ZN7fBase_c9Virtual38Ejj",
+            "addr": 33830044,
+            "add": 0
+          },
+          {
+            "off": 60,
+            "type": 2,
+            "sym": "_ZN7fBase_c9Virtual34Ejj",
+            "addr": 33830268,
+            "add": 0
+          },
+          {
+            "off": 56,
+            "type": 2,
+            "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+            "addr": 33831616,
+            "add": 0
+          },
+          {
+            "off": 128,
+            "type": 2,
+            "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+            "addr": 33620188,
+            "add": 0
+          },
+          {
+            "off": 124,
+            "type": 2,
+            "sym": "_ZN8dActor_c16OnAimedAtWithEggEv",
+            "addr": 33620260,
+            "add": 0
+          },
+          {
+            "off": 120,
+            "type": 2,
+            "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+            "addr": 33620268,
+            "add": 0
+          },
+          {
+            "off": 116,
+            "type": 2,
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "addr": 33620272,
+            "add": 0
+          },
+          {
+            "off": 112,
+            "type": 2,
+            "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+            "addr": 33620276,
+            "add": 0
+          },
+          {
+            "off": 108,
+            "type": 2,
+            "sym": "_ZN8dActor_c8OnPushedERS_",
+            "addr": 33620280,
+            "add": 0
+          },
+          {
+            "off": 104,
+            "type": 2,
+            "sym": "_ZN8dActor_c8OnKickedERS_",
+            "addr": 33620284,
+            "add": 0
+          },
+          {
+            "off": 100,
+            "type": 2,
+            "sym": "_ZN8dActor_c11OnAttacked2ERS_",
+            "addr": 33620288,
+            "add": 0
+          },
+          {
+            "off": 96,
+            "type": 2,
+            "sym": "_ZN8dActor_c11OnAttacked1ERS_",
+            "addr": 33620292,
+            "add": 0
+          },
+          {
+            "off": 92,
+            "type": 2,
+            "sym": "_ZN8dActor_c15OnGroundPoundedERS_",
+            "addr": 33620296,
+            "add": 0
+          },
+          {
+            "off": 88,
+            "type": 2,
+            "sym": "_ZN8dActor_c9Virtual50Ev",
+            "addr": 33620300,
+            "add": 0
+          },
+          {
+            "off": 84,
+            "type": 2,
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "addr": 33620308,
+            "add": 0
+          },
+          {
+            "off": 80,
+            "type": 2,
+            "sym": "_ZN8dActor_c13OnYoshiTryEatEv",
+            "addr": 33620320,
+            "add": 0
+          },
+          {
+            "off": 52,
+            "type": 2,
+            "sym": "_ZN8dActor_c11AfterRenderEj",
+            "addr": 33623916,
+            "add": 0
+          },
+          {
+            "off": 48,
+            "type": 2,
+            "sym": "_ZN8dActor_c12BeforeRenderEv",
+            "addr": 33623928,
+            "add": 0
+          },
+          {
+            "off": 40,
+            "type": 2,
+            "sym": "_ZN8dActor_c13AfterBehaviorEj",
+            "addr": 33624008,
+            "add": 0
+          },
+          {
+            "off": 36,
+            "type": 2,
+            "sym": "_ZN8dActor_c14BeforeBehaviorEv",
+            "addr": 33624020,
+            "add": 0
+          },
+          {
+            "off": 28,
+            "type": 2,
+            "sym": "_ZN8dActor_c21AfterCleanupResourcesEj",
+            "addr": 33624596,
+            "add": 0
+          },
+          {
+            "off": 24,
+            "type": 2,
+            "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+            "addr": 33624608,
+            "add": 0
+          },
+          {
+            "off": 16,
+            "type": 2,
+            "sym": "_ZN8dActor_c18AfterInitResourcesEj",
+            "addr": 33624644,
+            "add": 0
+          },
+          {
+            "off": 12,
+            "type": 2,
+            "sym": "_ZN8dActor_c19BeforeInitResourcesEv",
+            "addr": 33624680,
+            "add": 0
+          },
+          {
+            "off": 132,
+            "type": 2,
+            "sym": "_ZN10dBgActor_c4KillEv",
+            "addr": 34530652,
+            "add": 0
+          },
+          {
+            "off": 76,
+            "type": 2,
+            "sym": "_ZN17daObjKurumajiku_cD0Ev",
+            "addr": 34302436,
+            "add": 0
+          },
+          {
+            "off": 44,
+            "type": 2,
+            "sym": "_ZN17daObjKurumajiku_c6RenderEv",
+            "addr": 34302736,
+            "add": 0
+          },
+          {
+            "off": 32,
+            "type": 2,
+            "sym": "_ZN17daObjKurumajiku_c8BehaviorEv",
+            "addr": 34302776,
+            "add": 0
+          },
+          {
+            "off": 72,
+            "type": 2,
+            "sym": "_ZN17daObjKurumajiku_cD1Ev",
+            "addr": 34302524,
+            "add": 0
+          }
+        ],
+        "blind_words": [],
+        "all_emitted_bytes_equal": true,
+        "emitted_sha256": "f96c4e12ac0ff56e2a26e5a9bd40cae138c9e121247b30a8d17c1c0709dd6584",
+        "retail_sha256": "f96c4e12ac0ff56e2a26e5a9bd40cae138c9e121247b30a8d17c1c0709dd6584",
+        "standard_report": {
+          "symbol": "_ZTV17daObjKurumajiku_c",
+          "module": "ov002",
+          "addr": 34640672,
+          "bytes": 128,
+          "emitted": 128,
+          "romExtent": 128,
+          "blindWords": 0,
+          "verdict": "VERIFIED"
+        },
+        "preamble_words": [
+          0,
+          34640632
+        ],
+        "slot_words": [
+          0,
+          33624680,
+          33624644,
+          0,
+          33624608,
+          33624596,
+          34302776,
+          33624020,
+          33624008,
+          34302736,
+          33623928,
+          33623916,
+          33831616,
+          33830268,
+          33830044,
+          33830036,
+          34302524,
+          34302436,
+          33620320,
+          33620308,
+          33620300,
+          33620296,
+          33620292,
+          33620288,
+          33620284,
+          33620280,
+          33620276,
+          33620272,
+          33620268,
+          33620260,
+          33620188,
+          34530652
+        ]
+      }
+    ],
+    "all_allocated_output_and_relocations_identical_to_input": true,
+    "inventory": {
+      "sections": [
+        {
+          "index": 0,
+          "name": "",
+          "type": "SHT_NULL",
+          "size": 0
+        },
+        {
+          "index": 1,
+          "name": ".symtab",
+          "type": "SHT_SYMTAB",
+          "size": 1200
+        },
+        {
+          "index": 2,
+          "name": ".strtab",
+          "type": "SHT_STRTAB",
+          "size": 1697
+        },
+        {
+          "index": 3,
+          "name": ".shstrtab",
+          "type": "SHT_STRTAB",
+          "size": 265
+        },
+        {
+          "index": 4,
+          "name": ".comment",
+          "type": "SHT_PROGBITS",
+          "size": 34
+        },
+        {
+          "index": 5,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 8
+        },
+        {
+          "index": 6,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 24
+        },
+        {
+          "index": 7,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 9
+        },
+        {
+          "index": 8,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 9
+        },
+        {
+          "index": 9,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 10
+        },
+        {
+          "index": 10,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 12
+        },
+        {
+          "index": 11,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 36
+        },
+        {
+          "index": 12,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 12
+        },
+        {
+          "index": 13,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 36
+        },
+        {
+          "index": 14,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 12
+        },
+        {
+          "index": 15,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 36
+        },
+        {
+          "index": 16,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 12
+        },
+        {
+          "index": 17,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 36
+        },
+        {
+          "index": 18,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 13
+        },
+        {
+          "index": 19,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 20
+        },
+        {
+          "index": 20,
+          "name": ".data",
+          "type": "SHT_PROGBITS",
+          "size": 136
+        },
+        {
+          "index": 21,
+          "name": ".rela.data",
+          "type": "SHT_RELA",
+          "size": 372
+        },
+        {
+          "index": 22,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 68
+        },
+        {
+          "index": 23,
+          "name": ".rela.text",
+          "type": "SHT_RELA",
+          "size": 60
+        },
+        {
+          "index": 24,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 88
+        },
+        {
+          "index": 25,
+          "name": ".rela.text",
+          "type": "SHT_RELA",
+          "size": 84
+        },
+        {
+          "index": 26,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 72
+        },
+        {
+          "index": 27,
+          "name": ".rela.text",
+          "type": "SHT_RELA",
+          "size": 12
+        },
+        {
+          "index": 28,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 72
+        },
+        {
+          "index": 29,
+          "name": ".rela.text",
+          "type": "SHT_RELA",
+          "size": 48
+        },
+        {
+          "index": 30,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 40
+        },
+        {
+          "index": 31,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 284
+        },
+        {
+          "index": 32,
+          "name": ".rela.text",
+          "type": "SHT_RELA",
+          "size": 108
+        },
+        {
+          "index": 33,
+          "name": ".text",
+          "type": "SHT_PROGBITS",
+          "size": 4
+        }
+      ],
+      "symbols": [
+        {
+          "name": "$a",
+          "shndx": 22,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$d",
+          "shndx": 22,
+          "value": 60,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 24,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$d",
+          "shndx": 24,
+          "value": 76,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 26,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 28,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 30,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 31,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$d",
+          "shndx": 31,
+          "value": 276,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "$a",
+          "shndx": 33,
+          "value": 0,
+          "size": 0,
+          "bind": "STB_LOCAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "_ZTI7fBase_c",
+          "shndx": 5,
+          "value": 0,
+          "size": 8,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTS7fBase_c",
+          "shndx": 8,
+          "value": 0,
+          "size": 9,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTS7dBase_c",
+          "shndx": 7,
+          "value": 0,
+          "size": 9,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTS8dActor_c",
+          "shndx": 9,
+          "value": 0,
+          "size": 10,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTI7dBase_c",
+          "shndx": 10,
+          "value": 0,
+          "size": 12,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTI10dBgActor_c",
+          "shndx": 12,
+          "value": 0,
+          "size": 12,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTS10dBgActor_c",
+          "shndx": 18,
+          "value": 0,
+          "size": 13,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTI8dActor_c",
+          "shndx": 14,
+          "value": 0,
+          "size": 12,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTI17daObjKurumajiku_c",
+          "shndx": 16,
+          "value": 0,
+          "size": 12,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTS17daObjKurumajiku_c",
+          "shndx": 19,
+          "value": 0,
+          "size": 20,
+          "bind": "STB_LOPROC",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZTV17daObjKurumajiku_c",
+          "shndx": 20,
+          "value": 0,
+          "size": 136,
+          "bind": "STB_GLOBAL",
+          "type": "STT_OBJECT"
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_cD0Ev",
+          "shndx": 24,
+          "value": 0,
+          "size": 88,
+          "bind": "STB_LOPROC",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c6RenderEv",
+          "shndx": 30,
+          "value": 0,
+          "size": 40,
+          "bind": "STB_GLOBAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_c8BehaviorEv",
+          "shndx": 31,
+          "value": 0,
+          "size": 284,
+          "bind": "STB_GLOBAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "_ZN17daObjKurumajiku_cD1Ev",
+          "shndx": 22,
+          "value": 0,
+          "size": 68,
+          "bind": "STB_LOPROC",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "func_ov002_020b6a80",
+          "shndx": 26,
+          "value": 0,
+          "size": 72,
+          "bind": "STB_GLOBAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "func_ov002_020b6ac8",
+          "shndx": 28,
+          "value": 0,
+          "size": 72,
+          "bind": "STB_GLOBAL",
+          "type": "STT_FUNC"
+        },
+        {
+          "name": "_ZN7Vector3D1Ev",
+          "shndx": 33,
+          "value": 0,
+          "size": 4,
+          "bind": "STB_LOPROC",
+          "type": "STT_FUNC"
+        }
+      ],
+      "relocs": {
+        "5": [
+          {
+            "offset": 4,
+            "sym": "_ZTS7fBase_c",
+            "addend": 0
+          },
+          {
+            "offset": 0,
+            "sym": "_ZTVN3abi17__class_type_infoE",
+            "addend": 8
+          }
+        ],
+        "10": [
+          {
+            "offset": 4,
+            "sym": "_ZTS7dBase_c",
+            "addend": 0
+          },
+          {
+            "offset": 8,
+            "sym": "_ZTI7fBase_c",
+            "addend": 0
+          },
+          {
+            "offset": 0,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addend": 8
+          }
+        ],
+        "12": [
+          {
+            "offset": 4,
+            "sym": "_ZTS10dBgActor_c",
+            "addend": 0
+          },
+          {
+            "offset": 8,
+            "sym": "_ZTI8dActor_c",
+            "addend": 0
+          },
+          {
+            "offset": 0,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addend": 8
+          }
+        ],
+        "14": [
+          {
+            "offset": 4,
+            "sym": "_ZTS8dActor_c",
+            "addend": 0
+          },
+          {
+            "offset": 8,
+            "sym": "_ZTI7dBase_c",
+            "addend": 0
+          },
+          {
+            "offset": 0,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addend": 8
+          }
+        ],
+        "16": [
+          {
+            "offset": 4,
+            "sym": "_ZTS17daObjKurumajiku_c",
+            "addend": 0
+          },
+          {
+            "offset": 8,
+            "sym": "_ZTI10dBgActor_c",
+            "addend": 0
+          },
+          {
+            "offset": 0,
+            "sym": "_ZTVN3abi20__si_class_type_infoE",
+            "addend": 8
+          }
+        ],
+        "20": [
+          {
+            "offset": 4,
+            "sym": "_ZTI17daObjKurumajiku_c",
+            "addend": 0
+          },
+          {
+            "offset": 68,
+            "sym": "_ZN7fBase_c13OnHeapCreatedEv",
+            "addend": 0
+          },
+          {
+            "offset": 64,
+            "sym": "_ZN7fBase_c9Virtual38Ejj",
+            "addend": 0
+          },
+          {
+            "offset": 60,
+            "sym": "_ZN7fBase_c9Virtual34Ejj",
+            "addend": 0
+          },
+          {
+            "offset": 56,
+            "sym": "_ZN7fBase_c16OnPendingDestroyEv",
+            "addend": 0
+          },
+          {
+            "offset": 128,
+            "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+            "addend": 0
+          },
+          {
+            "offset": 124,
+            "sym": "_ZN8dActor_c16OnAimedAtWithEggEv",
+            "addend": 0
+          },
+          {
+            "offset": 120,
+            "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+            "addend": 0
+          },
+          {
+            "offset": 116,
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "addend": 0
+          },
+          {
+            "offset": 112,
+            "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+            "addend": 0
+          },
+          {
+            "offset": 108,
+            "sym": "_ZN8dActor_c8OnPushedERS_",
+            "addend": 0
+          },
+          {
+            "offset": 104,
+            "sym": "_ZN8dActor_c8OnKickedERS_",
+            "addend": 0
+          },
+          {
+            "offset": 100,
+            "sym": "_ZN8dActor_c11OnAttacked2ERS_",
+            "addend": 0
+          },
+          {
+            "offset": 96,
+            "sym": "_ZN8dActor_c11OnAttacked1ERS_",
+            "addend": 0
+          },
+          {
+            "offset": 92,
+            "sym": "_ZN8dActor_c15OnGroundPoundedERS_",
+            "addend": 0
+          },
+          {
+            "offset": 88,
+            "sym": "_ZN8dActor_c9Virtual50Ev",
+            "addend": 0
+          },
+          {
+            "offset": 84,
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "addend": 0
+          },
+          {
+            "offset": 80,
+            "sym": "_ZN8dActor_c13OnYoshiTryEatEv",
+            "addend": 0
+          },
+          {
+            "offset": 52,
+            "sym": "_ZN8dActor_c11AfterRenderEj",
+            "addend": 0
+          },
+          {
+            "offset": 48,
+            "sym": "_ZN8dActor_c12BeforeRenderEv",
+            "addend": 0
+          },
+          {
+            "offset": 40,
+            "sym": "_ZN8dActor_c13AfterBehaviorEj",
+            "addend": 0
+          },
+          {
+            "offset": 36,
+            "sym": "_ZN8dActor_c14BeforeBehaviorEv",
+            "addend": 0
+          },
+          {
+            "offset": 28,
+            "sym": "_ZN8dActor_c21AfterCleanupResourcesEj",
+            "addend": 0
+          },
+          {
+            "offset": 24,
+            "sym": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+            "addend": 0
+          },
+          {
+            "offset": 16,
+            "sym": "_ZN8dActor_c18AfterInitResourcesEj",
+            "addend": 0
+          },
+          {
+            "offset": 12,
+            "sym": "_ZN8dActor_c19BeforeInitResourcesEv",
+            "addend": 0
+          },
+          {
+            "offset": 132,
+            "sym": "_ZN10dBgActor_c4KillEv",
+            "addend": 0
+          },
+          {
+            "offset": 76,
+            "sym": "_ZN17daObjKurumajiku_cD0Ev",
+            "addend": 0
+          },
+          {
+            "offset": 44,
+            "sym": "_ZN17daObjKurumajiku_c6RenderEv",
+            "addend": 0
+          },
+          {
+            "offset": 32,
+            "sym": "_ZN17daObjKurumajiku_c8BehaviorEv",
+            "addend": 0
+          },
+          {
+            "offset": 72,
+            "sym": "_ZN17daObjKurumajiku_cD1Ev",
+            "addend": 0
+          }
+        ],
+        "22": [
+          {
+            "offset": 28,
+            "sym": "_ZN10dBgW_KcMbgD1Ev",
+            "addend": -8
+          },
+          {
+            "offset": 36,
+            "sym": "_ZN5ModelD1Ev",
+            "addend": -8
+          },
+          {
+            "offset": 44,
+            "sym": "_ZN8dActor_cD2Ev",
+            "addend": -8
+          },
+          {
+            "offset": 60,
+            "sym": "_ZTV17daObjKurumajiku_c",
+            "addend": 8
+          },
+          {
+            "offset": 64,
+            "sym": "_ZTV10dBgActor_c",
+            "addend": 8
+          }
+        ],
+        "24": [
+          {
+            "offset": 28,
+            "sym": "_ZN10dBgW_KcMbgD1Ev",
+            "addend": -8
+          },
+          {
+            "offset": 36,
+            "sym": "_ZN5ModelD1Ev",
+            "addend": -8
+          },
+          {
+            "offset": 44,
+            "sym": "_ZN8dActor_cD2Ev",
+            "addend": -8
+          },
+          {
+            "offset": 60,
+            "sym": "_ZN6Memory10DeallocateEPvP4Heap",
+            "addend": -8
+          },
+          {
+            "offset": 76,
+            "sym": "_ZTV17daObjKurumajiku_c",
+            "addend": 8
+          },
+          {
+            "offset": 80,
+            "sym": "_ZTV10dBgActor_c",
+            "addend": 8
+          },
+          {
+            "offset": 84,
+            "sym": "data_020a0eac",
+            "addend": 0
+          }
+        ],
+        "26": [
+          {
+            "offset": 24,
+            "sym": "Matrix4x3_FromRotationZXYExt",
+            "addend": -8
+          }
+        ],
+        "28": [
+          {
+            "offset": 20,
+            "sym": "_ZN4dBgW9IsEnabledEv",
+            "addend": -8
+          },
+          {
+            "offset": 36,
+            "sym": "_ZN4dBgW7DisableEv",
+            "addend": -8
+          },
+          {
+            "offset": 44,
+            "sym": "_ZN13SharedFilePtr7ReleaseEv",
+            "addend": -8
+          },
+          {
+            "offset": 52,
+            "sym": "_ZN13SharedFilePtr7ReleaseEv",
+            "addend": -8
+          }
+        ],
+        "31": [
+          {
+            "offset": 104,
+            "sym": "_ZN8dActor_c10FindWithIDEj",
+            "addend": -8
+          },
+          {
+            "offset": 144,
+            "sym": "Matrix4x3_FromRotationXYZExt",
+            "addend": -8
+          },
+          {
+            "offset": 160,
+            "sym": "MulVec3Mat4x3",
+            "addend": -8
+          },
+          {
+            "offset": 176,
+            "sym": "Vec3_Add",
+            "addend": -8
+          },
+          {
+            "offset": 224,
+            "sym": "func_ov002_020b6a80",
+            "addend": -8
+          },
+          {
+            "offset": 240,
+            "sym": "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_",
+            "addend": -8
+          },
+          {
+            "offset": 256,
+            "sym": "_ZN10dBgActor_c19UpdateClsnPosAndRotEv",
+            "addend": -8
+          },
+          {
+            "offset": 276,
+            "sym": "data_ov002_0210ddd0",
+            "addend": 0
+          },
+          {
+            "offset": 280,
+            "sym": "data_020a0e68",
+            "addend": 0
+          }
+        ]
+      }
+    },
+    "compiler_only_policy": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN17daObjKurumajiku_cD1Ev",
+        "_ZN17daObjKurumajiku_cD0Ev"
+      ],
+      "deadstripped": [
+        "_ZN17daObjKurumajiku_cD0Ev",
+        "_ZN17daObjKurumajiku_cD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        33
+      ],
+      "data": [
+        "_ZTV17daObjKurumajiku_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV17daObjKurumajiku_c"
+      ]
+    },
+    "policy_errors": [],
+    "unlicensed_outputs": [
+      [],
+      [],
+      []
+    ],
+    "licensed_emission_order": [
+      "func_ov002_020b6a80",
+      "func_ov002_020b6ac8",
+      "_ZN17daObjKurumajiku_c6RenderEv",
+      "_ZN17daObjKurumajiku_c8BehaviorEv"
+    ],
+    "duplicate_destructor_emission_order": [
+      "_ZN17daObjKurumajiku_cD1Ev",
+      "_ZN17daObjKurumajiku_cD0Ev"
+    ],
+    "tubuild": {
+      "command": [
+        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "tools/tubuild.py",
+        "--manifest",
+        "C:\\tmp\\sm64ds-axle2873-0920\\build\\axle2873\\verify-manifest.json",
+        "verify",
+        "ov002/daObjKurumajiku_c"
+      ],
+      "exit_code": 0,
+      "log": "compiling src/actors/daObjKurumajiku_c.cpp  [2004/b56]\n  flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off\n\nTU ov002/daObjKurumajiku_c\n\ncompiler-only     : exact deadstrip ['_ZN17daObjKurumajiku_cD0Ev', '_ZN17daObjKurumajiku_cD1Ev', '_ZN7Vector3D1Ev']\n\nMATCH    func_ov002_020b6a80                        0x020b6a80  size 0x048\nMATCH    func_ov002_020b6ac8                        0x020b6ac8  size 0x048\nMATCH    _ZN17daObjKurumajiku_c6RenderEv            0x020b6b10  size 0x028\nMATCH    _ZN17daObjKurumajiku_c8BehaviorEv          0x020b6b38  size 0x11c\n\nbyte comparison   : 4/4 MATCH  (tools/match.py extract_func + compare, relocation-aware)\nobjisolate check  : clean  (tools/objisolate.py plan() -- relocation type/addend; this is the check pilot #1 needed to catch a bug match.compare alone reported as MATCH)\nemission order    : all 4 function(s) in the expected ROM-ascending section order\n\nResult: 4/4 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED\n"
+    }
+  },
+  "queue_measurement": {
+    "source_count": 3,
+    "total_lines": 171,
+    "sources": [
+      {
+        "path": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+        "lines": 29
+      },
+      {
+        "path": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+        "lines": 33
+      },
+      {
+        "path": "src/actors/daObjKurumajiku_c.cpp",
+        "lines": 109
+      }
+    ]
+  },
+  "source_delta_from_input": "diff --git a/src/_ZN17daObjKurumajiku_cD1Ev.cpp b/src/_ZN17daObjKurumajiku_cD1Ev.cpp\nindex 25a11429a..c48953662 100644\n--- a/src/_ZN17daObjKurumajiku_cD1Ev.cpp\n+++ b/src/_ZN17daObjKurumajiku_cD1Ev.cpp\n@@ -3,8 +3,8 @@\n /* recovered: real C++ destructor, defined inline in the header\n  *\n  * ~daObjKurumajiku_c is defined in the class body, not here, and that is\n- * load-bearing: this class's two descendants (RickshawBdw and the ov047\n- * sibling daObjKm3_Kurumajiku_c) inline this destructor's vptr store rather\n+ * load-bearing: this class's two descendants (daObjKm1_Kurumajiku_c and\n+ * daObjKm3_Kurumajiku_c) inline this destructor's vptr store rather\n  * than calling it, which the compiler can only do from a visible body.\n  * include/daObjKurumajiku_c.h records the measurement.\n  *\ndiff --git a/src/actors/daObjKurumajiku_c.cpp b/src/actors/daObjKurumajiku_c.cpp\nindex 18da1624a..6d33cc41d 100644\n--- a/src/actors/daObjKurumajiku_c.cpp\n+++ b/src/actors/daObjKurumajiku_c.cpp\n@@ -1,46 +1,24 @@\n //cpp\n-/**\n- * The rickshaw axle (`kurumajiku`): an abstract dBgActor_c that spins and\n- * drags up to four mounted carts around itself.\n+/* Rickshaw axle shared by the Bowser in the Dark World and Bowser in the Sky\n+ * actors. It turns the model and carries up to four mounted carts.\n  *\n- * Shared base of two overlay actors that are already promoted --\n- * ov043 daObjKm1_Kurumajiku_c (src/game/actors/d_a_obj_km1_kurumajiku.cpp)\n- * and ov047 daObjKm3_Kurumajiku_c (src/game/actors/d_a_obj_km3_kurumajiku.cpp).\n- * Both leave InitResources / CleanupResources pure here and hand this\n- * overlay's two helpers their own resource descriptor, which is why those\n- * two helpers live in ov002 with the base rather than in either child.\n- *\n- * The class is ABSTRACT: vtable slots 0 and 3 are null words in the\n- * cartridge. include/daObjKurumajiku_c.h spells that with pure-specifiers\n- * and explains why. tools/romdata_check.py confirms the model against the\n- * cartridge: the vtable this TU emits is byte-equal to ov002 0x02109320\n- * for all 128 bytes, and the class RTTI record and type-name string are\n- * byte-equal at 0x021092f8 and 0x02109304.\n- *\n- * deslop\n- * Leftover: func_ov002_020b6a80 and func_ov002_020b6ac8 are still under\n- *   their linker names. 020b6ac8 is the shared CleanupResources helper\n- *   (disable the collision, release the two SharedFilePtrs); 020b6a80\n- *   rebuilds the collision matrix from the actor's own angles and scales\n- *   its position by 1/8. Naming them is a separate rename PR.\n- * Leftover: this TU is text-only. The vtable/RTTI group it emits is\n- *   verified at its cartridge home and then discarded by isolation; the\n- *   cartridge's own copy is supplied by the overlay's data gap.\n- * Leftover: the destructor pair is NOT in this TU -- deliberately. The\n- *   cartridge has D0 (0x020b69e4) BELOW D1 (0x020b6a3c) and every\n- *   visible-body source form emits D1,D0 (measured, see the manifest's\n- *   destructor grid note), so the pair keeps its legacy one-function\n- *   shards (src/_ZN17daObjKurumajiku_cD0Ev.cpp,\n- *   src/_ZN17daObjKurumajiku_cD1Ev.cpp), where one function per object\n- *   makes emission order vacuous. The vtable homes here via Behavior;\n- *   its D1/D0 slots resolve to the legacy objects at link. Exactly the\n- *   landed daObjKuruma_c shape immediately below.\n+ * This partial TU owns the four functions below. The two destructors retain\n+ * their individual source files; their emitted order and the discarded class\n+ * metadata are recorded in the manifest and the source-repair experiment.\n  */\n \n #include \"daObjKurumajiku_c.h\"\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n+/* Local view of the three-word descriptors supplied by ov043 and ov047. */\n+struct AxleResources {\n+    SharedFilePtr *model;\n+    SharedFilePtr *collision;\n+    CLPS_Block *clps;\n+};\n+typedef char AxleResources_size_must_be_0x0c[sizeof(AxleResources) == 0x0c ? 1 : -1];\n+\n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n extern char data_020a0e68[0x30];\n@@ -51,37 +29,28 @@ void MulVec3Mat4x3(const Vector3 *v, const void *m, Vector3 *dst);\n void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);\n \n int func_ov002_020b6a80(char *self);\n-int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor);\n+int func_ov002_020b6ac8(void *actor, void *descriptor);\n \n-/* Carries Fix12<int> by value, so its definition stays a mangled free\n-   function -- see include/ShadowModel.h. A call is unaffected. */\n-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int x, int z);\n+/* Matches the scalar definition in dBgActor_c.cpp. Its encoded Fix12 name\n+   does not establish a by-value class parameter; see dBgActor_c.h. */\n+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);\n }\n \n /* mwccarm 2004/b56 emits one .text section per function in the REVERSE of\n    source order, so the highest-address cartridge function is written first. */\n \n // @symbol _ZN17daObjKurumajiku_c8BehaviorEv\n-/* Vtable slot 6, ov002 0x020b6b38. The axle turns 0x100 per frame and drags\n-   its riders with it: each rider's offset comes out of the four-entry table\n-   at data_ov002_0210ddd0, is rotated by the axle's own Euler angles through\n-   the scratch matrix at data_020a0e68, and is added to the axle's position.\n-   Bit 3 of mFlags -- fBase_c's \"behaviour off\" bit -- suppresses all of it,\n-   and the early return skips the collision update too, which is what makes\n-   a stopped axle stop carrying. */\n+/* The angle advances even while bit 3 suppresses rider and collision updates. */\n s32 daObjKurumajiku_c::Behavior()\n {\n     int i;\n     Vector3 mid;\n     Vector3 res;\n-    s16 *rzp = &mAngleZ;\n-\n-    *rzp = *rzp + 0x100;\n-    {\n-        int suppressed = (int)((mFlags & 8) != 0);\n-        if (suppressed != 0)\n-            return 1;\n-    }\n+    mAngleZ += 0x100;\n+    // Widening the comparison to int preserves the retail branch sequence.\n+    int suppressed = (mFlags & 8) != 0;\n+    if (suppressed)\n+        return 1;\n     for (i = 0; i < 4; i++) {\n         if (mMountedActorIds[i]) {\n             dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);\n@@ -105,7 +74,6 @@ s32 daObjKurumajiku_c::Behavior()\n }\n \n // @symbol _ZN17daObjKurumajiku_c6RenderEv\n-/* Vtable slot 9, ov002 0x020b6b10. Draws through dBgActor_c's own mModel. */\n s32 daObjKurumajiku_c::Render()\n {\n     mModel.Render(0);\n@@ -113,33 +81,29 @@ s32 daObjKurumajiku_c::Render()\n }\n \n // @symbol func_ov002_020b6ac8\n-/* ov002 0x020b6ac8 -- the CleanupResources body both descendants call with\n-   their own resource descriptor: drop the collision if it is enabled, then\n-   release the descriptor's model and collision SharedFilePtrs. The\n-   descriptor stays void * here because only the two callers know its shape;\n-   ov043 and ov047 each declare their own typed view of it. */\n-extern \"C\" int func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)\n+/* Disable the moving collision before releasing the model and collision files.\n+   The C boundary remains opaque: both descendants retain their own pointer views. */\n+extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n-    char *r4 = (char *)descriptor;\n-    if (((dBgW *)((char *)self + 0x124))->IsEnabled())\n-        ((dBgW *)((char *)self + 0x124))->Disable();\n-    ((SharedFilePtr *)(*(void **)r4))->Release();\n-    ((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();\n+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n+    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    if (self->mMeshCollider.IsEnabled())\n+        self->mMeshCollider.Disable();\n+    resources->model->Release();\n+    resources->collision->Release();\n     return 1;\n }\n \n // @symbol func_ov002_020b6a80\n-/* ov002 0x020b6a80 -- rebuild the collision matrix from the actor's own\n-   Y/Z angles and copy its position in at 1/8 scale. Reached by offset\n-   because this one is still under its linker name; the offsets are\n-   dBgActor_c's mClsnMtx (0xf0) and its position row (0x114). */\n+/* Build the model transform. Model translation uses 1/8 of the world position.\n+   The char* entry contract is shared with the existing setup helper. */\n extern \"C\" int func_ov002_020b6a80(char *self)\n {\n-    char *c = self;\n-    Matrix4x3_FromRotationZXYExt(c + 0xf0, 0, *(short *)(c + 0x8e), *(short *)(c + 0x90));\n-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;\n-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;\n-    int z = *(int *)(c + 0x64) >> 3;\n-    *(int *)(c + 0x11c) = z;\n+    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n+    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n+    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n+    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n+    int z = actor->mPosZ >> 3;\n+    actor->mModel.mat4x3.m[11] = z;\n     return z;\n }\n",
+  "reproduction": {
+    "instructions": "Apply each saved patch to the exact input source, compile the resulting complete TU with the recorded flags, derive every licensed function and run strict linkcheck. named_angle is the base of the three flag probes. The final proof script below additionally proves duplicates, unchanged callers, metadata tails/preamble and policy disposition. Work only in a private wired worktree.",
+    "final_proof_script": "import pathlib,sys,json,hashlib,subprocess,io\nfrom elftools.elf.elffile import ELFFile\nroot=pathlib.Path('C:/tmp/sm64ds-axle2873-0920');sys.path.insert(0,str(root/'tools'))\nimport build_pin as B,tubuild as T,match as M,objisolate as O,linkcheck as L,reloc_audit as R,romdata_check as D\nout=root/'build/axle2873';src=root/'src/actors/daObjKurumajiku_c.cpp'\nentry=json.loads((root/'config/tu_manifest.d/ov002/daObjKurumajiku_c.json').read_text());idx=R.build_name_index()\nobj=M.compile_c(src,'2004/b56',B.flags_for(src));assert obj;(out/'final.o').write_bytes(obj)\ndef signature(raw):\n elf=ELFFile(io.BytesIO(raw));inv=T.elf_inventory(raw)\n payload={'sections':[dict(index=i,name=s.name,type=s['sh_type'],flags=s['sh_flags'],size=s['sh_size'],data=s.data().hex() if s['sh_type']!='SHT_NOBITS' else '') for i,s in enumerate(elf.iter_sections()) if s['sh_flags']&2], 'symbols':[s for s in inv['symbols'] if s['type']!='STT_FILE'],'relocs':inv['relocs']}\n return hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()\ndef strict(raw,name,mod,addr,size):\n iso,plan=O.derive(raw,name);assert iso,plan\n r=L.linkcheck(name,addr,size,mod,idx,obj=iso,sym=name)\n assert r['verdict']=='VERIFIED' and not r['diffs'] and r['blind']==0,r\n return r\nreport={'input_commit':'9d889e90b7a71db67a9af73221844979c97011a8','tested_base':'2705c624d2554ee8d21a56641275a2b85cce3a8b','formal_acceptance':False,'compiler':'2004/b56','flags':B.flags_for(src),'source_sha256_lf':hashlib.sha256(src.read_text().encode()).hexdigest(),'object_sha256':hashlib.sha256(obj).hexdigest(),'object_bytes':len(obj),'object_signature':signature(obj),'control_signature':signature((out/'control.o').read_bytes()),'functions':[],'duplicates':[],'callers':[],'metadata':[]}\nreport['all_allocated_output_and_relocations_identical_to_input']=report['object_signature']==report['control_signature'];assert report['all_allocated_output_and_relocations_identical_to_input']\nfor f in entry['functions']:report['functions'].append(strict(obj,f['symbol'],'ov002',int(f['address'],0),int(f['size'],0)))\nfor name,mod,addr,size in [('_ZN7Vector3D1Ev','arm9',0x020072c0,4),('_ZN17daObjKurumajiku_cD0Ev','ov002',0x020b69e4,0x58),('_ZN17daObjKurumajiku_cD1Ev','ov002',0x020b6a3c,0x44)]:\n rec={'emitted':strict(obj,name,mod,addr,size)}\n if 'Kurumajiku' in name:\n  path=root/('src/'+name+'.cpp');raw=M.compile_c(path,'2004/b56',B.flags_for(path));assert raw\n  rec['retained_source']=path.relative_to(root).as_posix();rec['retained_strict']=strict(raw,name,mod,addr,size)\n report['duplicates'].append(rec)\nfor n in (1,3):\n mod='ov043' if n==1 else 'ov047';p=root/f'src/game/actors/d_a_obj_km{n}_kurumajiku.cpp';raw=M.compile_c(p,'2004/b56',B.flags_for(p));assert raw\n e=json.loads((root/f'config/tu_manifest.d/{mod}/daObjKm{n}_Kurumajiku_c.json').read_text())\n f=next(f for f in e['functions'] if 'CleanupResources' in f['symbol'])\n report['callers'].append({'source':p.relative_to(root).as_posix(),'source_git_blob':subprocess.check_output(['git','hash-object',str(p)],text=True).strip(),'object_sha256':hashlib.sha256(raw).hexdigest(),'strict':strict(raw,f['symbol'],mod,int(f['address'],0),int(f['size'],0))})\np=root/'src/func_ov002_020b6c54.c';raw=M.compile_c(p,'2004/b56',B.flags_for(p));assert raw\nreport['callers'].append({'source':p.relative_to(root).as_posix(),'source_git_blob':subprocess.check_output(['git','hash-object',str(p)],text=True).strip(),'strict':strict(raw,'func_ov002_020b6c54','ov002',0x020b6c54,0xd4)})\nelf=ELFFile(io.BytesIO(obj));policies={p['symbol']:p for p in entry['compiler_only_output']}\nfor name,section,value,size in D.emitted_data_symbols(obj):\n p=policies[name];module=p['canonical_module'];addr=int(p['canonical_address'],0);start=addr-(8 if name.startswith('_ZTV') else 0)\n body=elf.get_section(section).data()[value:value+size];relocs=L.func_relocs_typed(obj,name,idx) or []\n for r in relocs:\n  if r['sym'].startswith('_ZTV') and r['add']>=8:r['add']-=8\n linked,blind=L.link_function(body,start,relocs);retail=B.target_bytes(module,start,size)\n rec={'symbol':name,'module':module,'storage_start':hex(start),'public_address':hex(addr),'size':size,'relocations':relocs,'blind_words':sorted(blind),'all_emitted_bytes_equal':linked==retail,'emitted_sha256':hashlib.sha256(linked).hexdigest(),'retail_sha256':hashlib.sha256(retail).hexdigest(),'standard_report':D.verify_data_symbol(obj,name,section,value,size,idx)}\n if name.startswith('_ZTS'):\n  payload=body.index(b'\\0')+1;extent=D.rom_data_index().get((module,name),(addr,None))[1]\n  rec.update(payload_bytes=payload,emitted_padding_bytes=size-payload,payload_text=body[:payload-1].decode(),configured_extent=extent)\n  if extent and extent>size:rec['unemitted_retail_tail_hex']=B.target_bytes(module,start+size,extent-size).hex()\n if name.startswith('_ZTV'):\n  rec['preamble_words']=[int.from_bytes(linked[i:i+4],'little') for i in (0,4)];rec['slot_words']=[int.from_bytes(linked[i:i+4],'little') for i in range(8,len(linked),4)]\n assert not blind and linked==retail,rec\n report['metadata'].append(rec)\nassert len(report['metadata'])==11\ninv=T.elf_inventory(obj);audited,policy,errors=T.apply_compiler_only_policy(obj,entry);assert audited and not errors,(policy,errors)\nextras=T.unlicensed_inventory(entry,T.elf_inventory(audited));assert not any(extras),extras\nreport.update(inventory=inv,compiler_only_policy=policy,policy_errors=errors,unlicensed_outputs=list(extras))\nreport['licensed_emission_order']=[s['name'] for s in sorted(inv['symbols'],key=lambda s:s['shndx'] if isinstance(s['shndx'],int) else -1) if s['name'] in {f['symbol'] for f in entry['functions']}]\nassert report['licensed_emission_order']==[f['symbol'] for f in entry['functions']]\nreport['duplicate_destructor_emission_order']=[s['name'] for s in sorted(inv['symbols'],key=lambda s:s['shndx'] if isinstance(s['shndx'],int) else -1) if s['name'] in {'_ZN17daObjKurumajiku_cD0Ev','_ZN17daObjKurumajiku_cD1Ev'}]\nmanifest=out/'verify-manifest.json';manifest.write_text(json.dumps({'schema_version':1,'entries':[entry]},indent=2)+'\\n')\ncmd=[sys.executable,'-B','tools/tubuild.py','--manifest',str(manifest),'verify',entry['id']]\np=subprocess.run(cmd,cwd=root,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding='utf-8');(out/'tubuild.log').write_text(p.stdout);report['tubuild']={'command':cmd,'exit_code':p.returncode,'log':p.stdout};assert p.returncode==0,p.stdout\n(out/'final-proof.json').write_text(json.dumps(report,indent=2)+'\\n')\nprint(json.dumps({k:report[k] for k in ('object_sha256','object_bytes','all_allocated_output_and_relocations_identical_to_input','licensed_emission_order','duplicate_destructor_emission_order')},indent=2))\nprint('4 licensed + 3 duplicate + 2 retained + 3 caller strict checks PASS; all 11 complete emitted metadata payloads/padding and vtable preamble PASS; policy/output/order clean.',flush=True)\n",
+    "probe_script": "import pathlib,sys,json,hashlib,difflib\nroot=pathlib.Path('C:/tmp/sm64ds-axle2873-0920')\nsys.path.insert(0,str(root/'tools'))\nimport match as M,build_pin as B,tubuild as T,objisolate as O,linkcheck as L,reloc_audit as R\nout=root/'build/axle2873';out.mkdir(parents=True,exist_ok=True)\nsrc=root/'src/actors/daObjKurumajiku_c.cpp';original=src.read_text()\nentry=json.loads((root/'config/tu_manifest.d/ov002/daObjKurumajiku_c.json').read_text())\nidx=R.build_name_index()\ndef opaque(s):\n s=s.replace('func_ov002_020b6ac8(daObjKurumajiku_c *self, void *descriptor)','func_ov002_020b6ac8(void *actor, void *descriptor)')\n return s.replace('    char *r4 = (char *)descriptor;','    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\\n    char *r4 = (char *)descriptor;')\ndef mesh(s):return s.replace('((dBgW *)((char *)self + 0x124))->','self->mMeshCollider.')\ndef descriptor(s):\n s=s.replace('extern \"C\" {','struct AxleResources {\\n    SharedFilePtr *model;\\n    SharedFilePtr *collision;\\n    CLPS_Block *clps;\\n};\\n\\nextern \"C\" {',1)\n s=s.replace('char *r4 = (char *)descriptor;','AxleResources *resources = static_cast<AxleResources *>(descriptor);')\n return s.replace('((SharedFilePtr *)(*(void **)r4))->Release();','resources->model->Release();').replace('((SharedFilePtr *)(*(void **)(r4 + 4)))->Release();','resources->collision->Release();')\ndef matrix(s):\n old=s[s.index('    char *c = self;'):]\n new='''    daObjKurumajiku_c *actor = reinterpret_cast<daObjKurumajiku_c *>(self);\n    Matrix4x3_FromRotationZXYExt(&actor->mModel.mat4x3, 0, actor->mAngleY, actor->mAngleZ);\n    actor->mModel.mat4x3.m[9] = actor->mPosX >> 3;\n    actor->mModel.mat4x3.m[10] = actor->mPosY >> 3;\n    int z = actor->mPosZ >> 3;\n    actor->mModel.mat4x3.m[11] = z;\n    return z;\n}\n'''\n return s.replace(old,new)\ndef angle(s):return s.replace('    s16 *rzp = &mAngleZ;\\n\\n    *rzp = *rzp + 0x100;','    mAngleZ += 0x100;')\ndef angle_assign(s):return s.replace('    s16 *rzp = &mAngleZ;\\n\\n    *rzp = *rzp + 0x100;','    mAngleZ = mAngleZ + 0x100;')\ndef flag(s):return s.replace('    {\\n        int suppressed = (int)((mFlags & 8) != 0);\\n        if (suppressed != 0)\\n            return 1;\\n    }','    if (mFlags & 8)\\n        return 1;')\ncases=[('control',original),('opaque',opaque(original)),('mesh',mesh(opaque(original))),('descriptor',descriptor(mesh(opaque(original)))),('matrix',matrix(original)),('angle',angle(original)),('angle_assign',angle_assign(original)),('flag',flag(original)),('named_combined',matrix(descriptor(mesh(opaque(original))))),('named_angle',angle(matrix(descriptor(mesh(opaque(original)))))),('named_angle_assign',angle_assign(matrix(descriptor(mesh(opaque(original))))))]\nrows=[]\nfor key,code in cases:\n path=out/(key+'.cpp');path.write_text(code,newline='\\n')\n obj=M.compile_c(path,'2004/b56',B.flags_for(path))\n rec={'id':key,'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'patch_from_input':''.join(difflib.unified_diff(original.splitlines(True),code.splitlines(True),fromfile='input',tofile=key)), 'compiled':obj is not None}\n if obj:\n  (out/(key+'.o')).write_bytes(obj)\n  inv=T.elf_inventory(obj);rec.update(object_sha256=hashlib.sha256(obj).hexdigest(),object_bytes=len(obj),inventory=inv,strict=[])\n  for f in entry['functions']:\n   isolated,plan=O.derive(obj,f['symbol'])\n   r=L.linkcheck(f['symbol'],int(f['address'],0),int(f['size'],0),entry['module'],idx,obj=isolated or obj,sym=f['symbol'])\n   rec['strict'].append(r)\n  rec['all_four_exact']=all(r['verdict']=='VERIFIED' and r['blind']==0 and not r['diffs'] for r in rec['strict'])\n rows.append(rec)\n (out/'probe.json').write_text(json.dumps({'input_commit':'9d889e90b7a71db67a9af73221844979c97011a8','compiler':'2004/b56','variants':rows},indent=2)+'\\n')\n print(key,rec.get('all_four_exact'),[(r['name'],r['verdict'],len(r['diffs'])) for r in rec.get('strict',[])],flush=True)\n",
+    "flag_probe_script": "exec(open('C:/Users/andre/source/tangosdev/sm64ds-decomp/build/reviewer-0919/pr2873-probe.py').read().split('cases=')[0])\nbase=(out/'named_angle.cpp').read_text()\nold='    {\\n        int suppressed = (int)((mFlags & 8) != 0);\\n        if (suppressed != 0)\\n            return 1;\\n    }'\nforms={'int_compare':'    int suppressed = (mFlags & 8) != 0;\\n    if (suppressed)\\n        return 1;', 'bool_compare':'    bool suppressed = (mFlags & 8) != 0;\\n    if (suppressed)\\n        return 1;', 'int_mask':'    int suppressed = mFlags & 8;\\n    if (suppressed)\\n        return 1;'}\nrows=[]\nfor key,form in forms.items():\n code=base.replace(old,form);assert code!=base\n path=out/(key+'.cpp');path.write_text(code,newline='\\n');obj=M.compile_c(path,'2004/b56',B.flags_for(path));assert obj\n (out/(key+'.o')).write_bytes(obj);f=entry['functions'][-1];isolated,_=O.derive(obj,f['symbol'])\n codebytes,relocs=M.extract_func(obj,f['symbol']);retail=B.target_bytes('ov002',int(f['address'],0),int(f['size'],0));matches,diffs=M.compare(retail,codebytes,relocs,verbose=False)\n r=L.linkcheck(f['symbol'],int(f['address'],0),int(f['size'],0),'ov002',idx,obj=isolated,sym=f['symbol'])\n rec={'id':key,'patch_from_named_angle':''.join(difflib.unified_diff(base.splitlines(True),code.splitlines(True),fromfile='named_angle',tofile=key)),'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'object_sha256':hashlib.sha256(obj).hexdigest(),'behavior_bytes':len(codebytes),'masked_differing_words':diffs,'strict':r}\n rows.append(rec);print(key,len(codebytes),diffs,r,flush=True)\n(out/'flag-probe.json').write_text(json.dumps(rows,indent=2)+'\\n')\n"
+  },
+  "limits": [
+    "Producer evidence, not independent Source acceptance. Current-base composition and terminal private CI remain integrator work.",
+    "No ledger, promotion queue, shared-header, descendant source, or enrollment edits in this source stage.",
+    "The inherited distinct C declaration pointer views are not unified by void*. The restored opaque boundary removes the newly introduced named-type regression only.",
+    "Destructor exclusion remains partial packaging; fourteen historical forms are attributed producer reports, not reproduced here.",
+    "No compiler-generated sinit claim; no license outside the four-function text run."
+  ],
+  "full_rom": {
+    "command": "python -B tools/rombuild.py -j 16 --no-rom",
+    "exit_code": 0,
+    "source_overlay_sha256": "5596a27d666cc516f3f7b66fc48800f981ed6d684db435f3b67809aeb7c7417c",
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11208,
+      "compiledBytes": 2151584,
+      "sourceFunctions": 11208,
+      "sourceBytes": 2151584,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 96.13405608665892,
+      "reproducingFunctions": 11208,
+      "reproducingBytes": 2151584,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 26,
+      "sourceBssClaims": 3,
+      "sourceBssBytes": 172,
+      "reproducingDataClaims": 26,
+      "reproducingDataClaimBytes": 4984,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "intact_tu_gates": {
+      "ok": true,
+      "modulesOk": true,
+      "symbolsCommandOk": true,
+      "symbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "baselineSymbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "newSymbolErrors": [],
+      "storageAliases": [
+        {
+          "vtable": "_ZTV15daObjRcCarpet_c",
+          "vtableMetadata": {
+            "address": 34684828,
+            "size": 88,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 77,
+            "section": "OV036"
+          },
+          "splitSymbols": {
+            "data_ov036_02113ff4": {
+              "address": 34684916,
+              "size": 28,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 77,
+              "section": "OV036"
+            },
+            "data_ov036_02114010": {
+              "address": 34684944,
+              "size": 16,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 77,
+              "section": "OV036"
+            }
+          },
+          "baselineElfSha256": "8e91ffa4135f4da95d88d8c650935a62565d115804719c883cc23e49f575afa5",
+          "exact": true
+        },
+        {
+          "vtable": "_ZTV19daPropeller_Heyho_c",
+          "vtableMetadata": {
+            "address": 34746728,
+            "size": 28,
+            "binding": "STB_GLOBAL",
+            "type": "STT_OBJECT",
+            "visibility": "STV_DEFAULT",
+            "sectionIndex": 147,
+            "section": "OV070"
+          },
+          "splitSymbols": {
+            "data_ov070_02123184": {
+              "address": 34746756,
+              "size": 28,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 147,
+              "section": "OV070"
+            },
+            "data_ov070_021231a0": {
+              "address": 34746784,
+              "size": 68,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 147,
+              "section": "OV070"
+            }
+          },
+          "baselineElfSha256": "8e91ffa4135f4da95d88d8c650935a62565d115804719c883cc23e49f575afa5",
+          "exact": true
+        }
+      ],
+      "storageAliasErrors": []
+    },
+    "global_data_summary": {
+      "verified": 757,
+      "partial": 264,
+      "differs": 3,
+      "unnamed": 300
+    },
+    "global_data_difference_records": [
+      {
+        "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+        "symbol": "_ZTV10dCcAcPos_c",
+        "module": "arm9",
+        "addr": 34137860,
+        "differingBytes": 4
+      },
+      {
+        "src": "src/_ZN8daDemo_c10anmModel_cD0Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+        "module": "ov002",
+        "addr": 34650812,
+        "differingBytes": 8
+      },
+      {
+        "src": "src/_ZN8daDemo_c10anmModel_cD1Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+        "module": "ov002",
+        "addr": 34650812,
+        "differingBytes": 8
+      },
+      {
+        "src": "src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+        "module": "ov002",
+        "addr": 34650876,
+        "differingBytes": 8
+      },
+      {
+        "src": "src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+        "module": "ov002",
+        "addr": 34650876,
+        "differingBytes": 8
+      },
+      {
+        "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+        "module": "ov002",
+        "addr": 34650812,
+        "differingBytes": 8
+      },
+      {
+        "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+        "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+        "module": "ov002",
+        "addr": 34650812,
+        "differingBytes": 8
+      }
+    ],
+    "coverage_limit": "Global metadata retains three differing identities outside this TU and 300 unnamed symbols; not a global zero-difference claim. This TU has zero differing emitted metadata. The ROM-gap control has the same nine symbol diagnostics; zero new errors. --no-rom skips the final production ROM packaging step."
+  },
+  "source_stage_static": {
+    "declarations_overlay": {
+      "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+      "head": "9d889e90b7a71db67a9af73221844979c97011a8",
+      "worktree_overlay": true,
+      "exit_code": 0,
+      "output": "check_decl_agreement: 8743 file(s), 38460 extern declaration(s) of 13944 distinct symbol(s), 10608 of which the tree also defines; 2 unparsed declarator(s)\n  17090 disagreement(s) across 3774 symbol(s)   arity=1133  kind=333  linkage=1  mangled=53  param=7997  return=7573\n  --changed 2705c624d2554ee8d21a56641275a2b85cce3a8b: 2 source file(s) changed defining 5 symbol(s), 0 symbol(s) named by a changed config row, 1 file(s) reached through 2 changed type name(s); 5 file(s) in scope once every declaration of those is folded in; 319 disagreement(s) among them\n  no new declaration disagreements\n"
+    },
+    "port_refcheck": {
+      "exit_code": 0,
+      "checked": 418,
+      "stale": 0
+    },
+    "conflict_accounting": {
+      "command": "python -B tools/check_tubuild_conflicts.py ov002/daObjKurumajiku_c",
+      "exit_code": 0,
+      "sources": 1,
+      "notes": 0,
+      "markers": 0
+    },
+    "references": "No eligibility-based check_references PASS claimed. Explicit strict checks resolve every licensed/duplicate/caller relocation; full ROM links without new symbol errors. Integrator runs current-tree reference gates."
+  },
+  "production_enrollment": {
+    "unchanged_delinks": "config/arm9/overlays/ov002/delinks.txt",
+    "source_object_lines": [
+      "C:\\tmp\\sm64ds-axle2873-0920\\build\\src\\_ZN17daObjKurumajiku_cD0Ev.o",
+      "C:\\tmp\\sm64ds-axle2873-0920\\build\\src\\_ZN17daObjKurumajiku_cD1Ev.o",
+      "C:\\tmp\\sm64ds-axle2873-0920\\build\\src\\actors\\daObjKurumajiku_c.o"
+    ],
+    "text_range": [
+      "0x020b6a80",
+      "0x020b6c54"
+    ],
+    "scope": "The linked object list uses the repaired src/actors object and retained D0/D1 source objects, not ROM fallback for those functions."
+  }
+}

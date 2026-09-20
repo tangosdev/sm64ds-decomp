@@ -44,6 +44,14 @@
 #ifdef __cplusplus
 
 struct daObjKurumajiku_c : dBgActor_c {
+    /* Resource records passed to the shared axle helpers by both descendants.
+       The model and collision handles precede the collision surface table. */
+    struct Resources {
+        SharedFilePtr *model;
+        SharedFilePtr *collision;
+        CLPS_Block *clps;
+    };
+
     /* Field NAME is a placeholder; the offset and the width are observed. */
     u32 mMountedActorIds[4];        /* 0x320 */
 

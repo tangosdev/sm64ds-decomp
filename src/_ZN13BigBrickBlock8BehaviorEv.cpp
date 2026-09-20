@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN13BigBrickBlock8BehaviorEv
 #include "BigBrickBlock.h"
-#include "StarSwitch.h"
+#include "daObjSwitch_c.h"
 
 /* Event has no shared namespace declaration yet. The two unnamed collision
    setters remain address-named, and IsClsnInRangeOnScreen's by-value Fix12
@@ -21,7 +21,7 @@ int BigBrickBlock::Behavior()
         if (mSwitch == 0) {
             unsigned int id = 0xb;
             do {
-                mSwitch = (StarSwitch *)FindWithActorID(id, mSwitch);
+                mSwitch = (daObjSwitch_c *)FindWithActorID(id, mSwitch);
             } while (mSwitch == 0 || mEventID != mSwitch->mEventBit);
         }
 

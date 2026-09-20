@@ -34,7 +34,7 @@
  * of the class, so slot 31 (Kill) could not be written as a method until now.
  */
 
-struct StarSwitch;
+struct daObjSwitch_c;
 
 #ifdef __cplusplus
 
@@ -57,7 +57,7 @@ struct BigBrickBlock : dBgActor_c {
        dActor_c::UntrackAndSpawnStar takes `s8 &` -- Kill passes `this + 0x323` as
        exactly that argument. */
     s8 mTrackStarID;                  /* 0x323 */
-    StarSwitch *mSwitch;                 /* 0x324 */
+    daObjSwitch_c *mSwitch;                 /* 0x324 */
     /* A dActor_c *, and NotifyLinkedActor is the evidence: it loads this word
        and reads actorID at +0xc off it, then writes +0x3b0 or +0xd6. Kill only
        tests it against null. */
@@ -150,11 +150,11 @@ struct BigBrickBlock {
     u8  pad_321[0x1];
     u8  mStarID;            /* 0x322 */
     s8  mTrackStarID;            /* 0x323 */
-    /* StarSwitch * -- Behavior follows dActor_c::FindWithActorID(0xb, ...)
-       until the returned actor's byte at +0x34e equals mEventID. StarSwitch's
+    /* daObjSwitch_c * -- Behavior follows dActor_c::FindWithActorID(0xb, ...)
+       until the returned actor's byte at +0x34e equals mEventID. daObjSwitch_c's
        independently recovered mEventBit is exactly +0x34e; Render also reads
        that same object's mTimer/mTimeLimit at +0x338/+0x33a. */
-    struct StarSwitch *mSwitch;   /* 0x324 */
+    struct daObjSwitch_c *mSwitch;   /* 0x324 */
     dActor_c *mLinkedActor;            /* 0x328 */
     u8  pad_32c[0x4];
 };
