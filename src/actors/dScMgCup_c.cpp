@@ -2,7 +2,7 @@
 /* dScMgCup_c -- the cup-shuffle minigame scene, ov006.
  *
  * One translation unit, ROM ordinals 0..31 of the contiguous linker run
- * 0x020de988..0x020e0638: the destructor pair, fourteen file-local helpers,
+ * 0x020de988..0x020e0638: the destructor pair, fourteen address-named helpers,
  * two empty array-element callbacks, the eight State* members the scene
  * dispatches through, the five non-destructor vtable overrides, and the MG_CUP
  * factory.  dScMgCurling_c begins exactly at the next address.  The factory's
@@ -17,8 +17,8 @@
  *
  * The own-tail offsets have load/store and constructor evidence, but their
  * original field names are unproved. The header's mState, mShuffleAngle,
- * mShuffleSpeed, mOnes, mIds and mFlags are disclosed inferences; only mState
- * is used as a member here. Raw offsets and Obj6e remain reconstruction work,
+ * mShuffleSpeed, mOnes, mIds and mFlags are disclosed inferences. Several are
+ * used as members here. Raw offsets and Obj6e remain reconstruction work,
  * not a naming requirement. Issue #2492 tracks individually proved typed-field
  * replacements, including the live words at 0x5400, 0x5404 and 0x5408.
  *
@@ -27,21 +27,13 @@
  * but the original names are not in the cartridge.  The same holds for
  * Virtual50 and for dScMgCup_c_classInit.
  *
- * FIVE RETAINED SOURCE FORMS HAVE RECORDED CODE-GENERATION MEASUREMENTS.  Each
- * carries its own comment where it sits: func_ov006_020ded00's two spellings of
- * +0x12; func_ov006_020def80's per-arm `cup = i;` assignments;
- * StateShuffle's read-modify-write on +0x545c/+0x545e; Behavior's `(int)`
- * launders over the three parallel per-cup arrays; and Render's two
- * pointer-arithmetic towers.  Every other cast of that shape in this file was
- * measured one at a time and deleted as byte-neutral -- a cast tower here is
- * either load-bearing and commented, or gone.
- *
- * ONE byte-neutral spelling is kept anyway and is labelled as such: the
- * `speed = -speed;` statement split inside StateShuffle.  An earlier revision
- * claimed it bought bytes; re-measurement says it does not.  If you find any
- * other claim in this file that a spelling is load-bearing, it was produced by
- * deleting that spelling and re-running tools/tubuild.py verify -- keep it that
- * way.
+ * Earlier matching work measured several retained source forms, including
+ * func_ov006_020ded00's two +0x12 spellings, func_ov006_020def80's per-arm
+ * assignments, StateShuffle's read-modify-write and Behavior's array launders.
+ * Those results apply to their specific source alternatives. The named Render
+ * frame-counter access below reproduces the complete object; it is not a
+ * compiler limitation. The split negation in StateShuffle is also byte-neutral.
+ * Remaining raw storage and helper interfaces are tracked under issue #2492.
  *
  * Result: 32/32 byte+relocation matches.  Compiler-only D2/RTTI/vtable
  * passengers are externalized in the manifest to the canonical cartridge
@@ -996,11 +988,8 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
  * Draws the three cups back to front: the bubble sort orders the indices by the
  * per-cup depth at 0x53ec, and the render loop then walks them in that order.
  *
- * WAS A C99 FILE, and every declaration below therefore has to move inside
- * `extern "C"` -- in C++ these names would otherwise mangle and the link would
- * come up short. The `extern` on the two arrays is load-bearing for the same
- * reason the tree's notes give: without it, a variable declaration inside
- * `extern "C" {}` is a DEFINITION and collides with the delinked gap object. */
+ * External helpers and data keep the declarations collected above; their
+ * repository symbol spellings do not establish the original source linkage. */
 s32 dScMgCup_c::Render()
 {
     char *c = (char *)this;
@@ -1028,17 +1017,14 @@ s32 dScMgCup_c::Render()
         }
     }
 
-    /* The two pointer-arithmetic spellings in the call below are load-bearing.
-       Rewriting `((int*)c + k)[0x1510]` as `unk_5440[k]`, or
-       `((struct P8*)c + cup)[0xa7d].b` as `*(int*)(c + cup * 8 + 0x53ec)`, was
-       measured here: either one alone takes Render from MATCH to DIFF. b56
-       scales the index into the base register from these forms and re-computes
-       the address from `c` in the flat form. */
+    /* The named frame counter reproduces the complete object. The remaining
+       P8 position view is retained from earlier reconstruction work; its
+       historical raw-offset experiment is a separate source alternative. */
     for (k = 0; k < 3; k++) {
         cup = list[k];
         func_ov006_020debb4(c + 0x50e8, (char)cup);
         func_ov006_020deed8((int)c,
-            (void *)data_ov006_0213c0d8[unk_5434[cup]][((int*)c + k)[0x1510]].a,
+            (void *)data_ov006_0213c0d8[unk_5434[cup]][unk_5440[k]].a,
             *(int*)(c + cup * 8 + 0x53e8),
             ((struct P8*)c + cup)[0xa7d].b,
             mOnes[cup],

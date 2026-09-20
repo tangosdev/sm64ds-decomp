@@ -11,11 +11,10 @@
  *
  * Eight of the 40 are this class's own vtable slots: 0 InitResources,
  * 3 CleanupResources, 6 Behavior, 9 Render, the 16/17 destructor pair, and
- * 18/19 OnYoshiTryEat/OnTurnIntoEgg.  The other 32 are the file-local helpers
- * that shared the translation unit with them -- board hit-testing, the racer
- * update and draw loops, the slider physics and the HUD strips.  None is
- * reached from outside 0x0210788c..0x0210a400 and the ROM gives none of them
- * a mangled name, so none was a class member with external linkage.
+ * 18/19 OnYoshiTryEat/OnTurnIntoEgg. The remaining 32 address-named helpers
+ * cover board hit-testing, racer update and draw loops, slider physics and
+ * HUD strips. Their repository labels do not recover the original names,
+ * linkage or choice of member versus free function.
  *
  * PRODUCTION translation unit: enrolled in
  * config/arm9/overlays/ov006/delinks.txt as one complete .text range and
