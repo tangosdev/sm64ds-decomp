@@ -102,6 +102,8 @@
 //                           its camera probes drive the DS rotate bits.
 //      SM64DS_ANALOG_CAMERA=1  put a selftest in the analog camera
 //      SM64DS_OVERLAY=1     boot with the F3 stats overlay already on
+//      SM64DS_HOST_KEY=<vk-hex>@<f0>[-<f1>],...  script a host KEY (SM64DS_HOST_PAD's
+//                           grammar), the one thing no scripted row could press before
 //      SM64DS_MENU=1        boot with the F5 debug menu open
 //      SM64DS_TRACE_PACE=1  the frame clock's report, once per 120 frames:
 //                           the rate, and the DISTRIBUTION of the frame
@@ -2398,6 +2400,18 @@ static int port_frame_divider(void)
 
 static void present(void);   /* the blit, defined with the window code below */
 
+/* THE PICTURE COUNT. Every picture this program hands to the window goes
+   through present(), including the repeats port_present_clock makes, so
+   this one counter is the only honest answer to "how many pictures a
+   second". Counted at entry, so a window with no client area (a minimized
+   proof run) counts the same pictures a visible session counts and the two
+   are comparable. */
+static unsigned long long g_present_n;
+/* set by port_present_clock whenever it presented an extra picture; the
+   rate meter reads and clears it, so the overlay can say whether the
+   presentation clock is actually running rather than only configured. */
+static int g_pic_clock_ran;
+
 /* The key's answer, latched once. host_setting_frame_rate is itself
    boot-latched; this caches it so the pacer's hot path never re-reads it. */
 static int port_frame_rate_target(void)
@@ -2532,6 +2546,7 @@ extern "C" double port_present_clock(long long now, long long deadline,
         port_sleep_until(g_pic_due, qpf);
         present();
         ++g_pic_extra;
+        g_pic_clock_ran = 1;
         QueryPerformanceCounter(&at);
         port_pic_note(at.QuadPart, qpf, trace, rate);
         g_pic_due += step;
@@ -2749,10 +2764,82 @@ static int g_selftest_frames;   /* main's `selftest`, at file scope so the pump
 
 static unsigned long long g_frame_pump_turns;   /* what the [r3b] line reports */
 
+/* ---- THE TWO RATES THE OVERLAY EXISTS TO SHOW ------------------------
+   Counts over a wall-clock window, not a smoothing, because the question
+   being asked is "is the FrameRate setting delivering the rate it was set
+   to" and a smoothed present-to-present figure taken once per loop turn
+   structurally cannot exceed the loop's own rate -- which is why the old
+   line read about 60 with the key at 144.
+     ticks  -- the simulation. port_rom_frame() advances exactly once per
+               game tick, which is 30 a second in a course and 60 in a menu
+               (the ROM's own divider word data_0208ee44).
+     shown  -- pictures handed to the window, g_present_n, which includes
+               every repeat the presentation clock made.
+   Half-second window: long enough to be steady, short enough to follow a
+   setting change. Both loops call this once a frame, whether the overlay is
+   on or off, so turning it on shows a number at once; the cost is one
+   QueryPerformanceCounter a frame. */
+static double g_rate_ticks, g_rate_shown;
+static int    g_rate_clock_on;
+static void ovl_rate_sample(void)
+{
+    static LARGE_INTEGER qpf, t0;
+    static unsigned long long p0;
+    static int f0;
+    LARGE_INTEGER now;
+    if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
+    QueryPerformanceCounter(&now);
+    if (!t0.QuadPart) {
+        t0 = now; p0 = g_present_n; f0 = port_rom_frame();
+        return;
+    }
+    const double dt = (now.QuadPart - t0.QuadPart) / (double)qpf.QuadPart;
+    if (dt < 0.5) return;
+    g_rate_shown = (double)(g_present_n - p0) / dt;
+    g_rate_ticks = (double)(port_rom_frame() - f0) / dt;
+    g_rate_clock_on = g_pic_clock_ran;
+    g_pic_clock_ran = 0;
+    t0 = now; p0 = g_present_n; f0 = port_rom_frame();
+}
+
+/* The process's own CPU, over the same kind of window, as a share of ONE
+   logical processor's worth of time times the machine's processor count --
+   i.e. the number Task Manager shows. There is deliberately no GPU line:
+   this port rasterises on the CPU, and the millisecond lines below are
+   where that work is already reported. */
+static double g_cpu_pct;
+static void ovl_cpu_sample(void)
+{
+    static LARGE_INTEGER qpf, t0;
+    static unsigned long long k0, u0;
+    static double ncpu;
+    FILETIME c, e, k, u;
+    LARGE_INTEGER now;
+    if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
+    if (ncpu <= 0.0) {
+        SYSTEM_INFO si;
+        GetSystemInfo(&si);
+        ncpu = si.dwNumberOfProcessors > 0 ? si.dwNumberOfProcessors : 1;
+    }
+    if (!GetProcessTimes(GetCurrentProcess(), &c, &e, &k, &u)) return;
+    const unsigned long long kt =
+        ((unsigned long long)k.dwHighDateTime << 32) | k.dwLowDateTime;
+    const unsigned long long ut =
+        ((unsigned long long)u.dwHighDateTime << 32) | u.dwLowDateTime;
+    QueryPerformanceCounter(&now);
+    if (!t0.QuadPart) { t0 = now; k0 = kt; u0 = ut; return; }
+    const double dt = (now.QuadPart - t0.QuadPart) / (double)qpf.QuadPart;
+    if (dt < 0.5) return;
+    g_cpu_pct = ((double)((kt - k0) + (ut - u0)) * 1e-7) / (dt * ncpu) * 100.0;
+    t0 = now; k0 = kt; u0 = ut;
+}
+
 extern "C" int port_host_frame_pump(unsigned spin)
 {
     (void)spin;
     ++g_frame_pump_turns;
+    ovl_rate_sample();
+    ovl_cpu_sample();
     frame_stat();
     /* RUNG E1: see frame_pace. One VBlank per turn while the ROM's sleep is
        what ends the frame, one whole game frame per call while this loop is. */
@@ -2810,16 +2897,24 @@ extern "C" int port_host_frame_pump(unsigned spin)
    it; there is no "upper half" to prefer, and the overlay goes where it always
    went. Nothing about a level changes. */
 #ifdef NTR_WIDE_RT
-/* The host debug overlay (F3 stats, F5 menu, save toast) is diagnostic UI, not
-   game content, and it is off in normal play. Pin it to the 2x tier's 1x text
-   so a 4:3 (toggle-off) run's overlay is byte-for-byte the shipped one; the wide
-   toggle keeps the same 1x text rather than growing it, which is fine for a
-   diagnostic layer. */
-static const int OVL_SCALE = 1;
+static int ovl_scale_now(void)
+{
+    /* The overlay is painted into the RENDER buffer and present() fits that
+       buffer into the window, so a glyph's on-screen size is its pixel size
+       divided by this run's render height. RenderScale multiplies that
+       height, which shrank the text by the same factor and, under the
+       nearest-neighbour present, dropped strokes out of a one-pixel font.
+       Sizing off the height keeps the text the same fraction of the picture
+       at every scale. 384 rows is the default extent, so a default run gets
+       1 and every picture it has ever produced is unchanged. */
+    const int s = (ntr::active_h + 192) / 384;
+    return s < 1 ? 1 : (s > 4 ? 4 : s);
+}
 #else
-static const int OVL_SCALE = ntr::SCREEN_W >= 1024 ? 2 : 1;
+static int ovl_scale_now(void) { return ntr::SCREEN_W >= 1024 ? 2 : 1; }
 #endif
-static const int OVL_LINE = (OVL_GLYPH_H + 2) * OVL_SCALE;
+#define OVL_SCALE (ovl_scale_now())
+#define OVL_LINE  ((OVL_GLYPH_H + 2) * OVL_SCALE)
 
 /* WHERE AN OVERLAY PAINTS: one DS screen's worth of 0xAARRGGBB pixels, at
    `stride` words per row. `px` is that screen's top-left. Deliberately not a
@@ -2937,9 +3032,12 @@ static void ph_end(int idx, double start)
 }
 
 struct OvlStats {
-    double fps;              /* frames presented per second, smoothed */
-    double tps;              /* GAME ticks per second -- diverges from fps
-                                whenever the debug menu pauses the tick */
+    double shown;            /* pictures handed to the window, per second */
+    double ticks;            /* game ticks per second (the simulation) */
+    int    tick_target;      /* what the ROM's divider says it should be */
+    int    set_rate;         /* the FrameRate setting, 0 = native */
+    int    clock_on;         /* the presentation clock presented this window */
+    double cpu_pct;
     int tris;                /* polygons gx accepted this frame */
     int actors;              /* live entries on the behaviour list */
     char *player;            /* the Player actor */
@@ -2954,17 +3052,23 @@ extern "C" int port_vs_king_hud(char *out, int cap);
 
 static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
 {
-    char ln[10][96];
+    char ln[12][96];
     int n = 0;
     const uint32_t WHITE = 0xFFFFFFFFu, AMBER = 0xFFFFC040u,
                    GREEN = 0xFF80FF80u, RED = 0xFFFF6060u;
-    uint32_t col[10];
+    uint32_t col[12];
     char *c = s.player;
     void *st = c ? *(void **)(c + 0x370) : 0;
 
-    snprintf(ln[n], sizeof ln[0], "fps %5.1f   tick %5.1f/30%s", s.fps, s.tps,
-             s.menu_paused ? "  PAUSED" : "");
-    col[n++] = s.fps >= 28.0 ? GREEN : (s.fps >= 20.0 ? AMBER : RED);
+    char setbuf[32];
+    if (!s.set_rate) snprintf(setbuf, sizeof setbuf, "native");
+    else snprintf(setbuf, sizeof setbuf, "%d%s", s.set_rate,
+                  s.clock_on ? "" : " idle");
+    snprintf(ln[n], sizeof ln[0], "ticks %4.1f/%d   shown %5.1f   set %s%s",
+             s.ticks, s.tick_target, s.shown, setbuf,
+             s.menu_paused ? "   PAUSED" : "");
+    col[n++] = s.ticks >= s.tick_target - 2 ? GREEN
+             : (s.ticks >= s.tick_target - 10 ? AMBER : RED);
     snprintf(ln[n], sizeof ln[0], "frame %5.2fms  in+tick %5.2f  cam %5.2f",
              g_clk.ms[PH_FRAME], g_clk.ms[PH_INPUT], g_clk.ms[PH_CAMERA]);
     col[n++] = WHITE;
@@ -2987,7 +3091,7 @@ static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
                  st ? *(unsigned *)st : 0u, g_port_unhosted_hits);
         col[n++] = g_port_unhosted_hits ? AMBER : WHITE;
     }
-    snprintf(ln[n], sizeof ln[0], "ram %6u KB", s.mem_kb);
+    snprintf(ln[n], sizeof ln[0], "ram %6u KB   cpu %3.0f%%", s.mem_kb, s.cpu_pct);
     col[n++] = WHITE;
 
     /* KING OF THE STAR live points, only during a king match (returns 0 and
@@ -3010,6 +3114,48 @@ static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
         for (int i = 0; i < n; ++i)
             ovl_text(fb, 4 + OVL_SCALE, 4 + i * OVL_LINE, ln[i], col[i]);
     }
+}
+
+/* Everything the overlay can read WITHOUT a level: both loops call this and
+   then fill in what only they have (the Player, the camera's name). The
+   scene path has no Player and ovl_draw already draws the short form when
+   `player` is null. */
+static void ovl_fill_common(OvlStats &os)
+{
+    size_t tn = 0;
+    int actors = 0;
+    ntr::gx_polygons(tn);
+    for (int *node = (int *)(size_t)data_020a4b78[0];
+         node && actors < 4096; node = (int *)(size_t)node[1])
+        if (node[2]) ++actors;
+    if (W.GetProcessMemoryInfo_) {
+        static unsigned kb;
+        static int every;
+        if ((every++ % 30) == 0) {
+            PortMemCounters pmc;
+            pmc.cb = sizeof pmc;
+            if (W.GetProcessMemoryInfo_(GetCurrentProcess(), &pmc,
+                                        sizeof pmc))
+                kb = (unsigned)(pmc.WorkingSetSize / 1024);
+        }
+        os.mem_kb = kb;
+    } else {
+        os.mem_kb = 0;
+    }
+    os.tris = (int)tn;
+    os.actors = actors;
+    os.shown = g_rate_shown;
+    os.ticks = g_rate_ticks;
+    os.clock_on = g_rate_clock_on;
+    os.set_rate = port_frame_rate_target();
+    os.cpu_pct = g_cpu_pct;
+    {
+        const int d = port_frame_divider();
+        os.tick_target = d > 0 ? 60 / d : 30;
+    }
+    os.player = 0;
+    os.cam_name = "";
+    os.menu_paused = 0;
 }
 
 /* selftest diagnostic: closest clip-approach of the ambient (flag-0x10000)
@@ -3462,8 +3608,68 @@ static int g_padlearn;
 static unsigned char key_stale[256];
 static int g_selftest;
 
+/* Self-contained copy of pad_script_mask's grammar (:5513 region), comparing
+   the parsed hex value to a single vk instead of OR-ing it into a mask; same
+   @f0[-f1] window, same comma list. Placed here, above key_live, rather than
+   reusing pad_script_mask itself, because pad_script_mask is declared below
+   key_live and this must not introduce a forward declaration. */
+static int pad_script_mask_vk(const char *spec, int vk, int frame)
+{
+    enum { PAD_TEST_HOLD = 4 };
+    int hit = 0;
+    const char *p = spec;
+    while (*p) {
+        char *q;
+        const unsigned m = (unsigned)strtoul(p, &q, 16);
+        long f0 = -1, f1 = -1;
+        p = q;
+        if (*p == 64 /* '@' */) {
+            f0 = strtol(p + 1, &q, 10);
+            p = q;
+            f1 = f0 + PAD_TEST_HOLD - 1;
+            if (*p == 45 /* '-' */) { f1 = strtol(p + 1, &q, 10); p = q; }
+        }
+        if ((int)m == vk && f0 >= 0 && frame >= f0 && frame <= f1)
+            hit = 1;
+        while (*p && *p != 44 /* ',' */) ++p;
+        if (*p == 44) ++p;
+    }
+    return hit;
+}
+
+/* SM64DS_HOST_KEY=<vk-hex>@<f0>[-<f1>],... -- a scripted HOST KEY, in
+   SM64DS_HOST_PAD's grammar and for its reason: F3, F5 and F12 are read
+   through key_live, key_live is off under a selftest, and so the one thing
+   no row could prove was whether a key the window loop reads reaches its
+   feature. This enters at key_live's own seam, so the edge latches, the
+   menu and the fullscreen toggle are all the program's own. Inert unless
+   set. A hold is ONE press edge, exactly like the click driver's. */
+static int g_host_key_frame;
+static int host_key_script(int vk)
+{
+    static const char *env = (const char *)1;
+    static unsigned char prev[256];
+    if (env == (const char *)1) {
+        env = getenv("SM64DS_HOST_KEY");
+        if (env) {
+            fprintf(stderr, "[hostkey] SM64DS_HOST_KEY=%s -- scripted keys "
+                    "enter at key_live's own seam\n", env);
+            fflush(stderr);
+        }
+    }
+    if (!env) return 0;
+    const int now = (int)(pad_script_mask_vk(env, vk, g_host_key_frame));
+    if ((unsigned)vk < 256 && now != prev[vk]) {
+        fprintf(stderr, "[hostkey] f%d vk %02x %s\n", g_host_key_frame, vk,
+                now ? "down" : "up");
+        prev[vk] = (unsigned char)now;
+    }
+    return now;
+}
+
 static int key_live(int vk)
 {
+    if (host_key_script(vk)) return 1;
     if (g_selftest) return 0;
     if (g_rebind_capture) return 0;
     if (g_padlearn) return 0;           /* a pad is being taught */
@@ -6181,6 +6387,7 @@ static const BITMAPINFO *g_present_stack_bi;
    panel twice, stacked, so the stacked fit is 2:3. */
 static void present(void)
 {
+    ++g_present_n;
     if (!g_present_hwnd || !g_present_hdc || !g_present_bi || !g_present_fb)
         return;
     if (!W.GetClientRect_ || !W.StretchDIBits_) return;
@@ -7982,11 +8189,20 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
         if (now && !*focus_was) memset(key_stale, 1, sizeof key_stale);
         *focus_was = now;
     }
+    g_host_key_frame = frame;
     {
         static int fs_edge;
         const int now = key_live(VK_F12) || key_live(VK_F11);
         if (now && !fs_edge) fullscreen_toggle(hwnd);
         fs_edge = now;
+    }
+    /* F3, the same edge latch the level loop keeps, with its own static so the
+       two loops cannot swallow each other's press across a title fall-through. */
+    {
+        static int ov_edge;
+        const int now = key_live(VK_F3);
+        if (now && !ov_edge) g_overlay_on = !g_overlay_on;
+        ov_edge = now;
     }
 
     int pad_live = port_pad_poll(pad);
@@ -8138,6 +8354,18 @@ static void scene_host_present_frame(HWND hwnd, int stacked,
     const OvlSurface surf =
         stacked ? ovl_surface_stacked(stack_img, fb) : ovl_surface(fb);
 
+    /* THE STATS OVERLAY ON THE SCENE PATH (run link100, lane FPSSTATS1). It
+       had one draw site, in the level loop, so the title, the file select, the
+       star select, the minigame and VS menus and the game over screen showed
+       nothing whatever F3 or the debug menu's row said. It is the same painter
+       on the same surface the menu and the toast already use, so it lands on
+       the upper physical screen in either layout. */
+    if (g_overlay_on && !rb_skip_render()) {
+        OvlStats os;
+        ovl_fill_common(os);
+        os.menu_paused = menu_on;
+        ovl_draw(surf, os);
+    }
     if (menu_on) menu_draw(surf);
     if (!rb_skip_render())
         toast_draw(surf);
@@ -8233,7 +8461,7 @@ static int scene_window_run(void)
         stacked, &hdc,
         "SM64DS   |   stylus = left mouse drag   Space jump   X punch"
         "   Ctrl crouch   |   arrows / d-pad   Enter start"
-        "   |   F5 or Esc menu   F12 fullscreen");
+        "   |   F3 stats   F5 or Esc menu   F12 fullscreen");
     if (!hwnd) {
         /* A window that will not open is not a reason to lose the run: the
            scene still boots, still ticks and still writes whatever capture it
@@ -10110,8 +10338,6 @@ int main(void)
        itself draws, which is how a shot of it gets captured without a person. */
     menu_on = getenv("SM64DS_MENU") != 0;
     int overlay_edge = 0;
-    double ovl_fps = 0, ovl_tps = 0, ovl_last_present = 0;
-    unsigned ovl_mem_kb = 0;
 
     /* the bottom screen: dual OAM, the 2D frame, and the corner panel */
     hal_sub_screen_init(hwnd, stylus_fallback_zoom());
@@ -10324,6 +10550,7 @@ int main(void)
             focus_was = now;
         }
         {
+            g_host_key_frame = frame;
             const int now = key_live(VK_F3);
             if (now && !overlay_edge) g_overlay_on = !g_overlay_on;
             overlay_edge = now;
@@ -14991,26 +15218,9 @@ int main(void)
            the window, and the selftest BMP carries it. */
         if (g_overlay_on && !rb_skip_render()) {
             OvlStats os;
-            size_t tn = 0;
-            int actors = 0;
-            ntr::gx_polygons(tn);
-            for (int *node = (int *)(size_t)data_020a4b78[0];
-                 node && actors < 4096; node = (int *)(size_t)node[1])
-                if (node[2]) ++actors;
-            if (W.GetProcessMemoryInfo_ && (frame % 30) == 0) {
-                PortMemCounters pmc;
-                pmc.cb = sizeof pmc;
-                if (W.GetProcessMemoryInfo_(GetCurrentProcess(), &pmc,
-                                            sizeof pmc))
-                    ovl_mem_kb = (unsigned)(pmc.WorkingSetSize / 1024);
-            }
-            os.fps = ovl_fps;
-            os.tps = ovl_tps;
-            os.tris = (int)tn;
-            os.actors = actors;
+            ovl_fill_common(os);
             os.player = c;
             os.cam_name = cam_mode_name(cam_mode);
-            os.mem_kb = ovl_mem_kb;
             os.menu_paused = !game_ticked;
             ovl_draw(surf, os);
         }
@@ -15063,21 +15273,6 @@ int main(void)
         }
         if (rb_replaying()) {
             for (int p = 0; p < PH_COUNT; ++p) rb_replay_phase(p, g_clk.raw[p]);
-        }
-        /* present-to-present rate, and the GAME TICK rate beside it -- the two
-           diverge whenever a tick is skipped, which is what the debug menu's
-           pause does. Both smoothed the same way the phase times are. */
-        {
-            const double now = ovl_now_ms();
-            if (ovl_last_present > 0.0) {
-                const double dt = now - ovl_last_present;
-                if (dt > 0.01) {
-                    const double inst = 1000.0 / dt;
-                    ovl_fps += (inst - ovl_fps) * 0.1;
-                    ovl_tps += ((game_ticked ? inst : 0.0) - ovl_tps) * 0.1;
-                }
-            }
-            ovl_last_present = now;
         }
         /* the click flag is true for exactly the frame it landed on; the hold
            in g_mouse_left_down is what outlives it */
