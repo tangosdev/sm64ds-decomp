@@ -1739,7 +1739,7 @@ s32 dScMgHanachan_c::Render()
         Pair *p = PAIR0(self);
         Pair *g = &data_ov006_0213c9ac;
         if (p->v[0] == g->v[0]) {
-            if (p->v[1] == g->v[1] || *(int *)(self + 0x4660) == 0) {
+            if (p->v[1] == g->v[1] || unk_4660 == 0) {
                 i = 0;
                 if (data_ov006_0213c958 > 0) {
                     arr = self + 0x4678;
@@ -1758,13 +1758,13 @@ s32 dScMgHanachan_c::Render()
         Pair *p = PAIR0(self);
         Pair *g = &data_ov006_0213c994;
         if (p->v[0] == g->v[0]) {
-            if (p->v[1] == g->v[1] || *(int *)(self + 0x4660) == 0) {
-                int flag = *(unsigned char *)(self + 0x4f64);
+            if (p->v[1] == g->v[1] || unk_4660 == 0) {
+                int flag = unk_4f64;
                 if (flag != 0) {
-                    if (*(int *)(self + 0x466c) < 0x5a) goto do_eac;
+                    if (unk_466c < 0x5a) goto do_eac;
                 }
                 if (flag != 0) goto count_loop;
-                if (*(int *)(self + 0x466c) < 0x8a) goto do_eac;
+                if (unk_466c < 0x8a) goto do_eac;
                 goto count_loop;
             do_eac:
                 func_ov006_020eac38(*(void **)(self + 0x4f60));
@@ -1787,8 +1787,8 @@ s32 dScMgHanachan_c::Render()
     {
         Pair *p = PAIR0(self);
         Pair *g = &data_ov006_0213ca3c;
-        if ((p->v[0] == g->v[0] && (p->v[1] == g->v[1] || *(int *)(self + 0x4660) == 0))
-            || (p = PAIR0(self), g = &data_ov006_0213ca34, (p->v[0] == g->v[0] && (p->v[1] == g->v[1] || *(int *)(self + 0x4660) == 0)))) {
+        if ((p->v[0] == g->v[0] && (p->v[1] == g->v[1] || unk_4660 == 0))
+            || (p = PAIR0(self), g = &data_ov006_0213ca34, (p->v[0] == g->v[0] && (p->v[1] == g->v[1] || unk_4660 == 0)))) {
             func_ov006_020eac38(*(void **)(self + 0x4f60));
         }
     }
@@ -1799,7 +1799,7 @@ tail:
     {
         Pair *p = PAIR0(self);
         Pair *g = &data_ov006_0213ca2c;
-        if (!(p->v[0] == g->v[0] && (p->v[1] == g->v[1] || *(int *)(self + 0x4660) == 0))) {
+        if (!(p->v[0] == g->v[0] && (p->v[1] == g->v[1] || unk_4660 == 0))) {
             int idx = GetGameLanguage();
             void *e = data_ov006_0213ca9c[idx];
             void *f = *(void **)((char *)e + 0xc);
@@ -2234,11 +2234,11 @@ void dScMgHanachan_c::OnYoshiTryEat(int state)
         if (*(unsigned int*)(c + 0xbc) > 0x270e) *(unsigned int*)(c + 0xbc) = 0x270e;
         if (data_ov004_020beb68 != 0) *(int*)((char *)data_ov004_020beb68 + 0xb4) = 0;
         func_ov004_020adb1c(*(int*)(c + 0xb4));
-        *(int*)(c + 0x4670) = 0x14;
+        unk_4670 = 0x14;
     } else {
         int v = *(unsigned int*)(c + 0xbc);
         if (data_ov004_020beb68 != 0) *(int*)((char *)data_ov004_020beb68 + 0xb4) = v;
-        *(int*)(c + 0x4670) = 0x14;
+        unk_4670 = 0x14;
     }
     func_ov006_020ea8e0();
     func_ov006_020ea658();

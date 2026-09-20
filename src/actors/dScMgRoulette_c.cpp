@@ -863,29 +863,29 @@ int dScMgRoulette_c::OnTurnIntoEgg(int /* mode */)
 {
     char *self = (char *)this;
 
-    switch (*(s16 *)(self + 0x53e6)) {
+    switch (mPhase) {
     case 5:
         FreeGfxSlotsById(0x1d);
         if (func_ov006_02107a6c() != 0)
-            (*(s16 *)(self + 0x53e6))++;
+            (mPhase)++;
         break;
     case 6:
         if (func_ov006_020c1718(self + 0x4f38) != 0) {
-            *(u16 *)(self + 0x53e8) = 0x3c;
-            *(int *)(self + 0x53f8) = 0;
-            (*(s16 *)(self + 0x53e6))++;
+            mPhaseTimer = 0x3c;
+            mDealIndex = 0;
+            (mPhase)++;
         }
         break;
     case 7:
-        (*(s16 *)(self + 0x53e8))--;
-        if (*(s16 *)(self + 0x53e8) == 0) {
-            if (*(s16 *)(self + 0x53f2) != 0)
+        (mPhaseTimer)--;
+        if (mPhaseTimer == 0) {
+            if (mScore != 0)
                 func_ov004_020b56c8();
-            (*(s16 *)(self + 0x53e6))++;
+            (mPhase)++;
         }
         break;
     case 8:
-        (*(s16 *)(self + 0x53e6))++;
+        (mPhase)++;
         /* fall through */
     case 9:
     default:

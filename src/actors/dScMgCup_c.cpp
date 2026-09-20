@@ -520,13 +520,13 @@ void dScMgCup_c::StateFinish()
         if (*(int*)(c + 0xb4) < 0x270f) *(int*)(c + 0xb4) += 1;
         if (*(int*)(c + 0xb4) > *(int*)(c + 0xb8)) *(int*)(c + 0xb8) = *(int*)(c + 0xb4);
         func_ov004_020b0a54(0);
-        *(int*)(c + 0x5000 + 0x418) = 7;
+        mState = 7;
     } else {
         if (*(int*)(c + 0xa8) > 0) {
             OnYoshiTryEat(-1);
         } else {
             func_ov004_020b0a54(0x12);
-            *(int*)(c + 0x5000 + 0x418) = 7;
+            mState = 7;
         }
     }
 }
@@ -567,7 +567,7 @@ void dScMgCup_c::StateResult()
         func_02012790(0x12f);
     }
     func_ov004_020adb1c(score);
-    *(int *)(self + 0x5000 + 0x418) = 6;
+    mState = 6;
     *(u8 *)(self + 0xc3) = 0;
 }
 #pragma pop
@@ -603,14 +603,14 @@ void dScMgCup_c::StateSelect()
         *(unsigned char*)(c + j + 0x5000 + 0x465) = 1;
         func_ov006_020def80(c, j);
 
-        if (*(unsigned char*)(c + 0x5000 + 0x468) == *(unsigned char*)(c + j + 0x5000 + 0x462)) {
+        if (unk_5468 == *(unsigned char*)(c + j + 0x5000 + 0x462)) {
             *(unsigned char*)(c + 0x5000 + 0x469) = 1;
-            *(int*)(c + j * 4 + 0x5000 + 0x434) = 6;
+            unk_5434[j] = 6;
         } else {
             *(unsigned char*)(c + 0x5000 + 0x469) = 0;
         }
 
-        *(int*)(c + 0x5000 + 0x418) = 5;
+        mState = 5;
         *(int*)(c + 0x5000 + 0x41c) = 0x3c;
         FreeGfxSlotsById(0x1d);
 
@@ -618,9 +618,9 @@ void dScMgCup_c::StateSelect()
             unsigned int idx2 = data_020a0e40[0];
             unsigned char a1 = *(volatile unsigned char*)&data_020a0deb[idx2 * 4];
             unsigned char a2 = *(volatile unsigned char*)&data_020a0dea[idx2 * 4];
-            *(int*)(c + 0x5000 + 0xdc) = 1;
-            *(int*)(c + 0x5000 + 0xd4) = a2;
-            *(int*)(c + 0x5000 + 0xd8) = a1;
+            unk_50dc = 1;
+            unk_50d4 = a2;
+            unk_50d8 = a1;
         }
         _ZN5Sound12PlayBank2_2DEj(0x1cd);
         return;
@@ -637,7 +637,7 @@ void dScMgCup_c::StateWaitForInput()
     if (*(int *)(c + 0x541c) > 0)
         return;
     func_ov004_020b0cac(0xf, 0x80, 0x38, 0, -1, 0xd);
-    *(int *)(c + 0x5418) = 4;
+    mState = 4;
 }
 
 /* [22] 0x020df5b8  _ZN10dScMgCup_c12StateShuffleEv  size 0x720 */
@@ -650,27 +650,27 @@ void dScMgCup_c::StateShuffle()
     int ox, oy;
 
     {
-        int v = *(s16*)(c + 0x545e);
+        int v = mShuffleSpeed;
         int amp;
         if (v < 0) v = -v;
         amp = (v * 0x1f4) / 0x1000;
         if (amp >= 0x1f4) amp = 0x1f4;
-        *(int*)(c + 0x5458) = func_02012468(*(int*)(c + 0x5458), 2, 0x1cb, 2, 0, amp, 0, 0);
+        mShuffleSound = func_02012468(mShuffleSound, 2, 0x1cb, 2, 0, amp, 0, 0);
     }
 
-    *(u16*)(c + 0x545c) += *(s16*)(c + 0x545e);
+    mShuffleAngle += mShuffleSpeed;
 
     {
-        s16 speed = *(s16*)(c + 0x545e);
-        if ((speed >= 0 && *(u16*)(c + 0x545c) >= 0x8000u) ||
-            (speed < 0 && *(u16*)(c + 0x545c) <= 0x8000u)) {
-            *(u16*)(c + 0x545c) = 0x8000;
+        s16 speed = mShuffleSpeed;
+        if ((speed >= 0 && mShuffleAngle >= 0x8000u) ||
+            (speed < 0 && mShuffleAngle <= 0x8000u)) {
+            mShuffleAngle = 0x8000;
         }
     }
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
-        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
@@ -679,11 +679,11 @@ void dScMgCup_c::StateShuffle()
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
         *(int*)(c + slot * 8 + 0x53ec) = *(int*)(c + 0x5404)
-            - (int)((data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+            - (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
-        *(int*)(c + slot * 4 + 0x540c) = ((*(int*)(c + slot * 8 + 0x53ec) - *(int*)(c + 0x5404)) >> 7) + 0x1000;
+        mOnes[slot] = ((*(int*)(c + slot * 8 + 0x53ec) - *(int*)(c + 0x5404)) >> 7) + 0x1000;
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -694,7 +694,7 @@ void dScMgCup_c::StateShuffle()
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
-        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
@@ -703,11 +703,11 @@ void dScMgCup_c::StateShuffle()
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
         *(int*)(c + slot * 8 + 0x53ec) = *(int*)(c + 0x5404)
-            + (int)((data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+            + (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
-        *(int*)(c + slot * 4 + 0x540c) = ((*(int*)(c + slot * 8 + 0x53ec) - *(int*)(c + 0x5404)) >> 7) + 0x1000;
+        mOnes[slot] = ((*(int*)(c + slot * 8 + 0x53ec) - *(int*)(c + 0x5404)) >> 7) + 0x1000;
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
@@ -724,14 +724,14 @@ void dScMgCup_c::StateShuffle()
             int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
             *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420) = tb;
             *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420) = ta;
-            *(u8*)(c + 0x5460) -= 1;
-            if (*(u8*)(c + 0x5460) == 0) {
+            unk_5460 -= 1;
+            if (unk_5460 == 0) {
                 *(int*)(c + 0x541c) = 0x1e;
-                *(int*)(c + 0x5418) = 3;
+                mState = 3;
             } else {
                 u32 r = RandomIntInternal(&data_0209e650);
                 *(int*)(c + 0x541c) = (r >> 8) % 0x18 + 1;
-                *(int*)(c + 0x5418) = 1;
+                mState = 1;
             }
         } else if (*(u8*)(c + 0x546a) != 0) {
             s16 speed = *(s16*)(state + 0x5e);
@@ -746,19 +746,19 @@ void dScMgCup_c::StateShuffle()
                    (`data_ov006_0213c085` where the ROM has `0x0213c084`).
 
                    (2) The increment must be a plain read-modify-write.  Writing
-                   it `*(u16*)(c + 0x545c) += 0x8000;` makes mwcc CSE the field
+                   it `mShuffleAngle += 0x8000;` makes mwcc CSE the field
                    address into a register and drop the displacement, which
                    `opt_common_subs off` (in force over this function) does not
                    undo.  DIFF.
 
                    The split `speed = -speed;` statement is NOT load-bearing, and
                    an earlier revision of this comment wrongly said it was.
-                   Fusing it into the store as `*(s16*)(c + 0x545e) = -speed;`
+                   Fusing it into the store as `mShuffleSpeed = -speed;`
                    still gives 32/32 MATCH -- measured, not reasoned.  It is kept
                    split only because it reads better beside the guard above. */
                 speed = -speed;
-                *(s16*)(c + 0x545e) = speed;
-                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
+                mShuffleSpeed = speed;
+                mShuffleAngle = mShuffleAngle + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -845,7 +845,7 @@ void dScMgCup_c::StatePrepareShuffle()
         unsigned char *q = (unsigned char *)(o + 0x546b);
         *q = *q - 1;
     }
-    *(int *)(o + 0x5000 + 0x418) = 2;
+    mState = 2;
 }
 
 /* [24] 0x020dfd48  _ZN10dScMgCup_c10StateSetupEv  size 0x18c */
@@ -872,34 +872,34 @@ void dScMgCup_c::StateSetup()
 
     score = *(int *)(c + 0xb4);
     if (score < 0xa) {
-        *(unsigned char *)(c + 0x5461) = (unsigned char)score;
+        unk_5461 = (unsigned char)score;
     } else {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         hi = rnd >> 16;
         kind = (hi % 5) + 5;
-        *(unsigned char *)(c + 0x5461) = (unsigned char)kind;
+        unk_5461 = (unsigned char)kind;
     }
 
-    *(unsigned char *)(c + 0x5460) =
-        ((unsigned char *)data_ov006_0213c094)[*(unsigned char *)(c + 0x5461) * 2];
+    unk_5460 =
+        ((unsigned char *)data_ov006_0213c094)[unk_5461 * 2];
 
     if (score > 3) {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         if (rnd & 1) {
-            *(unsigned char *)(c + 0x5468) = 1;
+            unk_5468 = 1;
         } else {
-            *(unsigned char *)(c + 0x5468) = 2;
+            unk_5468 = 2;
         }
     } else if (score == 3) {
-        *(unsigned char *)(c + 0x5468) = 2;
+        unk_5468 = 2;
     }
 
     *(unsigned char *)(c + 0x546b) = 0;
     *(unsigned char *)(c + 0x5469) = 0;
-    *(int *)(c + 0x5418) = 1;
+    mState = 1;
     *(int *)(c + 0x541c) = 0x1e;
     *(unsigned char *)(c + 0x546d) = 0xff;
-    *(int *)(c + 0x5458) = 0;
+    mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
     rnd = (unsigned int)RandomIntInternal(&data_0209e650);
@@ -944,37 +944,37 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
         }
         *(int *)(c + 0xa8) = 2;
         *(int *)(c + 0xac) = *(int *)(c + 0xa8);
-        *(unsigned char *)(c + 0x5000 + 0x462) = 1;
-        *(unsigned char *)(c + 0x5000 + 0x463) = 0;
+        unk_5462[0] = 1;
+        unk_5462[1] = 0;
         if (*(int *)(c + 0xb4) >= 3) {
-            *(unsigned char *)(c + 0x5000 + 0x464) = 2;
+            unk_5462[2] = 2;
         } else {
-            *(unsigned char *)(c + 0x5000 + 0x464) = 0;
+            unk_5462[2] = 0;
         }
-        *(unsigned char *)(c + 0x5000 + 0x468) = 1;
+        unk_5468 = 1;
     } else if (msg == 0) {
         *(int *)(c + 0xa8) = 2;
         *(int *)(c + 0xac) = *(int *)(c + 0xa8);
         if (*(int *)(c + 0xb4) == 3) {
-            *(unsigned char *)(c + 0x5000 + 0x462) = 1;
-            *(unsigned char *)(c + 0x5000 + 0x463) = 0;
-            *(unsigned char *)(c + 0x5000 + 0x464) = 2;
+            unk_5462[0] = 1;
+            unk_5462[1] = 0;
+            unk_5462[2] = 2;
         }
     }
 
     for (i = 0; i < 3; i++) {
         if (*(unsigned char *)(c + i + 0x5000 + 0x462) != 0) {
-            *(int *)(c + i * 4 + 0x5000 + 0x434) = 3;
+            unk_5434[i] = 3;
         } else {
-            *(int *)(c + i * 4 + 0x5000 + 0x434) = 0;
+            unk_5434[i] = 0;
         }
-        *(int *)(c + i * 4 + 0x5000 + 0x440) = 0;
-        *(int *)(c + i * 4 + 0x5000 + 0x44c) = 0;
+        unk_5440[i] = 0;
+        unk_544c[i] = 0;
     }
 
     *(int *)(c + 0x5000 + 0x41c) = 0x3c;
-    *(int *)(c + 0x5000 + 0x418) = 0;
-    *(int *)(c + 0x5000 + 0xdc) = 0;
+    mState = 0;
+    unk_50dc = 0;
     func_ov006_020c2924(c + 0x4f38);
 
     *(unsigned int *)(c + 0xbc) = *(int *)(c + 0xb4);
@@ -1029,7 +1029,7 @@ s32 dScMgCup_c::Render()
     }
 
     /* The two pointer-arithmetic spellings in the call below are load-bearing.
-       Rewriting `((int*)c + k)[0x1510]` as `*(int*)(c + k * 4 + 0x5440)`, or
+       Rewriting `((int*)c + k)[0x1510]` as `unk_5440[k]`, or
        `((struct P8*)c + cup)[0xa7d].b` as `*(int*)(c + cup * 8 + 0x53ec)`, was
        measured here: either one alone takes Render from MATCH to DIFF. b56
        scales the index into the base register from these forms and re-computes
@@ -1038,16 +1038,16 @@ s32 dScMgCup_c::Render()
         cup = list[k];
         func_ov006_020debb4(c + 0x50e8, (char)cup);
         func_ov006_020deed8((int)c,
-            (void *)data_ov006_0213c0d8[*(int*)(c + cup * 4 + 0x5434)][((int*)c + k)[0x1510]].a,
+            (void *)data_ov006_0213c0d8[unk_5434[cup]][((int*)c + k)[0x1510]].a,
             *(int*)(c + cup * 8 + 0x53e8),
             ((struct P8*)c + cup)[0xa7d].b,
-            *(int*)(c + cup * 4 + 0x540c),
+            mOnes[cup],
             *(unsigned char*)(c + cup + 0x5462));
     }
 
-    if (*(int*)(c + 0x5418) == 4 || *(int*)(c + 0x5418) == 5) {
+    if (mState == 4 || mState == 5) {
         Hud_RenderSprite(data_ov006_02139df4, 0x92, 0x20,
-            (*(unsigned char*)(c + 0x5468) == 2) ? 4 : -1, -1);
+            (unk_5468 == 2) ? 4 : -1, -1);
     }
 
     func_ov004_020b2574(*(int*)(c + 0xa8), 1);
