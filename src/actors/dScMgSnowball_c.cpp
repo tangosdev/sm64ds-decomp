@@ -274,6 +274,7 @@ void func_ov006_02125800(void)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02125804(char *c)
 {
+    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
     int i;
     char *p = c;
     for (i = 0; i < 0x20; i++) {
@@ -281,7 +282,7 @@ void func_ov006_02125804(char *c)
             RenderOamBothScreens(
                 data_ov006_02139c6c[*(int *)(p + 0xba30)],
                 *(int *)(p + 0xba14) >> 0xc,
-                ((((*(int *)(p + 0xba18) - *(int *)(p + 0xba1c)) - *(int *)(c + 0xab6c)) >> 0xc) - 0x110),
+                ((((*(int *)(p + 0xba18) - *(int *)(p + 0xba1c)) - self->mScrollY) >> 0xc) - 0x110),
                 -1, 0, 0);
         }
         p += 0x24;
@@ -800,10 +801,11 @@ extern "C" void func_ov006_02125f68(char *p_)
 /* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02126948(char *c) {
+    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
     int t = _ZN4cstd4fdivEii(0xc0000, data_02082314);
     struct V3 v;
     int x, y;
-    if (*(unsigned char *)(c + 0xb9f8) == 0) {
+    if (self->mScreensSwapped == 0) {
         *(int *)(c + 0x4700) = 0;
         *(int *)(c + 0x4704) = 0xd0000;
         *(int *)(c + 0x4708) = 0;
@@ -822,13 +824,13 @@ void func_ov006_02126948(char *c) {
         *(short *)(c + 0x4718) = 0x200;
         Camera_UpdateMatrices(c + 0x4660);
     }
-    y = *(int *)(c + 0xab6c) - *(int *)(c + 0xab3c) + 0x110000;
-    x = *(int *)(c + 0xab38) - 0x80000;
+    y = self->mScrollY - self->mPosY + 0x110000;
+    x = self->mPosX - 0x80000;
     v.x = x; v.y = y; v.z = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, x, y, 0);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(short *)(c + 0xab7c));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short *)(c + 0xab78));
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short *)(c + 0xab7a));
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->unk_ab7a);
     *(struct M4x3Flat *)(c + 0xabc0) = *(struct M4x3Flat *)&data_020a0e68;
 }
 }
@@ -841,8 +843,9 @@ void func_ov006_02126948(char *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02126a98(char *c)
 {
+    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
     int flag = 1;
-    int val = (*(int*)(c + 0xa000 + 0xb6c) >> 12) / 16 - 2;
+    int val = (self->mScrollY >> 12) / 16 - 2;
     int i;
     if (val < 0) val = 0;
     for (i = 0; i < 0x10; i++) {
@@ -852,9 +855,9 @@ void func_ov006_02126a98(char *c)
     {
         int flag2 = 0;
         int k = flag2;
-        int r8 = ((*(int*)(c + 0xa000 + 0xb6c) >> 12) + 0x110) / 16 - 2;
+        int r8 = ((self->mScrollY >> 12) + 0x110) / 16 - 2;
         for (; flag2 < 0x10; flag2++) {
-            if (r8 >= *(int*)(c + 0xb000 + 0xa08)) return;
+            if (r8 >= self->mScrollLimit) return;
             func_ov006_02126b4c(c, r8, k);
             r8++;
         }

@@ -195,8 +195,7 @@ daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daNknk_c13OnYoshiTryEatEv
 s32 daNknk_c::OnYoshiTryEat() {
-    char* c = (char*)this;
-  if(*(int*)(c+0x394)==0) return 6;
+  if(mModelIndex==0) return 6;
   return 5;
 }
 
@@ -496,6 +495,7 @@ int daNknk_c::CleanupResources()
 // @symbol func_ov062_02118de8
 extern "C" void func_ov062_02118de8(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     *(int*)(c + 0x98) = 0;
     if (*(unsigned char*)(c + 0x398) == 2) {
         if (_ZN9Animation8FinishedEv(c + 0x350) == 0) return;
@@ -510,10 +510,10 @@ extern "C" void func_ov062_02118de8(char *c)
         return;
     }
     func_ov062_02117994(c, 0);
-    if (*(int*)(c + 0x390) == 1)
-        *(int*)(c + 0x38c) = 5;
+    if (self->mKoopaVariant == 1)
+        self->mState = 5;
     else
-        *(int*)(c + 0x38c) = 2;
+        self->mState = 2;
     if (((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x8000) {
         int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
         *(short*)(c + 0x3c2) = *(short*)(c + 0x94) - r;
@@ -532,6 +532,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: the file-scope view is (void*) */
 void func_ov062_02118cdc(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     if (*(unsigned char*)(c+0x3cc)) {
         *(unsigned char*)(c+0x3cc) = (_Z14ApproachLinearRsss((short*)(c+0x94), *(short*)(c+0x3c2), 0x200) ^ 1) != 0;
     } else {
@@ -544,7 +545,7 @@ void func_ov062_02118cdc(char *c)
     if (*(unsigned char*)(c+0x398) == 1) {
         func_ov062_02117724(c, 2, 8, 0x13, 0x19);
     }
-    switch (*(unsigned short*)(c+0x3c4)) {
+    switch (self->mWalkState) {
     case 0: func_ov062_021181a0(c); break;
     case 1: func_ov062_0211811c(c); break;
     case 2: func_ov062_021180d4(c); break;
@@ -561,14 +562,15 @@ void func_ov062_02118cdc(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: the file-scope view is (void*) */
 void func_ov062_02118b4c(char *self) {
+    daNknk_c *obj = (daNknk_c *)self;
     if (*(u8 *)(self + 0x398) == 3)
         func_ov062_02117724(self, 2, 5, 8, 0xb);
 
-    if (*(int *)(self + 0x394) != 0) {
+    if (obj->mModelIndex != 0) {
         if (*(u16 *)(self + 0x100) > 0x1e && func_ov062_02117b60(self) > 0x320000) {
             if (_Z14ApproachLinearRiii((int *)(self + 0x98), 0, 0x1000) == 0)
                 return;
-            *(int *)(self + 0x38c) = 1;
+            obj->mState = 1;
             func_ov062_02117994(self, 2);
             return;
         }
@@ -584,7 +586,7 @@ void func_ov062_02118b4c(char *self) {
     if (*(u16 *)(self + 0x100) > 0x1e && *(int *)(self + 0x3b8) > 0x320000) {
         if (_Z14ApproachLinearRiii((int *)(self + 0x98), 0, 0x1000) == 0)
             return;
-        *(int *)(self + 0x38c) = 1;
+        obj->mState = 1;
         func_ov062_02117994(self, 2);
         return;
     }
@@ -604,6 +606,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: a conflicting file-scope view exists */
 void func_ov062_02118a50(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     if (*(int *)(c + 0x98) != 0) {
         if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0) {
             void *sr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x144);
@@ -628,7 +631,7 @@ void func_ov062_02118a50(char *c)
         func_ov062_021175c0(c);
     if (_ZN9Animation8FinishedEv(c + 0x350) == 0)
         return;
-    *(int *)(c + 0x38c) = 1;
+    self->mState = 1;
     func_ov062_02117994(c, 2);
 }
 }
@@ -660,6 +663,7 @@ extern "C" void func_ov062_02118a00(void *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02118718(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     int dist = 0x7fffffff;
     char *other;
 
@@ -699,7 +703,7 @@ void func_ov062_02118718(char *c)
                  (short)(*(short*)(c + 0x94) + 0x8000)) < 0x2000)) {
             _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x3c2), 0x600);
         } else {
-            if (*(int*)(c + 0x394) != 0)
+            if (self->mModelIndex != 0)
                 _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x3c0), 0x600);
             else
                 _Z14ApproachLinearRsss((short*)(c + 0x94), (short)(*(short*)(c + 0x3c0) + 0x8000), 0x600);
@@ -714,7 +718,7 @@ void func_ov062_02118718(char *c)
         return;
 
     *(short*)(c + 0x94) = *(short*)(c + 0x3c2);
-    *(int*)(c + 0x38c) = 2;
+    self->mState = 2;
     *(int*)(((int)c + 0x98)) += *(int*)(c + 0x98) / 5;
     *(int*)(c + 0xa8) = dist / 30;
     func_ov062_02117994(c, 6);
@@ -729,9 +733,10 @@ void func_ov062_02118718(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02118588(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     void *found = 0;
     int match = 0;
-    if (*(int *)(c + 0x38c) == 2) {
+    if (self->mState == 2) {
         if (*(unsigned int *)(c + 0x134) != 0) {
             found = dActor_c::FindWithID(*(unsigned int *)(c + 0x134));
             if (found != 0) {
@@ -744,8 +749,8 @@ void func_ov062_02118588(char *c)
     }
     if (match != 0) {
         int *hp = (int *)(c + 0x98);
-        *(int *)(c + 0x390) = 0;
-        *(int *)(c + 0x38c) = 4;
+        self->mKoopaVariant = 0;
+        self->mState = 4;
         *hp = *hp / 2;
         _ZN7fBase_c18MarkForDestructionEv(found);
         return;
@@ -771,12 +776,12 @@ void func_ov062_02118588(char *c)
         func_ov062_021175c0(c);
     if (_ZN9Animation8FinishedEv(c + 0x350) == 0)
         return;
-    if (*(int *)(c + 0x394) != 0) {
-        *(int *)(c + 0x38c) = 5;
+    if (self->mModelIndex != 0) {
+        self->mState = 5;
         func_ov062_02117994(c, 0);
         return;
     }
-    *(int *)(c + 0x38c) = 1;
+    self->mState = 1;
     func_ov062_02117994(c, 3);
 }
 }
@@ -788,6 +793,7 @@ void func_ov062_02118588(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_021183e0(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     int dist = 0x7fffffff;
     char *other;
 
@@ -811,7 +817,7 @@ void func_ov062_021183e0(char *c)
 
     if (dist < 0xc8000 && _ZN8dActor_c14GetSubtractionEss(c, *(short*)(c + 0x3c2), *(short*)(c + 0x94)) < 0xc00) {
         *(short*)(c + 0x94) = *(short*)(c + 0x3c2);
-        *(int*)(c + 0x38c) = 2;
+        self->mState = 2;
         *(int*)(c + 0x98) = 0x18000;
         *(int*)(c + 0xa8) = dist / 30;
         func_ov062_02117994(c, 6);
@@ -819,7 +825,7 @@ void func_ov062_021183e0(char *c)
         return;
     }
 
-    if (*(int*)(c + 0x390) == 2)
+    if (self->mKoopaVariant == 2)
         _Z14ApproachLinearRiii((int*)(c + 0x98), 0x2000, 0x4cc);
     else
         _Z14ApproachLinearRiii((int*)(c + 0x98), 0x3000, 0x4cc);
@@ -906,7 +912,8 @@ void func_ov062_02118258(char* c, int lim)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 void func_ov062_021181a0(char *c) {
-    if (*(int*)(c + 0x390) == 2) {
+    daNknk_c *self = (daNknk_c *)c;
+    if (self->mKoopaVariant == 2) {
         _Z14ApproachLinearRiii((int*)(c + 0x98), 0x2000, 0x4cc);
     } else {
         _Z14ApproachLinearRiii((int*)(c + 0x98), 0x3000, 0x4cc);
@@ -970,14 +977,15 @@ void func_ov062_021180d4(void *c) {
 // @symbol func_ov062_02118058
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02118058(char *c){
+    daNknk_c *self = (daNknk_c *)c;
   void *o=*(void**)(c+0x3b4);
   int d=*(int*)(c+0x3b8);
   if(o!=0) d=Vec3_Dist(c+0x5c, (char*)o+0x5c);
   if(d>=0x12c000) return;
   int s=_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c+0x3c0), *(short*)(c+0x94));
   if(s>=0x3000) return;
-  if(*(int*)(c+0x390)==1) *(int*)(c+0x38c)=1;
-  else *(int*)(c+0x38c)=3;
+  if(self->mKoopaVariant==1) self->mState=1;
+  else self->mState=3;
   func_ov062_02117994(c, 3);
 }
 }
@@ -1151,9 +1159,10 @@ tail:
 /* recovered: shared common types */
 namespace tu {  /* namespaced: a conflicting file-scope view exists */
 extern "C" void func_ov062_02117bf4(char* c){
+    daNknk_c *self = (daNknk_c *)c;
     func_0201267c(0xed, (const Vector3*)(c + 0x74));
-    *(int*)(c+0x390) = 1;
-    *(int*)(c+0x38c) = 3;
+    self->mKoopaVariant = 1;
+    self->mState = 3;
     *(int*)(c+0x98) = 0x14000;
     func_ov062_02117994(c, 7);
     {
@@ -1163,9 +1172,9 @@ extern "C" void func_ov062_02117bf4(char* c){
         v.x = *(int*)(c+0x5c);
         v.y = zz;
         v.z = yy;
-        dActor_c::Spawn(0x11d, *(unsigned int*)(c+0x394), v, 0, *(signed char*)(c+0xcc), -1);
+        dActor_c::Spawn(0x11d, self->mModelIndex, v, 0, *(signed char*)(c+0xcc), -1);
     }
-    *(short*)(c+0x3ca) = 0xa;
+    self->mInvincibleTimer = 0xa;
     func_0201267c(1, (const Vector3*)(c + 0x74));
 }
 }  /* namespace tu */
@@ -1213,7 +1222,8 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: a conflicting file-scope view exists */
 void func_ov062_02117b48(char *p)
 {
-    *(int *)(p + 0x38c) = 0;
+    daNknk_c *self = (daNknk_c *)p;
+    self->mState = 0;
     *(int *)(p + 0xa8) = 81920;
     *(int *)(p + 0x98) = 0;
 }
@@ -1226,7 +1236,8 @@ void func_ov062_02117b48(char *p)
 // @symbol func_ov062_02117acc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02117acc(char *c){
-  switch(*(int*)(c+0x38c)){
+    daNknk_c *self = (daNknk_c *)c;
+  switch(self->mState){
   case 0: func_ov062_02118a00(c); break;
   case 1: func_ov062_02118de8(c); break;
   case 2: func_ov062_02118cdc(c); break;
@@ -1242,7 +1253,8 @@ void func_ov062_02117acc(char *c){
 // @symbol func_ov062_02117a3c
 extern "C" void func_ov062_02117a3c(char *c)
 {
-    switch (*(int *)(c + 0x38c)) {
+    daNknk_c *self = (daNknk_c *)c;
+    switch (self->mState) {
     case 0: func_ov062_02118a00(c); break;
     case 1: func_ov062_02118718(c); break;
     case 2: func_ov062_02118588(c); break;
@@ -1360,12 +1372,13 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: conflicting file-scope views exist */
 void func_ov062_021175c0(char *c)
 {
+    daNknk_c *self = (daNknk_c *)c;
     volatile Vector3 pos;
     int t;
     u32 spawned;
     void *particle;
 
-    if (*(unsigned char *)(c + 0x3ce) != 0) return;
+    if (self->mLandingDustTimer != 0) return;
 
     pos.x = *(int *)(c + 0x5c);
     pos.y = *(int *)(c + 0x60);
@@ -1387,7 +1400,7 @@ void func_ov062_021175c0(char *c)
 
     _ZN8Particle19SetSelfDestructFlagEj(0xb2);
 
-    *(unsigned char *)(c + 0x3ce) = 0xa;
+    self->mLandingDustTimer = 0xa;
     if (spawned == 0) return;
 
     particle = _ZN8Particle6System12FromUniqueIDEj(spawned);

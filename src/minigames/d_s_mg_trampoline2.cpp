@@ -630,14 +630,15 @@ int dScMgTrampoline2_c::OnTurnIntoEgg(int /* mode */)
 // @symbol func_ov006_02124228
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02124228(char* c) {
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)c;
     short a, b;
     *(int*)(c + 0x7b84) = 0x5a;
     a = data_ov006_0212e044;
-    *(short*)(c + 0x7ba0) = a;
+    self->unk_7ba0 = a;
     b = data_ov006_0212e048;
-    *(short*)(c + 0x7ba2) = b;
-    *(short*)(c + 0x7b9c) = a;
-    *(short*)(c + 0x7b9e) = b;
+    self->unk_7ba2 = b;
+    self->unk_7b9c = a;
+    self->unk_7b9e = b;
     *(int*)(c + 0x7b8c) = 0;
     *(int*)(c + 0x7b90) = 0x3e8;
     *(struct P2*)(c + 0x5004) = data_ov006_0213fbd8;
@@ -651,6 +652,7 @@ void func_ov006_02124228(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02124088(char *c)
 {
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)c;
     int counter;
 
     func_ov006_020d0ac0();
@@ -678,16 +680,16 @@ void func_ov006_02124088(char *c)
 
     {
         int t = _ZN4cstd4fdivEii(counter << 12, 0x5a000);
-        volatile s16 old9c = *(s16 *)(c + 0x7b9c);
-        volatile s16 old9e = *(s16 *)(c + 0x7b9e);
+        volatile s16 old9c = self->unk_7b9c;
+        volatile s16 old9e = self->unk_7b9e;
         int mixRaw = data_ov006_0212e050 * t + data_ov006_0212e058 * (0x1000 - t);
-        *(s16 *)(c + 0x7b9c) = (s16)(mixRaw >> 12);
-        *(s16 *)(c + 0x7b9e) = data_ov006_0212e048;
+        self->unk_7b9c = (s16)(mixRaw >> 12);
+        self->unk_7b9e = data_ov006_0212e048;
 
-        *(s16 *)(c + 0x7b9e) +=
+        self->unk_7b9e +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800) << 2) >> 12);
 
-        func_ov004_020ae5c4((int)c, old9c, old9e, *(s16 *)(c + 0x7b9c), *(s16 *)(c + 0x7b9e), 2, 0xc);
+        func_ov004_020ae5c4((int)c, old9c, old9e, self->unk_7b9c, self->unk_7b9e, 2, 0xc);
 
         *(int *)(c + 0x7b8c) = func_02012468(*(int *)(c + 0x7b8c), 2, 0x1b0, 2, 0,
                                               func_020126e8(mixRaw), 0, 0);
@@ -829,6 +831,7 @@ extern "C" void func_ov006_02123bf4(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02123b24(char *c)
 {
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)c;
     int idx, b;
     *(int *)(c + 0x7b84) -= 1;
     if (*(int *)(c + 0x7000 + 0xb84) != 0)
@@ -848,7 +851,7 @@ void func_ov006_02123b24(char *c)
         h = 0;
         MultiStore16(h, (char *)r, 0x6000);
     }
-    *(short *)(c + 0x7ba8) = 1;
+    self->unk_7ba8 = 1;
     {
         int w0 = data_ov006_0213fbd0[0];
         int w1 = data_ov006_0213fbd0[1];

@@ -401,7 +401,8 @@ extern "C" {
 extern int data_ov062_0211ddf8[];
 // @symbol func_ov062_02116c78
 int func_ov062_02116c78(char *c){
-  *(short*)(c+0x3e6) = 0x3c;
+    daHolhei_c *self = (daHolhei_c *)c;
+  self->unk_3e6 = 0x3c;
   *(int*)(c+0x3f0) = 0;
   *(int*)(c+0x35c) = 0x1000;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c+0x300), (void*)data_ov062_0211ddf8[1], 0, 0x1000, 0);
@@ -416,8 +417,9 @@ int func_ov062_02116c78(char *c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov062_02116bf8
 int func_ov062_02116bf8(char* c){
+    daHolhei_c *self = (daHolhei_c *)c;
   _Z14ApproachLinearRiii((int*)(c+0x98), 0, 0x2000);
-  if(*(u16*)(c+0x3e6) == 0){
+  if(self->unk_3e6 == 0){
     ApproachAngle((s16*)(c+0x94), *(s16*)(c+0x3f4), 0xa, 0x200, 0x100);
     if(AngleDiff(*(s16*)(c+0x3f4), *(s16*)(c+0x8e)) < 0x100){
       ::daHolhei_c_ChangeState(c, data_ov062_0211dee0);
@@ -451,6 +453,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov062_02116a08
     int func_ov062_02116a08(char* c)
     {
+    daHolhei_c *self = (daHolhei_c *)c;
         struct { int vd0[3]; int vd1[3]; } L;
         int r;
         char* pl;
@@ -468,7 +471,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
         Vec3_Dist(p0, p1);
 
         r = func_ov062_02115f84(c);
-        if (r != 0 || *(unsigned char *)(c + 0x3e4) == 1) {
+        if (r != 0 || self->mEdgeStop == 1) {
             if (r != 2) {
                 ::daHolhei_c_ChangeState(c, data_ov062_0211df00);
             } else {
@@ -486,7 +489,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
             _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(unsigned int *)(c + 0x3ec), 3, 0x18a, c + 0x74, 0);
 
-        if (pl != 0 && *(unsigned short *)(c + 0x3e8) == 0) {
+        if (pl != 0 && self->unk_3e8 == 0) {
             pos = (int *)(((int)pl + 0x5c));
             L.vd1[0] = pos[0];
             L.vd1[1] = pos[1];
@@ -512,9 +515,10 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov062_02116980
 int func_ov062_02116980(char *c) {
-    *(int*)(c+0x5c) = *(int*)(c+0x3d8);
-    *(int*)(c+0x60) = *(int*)(c+0x3dc);
-    *(int*)(c+0x64) = *(int*)(c+0x3e0);
+    daHolhei_c *self = (daHolhei_c *)c;
+    *(int*)(c+0x5c) = self->mPrevPosX;
+    *(int*)(c+0x60) = self->mPrevPosY;
+    *(int*)(c+0x64) = self->mPrevPosZ;
     *(int*)(c+0x98) = 0;
     if (AngleDiff(*(short*)(c+0x3f4), Vec3_HorzAngle(c+0x5c, c+0x3c0)) <= 0x2000) {
         *(short*)(c+0x3f4) = *(short*)(c+0x94) - 0x1000;
@@ -532,9 +536,10 @@ int func_ov062_02116980(char *c) {
 extern "C" {
 // @symbol func_ov062_02116894
 int func_ov062_02116894(char* c){
+    daHolhei_c *self = (daHolhei_c *)c;
   if(*(unsigned short*)(c+0x100) != 0) return 1;
   if(*(int*)(c+0x98) == 0) goto angle;
-  if(func_ov062_02115f84(c) != 0 || *(unsigned char*)(c+0x3e4) == 1){
+  if(func_ov062_02115f84(c) != 0 || self->mEdgeStop == 1){
     *(short*)((c+0x300)+0xf4) = *(short*)(c+0x94) - 0x2000;
     goto angle;
   }
@@ -572,6 +577,7 @@ s16 func_ov062_02116850(void* c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021167c0
 extern "C" int func_ov062_021167c0(char* c){
+    daHolhei_c *self = (daHolhei_c *)c;
     ApproachAngle(c + 0x94, *(short*)(c + 0x3f4), 0xa, 0x200, 0x100);
     if (AngleDiff(*(short*)(c + 0x3f4), *(short*)(c + 0x8e)) < 0x100) {
         *(int*)(c + 0x98) = 0xa000;
@@ -579,7 +585,7 @@ extern "C" int func_ov062_021167c0(char* c){
         *(short*)(c + 0x100) = 0x14;
     }
     if (*(unsigned short*)(c + 0x100) == 0) {
-        *(short*)(c + 0x3e8) = 0x1e;
+        self->unk_3e8 = 0x1e;
         ::daHolhei_c_ChangeState(c, data_ov062_0211dee0);
     }
     return 1;
@@ -606,6 +612,7 @@ int func_ov062_02116784(char *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov062_021165e8(char* c)
 {
+    daHolhei_c *self = (daHolhei_c *)c;
     char* player;
     int r;
     volatile struct Vector3 pos;
@@ -613,7 +620,7 @@ int func_ov062_021165e8(char* c)
 
     player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     r = func_ov062_02115f84(c);
-    if (r != 0 || *(unsigned char*)(c + 0x3e4) == 1) {
+    if (r != 0 || self->mEdgeStop == 1) {
         if (r != 2)
             ::daHolhei_c_ChangeState(c, data_ov062_0211df00);
         else
@@ -635,9 +642,9 @@ int func_ov062_021165e8(char* c)
         if (AngleDiff(*(short*)(c + 0x3f4), *(short*)(c + 0x8e)) < 0x200) {
             *(int*)(c + 0x98) = 0x1e000;
             *(int*)(c + 0x3f0) = 1;
-            *(int*)(c + 0x3cc) = pos.x;
-            *(int*)(c + 0x3d0) = pos.y;
-            *(int*)(c + 0x3d4) = pos.z;
+            self->mChasePosX = pos.x;
+            self->mChasePosY = pos.y;
+            self->mChasePosZ = pos.z;
         }
     }
 
@@ -680,13 +687,14 @@ int func_ov062_021165e0(void)
 // @symbol func_ov062_021164e8
 extern "C" int func_ov062_021164e8(char *c)
 {
+    daHolhei_c *self = (daHolhei_c *)c;
     int flag;
     int t;
-    if (*(unsigned char *)(c + 0x3e5) == 0) {
+    if (self->unk_3e5 == 0) {
         t = (*(int *)(c + 0xb0) & 0x4000) != 0;
         if (t) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void *)(c + 0x300), (void *)data_ov062_0211de00[1], 0, 0x1000, 0);
-            *(unsigned char *)(c + 0x3e5) = 1;
+            self->unk_3e5 = 1;
         }
     }
     flag = *(int *)(c + 0xb0);

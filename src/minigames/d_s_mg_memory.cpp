@@ -388,7 +388,7 @@ void dScMgMemory_c::InitPlayers()
 
     entry = self;
     i = 0;
-    *(unsigned char *)(self + 0x533b) = (unsigned char)n;
+    mMaxMisses = (unsigned char)n;
     if (n <= 0)
         return;
 
@@ -440,9 +440,9 @@ void dScMgMemory_c::JudgePair()
     char *self = (char*)this;
     int a, b;
     unsigned char *ea, *eb;
-    if (*(unsigned char *)(self + 0x5338) < 2) return;
-    a = *(unsigned char *)(self + 0x532e);
-    b = *(unsigned char *)(self + 0x532f);
+    if (mSelectedCount < 2) return;
+    a = mSelectedCards[0];
+    b = mSelectedCards[1];
     ea = (unsigned char *)(self + 0x51bc + a * 0x18);
     if (*ea != 4) return;
     eb = (unsigned char *)(self + 0x51bc + b * 0x18);
@@ -455,16 +455,16 @@ void dScMgMemory_c::JudgePair()
         func_02012790(0x26);
         Sound::PlayBank2_2D(0x13d);
         (*(unsigned char *)(((int)self + 0x5337)))++;
-        *(unsigned char *)(self + 0x5338) = 0;
+        mSelectedCount = 0;
     } else {
         func_02012790(0xe);
         (*(unsigned char *)(((int)self + 0x533a)))++;
         func_ov004_020b5dd4();
         Sound::PlayBank2_2D(0x13e);
-        if (*(unsigned char *)(self + 0x533a) < *(unsigned char *)(self + 0x533b)) {
+        if (mMisses < mMaxMisses) {
             *ea = 5;
             *eb = 5;
-            *(unsigned char *)(self + 0x5338) = 0;
+            mSelectedCount = 0;
         }
     }
 }

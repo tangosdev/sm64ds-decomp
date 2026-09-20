@@ -211,9 +211,10 @@ typedef struct { int w[12]; } M48;
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_021184c0(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -226,6 +227,7 @@ int func_ov066_021184c0(char *p)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_021184e0(char *c)
 {
+    Eyerok *self = (Eyerok *)c;
     if (func_ov066_021168ec(c) != 0 && func_ov066_021168ec(c) != 4) {
         *(int *)(c + 0xb0) = 0;
         func_ov066_021162e8((int *)c);
@@ -234,7 +236,7 @@ int func_ov066_021184e0(char *c)
     func_ov066_0211632c(c);
     switch (*(int *)(c + 0x4a0)) {
     case 0:
-        if (data_ov066_0211ae0c == *(int *)(c + 0x49c)) {
+        if (data_ov066_0211ae0c == self->mPartIdx) {
             int *p = (int *)(c + 0x4a0);
             *(int *)(c + 0x9c) = -0x14000;
             *(int *)(c + 0xa8) = 0x64000;
@@ -243,13 +245,13 @@ int func_ov066_021184e0(char *c)
         break;
     case 1:
         if (*(int *)(c + 0x9c) != 0) {
-            if (*(int *)(c + 0x4a8) >= *(int *)(c + 0x60)) {
-                *(int *)(c + 0x60) = *(int *)(c + 0x4a8);
+            if (self->mRestPosY >= *(int *)(c + 0x60)) {
+                *(int *)(c + 0x60) = self->mRestPosY;
                 *(int *)(c + 0xa8) = 0;
                 *(int *)(c + 0x9c) = 0;
                 func_ov066_02116ac4(c, 0x7d0000);
-                if ((data_ov066_0211ae0c & *(int *)(c + 0x49c)) != 0)
-                    data_ov066_0211ae0c ^= *(int *)(c + 0x49c);
+                if ((data_ov066_0211ae0c & self->mPartIdx) != 0)
+                    data_ov066_0211ae0c ^= self->mPartIdx;
                 *(int *)(c + 0x4a0) = 0;
             }
         }
@@ -266,9 +268,10 @@ int func_ov066_021184e0(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_021185e4(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -298,9 +301,10 @@ int func_ov066_02118604(void *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118658(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -313,10 +317,11 @@ int func_ov066_02118658(char *p)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118678(char* c)
 {
+    Eyerok *self = (Eyerok *)c;
     if (*(int*)(c + 0x494) == 0) {
         if (data_ov066_0211ae04 == 2) {
             *(int*)(c + 0x3bc) = 0x1000;
-            if (*(int*)(c + 0x49c) == 1) {
+            if (self->mPartIdx == 1) {
                 *(int*)(c + 0xa8) = 0x2d000;
                 *(int*)(c + 0x9c) = -0x2000;
             } else {
@@ -331,7 +336,7 @@ int func_ov066_02118678(char* c)
 
     Vec3_ApproachHorz(c + 0x5c, c + 0x4a4, 0x14000);
     if (*(int*)(c + 0x9c) != 0) {
-        int v = *(int*)(c + 0x4a8);
+        int v = self->mRestPosY;
         if (v >= *(int*)(c + 0x60)) {
             *(int*)(c + 0x60) = v;
             *(int*)(c + 0xa8) = 0;
@@ -344,7 +349,7 @@ int func_ov066_02118678(char* c)
         && Vec3_HorzDist(c + 0x5c, c + 0x4a4) <= 0x14000
         && _ZN9Animation8FinishedEv(c + 0x3b0)) {
         _ZN4dBgW6EnableEP8dActor_c(c + 0x674, c);
-        data_ov066_0211ae0c |= *(int*)(c + 0x49c);
+        data_ov066_0211ae0c |= self->mPartIdx;
         func_ov066_02119454(c, &data_ov066_0211b06c);
     }
     return 1;
@@ -357,7 +362,8 @@ int func_ov066_02118678(char* c)
 // @symbol func_ov066_021187c8
 extern "C" {
 int func_ov066_021187c8(char* c){
-  if(*(int*)(c+0x49c) == 2){
+    Eyerok *self = (Eyerok *)c;
+  if(self->mPartIdx == 2){
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c+0x360, (void*)data_ov066_0211ae74[1], 4, 0x40000000, 0x1000, 0);
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c+0x448, (void*)data_ov066_0211ae3c[1], 0x40000000, 0x1000, 0);
   } else {
@@ -377,8 +383,9 @@ int func_ov066_021187c8(char* c){
 // @symbol func_ov066_021188b0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_021188b0(char* c){
+    Eyerok *self = (Eyerok *)c;
   if(data_ov066_0211abe0==0){
-    *(unsigned short*)(c+0x400+0xd2)=0x64;
+    self->mTimer2=0x64;
     func_ov066_02119454(c, &data_ov066_0211b0ac);
     return 1;
   }
@@ -397,9 +404,10 @@ int func_ov066_021188b0(char* c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118934(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -429,9 +437,10 @@ s32 func_ov066_02118954(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_021189a0(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -462,9 +471,10 @@ int func_ov066_021189c0(char* c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118a30(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -502,9 +512,10 @@ s32 func_ov066_02118a50(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118b08(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -542,9 +553,10 @@ s32 func_ov066_02118b28(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118be0(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -582,9 +594,10 @@ s32 func_ov066_02118c00(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118cb8(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 30;
+    self->mTimer1 = 30;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -600,13 +613,14 @@ typedef struct { int y; } Pmf44;
 extern "C" {
 
 int func_ov066_02118cdc(char* c) {
+    Eyerok *self = (Eyerok *)c;
     if (func_ov066_021168b0(c) == 0)
         return 1;
-    if (*(unsigned short*)(c + 0x4d0) == 0) {
+    if (self->mTimer1 == 0) {
         if (func_ov066_02116a68(c) != (int)0xff3ae000) {
             if (data_ov066_0211ae0c == 0) {
                 data_ov066_0211ae04 = 3;
-                *(unsigned short*)(c + 0x4d2) = 0x1e;
+                self->mTimer2 = 0x1e;
                 func_ov066_02119454(c, &data_ov066_0211b0cc);
             }
             return 1;
@@ -636,9 +650,10 @@ int func_ov066_02118cdc(char* c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_02118de0(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 30;
+    self->mTimer1 = 30;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -715,9 +730,10 @@ int func_ov066_02118e04(void* self)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_0211901c(char *p)
 {
+    Eyerok *self = (Eyerok *)p;
     *(int *)(p + 0x494) = 0;
     *(int *)(p + 0x498) = 0;
-    *(short *)(p + 0x4d0) = 0;
+    self->mTimer1 = 0;
     *(int *)(p + 0x4a0) = 0;
     return 1;
 }
@@ -731,11 +747,12 @@ int func_ov066_0211901c(char *p)
 /* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_0211903c(char* self) {
+    Eyerok *obj = (Eyerok *)self;
     struct Vector3 v1, v2, in, out, star;
     void* cam;
     int msgid;
 
-    if (*(unsigned short*)(self + 0x4d2)) return 1;
+    if (obj->mTimer2) return 1;
 
     cam = data_0209f318;
     if (*(int*)(self + 0x4a0) == 0) {
@@ -806,7 +823,7 @@ int func_ov066_0211903c(char* self) {
                     star.x = 0;
                     star.y = (int)0xffa24000;
                     star.z = (int)0xff1b4000;
-                    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x673), *(unsigned char*)(self + 0x672), &star, 4);
+                    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x673), obj->mStarId, &star, 4);
                     _ZN7fBase_c18MarkForDestructionEv(self);
                 }
             }
@@ -906,21 +923,22 @@ extern "C" {
 
 void func_ov066_021194fc(char* c)
 {
+    Eyerok *self = (Eyerok *)c;
     int v[3];
     Vec3_Asr(v, c + 0x5c, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
-    if (*(int*)(c + 0x49c) == 0)
+    if (self->mPartIdx == 0)
         *(M48*)(c + 0x3ec) = *(M48*)data_020a0e68;
     else
         *(M48*)(c + 0x37c) = *(M48*)data_020a0e68;
-    if (*(int*)(c + 0x49c) == 0)
+    if (self->mPartIdx == 0)
         return;
-    if (*(int*)(c + 0x4a8) >= *(int*)(c + 0x60))
+    if (self->mRestPosY >= *(int*)(c + 0x60))
         return;
     {
         int d;
-        if (*(int*)(c + 0x49c) == 2)
+        if (self->mPartIdx == 2)
             d = 0x64000;
         else
             d = -0x64000;

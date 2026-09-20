@@ -412,10 +412,10 @@ void dScMgFlower_c::OnYoshiTryEat(int /* arg */)
 {
     char *self = (char *)this;
 
-    if (*(int *)(self + 0x5fe4) <= 0x14) {
+    if (mHoldTimer <= 0x14) {
         (*(volatile int *)(self + 0x5fe4))++;
     } else {
-        *(int *)(self + 0x5fe4) = 0;
+        mHoldTimer = 0;
     }
     func_ov006_020c3bc8(self + 0x51f8);
     func_ov006_0212a764(self);
@@ -447,27 +447,27 @@ s32 dScMgFlower_c::Render()
     int (*iarr)[8] = (int (*)[8])self;
     u16 (*harr)[0x10] = (u16 (*)[0x10])self;
 
-    *(u16*)(self + 0x5ff4) += 0xc0;
+    mBgScrollPhase += 0xc0;
     {
-        int v = data_02082214[(*(u16*)(self + 0x5ff4) >> 4) << 1];
+        int v = data_02082214[(mBgScrollPhase >> 4) << 1];
         int t = v + 0x80;
         int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
         SetSubBg2Offset(off, off + 8);
     }
     {
-        int v = data_02082214[(*(u16*)(self + 0x5ff4) >> 4) << 1];
+        int v = data_02082214[(mBgScrollPhase >> 4) << 1];
         int t = 0x80 - v;
         int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
         SetSubBg3Offset(off, off);
     }
-    func_ov004_020afdd0(data_ov006_0213ab94[*(int*)(self + 0x5fec)], 0x80, 0x60, -1, 1);
+    func_ov004_020afdd0(data_ov006_0213ab94[mFaceSprite], 0x80, 0x60, -1, 1);
 
     for (i = 0; i < 0x16; i++) {
         if (barr[i][0x4f38] != 0) {
             struct S2 loc = *(struct S2*)data_ov006_0213abe0;
             int a4 = 1;
             loc.a = (loc.a & 0xc1fffcff) | 0x100;
-            if (*(int*)(self + 0x5fc8) == i)
+            if (mHeldPetal == i)
                 a4 = 0;
             func_ov004_020af770(
                 &loc,
@@ -754,7 +754,7 @@ s32 dScMgFlower_c::InitResources()
     char *c = (char *)this;
     int h;
 
-    *(int *)(c + 0x5ff0) = func_ov004_020ad8b8();
+    mScore = func_ov004_020ad8b8();
 
     data_0208ee44 = 1;
 
@@ -822,9 +822,9 @@ s32 dScMgFlower_c::InitResources()
     data_ov004_020bc86c = 0xc0;
     data_ov004_020bc8a4 = 0xa0;
 
-    *(int *)(c + 0x5fdc) = 0;
-    *(int *)(c + 0x5fe0) = 0;
-    *(int *)(c + 0x5fe4) = 0;
+    mWinStreak = 0;
+    mLoseStreak = 0;
+    mHoldTimer = 0;
     func_ov006_0212a764(c);
 
     data_0209d45c |= 1;

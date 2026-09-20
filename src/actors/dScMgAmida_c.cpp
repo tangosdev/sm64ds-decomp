@@ -852,7 +852,7 @@ s32 dScMgAmida_c::Render()
 {
     char *self = (char *)this;
 
-    *(u16*)(self + 0x53bc) += 0xc0;
+    mBgScrollPhase += 0xc0;
     {
         u8 *p2 = (u8*)(self + 0x5300);
         u16 idx = *(u16*)(p2 + 0xbc);
@@ -862,13 +862,13 @@ s32 dScMgAmida_c::Render()
     }
     func_ov004_020b1e34(self, 0xe0, 0x14, 1);
 
-    if (*(int*)(self + 0x46d0) == 3 && *(int*)(self + 0x53d0) == 0) {
+    if (mState == 3 && mEndDelayTimer == 0) {
         data_0209d45c &= ~1;
         data_0209d454 &= ~1;
-        if (((Base*)self)->m_90() == 0 && *(u8*)(self + 0x46d4) == 1) {
+        if (((Base*)self)->m_90() == 0 && mFinished == 1) {
             int i;
             for (i = 0; i < 4; i++) {
-                if (*(int*)(self + i * 4 + 0x4714) != 0) {
+                if (unk_4714[i] != 0) {
                     int *counterA = (int*)(self + i * 4 + 0x539c);
                     (*counterA)++;
                     Buf14 local = data_ov006_0213b880;
@@ -881,9 +881,9 @@ s32 dScMgAmida_c::Render()
                             *counterB = 0;
                     }
                     func_ov004_020afdd0(
-                        data_ov006_0213a458[*(int*)(self + i * 4 + 0x53ac)],
-                        *(int*)(self + i * 8 + 0x4724) >> 12,
-                        (*(int*)(self + i * 8 + 0x4728) >> 12) - 4,
+                        data_ov006_0213a458[mLaneAnimFrame[i]],
+                        mLanePos[i][0] >> 12,
+                        (mLanePos[i][1] >> 12) - 4,
                         -1,
                         0);
                 }

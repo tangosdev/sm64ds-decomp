@@ -189,23 +189,24 @@ int daDkk_c::Behavior()
  * emits. Earthquake / NewSimple stay mangled (Fix12-by-value). */
 extern "C" void func_ov025_02111a84(char *c)
 {
+    daDkk_c *self = (daDkk_c *)c;
     Vector3 v[2];
     ((daDkk_c *)c)->UpdatePos(0);
     if (*(int *)(c + 0xa8) >= 0)
         *(int *)(c + 0x9c) = -0x4000;
     else
         *(int *)(c + 0x9c) = -0x8000;
-    if (*(int *)(c + 0x60) > *(int *)(c + 0x394))
+    if (*(int *)(c + 0x60) > self->unk_394)
         return;
-    *(int *)(c + 0x60) = *(int *)(c + 0x394);
+    *(int *)(c + 0x60) = self->unk_394;
     v[1].x = *(int *)(c + 0x5c);
     v[1].y = *(int *)(c + 0x60);
     v[1].z = *(int *)(c + 0x64);
     _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, v[1], 0x7d0000);
-    *(unsigned char *)(c + 0x39e) = 0x3c;
+    self->unk_39e = 0x3c;
     *(unsigned char *)(((int)c + 0x39f)) =
         *(unsigned char *)(((int)c + 0x39f)) + 1;
-    *(int *)(c + 0x398) = 6;
+    self->mState = 6;
     v[0].x = *(int *)(c + 0x5c);
     v[0].y = *(int *)(c + 0x60);
     v[0].z = *(int *)(c + 0x64);
@@ -225,17 +226,18 @@ extern "C" void func_ov025_02111a84(char *c)
  * (int)c + 0x39e integer-cast form is the decrement the cartridge emits. */
 extern "C" void func_ov025_021119f4(char *c)
 {
+    daDkk_c *self = (daDkk_c *)c;
     *(u8 *)(((int)c + 0x39e)) =
         *(u8 *)(((int)c + 0x39e)) - 1;
-    if (*(u8 *)(c + 0x39e) != 0) return;
-    if (*(u8 *)(c + 0x39f) != 4) {
-        *(s32 *)(c + 0x398) = 5;
+    if (self->unk_39e != 0) return;
+    if (self->unk_39f != 4) {
+        self->mState = 5;
         *(s32 *)(c + 0xa8) = 0x3c000;
         func_0201267c(0xf4, c + 0x74);
         return;
     }
-    *(s32 *)(c + 0x398) = 7;
-    *(s16 *)(c + 0x39c) = (s16)(*(s16 *)(c + 0x8e) + 0x8000);
+    self->mState = 7;
+    self->unk_39c = (s16)(*(s16 *)(c + 0x8e) + 0x8000);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -247,12 +249,13 @@ extern "C" void func_ov025_021119f4(char *c)
  * counter and goes back to state 6. */
 extern "C" int func_ov025_021119a4(char *c)
 {
-    int r = _Z14ApproachLinearRsss(*(short *)(c + 0x8e), *(short *)(c + 0x39c), 0x400);
+    daDkk_c *self = (daDkk_c *)c;
+    int r = _Z14ApproachLinearRsss(*(short *)(c + 0x8e), self->unk_39c, 0x400);
     if (r == 0) return r;
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    *(int *)(c + 0x398) = 6;
-    *(unsigned char *)(c + 0x39f) = 0;
-    *(unsigned char *)(c + 0x39e) = 0x28;
+    self->mState = 6;
+    self->unk_39f = 0;
+    self->unk_39e = 0x28;
     return 0x28;
 }
 
