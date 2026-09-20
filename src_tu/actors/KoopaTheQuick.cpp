@@ -237,48 +237,48 @@ int KoopaTheQuick::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e03c);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e02c);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov062_0211e004);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii((char *)((void *)this) + 0x300, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, *(void **)(data_ov062_0211e00c + 4), 1, -1) == 0)
         return 0;
-    if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
+    if (_ZN11ShadowModel12InitCylinderEv(&mShadowModel) == 0)
         return 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)((void *)this) + 0x300, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
-    *(int *)((char *)&mScaleX) = 0x14cc;
-    *(int *)((char *)&mScaleY) = 0x14cc;
-    *(int *)((char *)&mScaleZ) = 0x14cc;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((char *)((void *)this) + 0x110, ((void *)this), 0x78000, 0x12c000, 0x800004, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void **)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
+    mScaleX = 0x14cc;
+    mScaleY = 0x14cc;
+    mScaleZ = 0x14cc;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x78000, 0x12c000, 0x800004, 0);
     zero = 0;
-    *(int *)((char *)&mState) = zero;
-    *(s16 *)((char *)&unk_3aa) = (s16)zero;
-    *(unsigned char *)((char *)&mHasFinished) = (unsigned char)zero;
-    *(int *)((char *)&unk_39c) = *(int *)((char *)&mPosX);
-    *(int *)((char *)&unk_3a0) = *(int *)((char *)&mPosY);
-    *(int *)((char *)&unk_3a4) = *(int *)((char *)&mPosZ);
-    *(int *)((char *)&mVertAccel) = -0x2000;
-    *(int *)((char *)&mTerminalVelocity) = -0x3c000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)((void *)this) + 0x144, ((void *)this), 0x78000, 0x78000, 0, 0);
-    _ZN7PathPtr6FromIDEj((char *)((void *)this) + 0x3d8, *(unsigned int *)((char *)&param1) & 0xf);
-    *(int *)((char *)&mNumPathPts) = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
-    *(int *)((char *)&mCurPathPt) = zero;
-    *(int *)((char *)&unk_3c0) = *(int *)((char *)&mPosX);
-    *(int *)((char *)&unk_3c4) = *(int *)((char *)&mPosY);
-    *(int *)((char *)&unk_3c8) = *(int *)((char *)&mPosZ);
-    _ZNK7PathPtr7GetNodeER7Vector3j((char *)((void *)this) + 0x3d8, (char *)((void *)this) + 0x3cc, *(unsigned int *)((char *)&mCurPathPt));
-    *(unsigned char *)((char *)&mHasPlayerUsedCannon) = (unsigned char)zero;
-    b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 4) + 1) & 0x3f);
-    *(unsigned char *)((char *)&mPathPtToJumpAt1) = b;
-    b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 10) + 1) & 0x3f);
-    *(unsigned char *)((char *)&mPathPtToJumpAt2) = b;
-    if (*(unsigned char *)((char *)&mPathPtToJumpAt1) <= 1)
-        *(unsigned char *)((char *)&mPathPtToJumpAt1) = 0xff;
-    if (*(unsigned char *)((char *)&mPathPtToJumpAt2) <= 1)
-        *(unsigned char *)((char *)&mPathPtToJumpAt2) = 0xff;
-    *(unsigned char *)((char *)&mStarID) = (unsigned char)(*(s16 *)((char *)&mAngleX) & 0xf);
-    b = *(unsigned char *)((char *)&mStarID);
-    *(unsigned char *)((char *)&mTrackedStar) = _ZN8dActor_c9TrackStarEjj(((void *)this), b, 2);
-    *(int *)((char *)&mFlagID) = zero;
-    *(int *)((char *)&mPlayer) = zero;
-    *(unsigned char *)((char *)&mIsRacing) = (unsigned char)zero;
-    *(unsigned char *)((char *)&mIsTalkingToMario) = (unsigned char)zero;
+    mState = zero;
+    unk_3aa = (s16)zero;
+    mHasFinished = (unsigned char)zero;
+    unk_39c = mPosX;
+    unk_3a0 = mPosY;
+    *(int *)((char *)&unk_3a4) = mPosZ;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x78000, 0x78000, 0, 0);
+    _ZN7PathPtr6FromIDEj(&mPathPtr, param1 & 0xf);
+    mNumPathPts = _ZNK7PathPtr8NumNodesEv(&mPathPtr);
+    mCurPathPt = zero;
+    unk_3c0 = mPosX;
+    unk_3c4 = mPosY;
+    *(int *)((char *)&unk_3c8) = mPosZ;
+    _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mPathTarget, *(unsigned int *)((char *)&mCurPathPt));
+    mHasPlayerUsedCannon = (unsigned char)zero;
+    b = (unsigned char)(((param1 >> 4) + 1) & 0x3f);
+    mPathPtToJumpAt1 = b;
+    b = (unsigned char)(((param1 >> 10) + 1) & 0x3f);
+    mPathPtToJumpAt2 = b;
+    if (mPathPtToJumpAt1 <= 1)
+        mPathPtToJumpAt1 = 0xff;
+    if (mPathPtToJumpAt2 <= 1)
+        mPathPtToJumpAt2 = 0xff;
+    mStarID = (unsigned char)(mAngleX & 0xf);
+    b = mStarID;
+    mTrackedStar = _ZN8dActor_c9TrackStarEjj(this, b, 2);
+    mFlagID = zero;
+    mPlayer = zero;
+    mIsRacing = (unsigned char)zero;
+    mIsTalkingToMario = (unsigned char)zero;
     return 1;
 }
 
