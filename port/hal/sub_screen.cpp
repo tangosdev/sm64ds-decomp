@@ -87,6 +87,7 @@
 #include "hal/comms_seam.h"   /* run mg16 lane MP3: touch_ring_index/advance */
 
 #include "hal/screen_gap.h"
+#include "hal/host_settings.h"   /* the improved map's two keys */
 
 namespace OAM {
 void Reset();
@@ -190,6 +191,34 @@ namespace {
 
 const int kMargin = 8;
 
+/* ---- THE CORNER PANEL'S GEOMETRY, COMPUTED ONCE ----------------------------
+ *
+ * THREE READERS, ONE ARITHMETIC. The compose draws the panel, this file
+ * publishes its origin, and poll_touch's inset arm runs the whole thing
+ * backwards to turn a client pixel into a DS pixel. Before the size became a
+ * player option those three shared one integer divisor and agreed by
+ * construction. A fraction cannot be trusted to agree by construction -- two
+ * sites rounding 5/8 of 256 independently is exactly the shape of defect that
+ * put every menu tap two thirds of the way up its button at 32:9 (lane WIDE4)
+ * -- so the numbers are computed HERE, once per frame, and the other two read
+ * these variables rather than recomputing anything.
+ *
+ * g_pan_num / g_pan_den is the size as a fraction of one DS screen:
+ *
+ *   option OFF   1 / g_div          exactly what this file has always drawn
+ *   option ON    the MinimapScale table's ratio (index 0 is 1/2, which IS
+ *                g_div 2, so scale 1 with the option on is the same picture)
+ *
+ * SM64DS_SUB_SCALE still rules with the option off and is IGNORED with it on:
+ * the two knobs mean the same thing and the player-facing one wins when the
+ * player has turned it on. Said here rather than discovered by a player whose
+ * old environment variable stopped having an effect.
+ */
+int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
+int g_pan_num = 1, g_pan_den = 2;   /* panel size as a fraction of a DS screen */
+int g_pan_w, g_pan_h;               /* the drawn panel, in framebuffer pixels */
+int g_pan_margin = kMargin;         /* what was left of the margin (see below) */
+
 bool g_on = true;
 bool g_ready;
 /* Headless runs must not read the mouse or the keyboard. SM64DS_WINDOW_SELFTEST
@@ -204,7 +233,152 @@ bool g_headless;
    window in the background has a documented way to say so. */
 bool g_nofocusgate;
 int g_x0, g_y0;            // panel origin in framebuffer pixels
-int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
+
+/* The improved map's own gate, asked once per process. The keys are latched
+   at boot like Aspect and RenderScale, so re-asking every frame would only
+   re-walk the environment. */
+int improved_map_on(void)
+{
+    static int v = -1;
+    if (v < 0) v = host_setting_improved_minimap() ? 1 : 0;
+    return v;
+}
+
+/* THE ONE ARITHMETIC. See the banner over g_pan_num.
+ *
+ * THE MARGIN GIVES WAY BEFORE THE PANEL DOES. At the largest size the panel
+ * is a whole DS screen doubled -- 512x384 -- which is the entire framebuffer
+ * at the 4:3 tier, so there is no room for the eight-pixel inset the smaller
+ * sizes sit in. The old code answered that case by RETURNING WITHOUT DRAWING
+ * ("no room; leave the frame alone"), which for a player who picked 4x would
+ * be a map that silently did not appear. So the margin shrinks to whatever
+ * actually fits and the origin clamps at zero: the player gets the size they
+ * asked for, flush to the corner, and the frame lines that fall outside the
+ * picture are simply not drawn. */
+void hal_sub_panel_geometry(int w, int h)
+{
+    int num = 1, den = g_div;
+    if (improved_map_on()) host_setting_minimap_scale_ratio(&num, &den);
+    if (num < 1) num = 1;
+    if (den < 1) den = 1;
+    g_pan_num = num;
+    g_pan_den = den;
+    g_pan_w = ntr::SUB_W * num / den;
+    g_pan_h = ntr::SUB_H * num / den;
+
+    int m = kMargin;
+    if (g_pan_w + m > w) m = w - g_pan_w;
+    if (g_pan_h + m > h) m = h - g_pan_h;
+    if (m < 0) m = 0;
+    g_pan_margin = m;
+
+    g_x0 = w - g_pan_w - m;
+    g_y0 = h - g_pan_h - m;
+    if (g_x0 < 0) g_x0 = 0;
+    if (g_y0 < 0) g_y0 = 0;
+}
+
+/* ---- THE ROM'S OWN CAMERA-BUTTON ZONE, quoted -----------------------------
+ *
+ * src/_ZN5Stage16CheckCameraInputEv.cpp:52-58 decides whether a stylus press
+ * is on one of the four map arrows, and these are its literal bounds:
+ *
+ *   camera mode 0 (the DS camera): y >= 0x8a AND (x <= 0x58 OR x >= 0xa7)
+ *   camera mode 2 (the zoom):      y >= 0x9a AND  x >= 0xa7
+ *
+ * With the improved map on, a press inside that zone is NOT PUBLISHED, which
+ * is how the arrows stop being clickable without anything in src/ changing
+ * and without a hot zone left behind under an invisible button. The ROM's
+ * own hit test then runs over a record that says nothing was touched there,
+ * which is the same answer it gives today for a player who did not touch it.
+ *
+ * MODE 2's zone is a subset of mode 0's, so one test covers both and a
+ * camera mode this port does not select cannot leak a hot zone either. */
+int in_camera_button_zone(int dsx, int dsy)
+{
+    return dsy >= 0x8a && (dsx <= 0x58 || dsx >= 0xa7);
+}
+
+/* ---- AND THE OTHER HALF: THE ARROWS ARE NOT DRAWN --------------------------
+ *
+ * HOW THEY ARE IDENTIFIED, and it is not by position. A sprite's position is a
+ * poor key here: the minimap's player icon and its star markers move over the
+ * whole screen, and the arrows' own corners are exactly where the player icon
+ * sits when the owner is at the bottom of a course, so a position test would
+ * make Mario's head vanish at the bottom of the map. The key is the TILE
+ * NUMBER the arrows' own templates carry. OAM::Render copies a template's
+ * attr2 into the entry it writes and patches only the palette and priority
+ * fields out of it, so the tile bits arrive unchanged; and the eight templates
+ * are ROM data this binary links by name (ov002_data.c.obj, aliased in
+ * hal/sub_actors.cpp). The set is therefore read from the cartridge's own
+ * tables at run time. No literal, no guess, and a graphic that moved would
+ * take its tile with it.
+ *
+ * Tile 0 is never added: it is the ROM's own "nothing here" and unrelated
+ * templates carry it.
+ *
+ * The predicate is installed into ntr's raster (ppu_sub_set_obj_veto) because
+ * the policy is this file's and the raster is a hardware model. */
+extern "C" {
+extern const unsigned short _ZN3OAM12CAM_BUTTON_LE[];
+extern const unsigned short _ZN3OAM12CAM_BUTTON_RE[];
+extern const unsigned short _ZN3OAM20CAM_BUTTON_L_PRESSEDE[];
+extern const unsigned short _ZN3OAM20CAM_BUTTON_R_PRESSEDE[];
+extern const unsigned short _ZN3OAM14S_CAM_BUTTON_LE[];
+extern const unsigned short _ZN3OAM14S_CAM_BUTTON_RE[];
+extern const unsigned short _ZN3OAM22S_CAM_BUTTON_L_PRESSEDE[];
+extern const unsigned short _ZN3OAM22S_CAM_BUTTON_R_PRESSEDE[];
+}
+
+unsigned short g_cam_tiles[64];
+int g_cam_tiles_n = -1;
+
+void cam_tiles_add(const unsigned short *t)
+{
+    /* an OamAttr is four halfwords and attr3 == 0xffff ends the list
+       (include/OamAttr.h). The sixteen is a guard, not a length: a list that
+       never terminates is a corrupt table and must not be walked off. */
+    for (int i = 0; i < 16; ++i) {
+        const unsigned short a2 = t[i * 4 + 2];
+        const unsigned short a3 = t[i * 4 + 3];
+        const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+        if (tile && g_cam_tiles_n <
+                (int)(sizeof g_cam_tiles / sizeof g_cam_tiles[0])) {
+            int seen = 0;
+            for (int k = 0; k < g_cam_tiles_n; ++k)
+                if (g_cam_tiles[k] == tile) { seen = 1; break; }
+            if (!seen) g_cam_tiles[g_cam_tiles_n++] = tile;
+        }
+        if (a3 == 0xffff) return;
+    }
+}
+
+int cam_button_veto(unsigned short a2)
+{
+    if (g_cam_tiles_n < 0) {
+        g_cam_tiles_n = 0;
+        cam_tiles_add(_ZN3OAM12CAM_BUTTON_LE);
+        cam_tiles_add(_ZN3OAM12CAM_BUTTON_RE);
+        cam_tiles_add(_ZN3OAM20CAM_BUTTON_L_PRESSEDE);
+        cam_tiles_add(_ZN3OAM20CAM_BUTTON_R_PRESSEDE);
+        cam_tiles_add(_ZN3OAM14S_CAM_BUTTON_LE);
+        cam_tiles_add(_ZN3OAM14S_CAM_BUTTON_RE);
+        cam_tiles_add(_ZN3OAM22S_CAM_BUTTON_L_PRESSEDE);
+        cam_tiles_add(_ZN3OAM22S_CAM_BUTTON_R_PRESSEDE);
+        if (std::getenv("SM64DS_MINIMAP_TRACE")) {
+            std::fprintf(stderr, "[mmtrace] camera-button tiles (%d):",
+                         g_cam_tiles_n);
+            for (int k = 0; k < g_cam_tiles_n; ++k)
+                std::fprintf(stderr, " %u", (unsigned)g_cam_tiles[k]);
+            std::fprintf(stderr, "\n");
+        }
+    }
+    const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+    for (int k = 0; k < g_cam_tiles_n; ++k)
+        if (g_cam_tiles[k] == tile)
+            return improved_map_on() ? 3 : 1;
+    return 0;
+}
 int g_zoom = 1;
 HWND g_hwnd;
 // The client rectangle the framebuffer was last presented into, in client
@@ -598,14 +772,33 @@ void poll_touch(void)
                    the clamp puts it, so the inside answer gates the press */
                 on_picture =
                     hal_present_client_to_fb((int)p.x, (int)p.y, &bx, &by);
-                fx = (bx - g_x0) * g_div;
-                fy = (by - g_y0) * g_div;
+                /* panel pixels back to DS pixels. The forward direction is
+                   DS * num / den (hal_sub_panel_geometry), so the inverse is
+                   * den / num, and with the option off num is 1 and den is
+                   g_div -- byte for byte the multiply this replaces. */
+                fx = (bx - g_x0) * g_pan_den / g_pan_num;
+                fy = (by - g_y0) * g_pan_den / g_pan_num;
             }
             live_cx = (int)p.x;
             live_cy = (int)p.y;
             live_seen = 1;
-            const int on_surface = on_picture && fx >= 0 && fx < ntr::SUB_W &&
-                                   fy >= 0 && fy < ntr::SUB_H;
+            int on_surface = on_picture && fx >= 0 && fx < ntr::SUB_W &&
+                             fy >= 0 && fy < ntr::SUB_H;
+            /* THE ARROWS ARE NOT CLICKABLE WITH THE OPTION ON. Refused here,
+               at the one seam that decides whether a host click becomes a
+               stylus record at all, so the press never exists as far as the
+               ROM is concerned -- no press, no camera step, and no invisible
+               button to hit by accident. The bumpers, Q / E and the right
+               stick reach the camera through tests/walk_window.cpp's own
+               cam_turn and are untouched by this.
+               IT ALSO ENDS A DRAG rather than clamping one: a press that
+               wanders into the zone is dropped for as long as it is in there,
+               which is what a player who cannot see a button expects. */
+            if (on_surface && improved_map_on() &&
+                in_camera_button_zone(fx, fy)) {
+                on_surface = 0;
+                drag_own = 0;
+            }
             /* the arming edge, and the only one there is */
             if (on_surface) drag_own = 1;
             if (inj && on_surface) ++g_inj_on_surface;
@@ -1712,10 +1905,14 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
             init = 1;
             const int v = env_flag("SM64DS_SUB_SCALE", 2);
             g_div = v < 1 ? 1 : (v > 4 ? 4 : v);
+            /* the improved map's sprite veto, installed once. It is installed
+               whatever the option says, because it also LABELS the four
+               entries for the census; it only declines them when the option
+               is on (cam_button_veto's own return). */
+            ntr::ppu_sub_set_obj_veto(cam_button_veto);
         }
     }
-    g_x0 = w - ntr::SUB_W / g_div - kMargin;
-    g_y0 = h - ntr::SUB_H / g_div - kMargin;
+    hal_sub_panel_geometry(w, h);
     /* Publish the layer mask, the way nine ROM functions do with this exact
        line. Minimap::Behavior and Message::UpdateWindow both write
        data_0209d454 and then push it themselves; doing it once more here is
@@ -1864,7 +2061,7 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
     if (!hal_sub_screen_stacked())
-        ntr::ppu_compose_sub(g_sub, dst, w, h, kMargin, g_div);
+        ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, g_pan_num, g_pan_den);
     g_ready = true;
 
     /* SM64DS_SUB_DUMP=N: the bottom screen alone, at 256x192, on frame N. */

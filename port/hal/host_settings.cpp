@@ -1177,6 +1177,52 @@ int g_render_scale = 0;
 int g_hd_textures = 0;
 int g_smooth_models = 0;
 
+/* ---- THE IMPROVED MINIMAP'S TWO KEYS ---------------------------------------
+
+   The six legal sizes, in the order the launcher's picker lists them. They
+   are multipliers on the panel the port draws TODAY (half a DS screen, so
+   128x96), which is what "scaled from how it is" means: index 0 is the
+   current picture, byte for byte.
+
+   WHY THESE SIX AND NOT A FREE NUMBER. The panel is drawn from a 256x192
+   source, so a size is only honest if 256*s/2 and 192*s/2 are both whole
+   pixels. 1, 1.25, 1.5, 2, 3 and 4 give 128x96, 160x120, 192x144, 256x192,
+   384x288 and 512x384 -- every one exact, no fractional destination row, and
+   the rational form each one reduces to is in the second and third columns so
+   the compose and the stylus inverse can share one integer arithmetic. */
+const struct { double s; int num, den; } MINIMAP_SCALES[6] = {
+    { 1.00, 1, 2 }, { 1.25, 5, 8 }, { 1.50, 3, 4 },
+    { 2.00, 1, 1 }, { 3.00, 3, 2 }, { 4.00, 2, 1 },
+};
+
+int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
+int g_minimap_scale = 0;      /* index into MINIMAP_SCALES */
+
+/* Snap an arbitrary number to the nearest legal size. Ties go to the SMALLER
+   one, because a tie means the player asked for something exactly between two
+   sizes and the smaller of the two hides less of the game behind the map.
+   Absent, zero, negative and unparseable all read as index 0, the Aspect
+   rule: a number that is a picture beats an error.
+
+   It returns the index and, through `snapped`, whether it had to move, so the
+   one caller that wants to say so can say it once rather than every reader
+   printing a line. */
+int minimap_scale_sanitise(double v, int *snapped)
+{
+    if (snapped) *snapped = 0;
+    if (!(v > 0.0)) return 0;
+    int best = 0;
+    double bestd = -1.0;
+    for (int i = 0; i < 6; ++i) {
+        double d = v - MINIMAP_SCALES[i].s;
+        if (d < 0.0) d = -d;
+        /* strictly less than keeps the FIRST (smaller) of two equal distances */
+        if (bestd < 0.0 || d < bestd) { bestd = d; best = i; }
+    }
+    if (snapped && bestd > 1e-9) *snapped = 1;
+    return best;
+}
+
 void load_once(void)
 {
     if (g_loaded) return;
@@ -1469,6 +1515,25 @@ void load_once(void)
            from. A file written before these keys existed reads as one that
            left all three off, which is the shipped picture. */
         g_render_scale = render_scale_sanitise(json_int(text, "RenderScale", 0));
+        /* THE IMPROVED MINIMAP, and the default is the odd one in this file:
+           ABSENT IS ON. Every other feature key here defaults off so a file
+           written before the key existed reads as the shipped picture; this
+           one is on by the owner's explicit order, so a file with no
+           ImprovedMinimap line gets the improved map. Both spellings of the
+           toggle, the RunMode rule: the launcher serialises a C# bool and a
+           player editing by hand may write 1. */
+        g_improved_minimap = (json_int(text, "ImprovedMinimap", 1) != 0 &&
+                              json_bool(text, "ImprovedMinimap", 1) != 0) ? 1 : 0;
+        {
+            int snapped = 0;
+            const double want = json_num(text, "MinimapScale", 1.0);
+            g_minimap_scale = minimap_scale_sanitise(want, &snapped);
+            if (snapped)
+                fprintf(stderr, "[settings] MinimapScale %g is not one of "
+                        "1, 1.25, 1.5, 2, 3, 4 -- using %g (the nearest, ties "
+                        "to the smaller)\n", want,
+                        MINIMAP_SCALES[g_minimap_scale].s);
+        }
         /* Both spellings of a toggle, the RunMode rule: the launcher
            serialises a C# bool as true/false and a player editing by hand may
            write 1. Either says on; absent and anything else say off. */
@@ -2329,6 +2394,68 @@ extern "C" int host_setting_render_scale(void)
     if (env >= 0) return env;
     load_once();
     return g_render_scale;
+}
+
+/* ---- THE IMPROVED MINIMAP'S TWO GETTERS ------------------------------------
+
+   THE PIN IS HERE, IN THE GETTER, rather than in the frame loop, and that is
+   the whole reason this pair is not two more lines of boilerplate. The option
+   changes what the bottom-screen panel DRAWS. Every recorded baseline in this
+   tree -- the five level-1 capture hashes, hd1's six key-absent captures, the
+   opening gate, every sweep row -- is a picture taken on one of exactly two
+   routes: a window selftest (SM64DS_WINDOW_SELFTEST) or a scene run
+   (SM64DS_SCENE_FRAMES). A feature that moved those hashes would look like a
+   hundred regressions and be none of them. Both frame loops and every proof
+   tool in port/tools go through this one function, so pinning it once here
+   covers all of them, and tests/walk_window.cpp needs no line of its own.
+
+   THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
+   run that means to look at the improved map sets SM64DS_IMPROVED_MINIMAP=1
+   and gets it, selftest or not, which is how this lane's own captures were
+   taken. That is the same precedence SM64DS_DUAL_SCREEN has over the layout
+   proposal in hal/sub_screen.cpp. */
+extern "C" int host_setting_improved_minimap(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_IMPROVED_MINIMAP");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    if (getenv("SM64DS_WINDOW_SELFTEST") || getenv("SM64DS_SCENE_FRAMES"))
+        return 0;
+    load_once();
+    return g_improved_minimap;
+}
+
+extern "C" int host_setting_minimap_scale(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_MINIMAP_SCALE");
+        if (e && *e) {
+            char *end = 0;
+            const double v = strtod(e, &end);
+            env = (end != e) ? minimap_scale_sanitise(v, 0) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_minimap_scale;
+}
+
+/* The chosen size as the exact rational the drawing and the touch inverse
+   share. ONE table, read through one function, so a size can never mean two
+   things in two files -- which is the rule the corner panel's geometry was
+   already keeping with its single integer divisor and has to keep now that
+   the divisor is a fraction. */
+extern "C" void host_setting_minimap_scale_ratio(int *num, int *den)
+{
+    const int i = host_setting_minimap_scale();
+    if (num) *num = MINIMAP_SCALES[i].num;
+    if (den) *den = MINIMAP_SCALES[i].den;
 }
 
 /* HdTextures: 1 when the replacement pack is on. SM64DS_HD_TEXTURES has the

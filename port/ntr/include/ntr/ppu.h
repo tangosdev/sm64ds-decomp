@@ -315,13 +315,46 @@ void ppu_display_capture(const uint32_t *src, int w, int h);
 // mapping made visible.
 void ppu_vram_publish(void);
 
-// Blit the bottom screen 1:1 into the bottom-right corner of a dst_w x dst_h
-// ARGB buffer, `margin` pixels in from both edges, with a one-pixel frame.
-/* div: integer downscale of the panel (1 = 1:1 DS pixels, 2 = half size).
-   Downscaled pixels are the box average of the div x div source block, so the
-   minimap's 1px marks survive as shading rather than vanishing. */
+// Blit the bottom screen into a dst_w x dst_h ARGB buffer at (x0, y0), with a
+// one-pixel frame around it.
+/* num/den: the panel's size as a fraction of one DS screen. 1/2 is the half
+   size this has always drawn by default and 1/1 is 1:1 DS pixels; the improved
+   map's six sizes are 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1, every one of which is a
+   whole number of pixels in both axes at 256x192.
+   DOWNSCALED pixels (den > num) are the box average of the source block they
+   cover, so the minimap's 1px marks survive as shading rather than vanishing.
+   UPSCALED pixels (num > den) are NEAREST: every DS pixel becomes a block, no
+   interpolation, for the reason the stacked presentation gives two paragraphs
+   up -- a filter would invent pixels the DS never drew, and a magnified map
+   wants the cartridge's own pixels.
+   THE ORIGIN IS THE CALLER'S rather than a margin computed here, because the
+   touch inverse has to run this placement backwards and two sites rounding one
+   fraction independently is how a drawn picture and a stylus surface come to
+   disagree. hal/sub_screen.cpp's hal_sub_panel_geometry is the one place that
+   decides; this draws what it decided. */
 void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
-                     int dst_h, int margin, int div = 1);
+                     int dst_h, int x0, int y0, int num, int den);
+
+/* ---- THE HOST'S VETO OVER ENGINE B'S SPRITES -------------------------------
+ *
+ * A predicate the host may install to decline individual sub-engine OBJ
+ * entries at raster time, keyed on the entry's attr2 (tile, priority,
+ * palette). It exists for the improved minimap, which has to take the ROM's
+ * four touchscreen camera arrows out of a picture a mouse player cannot use
+ * them in -- without touching src/ and without skipping a call the ROM makes.
+ * The ROM still computes and submits the sprites; this layer declines to draw
+ * them.
+ *
+ * IT IS A HOOK BECAUSE THE POLICY IS NOT NTR'S. The tile numbers are cartridge
+ * data and the option is a settings key, and this layer models DS hardware for
+ * four smoke binaries that have neither. Nothing installed is the old
+ * behaviour exactly.
+ *
+ * The return is a bitmask: bit 0 "this is one of the entries you named", bit 1
+ * "and do not draw it". Two bits rather than one because the census wants to
+ * label an entry whether or not the option is on.  */
+void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2));
+long ppu_sub_obj_veto_count(void);
 
 // ---- the stacked presentation -----------------------------------------------
 //

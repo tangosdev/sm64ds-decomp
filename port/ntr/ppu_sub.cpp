@@ -408,6 +408,58 @@ ObjPixel g_obj[192][256];
 // from g_obj because a mask pixel contributes no colour and has no priority.
 uint8_t g_objwin[192][256];
 
+/* ---- THE FOUR MAP ARROWS, DECLINED AT THE PRESENTATION SEAM ----------------
+ *
+ * WHAT THE OWNER ASKED FOR: "Remove the left and right arrows from the minimap
+ * since the PC doesn't need touchscreen map controls."
+ *
+ * WHAT IS NOT DONE ABOUT IT. Nothing in src/ changes and no call the ROM makes
+ * is skipped. HUD::RenderCameraButtons still runs, still reads the camera
+ * state, still submits its four sprites, and Stage::CheckCameraInput still
+ * hit-tests a record that no longer says anything was touched there (the other
+ * half of this, at hal/sub_screen.cpp's stylus seam). The host simply declines
+ * to PRESENT four entries, which is this raster's own business and nobody
+ * else's -- the same shape, and the same one-line spelling, as the seam-snow
+ * overlay's `ppu_seam_snow_owns` two lines below.
+ *
+ * WHERE THE ANSWER COMES FROM, and why it is a hook rather than a call. This
+ * file is the NTR layer: it knows DS hardware and nothing else. The tile set
+ * is ROM data (ov002) and the option is a host setting, and neither belongs in
+ * a hardware model -- ntr.lib is linked by four small smoke binaries that have
+ * no hal, no settings file and no cartridge data, and a direct call put nine
+ * unresolved externals into smoke_objwin's link. So hal/sub_screen.cpp -- which
+ * already owns the panel, the option and the stylus half of this -- installs a
+ * predicate here at boot, and with nothing installed this raster behaves
+ * exactly as it always did.
+ *
+ * The predicate answers a small bitmask so one call serves both readers:
+ *   bit 0  this entry is one of the camera buttons
+ *   bit 1  and it is not to be drawn on this run
+ * The trace wants bit 0 whether or not the option is on; the raster wants bit 1.
+ */
+int (*g_obj_veto_b)(unsigned short a2);
+
+/* How many entries this run declined, and the census of what engine B was
+   asked to draw on one frame. SM64DS_MINIMAP_TRACE=<frame> prints every sub
+   OBJ entry on that frame -- index, position, tile, palette -- and marks the
+   ones the filter matched, so "the arrows are gone" is a list of numbers
+   rather than an impression, and so the next reader can identify any OTHER
+   sprite on that screen (the touch target among them) without a second build.
+   It prints to stderr, which on a scene run is the playlog; see the note over
+   hal_touch_client_probe. */
+int g_mm_trace_frame = -2;
+long g_mm_skipped;
+
+int mm_trace_at(void)
+{
+    if (g_mm_trace_frame == -2) {
+        const char *e = std::getenv("SM64DS_MINIMAP_TRACE");
+        g_mm_trace_frame = (e && *e) ? std::atoi(e) : -1;
+        if (e && *e && g_mm_trace_frame == 0) g_mm_trace_frame = 1;
+    }
+    return g_mm_trace_frame;
+}
+
 void raster_obj(uint32_t dispcnt) {
     static const int kSizes[3][4][2] = {
         {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
@@ -461,6 +513,20 @@ void raster_obj(uint32_t dispcnt) {
         const uint16_t a2 = rd16(oam_b + i * 8u + 4);
         /* the seam-snow overlay owns these while engaged; see seam_snow */
         if (ppu_seam_snow_owns(a2)) continue;
+        /* THE FOUR MAP ARROWS, declined. See the banner over cam_button_entry. */
+        {
+            static long frame;
+            if (i == 127) ++frame;
+            const int v = g_obj_veto_b ? g_obj_veto_b(a2) : 0;
+            const int trace = mm_trace_at() >= 0 && frame == mm_trace_at();
+            if (trace && (a0 | a1 | a2))
+                std::fprintf(stderr, "[mmtrace] f%ld e%3d y%3u x%3u tile%4u "
+                             "pal%2u a0=%04x a1=%04x a2=%04x%s\n", frame, i,
+                             (unsigned)(a0 & 0xFFu), (unsigned)(a1 & 0x1FFu),
+                             (unsigned)(a2 & 0x3FFu), (unsigned)(a2 >> 12),
+                             a0, a1, a2, (v & 1) ? "  <- camera button" : "");
+            if (v & 2) { ++g_mm_skipped; continue; }
+        }
         /* SM64DS_OAMAGE_TRACE: engine B's half of the probe in ppu.cpp. */
         {
             static int bget = -1;
@@ -992,47 +1058,101 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb)
 // Composited at 1:1 DS pixels whatever tier the top screen is drawn at, which
 // is the whole reason this file exists. A one-pixel frame around it so the
 // panel reads as a panel and not as a corruption of the 3D view.
-void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
-                     int dst_h, int margin, int div)
+/* The host's per-entry veto over engine B's sprites. See the banner over
+   g_obj_veto_b in the raster. Installed once, at boot, by whoever owns the
+   policy; nothing installed is the behaviour this file shipped with. */
+void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2))
 {
-    if (div < 1) div = 1;
-    const int out_w = SUB_W / div, out_h = SUB_H / div;
-    const int x0 = dst_w - out_w - margin;
-    const int y0 = dst_h - out_h - margin;
-    if (x0 < 1 || y0 < 1) return;      // no room; leave the frame alone
+    g_obj_veto_b = fn;
+}
+
+/* How many entries the veto has declined this run. The proof that the arrows
+   are gone is a pixel diff of their four rectangles; this is the cheap
+   corroborating number that says the filter fired at all, so a diff of zero
+   can be told apart from a filter that never ran. */
+long ppu_sub_obj_veto_count(void)
+{
+    return g_mm_skipped;
+}
+
+void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
+                     int dst_h, int x0, int y0, int num, int den)
+{
+    if (num < 1) num = 1;
+    if (den < 1) den = 1;
+    const int out_w = SUB_W * num / den, out_h = SUB_H * num / den;
+    if (out_w < 1 || out_h < 1) return;
+    if (x0 < 0 || y0 < 0) return;
+    if (x0 + out_w > dst_w || y0 + out_h > dst_h) return;   // would not fit
 
     /* dst_w/dst_h are the LIVE image extent (where the panel sits, bottom-right);
        the framebuffer's row STRIDE is always SCREEN_W, which equals dst_w on the
        fixed tiers and is the buffer max on NTR_WIDE_RT with a narrower active
        image. Place with the extent, index with the stride. */
     const int stride = SCREEN_W;
-    for (int x = x0 - 1; x <= x0 + out_w; ++x) {
-        dst[(y0 - 1) * stride + x] = 0xFF000000u;
-        dst[(y0 + out_h) * stride + x] = 0xFF000000u;
-    }
-    for (int y = y0 - 1; y <= y0 + out_h; ++y) {
-        dst[y * stride + (x0 - 1)] = 0xFF000000u;
-        dst[y * stride + (x0 + out_w)] = 0xFF000000u;
-    }
-    if (div == 1) {
+    /* THE FRAME IS DRAWN EDGE BY EDGE, because at the largest size the panel
+       is flush with the picture and the lines outside it have nowhere to go.
+       Every one of these four used to be unconditional behind a single
+       `x0 < 1 || y0 < 1` early return that skipped the WHOLE panel; a player
+       who picked the biggest map would have got no map at all. */
+    if (y0 - 1 >= 0)
+        for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+             x <= x0 + out_w && x < dst_w; ++x)
+            dst[(y0 - 1) * stride + x] = 0xFF000000u;
+    if (y0 + out_h < dst_h)
+        for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+             x <= x0 + out_w && x < dst_w; ++x)
+            dst[(y0 + out_h) * stride + x] = 0xFF000000u;
+    if (x0 - 1 >= 0)
+        for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+             y <= y0 + out_h && y < dst_h; ++y)
+            dst[y * stride + (x0 - 1)] = 0xFF000000u;
+    if (x0 + out_w < dst_w)
+        for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+             y <= y0 + out_h && y < dst_h; ++y)
+            dst[y * stride + (x0 + out_w)] = 0xFF000000u;
+
+    if (num == 1 && den == 1) {
         for (int y = 0; y < SUB_H; ++y)
             std::memcpy(dst + (y0 + y) * stride + x0, sub.px[y], SUB_W * 4);
         return;
     }
-    const int n = div * div;
-    for (int y = 0; y < out_h; ++y)
+    if (num > den) {
+        /* MAGNIFIED: nearest neighbour, one source pixel per destination
+           block. num/den is 3/2 or 2/1 here, so the block is never smaller
+           than one pixel and the map keeps the cartridge's own hard edges. */
+        for (int y = 0; y < out_h; ++y) {
+            const uint32_t *srow = sub.px[y * den / num];
+            uint32_t *drow = dst + (y0 + y) * stride + x0;
+            for (int x = 0; x < out_w; ++x)
+                drow[x] = 0xFF000000u | (srow[x * den / num] & 0x00FFFFFFu);
+        }
+        return;
+    }
+    /* REDUCED: the box average of the source block this destination pixel
+       covers. The block is [x*den/num, (x+1)*den/num), which is 2x2 at the
+       default 1/2 and so reduces to exactly the square average this drew
+       before; at 5/8 and 3/4 the blocks are uneven by a pixel from column to
+       column, which is what makes it an average rather than a decimation and
+       is why the minimap's one-pixel marks still show up as shading. */
+    for (int y = 0; y < out_h; ++y) {
+        const int sy0 = y * den / num, sy1 = (y + 1) * den / num;
         for (int x = 0; x < out_w; ++x) {
-            unsigned r = 0, g = 0, b = 0;
-            for (int sy = 0; sy < div; ++sy)
-                for (int sx = 0; sx < div; ++sx) {
-                    const uint32_t p = sub.px[y * div + sy][x * div + sx];
+            const int sx0 = x * den / num, sx1 = (x + 1) * den / num;
+            unsigned r = 0, g = 0, b = 0, n = 0;
+            for (int sy = sy0; sy < sy1 && sy < SUB_H; ++sy)
+                for (int sx = sx0; sx < sx1 && sx < SUB_W; ++sx) {
+                    const uint32_t p = sub.px[sy][sx];
                     r += (p >> 16) & 0xFF;
                     g += (p >> 8) & 0xFF;
                     b += p & 0xFF;
+                    ++n;
                 }
+            if (!n) { r = g = b = 0; n = 1; }
             dst[(y0 + y) * stride + (x0 + x)] =
                 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
         }
+    }
 }
 
 // ---- THE GAP BAND -----------------------------------------------------------

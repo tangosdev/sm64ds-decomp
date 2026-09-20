@@ -710,6 +710,37 @@ int host_setting_hd_textures(void);
 const char *host_setting_hd_textures_dir(void);
 int host_setting_smooth_models(void);
 
+/* ---- THE IMPROVED MINIMAP (two keys) ---------------------------------------
+
+   ImprovedMinimap: the corner map panel's player-facing option. ABSENT MEANS
+   ON, which is not this file's usual shape and is deliberate: it is the
+   owner's order for the feature ("on by default"). 0 turns it off and
+   restores the panel exactly as it was. SM64DS_IMPROVED_MINIMAP overrides the
+   file in either direction.
+
+   IT IS PINNED OFF ON EVERY COMPARATOR ROUTE unless the environment asks for
+   it by name. A selftest run and a scene sweep row are the two shapes every
+   baseline capture in this tree is taken in, and a feature that changed what
+   they draw would move a hundred recorded hashes for a reason that has
+   nothing to do with the code under test. So the getter answers 0 for those
+   routes, the same belt-and-braces pin the run mode and the camera mode take
+   in tests/walk_window.cpp, and one explicit SM64DS_IMPROVED_MINIMAP=1 turns
+   it back on for a run that means to look at it.
+
+   MinimapScale: how much bigger than today the panel is drawn, as one of six
+   sizes -- 1, 1.25, 1.5, 2, 3, 4. 1 is what the port draws today (the half
+   size inset, 128x96). Every one of the six is a whole number of pixels in
+   both axes at the DS's own 256x192, which is why the set is these six and
+   not a free number. Anything else SNAPS to the nearest legal value, a tie
+   going to the smaller one, and the snap is announced once. The getter
+   returns an INDEX into that table rather than a float so nothing downstream
+   has to compare fractions. SM64DS_MINIMAP_SCALE overrides the file.
+
+   Both are read once and latched, like Aspect and RenderScale. */
+int host_setting_improved_minimap(void);
+int host_setting_minimap_scale(void);      /* 0..5 -> 1, 1.25, 1.5, 2, 3, 4 */
+void host_setting_minimap_scale_ratio(int *num, int *den);
+
 #ifdef __cplusplus
 }
 #endif
