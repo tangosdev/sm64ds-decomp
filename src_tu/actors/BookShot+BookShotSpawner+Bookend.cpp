@@ -4,10 +4,9 @@
  *
  * NOT ENROLLED, NOT CANONICAL. This file contributes nothing to the ROM
  * build. It is a STARTING POINT (plan sec 7.3): local shadow declarations
- * below were carried verbatim from the legacy files, not reconciled against
- * real project headers -- that judgement call is left to a human/LLM review,
- * the way pilot #1 reconciled daObjKm2_Ami_Bou_c::Render and ::CleanupResources by hand
- * (see notes/tu-reconstruction-pilot-report.md sec 5.2).
+ * originated in the legacy files. Selected call contracts are repaired here;
+ * remaining raw views and unlicensed metadata are still partial reconstruction.
+ * See notes/experiments/pr2868-source-repair-0920.json for the measured scope.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -68,9 +67,12 @@
 #include "decl_dCcAcPos_c.h"
 #include "decl_Actor.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
+int ApproachLinear(int& value, int target, int step);
+int ApproachLinear(short& value, short target, short step);
+
+/* Remaining local views originated in the legacy sources. Corrected scalar
+ * bridges below follow their actual definitions; shared aggregate interfaces
+ * still need reconstruction. */
 /* shadow typedef 'struct' */
 typedef struct { int x, y, z; } Vec3;
 
@@ -101,13 +103,11 @@ extern "C" {
 extern void _ZN10dCcAcPos_cD1Ev(void *);
 extern void _ZN12dEnemyBase_cD2Ev(void *);
 extern void *data_020a0eac;
-extern char* _ZN8dActor_c13ClosestPlayerEv(void*);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
 extern void Vec3_Sub(struct Vector3 *d, struct Vector3 *a, struct Vector3 *b);
 extern int Vec3_HorzLen(struct Vector3 *);
 extern int RandomIntInternal(void *p);
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern int data_0209e650[];
 extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *thiz, void *clsn, void *player);
@@ -118,21 +118,18 @@ extern void func_ov063_0211cae8(void *found, unsigned int mask);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 extern u8 data_ov020_02114828[];
 extern void func_0203568c(int* p, int v);
-extern void _Z14ApproachLinearRiii(int* v, int a, int b);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, struct dCc_c* c);
-extern int func_0201267c(int a, void *b);
+extern void func_0201267c(unsigned int id, const Vector3 *pos);
 extern int func_ov020_02111418(char *c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern int _ZN9Animation8FinishedEv(void *);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, int);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *, BCA_File *, int, int, u16);
 extern void func_ov020_021112b0(char *c);
-extern int _Z14ApproachLinearRsss(s16 *, short, short);
 extern s16 data_02082214[];
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern "C" int _ZN8dActor_c14GetSubtractionEss(void* thiz, short a, short b);
 extern "C" void func_ov020_02111fc4(char *c);
-extern "C" int func_ov020_02111ee0(char *c);
+extern "C" void func_ov020_02111ee0(char *c);
 extern "C" void func_ov020_02111c30(char *c);
 extern "C" void func_ov020_02111b28(char *c);
 extern "C" void func_ov020_02111aa8(char *c);
@@ -151,22 +148,15 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void LoadBlueCoinModel(void* c);
 extern int _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 extern struct M48 IDENTITY_MATRIX4X3;
 extern int data_ov020_02114ab8[];
 extern int data_ov020_02114aa0[];
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov020_021115ac, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(u32 id); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov020_0211174c, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov020_02111aa8, NOT applied: extern void _Z14ApproachLinearRiii(int *p, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c9UpdatePosEP5dCc_c, from the legacy file for func_ov020_02111aa8, NOT applied: extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov020_02111c30, NOT applied: extern int _Z14ApproachLinearRiii(s32 *, int, int); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov020_02111fc4, NOT applied: extern "C" char* _ZN8dActor_c13ClosestPlayerEv(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_0201267c, from the legacy file for func_ov020_02111fc4, NOT applied: extern "C" void func_0201267c(int a, void* p); */
 /* TUBUILD CONFLICT -- alternate declaration of UnloadBlueCoinModel, from the legacy file for _ZN15BookShotSpawner16CleanupResourcesEv, NOT applied: extern void UnloadBlueCoinModel(char *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN15BookShotSpawner8BehaviorEv, NOT applied: extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c14GetSubtractionEss, from the legacy file for _ZN15BookShotSpawner8BehaviorEv, NOT applied: extern int _ZN8dActor_c14GetSubtractionEss(void *thiz, short a, short b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, from the legacy file for _ZN15BookShotSpawner8BehaviorEv, NOT applied: extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 *pos, const Vector3_16 *r, int e, int f); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov020_02114aa0, from the legacy file for _ZN8BookShot13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov020_02114aa0; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov020_02114ab8, from the legacy file for _ZN8BookShot13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov020_02114ab8; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov020_02114aa8, from the legacy file for _ZN8BookShot13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov020_02114aa8; */
@@ -342,7 +332,7 @@ int BookShot::InitResources()
     unk_430 = mPosY;
     unk_434 = mPosZ;
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
+    if (mModel.SetFile((BMD_File*)data_ov020_02114ab8[1], 1, -1) == 0)
         return 0;
 
     *(struct M48*)(&unk_1ec) = IDENTITY_MATRIX4X3;
@@ -412,8 +402,8 @@ int BookShotSpawner::Behavior()
                 short angle = Vec3_HorzAngle((Vector3 *)&mPosX, &tmp);
                 if (_ZN8dActor_c14GetSubtractionEss(this, mAngleY, angle) < 0x2000) {
                     signed char sc = mAreaId;
-                    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                        0x145, 0, (Vector3 *)&mPosX, (Vector3_16 *)&mPrevAngleX,
+                    dActor_c::Spawn(
+                        0x145, 0, *(Vector3 *)&mPosX, (Vector3_16 *)&mPrevAngleX,
                         sc, -1);
                     mSpawnTimer = 0;
                 }
@@ -512,7 +502,7 @@ int BookShot::CleanupResources()
 /* -------------------------------------------------------------------------- */
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void* m, int x, int y, int z);
-extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* mtx, int f, int g, unsigned int h);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(dActor_c* thiz, ShadowModel* sm, Matrix4x3* mtx, int radius, int depth, u8 opacity);
 
 void func_ov020_0211216c(void* vc)
 {
@@ -528,7 +518,7 @@ void func_ov020_0211216c(void* vc)
     *(int*)(c + 0x214) = *(int*)(c + 0x430) >> 3;
     *(int*)(c + 0x218) = *(int*)(c + 0x64) >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x1c4, c + 0x1ec, *(int*)(c + 0x80) * 0x64, 0x12c000, 0xf);
+        (dActor_c*)c, (ShadowModel*)(c + 0x1c4), (Matrix4x3*)(c + 0x1ec), *(int*)(c + 0x80) * 0x64, 0x12c000, 0xf);
 }
 }
 
@@ -536,13 +526,12 @@ void func_ov020_0211216c(void* vc)
 /* ROM ordinal 16 -- func_ov020_02112110, 0x02112110, size 0x5c */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 void _ZN8dActor_c8PoofDustEv(void* self);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void func_ov020_02112110(char* c) {
   if (*(unsigned char*)(c+0x108)) {
     int param = *(signed char*)(c+0xcc);
-    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x122, 2, (void*)(c+0x5c), (void*)0, param, -1);
+    dActor_c::Spawn(0x122, 2, *(Vector3*)(c+0x5c), 0, param, -1);
   }
   _ZN8dActor_c8PoofDustEv(c);
   _ZN7fBase_c18MarkForDestructionEv(c);
@@ -570,12 +559,11 @@ extern "C" void func_ov020_02112080(void *vc)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov020_02111fc4
 /* recovered: shared common types */
-namespace no_arg_cp { extern "C" char* _ZN8dActor_c13ClosestPlayerEv(); } /* this member byte-requires the zero-arg call (no r0 setup); the TU's view takes (void*) */
 extern "C" void func_ov020_02111fc4(char* thiz)
 {
     char* c = thiz;
     Vector3 v;
-    char* p = no_arg_cp::_ZN8dActor_c13ClosestPlayerEv();
+    char* p = (char*)((dActor_c*)c)->ClosestPlayer();
     {
         int* s = (int*)(int)(((int)p + 0x5c));
         v.x = s[0];
@@ -594,31 +582,24 @@ extern "C" void func_ov020_02111fc4(char* thiz)
         int* p234 = (int*)(int)(((int)c + 0x234));
         *p234 = *p234 & ~1;
     }
-    func_0201267c(0x166, c + 0x74);
+    func_0201267c(0x166, (const Vector3*)(c + 0x74));
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov020_02111ee0, 0x02111ee0, size 0xe4 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-int func_ov020_02111ee0(char* c){
-    /* this member's declaration views (int-width args, int-typed pointers) are
-     * byte-load-bearing and diverge from the TU's canonical ones; block scope
-     * keeps them its own (C linkage inherited, file-scope views hidden). */
+void func_ov020_02111ee0(char* c){
     int func_ov020_02111418(char *c_);
-    int _Z14ApproachLinearRsss(void*, int, int);
-    int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
-    int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigned);
-    int _ZN8dActor_c9UpdatePosEP5dCc_c(void*,int);
   int r = func_ov020_02111418(c);
-  if(r) return r;
-  if(_Z14ApproachLinearRsss(c+0x8c, -0x2000, 0x200)){
+  if(r) return;
+  if(ApproachLinear(*(s16*)(c+0x8c), -0x2000, 0x200)){
     int s;
     *(int*)(c+0x98) = 0;
-    s = _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x110, data_ov020_02114aa0[1], 1, -1);
-    if(s == 0) return s;
+    s = ((ModelBase*)(c+0x110))->SetFile((BMD_File*)data_ov020_02114aa0[1], 1, -1);
+    if(s == 0) return;
     *(int*)(c+0x424) = 2;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x110, data_ov020_02114aa8[1], 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c+0x110), (BCA_File*)data_ov020_02114aa8[1], 0x40000000, 0x1000, 0);
     *(unsigned char*)(c+0x450) = 1;
     *(short*)(c+0x100) = 0;
     {
@@ -627,7 +608,7 @@ int func_ov020_02111ee0(char* c){
     }
     *(int*)(c+0x43c) = -0x19000;
   }
-  return _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+  ((dActor_c*)c)->UpdatePos(0);
 }
 }
 
@@ -643,13 +624,12 @@ void func_ov020_02111c30(char *c)
     _ZN9Animation7AdvanceEv(c + 0x160);
 
     {
-        extern int _Z14ApproachLinearRiii(s32 *, int, int); /* this member reads the result; the TU's view returns void */
-        if (_Z14ApproachLinearRiii((s32 *)(c + 0x98), 0xa000, 0xa00) == 0)
+        if (ApproachLinear(*(s32 *)(c + 0x98), 0xa000, 0xa00) == 0)
             return;
     }
 
     if (_ZN9Animation8FinishedEv(c + 0x160)) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, (void *)data_ov020_02114ab0[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0x110), (BCA_File*)data_ov020_02114ab0[1], 0, 0x1000, 0);
         *(s32 *)(c + 0x424) = 3;
         *(s32 *)(c + 0x98) = 0;
         func_ov020_021112b0(c);
@@ -673,18 +653,18 @@ void func_ov020_02111c30(char *c)
         return;
 
     func_ov020_021112b0(c);
-    _Z14ApproachLinearRsss((s16 *)(c + 0x8e), *(s16 *)(c + 0x446), 0x7d0);
-    _Z14ApproachLinearRsss((s16 *)(c + 0x8c), -*(s16 *)(c + 0x444), 0x7d0);
+    ApproachLinear(*(s16 *)(c + 0x8e), *(s16 *)(c + 0x446), 0x7d0);
+    ApproachLinear(*(s16 *)(c + 0x8c), -*(s16 *)(c + 0x444), 0x7d0);
 
     if (*(u16 *)(c + 0x100) < 9)
         return;
 
-    _Z14ApproachLinearRsss((s16 *)(c + 0x90), *(s16 *)(c + 0x448), 0x7d0);
+    ApproachLinear(*(s16 *)(c + 0x90), *(s16 *)(c + 0x448), 0x7d0);
 
     if (*(u16 *)(c + 0x100) < 0x13)
         return;
 
-    _Z14ApproachLinearRiii((s32 *)(c + 0x44c), 0x1800, 0x19a);
+    ApproachLinear(*(s32 *)(c + 0x44c), 0x1800, 0x19a);
     *(s32 *)(c + 0x220) = *(s32 *)(c + 0x44c) * 0x32;
     *(s32 *)(c + 0x224) = *(s32 *)(c + 0x44c) * 0x64;
     *(s32 *)(c + 0x43c) = *(s32 *)(c + 0x44c) * -0x32;
@@ -702,8 +682,6 @@ void func_ov020_02111c30(char *c)
 /* -------------------------------------------------------------------------- */
 extern "C" {
 void func_ov020_02111b28(char* c){
-  /* this member's declaration views diverge from the TU's canonical ones and are
-   * byte-load-bearing; block scope keeps them its own (C linkage inherited). */
   void _ZN9Animation7AdvanceEv(void* self);
   void AddVec3(void* a, void* b, void* c_);
   int func_ov020_02111418(char* c_);
@@ -713,9 +691,6 @@ void func_ov020_02111b28(char* c){
   int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
   int _ZNK10dBgCh_Actr13GetWallResultEv(void* self);
   void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, void* v);
-  int _ZN4cstd5atan2E5Fix12IiES1_(int x, int y);
-  short _ZN8dActor_c14GetSubtractionEss(void* self, short a, int b);
-  void func_0201267c(int a, void* p);
   if (*(unsigned char*)(c+0x450) != 0) {
     _ZN9Animation7AdvanceEv(c+0x160);
   }
@@ -725,7 +700,7 @@ void func_ov020_02111b28(char* c){
   if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x25c) != 0) {
     *(unsigned char*)(c+0x108) = 0;
     func_ov020_02112110(c);
-    func_0201267c(0xc5, c+0x74);
+    func_0201267c(0xc5, (const Vector3*)(c+0x74));
     return;
   }
   if (_ZNK10dBgCh_Actr8IsOnWallEv(c+0x25c) == 0) return;
@@ -733,12 +708,12 @@ void func_ov020_02111b28(char* c){
     int v[3];
     void* w = (void*)_ZNK10dBgCh_Actr13GetWallResultEv(c+0x25c);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)w+4, v);
-    int a = _ZN4cstd5atan2E5Fix12IiES1_(v[0], v[2]);
-    if (_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c+0x94), a) <= 0x4000) return;
+    short angle = _ZN4cstd5atan2E5Fix12IiES1_(v[0], v[2]);
+    if (((dActor_c*)c)->GetSubtraction(*(short*)(c+0x94), angle) <= 0x4000) return;
   }
   *(unsigned char*)(c+0x108) = 0;
   func_ov020_02112110(c);
-  func_0201267c(0xc5, c+0x74);
+  func_0201267c(0xc5, (const Vector3*)(c+0x74));
 }
 }
 
@@ -760,10 +735,10 @@ void func_ov020_02111aa8(char *c)
         t = *bf;
         sid = 0x166;
         *bf = t & ~1;
-        func_0201267c(sid, c + 0x74);
+        func_0201267c(sid, (const Vector3*)(c + 0x74));
     }
-    _Z14ApproachLinearRiii((int *)(c + 0x98), 0x32000, 0x1000);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    ApproachLinear(*(int *)(c + 0x98), 0x32000, 0x1000);
+    ((dActor_c*)c)->UpdatePos(0);
 }
 }
 
@@ -785,15 +760,15 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
                 *q = *q & ~1;
             }
         }
-        _Z14ApproachLinearRiii((int*)(c + 0xa8), 0, 0x800);
-        _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x800);
+        ApproachLinear(*(int*)(c + 0xa8), 0, 0x800);
+        ApproachLinear(*(int*)(c + 0x98), 0, 0x800);
         if (*(int*)(c + 0xa8) == 0 && *(int*)(c + 0x98) == 0) {
             func_0203568c((int*)(c + 0x25c), 0x32000);
             *(int*)(c + 0x424) = *(int*)(c + 0x428);
             if (*(int*)(c + 0x424) == 3)
                 *(int*)(c + 0x424) = 2;
         }
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+        ((dActor_c*)c)->UpdatePos(0);
     }
 }
 
@@ -969,15 +944,15 @@ int func_ov020_021115ac(void *vc)
 extern "C" {
 extern int func_ov020_021115ac(void *c);
 extern void func_ov020_02112110(char *c);
-extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
-extern int _ZN6Player6BounceE5Fix12IiE(void *self, int fix);
+extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, void *v, unsigned int a, int fix, u8 b, u8 d, u8 e);
+extern void _ZN6Player6BounceE5Fix12IiE(Player *self, int fix);
 int func_ov020_02111418(char *c) {
     int r = func_ov020_021115ac(c);
     if (r == 1) { func_ov020_02112110(c); return 1; }
     if (r == 2) {
         int v[3];
         v[0] = *(int*)(c+0x5c); v[1] = *(int*)(c+0x60); v[2] = *(int*)(c+0x64);
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(void**)(c+0x41c), v, 0, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(Player**)(c+0x41c), v, 0, 0xc000, 1, 0, 1);
         func_ov020_02112110(c);
         return 1;
     }
@@ -986,18 +961,18 @@ int func_ov020_02111418(char *c) {
         if (eq) {
             int v[3];
             v[0] = *(int*)(c+0x5c); v[1] = *(int*)(c+0x60); v[2] = *(int*)(c+0x64);
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(void**)(c+0x41c), v, 2, 0xc000, 1, 0, 1);
+            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(Player**)(c+0x41c), v, 2, 0xc000, 1, 0, 1);
         } else {
             int v[3];
             v[0] = *(int*)(c+0x5c); v[1] = *(int*)(c+0x60); v[2] = *(int*)(c+0x64);
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(void**)(c+0x41c), v, 1, 0xc000, 1, 0, 1);
+            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(*(Player**)(c+0x41c), v, 1, 0xc000, 1, 0, 1);
         }
         *(char*)(c+0x108) = 0;
         func_ov020_02112110(c);
         return 1;
     }
     if (r != -2) return 0;
-    _ZN6Player6BounceE5Fix12IiE(*(void**)(c+0x41c), 0x28000);
+    _ZN6Player6BounceE5Fix12IiE(*(Player**)(c+0x41c), 0x28000);
     func_ov020_02112110(c);
     return 1;
 }
@@ -1043,7 +1018,7 @@ void func_ov020_02111340(void *vc)
             rot.y = (short)((bit << 15) + 0x4000);
             rot.x = 0;
             rot.z = 0;
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x145, 0, &pos, &rot, *(signed char *)(c + 0xcc), -1);
+            dActor_c::Spawn(0x145, 0, pos, &rot, *(signed char *)(c + 0xcc), -1);
         }
     }
 }
@@ -1062,7 +1037,7 @@ void func_ov020_02111340(void *vc)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov020_021112b0(char *c)
 {
-  char *p = _ZN8dActor_c13ClosestPlayerEv(c);
+  char *p = (char*)((dActor_c*)c)->ClosestPlayer();
   if (!p)
     return;
   struct Vector3 *ps = (struct Vector3 *)(((long long)(int)(p + 0x5c)));

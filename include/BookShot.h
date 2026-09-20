@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
  * class's own destructor `_ZN8BookShotD1Ev` destroys each member, and
- * `daBook_c_classInit_SHOOT_BOOK` constructs the same types at the same offsets before
+ * `daBook_c_classInit_SHOOT_BOOK` constructs the same types at the same offsets after
  * storing `_ZTV8BookShot`. Everything this header used to restate below 0x110
  * belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
