@@ -4,10 +4,7 @@
 
 namespace cstd { int fdiv(int a, int b); }
 
-/* The ROM call carries a third register argument even though the imported
- * mangled name records only the opacity. Keep that measured ABI view until
- * the declaration itself is repaired; the ordinary member call is shorter. */
-extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *, u32 opacity, int enable);
+/* The shared ApplyOpacity declaration preserves both retail scalar arguments. */
 
 int PeachPainting::Behavior()
 {
@@ -22,6 +19,6 @@ int PeachPainting::Behavior()
         mOpacity = (u8)(opacity >> 3);
     }
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModel, mOpacity, 1);
+    mModel.ApplyOpacity(mOpacity, 1);
     return 1;
 }

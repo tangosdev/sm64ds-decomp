@@ -28,7 +28,7 @@ void func_ov063_0211640c(char *c);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 void Vec3_Asr(Vector3 *d, const Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
-void _ZN9ModelBase12ApplyOpacityEj(void *self, u32 opacity, int enable);
+void _ZN9ModelBase12ApplyOpacityEjj(void *self, unsigned int opacity, unsigned int unused);
 void func_020167a4(void *p);
 void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *self);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
@@ -68,7 +68,7 @@ extern "C" void func_ov063_021166ac(char *c)
         Vec3_Asr(&t1, (Vector3 *)(c + 0x5c), 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         *(Matrix4x3 *)(c + 0x39c) = data_020a0e68;
-        _ZN9ModelBase12ApplyOpacityEj(c + 0x380, (u8)(*(u8 *)(c + 0x5c8) >> 3), 1);
+        _ZN9ModelBase12ApplyOpacityEjj(c + 0x380, (u8)(*(u8 *)(c + 0x5c8) >> 3), 1);
         func_020167a4(c + 0x380);
         {
             char *p = *(char **)(c + 0x390);
@@ -82,7 +82,7 @@ extern "C" void func_ov063_021166ac(char *c)
         Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));
         *(Matrix4x3 *)(c + 0x39c) = data_020a0e68;
-        _ZN9ModelBase12ApplyOpacityEj(c + 0x380, (u8)(*(u8 *)(c + 0x5c8) >> 3), 1);
+        _ZN9ModelBase12ApplyOpacityEjj(c + 0x380, (u8)(*(u8 *)(c + 0x5c8) >> 3), 1);
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, *(s32 *)(c + 0x5c) >> 3, *(s32 *)(c + 0x60) >> 3, *(s32 *)(c + 0x64) >> 3);

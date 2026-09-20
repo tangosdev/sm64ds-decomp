@@ -9,7 +9,7 @@ extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);
-extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
+extern void _ZN9ModelBase12ApplyOpacityEjj(void *self, unsigned int opacity, unsigned int unused);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_LslInPlace(void *v, int sh);
 extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
@@ -43,7 +43,7 @@ skip_angles:
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(c + 0x8c));
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + 0x90));
     *(Matrix4x3 *)(c + 0xf0) = data_020a0e68;
-    _ZN9ModelBase12ApplyOpacityEj(c + 0xd4, (unsigned char)((int)*(unsigned char *)(c + 0x41c) >> 3), 1);
+    _ZN9ModelBase12ApplyOpacityEjj(c + 0xd4, (unsigned char)((int)*(unsigned char *)(c + 0x41c) >> 3), 1);
     saved = data_020a0e68;
     zero = 0;
     *(int *)(c + 0x3e0) = zero;

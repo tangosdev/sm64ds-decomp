@@ -2276,7 +2276,7 @@ src/_ZN5Model14SetPolygonModeEi.cpp:
     complete
     .text start:0x02016a8c end:0x02016a9c
 
-src/_ZN9ModelBase12ApplyOpacityEj.cpp:
+src/_ZN9ModelBase12ApplyOpacityEjj.cpp:
     complete
     .text start:0x02016a9c end:0x02016aac
 

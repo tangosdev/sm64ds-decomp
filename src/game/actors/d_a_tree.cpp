@@ -18,10 +18,6 @@
  *   form homes them to the stack and size-DIFFs, so the TU-local wrapper
  *   keeps scalar ints.
  * - Clipper::Func_02015560 6az: the same wall on its Fix12<int> scale.
- * - ModelBase::ApplyOpacity keeps its 3-word mangled extern: the call-site
- *   census below measures a third argument register that include/ModelBase.h
- *   does not spell. That is a declaration disagreement to settle tree-wide,
- *   not a codegen wall -- see the extern's own comment.
  * - dCcPos_c::C1 stays a mangled extern: a language limit, not a codegen
  *   one. C++ has no syntax for a qualified constructor call on storage that
  *   already exists, and the alternative -- placement new -- needs a leaf
@@ -95,43 +91,10 @@ int *Vec3_AsrInPlace(Vector3 *v, int shift);
  * sizeof is unsigned long here, so the `new` expression mangles _Znwm,
  * which has no ROM home; the cartridge calls _Znwj. */
 void *_Znwj(unsigned int size);
-/* ApplyOpacity takes a third argument its own body ignores, so the extern
- * spells three words where include/ModelBase.h spells two. MEASURED over the
- * whole cartridge (arm9 + all 104 overlays), not inferred from this call:
- *
- *  - 0x02016a9c is a four-instruction this-adjusting thunk -- `ldr ip,[pc,#4]`
- *    / `add r0, r0, #8` / `bx ip` -- to 0x020461b4, forwarding r1..r3.
- *  - 0x020461b4 genuinely never reads incoming r2: it sets r5 = 0 and then
- *    overwrites r2 with r5 on every iteration. That test is one-way. A callee
- *    that ignores an argument register is what an UNUSED parameter looks like,
- *    so it cannot by itself decide the arity.
- *  - What decides it is the caller side. There are exactly 25 `bl` sites to
- *    0x02016a9c in the cartridge, and all 25 write r2 on the straight-line
- *    path into the branch, inside the r0/r1/r2 setup run, with no call
- *    between: 13 `mov r2,#0`, 10 `mov r2,#1`, and 2 that copy a register
- *    (`mov r2,r1` at ov002:0x020b8034, `mov r2,r5` at ov002:0x020ec14c --
- *    this TU's own Render). Both of those registers provably hold 0, so the
- *    value census is 15 zero / 10 one; neither passes a live value.
- *  - The control that makes 25/25 mean something: across all 47,746 `bl`
- *    sites in the cartridge only 33.4% write r2 in the same 8-instruction
- *    window, and only 76 of the 588 callees with 10+ sites reach 100%. Two
- *    two-argument neighbours score 31/184 (17%) and 13/237 (5%); a known
- *    multi-argument one scores 40/40. See
- *    notes/experiments/batch3-2707-tree-applyopacity-census.md.
- *  - Corroboration from the thunk's own family: the adjacent thunk 0x02016aac
- *    targets 0x0204605c, which READS r2 as an element index (`mla r0, r2,
- *    #0x30, r3`). Same three-register shape, consumed there, ignored here
- *    because 0x020461b4 loops over every index instead of taking one.
- *
- * A register no caller needed would be left alone at some of 25 sites and
- * would not carry two different values. The mangled name is the decomp's own
- * coinage -- neither "ApplyOpacity" nor "9ModelBase" occurs anywhere in the
- * ROM image -- so its single-`unsigned int` mangling is not the cartridge's
- * word on arity either. Reconciling include/ModelBase.h with this measurement
- * renames the symbol and touches all 17 files that already declare the
- * three-word form; that is its own change, not this TU's. Until then the
- * cross-TU extern is where the measurement is spelled. */
-void _ZN9ModelBase12ApplyOpacityEj(Model *self, u32 op, int unused);
+/* The shared opacity method preserves the second scalar argument observed at
+ * every retail caller. It is unused by this implementation; its source name
+ * and unsigned type are reconstruction choices, not recovered ROM spelling.
+ * See notes/experiments/applyopacity-api-0920.md. */
 
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
@@ -236,7 +199,7 @@ int daTree_c::Render()
                 int opacity = kOpacityFull;
                 if (dist < kFadeDist)
                     opacity = ((dist - kFadeBase) >> 12) & 0xff;
-                _ZN9ModelBase12ApplyOpacityEj(model, opacity, 0);
+                model->ApplyOpacity(opacity, 0);
                 mat->t.x = node->pos.x;
                 mat->t.y = node->pos.y - kCanopyLift;
                 mat->t.z = node->pos.z;

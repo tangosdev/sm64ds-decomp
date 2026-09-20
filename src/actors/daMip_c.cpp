@@ -135,7 +135,6 @@ void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, s32, u32)
 void  _ZN9ModelAnim6RenderEPK7Vector3(void *, void *);
 void  _ZN9ModelAnimC1Ev(void *);
 int   _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
-void  _ZN9ModelBase12ApplyOpacityEj(void *, u32, u32);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 char *_ZN9Animation8LoadFileER13SharedFilePtr(void *);
 int   _ZN9Animation8FinishedEv(void *);
@@ -1456,7 +1455,7 @@ void daMip_c::RenderMirrorImage()
     func_02016acc((void *)(c + 0x300), 0x80);
     func_02016b24((void *)(c + 0x300), 0x40);
     _ZN9ModelAnim6RenderEPK7Vector3((void *)(c + 0x300), (void *)(c + 0x80));
-    _ZN9ModelBase12ApplyOpacityEj((void *)(c + 0x300), 0xff, 0);
+    mModelAnim.ApplyOpacity(0xff, 0);
     func_02016b24((void *)(c + 0x300), 0x80);
     func_02016acc((void *)(c + 0x300), 0x40);
     *(struct Mtx43 *)(c + 0x31c) = tmp;

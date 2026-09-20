@@ -42,7 +42,6 @@ extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 rate);
 extern void _Z15ApproachLinear2Riii(s32 *dst, s32 target, s32 rate);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
-extern void _ZN9ModelBase12ApplyOpacityEj(void *c, u32 a, int b);
 }
 
 int daKinopio_c::Behavior()
@@ -115,7 +114,7 @@ int daKinopio_c::Behavior()
 
     mModelAnim.speed = 0x1000;
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(mOpacity >> 3), 1);
+    mModelAnim.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
 
     ((dCc_c *)&mCollider)->Clear();
     ((dCc_c *)&mCollider)->Update();

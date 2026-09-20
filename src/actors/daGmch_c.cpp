@@ -196,7 +196,6 @@ extern int    _ZN4cstd4fdivEii(int a, int b);
 extern int    _ZNK10dBgCh_Actr8IsOnWallEv(void *clsn);
 extern void  *_ZNK10dBgCh_Actr13GetWallResultEv(void *clsn);
 extern void   Matrix4x3_FromRotationY(void *m, int angle);
-extern void   _ZN9ModelBase12ApplyOpacityEj(void *self, u32 op, int z);
 extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
@@ -443,7 +442,7 @@ void daGmch_c::UpdateDrawMatrices()
     mModelAnim.mat4x3.m[10] = mPosY >> 3;
     mModelAnim.mat4x3.m[11] = mPosZ >> 3;
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, mState, 0);
+    mModelAnim.ApplyOpacity(mState, 0);
 
     if (mAngleX != 0) {
         data_020a0e68 = mModelAnim.mat4x3;
@@ -460,7 +459,7 @@ void daGmch_c::UpdateDrawMatrices()
         mModel.mat4x3 = data_020a0e68;
     }
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModel, (0x20 - mState) & 0xff, 0);
+    mModel.ApplyOpacity((0x20 - mState) & 0xff, 0);
 
     mMatrix.m[9] = mPosX >> 3;
     mMatrix.m[10] = mPosY >> 3;
