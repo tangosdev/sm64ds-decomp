@@ -1,0 +1,502 @@
+{
+  "schema": 1,
+  "task": "pr2863-source-repair-0920",
+  "producer_session": "codex-spiny-producer-0920",
+  "harness": "Codex",
+  "input_commit": "ae60f78461fd392862059377bb452143a4f3bd7c",
+  "source_base": "9022c77b3834c5ee77c31b4fb4af587418137d6c",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src_tu/actors/Spiny.cpp",
+  "source_sha256_lf": "dcf58402b3deec1e752daca24d81d887e7330a145d60592ce853ca114df83f62",
+  "scope": "Two bounded shadow-TU repairs. No promotion, header, manifest, symbols, enrollment or ledger change.",
+  "formal_acceptance": false,
+  "completion": "partial",
+  "independence": "The agent that first tested these scratch forms is now their producer. A different reviewer must independently accept this committed repair.",
+  "findings": [
+    {
+      "id": "SP2863-01",
+      "kind": "correctness",
+      "disposition": "fixed locally; independent acceptance pending",
+      "reason": "The namespaced int(void*,int,int) declaration and its unsupported byte-requires-third-argument claim are removed. InitResources now calls the same void(void*,int) contract as the actual TU definition. mDespawnTimer assignment is unchanged.",
+      "evidence": "The honest call alone and the combined repair preserve the entire emitted object, including every relocation; all 34 functions verify strictly."
+    },
+    {
+      "id": "SP2863-02",
+      "kind": "reconstruction",
+      "disposition": "fixed locally; independent acceptance pending",
+      "reason": "The fabricated six-slot Obj class is removed. Calls use the existing Model::Render(const Vector3*) and ModelAnim::Render(const Vector3*) virtual interfaces with null scale.",
+      "evidence": "Each ordinary Render call selects the existing slot 5; isolated and combined repairs preserve the complete object and all 34 strict function results."
+    },
+    {
+      "id": "SP2863-03",
+      "kind": "reconstruction",
+      "disposition": "open",
+      "reason": "The u8 mMatrix member plus padding and its M48 aggregate view remain. This task does not change shared layout or claim recovered matrix typing."
+    },
+    {
+      "id": "SP2863-04",
+      "kind": "reconstruction",
+      "disposition": "open",
+      "reason": "The shadow retains nine unlicensed metadata outputs and reversed destructor ordinal pair [0,1]. Existing raw helper fields, free-function bridges and lifecycle forms are not accepted by this narrow repair. A follow-up issue has not been posted."
+    }
+  ],
+  "compiler": "2004/b56",
+  "compiler_selection": "Derived independently from all 34 legacy manifest entries; wired-worktree canary returned True/2004/b56.",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+  "object_bytes": 21528,
+  "base_and_input_control": "The actual input parent is source_base. Independently compiling both complete shadow TUs gives byte-for-byte identical objects. The repaired object is also identical to both.",
+  "patch_from_input": "--- a/src_tu/actors/Spiny.cpp\n+++ b/src_tu/actors/Spiny.cpp\n@@ -115,7 +115,7 @@\n extern \"C\" int _ZN11ShadowModel12InitCylinderEv(void *self);\n extern \"C\" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);\n extern \"C\" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);\n-namespace three_arg_e94 { extern \"C\" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */\n+extern \"C\" void func_ov077_02125e94(void *c, int state);\n \n extern SharedFilePtr data_ov077_02127b48;\n extern SharedFilePtr data_ov077_02127b38;\n@@ -141,7 +141,7 @@\n     mScaleY = 0x1000;\n     mScaleZ = 0x1000;\n     mDespawnTimer = 0x2c;\n-    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);\n+    func_ov077_02125e94(this, 0);\n     *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;\n     func_ov077_02125304((char *)this);\n     return 1;\n@@ -200,17 +200,13 @@\n // @symbol _ZN5Spiny6RenderEv\n /* recovered: named members + shared header, real C++ method */\n #include \"Spiny.h\"\n-struct Obj {\n-  virtual void m0(); virtual void m1(); virtual void m2();\n-  virtual void m3(); virtual void m4(); virtual void doit(int);\n-};\n \n int Spiny::Render()\n {\n   if((mFlags & 0x40000) ? 1 : 0) return 1;\n   int s=mState;\n-  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);\n-  else ((Obj*)&mModelAnim)->doit(0);\n+  if(s==0 || s==4) mModel.Render(0);\n+  else mModelAnim.Render(0);\n   return 1;\n }\n \n",
+  "measurements": [
+    {
+      "variant": "control",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "real_render",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truthful_call",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truthful_and_render",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truth_timer_first",
+      "compiled": true,
+      "object_sha256": "146acd03f98ae4be23962122849a0ccffd75a9cd4868f26491386456a22e216e",
+      "whole_object_identical_to_input": false,
+      "nonmatching_functions": [
+        {
+          "symbol": "_ZN5Spiny13InitResourcesEv",
+          "rom_size": 316,
+          "compiled_size": 316,
+          "masked_word_diffs": 7
+        }
+      ]
+    },
+    {
+      "variant": "truth_scale_chain",
+      "compiled": true,
+      "object_sha256": "2a477620df0f69180223dddd8d9cda628189824e689d25190975dcf3f33cc101",
+      "whole_object_identical_to_input": false,
+      "nonmatching_functions": [
+        {
+          "symbol": "_ZN5Spiny13InitResourcesEv",
+          "rom_size": 316,
+          "compiled_size": 324,
+          "masked_word_diffs": 999
+        }
+      ]
+    },
+    {
+      "variant": "truth_timer_local",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    },
+    {
+      "variant": "truth_state_local",
+      "compiled": true,
+      "object_sha256": "c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659",
+      "whole_object_identical_to_input": true,
+      "nonmatching_functions": []
+    }
+  ],
+  "unsuccessful_forms": {
+    "truth_timer_first": "Move mDespawnTimer = 0x2c before the three scale stores: InitResources remains 0x13c but seven words differ.",
+    "truth_scale_chain": "mScaleX = mScaleY = mScaleZ = 0x1000 before timer/state initialization: InitResources becomes 0x144 versus retail 0x13c.",
+    "interpretation": "Only these particular forms failed. The simple truthful two-argument call matches without any workaround, so no compiler constraint is claimed."
+  },
+  "successful_forms": {
+    "truthful_call": "extern \"C\" void func_ov077_02125e94(void*, int); then mDespawnTimer = 0x2c; func_ov077_02125e94(this, 0);",
+    "real_render": "Remove struct Obj and replace both casts/doit calls with mModel.Render(0) and mModelAnim.Render(0).",
+    "truth_timer_local": "An ordinary unsigned char despawnTimer = 0x2c local before the scale stores also matches, but is unnecessary and not retained.",
+    "truth_state_local": "An ordinary int initialState = 0 local before the scale stores also matches, but is unnecessary and not retained."
+  },
+  "fresh_applied_source_result": {
+    "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\spiny2863-producer\\manifest.json verify ov077/Spiny",
+    "exit_code": 1,
+    "strict_verified": 34,
+    "function_bytes": 5864,
+    "strict_diffs": [],
+    "strict_blind": 0,
+    "whole_object_identical_to_input_and_base": true,
+    "compiler_only_policy": {
+      "requested": [
+        "_ZN5SpinyD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN5SpinyD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        19,
+        20,
+        29
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "compiler_only_policy_reasons": [],
+    "unlicensed_metadata_symbols": [
+      "_ZTS5Spiny",
+      "_ZTI7fBase_c",
+      "_ZTS7fBase_c",
+      "_ZTS7dBase_c",
+      "_ZTS8dActor_c",
+      "_ZTI5Spiny",
+      "_ZTI8dActor_c",
+      "_ZTI7dBase_c",
+      "_ZTV5Spiny"
+    ],
+    "bad_ordinal_pairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "verdict": "Text/function proof passes; promotion is refused. Exit1 is the inherited nine unlicensed metadata outputs, not a new function mismatch. The historical preflight count of eleven was stale."
+  },
+  "functions": [
+    {
+      "symbol": "_ZN5SpinyD1Ev",
+      "address": "0x02124b64",
+      "size": "0x00000050",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5SpinyD0Ev",
+      "address": "0x02124bb4",
+      "size": "0x00000064",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
+      "address": "0x02124c18",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
+      "address": "0x02124c20",
+      "size": "0x00000008",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124c28",
+      "address": "0x02124c28",
+      "size": "0x000000bc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124ce4",
+      "address": "0x02124ce4",
+      "size": "0x00000024",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124d08",
+      "address": "0x02124d08",
+      "size": "0x000001a8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02124eb0",
+      "address": "0x02124eb0",
+      "size": "0x000001f8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021250a8",
+      "address": "0x021250a8",
+      "size": "0x00000128",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021251d0",
+      "address": "0x021251d0",
+      "size": "0x000000c0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125290",
+      "address": "0x02125290",
+      "size": "0x00000074",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125304",
+      "address": "0x02125304",
+      "size": "0x000000a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021253a4",
+      "address": "0x021253a4",
+      "size": "0x000000dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125480",
+      "address": "0x02125480",
+      "size": "0x000000d0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125550",
+      "address": "0x02125550",
+      "size": "0x00000164",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021256b4",
+      "address": "0x021256b4",
+      "size": "0x0000017c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125830",
+      "address": "0x02125830",
+      "size": "0x000000ac",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_021258dc",
+      "address": "0x021258dc",
+      "size": "0x0000002c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125908",
+      "address": "0x02125908",
+      "size": "0x00000104",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a0c",
+      "address": "0x02125a0c",
+      "size": "0x00000048",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125a54",
+      "address": "0x02125a54",
+      "size": "0x000000c8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125b1c",
+      "address": "0x02125b1c",
+      "size": "0x00000098",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125bb4",
+      "address": "0x02125bb4",
+      "size": "0x00000220",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125dd4",
+      "address": "0x02125dd4",
+      "size": "0x0000004c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e20",
+      "address": "0x02125e20",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e5c",
+      "address": "0x02125e5c",
+      "size": "0x00000038",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "func_ov077_02125e94",
+      "address": "0x02125e94",
+      "size": "0x0000001c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16CleanupResourcesEv",
+      "address": "0x02125eb0",
+      "size": "0x0000003c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny16OnPendingDestroyEv",
+      "address": "0x02125eec",
+      "size": "0x00000004",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny6RenderEv",
+      "address": "0x02125ef0",
+      "size": "0x00000078",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny8BehaviorEv",
+      "address": "0x02125f68",
+      "size": "0x000000f0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13InitResourcesEv",
+      "address": "0x02126058",
+      "size": "0x0000013c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
+      "address": "0x02126194",
+      "size": "0x00000060",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "symbol": "daTgz_c_classInit",
+      "address": "0x021261f4",
+      "size": "0x00000058",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "reproduction_python": [
+    "import pathlib, json, sys, hashlib",
+    "sys.path.insert(0, \"tools\")",
+    "import tubuild as T, build_pin as B, match as M, reloc_audit as R, objisolate as O, linkcheck as L",
+    "src = pathlib.Path(\"src_tu/actors/Spiny.cpp\")",
+    "entry = json.loads(pathlib.Path(\"config/tu_manifest.d/ov077/Spiny.json\").read_text())",
+    "version, note = T.resolve_tu_version(entry)",
+    "assert version == \"2004/b56\" and note is None",
+    "obj = M.compile_c(src, version, B.flags_for(src)); assert obj",
+    "assert hashlib.sha256(obj).hexdigest() == \"c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659\"",
+    "index = R.build_name_index()",
+    "for f in entry[\"functions\"]:",
+    "    isolated, _ = O.derive(obj, f[\"symbol\"])",
+    "    r = L.linkcheck(f[\"symbol\"], int(f[\"address\"], 0), int(f[\"size\"], 0), \"ov077\", index, obj=isolated, sym=f[\"symbol\"])",
+    "    assert r[\"verdict\"] == \"VERIFIED\" and r[\"blind\"] == 0 and not r[\"diffs\"], r",
+    "audited, policy, reasons = T.apply_compiler_only_policy(obj, entry)",
+    "assert not reasons",
+    "extra = T.unlicensed_inventory(entry, T.elf_inventory(audited))",
+    "assert not extra[0] and len(extra[1]) == 9 and not extra[2]",
+    "print(\"34 strict functions pass; nine inherited metadata outputs still prevent promotion\")"
+  ],
+  "coverage_limits": [
+    "No full-ROM build: this source remains unenrolled and a normal production build would not exercise its edits.",
+    "No header changed; all headers/configuration are byte-identical to the actual input/base for this repair.",
+    "No data/license policy was repaired. No declaration-baseline expansion was made.",
+    "Private PR validation on the input reported noverify; it is not substituted for the explicit independent and fresh producer compiles above.",
+    "A follow-up issue and independent partial-source judgment remain pending. No formal pass is asserted."
+  ],
+  "static_checks": [
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "No whitespace errors."
+    },
+    {
+      "command": "python tools/check_decl_agreement.py --changed 9022c77b3834c5ee77c31b4fb4af587418137d6c",
+      "exit_code": 0,
+      "result": "No src/ or include/ source or symbol configuration changed; this gate checks no shadow source and is not evidence for its declarations."
+    },
+    {
+      "command": "python tools/check_dead_references.py",
+      "exit_code": 0,
+      "result": "No new dead references; 1971 Markdown links checked, zero broken. Existing baseline debt unchanged."
+    },
+    {
+      "command": "Execute reproduction_python from this experiment record under python -X utf8",
+      "exit_code": 0,
+      "result": "Replay independently recompiled the applied source, asserted exact object SHA, and verified all 34 functions with the recorded policy limits."
+    }
+  ]
+}

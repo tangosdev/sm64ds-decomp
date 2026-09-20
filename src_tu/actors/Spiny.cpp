@@ -115,7 +115,7 @@ extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f,
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
-namespace three_arg_e94 { extern "C" int func_ov077_02125e94(void *c, int a, int b); } /* InitResources's call byte-requires the third argument; the TU's file-scope view is (void*, int) */
+extern "C" void func_ov077_02125e94(void *c, int state);
 
 extern SharedFilePtr data_ov077_02127b48;
 extern SharedFilePtr data_ov077_02127b38;
@@ -141,7 +141,7 @@ int Spiny::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
-    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);
+    func_ov077_02125e94(this, 0);
     *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304((char *)this);
     return 1;
@@ -200,17 +200,13 @@ done:
 // @symbol _ZN5Spiny6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "Spiny.h"
-struct Obj {
-  virtual void m0(); virtual void m1(); virtual void m2();
-  virtual void m3(); virtual void m4(); virtual void doit(int);
-};
 
 int Spiny::Render()
 {
   if((mFlags & 0x40000) ? 1 : 0) return 1;
   int s=mState;
-  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);
-  else ((Obj*)&mModelAnim)->doit(0);
+  if(s==0 || s==4) mModel.Render(0);
+  else mModelAnim.Render(0);
   return 1;
 }
 
