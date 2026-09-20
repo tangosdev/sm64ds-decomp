@@ -8,7 +8,7 @@
   "tested_base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
   "policy_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
   "source": "src/game/actors/d_a_nknk.cpp",
-  "source_sha256": "205964bb3068e1dd32e46ef0bdce297ce095c66350befaa41abf5d88878b225e",
+  "source_sha256": "2304455a9d3945d56f07ce8e362095541a8147814a82ee0350b923419451f130",
   "scope": "Text-only production promotion of39 Koopa functions, native daNknk_c lifecycle identity,26 external contract dependency files, exact ledgers and affected queue rows. Data/BSS remain at their canonical original owners.",
   "accounting": {
     "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
@@ -1376,7 +1376,7 @@
     "before": {
       "class_name": "Koopa",
       "shard_count": "1",
-      "total_lines": "1443",
+      "total_lines": "1442",
       "overlay": "ov062",
       "has_header": "yes",
       "already_promoted": "yes",
@@ -1387,7 +1387,7 @@
     "after": {
       "class_name": "Koopa",
       "shard_count": "1",
-      "total_lines": "1442",
+      "total_lines": "1434",
       "overlay": "ov062",
       "has_header": "yes",
       "already_promoted": "yes",
@@ -1405,7 +1405,7 @@
       ],
       "run_functions": 39,
       "src_files": 1,
-      "total_lines": 1442,
+      "total_lines": 1434,
       "unmatched": 0,
       "no_legacy_source": 0,
       "sourceless": [],
@@ -1420,8 +1420,8 @@
         "class": "daKpa2Bg_c",
         "before": {
           "class_name": "daKpa2Bg_c",
-          "shard_count": "10",
-          "total_lines": "191",
+          "shard_count": "3",
+          "total_lines": "260",
           "overlay": "ov060",
           "has_header": "yes",
           "already_promoted": "yes",
@@ -1464,11 +1464,11 @@
         "before": {
           "class_name": "daMky_c",
           "shard_count": "3",
-          "total_lines": "2382",
+          "total_lines": "2381",
           "overlay": "ov030",
           "has_header": "yes",
           "already_promoted": "yes",
-          "blockers": "compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)",
+          "blockers": "pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)",
           "sibling_oracle": "-",
           "promotion_route": "text-only"
         },
@@ -1508,7 +1508,7 @@
         "before": {
           "class_name": "daSanbo_c",
           "shard_count": "1",
-          "total_lines": "1132",
+          "total_lines": "1129",
           "overlay": "ov096",
           "has_header": "yes",
           "already_promoted": "yes",
@@ -7358,6 +7358,699 @@
     },
     "reproduction": "Recreate probe input from source_input and the exact diff above; apply each variant patch. Compile with match.compile_c and the recorded 2004/b56 flags. Derive all39 manifest symbols with objisolate.derive and linkcheck.linkcheck at their module/address/size. The true production linker must also resolve the final member import; inferred-address strict checks alone did not catch the old missing import."
   },
+  "cleanup_and_lifecycle": {
+    "input_commit": "c4668008f8dfefbc92380491494bafae56a6742e",
+    "path": "src/game/actors/d_a_nknk.cpp",
+    "compiler": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "selected": "named_for_this",
+    "selected_source_sha256": "5b50a74fbd826ef3afcfe277d5e283e30ec1a35f7d9a6d383b44a6020eb5474d",
+    "inline_lifecycle_body": "~daNknk_c() {}",
+    "lifecycle_header": "include/Koopa.h",
+    "lifecycle_source": "Actual inline destructor body through tiers._lifecycle_member_fragment; no synthetic @symbol D1/D0 slices.",
+    "accounting": "37 written function markers +2compiler-generated destructor variants;39ROMfunctions. The same four prior converted identities remain converted, with no added credit or new match.",
+    "scope": "Three real SharedFilePtr::Release calls restore main2705 source quality; only required cast is Entry* array to actual SharedFilePtr*. Named fields/ordinaryloop adopted only when entire object identity and strict39 hold. No other method changes.",
+    "accepted_patch": "--- a/src/game/actors/d_a_nknk.cpp\n+++ b/src/game/actors/d_a_nknk.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,22 +476,17 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n+  int b = actorID == 0xcc;\n   if (b == 0)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n+  for (int i = 0; i < 9; ++i)\n   {\n-    int i = 0;\n-    do\n-    {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n-      i++;\n-    }\n-    while (i < 9);\n+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();\n   }\n-  UnloadBlueCoinModel(((char *)this));\n+  UnloadBlueCoinModel(this);\n   return 1;\n }\n \n",
+    "probes": [
+      {
+        "tag": "control",
+        "object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+        "object_size": 26424,
+        "whole_object_identical_to_control": true,
+        "summary": {
+          "VERIFIED": 39
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": false,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": false,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 39,
+        "patch_from_input": ""
+      },
+      {
+        "tag": "release_and_real_lifecycle",
+        "object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+        "object_size": 26424,
+        "whole_object_identical_to_control": true,
+        "summary": {
+          "VERIFIED": 39
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ release_and_real_lifecycle.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -482,14 +479,14 @@\n   int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n   if (b == 0)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]->Release();\n   {\n     int i = 0;\n     do\n     {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n+      ((SharedFilePtr *)data_ov062_0211cee8[(long) i])->Release();\n       i++;\n     }\n     while (i < 9);\n"
+      },
+      {
+        "tag": "named_fields",
+        "object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+        "object_size": 26424,
+        "whole_object_identical_to_control": true,
+        "summary": {
+          "VERIFIED": 39
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ named_fields.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,17 +476,17 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n+  int b = actorID == 0xcc;\n   if (b == 0)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n   {\n     int i = 0;\n     do\n     {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n+      ((SharedFilePtr *)data_ov062_0211cee8[(long) i])->Release();\n       i++;\n     }\n     while (i < 9);\n"
+      },
+      {
+        "tag": "direct_condition",
+        "object_sha256": "22ec90327cc1f48ae6d493eb4e531353ff774549439acba23a6cad4d705fb9a7",
+        "object_size": 26408,
+        "whole_object_identical_to_control": false,
+        "summary": {
+          "VERIFIED": 38,
+          "NO-REPRO": 1
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ direct_condition.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,17 +476,16 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n-  if (b == 0)\n+  if (actorID != 0xcc)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n   {\n     int i = 0;\n     do\n     {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n+      ((SharedFilePtr *)data_ov062_0211cee8[(long) i])->Release();\n       i++;\n     }\n     while (i < 9);\n"
+      },
+      {
+        "tag": "ordinary_for",
+        "object_sha256": "22ec90327cc1f48ae6d493eb4e531353ff774549439acba23a6cad4d705fb9a7",
+        "object_size": 26408,
+        "whole_object_identical_to_control": false,
+        "summary": {
+          "VERIFIED": 38,
+          "NO-REPRO": 1
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ ordinary_for.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,20 +476,14 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n-  if (b == 0)\n+  if (actorID != 0xcc)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n+  for (int i = 0; i < 9; ++i)\n   {\n-    int i = 0;\n-    do\n-    {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n-      i++;\n-    }\n-    while (i < 9);\n+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();\n   }\n   UnloadBlueCoinModel(((char *)this));\n   return 1;\n"
+      },
+      {
+        "tag": "ordinary_for_this",
+        "object_sha256": "22ec90327cc1f48ae6d493eb4e531353ff774549439acba23a6cad4d705fb9a7",
+        "object_size": 26408,
+        "whole_object_identical_to_control": false,
+        "summary": {
+          "VERIFIED": 38,
+          "NO-REPRO": 1
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ ordinary_for_this.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,22 +476,16 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n-  if (b == 0)\n+  if (actorID != 0xcc)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n+  for (int i = 0; i < 9; ++i)\n   {\n-    int i = 0;\n-    do\n-    {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n-      i++;\n-    }\n-    while (i < 9);\n+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();\n   }\n-  UnloadBlueCoinModel(((char *)this));\n+  UnloadBlueCoinModel(this);\n   return 1;\n }\n \n"
+      },
+      {
+        "tag": "named_for",
+        "object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+        "object_size": 26424,
+        "whole_object_identical_to_control": true,
+        "summary": {
+          "VERIFIED": 39
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ named_for.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,20 +476,15 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n+  int b = actorID == 0xcc;\n   if (b == 0)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n+  for (int i = 0; i < 9; ++i)\n   {\n-    int i = 0;\n-    do\n-    {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n-      i++;\n-    }\n-    while (i < 9);\n+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();\n   }\n   UnloadBlueCoinModel(((char *)this));\n   return 1;\n"
+      },
+      {
+        "tag": "named_for_this",
+        "object_sha256": "f78e036176fd6aab9607c17681c296bc5b0d24cd4577f0643fd27fed4a3f7489",
+        "object_size": 26424,
+        "whole_object_identical_to_control": true,
+        "summary": {
+          "VERIFIED": 39
+        },
+        "four_existing_converted_scores": {
+          "_ZN8daNknk_cD1Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_cD0Ev": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16CleanupResourcesEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          },
+          "_ZN8daNknk_c16OnPendingDestroyEv": {
+            "real_name": true,
+            "no_raw_offset": true,
+            "no_unk_field": true,
+            "no_codegen_trick": true,
+            "no_mangled_refs": true,
+            "shared_header": true
+          }
+        },
+        "written_symbol_markers": 37,
+        "patch_from_input": "--- control.cpp\n+++ named_for_this.cpp\n@@ -7,8 +7,6 @@\n  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.\n  */\n // Inline definitions in Koopa.h, emitted here by the two factories:\n-// @symbol _ZN8daNknk_cD1Ev\n-// @symbol _ZN8daNknk_cD0Ev\n #include \"Koopa.h\"\n #include \"common.h\"\n #include \"types.h\"\n@@ -471,7 +469,6 @@\n /* -------------------------------------------------------------------------- */\n // @symbol _ZN8daNknk_c16CleanupResourcesEv\n extern \"C\" {\n-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);\n extern void UnloadBlueCoinModel(void *c);\n }\n extern struct SharedFilePtr *data_ov062_0211cee0[];\n@@ -479,22 +476,17 @@\n \n int daNknk_c::CleanupResources()\n {\n-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);\n+  int b = actorID == 0xcc;\n   if (b == 0)\n   {\n-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);\n+    data_ov062_0211cee0[mModelIndex]->Release();\n   }\n-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);\n+  data_ov062_0211ced8[mModelIndex]->Release();\n+  for (int i = 0; i < 9; ++i)\n   {\n-    int i = 0;\n-    do\n-    {\n-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);\n-      i++;\n-    }\n-    while (i < 9);\n+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();\n   }\n-  UnloadBlueCoinModel(((char *)this));\n+  UnloadBlueCoinModel(this);\n   return 1;\n }\n \n",
+        "strict": [
+          {
+            "name": "_ZN8daNknk_cD1Ev",
+            "module": "ov062",
+            "addr": "0x021174cc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_cD0Ev",
+            "module": "ov062",
+            "addr": "0x02117514",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117570",
+            "module": "ov062",
+            "addr": "0x02117570",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_021175c0",
+            "module": "ov062",
+            "addr": "0x021175c0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117724",
+            "module": "ov062",
+            "addr": "0x02117724",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117994",
+            "module": "ov062",
+            "addr": "0x02117994",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_021179e4",
+            "module": "ov062",
+            "addr": "0x021179e4",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117a3c",
+            "module": "ov062",
+            "addr": "0x02117a3c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117acc",
+            "module": "ov062",
+            "addr": "0x02117acc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117b48",
+            "module": "ov062",
+            "addr": "0x02117b48",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117b60",
+            "module": "ov062",
+            "addr": "0x02117b60",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117b9c",
+            "module": "ov062",
+            "addr": "0x02117b9c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117bf4",
+            "module": "ov062",
+            "addr": "0x02117bf4",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02117c98",
+            "module": "ov062",
+            "addr": "0x02117c98",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118004",
+            "module": "ov062",
+            "addr": "0x02118004",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118058",
+            "module": "ov062",
+            "addr": "0x02118058",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_021180d4",
+            "module": "ov062",
+            "addr": "0x021180d4",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_0211811c",
+            "module": "ov062",
+            "addr": "0x0211811c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_021181a0",
+            "module": "ov062",
+            "addr": "0x021181a0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118258",
+            "module": "ov062",
+            "addr": "0x02118258",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118334",
+            "module": "ov062",
+            "addr": "0x02118334",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_021183e0",
+            "module": "ov062",
+            "addr": "0x021183e0",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118588",
+            "module": "ov062",
+            "addr": "0x02118588",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118718",
+            "module": "ov062",
+            "addr": "0x02118718",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118a00",
+            "module": "ov062",
+            "addr": "0x02118a00",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118a50",
+            "module": "ov062",
+            "addr": "0x02118a50",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118b4c",
+            "module": "ov062",
+            "addr": "0x02118b4c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118cdc",
+            "module": "ov062",
+            "addr": "0x02118cdc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "func_ov062_02118de8",
+            "module": "ov062",
+            "addr": "0x02118de8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c16CleanupResourcesEv",
+            "module": "ov062",
+            "addr": "0x02118f04",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c16OnPendingDestroyEv",
+            "module": "ov062",
+            "addr": "0x02118f80",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c6RenderEv",
+            "module": "ov062",
+            "addr": "0x02118f84",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c8BehaviorEv",
+            "module": "ov062",
+            "addr": "0x021190ec",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c13InitResourcesEv",
+            "module": "ov062",
+            "addr": "0x02119420",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c16OnAimedAtWithEggEv",
+            "module": "ov062",
+            "addr": "0x02119608",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+            "module": "ov062",
+            "addr": "0x02119628",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "_ZN8daNknk_c13OnYoshiTryEatEv",
+            "module": "ov062",
+            "addr": "0x021196a8",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "daNknk_c_classInit_NOKONOKO_S",
+            "module": "ov062",
+            "addr": "0x021196bc",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          },
+          {
+            "name": "daNknk_c_classInit_NOKONOKO",
+            "module": "ov062",
+            "addr": "0x0211970c",
+            "verdict": "VERIFIED",
+            "diffs": [],
+            "blind": 0
+          }
+        ]
+      }
+    ]
+  },
   "fresh_main_control": {
     "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
     "rom_artifact": {
@@ -7665,10 +8358,66 @@
         }
       ]
     },
+    "rom": {
+      "stage": "rom",
+      "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+      "head_before": "c4668008f8dfefbc92380491494bafae56a6742e",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/rombuild.py",
+            "-j16",
+            "--report-json",
+            "build/koopa-production/rom.json",
+            "--data-json",
+            "build/koopa-production/data.json"
+          ],
+          "exit_code": 0,
+          "seconds": 135.73,
+          "log": "build/koopa-production/rombuild.log"
+        },
+        {
+          "name": "prepush-linkcheck",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "2705c624d2554ee8d21a56641275a2b85cce3a8b..HEAD",
+            "--json",
+            "build/koopa-production/prepush-linkcheck.json"
+          ],
+          "exit_code": 0,
+          "seconds": 157.5,
+          "log": "build/koopa-production/prepush-linkcheck.log"
+        },
+        {
+          "name": "romdata",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/romdata_check.py",
+            "--files",
+            "src/game/actors/d_a_nknk.cpp",
+            "--json",
+            "build/koopa-production/koopa-data.json"
+          ],
+          "exit_code": 0,
+          "seconds": 0.41,
+          "log": "build/koopa-production/romdata.log"
+        }
+      ]
+    },
     "static": {
       "stage": "static",
       "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
-      "head_before": "d81de04a24a2c0059c6814c71bf512e1547e0e65",
+      "head_before": "c4668008f8dfefbc92380491494bafae56a6742e",
       "gates": [
         {
           "name": "coverage",
@@ -7682,7 +8431,7 @@
             "2705c624d2554ee8d21a56641275a2b85cce3a8b"
           ],
           "exit_code": 0,
-          "seconds": 0.42,
+          "seconds": 0.41,
           "log": "build/koopa-production/coverage.log"
         },
         {
@@ -7694,7 +8443,7 @@
             "tools/layout_check.py"
           ],
           "exit_code": 0,
-          "seconds": 0.36,
+          "seconds": 0.39,
           "log": "build/koopa-production/layout.log"
         },
         {
@@ -7707,7 +8456,7 @@
             "--list"
           ],
           "exit_code": 0,
-          "seconds": 0.31,
+          "seconds": 0.19,
           "log": "build/koopa-production/conflicts.log"
         },
         {
@@ -7718,9 +8467,64 @@
             "utf8",
             "tools/check_dead_references.py"
           ],
-          "exit_code": 1,
-          "seconds": 9.83,
+          "exit_code": 0,
+          "seconds": 6.11,
           "log": "build/koopa-production/references.log"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.95,
+          "log": "build/koopa-production/port.log"
+        },
+        {
+          "name": "declarations",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "2705c624d2554ee8d21a56641275a2b85cce3a8b"
+          ],
+          "exit_code": 0,
+          "seconds": 8.49,
+          "log": "build/koopa-production/declarations.log"
+        },
+        {
+          "name": "attribution",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_attribution.py",
+            "--base",
+            "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+            "--head",
+            "HEAD"
+          ],
+          "exit_code": 0,
+          "seconds": 63.55,
+          "log": "build/koopa-production/attribution.log"
+        },
+        {
+          "name": "converted",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/tiers_ratchet.py",
+            "--check"
+          ],
+          "exit_code": 1,
+          "seconds": 3.72,
+          "log": "build/koopa-production/converted.log"
         }
       ]
     }
@@ -7749,8 +8553,21 @@
       "kind": "correctness",
       "summary": "Promotion exposes a scanner-omitted Matrix4x3 versus private Mtx43 contract contradiction.",
       "repair": "Canonical shared matrix definition and all13 affected callers, including omitted daMky declarations;57 healed diagnostics, zero new ones."
+    },
+    {
+      "id": "KP2864-09",
+      "kind": "reconstruction",
+      "summary": "Older consolidated CleanupResources had lost the genuine Release calls already present in main.",
+      "repair": "Restore three real member calls, use the named actor fields and an ordinary for loop; remove synthetic lifecycle markers so the actual inline destructor body supplies both variant scores. Complete object is identical and all four original converted identities remain valid."
     }
   ],
   "prior_findings": "KP2864-01 through KP2864-06 remain in the source-stage experiment and independent review. The original promotion kind of KP2864-04 is retained there; do not erase or relabel it to defer correctness.",
-  "gate_claim": "Only completed local results below are claimed. Exact-head independent Source review and terminal private CI remain separate requirements."
+  "gate_claim": "Only completed local results below are claimed. Exact-head independent Source review and terminal private CI remain separate requirements.",
+  "specialized_tool_mode_refusal": {
+    "command": "python tools/tubuild.py linkcheck ov062/Koopa+KoopaSmall -j16",
+    "result": "REFUSED: intact production requires one .text claim and at least one non-text claim",
+    "cause": "The already-enrolled branch of tubuild.cmd_linkcheck forces intact-object preparation for any enrolled candidate, even when this manifest has only text and no production_mode:intact-object. Normal rombuild enables intact preparation only for explicit intact-object manifests.",
+    "proof_required_instead": "Normal production rombuild with full source-function accounting, actual linked39-function span, exact ROM, strict relocations, all emitted metadata and complete raw output/order/policy audit. The refused invocation is not reported as a linkcheck pass.",
+    "tooling_changes": null
+  }
 }

@@ -7,8 +7,6 @@
  * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.
  */
 // Inline definitions in Koopa.h, emitted here by the two factories:
-// @symbol _ZN8daNknk_cD1Ev
-// @symbol _ZN8daNknk_cD0Ev
 #include "Koopa.h"
 #include "common.h"
 #include "types.h"
@@ -471,7 +469,6 @@ void daNknk_c::OnPendingDestroy()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daNknk_c16CleanupResourcesEv
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);
 extern void UnloadBlueCoinModel(void *c);
 }
 extern struct SharedFilePtr *data_ov062_0211cee0[];
@@ -479,22 +476,17 @@ extern struct SharedFilePtr *data_ov062_0211ced8[];
 
 int daNknk_c::CleanupResources()
 {
-  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);
+  int b = actorID == 0xcc;
   if (b == 0)
   {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);
+    data_ov062_0211cee0[mModelIndex]->Release();
   }
-  _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211ced8[*((int *) ((char *)&mModelIndex))]);
+  data_ov062_0211ced8[mModelIndex]->Release();
+  for (int i = 0; i < 9; ++i)
   {
-    int i = 0;
-    do
-    {
-      _ZN13SharedFilePtr7ReleaseEv((SharedFilePtr *)data_ov062_0211cee8[(long) i]);
-      i++;
-    }
-    while (i < 9);
+    ((SharedFilePtr *)data_ov062_0211cee8[i])->Release();
   }
-  UnloadBlueCoinModel(((char *)this));
+  UnloadBlueCoinModel(this);
   return 1;
 }
 
