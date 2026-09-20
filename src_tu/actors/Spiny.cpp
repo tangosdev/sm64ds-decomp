@@ -128,22 +128,22 @@ int Spiny::InitResources()
 {
     BMD_File *bmd;
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b48);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b38);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x124, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov077_02127c14);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x124, *(BCA_File **)((char *)&data_ov077_02127c14 + 4), 0, 0x1000, 0);
-    if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel))
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File **)((char *)&data_ov077_02127c14 + 4), 0, 0x1000, 0);
+    if (!_ZN11ShadowModel12InitCylinderEv(&mShadowModel))
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x1b0, (dActor_c *)((char *)this), 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x1e4, (dActor_c *)((char *)this), 0x2d000, 0, (Vector3_16 *)((char *)&mPrevAngleX), (Vector3_16 *)((char *)&mAngleX));
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x2d000, 0, (Vector3_16 *)&mPrevAngleX, (Vector3_16 *)&mAngleX);
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
-    three_arg_e94::func_ov077_02125e94(((char *)this), 0, 0x2c);
-    *(M48 *)((char *)&mMatrix) = *(M48 *)&IDENTITY_MATRIX4X3;
-    func_ov077_02125304(((char *)this));
+    three_arg_e94::func_ov077_02125e94(this, 0, 0x2c);
+    *(M48 *)&mMatrix = *(M48 *)&IDENTITY_MATRIX4X3;
+    func_ov077_02125304((char *)this);
     return 1;
 }
 
@@ -171,24 +171,24 @@ extern signed char data_0209f2f8;
 int Spiny::Behavior()
 {
     int s = mState;
-    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
+    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv(&mWithMeshClsn)) {
         s = mState;
-        if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
-            if (DecIfAbove0_Byte((unsigned char*)((char*)&mDespawnTimer)) == 0) {
-                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+        if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000)) {
+            if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+                _ZN7fBase_c18MarkForDestructionEv(this);
                 return 1;
             }
             goto done;
         }
     }
-    func_ov077_02124c28(((char*)this));
-    func_ov077_02125e20(((char*)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x1b0);
-    func_ov077_02125304(((char*)this));
+    func_ov077_02124c28(this);
+    func_ov077_02125e20(this);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(this, &mdCcAc_c);
+    func_ov077_02125304((char *)this);
     if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {
-        _ZN8dActor_c8PoofDustEv(((char*)this));
-        func_02012694(0xc4, ((char*)this) + 0x74);
-        _ZN7fBase_c18MarkForDestructionEv(((char*)this));
+        _ZN8dActor_c8PoofDustEv(this);
+        func_02012694(0xc4, &mCamSpacePosX);
+        _ZN7fBase_c18MarkForDestructionEv(this);
     }
 done:
     return 1;
@@ -209,8 +209,8 @@ int Spiny::Render()
 {
   if((mFlags & 0x40000) ? 1 : 0) return 1;
   int s=mState;
-  if(s==0 || s==4) ((Obj*)((char *)&mModel))->doit(0);
-  else ((Obj*)((char *)&mModelAnim))->doit(0);
+  if(s==0 || s==4) ((Obj*)&mModel)->doit(0);
+  else ((Obj*)&mModelAnim)->doit(0);
   return 1;
 }
 
