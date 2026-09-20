@@ -314,7 +314,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | [ov020](../../config/arm9/overlays/ov020/symbols.txt) |
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
-| `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
+| `bhvKoopa` | → | `Koopa` (+`daRNk_c`, `KoopaFlag`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
 | `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
 | `bhvHeaveHo` | → | `daPopoi_c` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) |
 | `bhvFlyGuy` | → | `FlyGuy` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
@@ -342,7 +342,7 @@ Combined with N64's field vocabulary (`oPosX`/`oAction`/…) and the hitbox cons
 `sm64/src/game/behaviors/*.inc.c`, this is directly usable when drafting DS `Behavior()` /
 `InitResources()` or renaming `func_ov###_########` placeholders for these actors.
 
-DS-only / EAD additions, not chased: `KoopaTheQuick`, `daIDonketu_c` (then called `ChillBully` here)/`daKing_Donketu_c` (Snowman's Land
+DS-only / EAD additions, not chased: `daRNk_c`, `daIDonketu_c` (then called `ChillBully` here)/`daKing_Donketu_c` (Snowman's Land
 reskins — N64 doesn't reuse Bully there), `daKinopio_c`, `daDossy_c` (then called `Dorrie` here).
 
 ---

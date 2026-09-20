@@ -6,8 +6,10 @@ Producer `codex-bookshot-decls-0920` owns task `pr2869-source-repair-0920` in
 `C:/tmp/sm64ds-book2869-repair0920`, branch `fix/pr2869-bookshot-decls0920`.
 The two predecessor tasks are `pr2868-source-repair-0920` and
 `pr2868-composition-0920`; both independent reviews completed before this claim.
-The historical composition base is `c04f97677c3c30b269354a36435c027bdd0afd5f`.
-Current-main acceptance must be refreshed if a later source-bearing main lands.
+The final composition base is actual BookShot-merged main
+`a3776dc057779c652309ab5de764061c63a426ad`; the original local measurements used
+`c04f97677c3c30b269354a36435c027bdd0afd5f`. Current-main acceptance must be refreshed
+if a later source-bearing main lands.
 
 The original PR's typed collision members are retained. `mShadowModel.InitCylinder()`
 now uses the genuine method. Both accepted `SetFile` member calls and every earlier
@@ -71,6 +73,24 @@ is retained in the experiment and will be carried into independent review.
 
 The running task's original two predecessor IDs remain immutable. The later
 accepted dependency above is explicitly recorded here and in producer evidence;
-current v2 amendment supports resource additions, not predecessor edits. This is
-still an unpublished producer checkpoint awaiting the integrator's final current
-main revision. No passing source acceptance or current-main completion is claimed.
+current v2 amendment supports resource additions, not predecessor edits. The final composition below incorporates the supplied main revision. No passing
+independent source acceptance is claimed by this producer.
+
+
+## Final composition for independent review
+
+Branch `fix/pr2869-final-main0920` preserves both earlier branches: source repair
+`102d3df731a9cfc7e217a7042f7e761c6bb8d15a` and metadata continuation
+`a4b060303b55e0f34334a765c6a31d8764e0afc6`. Actual merged main is
+`a3776dc057779c652309ab5de764061c63a426ad`, after PRs #2859, #2863 and #2868.
+Only the owned declaration hunk conflicted. Main's incoming source blob exactly
+equals accepted `2de63065`/`d160ad64`, so the preflighted follow-up source was
+retained byte-for-byte. Every unrelated main path is preserved. Relative to main,
+the delta is this existing shadow TU plus the two owned evidence documents.
+
+Required final gates are fresh pinned31 strict functions, complete-object identity,
+explicit complete-output limitations, conflicts, dead references, scoped declaration
+agreement, port references and whitespace. Exact final commit/results are bound in
+producer queue evidence; an independent reviewer must publish the source verdict.
+BOOK2868-01 through BOOK2868-06 and BOOK2869-01 all remain in scope with issue2872.
+No source branch, PR body or merge is published by this worker.

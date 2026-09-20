@@ -168,7 +168,7 @@
   "followup_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
   "next_owner": "codex-integrator-0920",
   "limits": [
-    "This is historical composition on c04; later review-relevant main movement requires a separately verified composition.",
+    "Final composition uses actual BookShot-merged main a3776dc057779c652309ab5de764061c63a426ad. Any later review-relevant main movement needs renewed exact composition acceptance.",
     "No class/layout/header/manifest/ledger/enrollment edit, source promotion or metadata licensing.",
     "No full-ROM claim: the shadow is unenrolled. All complete-object failures are retained.",
     "Producer proof is not independent source acceptance."
@@ -198,5 +198,20 @@
     },
     "independent_metadata_evidence": "pr2868-conflict-notes-independent-review.json",
     "protocol_note": "Existing task predecessors are immutable in current v2; amend only extends resources. Adopt this later accepted dependency and preserve its finding explicitly in producer evidence and final independent review; do not reuse another session receipt."
+  },
+  "final_composition": {
+    "base": "a3776dc057779c652309ab5de764061c63a426ad",
+    "previous_frozen_candidate": "a4b060303b55e0f34334a765c6a31d8764e0afc6",
+    "accepted_metadata_commit": "2de630659a82f027501fe66792068c97ff18f0b6",
+    "source_blob": "fdb05af48d31496f85de068a1a8a26de8921f48d",
+    "incoming_source_blob": "957997ee6ee8ef1664cc32f9dc6ed5916db4bf55",
+    "source_unchanged_from_previous_candidate": true,
+    "all_unrelated_main_paths_preserved": true,
+    "conflict_resolution": "Only this owned TU declaration hunk conflicted. Incoming main source exactly equals accepted2de/d160; preserve entire preflighted a4 source after that identity check. No source edits were needed.",
+    "new_delta_from_main": [
+      "notes/agents/handoffs/pr2869-source-repair-0920.md",
+      "notes/experiments/pr2869-source-repair-0920.json",
+      "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp"
+    ]
   }
 }

@@ -1,0 +1,654 @@
+{
+  "head": "291f8997a6cb16754bb30da4bdfef59772795200",
+  "tested_base": "aba8efc2891b1428d73af41fc78c3439fb1dd7bd",
+  "accepted_source": "2de630659a82f027501fe66792068c97ff18f0b6",
+  "producer_session": "codex-book-after-spiny-composer-0920",
+  "formal_acceptance": false,
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "complete_object_sha256": "05b5f1dc672fdd24cda95ebcd02e9a2327fe297bc948a889077b75a320620688",
+  "complete_object_bytes": 22376,
+  "object_equals_own_accepted_control": true,
+  "function_bytes": 6040,
+  "strict_summary": {
+    "VERIFIED": 31
+  },
+  "strict_functions": [
+    {
+      "name": "_ZN8BookShotD1Ev",
+      "module": "ov020",
+      "addr": "0x021111a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShotD0Ev",
+      "module": "ov020",
+      "addr": "0x021111f0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN15BookShotSpawnerD1Ev",
+      "module": "ov020",
+      "addr": "0x02111254",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN15BookShotSpawnerD0Ev",
+      "module": "ov020",
+      "addr": "0x02111278",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_021112b0",
+      "module": "ov020",
+      "addr": "0x021112b0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111340",
+      "module": "ov020",
+      "addr": "0x02111340",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111418",
+      "module": "ov020",
+      "addr": "0x02111418",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_021115ac",
+      "module": "ov020",
+      "addr": "0x021115ac",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_0211174c",
+      "module": "ov020",
+      "addr": "0x0211174c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_021119dc",
+      "module": "ov020",
+      "addr": "0x021119dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111aa8",
+      "module": "ov020",
+      "addr": "0x02111aa8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111b28",
+      "module": "ov020",
+      "addr": "0x02111b28",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111c30",
+      "module": "ov020",
+      "addr": "0x02111c30",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111ee0",
+      "module": "ov020",
+      "addr": "0x02111ee0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02111fc4",
+      "module": "ov020",
+      "addr": "0x02111fc4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02112080",
+      "module": "ov020",
+      "addr": "0x02112080",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_02112110",
+      "module": "ov020",
+      "addr": "0x02112110",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov020_0211216c",
+      "module": "ov020",
+      "addr": "0x0211216c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot16CleanupResourcesEv",
+      "module": "ov020",
+      "addr": "0x02112244",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN15BookShotSpawner16CleanupResourcesEv",
+      "module": "ov020",
+      "addr": "0x02112290",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot6RenderEv",
+      "module": "ov020",
+      "addr": "0x021122c4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot8BehaviorEv",
+      "module": "ov020",
+      "addr": "0x0211233c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN15BookShotSpawner8BehaviorEv",
+      "module": "ov020",
+      "addr": "0x02112418",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot13InitResourcesEv",
+      "module": "ov020",
+      "addr": "0x021124e4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN15BookShotSpawner13InitResourcesEv",
+      "module": "ov020",
+      "addr": "0x02112768",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot16OnAimedAtWithEggEv",
+      "module": "ov020",
+      "addr": "0x021127a4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "_ZN8BookShot13OnYoshiTryEatEv",
+      "module": "ov020",
+      "addr": "0x021127cc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "daBook_c_classInit_BOOK_SWITCH",
+      "module": "ov020",
+      "addr": "0x021127f4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "daBookGen_c_classInit",
+      "module": "ov020",
+      "addr": "0x02112850",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "daBook_c_classInit_KILLER_BOOK",
+      "module": "ov020",
+      "addr": "0x02112880",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "daBook_c_classInit_SHOOT_BOOK",
+      "module": "ov020",
+      "addr": "0x021128dc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "header_consumers": [
+    {
+      "name": "_ZN8BookShot13InitResourcesEv",
+      "module": "ov020",
+      "addr": "0x021124e4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot13InitResourcesEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShot13OnYoshiTryEatEv",
+      "module": "ov020",
+      "addr": "0x021127cc",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot13OnYoshiTryEatEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShot16CleanupResourcesEv",
+      "module": "ov020",
+      "addr": "0x02112244",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot16CleanupResourcesEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShot16OnAimedAtWithEggEv",
+      "module": "ov020",
+      "addr": "0x021127a4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot16OnAimedAtWithEggEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShot6RenderEv",
+      "module": "ov020",
+      "addr": "0x021122c4",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot6RenderEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShot8BehaviorEv",
+      "module": "ov020",
+      "addr": "0x0211233c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShot8BehaviorEv.cpp"
+    },
+    {
+      "name": "_ZN8BookShotD0Ev",
+      "module": "ov020",
+      "addr": "0x021111f0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShotD0Ev.cpp"
+    },
+    {
+      "name": "_ZN8BookShotD1Ev",
+      "module": "ov020",
+      "addr": "0x021111a0",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "source": "src/_ZN8BookShotD1Ev.cpp"
+    }
+  ],
+  "affected_src_command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/affected_src.py include/BookShot.h",
+  "accepted_blobs_preserved": {
+    "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json": "100644 blob 8b0202a9146481f6dc4cf85b9ff586472af74f03",
+    "include/BookShot.h": "100644 blob 4564bbe0848741077d60b5cbab70327f27eacd65",
+    "include/BookShotSpawner.h": "100644 blob e70ffdc6417f080aa4104fd80f5b381a7d3eaff3",
+    "notes/agents/handoffs/pr2868-composition-0920.md": "100644 blob bdbceee7e48fce8b2955003b66851174554ce0e8",
+    "notes/agents/handoffs/pr2868-conflict-notes-0920.md": "100644 blob e6ea9b53ebb1eb546f1117687fedc94fd90702c9",
+    "notes/agents/handoffs/pr2868-source-repair-0920.md": "100644 blob 23255f2563787f420f9152705ee2e3c6a6efde1a",
+    "notes/experiments/pr2868-composition-0920.json": "100644 blob 960ed8a58d3c052d9c22f937c1335e5acb659af6",
+    "notes/experiments/pr2868-source-repair-0920.json": "100644 blob d61e8490c475036d8c4b3a58afa4c0538f9d1665",
+    "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp": "100644 blob 957997ee6ee8ef1664cc32f9dc6ed5916db4bf55"
+  },
+  "all_unrelated_main_blobs_preserved": true,
+  "main_ledgers_preserved": {
+    "attribution.json": true,
+    "config/decl-agreement-baseline.json": true,
+    "config/converted-baseline.json": true,
+    "notes/data/tu-promotion-queue.tsv": true
+  },
+  "source_delta_from_actual_main": [
+    "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+    "include/BookShot.h",
+    "notes/agents/handoffs/pr2868-composition-0920.md",
+    "notes/agents/handoffs/pr2868-conflict-notes-0920.md",
+    "notes/agents/handoffs/pr2868-source-repair-0920.md",
+    "notes/experiments/pr2868-composition-0920.json",
+    "notes/experiments/pr2868-source-repair-0920.json",
+    "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp"
+  ],
+  "checks": [
+    {
+      "name": "whole_tu",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/tubuild.py --manifest C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\manifest.json verify ov020/BookShot+BookShotSpawner+Bookend",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "seconds": 1.47,
+      "log": "C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\whole_tu.log"
+    },
+    {
+      "name": "tubuild_conflicts",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/check_tubuild_conflicts.py ov020/BookShot+BookShotSpawner+Bookend --list",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 0.12,
+      "log": "C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\tubuild_conflicts.log"
+    },
+    {
+      "name": "declarations",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/check_decl_agreement.py --changed aba8efc2891b1428d73af41fc78c3439fb1dd7bd",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 7.13,
+      "log": "C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\declarations.log"
+    },
+    {
+      "name": "port_references",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/port_refcheck.py",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 1.5,
+      "log": "C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\port_references.log"
+    },
+    {
+      "name": "dead_references",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/check_dead_references.py",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 10.15,
+      "log": "C:\\tmp\\sm64ds-bookcompose0920\\build\\pr2868-after-spiny\\composition\\dead_references.log"
+    }
+  ],
+  "compiler_only_policy_errors": [
+    "unlicensed function _ZN15BookShotSpawnerD2Ev has no compiler_only_output policy",
+    "unlicensed function _ZN7Vector3D1Ev has no compiler_only_output policy",
+    "unlicensed function _ZN8BookShotD2Ev has no compiler_only_output policy"
+  ],
+  "unlicensed_outputs": [
+    [
+      {
+        "name": "_ZN8BookShotD2Ev",
+        "shndx": 27,
+        "value": 0,
+        "size": 80,
+        "bind": "STB_GLOBAL",
+        "type": "STT_FUNC"
+      },
+      {
+        "name": "_ZN15BookShotSpawnerD2Ev",
+        "shndx": 33,
+        "value": 0,
+        "size": 36,
+        "bind": "STB_GLOBAL",
+        "type": "STT_FUNC"
+      },
+      {
+        "name": "_ZN7Vector3D1Ev",
+        "shndx": 41,
+        "value": 0,
+        "size": 4,
+        "bind": "STB_LOPROC",
+        "type": "STT_FUNC"
+      }
+    ],
+    [
+      {
+        "name": "_ZTI7fBase_c",
+        "shndx": 5,
+        "value": 0,
+        "size": 8,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS7fBase_c",
+        "shndx": 8,
+        "value": 0,
+        "size": 9,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS7dBase_c",
+        "shndx": 7,
+        "value": 0,
+        "size": 9,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS8BookShot",
+        "shndx": 9,
+        "value": 0,
+        "size": 10,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS8dActor_c",
+        "shndx": 10,
+        "value": 0,
+        "size": 10,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTI7dBase_c",
+        "shndx": 11,
+        "value": 0,
+        "size": 12,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTI15BookShotSpawner",
+        "shndx": 13,
+        "value": 0,
+        "size": 12,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS15BookShotSpawner",
+        "shndx": 22,
+        "value": 0,
+        "size": 18,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTI8dActor_c",
+        "shndx": 17,
+        "value": 0,
+        "size": 12,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTI12dEnemyBase_c",
+        "shndx": 15,
+        "value": 0,
+        "size": 12,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTS12dEnemyBase_c",
+        "shndx": 21,
+        "value": 0,
+        "size": 15,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTI8BookShot",
+        "shndx": 19,
+        "value": 0,
+        "size": 12,
+        "bind": "STB_LOPROC",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTV15BookShotSpawner",
+        "shndx": 23,
+        "value": 0,
+        "size": 132,
+        "bind": "STB_GLOBAL",
+        "type": "STT_OBJECT"
+      },
+      {
+        "name": "_ZTV8BookShot",
+        "shndx": 25,
+        "value": 0,
+        "size": 132,
+        "bind": "STB_GLOBAL",
+        "type": "STT_OBJECT"
+      }
+    ],
+    []
+  ],
+  "limits": [
+    "Unenrolled shadow. No full-ROM or production promotion claim.",
+    "Seventeen unlicensed outputs, three policy errors and inherited reversed destructor ordinal pairs remain; complete-output gate deliberately retains failure.",
+    "Declaration ratchet excludes src_tu and is not fresh proof of every shadow contract."
+  ],
+  "inherited_findings": [
+    "BOOK2868-01",
+    "BOOK2868-02",
+    "BOOK2868-03",
+    "BOOK2868-04",
+    "BOOK2868-05",
+    "BOOK2868-06"
+  ],
+  "followup": "https://github.com/tangosdev/sm64ds-decomp/issues/2872",
+  "followup_owner": "codex-integrator-0920",
+  "tracked_clean": true,
+  "task_id": "pr2868-after-spiny-0920",
+  "predecessor_tasks": [
+    "pr2868-conflict-notes-0920",
+    "pr2868-composition-0920"
+  ],
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "inherited_source_review": {
+    "accepted_commit": "2de630659a82f027501fe66792068c97ff18f0b6",
+    "tested_base": "c04f97677c3c30b269354a36435c027bdd0afd5f",
+    "reviewer_session": "codex-bookmeta-review-0920",
+    "completion": "partial",
+    "findings": [
+      {
+        "id": "BOOK2868-01",
+        "kind": "reconstruction",
+        "location": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp; include/BookShot.h",
+        "summary": "The original member-offset cleanup is retained and correctly identifies the embedded objects.",
+        "reason": "Source observation accepted as fixed reconstruction for schema vocabulary only: actual offsets/layout witnesses agree, original author ancestry is retained, and fresh31strict plus complete-object identity confirm preservation.",
+        "disposition": "fixed"
+      },
+      {
+        "id": "BOOK2868-02",
+        "kind": "reconstruction",
+        "location": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp:338,449; include/BookShot.h",
+        "summary": "Raw matrix/vector overlays and other helper/interface reconstruction remain partial.",
+        "reason": "Actual issue2872 assigns the real-field and ordinary-interface work to codex-integrator-0920. Correct scalar SetAnim/DropShadow bridges are retained after documented valid ordinary-member probes enlarged affected functions; those bounded measurements do not claim all cleaner forms impossible.",
+        "disposition": "deferred",
+        "owner": "codex-integrator-0920",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872"
+      },
+      {
+        "id": "BOOK2868-03",
+        "kind": "reconstruction",
+        "location": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json",
+        "summary": "The complete emitted object still fails ownership/policy/order requirements for promotion.",
+        "reason": "Fresh gate exits1:17unlicensed outputs(3functions+14objects), missing BookShotD2/BookShotSpawnerD2/Vector3D1 policies, and destructor order pairs[0,1]/[2,3]. These are reconstruction prerequisites under actual issue2872, explicitly deferred for this unenrolled shadow. No full-output or promotion pass is claimed.",
+        "disposition": "deferred",
+        "owner": "codex-integrator-0920",
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2872"
+      },
+      {
+        "id": "BOOK2868-04",
+        "kind": "correctness",
+        "location": "src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp",
+        "summary": "All nine reported contradictory call-contract families are repaired.",
+        "reason": "Verified genuine ClosestPlayer, UpdatePos, SetFile, Spawn and both ApproachLinear overloads; void state helper has one result-discarding caller. Short angle plus genuine GetSubtraction preserves correct int comparison. Sound, Hurt/Bounce, SetAnim and DropShadow scalar bridges agree with actual pinned definitions. All31strict pass, complete object identical, targeted diagnostics empty. Correctness is fixed rather than deferred.",
+        "disposition": "fixed"
+      },
+      {
+        "id": "BOOK2868-05",
+        "kind": "provenance",
+        "location": "include/BookShot.h:6-9",
+        "summary": "The factory-order comment now states that members are constructed after the derived vptr store.",
+        "reason": "Only before->after changed. Non-comment header text is identical and all eight production consumers strictly verify. Actual factory bytes still match; retail daBook_c identity and member-layout evidence are preserved.",
+        "disposition": "fixed"
+      },
+      {
+        "id": "BOOK2868-06",
+        "kind": "provenance",
+        "disposition": "fixed",
+        "location": "config/tu_manifest.d/ov020/BookShot+BookShotSpawner+Bookend.json:252-256,260",
+        "summary": "The six stale open-conflict records are now explicitly resolved while preserving historical warning text.",
+        "reason": "Independently inspected each real definition and repaired call population. Exact successor changes only the six approved RESOLVED prefixes and its handoff; actual full conflicts check passes with13 remaining open notes and13 markers. All previous findings and partial issue ownership are retained."
+      }
+    ]
+  },
+  "destructor_order_exceptions": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "new_source_edits": false,
+  "new_header_or_manifest_edits": false,
+  "final_commit_binding": "This report records the tested clean merge. The final candidate adds only this report and its handoff; exact-final source-blob/reference/whitespace checks bind those documentation additions before publication. Independent verification remains required."
+}
