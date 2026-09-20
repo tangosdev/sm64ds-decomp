@@ -154,8 +154,13 @@ from a mode the port never entered.
       screen to latch it, and port_level_boot_target() is the seam.
   data_0209f264 = SM64DS_ENTRANCE    data_0209f264 = data_0209f268
       SAME SHAPE. data_0209f268 is the entrance the previous scene chose.
-  data_0209f220 = SM64DS_STAR_FILTER data_0209f220 = data_0209f1f0
-      SAME SHAPE. data_0209f1f0 is the game-mode byte.
+  data_0209f220 = data_0209f1f0      data_0209f220 = data_0209f1f0
+      THE ROM'S OWN LINE NOW, after the 0.4.1 patch. data_0209f1f0 is the act
+      the level change staged and the star select's own output
+      (src/_ZN12dScStarSel_c8BehaviorEv.cpp:147). This used to read
+      SM64DS_STAR_FILTER unconditionally and so threw the player's chosen act
+      away on every course entry. SM64DS_STAR_FILTER now seats the PENDING act
+      once, on the first stage boot, exactly as SM64DS_ENTRANCE does above it.
   data_0209f344 = &VS_STAR_SPAWN_    data_0209f344 = &data_02075720[
     ORDERS[data_020a1040 % 6][0]       func_0203dad4() % 6]
       TRUE DUPLICATE of the ROM's tail block, and the comment at

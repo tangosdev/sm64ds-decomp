@@ -1473,6 +1473,32 @@ static void port_level_scene_interlude(void)
                          (int)data_0209f1f0,
                          (unsigned)((unsigned short *)data_020a0e58)[0],
                          (unsigned)((unsigned short *)data_020a0e58)[1]);
+        /* THE GRID ITSELF, once it exists and again on every change.
+           dScStarSel_c::InitResources:283-320 derives the row the player is
+           looking at from the save block, and every question about "why did
+           the pick not move" is a question about these six bytes: how many
+           icons there are (+0x114), which of them may be chosen (+0x131), the
+           one under the cursor (+0x115, and the act is that plus one), and the
+           three state bytes the Behavior's own arms are gated on (+0x133,
+           +0x135 -- nonzero is what lets a button confirm at all -- and
+           +0x139). Without them a row can only report that nothing happened. */
+        {
+            static unsigned char was[6];
+            static int had;
+            unsigned char *sc = (unsigned char *)port_scene_live_object();
+            if (sc) {
+                const unsigned char now[6] = { sc[0x114], sc[0x131], sc[0x115],
+                                               sc[0x133], sc[0x135], sc[0x139] };
+                if (!had || std::memcmp(now, was, sizeof now) != 0) {
+                    had = 1;
+                    std::memcpy(was, now, sizeof now);
+                    std::fprintf(stderr, "  [starsel] f%d grid icons %u mask "
+                                 "%02x cur %u (act %u) state %02x/%02x/%02x\n",
+                                 f, now[0], now[1], now[2], now[2] + 1u,
+                                 now[3], now[4], now[5]);
+                }
+            }
+        }
         /* AND EVERY EDGE OF IT, because a press held for two hundred frames in
            the middle of a thousand is invisible on a line printed every three
            hundred. This is the line that separates "the host was polled" from
