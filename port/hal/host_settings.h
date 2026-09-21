@@ -873,11 +873,12 @@ int host_setting_renderer(void);
 /* ---- THE SAVE MENU ON THE TOP SCREEN (one key) -----------------------------
 
    SaveMenuOnTop: while the level-clear save menu is up after a Power Star,
-   the two DS screens trade places. The bottom screen -- the three buttons the
-   player has to answer -- is presented as the BIG picture at full size, and
-   the top screen -- the course-clear text and the coin tally -- drops into the
-   corner inset the bottom screen normally sits in. The frame the menu is
-   answered, by a click on any row or by Start, they swap back.
+   the big picture is COMPOSED out of both DS screens instead of showing one
+   of them. The top screen's course-clear text goes at the top, the bottom
+   screen's three button plates go in the middle at the largest size the
+   space between allows, and the top screen's coin total goes at the very
+   bottom. Nothing else of either screen is drawn. The frame the menu is
+   answered, by a click on any row or by Start, the ordinary picture is back.
 
    ABSENT MEANS ON. It is a mod the owner asked for and recommended on, the
    same default ImprovedMinimap carries and for the same reason. 0 is the

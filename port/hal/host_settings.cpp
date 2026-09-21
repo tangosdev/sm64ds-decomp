@@ -1718,7 +1718,8 @@ void load_once(void)
     if (g_swap_camera_turn)
         fprintf(stderr, "[settings] SwapCameraTurnDirection on (%s)\n", path);
     /* Off its default, so it is said once: this copy keeps the level-clear
-       save menu on the corner panel instead of swapping the screens. */
+       save menu on the corner panel instead of composing it onto the big
+       picture. */
     if (!g_save_menu_on_top)
         fprintf(stderr, "[settings] SaveMenuOnTop off -- the save menu "
                 "after a star stays on the corner panel (%s)\n", path);
@@ -2680,7 +2681,7 @@ extern "C" int host_setting_improved_minimap(void)
    same three reasons.
 
    ABSENT IS ON. It is a mod the owner asked for and recommended on, so a
-   settings file written before the key existed gets the swap.
+   settings file written before the key existed gets the composed picture.
 
    IT IS PINNED OFF ON EVERY COMPARATOR ROUTE. A window selftest and a scene
    sweep row are the two shapes every recorded baseline capture in this tree
@@ -2691,8 +2692,9 @@ extern "C" int host_setting_improved_minimap(void)
    port/tools at once.
 
    THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
-   run that means to look at the swap sets SM64DS_SAVE_MENU_ON_TOP=1 and gets
-   it, selftest or not, which is how this lane's own captures were taken. */
+   run that means to look at the composed picture sets
+   SM64DS_SAVE_MENU_ON_TOP=1 and gets it, selftest or not, which is how every
+   capture of it was taken. */
 extern "C" int host_setting_save_menu_on_top(void)
 {
     static int env = -2;
