@@ -1257,6 +1257,56 @@ int g_present_backend = 0;
 int g_present_filter = 0;
 int g_vsync = 0;
 
+/* ---- THE IMPROVED MINIMAP'S TWO KEYS ---------------------------------------
+
+   MinimapScale is a multiplier on the panel the port draws TODAY (half a DS
+   screen, so 128x96), which is what "scaled from how it is" means: 1 is the
+   current picture, byte for byte.
+
+   IT IS A FREE NUMBER NOW, not one of six rows, because the owner asked to
+   drag the map's corner and scale it against the window by hand. The launcher
+   keeps its 1 / 1.25 / 1.5 / 2 / 3 / 4 picker and every one of those six is
+   still exact; a number between them is just as legal, and the picker's own
+   round trip shows the nearest row for one the player dragged to.
+
+   THE ONE THING A SIZE HAS TO BE is a whole number of pixels in both axes.
+   The map is drawn from a 256x192 source and keeps its 4:3 shape, so its
+   drawn width k must be a multiple of four for 3k/4 to be whole. Every size
+   is therefore quantised onto that grid -- steps of four pixels of width,
+   three of height, one thirty-second of a multiplier -- and the six picker
+   rows land on it exactly: 128, 160, 192, 256, 384 and 512.
+
+   The ratio handed to the compose and to the stylus inverse is k/256, which
+   for those six reduces to the 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1 they used
+   before and draws the identical picture. */
+int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
+double g_minimap_scale = 1.0; /* the multiplier, 1 or more */
+
+/* THE MAP'S DRAWN WIDTH for a multiplier, on the grid above. Absent, zero,
+   negative and unparseable all read as 1, the Aspect rule: a number that is a
+   picture beats an error. The ceiling is a sanity bound only -- the real
+   limit is "the whole panel still fits in the picture" and only the drawing
+   layer knows the picture. */
+int minimap_scale_k(double v)
+{
+    if (!(v > 0.0)) v = 1.0;
+    int k = (int)(v * 128.0 + 0.5);
+    k = (k + 2) & ~3;
+    if (k < 128) k = 128;
+    if (k > 4096) k = 4096;
+    return k;
+}
+
+/* Put a multiplier on the grid, and say through `snapped` whether it had to
+   move, so the one caller that wants to say so can say it once rather than
+   every reader printing a line. */
+double minimap_scale_sanitise(double v, int *snapped)
+{
+    const double q = minimap_scale_k(v) / 128.0;
+    if (snapped) *snapped = (v != q) ? 1 : 0;
+    return q;
+}
+
 void load_once(void)
 {
     if (g_loaded) return;
@@ -1561,6 +1611,24 @@ void load_once(void)
            from. A file written before these keys existed reads as one that
            left all three off, which is the shipped picture. */
         g_render_scale = render_scale_sanitise(json_int(text, "RenderScale", 0));
+        /* THE IMPROVED MINIMAP, and the default is the odd one in this file:
+           ABSENT IS ON. Every other feature key here defaults off so a file
+           written before the key existed reads as the shipped picture; this
+           one is on by the owner's explicit order, so a file with no
+           ImprovedMinimap line gets the improved map. Both spellings of the
+           toggle, the RunMode rule: the launcher serialises a C# bool and a
+           player editing by hand may write 1. */
+        g_improved_minimap = (json_int(text, "ImprovedMinimap", 1) != 0 &&
+                              json_bool(text, "ImprovedMinimap", 1) != 0) ? 1 : 0;
+        {
+            int snapped = 0;
+            const double want = json_num(text, "MinimapScale", 1.0);
+            g_minimap_scale = minimap_scale_sanitise(want, &snapped);
+            if (snapped)
+                fprintf(stderr, "[settings] MinimapScale %g is not a whole "
+                        "number of pixels in both axes -- using %g, the "
+                        "nearest that is\n", want, g_minimap_scale);
+        }
         /* Both spellings of a toggle, the RunMode rule: the launcher
            serialises a C# bool as true/false and a player editing by hand may
            write 1. Either says on; absent and anything else say off. */
@@ -2489,6 +2557,101 @@ extern "C" int host_setting_render_scale(void)
     return g_render_scale;
 }
 
+/* ---- THE IMPROVED MINIMAP'S TWO GETTERS ------------------------------------
+
+   THE PIN IS HERE, IN THE GETTER, rather than in the frame loop, and that is
+   the whole reason this pair is not two more lines of boilerplate. The option
+   changes what the bottom-screen panel DRAWS. Every recorded baseline in this
+   tree -- the five level-1 capture hashes, hd1's six key-absent captures, the
+   opening gate, every sweep row -- is a picture taken on one of exactly two
+   routes: a window selftest (SM64DS_WINDOW_SELFTEST) or a scene run
+   (SM64DS_SCENE_FRAMES). A feature that moved those hashes would look like a
+   hundred regressions and be none of them. Both frame loops and every proof
+   tool in port/tools go through this one function, so pinning it once here
+   covers all of them, and tests/walk_window.cpp needs no line of its own.
+
+   THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
+   run that means to look at the improved map sets SM64DS_IMPROVED_MINIMAP=1
+   and gets it, selftest or not, which is how this lane's own captures were
+   taken. That is the same precedence SM64DS_DUAL_SCREEN has over the layout
+   proposal in hal/sub_screen.cpp. */
+extern "C" int host_setting_improved_minimap(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_IMPROVED_MINIMAP");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    if (getenv("SM64DS_WINDOW_SELFTEST") || getenv("SM64DS_SCENE_FRAMES"))
+        return 0;
+    load_once();
+    return g_improved_minimap;
+}
+
+extern "C" double host_setting_minimap_scale_value(void)
+{
+    static int env_read = 0;
+    static double env = -1.0;        /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_MINIMAP_SCALE");
+        if (e && *e) {
+            char *end = 0;
+            const double v = strtod(e, &end);
+            env = (end != e) ? minimap_scale_sanitise(v, 0) : 1.0;
+        }
+    }
+    if (env > 0.0) return env;
+    load_once();
+    return g_minimap_scale;
+}
+
+/* The chosen size as the exact rational the drawing and the touch inverse
+   share. ONE function, so a size can never mean two things in two files --
+   which is the rule the corner panel's geometry was already keeping with its
+   single integer divisor and has to keep now that the divisor is a fraction
+   the player can drag. */
+extern "C" void host_setting_minimap_scale_ratio(int *num, int *den)
+{
+    const int k = minimap_scale_k(host_setting_minimap_scale_value());
+    if (num) *num = k;
+    if (den) *den = 256;
+}
+
+/* THE DRAG'S TWO WRITES.
+ *
+ * _live moves the size for this run and nothing else: it is called on every
+ * frame of a drag, and a settings file rewritten sixty times a second would
+ * be a file the launcher is reading while it is half written.
+ *
+ * _save is the mouse-up: the same move, and then the number on disk, so the
+ * size survives a restart and the launcher's picker opens on it. It goes
+ * through save_keys like the debug menu's run and camera rows, which reloads
+ * the document and carries every key this program did not write across
+ * untouched. The environment override still wins over both for the rest of
+ * the run, deliberately: a proof run that pinned a size keeps it.
+ *
+ * %.6g is enough to print any number on the grid exactly (the grid is
+ * thirty-seconds, and 4096/128 = 32 is the ceiling), so a value written here
+ * reads back as the same value. */
+extern "C" void host_setting_minimap_scale_set_live(double s)
+{
+    load_once();
+    g_minimap_scale = minimap_scale_sanitise(s, 0);
+}
+
+extern "C" int host_setting_save_minimap_scale(double s)
+{
+    load_once();
+    g_minimap_scale = minimap_scale_sanitise(s, 0);
+    char v[32];
+    snprintf(v, sizeof v, "%.6g", g_minimap_scale);
+    const char *const keys[1] = { "MinimapScale" };
+    const char *const vals[1] = { v };
+    return save_keys(keys, vals, 1, "minimap size");
+}
+
 /* HdTextures: 1 when the replacement pack is on. SM64DS_HD_TEXTURES has the
    mod keys' grammar rather than a number's -- unset is the file's answer,
    empty or "0" forces it off, anything else forces it on -- because that is
@@ -2542,6 +2705,45 @@ extern "C" const char *host_setting_hd_textures_dir(void)
                 snprintf(dir, sizeof dir, "%s/textures_hd", root);
             else
                 snprintf(dir, sizeof dir, "textures_hd");
+        }
+    }
+    return dir;
+}
+
+/* WHERE THE IMPROVED MAP'S PANEL ARTWORK WOULD BE READ FROM, whether or not
+   anything is there. Exactly the shape host_setting_hd_textures_dir has above,
+   and for the same reason: an asset folder beside the game data, named here so
+   a log line can say where the game looked.
+
+     SM64DS_MINIMAP_DIR    the folder outright, used as given. A test points
+                           this at a read-only folder somewhere else.
+     SM64DS_ASSET_ROOT     "<root>/minimap". In a player's kit the launcher
+                           sets the asset root to the bundle directory, so
+                           this is a folder sitting beside the exe, exactly
+                           where textures_hd sits.
+     neither               "minimap", relative to the working directory.
+
+   THE PICTURES ARE NOT PART OF THIS PROGRAM. Nothing here ships, embeds or
+   copies them: the code reads a folder, and whether a folder with those two
+   files in it travels with a download is a packaging decision made outside
+   the code. With no folder the panel is composed at run time from the
+   player's own game data, which is what hal/sub_screen.cpp did before this
+   and still does. Built once, never null. */
+extern "C" const char *host_setting_minimap_dir(void)
+{
+    static int built = 0;
+    static char dir[1024];
+    if (!built) {
+        built = 1;
+        const char *over = getenv("SM64DS_MINIMAP_DIR");
+        if (over && *over) {
+            snprintf(dir, sizeof dir, "%s", over);
+        } else {
+            const char *root = getenv("SM64DS_ASSET_ROOT");
+            if (root && *root && strlen(root) + 12 < sizeof dir)
+                snprintf(dir, sizeof dir, "%s/minimap", root);
+            else
+                snprintf(dir, sizeof dir, "minimap");
         }
     }
     return dir;

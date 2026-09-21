@@ -644,6 +644,8 @@ unsigned int _ZNK6Player14GetBodyModelIDEjb(char *, unsigned int, char);
 extern int data_0209f498[];    /* CheckInput's own Ctrl[4] block */
 extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
+extern unsigned char data_0209f4a8[]; /* split: stylus x  (Ctrl +0x10) */
+extern unsigned char data_0209f4a9[]; /* split: stylus y  (Ctrl +0x11) */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
 /* THE PRESSED HALFWORD'S SPLIT SYMBOL. On the DS this IS data_020a0e58 + 2 --
@@ -9063,6 +9065,14 @@ extern "C" void port_frame_ctrl_publish(void)
                     *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
                     *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
                     *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+                    /* THE STYLUS POINT, Ctrl +0x10 and +0x11, the same two
+                       bytes hal/stage_frame.cpp's prime copy fans out and for
+                       the same reason: Minimap::Behavior draws the touch
+                       marker at 0x100 - x, 0x80 - y out of these, so with
+                       them stuck at zero it landed in the map's top-left
+                       corner wherever the player touched. */
+                    *((unsigned char *)data_0209f4a8 + o) = *(const unsigned char *)(r + 0x10);
+                    *((unsigned char *)data_0209f4a9 + o) = *(const unsigned char *)(r + 0x11);
                     *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
                 }
             }

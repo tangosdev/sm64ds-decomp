@@ -87,6 +87,15 @@
 #include "hal/comms_seam.h"   /* run mg16 lane MP3: touch_ring_index/advance */
 
 #include "hal/screen_gap.h"
+#include "hal/host_settings.h"   /* the improved map's two keys */
+
+/* The PNG reader, vendored public-domain and already the one this port uses
+   for the replacement texture pack (ntr/hdtex.cpp, which is where the
+   IMPLEMENTATION is compiled -- every ntr library variant carries it, and
+   every target that links this file links one of them). Declarations only
+   here. The relative include is the spelling hdtex.cpp uses, because
+   port/CMakeLists.txt belongs to another lane. */
+#include "../third_party/stb/stb_image.h"
 
 namespace OAM {
 void Reset();
@@ -111,6 +120,14 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy);
 /* the layout mode, defined at the bottom of this file */
 int hal_sub_screen_stacked(void);
 void hal_touch_client_probe(void);
+/* THE THREE ATTENTION ARROWS, re-anchored above the panel (engine A's raster,
+   hal/message_compositor.cpp, which owns the sprites; this file owns where the
+   panel is). Called with the panel rect this frame's compose just drew, so the
+   arrows follow the size, the aspect and the render scale for free. Inert
+   unless hal_minimap_arrow_reanchor_on below says so, and nothing to draw is
+   the ordinary case: the ROM raises the cue only on a map event. */
+void port_bounce_arrows_present(unsigned int *dst, int dst_w, int dst_h,
+                                int px0, int py0, int pw, int ph);
 /* the two engines' brightness blends (hal/fader_wipes.cpp). The SUB one is what
    the sub framebuffer is composed with; the main one is still read by the inset
    path, where the panel is inside engine A's framebuffer when walk_window's own
@@ -190,6 +207,34 @@ namespace {
 
 const int kMargin = 8;
 
+/* ---- THE CORNER PANEL'S GEOMETRY, COMPUTED ONCE ----------------------------
+ *
+ * THREE READERS, ONE ARITHMETIC. The compose draws the panel, this file
+ * publishes its origin, and poll_touch's inset arm runs the whole thing
+ * backwards to turn a client pixel into a DS pixel. Before the size became a
+ * player option those three shared one integer divisor and agreed by
+ * construction. A fraction cannot be trusted to agree by construction -- two
+ * sites rounding 5/8 of 256 independently is exactly the shape of defect that
+ * put every menu tap two thirds of the way up its button at 32:9 (lane WIDE4)
+ * -- so the numbers are computed HERE, once per frame, and the other two read
+ * these variables rather than recomputing anything.
+ *
+ * g_pan_num / g_pan_den is the size as a fraction of one DS screen:
+ *
+ *   option OFF   1 / g_div          exactly what this file has always drawn
+ *   option ON    the MinimapScale table's ratio (index 0 is 1/2, which IS
+ *                g_div 2, so scale 1 with the option on is the same picture)
+ *
+ * SM64DS_SUB_SCALE still rules with the option off and is IGNORED with it on:
+ * the two knobs mean the same thing and the player-facing one wins when the
+ * player has turned it on. Said here rather than discovered by a player whose
+ * old environment variable stopped having an effect.
+ */
+int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
+int g_pan_num = 1, g_pan_den = 2;   /* panel size as a fraction of a DS screen */
+int g_pan_w, g_pan_h;               /* the drawn panel, in framebuffer pixels */
+int g_pan_margin = kMargin;         /* what was left of the margin (see below) */
+
 bool g_on = true;
 bool g_ready;
 /* Headless runs must not read the mouse or the keyboard. SM64DS_WINDOW_SELFTEST
@@ -204,7 +249,1247 @@ bool g_headless;
    window in the background has a documented way to say so. */
 bool g_nofocusgate;
 int g_x0, g_y0;            // panel origin in framebuffer pixels
-int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
+
+/* The improved map's own gate, asked once per process. The keys are latched
+   at boot like Aspect and RenderScale, so re-asking every frame would only
+   re-walk the environment. */
+int improved_map_on(void)
+{
+    static int v = -1;
+    if (v < 0) v = host_setting_improved_minimap() ? 1 : 0;
+    return v;
+}
+
+/* How far the decorated panel reaches past the map on each side, in
+   framebuffer pixels, for the size currently in g_pan_*. Defined further down,
+   beside the panel's own geometry, and declared here because the size has to
+   be settled before anything is drawn. Zero on all four sides with the option
+   off, where there is no panel. */
+void panel_extents(int *l, int *t, int *r, int *b);
+
+/* The inset selftest's size override, in g_pan_num's own units. Zero at every
+   other moment, including in every player's run. */
+int g_size_force;
+
+/* SM64DS_MINIMAP_TRACE=1: every rectangle the geometry above and the panel's
+   own settled on, printed when one of them changes. It exists so that a
+   capture can be MEASURED against the numbers the program actually drew,
+   rather than against a restatement of this arithmetic in some other
+   language -- which is the one thing a proof about a picture must not be.
+   Silent without the variable. Defined beside the panel's geometry. */
+void panel_trace(int w, int h);
+
+/* THE ONE ARITHMETIC. See the banner over g_pan_num.
+ *
+ * THE PANEL IS WHAT IS ANCHORED, not the map, whenever there is a panel. The
+ * owner asked for the whole thing -- plate, banner and all -- to stay in the
+ * picture at every size, so the eight-pixel inset is measured from the
+ * panel's outer edge and the map sits wherever that puts it. With the option
+ * off there is no panel and this is the arithmetic it always was, to the
+ * pixel.
+ *
+ * THE MARGIN GIVES WAY BEFORE THE SIZE DOES. At a large size there is no room
+ * for the inset the smaller sizes sit in, so the margin shrinks to whatever
+ * fits before the size is touched at all.
+ *
+ * AND THEN THE SIZE GIVES WAY. A size whose panel will not fit the picture
+ * even flush to the corner steps down four pixels of map width at a time
+ * until it does -- which is the ceiling the drag runs into, and the reason
+ * the ceiling lives here rather than in the settings file: it depends on the
+ * picture, and the picture depends on the window, the aspect and the render
+ * scale. The old code answered "no room" by RETURNING WITHOUT DRAWING, which
+ * for a player who picked the largest size was a map that silently did not
+ * appear; a size one step smaller is a better answer than no map. */
+void hal_sub_panel_geometry(int w, int h)
+{
+    int num = 1, den = g_div;
+    if (improved_map_on()) {
+        host_setting_minimap_scale_ratio(&num, &den);
+        /* the inset selftest walks every size through this function without
+           touching the player's settings; zero at every other moment */
+        if (g_size_force > 0) num = g_size_force;
+    }
+    if (num < 1) num = 1;
+    if (den < 1) den = 1;
+
+    /* the smallest the improved map goes is the picture the port drew before
+       it existed, which is half a DS screen: num/den = 1/2 */
+    const int on = improved_map_on() ? 1 : 0;
+    const int nmin = on ? (den / 2 < 1 ? 1 : den / 2) : num;
+    int el = 0, et = 0, er = 0, eb = 0;
+    for (;;) {
+        g_pan_num = num;
+        g_pan_den = den;
+        g_pan_w = ntr::SUB_W * num / den;
+        g_pan_h = ntr::SUB_H * num / den;
+        if (!on) break;
+        panel_extents(&el, &et, &er, &eb);
+        if (num <= nmin) break;
+        if (el + g_pan_w + er <= w && et + g_pan_h + eb <= h) break;
+        num -= 4;
+        if (num < nmin) num = nmin;
+    }
+
+    int m = kMargin;
+    if (el + g_pan_w + er + m > w) m = w - (el + g_pan_w + er);
+    if (et + g_pan_h + eb + m > h) m = h - (et + g_pan_h + eb);
+    if (m < 0) m = 0;
+    g_pan_margin = m;
+
+    g_x0 = w - m - er - g_pan_w;
+    g_y0 = h - m - eb - g_pan_h;
+    if (g_x0 < 0) g_x0 = 0;
+    if (g_y0 < 0) g_y0 = 0;
+
+    if (on) panel_trace(w, h);
+}
+
+/* ---- THE DECORATIVE PANEL, COMPOSED FROM THE PLAYER'S OWN GAME DATA -------
+ *
+ * WHAT IT IS. A bordered panel behind the map, tiled with the game's own
+ * wallpaper, with a plaque on its top edge reading MAP -- the design an artist
+ * sent the owner. His two PNGs are DERIVED FROM THE CARTRIDGE (lane MINIMAP1
+ * measured it: every colour in both sits on the DS's own BGR555 ladder, the
+ * panel interior is an exact 32x32 repeat, and its fifteen wallpaper colours
+ * are one 16-entry DS palette, in palette order, inside the ROM). The public
+ * bundle is ROM-clean, so those files are never committed, copied, embedded or
+ * read. The look comes from the player's own copy of the game instead, and
+ * only the DESIGN'S GEOMETRY is taken from the artist's work, which is what
+ * geometry is.
+ *
+ * WHERE THE WALLPAPER LIVES, MEASURED RATHER THAN GUESSED. The palette lane
+ * MINIMAP1 found in the cartridge is ARCHIVE/en1.narc member 6, bank 2 -- the
+ * ONLY bank in that whole archive whose sixteen entries carry those fifteen
+ * colours, searched bank by bank. Drawing member 1's background map with
+ * member 2's tiles through that bank paints exactly those fifteen colours and
+ * repeats every 32 pixels horizontally with a 0.991 match, which is the same
+ * 32x32 motif MINIMAP1 measured in the artist's panel. So the three members
+ * are the wallpaper, and this reads them straight out of the archive:
+ *
+ *     0x8401  the background map   LZ-compressed, 32x32 entries
+ *     0x8402  the tiles            LZ-compressed, 4bpp
+ *     0x8406  the palettes         plain, nine banks of sixteen
+ *
+ * It is a MENU screen's background, so a course never loads it and there is no
+ * copy in VRAM to borrow -- hence the archive read. It happens ONCE, the first
+ * frame a course draws the panel, and only with the option on.
+ *
+ * THE GEOMETRY, off the artist's design, in DS pixels against its own 240x180
+ * interior: six pixels of wallpaper outside a frame one pixel thick on the
+ * left and top and two on the right and bottom, so the panel stands seven
+ * pixels proud of the map on the left and top and eight on the right and
+ * bottom. The plaque is 109 wide and 32 tall against a 255-wide panel, centred
+ * on its top edge with ten of those rows above it. Every one of those numbers
+ * is a size or a position.
+ *
+ * THE COLOURS ARE ROLES, taken from the player's palette and never from the
+ * PNG: the wallpaper is the player's tiles as they are, the frame is the
+ * darkest colour in the player's own wallpaper bank taken down to a shadow of
+ * itself, and the plaque is the brightest one.
+ *
+ * WHAT IS STILL OWED. The word MAP is drawn in this file's own block letters,
+ * not in the game's font: finding the cartridge's own MAP label, or its HUD
+ * glyphs, is a hunt this lane did not have the clock for. Everything else on
+ * the panel is the player's own data. */
+extern "C" const unsigned char *port_fs_archive_member(unsigned fileID,
+                                                       unsigned *len_out);
+extern "C" void DecompressLZ16(void *src, void *dst);
+
+const unsigned kWallScreen = 0x8401, kWallTiles = 0x8402, kWallPltt = 0x8406;
+const int kWallBank = 2;          /* measured; see the banner above */
+
+/* the motif, 32x32 ARGB, and the two colour roles taken from the same bank */
+unsigned g_motif[32][32];
+unsigned g_panel_dark, g_panel_bright;
+int g_motif_state;                /* 0 not tried, 1 ready, -1 unavailable */
+
+unsigned bgr555_to_argb(unsigned c)
+{
+    const unsigned r = c & 0x1F, g = (c >> 5) & 0x1F, b = (c >> 10) & 0x1F;
+    return 0xFF000000u | ((r << 3 | r >> 2) << 16) | ((g << 3 | g >> 2) << 8)
+           | (b << 3 | b >> 2);
+}
+
+/* The compressed member, expanded with the game's own decompressor. The size
+   is the LZ header's own, which is what every caller of DecompressLZ16 in the
+   ROM relies on; a member that is not LZ at all is refused rather than run. */
+unsigned char *wall_expand(unsigned fileID, unsigned *out_len)
+{
+    unsigned n = 0;
+    const unsigned char *raw = port_fs_archive_member(fileID, &n);
+    if (!raw || n < 4 || raw[0] != 0x10) return 0;
+    const unsigned size = (unsigned)raw[1] | (unsigned)raw[2] << 8
+                        | (unsigned)raw[3] << 16;
+    if (size < 32 || size > (1u << 20)) return 0;
+    unsigned char *dst = (unsigned char *)std::malloc(size);
+    if (!dst) return 0;
+    /* DecompressLZ16 takes a writable source pointer the way the ROM's own
+       callers hand it one; the bytes are not modified. */
+    DecompressLZ16((void *)raw, dst);
+    *out_len = size;
+    return dst;
+}
+
+int wall_build(void)
+{
+    unsigned scr_n = 0, til_n = 0, pal_n = 0;
+    unsigned char *scr = wall_expand(kWallScreen, &scr_n);
+    unsigned char *til = scr ? wall_expand(kWallTiles, &til_n) : 0;
+    const unsigned char *pal = port_fs_archive_member(kWallPltt, &pal_n);
+    int ok = 0;
+    if (scr && til && pal && scr_n >= 2048 && til_n >= 1024
+        && pal_n >= (unsigned)(kWallBank + 1) * 32) {
+        unsigned bank[16];
+        int distinct = 0;
+        for (int k = 0; k < 16; ++k) {
+            const unsigned c = (unsigned)pal[kWallBank * 32 + k * 2]
+                             | (unsigned)pal[kWallBank * 32 + k * 2 + 1] << 8;
+            bank[k] = bgr555_to_argb(c);
+            int seen = 0;
+            for (int j = 0; j < k; ++j) if (bank[j] == bank[k]) seen = 1;
+            distinct += !seen;
+        }
+        /* THE GUARD ON THE WHOLE DERIVATION. A wallpaper bank is sixteen
+           distinct colours; a bank that is mostly one colour is not the one
+           this was measured against, and the panel falls back rather than
+           painting a flat rectangle and calling it the artist's design. */
+        if (distinct >= 12) {
+            /* The first 4x4 block of the background map whose sixteen entries
+               all carry ONE non-zero palette, which is a block of wallpaper
+               and not the header or the frame the menu draws around it. */
+            int bx = -1, by = -1;
+            for (int ty = 0; ty + 4 <= 32 && by < 0; ++ty)
+                for (int tx = 0; tx + 4 <= 32; ++tx) {
+                    int pl = -1, good = 1;
+                    for (int j = 0; j < 4 && good; ++j)
+                        for (int i = 0; i < 4; ++i) {
+                            const unsigned e =
+                                (unsigned)scr[((ty + j) * 32 + tx + i) * 2]
+                                | (unsigned)scr[((ty + j) * 32 + tx + i) * 2 + 1] << 8;
+                            const int p = (int)(e >> 12);
+                            if (!p || (pl >= 0 && p != pl)) { good = 0; break; }
+                            pl = p;
+                        }
+                    if (good) { bx = tx; by = ty; break; }
+                }
+            if (bx >= 0) {
+                unsigned lo = 0xFFFFFFFFu, hi = 0;
+                /* INDEX 0 IS NOT A COLOUR. On the DS a 4bpp background pixel
+                   of index 0 is transparent and the layer under it shows
+                   through, so painting it with the bank's entry 0 would put a
+                   colour on the panel that the wallpaper never shows -- the
+                   first build of this did, and the frame came out blue. The
+                   motif paints those pixels with the pattern's own field
+                   colour instead: the non-transparent index that covers most
+                   of the block. */
+                int hist[16] = {0};
+                for (int j = 0; j < 4; ++j)
+                    for (int i = 0; i < 4; ++i) {
+                        const unsigned e =
+                            (unsigned)scr[((by + j) * 32 + bx + i) * 2]
+                            | (unsigned)scr[((by + j) * 32 + bx + i) * 2 + 1] << 8;
+                        const unsigned t = e & 0x3FFu;
+                        for (int k = 0; k < 32; ++k) {
+                            const unsigned o = t * 32u + (unsigned)k;
+                            if (o >= til_n) break;
+                            ++hist[til[o] & 0xF];
+                            ++hist[til[o] >> 4];
+                        }
+                    }
+                int field = 1;
+                for (int k = 2; k < 16; ++k)
+                    if (hist[k] > hist[field]) field = k;
+                bank[0] = bank[field];
+                for (int j = 0; j < 4; ++j)
+                    for (int i = 0; i < 4; ++i) {
+                        const unsigned e =
+                            (unsigned)scr[((by + j) * 32 + bx + i) * 2]
+                            | (unsigned)scr[((by + j) * 32 + bx + i) * 2 + 1] << 8;
+                        const unsigned t = e & 0x3FFu;
+                        const int hf = (e >> 10) & 1, vf = (e >> 11) & 1;
+                        for (int y = 0; y < 8; ++y)
+                            for (int x = 0; x < 8; ++x) {
+                                const int sx = hf ? 7 - x : x;
+                                const int sy = vf ? 7 - y : y;
+                                const unsigned o = t * 32u + (unsigned)sy * 4u
+                                                 + (unsigned)(sx >> 1);
+                                unsigned idx = 0;
+                                if (o < til_n)
+                                    idx = (sx & 1) ? (unsigned)(til[o] >> 4)
+                                                   : (unsigned)(til[o] & 0xF);
+                                const unsigned c = bank[idx];
+                                g_motif[j * 8 + y][i * 8 + x] = c;
+                                const unsigned l = ((c >> 16) & 0xFF)
+                                                 + ((c >> 8) & 0xFF) + (c & 0xFF);
+                                if (l < lo) { lo = l; g_panel_dark = c; }
+                                if (l > hi) { hi = l; g_panel_bright = c; }
+                            }
+                    }
+                /* THE FRAME'S COLOUR ROLE: the darkest colour the player's own
+                   wallpaper actually uses, taken down to a third of itself so
+                   it reads as a shadow line round the panel. A role, computed
+                   from the player's palette; nothing is sampled from anyone's
+                   artwork. */
+                g_panel_dark = 0xFF000000u
+                    | ((((g_panel_dark >> 16) & 0xFF) / 3) << 16)
+                    | ((((g_panel_dark >> 8) & 0xFF) / 3) << 8)
+                    | ((g_panel_dark & 0xFF) / 3);
+                ok = 1;
+            }
+        }
+    }
+    std::free(scr);
+    std::free(til);
+    if (!ok && std::getenv("SM64DS_MINIMAP_TRACE"))
+        std::fprintf(stderr, "[mmtrace] wallpaper not available "
+                     "(screen %u tiles %u palette %u); plain panel\n",
+                     scr_n, til_n, pal_n);
+    else if (ok && std::getenv("SM64DS_MINIMAP_TRACE"))
+        std::fprintf(stderr, "[mmtrace] wallpaper motif built from the "
+                     "player's data; frame %06x plaque %06x\n",
+                     g_panel_dark & 0xFFFFFF, g_panel_bright & 0xFFFFFF);
+    return ok;
+}
+
+/* M, A and P in a 5x7 grid, one bit per column, this file's own lettering.
+   Named for what it is: the game's own MAP label is still owed. */
+const unsigned char kGlyphMAP[3][7] = {
+    { 0x11, 0x1B, 0x15, 0x11, 0x11, 0x11, 0x11 },   /* M */
+    { 0x0E, 0x11, 0x11, 0x1F, 0x11, 0x11, 0x11 },   /* A */
+    { 0x1E, 0x11, 0x11, 0x1E, 0x10, 0x10, 0x10 },   /* P */
+};
+
+/* ---- THE ARTIST'S PANEL, WHEN THE PLAYER HAS THE PICTURES ------------------
+ *
+ * WHAT THIS IS. Someone drew the owner a panel to go round the map -- a
+ * bordered plate with a MAP plaque on its top edge -- and sent him two PNGs.
+ * When those two files are sitting in a folder beside the game data, THEY are
+ * the panel: read at boot, drawn as they are. When they are not, the panel
+ * composed from the player's own game data a few hundred lines above is drawn
+ * instead, silently but for one line on stderr.
+ *
+ * THE PICTURES ARE NOT PART OF THIS PROGRAM, and that is the whole shape of
+ * this code. They are not in the repository, not in the build, not embedded in
+ * the executable and not copied into any tree: lane MINIMAP1 measured them to
+ * be made from the cartridge's own art (every colour on the DS's own BGR555
+ * ladder, an exact 32x32 repeat, and the panel's fifteen wallpaper colours
+ * sitting in one 16-entry DS palette inside the ROM, in palette order). So
+ * what this file does is read a FOLDER. Whether a folder with those two files
+ * in it travels with a download is a packaging decision, and it is the
+ * owner's, made outside this code.
+ *
+ * WHICH FOLDER: host_setting_minimap_dir() -- "<asset root>/minimap", the same
+ * root textures_hd uses, with SM64DS_MINIMAP_DIR to point somewhere else.
+ *
+ * WHAT IS READ OUT OF THEM, AND IT IS MEASURED RATHER THAN ASSUMED. The panel
+ * carries an inner outlined rectangle -- a dark line inset from its border --
+ * and the map has to sit exactly inside it. Rather than trust a pixel count,
+ * art_scan_inner below finds that rectangle by scanning the picture: the rows
+ * and columns that are more than half dark are the frame's own lines, and the
+ * interior is what they enclose. The same scan reports the transparent notch
+ * at the top (where the plaque drops in) and the brightest and darkest colours
+ * the artwork uses, which is where the resize handle takes its colours from.
+ * Nothing about the artwork is hardcoded except the sanity bounds a scan has
+ * to pass before it is believed.
+ *
+ * A picture that will not load, will not scan, or scans to something absurd is
+ * simply not used. There is no half-way state. */
+struct ArtImage {
+    int w, h;
+    unsigned *px;              /* ARGB8888, top row first */
+};
+
+ArtImage g_art_base, g_art_tab;
+int g_art_state;               /* 0 not tried, 1 both here, -1 not available */
+/* the inner outlined rectangle's INTERIOR, in base-image pixels, inclusive */
+int g_art_ix0, g_art_iy0, g_art_ix1, g_art_iy1;
+int g_art_notch;               /* fully transparent rows at the top */
+unsigned g_art_bright, g_art_dark;   /* the artwork's own two extremes */
+/* how far the map is inset inside the well when the well is not 4:3. Zero on
+   the owner's own picture, whose well is 240 x 180 and so is exactly 4:3;
+   published for the boot line and for the captures' measured rows. */
+int g_art_gapx, g_art_gapy;
+
+int art_load_one(const char *dir, const char *name, ArtImage *im)
+{
+    char path[1200];
+    std::snprintf(path, sizeof path, "%s/%s", dir, name);
+    int w = 0, h = 0, comp = 0;
+    unsigned char *p = stbi_load(path, &w, &h, &comp, 4);
+    if (!p) return 0;
+    if (w < 8 || h < 8 || w > 4096 || h > 4096) { stbi_image_free(p); return 0; }
+    unsigned *px = (unsigned *)std::malloc((size_t)w * (size_t)h * 4u);
+    if (!px) { stbi_image_free(p); return 0; }
+    for (int i = 0; i < w * h; ++i)
+        px[i] = ((unsigned)p[i * 4 + 3] << 24) | ((unsigned)p[i * 4] << 16)
+              | ((unsigned)p[i * 4 + 1] << 8) | (unsigned)p[i * 4 + 2];
+    stbi_image_free(p);
+    im->w = w;
+    im->h = h;
+    im->px = px;
+    return 1;
+}
+
+void art_free(ArtImage *im)
+{
+    std::free(im->px);
+    im->px = 0;
+    im->w = im->h = 0;
+}
+
+inline unsigned art_lum(unsigned c)
+{
+    return (((c >> 16) & 0xFF) * 77 + ((c >> 8) & 0xFF) * 151
+            + (c & 0xFF) * 28) >> 8;
+}
+
+/* THE INNER OUTLINED RECTANGLE, FOUND BY MEASUREMENT.
+ *
+ * The frame is a dark line on a light plate, so "dark" is defined against the
+ * picture's own middle rather than against a constant: the median luminance of
+ * its opaque pixels, halved. A row of the frame is then a row where more than
+ * half the picture's width is dark, and a column likewise -- which no row of
+ * wallpaper can be, and which a line of any thickness is. The first and last
+ * such rows and columns are the four lines; walking in from each gives its
+ * THICKNESS, and what the four thicknesses enclose is the interior.
+ *
+ * Then it has to pass: an interior at least 16 x 12, and all four frame lines
+ * at least one pixel IN from the picture's own edge -- a dark line lying on
+ * the outermost row is a picture with a dark border, not a panel with a map
+ * well. That last test is the whole sanity check, and it is a test about
+ * POSITION rather than about proportion on purpose: the artwork this was
+ * written for is 255 x 205 with a 240 x 180 well, which is 94% of its width,
+ * so any "the interior must be at most so many tenths of the picture" rule
+ * large enough to be safe would have refused the very picture it exists to
+ * accept. A picture that fails is refused whole, because a panel drawn round
+ * a rectangle that is not the artist's is worse than the one this program can
+ * compose for itself. */
+int art_scan_inner(const ArtImage *im)
+{
+    long hist[256];
+    for (int i = 0; i < 256; ++i) hist[i] = 0;
+    long opaque = 0;
+    for (int i = 0; i < im->w * im->h; ++i)
+        if (im->px[i] >> 24) { ++hist[art_lum(im->px[i]) & 0xFF]; ++opaque; }
+    if (opaque < 64) return 0;
+    long half = opaque / 2, run = 0;
+    unsigned med = 0;
+    for (int i = 0; i < 256; ++i) {
+        run += hist[i];
+        if (run >= half) { med = (unsigned)i; break; }
+    }
+    const unsigned thr = med > 1 ? med / 2 : 1;
+
+    /* the two profiles, and the extremes of the palette while the pixels are
+       already in hand */
+    unsigned lo = 0xFFFFFFFFu, hi = 0;
+    g_art_bright = 0xFFFFFFFFu;
+    g_art_dark = 0xFF000000u;
+    int *rowd = (int *)std::calloc((size_t)im->h, sizeof(int));
+    int *cold = (int *)std::calloc((size_t)im->w, sizeof(int));
+    if (!rowd || !cold) { std::free(rowd); std::free(cold); return 0; }
+    for (int y = 0; y < im->h; ++y)
+        for (int x = 0; x < im->w; ++x) {
+            const unsigned c = im->px[y * im->w + x];
+            if (!(c >> 24)) continue;
+            const unsigned l = art_lum(c);
+            if (l < lo) { lo = l; g_art_dark = c | 0xFF000000u; }
+            if (l >= hi) { hi = l; g_art_bright = c | 0xFF000000u; }
+            if (l < thr) { ++rowd[y]; ++cold[x]; }
+        }
+
+    int t = -1, b = -1, l = -1, r = -1;
+    for (int y = 0; y < im->h; ++y) if (rowd[y] * 2 > im->w) { if (t < 0) t = y; b = y; }
+    for (int x = 0; x < im->w; ++x) if (cold[x] * 2 > im->h) { if (l < 0) l = x; r = x; }
+    int ok = 0;
+    if (t >= 0 && b > t && l >= 0 && r > l) {
+        int t1 = t, b0 = b, l1 = l, r0 = r;
+        while (t1 + 1 < im->h && rowd[t1 + 1] * 2 > im->w) ++t1;
+        while (b0 - 1 >= 0 && rowd[b0 - 1] * 2 > im->w) --b0;
+        while (l1 + 1 < im->w && cold[l1 + 1] * 2 > im->h) ++l1;
+        while (r0 - 1 >= 0 && cold[r0 - 1] * 2 > im->h) --r0;
+        const int ix0 = l1 + 1, ix1 = r0 - 1, iy0 = t1 + 1, iy1 = b0 - 1;
+        const int iw = ix1 - ix0 + 1, ih = iy1 - iy0 + 1;
+        if (t1 < b0 && l1 < r0 && iw >= 16 && ih >= 12 &&
+            ix0 >= 2 && iy0 >= 2 && ix1 <= im->w - 3 && iy1 <= im->h - 3) {
+            g_art_ix0 = ix0; g_art_ix1 = ix1;
+            g_art_iy0 = iy0; g_art_iy1 = iy1;
+            ok = 1;
+        }
+    }
+    /* the notch: the fully transparent rows at the top, which is where the
+       plaque drops in and by how much it stands proud of the plate */
+    g_art_notch = 0;
+    for (int y = 0; y < im->h; ++y) {
+        int any = 0;
+        for (int x = 0; x < im->w && !any; ++x) any = im->px[y * im->w + x] >> 24;
+        if (any) break;
+        ++g_art_notch;
+    }
+    std::free(rowd);
+    std::free(cold);
+    return ok;
+}
+
+/* Asked once. Both files or neither: a plate with no plaque, or a plaque with
+   no plate, is not the design anyone drew. */
+int art_build(void)
+{
+    const char *dir = host_setting_minimap_dir();
+    int ok = art_load_one(dir, "SM64DSMapBase.png", &g_art_base)
+          && art_load_one(dir, "SM64DSMapText.png", &g_art_tab)
+          && art_scan_inner(&g_art_base)
+          && g_art_tab.w <= g_art_base.w;
+    if (!ok) {
+        art_free(&g_art_base);
+        art_free(&g_art_tab);
+        std::fprintf(stderr, "[minimap] no panel artwork in %s -- the panel is "
+                     "composed from the game's own data instead\n", dir);
+    } else {
+        const int iw = g_art_ix1 - g_art_ix0 + 1, ih = g_art_iy1 - g_art_iy0 + 1;
+        std::fprintf(stderr, "[minimap] panel artwork from %s: plate %dx%d, "
+                     "plaque %dx%d, map well %d,%d %dx%d, notch %d rows\n",
+                     dir, g_art_base.w, g_art_base.h, g_art_tab.w, g_art_tab.h,
+                     g_art_ix0, g_art_iy0, iw, ih, g_art_notch);
+        /* THE MAP IS 4:3 AND SO, ON THE OWNER'S PICTURE, IS THE WELL. Said out
+           loud either way, because a well that is not 4:3 means the map no
+           longer touches all four of its sides and a reader is owed the number
+           rather than a squint at a screenshot. */
+        if (iw * 3 == ih * 4)
+            std::fprintf(stderr, "[minimap] the well is exactly 4:3, so the map "
+                         "fills it to all four sides at every size\n");
+        else
+            std::fprintf(stderr, "[minimap] the well is %dx%d, which is %d "
+                         "pixels off 4:3 in width (4:3 at that height is %d): "
+                         "the map keeps its own shape and is centred in the "
+                         "well, so it touches two sides and not four\n",
+                         iw, ih, iw - ih * 4 / 3, ih * 4 / 3);
+    }
+    return ok;
+}
+
+inline int art_on(void)
+{
+    if (!g_art_state) g_art_state = art_build() ? 1 : -1;
+    return g_art_state == 1;
+}
+
+/* FLOOR division, because the picture extends OUTWARD from the rectangle the
+   arithmetic below is anchored on and the coordinates going into it are
+   therefore negative as often as not. C's own division truncates towards
+   zero, which would fold the two pixels either side of the anchor onto the
+   same destination row and put a seam at the anchor's own edge. */
+inline int fdiv(int a, int b)
+{
+    return a >= 0 ? a / b : -((-a + b - 1) / b);
+}
+
+/* ONE PICTURE, PLACED BY AN ANCHOR RECTANGLE RATHER THAN BY ITS OWN.
+ *
+ * The caller names a rectangle INSIDE the source picture and the destination
+ * rectangle it has to land on exactly; the rest of the picture follows from
+ * the same linear map and spills outside as far as it goes. That is the shape
+ * this needs because the thing being placed is the artist's map well: the well
+ * must sit exactly on the map, and where the plate's outer edge then falls is
+ * an answer, not an input. Placing the picture by its own rectangle and hoping
+ * the well lands right is how a border ends up a pixel inside the map.
+ *
+ * The source's alpha is a stencil (0 or 255 is all this artwork has, and
+ * anything between reads as present -- the plate is a stencil, not a blend).
+ *
+ * MAGNIFIED: nearest neighbour, one source pixel per destination block, for
+ * the reason ntr's own compose gives for the map -- a filter would invent
+ * pixels the artist did not draw.
+ *
+ * REDUCED: the box average of the block, and NOT nearest, because this artwork
+ * is mostly flat plate with THIN DARK LINES on it: the well's outline is one
+ * pixel wide, and at the smallest map the plate is drawn at about half size,
+ * where nearest neighbour simply steps over that line about half the time and
+ * the panel loses the very border this was asked to match up with. An average
+ * turns it into a softer line instead of no line. Same argument, same answer,
+ * as the map's own reduction in ntr/ppu_sub.cpp. */
+void art_blit(const ArtImage *im, unsigned *dst, int w, int h,
+              int sx, int sy, int sw, int sh,
+              int dx, int dy, int dw, int dh)
+{
+    if (sw < 1 || sh < 1 || dw < 1 || dh < 1) return;
+    const int shrink = (dw < sw || dh < sh);
+    const int X0 = dx + fdiv(-sx * dw, sw), X1 = dx + fdiv((im->w - sx) * dw, sw);
+    const int Y0 = dy + fdiv(-sy * dh, sh), Y1 = dy + fdiv((im->h - sy) * dh, sh);
+    for (int Y = Y0; Y < Y1; ++Y) {
+        if (Y < 0 || Y >= h) continue;
+        int v0 = sy + fdiv((Y - dy) * sh, dh);
+        int v1 = shrink ? sy + fdiv((Y + 1 - dy) * sh, dh) : v0 + 1;
+        if (v0 < 0) v0 = 0;
+        if (v1 > im->h) v1 = im->h;
+        if (v0 >= im->h || v1 <= v0) continue;
+        unsigned *drow = dst + (size_t)Y * ntr::SCREEN_W;
+        for (int X = X0; X < X1; ++X) {
+            if (X < 0 || X >= w) continue;
+            int u0 = sx + fdiv((X - dx) * sw, dw);
+            int u1 = shrink ? sx + fdiv((X + 1 - dx) * sw, dw) : u0 + 1;
+            if (u0 < 0) u0 = 0;
+            if (u1 > im->w) u1 = im->w;
+            if (u0 >= im->w || u1 <= u0) continue;
+            unsigned r = 0, g = 0, b = 0, n = 0;
+            for (int v = v0; v < v1; ++v)
+                for (int u = u0; u < u1; ++u) {
+                    const unsigned c = im->px[(size_t)v * im->w + u];
+                    if (!(c >> 24)) continue;
+                    r += (c >> 16) & 0xFF;
+                    g += (c >> 8) & 0xFF;
+                    b += c & 0xFF;
+                    ++n;
+                }
+            if (!n) continue;             /* the block is all notch: draw nothing */
+            drow[X] = 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
+        }
+    }
+}
+
+void px_put(unsigned *dst, int dw, int dh, int x, int y, unsigned c)
+{
+    if (x < 0 || y < 0 || x >= dw || y >= dh) return;
+    dst[y * ntr::SCREEN_W + x] = c;
+}
+
+void px_fill(unsigned *dst, int dw, int dh, int x0, int y0, int w, int h,
+             unsigned c)
+{
+    for (int y = y0; y < y0 + h; ++y)
+        for (int x = x0; x < x0 + w; ++x)
+            px_put(dst, dw, dh, x, y, c);
+}
+
+/* ---- THE PANEL'S RECTANGLES, COMPUTED ONCE FOR BOTH PASSES ----------------
+ *
+ * THE PANEL IS DRAWN IN TWO PASSES NOW, on either side of the map, because
+ * the owner asked for exactly that: "the MAP banner and text should be above
+ * the minimap layer and the background should be behind the minimap layer".
+ * So the plate goes down first, the map is composed over it, and the plaque
+ * goes on top of the map. That is the whole reason this arithmetic is here
+ * rather than inside one drawing function: two passes reading one set of
+ * numbers cannot disagree about where the plaque is, and the plaque now
+ * overlaps something (the map) where before it only ever overlapped the
+ * plate.
+ *
+ * WHERE THE PLAQUE GOES IS MEASURED OFF THE ARTIST'S OWN MOCK-UP rather than
+ * chosen: in it the plate picture's top row and the plaque's top row are the
+ * SAME row, and the plaque is centred across the plate's width -- (255 - 109)
+ * / 2 = 73, and 73 is where it sits. The plate picture carries ten fully
+ * transparent rows at the top for exactly that, the notch the plaque drops
+ * into, so the plate is blitted whole, notch and all, and its transparent
+ * rows draw nothing.
+ *
+ * Returns 1 when the artwork is the panel, 0 when it is the composed one. */
+struct PanelGeom {
+    int x0, y0, pw, ph;        /* the plate, or the composed panel */
+    int tx, ty, tw, th;        /* the MAP plaque */
+    int wx, wy, ww, wh;        /* the artist's well, placed (art only) */
+    int vx, vy;                /* the panel's top-left VISIBLE corner */
+};
+
+int panel_geom(PanelGeom *g)
+{
+    /* The artist's margins, carried onto whatever size the map is drawn at.
+       Seven DS pixels proud on the left and top, eight on the right and
+       bottom, at the map's own scale, and never less than one pixel so the
+       smallest map still has a panel round it. */
+    const int sx7 = ntr::SUB_W * 7 * g_pan_num / (256 * g_pan_den);
+    const int sx8 = ntr::SUB_W * 8 * g_pan_num / (256 * g_pan_den);
+    const int sy7 = ntr::SUB_H * 7 * g_pan_num / (192 * g_pan_den);
+    const int sy8 = ntr::SUB_H * 8 * g_pan_num / (192 * g_pan_den);
+    /* A FLOOR OF SIX PIXELS, because the artist's margin is a PROPORTION of
+       his own 240-wide map and the smallest map here is 128 wide: three pixels
+       of margin is one pixel of wallpaper once the frame lines have taken
+       their share, which is a smudge rather than a panel. Above the smallest
+       couple of sizes the proportion is what rules. */
+    const int ml = sx7 < 6 ? 6 : sx7, mt = sy7 < 6 ? 6 : sy7;
+    const int mr = sx8 < 7 ? 7 : sx8, mb = sy8 < 7 ? 7 : sy8;
+
+    const int x0 = g_x0 - ml, y0 = g_y0 - mt;
+    const int pw = g_pan_w + ml + mr, ph = g_pan_h + mt + mb;
+
+    /* ---- THE MAP GOES INSIDE THE PICTURE'S OWN SQUARE ---------------------
+     *
+     * The owner: "make it match up with the outline and be inside the square
+     * on the image i sent". So the plate is not scaled to some rectangle of
+     * this program's choosing and the map dropped roughly in the middle of it;
+     * the WELL the artist drew is placed exactly onto the map, and the rest of
+     * the picture follows from that. plate_to_fb_x / _y below are that one
+     * linear map, and everything -- the plate's rectangle, the plaque's, the
+     * resize handle's corner -- is read out of it, so nothing can drift.
+     *
+     * ITS SHAPE. The map is 4:3 at every size and so, on the owner's picture,
+     * is the well: 240 x 180 at 7,17 inside a 255 x 205 plate. When a picture
+     * turns up whose well is NOT 4:3 the map keeps its own shape and is
+     * centred in the well instead, with the plate scaled by whichever axis
+     * binds, so the map is inscribed rather than stretched. The boot line says
+     * which of the two the picture got. */
+    if (art_on()) {
+        const int bw = g_art_base.w, bh = g_art_base.h;
+        const int iw = g_art_ix1 - g_art_ix0 + 1;
+        const int ih = g_art_iy1 - g_art_iy0 + 1;
+        if (iw > 0 && ih > 0 && g_pan_w > 0 && g_pan_h > 0) {
+            /* the well, grown to hold the map: whichever axis binds sets the
+               scale, and the map is centred across the other one */
+            int wellw = g_pan_w, wellh = g_pan_h;
+            if ((long)ih * g_pan_w >= (long)iw * g_pan_h)
+                wellh = (int)((long)ih * g_pan_w / iw);
+            else
+                wellw = (int)((long)iw * g_pan_h / ih);
+            const int gapx = (wellw - g_pan_w) / 2, gapy = (wellh - g_pan_h) / 2;
+            g_art_gapx = gapx;
+            g_art_gapy = gapy;
+            const int wx = g_x0 - gapx, wy = g_y0 - gapy;
+
+            const int px0 = wx + fdiv(-g_art_ix0 * wellw, iw);
+            const int px1 = wx + fdiv((bw - g_art_ix0) * wellw, iw);
+            const int py0 = wy + fdiv(-g_art_iy0 * wellh, ih);
+            const int py1 = wy + fdiv((bh - g_art_iy0) * wellh, ih);
+            const int tu = (bw - g_art_tab.w) / 2;
+            const int tx0 = wx + fdiv((tu - g_art_ix0) * wellw, iw);
+
+            g->x0 = px0;
+            g->y0 = py0;
+            g->pw = px1 - px0;
+            g->ph = py1 - py0;
+            g->tx = tx0;
+            g->ty = py0;
+            g->tw = fdiv(g_art_tab.w * wellw, iw);
+            g->th = fdiv(g_art_tab.h * wellh, ih);
+            g->wx = wx;
+            g->wy = wy;
+            g->ww = wellw;
+            g->wh = wellh;
+            /* the plate's OPAQUE top-left, which is the corner a player sees
+               and therefore the corner the resize handle goes on: the notch
+               rows above it are the hole the plaque drops into and draw
+               nothing at all */
+            g->vx = px0;
+            g->vy = py0 + fdiv(g_art_notch * wellh, ih);
+            return 1;
+        }
+    }
+
+    g->x0 = x0;
+    g->y0 = y0;
+    g->pw = pw;
+    g->ph = ph;
+    g->tw = pw * 109 / 255;
+    g->th = ph * 32 / 195;
+    if (g->tw < 12) g->tw = 12;
+    if (g->th < 6) g->th = 6;
+    g->tx = x0 + (pw - g->tw) / 2;
+    g->ty = y0 - ph * 10 / 195;
+    g->wx = g_x0;
+    g->wy = g_y0;
+    g->ww = g_pan_w;
+    g->wh = g_pan_h;
+    g->vx = x0;
+    g->vy = y0;
+    return 0;
+}
+
+/* How far the panel reaches past the map on each side. Declared near the top
+   of the file: the size has to be settled before anything is drawn, and what
+   settles it is whether this fits. The rectangles are worked out with the map
+   at the origin so the answers are offsets rather than positions, and the two
+   globals that stand in for it are put back afterwards because the caller has
+   not decided them yet this frame. */
+void panel_extents(int *l, int *t, int *r, int *b)
+{
+    const int sx = g_x0, sy = g_y0;
+    g_x0 = 0;
+    g_y0 = 0;
+    PanelGeom g;
+    panel_geom(&g);
+    g_x0 = sx;
+    g_y0 = sy;
+
+    int x0 = g.x0 < g.tx ? g.x0 : g.tx;
+    int y0 = g.y0 < g.ty ? g.y0 : g.ty;
+    int x1 = g.x0 + g.pw, y1 = g.y0 + g.ph;
+    if (g.tx + g.tw > x1) x1 = g.tx + g.tw;
+    if (g.ty + g.th > y1) y1 = g.ty + g.th;
+    *l = x0 < 0 ? -x0 : 0;
+    *t = y0 < 0 ? -y0 : 0;
+    *r = x1 > g_pan_w ? x1 - g_pan_w : 0;
+    *b = y1 > g_pan_h ? y1 - g_pan_h : 0;
+}
+
+/* ---- THE RESIZE HANDLE ----------------------------------------------------
+ *
+ * The owner: "could we actually make it where you can grab the top left
+ * corner and put a yellow/tan square there to grab and resize the minimap so
+ * its easy to scale it with window size", and then, on a draft that showed it
+ * only under the pointer: "make the yellow always be up. the square".
+ *
+ * SO IT IS ALWAYS THERE. No hover test, no fade, nothing to discover: while
+ * the improved map is on and the map is on screen, the square is on its
+ * top-left corner. There is exactly one condition that takes it away, and it
+ * is not a preference about clutter -- MouseCapture. With that key on the
+ * window hides the pointer and pins it to the middle of the picture to steer
+ * the camera with, so there is no cursor in the player's hand to grab
+ * anything with and a handle would be a control that cannot be operated. The
+ * key reloads live, so turning MouseCapture off in the launcher brings the
+ * square back without restarting the game.
+ *
+ * ITS COLOURS ARE THE PANEL'S OWN: the brightest and darkest colours in the
+ * artist's picture when the picture is what is drawn, and the same two the
+ * composed panel takes from the player's palette when it is not. Nothing here
+ * picks a colour.
+ *
+ * ITS SIZE IS THE PICTURE'S: ten pixels against a 384-row picture, growing
+ * with the render scale, never below six. */
+int handle_rect(int *hx, int *hy, int *hs, int h)
+{
+    if (!improved_map_on() || hal_sub_screen_stacked()) return 0;
+    if (host_setting_mouse_capture()) return 0;
+    PanelGeom g;
+    panel_geom(&g);
+    int s = 10 * h / 384;
+    if (s < 6) s = 6;
+    if (hx) *hx = g.vx;
+    if (hy) *hy = g.vy;
+    if (hs) *hs = s;
+    return 1;
+}
+
+/* THE DRAG'S STATE, host statics rather than anything in .dsstate, for the
+   reason poll_touch's own latch gives: a save-state load must not restore a
+   half-finished drag onto a hand that is not holding the button any more. */
+int g_handle_own;                /* this press started on the handle */
+int g_handle_num0;               /* g_pan_num when it started */
+int g_handle_bx0, g_handle_by0;  /* where in the picture it started */
+long g_handle_grabs, g_handle_frames;   /* for the proof's census line */
+
+/* THE PRESS, IF IT IS THE HANDLE'S. Returns 1 when the handle owns it, and
+ * then the press reaches nothing else at all: no stylus record, so no touch
+ * for the ROM to read and no camera button for it to hit-test. A drag that
+ * started here goes on owning the button after the cursor has left the
+ * square, which is what dragging a corner means; only letting go ends it.
+ *
+ * WHICH WAY IT SCALES. The map is anchored at its bottom-right corner, so
+ * pulling the handle up and to the left makes it bigger. Both axes count: the
+ * map keeps its 4:3 shape, so a pixel of height is worth four thirds of a
+ * pixel of width, and the two are averaged. A pull straight left, straight up
+ * or along the diagonal all do the sensible thing.
+ *
+ * THE SIZE MOVES LIVE AND IS WRITTEN DOWN ONLY ON RELEASE. A settings file
+ * rewritten sixty times a second is a file the launcher would be reading
+ * half-written. */
+int handle_press(int bx, int by, int on_picture)
+{
+    int hx, hy, hs;
+    if (!handle_rect(&hx, &hy, &hs, ntr::active_h)) {
+        g_handle_own = 0;
+        return 0;
+    }
+    if (!g_handle_own) {
+        if (!on_picture) return 0;
+        if (bx < hx || by < hy || bx >= hx + hs || by >= hy + hs) return 0;
+        g_handle_own = 1;
+        g_handle_num0 = g_pan_num;
+        g_handle_bx0 = bx;
+        g_handle_by0 = by;
+        ++g_handle_grabs;
+        std::fprintf(stderr, "[minimap] handle grabbed at picture (%d,%d); the "
+                     "map is %dx%d and this press reaches nothing else\n",
+                     bx, by, g_pan_w, g_pan_h);
+    }
+    ++g_handle_frames;
+
+    const int dx = g_handle_bx0 - bx, dy = g_handle_by0 - by;
+    const int dw = (3 * dx + 4 * dy) / 6;      /* pixels of map width */
+    int num = g_handle_num0 + dw * g_pan_den / ntr::SUB_W;
+    const int nmin = g_pan_den / 2 < 1 ? 1 : g_pan_den / 2;
+    if (num < nmin) num = nmin;
+    /* the ceiling is the drawing layer's: hal_sub_panel_geometry steps a size
+       down until the whole panel fits the picture, and what it settles on is
+       what gets written down when the button comes up */
+    host_setting_minimap_scale_set_live(2.0 * num / g_pan_den);
+    return 1;
+}
+
+/* THE BUTTON CAME UP. The size the drawing layer actually settled on -- which
+   is the one the player is looking at, after its own clamp -- goes to
+   settings.json, so it survives a restart and the launcher's picker opens on
+   it. */
+void handle_release(void)
+{
+    if (!g_handle_own) return;
+    g_handle_own = 0;
+    const double s = 2.0 * g_pan_num / g_pan_den;
+    host_setting_save_minimap_scale(s);
+    std::fprintf(stderr, "[minimap] resized to %g (map %dx%d) and saved\n",
+                 s, g_pan_w, g_pan_h);
+}
+
+/* See the declaration near the top of the file. One line per change, so a
+   windowed run that presents every frame prints one line and not sixty a
+   second. */
+void panel_trace(int w, int h)
+{
+    static int trace = -1;
+    static int last[8];
+    if (trace < 0) trace = std::getenv("SM64DS_MINIMAP_TRACE") ? 1 : 0;
+    if (!trace) return;
+    const int now[8] = { w, h, g_pan_num, g_pan_den, g_x0, g_y0,
+                         g_pan_w, g_pan_h };
+    int moved = 0;
+    for (int i = 0; i < 8; ++i)
+        if (now[i] != last[i]) { moved = 1; last[i] = now[i]; }
+    if (!moved) return;
+    PanelGeom g;
+    const int art = panel_geom(&g);
+    int hx = 0, hy = 0, hs = 0;
+    handle_rect(&hx, &hy, &hs, h);
+    std::fprintf(stderr,
+                 "[mmtrace] geom: picture %dx%d scale %.5f ratio %d/%d "
+                 "map %d,%d %dx%d panel %d,%d %dx%d plaque %d,%d %dx%d "
+                 "handle %d,%d %d well %d,%d %dx%d gap %d,%d art %d\n",
+                 w, h, 2.0 * g_pan_num / g_pan_den, g_pan_num, g_pan_den,
+                 g_x0, g_y0, g_pan_w, g_pan_h, g.x0, g.y0, g.pw, g.ph,
+                 g.tx, g.ty, g.tw, g.th, hx, hy, hs,
+                 g.wx, g.wy, g.ww, g.wh, g_art_gapx, g_art_gapy, art);
+}
+
+/* ---- THE INSET MAP'S OWN SELFTEST -----------------------------------------
+ *
+ * SM64DS_LAYOUT_SELFTEST's other half. The one further down this file asserts
+ * the STACKED layout and runs from the stacked image's own builder, so it
+ * never fires in a course -- and a course is the only place the inset map
+ * exists. This is the same idea over the inset arm, run once per process the
+ * first time a course composes.
+ *
+ * WHAT IT ASSERTS, at every size including three that are not on the
+ * launcher's picker:
+ *   G1 the four corners of the DRAWN map, run back through the exact
+ *      expression poll_touch's inset arm uses, land within ONE DS pixel of DS
+ *      (0,0), (255,0), (0,191) and (255,191). One pixel is the floor for a
+ *      reduced size, where one drawn pixel covers two DS ones and the last
+ *      drawn column can only name the first of the two it covers.
+ *   G2 one pixel outside each of the four edges reads OUTSIDE.
+ *   G3 the map is 4:3 exactly.
+ *   G4 the whole decorated panel is inside the picture.
+ * G4 is the one that can legitimately fail: it is the clamp's own promise,
+ * and a size that cannot keep it is supposed to have been stepped down before
+ * it was drawn. */
+void inset_map_selftest(int w, int h)
+{
+    const char *env = std::getenv("SM64DS_LAYOUT_SELFTEST");
+    if (!env || !*env) return;
+    /* 128 is scale 1 and 512 is scale 4; 220, 300 and 460 are off the
+       launcher's picker on purpose, because the size is a free number now.
+       Every one is on the grid -- a multiple of four -- because that is the
+       only thing a size is allowed to be, and a fixture that asks for a size
+       the program cannot produce is testing nothing. */
+    static const int forced[9] = { 128, 160, 192, 220, 256, 300, 384, 460, 512 };
+    const int s_num = g_pan_num, s_den = g_pan_den, s_w = g_pan_w,
+              s_h = g_pan_h, s_x = g_x0, s_y = g_y0, s_m = g_pan_margin;
+
+    int passed = 0;
+    for (int i = 0; i < 9; ++i) {
+        g_size_force = forced[i];
+        hal_sub_panel_geometry(w, h);
+        char fails[8];
+        int nf = 0;
+        const int mx1 = g_x0 + g_pan_w - 1, my1 = g_y0 + g_pan_h - 1;
+        int dx, dy, ok = 1;
+#define INV(bx, by) (dx = fdiv(((bx) - g_x0) * g_pan_den, g_pan_num), \
+                     dy = fdiv(((by) - g_y0) * g_pan_den, g_pan_num))
+        INV(g_x0, g_y0);
+        if (dx > 1 || dy > 1 || dx < 0 || dy < 0) ok = 0;
+        INV(mx1, g_y0);
+        if (dx < ntr::SUB_W - 2 || dx > ntr::SUB_W - 1 || dy > 1) ok = 0;
+        INV(g_x0, my1);
+        if (dy < ntr::SUB_H - 2 || dy > ntr::SUB_H - 1 || dx > 1) ok = 0;
+        INV(mx1, my1);
+        if (dx < ntr::SUB_W - 2 || dy < ntr::SUB_H - 2) ok = 0;
+        if (!ok) fails[nf++] = '1';
+        ok = 1;
+        INV(g_x0 - 1, g_y0);
+        if (dx >= 0) ok = 0;
+        INV(g_x0, g_y0 - 1);
+        if (dy >= 0) ok = 0;
+        INV(mx1 + 1, g_y0);
+        if (dx < ntr::SUB_W) ok = 0;
+        INV(g_x0, my1 + 1);
+        if (dy < ntr::SUB_H) ok = 0;
+#undef INV
+        if (!ok) fails[nf++] = '2';
+        if (g_pan_w * 3 != g_pan_h * 4) fails[nf++] = '3';
+        int el, et, er, eb;
+        panel_extents(&el, &et, &er, &eb);
+        if (g_x0 - el < 0 || g_y0 - et < 0 ||
+            g_x0 + g_pan_w + er > w || g_y0 + g_pan_h + eb > h)
+            fails[nf++] = '4';
+        fails[nf] = 0;
+        if (!nf) {
+            ++passed;
+            std::fprintf(stderr, "[insetst] size %d: map %d,%d %dx%d panel "
+                         "%d,%d %dx%d G1..G4 PASS\n", forced[i], g_x0, g_y0,
+                         g_pan_w, g_pan_h, g_x0 - el, g_y0 - et,
+                         el + g_pan_w + er, et + g_pan_h + eb);
+        } else {
+            std::fprintf(stderr, "[insetst] size %d: map %d,%d %dx%d panel "
+                         "%d,%d %dx%d FAIL G%s\n", forced[i], g_x0, g_y0,
+                         g_pan_w, g_pan_h, g_x0 - el, g_y0 - et,
+                         el + g_pan_w + er, et + g_pan_h + eb, fails);
+        }
+    }
+    std::fprintf(stderr, "INSET MAP SELFTEST: %s %d/9\n",
+                 passed == 9 ? "PASS" : "FAIL", passed);
+    g_size_force = 0;
+    g_pan_num = s_num;
+    g_pan_den = s_den;
+    g_pan_w = s_w;
+    g_pan_h = s_h;
+    g_x0 = s_x;
+    g_y0 = s_y;
+    g_pan_margin = s_m;
+}
+
+/* The square itself, drawn in the pass above the map so nothing covers it. */
+void hal_sub_panel_handle(unsigned *dst, int w, int h)
+{
+    int hx, hy, hs;
+    if (!handle_rect(&hx, &hy, &hs, h)) return;
+    const int art = (g_art_state == 1);
+    const unsigned bright = art ? g_art_bright
+                                : ((g_motif_state == 1) ? g_panel_bright
+                                                        : 0xFFE0C060u);
+    const unsigned dark = art ? g_art_dark
+                              : ((g_motif_state == 1) ? g_panel_dark
+                                                      : 0xFF201408u);
+    px_fill(dst, w, h, hx, hy, hs, hs, bright);
+    px_fill(dst, w, h, hx, hy, hs, 1, dark);
+    px_fill(dst, w, h, hx, hy + hs - 1, hs, 1, dark);
+    px_fill(dst, w, h, hx, hy, 1, hs, dark);
+    px_fill(dst, w, h, hx + hs - 1, hy, 1, hs, dark);
+}
+
+/* THE PANEL, DRAWN BEHIND THE MAP. Called from hal_sub_screen_present with the
+   framebuffer, just before the map itself is composed over the middle of it.
+   The plaque is NOT drawn here: it belongs above the map and is the second
+   pass, hal_sub_panel_plaque below. */
+void hal_sub_panel_decor(unsigned *dst, int w, int h)
+{
+    /* the archive read only matters when this program has to compose the
+       panel itself, so a player with the artwork never pays for it */
+    if (!art_on() && !g_motif_state) g_motif_state = wall_build() ? 1 : -1;
+
+    PanelGeom g;
+    if (panel_geom(&g)) {
+        /* THE WELL ONTO THE MAP, and the rest of the picture wherever that
+           puts it. See the banner over art_blit. */
+        art_blit(&g_art_base, dst, w, h,
+                 g_art_ix0, g_art_iy0,
+                 g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
+                 g.wx, g.wy, g.ww, g.wh);
+        return;
+    }
+    const int x0 = g.x0, y0 = g.y0, pw = g.pw, ph = g.ph;
+
+    /* the two margins the frame lines are proportioned from, read back out of
+       the rectangle rather than recomputed, so there is still one arithmetic */
+    const int ml = g_x0 - x0, mr = x0 + pw - (g_x0 + g_pan_w);
+
+    const unsigned flat = (g_motif_state == 1) ? g_motif[0][0] : 0xFF4A3B18u;
+    const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;
+
+    /* the wallpaper, at the map's own pixel grid so the panel and the map read
+       as one picture; a plain fill if the archive could not be read */
+    /* The column's motif index, worked out once for the row loop rather than
+       twice per pixel: the biggest panel is a whole framebuffer of them. */
+    static unsigned char col[ntr::SCREEN_W];
+    for (int x = x0 < 0 ? 0 : x0; x < x0 + pw && x < w; ++x)
+        col[x] = (unsigned char)(((x - x0) * g_pan_den / g_pan_num) & 31);
+    for (int y = y0; y < y0 + ph; ++y) {
+        if (y < 0 || y >= h) continue;
+        const unsigned *row = g_motif[((y - y0) * g_pan_den / g_pan_num) & 31];
+        for (int x = x0 < 0 ? 0 : x0; x < x0 + pw && x < w; ++x)
+            dst[y * ntr::SCREEN_W + x] =
+                (g_motif_state == 1) ? row[col[x]] : flat;
+    }
+
+    /* THE FRAME, one artist pixel thick on the left and top and two on the
+       right and bottom, drawn WHERE THE ARTIST HAS IT: immediately against the
+       map, with nothing between. It used to be pushed one pixel further out to
+       make room for the map's own black outline; the owner asked for that
+       outline to go ("Remove the black outline that is usually around the
+       minimap and make it match up with the outline"), it is gone with the
+       option on, and this line moves into the space it left. */
+    const int ft = ml / 7 < 1 ? 1 : ml / 7;
+    const int fb_ = (mr * 2) / 8 < 1 ? 1 : (mr * 2) / 8;
+    const int fx = g_x0, fy = g_y0;
+    const int fw = g_pan_w, fh = g_pan_h;
+    px_fill(dst, w, h, fx - ft, fy - ft, fw + ft * 2, ft, dark);
+    px_fill(dst, w, h, fx - ft, fy + fh, fw + ft + fb_, fb_, dark);
+    px_fill(dst, w, h, fx - ft, fy - ft, ft, fh + ft * 2, dark);
+    px_fill(dst, w, h, fx + fw, fy - ft, fb_, fh + ft + fb_, dark);
+}
+
+/* THE PLAQUE, DRAWN ABOVE THE MAP. The second of the panel's two passes,
+   called from hal_sub_screen_present AFTER ppu_compose_sub has put the map
+   down -- the owner's own order, "the MAP banner and text should be above the
+   minimap layer". It overlaps the top of the map now, which is what the
+   artist's mock-up shows too: there the plaque covers the top fifteen rows of
+   the 180-row map well, across its middle 109 columns.
+
+   The attention arrows are drawn after this and stay above everything. */
+void hal_sub_panel_plaque(unsigned *dst, int w, int h)
+{
+    PanelGeom g;
+    const int art = panel_geom(&g);
+    const int tx = g.tx, ty = g.ty, tw = g.tw, th = g.th;
+
+    if (art) {
+        /* the plaque rides the plate's scale exactly -- the same well-to-map
+           ratio -- with its own top-left corner as the anchor */
+        art_blit(&g_art_tab, dst, w, h,
+                 0, 0,
+                 g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
+                 tx, ty, g.ww, g.wh);
+        return;
+    }
+
+    const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;
+    const unsigned bright = (g_motif_state == 1) ? g_panel_bright : 0xFFE0C060u;
+
+    /* THE PLAQUE. 109 wide and 32 tall against the artist's 255-wide panel,
+       centred, with ten of its rows above the panel's top edge, and its
+       corners cut at forty-five degrees over seven of its own pixels. */
+    const int cut = tw * 7 / 109;
+    for (int y = 0; y < th; ++y) {
+        int in = 0;
+        if (y < cut) in = cut - y;
+        else if (y >= th - cut) in = cut - (th - 1 - y);
+        if (in < 0) in = 0;
+        px_fill(dst, w, h, tx + in, ty + y, tw - in * 2, 1, bright);
+        px_put(dst, w, h, tx + in, ty + y, dark);
+        px_put(dst, w, h, tx + tw - 1 - in, ty + y, dark);
+    }
+    px_fill(dst, w, h, tx + cut, ty, tw - cut * 2, 1, dark);
+    px_fill(dst, w, h, tx + cut, ty + th - 1, tw - cut * 2, 1, dark);
+
+    /* MAP, in this file's own letters, scaled to the plaque and centred. */
+    int gs = th / 9;
+    if (gs < 1) gs = 1;
+    const int gw = (5 * 3 + 2 * 2) * gs;          /* three glyphs, two gaps */
+    int gx = tx + (tw - gw) / 2;
+    const int gy = ty + (th - 7 * gs) / 2;
+    for (int gi = 0; gi < 3; ++gi) {
+        for (int r = 0; r < 7; ++r)
+            for (int c = 0; c < 5; ++c)
+                if (kGlyphMAP[gi][r] & (0x10 >> c))
+                    px_fill(dst, w, h, gx + c * gs, gy + r * gs, gs, gs, dark);
+        gx += 7 * gs;
+    }
+}
+
+/* ---- THE ROM'S OWN CAMERA-BUTTON ZONE, quoted -----------------------------
+ *
+ * src/_ZN5Stage16CheckCameraInputEv.cpp:52-58 decides whether a stylus press
+ * is on one of the four map arrows, and these are its literal bounds:
+ *
+ *   camera mode 0 (the DS camera): y >= 0x8a AND (x <= 0x58 OR x >= 0xa7)
+ *   camera mode 2 (the zoom):      y >= 0x9a AND  x >= 0xa7
+ *
+ * With the improved map on, a press inside that zone is NOT PUBLISHED, which
+ * is how the arrows stop being clickable without anything in src/ changing
+ * and without a hot zone left behind under an invisible button. The ROM's
+ * own hit test then runs over a record that says nothing was touched there,
+ * which is the same answer it gives today for a player who did not touch it.
+ *
+ * MODE 2's zone is a subset of mode 0's, so one test covers both and a
+ * camera mode this port does not select cannot leak a hot zone either. */
+int in_camera_button_zone(int dsx, int dsy)
+{
+    return dsy >= 0x8a && (dsx <= 0x58 || dsx >= 0xa7);
+}
+
+/* ---- AND THE OTHER HALF: THE ARROWS ARE NOT DRAWN --------------------------
+ *
+ * HOW THEY ARE IDENTIFIED, and it is not by position. A sprite's position is a
+ * poor key here: the minimap's player icon and its star markers move over the
+ * whole screen, and the arrows' own corners are exactly where the player icon
+ * sits when the owner is at the bottom of a course, so a position test would
+ * make Mario's head vanish at the bottom of the map. The key is the TILE
+ * NUMBER the arrows' own templates carry. OAM::Render copies a template's
+ * attr2 into the entry it writes and patches only the palette and priority
+ * fields out of it, so the tile bits arrive unchanged; and the eight templates
+ * are ROM data this binary links by name (ov002_data.c.obj, aliased in
+ * hal/sub_actors.cpp). The set is therefore read from the cartridge's own
+ * tables at run time. No literal, no guess, and a graphic that moved would
+ * take its tile with it.
+ *
+ * Tile 0 is never added: it is the ROM's own "nothing here" and unrelated
+ * templates carry it.
+ *
+ * The predicate is installed into ntr's raster (ppu_sub_set_obj_veto) because
+ * the policy is this file's and the raster is a hardware model. */
+extern "C" {
+extern const unsigned short _ZN3OAM12CAM_BUTTON_LE[];
+extern const unsigned short _ZN3OAM12CAM_BUTTON_RE[];
+extern const unsigned short _ZN3OAM20CAM_BUTTON_L_PRESSEDE[];
+extern const unsigned short _ZN3OAM20CAM_BUTTON_R_PRESSEDE[];
+extern const unsigned short _ZN3OAM14S_CAM_BUTTON_LE[];
+extern const unsigned short _ZN3OAM14S_CAM_BUTTON_RE[];
+extern const unsigned short _ZN3OAM22S_CAM_BUTTON_L_PRESSEDE[];
+extern const unsigned short _ZN3OAM22S_CAM_BUTTON_R_PRESSEDE[];
+}
+
+unsigned short g_cam_tiles[64];
+int g_cam_tiles_n = -1;
+
+void cam_tiles_add(const unsigned short *t)
+{
+    /* an OamAttr is four halfwords and attr3 == 0xffff ends the list
+       (include/OamAttr.h). The sixteen is a guard, not a length: a list that
+       never terminates is a corrupt table and must not be walked off. */
+    for (int i = 0; i < 16; ++i) {
+        const unsigned short a2 = t[i * 4 + 2];
+        const unsigned short a3 = t[i * 4 + 3];
+        const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+        if (tile && g_cam_tiles_n <
+                (int)(sizeof g_cam_tiles / sizeof g_cam_tiles[0])) {
+            int seen = 0;
+            for (int k = 0; k < g_cam_tiles_n; ++k)
+                if (g_cam_tiles[k] == tile) { seen = 1; break; }
+            if (!seen) g_cam_tiles[g_cam_tiles_n++] = tile;
+        }
+        if (a3 == 0xffff) return;
+    }
+}
+
+int cam_button_veto(unsigned short a2)
+{
+    if (g_cam_tiles_n < 0) {
+        g_cam_tiles_n = 0;
+        cam_tiles_add(_ZN3OAM12CAM_BUTTON_LE);
+        cam_tiles_add(_ZN3OAM12CAM_BUTTON_RE);
+        cam_tiles_add(_ZN3OAM20CAM_BUTTON_L_PRESSEDE);
+        cam_tiles_add(_ZN3OAM20CAM_BUTTON_R_PRESSEDE);
+        cam_tiles_add(_ZN3OAM14S_CAM_BUTTON_LE);
+        cam_tiles_add(_ZN3OAM14S_CAM_BUTTON_RE);
+        cam_tiles_add(_ZN3OAM22S_CAM_BUTTON_L_PRESSEDE);
+        cam_tiles_add(_ZN3OAM22S_CAM_BUTTON_R_PRESSEDE);
+        if (std::getenv("SM64DS_MINIMAP_TRACE")) {
+            std::fprintf(stderr, "[mmtrace] camera-button tiles (%d):",
+                         g_cam_tiles_n);
+            for (int k = 0; k < g_cam_tiles_n; ++k)
+                std::fprintf(stderr, " %u", (unsigned)g_cam_tiles[k]);
+            std::fprintf(stderr, "\n");
+        }
+    }
+    const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+    for (int k = 0; k < g_cam_tiles_n; ++k)
+        if (g_cam_tiles[k] == tile)
+            return improved_map_on() ? 3 : 1;
+    return 0;
+}
 int g_zoom = 1;
 HWND g_hwnd;
 // The client rectangle the framebuffer was last presented into, in client
@@ -565,7 +1850,11 @@ void poll_touch(void)
     const int btn = inj ? 1
                         : (!g_headless && g_on && GetAsyncKeyState_ &&
                            (GetAsyncKeyState_(VK_LBUTTON) & 0x8000) ? 1 : 0);
-    if (!btn) drag_own = 0;
+    if (!btn) {
+        drag_own = 0;
+        /* and a resize that was in progress is finished and written down */
+        handle_release();
+    }
     if (btn && (inj || (GetCursorPos_ && ScreenToClient_))) {
         POINT p;
         int got;
@@ -589,23 +1878,61 @@ void poll_touch(void)
                rectangle, run backwards), then panel pixels to DS pixels,
                because the panel is drawn at 1/g_div in a corner. Unchanged. */
             int fx = -1, fy = -1, on_picture = 0;
+            int bx = -1, by = -1;
             if (hal_sub_screen_stacked()) {
                 on_picture =
                     hal_present_client_to_sub((int)p.x, (int)p.y, &fx, &fy);
             } else {
-                int bx, by;
                 /* a click in a letterbox bar is not on the panel however close
                    the clamp puts it, so the inside answer gates the press */
                 on_picture =
                     hal_present_client_to_fb((int)p.x, (int)p.y, &bx, &by);
-                fx = (bx - g_x0) * g_div;
-                fy = (by - g_y0) * g_div;
+                /* panel pixels back to DS pixels. The forward direction is
+                   DS * num / den (hal_sub_panel_geometry), so the inverse is
+                   * den / num, and with the option off num is 1 and den is
+                   g_div -- byte for byte the multiply this replaces. */
+                /* FLOOR, not truncate. A point one pixel LEFT of the map is
+                   at -1 framebuffer pixels, and at a magnified size -1 times
+                   den over num truncates to 0 -- so the pixel of panel just
+                   outside the map's left edge read as DS column 0 and the
+                   touch surface was one pixel wider than the picture on two
+                   of its four sides. Harmless while the map was a bare inset
+                   over the 3D view; not harmless with the artist's frame
+                   drawn on exactly those pixels. */
+                fx = fdiv((bx - g_x0) * g_pan_den, g_pan_num);
+                fy = fdiv((by - g_y0) * g_pan_den, g_pan_num);
             }
             live_cx = (int)p.x;
             live_cy = (int)p.y;
             live_seen = 1;
-            const int on_surface = on_picture && fx >= 0 && fx < ntr::SUB_W &&
-                                   fy >= 0 && fy < ntr::SUB_H;
+            int on_surface = on_picture && fx >= 0 && fx < ntr::SUB_W &&
+                             fy >= 0 && fy < ntr::SUB_H;
+            /* THE ARROWS ARE NOT CLICKABLE WITH THE OPTION ON. Refused here,
+               at the one seam that decides whether a host click becomes a
+               stylus record at all, so the press never exists as far as the
+               ROM is concerned -- no press, no camera step, and no invisible
+               button to hit by accident. The bumpers, Q / E and the right
+               stick reach the camera through tests/walk_window.cpp's own
+               cam_turn and are untouched by this.
+               IT ALSO ENDS A DRAG rather than clamping one: a press that
+               wanders into the zone is dropped for as long as it is in there,
+               which is what a player who cannot see a button expects. */
+            if (on_surface && improved_map_on() &&
+                in_camera_button_zone(fx, fy)) {
+                on_surface = 0;
+                drag_own = 0;
+            }
+            /* THE RESIZE HANDLE TAKES THE PRESS WHOLE. Tested here, at the one
+               seam that decides whether a host click becomes a stylus record
+               at all, so a press that started on the square never exists as
+               far as the ROM is concerned: no touch, no camera step, nothing
+               published. It is tested AFTER the camera zone and before the
+               arming edge, because the handle sits outside the map's own
+               rectangle and the two can never both claim a press. */
+            if (!hal_sub_screen_stacked() && handle_press(bx, by, on_picture)) {
+                on_surface = 0;
+                drag_own = 0;
+            }
             /* the arming edge, and the only one there is */
             if (on_surface) drag_own = 1;
             if (inj && on_surface) ++g_inj_on_surface;
@@ -1697,6 +3024,28 @@ extern "C" void port_frame_oam_upload(void)
     ntr::ppu_seam_oam_mark_uploaded();
 }
 
+/* ---- IS THE ATTENTION CUE RE-ANCHORED THIS FRAME? -------------------------
+ *
+ * Asked by engine A's raster (hal/message_compositor.cpp) once per frame,
+ * before it decides whether to hold the three bouncing arrows back out of the
+ * top screen's own buffer.
+ *
+ * The cue is the ROM's "look at the bottom screen": Stage::RenderBouncingArrows
+ * puts three arrows along the bottom edge of the TOP screen and plays a sound,
+ * because on a DS the thing to look at is the other panel. On this port the
+ * bottom screen is a corner inset over the same picture, so the arrows point at
+ * empty floor. With the improved map on they are moved to sit just above the
+ * inset instead -- which is the whole request.
+ *
+ * SAME GATE AS THE REST OF THE OPTION: the improved map on, and the corner
+ * inset layout, which is a course. Menus and minigames take the stacked
+ * layout, where the bottom screen is a real second panel and the ROM's own
+ * placement is already right. */
+int hal_minimap_arrow_reanchor_on(void)
+{
+    return improved_map_on() && !hal_sub_screen_stacked();
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
@@ -1712,10 +3061,49 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
             init = 1;
             const int v = env_flag("SM64DS_SUB_SCALE", 2);
             g_div = v < 1 ? 1 : (v > 4 ? 4 : v);
+            /* the improved map's sprite veto, installed once. It is installed
+               whatever the option says, because it also LABELS the four
+               entries for the census; it only declines them when the option
+               is on (cam_button_veto's own return). */
+            ntr::ppu_sub_set_obj_veto(cam_button_veto);
         }
     }
-    g_x0 = w - ntr::SUB_W / g_div - kMargin;
-    g_y0 = h - ntr::SUB_H / g_div - kMargin;
+    hal_sub_panel_geometry(w, h);
+    /* the inset arm of SM64DS_LAYOUT_SELFTEST, once per process and only in a
+       course, which is the only place this map exists */
+    {
+        static int done;
+        if (!done && !hal_sub_screen_stacked()) {
+            done = 1;
+            inset_map_selftest(w, h);
+        }
+    }
+    /* THE TOUCH TARGET, not presented with the option on. Measured on this
+       build: the marker is BG2 of the sub engine, which the game enables only
+       while the bottom screen registers a touch (DISPCNT_B 0x40011803 ->
+       0x40011c03, bit 10), and the port draws it in the map's TOP-LEFT CORNER
+       whatever point was actually touched -- a click at the middle of the map
+       moves 1260 pixels and every one of them is inside a quarter disc of
+       radius 40 at DS (0,0). A marker that does not follow the touch is worse
+       than no marker, and a player clicking with a mouse needs no marker at
+       all, so with the improved map on this layer is not presented.
+       ONLY IN THE CORNER-INSET LAYOUT, which is a course: menus and minigames
+       take the stacked layout, where the bottom screen is the thing being
+       played on and BG2 is nobody's marker. Zero otherwise, which is the
+       raster's own old behaviour. */
+    ntr::ppu_sub_set_bg_suppress(
+        (improved_map_on() && !hal_sub_screen_stacked()) ? (1u << 10) : 0u);
+    /* THE MAP'S BLACK OUTLINE, and where it comes from. It is not the
+       cartridge's: the DS bottom screen's own outermost rows and columns are
+       whatever the game drew there. It is this port's, one pixel wide, drawn
+       by ntr::ppu_compose_sub immediately outside the map so a bare inset
+       reads as a panel rather than as a hole in the 3D picture. With a
+       decorated panel round the map that line sits on top of the artist's own
+       border, which is precisely what the owner asked to be rid of, so with
+       the improved map on it is not drawn and the panel's own frame takes its
+       place. Off, and in the stacked layout, it is exactly what it was. */
+    ntr::ppu_sub_set_compose_border(
+        (improved_map_on() && !hal_sub_screen_stacked()) ? 0 : 1);
     /* Publish the layer mask, the way nine ROM functions do with this exact
        line. Minimap::Behavior and Message::UpdateWindow both write
        data_0209d454 and then push it themselves; doing it once more here is
@@ -1863,9 +3251,83 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        the framebuffer this function is handed comes out of a stacked frame
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
-    if (!hal_sub_screen_stacked())
-        ntr::ppu_compose_sub(g_sub, dst, w, h, kMargin, g_div);
+    if (!hal_sub_screen_stacked()) {
+        /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
+           compose below writes the map over the middle of it and its own one
+           pixel frame lands on the panel's inner edge. Only with the option
+           on; with it off not a pixel of this runs. */
+        if (improved_map_on()) hal_sub_panel_decor(dst, w, h);
+        ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, g_pan_num, g_pan_den);
+        /* AND THE PANEL'S SECOND PASS, the MAP plaque, which the owner asked
+           to sit ABOVE the map rather than behind it. Three layers in his own
+           order: the plate, the map, the banner. */
+        if (improved_map_on()) hal_sub_panel_plaque(dst, w, h);
+        /* AND THE RESIZE HANDLE, above the map and the banner both, because it
+           is a control and a control that something can be drawn over is a
+           control a player cannot find. */
+        if (improved_map_on()) hal_sub_panel_handle(dst, w, h);
+        /* AFTER THE PANEL, DELIBERATELY. The arrows sit just above the panel's
+           top edge, so at every size but the largest they do not touch it; at
+           the largest size on a 4:3 picture the panel IS the picture and the
+           band has nowhere above to go, and drawing them here means the player
+           still sees the cue instead of losing it under the map. Engine A's
+           raster ran earlier in the frame (port_message_composite_engine_a),
+           which is why the sprites are handed over rather than drawn there. */
+        port_bounce_arrows_present(dst, w, h, g_x0, g_y0, g_pan_w, g_pan_h);
+    }
     g_ready = true;
+
+    /* SM64DS_BG2_TRACE=1: engine B's BG2 control and affine registers, once a
+       frame and only when one of them has changed. The touch marker the owner
+       calls "the target" is that layer (lane MINIMAP1 measured it: the sub
+       engine's 128 sprite entries are byte-identical touched and untouched,
+       and DISPCNT_B's layer mask goes 0x18 to 0x1c on touch), and it is drawn
+       in the map's top-left corner wherever the touch actually was. An affine
+       layer is PLACED by its reference point, so this prints what the game
+       writes there against where the touch is: if the reference point moves
+       with the stylus the port is misreading it, and if it does not the
+       cartridge places the marker some other way. */
+    {
+        static int on = -1;
+        static unsigned last[6];
+        if (on < 0) on = std::getenv("SM64DS_BG2_TRACE") ? 1 : 0;
+        if (on) {
+            const unsigned cnt = *(volatile unsigned short *)0x0400100c;
+            /* the map's own occupancy, because a text background can also be
+               placed by REDRAWING it: the box of non-empty entries says which
+               it is. Screen base is BGxCNT bits 8..12 in 2K units. */
+            const unsigned screen = 0x06200000u + (((cnt & 0x1f00u) >> 8) << 11);
+            unsigned bx0 = 64, bx1 = 0, by0 = 64, by1 = 0, nz = 0;
+            for (unsigned ty = 0; ty < 32; ++ty)
+                for (unsigned tx = 0; tx < 64; ++tx) {
+                    const unsigned short e = *(volatile unsigned short *)
+                        (screen + (ty * 64u + tx) * 2u);
+                    if (!(e & 0x3FFu)) continue;
+                    ++nz;
+                    if (tx < bx0) bx0 = tx;
+                    if (tx > bx1) bx1 = tx;
+                    if (ty < by0) by0 = ty;
+                    if (ty > by1) by1 = ty;
+                }
+            const unsigned now[6] = {
+                *(volatile unsigned *)0x04001000,
+                cnt,
+                (unsigned)(*(volatile unsigned short *)0x04001018)
+                    | (unsigned)(*(volatile unsigned short *)0x0400101a) << 16,
+                *(volatile unsigned *)0x04001028,
+                *(volatile unsigned *)0x0400102c,
+                (bx0 << 24) | (bx1 << 16) | (by0 << 8) | by1,
+            };
+            if (std::memcmp(now, last, sizeof now) != 0) {
+                std::memcpy(last, now, sizeof now);
+                std::fprintf(stderr, "[bg2b] DISPCNT %08x BG2CNT %04x "
+                             "HOFS %u VOFS %u BG2X %08x BG2Y %08x  map@%08x "
+                             "%u entries, tiles x %u..%u y %u..%u\n",
+                             now[0], now[1], now[2] & 0xFFFFu, now[2] >> 16,
+                             now[3], now[4], screen, nz, bx0, bx1, by0, by1);
+            }
+        }
+    }
 
     /* SM64DS_SUB_DUMP=N: the bottom screen alone, at 256x192, on frame N. */
     {

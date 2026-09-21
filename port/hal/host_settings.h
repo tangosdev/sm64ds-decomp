@@ -785,6 +785,60 @@ int host_setting_present_backend(void);
 int host_setting_present_filter(void);
 int host_setting_vsync(void);
 
+/* ---- THE IMPROVED MINIMAP (two keys) ---------------------------------------
+
+   ImprovedMinimap: the corner map panel's player-facing option. ABSENT MEANS
+   ON, which is not this file's usual shape and is deliberate: it is the
+   owner's order for the feature ("on by default"). 0 turns it off and
+   restores the panel exactly as it was. SM64DS_IMPROVED_MINIMAP overrides the
+   file in either direction.
+
+   IT IS PINNED OFF ON EVERY COMPARATOR ROUTE unless the environment asks for
+   it by name. A selftest run and a scene sweep row are the two shapes every
+   baseline capture in this tree is taken in, and a feature that changed what
+   they draw would move a hundred recorded hashes for a reason that has
+   nothing to do with the code under test. So the getter answers 0 for those
+   routes, the same belt-and-braces pin the run mode and the camera mode take
+   in tests/walk_window.cpp, and one explicit SM64DS_IMPROVED_MINIMAP=1 turns
+   it back on for a run that means to look at it.
+
+   MinimapScale: how much bigger than today the map is drawn. 1 is what the
+   port draws today (the half size inset, 128x96). IT IS A FREE NUMBER, not
+   one of a set of rows: the owner asked to grab the map's corner and drag it
+   to whatever size suits his window, so the drag writes back whatever he let
+   go at. The launcher keeps its 1 / 1.25 / 1.5 / 2 / 3 / 4 picker and all six
+   are still exact.
+
+   The one thing a size has to be is a whole number of pixels in both axes.
+   The map keeps its 4:3 shape, so its drawn width must be a multiple of four
+   and every value is quantised onto that grid -- steps of a thirty-second of
+   a multiplier. A value off the grid moves to the nearest one on it and the
+   move is announced once. The DRAWING layer clamps further, to the largest
+   size whose whole decorated panel still fits in the picture, because only it
+   knows the picture's size. SM64DS_MINIMAP_SCALE overrides the file and, once
+   set, also outranks the drag for the rest of the run.
+
+   ImprovedMinimap is read once and latched. MinimapScale is read live,
+   because the drag moves it while the game is running.
+
+   _set_live moves the size for this run only and is what a drag calls on
+   every frame; _save also writes MinimapScale back to settings.json through
+   the same writer the debug menu's run and camera rows use, carrying every
+   other key across untouched, and is what the mouse-up calls. */
+int host_setting_improved_minimap(void);
+double host_setting_minimap_scale_value(void);
+void host_setting_minimap_scale_ratio(int *num, int *den);
+void host_setting_minimap_scale_set_live(double s);
+int host_setting_save_minimap_scale(double s);
+
+/* WHERE THE PANEL ARTWORK WOULD BE READ FROM: "<asset root>/minimap", the
+   folder textures_hd's neighbour, or SM64DS_MINIMAP_DIR outright. Never null,
+   and it names a folder that very often is not there -- with no folder the
+   panel is composed at run time from the player's own game data instead. The
+   pictures are not part of this program and nothing here embeds or ships
+   them; the code reads a folder. */
+const char *host_setting_minimap_dir(void);
+
 #ifdef __cplusplus
 }
 #endif

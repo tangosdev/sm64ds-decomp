@@ -341,13 +341,75 @@ void ppu_capture_counters(unsigned long long &performed,
 // mapping made visible.
 void ppu_vram_publish(void);
 
-// Blit the bottom screen 1:1 into the bottom-right corner of a dst_w x dst_h
-// ARGB buffer, `margin` pixels in from both edges, with a one-pixel frame.
-/* div: integer downscale of the panel (1 = 1:1 DS pixels, 2 = half size).
-   Downscaled pixels are the box average of the div x div source block, so the
-   minimap's 1px marks survive as shading rather than vanishing. */
+// Blit the bottom screen into a dst_w x dst_h ARGB buffer at (x0, y0), with a
+// one-pixel frame around it.
+/* num/den: the panel's size as a fraction of one DS screen. 1/2 is the half
+   size this has always drawn by default and 1/1 is 1:1 DS pixels; the improved
+   map's six sizes are 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1, every one of which is a
+   whole number of pixels in both axes at 256x192.
+   DOWNSCALED pixels (den > num) are the box average of the source block they
+   cover, so the minimap's 1px marks survive as shading rather than vanishing.
+   UPSCALED pixels (num > den) are NEAREST: every DS pixel becomes a block, no
+   interpolation, for the reason the stacked presentation gives two paragraphs
+   up -- a filter would invent pixels the DS never drew, and a magnified map
+   wants the cartridge's own pixels.
+   THE ORIGIN IS THE CALLER'S rather than a margin computed here, because the
+   touch inverse has to run this placement backwards and two sites rounding one
+   fraction independently is how a drawn picture and a stylus surface come to
+   disagree. hal/sub_screen.cpp's hal_sub_panel_geometry is the one place that
+   decides; this draws what it decided. */
 void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
-                     int dst_h, int margin, int div = 1);
+                     int dst_h, int x0, int y0, int num, int den);
+
+/* THE ONE-PIXEL BLACK FRAME IS NOW OPTIONAL. It exists so the map reads as a
+   panel and not as a corruption of the 3D view, which is the right default for
+   a bare map floating in the corner. A map sitting inside a decorated panel
+   has a border already, and a black line drawn on top of the artist's own one
+   is exactly what the owner asked to be rid of ("Remove the black outline that
+   is usually around the minimap and make it match up with the outline ... on
+   the image"). So the host says which it wants; 1, the frame, is what this
+   file has always drawn and is the value nothing-installed keeps. */
+void ppu_sub_set_compose_border(int on);
+
+/* ---- THE HOST'S VETO OVER ENGINE B'S SPRITES -------------------------------
+ *
+ * A predicate the host may install to decline individual sub-engine OBJ
+ * entries at raster time, keyed on the entry's attr2 (tile, priority,
+ * palette). It exists for the improved minimap, which has to take the ROM's
+ * four touchscreen camera arrows out of a picture a mouse player cannot use
+ * them in -- without touching src/ and without skipping a call the ROM makes.
+ * The ROM still computes and submits the sprites; this layer declines to draw
+ * them.
+ *
+ * IT IS A HOOK BECAUSE THE POLICY IS NOT NTR'S. The tile numbers are cartridge
+ * data and the option is a settings key, and this layer models DS hardware for
+ * four smoke binaries that have neither. Nothing installed is the old
+ * behaviour exactly.
+ *
+ * The return is a bitmask: bit 0 "this is one of the entries you named", bit 1
+ * "and do not draw it". Two bits rather than one because the census wants to
+ * label an entry whether or not the option is on.  */
+void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2));
+long ppu_sub_obj_veto_count(void);
+
+/* ---- AND THE SAME IDEA ONE LAYER UP: SUPPRESSING A WHOLE BG ----------------
+ *
+ * DISPCNT_B bits this engine's scan-out is to treat as CLEAR. It can only ever
+ * turn a layer off; the register is not written, so the game reads back what it
+ * wrote and its own logic is untouched.
+ *
+ * It exists for the improved minimap's other removal. The touch marker the
+ * owner calls "the target" is NOT a sprite -- measured: engine B's 128 OAM
+ * entries are byte-identical with the screen touched and untouched -- it is
+ * BG2, which the game ENABLES only while the bottom screen registers a touch
+ * (DISPCNT_B goes 0x40011803 to 0x40011c03, layer mask 0x18 to 0x1c, bit 10).
+ * On a mouse player's screen that marker is drawn in the map's top-left corner
+ * wherever the click actually was, so with the improved map on the host stops
+ * presenting that layer.
+ *
+ * Set it every frame, from the code that knows the scene and the option; zero
+ * is the behaviour this file shipped with.  */
+void ppu_sub_set_bg_suppress(uint32_t mask);
 
 // ---- the stacked presentation -----------------------------------------------
 //

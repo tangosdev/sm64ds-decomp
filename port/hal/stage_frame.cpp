@@ -511,7 +511,7 @@ extern "C" void port_frame_ctrl_publish(void);
 
 extern "C" unsigned char data_0209f49c[], data_0209f49e[], data_0209f4a0[],
                          data_0209f4a2[], data_0209f4a4[], data_0209f4a6[],
-                         data_0209f4ac[];
+                         data_0209f4a8[], data_0209f4a9[], data_0209f4ac[];
 extern "C" int data_0209f498[];
 
 /* A SECOND COPY, AND IT RUNS BEFORE Stage::Behavior, NOT AFTER.
@@ -573,6 +573,19 @@ static void port_frame_ctrl_prime(void)
         *(short *)(data_0209f4a2 + o) = *(const short *)(r + 0x0a);
         *(short *)(data_0209f4a4 + o) = *(const short *)(r + 0x0c);
         *(short *)(data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+        /* THE STYLUS POINT, Ctrl +0x10 and +0x11, and leaving it out was a
+           visible bug for every player. Minimap::Behavior places the touch
+           marker with `SetSubBg2Offset(0x100 - x, 0x80 - y)` reading exactly
+           these two bytes, so with them stuck at zero the marker was drawn at
+           the map's top-left corner wherever the player actually touched --
+           measured on 0.4.0: a click at the middle of the map moves 1260
+           pixels and every one of them is inside a quarter disc of radius 40
+           at DS (0,0), and the scroll registers read 0x100 / 0x80 for three
+           different touch points. The flag at +0x14 below was fanned out and
+           the two coordinates beside it were not, which is why the marker
+           appeared at all and never moved. */
+        *(unsigned char *)(data_0209f4a8 + o) = *(const unsigned char *)(r + 0x10);
+        *(unsigned char *)(data_0209f4a9 + o) = *(const unsigned char *)(r + 0x11);
         *(unsigned char *)(data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
     }
 }

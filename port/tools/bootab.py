@@ -48,6 +48,12 @@ path hands the finished picture to the screen. presentdev=warp|hw pins the devic
 mode (SM64DS_PRESENT_OFFSCREEN), which draws the identical upload, quad and filter
 into a target of its own and needs no window -- which is what makes it usable from
 a headless sweep at all. All five are inert unless named.
+minimap=<size> turns the improved minimap ON at that size on every row (the
+"ImprovedMinimap" and "MinimapScale" settings), and minimapdir=<folder> points its
+panel artwork at a folder. Same shape and same reason as smooth= above, with one
+extra: the option's getter is pinned off under SM64DS_WINDOW_SELFTEST so a stray
+settings.json can never move a recorded baseline, which makes the environment the
+only channel a sweep has to it.
 aspect=<ratio> sets SM64DS_ASPECT to that ratio on EVERY row, level and scene alike,
 so one sweep boots the whole table at one presentation width. It is the only way to
 reach the wide path from here: the environment scrub above drops an inherited
@@ -169,6 +175,12 @@ for a in sys.argv[5:]:
 PRESENTOFF = ""
 for a in sys.argv[5:]:
     if a.startswith("presentoff="): PRESENTOFF = a[11:]
+MINIMAP = ""
+for a in sys.argv[5:]:
+    if a.startswith("minimap="): MINIMAP = a[8:]
+MINIMAPDIR = ""
+for a in sys.argv[5:]:
+    if a.startswith("minimapdir="): MINIMAPDIR = a[11:]
 WARPIN = any(a == "warpin=1" for a in sys.argv[5:])
 REENTRY = any(a == "reentry=1" for a in sys.argv[5:])
 PRESS = "200:A"
@@ -210,7 +222,7 @@ WORKERS = max(1, min(WORKERS, MAX_SWEEP_WORKERS))
 # the row filter is positional but the flags are not, so a run that passes only a
 # flag must not have that flag read as a filter (it would then match no prefix and
 # sweep everything by accident)
-if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "workers=")): FILTER = ""
+if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "workers=", "minimap=", "minimapdir=")): FILTER = ""
 if FILTER.startswith("levels="):
     sel = FILTER[7:]; SCENES = ()
     if sel != "all": LEVELS = tuple(i for i in LEVELS if str(i) in sel.split(","))
@@ -524,6 +536,20 @@ def run(kind, ident, label, ent=None, wdir=None):
     if VSYNC: env["SM64DS_VSYNC"] = VSYNC
     if PRESENTDEV: env["SM64DS_PRESENT_DEVICE"] = PRESENTDEV
     if PRESENTOFF: env["SM64DS_PRESENT_OFFSCREEN"] = PRESENTOFF
+    # minimap=<size>, minimapdir=<folder>: the improved minimap's keys, the
+    # same shape and the same reason as smooth= and aspect= above. They cannot
+    # come from a settings.json here, for two reasons that are both about this
+    # tool rather than about the option: at workers>1 only the exe is copied
+    # into a worker directory, so a settings file beside the real exe is not
+    # what a row reads; and the option's own getter is pinned OFF under
+    # SM64DS_WINDOW_SELFTEST precisely so that a settings file cannot move a
+    # recorded baseline, which leaves the environment as the only channel a
+    # sweep has. Unset, both lines do nothing and a sweep is byte-identical to
+    # one from before this argument existed.
+    if MINIMAP:
+        env["SM64DS_IMPROVED_MINIMAP"] = "1"
+        env["SM64DS_MINIMAP_SCALE"] = MINIMAP
+    if MINIMAPDIR: env["SM64DS_MINIMAP_DIR"] = MINIMAPDIR
     exe_path = os.path.join(wdir, os.path.basename(EXE))
     t0 = time.time()
     rc, out = _run_proc([exe_path], wdir, env, BUDGET)
