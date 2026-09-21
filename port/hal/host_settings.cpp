@@ -1179,48 +1179,52 @@ int g_smooth_models = 0;
 
 /* ---- THE IMPROVED MINIMAP'S TWO KEYS ---------------------------------------
 
-   The six legal sizes, in the order the launcher's picker lists them. They
-   are multipliers on the panel the port draws TODAY (half a DS screen, so
-   128x96), which is what "scaled from how it is" means: index 0 is the
+   MinimapScale is a multiplier on the panel the port draws TODAY (half a DS
+   screen, so 128x96), which is what "scaled from how it is" means: 1 is the
    current picture, byte for byte.
 
-   WHY THESE SIX AND NOT A FREE NUMBER. The panel is drawn from a 256x192
-   source, so a size is only honest if 256*s/2 and 192*s/2 are both whole
-   pixels. 1, 1.25, 1.5, 2, 3 and 4 give 128x96, 160x120, 192x144, 256x192,
-   384x288 and 512x384 -- every one exact, no fractional destination row, and
-   the rational form each one reduces to is in the second and third columns so
-   the compose and the stylus inverse can share one integer arithmetic. */
-const struct { double s; int num, den; } MINIMAP_SCALES[6] = {
-    { 1.00, 1, 2 }, { 1.25, 5, 8 }, { 1.50, 3, 4 },
-    { 2.00, 1, 1 }, { 3.00, 3, 2 }, { 4.00, 2, 1 },
-};
+   IT IS A FREE NUMBER NOW, not one of six rows, because the owner asked to
+   drag the map's corner and scale it against the window by hand. The launcher
+   keeps its 1 / 1.25 / 1.5 / 2 / 3 / 4 picker and every one of those six is
+   still exact; a number between them is just as legal, and the picker's own
+   round trip shows the nearest row for one the player dragged to.
 
+   THE ONE THING A SIZE HAS TO BE is a whole number of pixels in both axes.
+   The map is drawn from a 256x192 source and keeps its 4:3 shape, so its
+   drawn width k must be a multiple of four for 3k/4 to be whole. Every size
+   is therefore quantised onto that grid -- steps of four pixels of width,
+   three of height, one thirty-second of a multiplier -- and the six picker
+   rows land on it exactly: 128, 160, 192, 256, 384 and 512.
+
+   The ratio handed to the compose and to the stylus inverse is k/256, which
+   for those six reduces to the 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1 they used
+   before and draws the identical picture. */
 int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
-int g_minimap_scale = 0;      /* index into MINIMAP_SCALES */
+double g_minimap_scale = 1.0; /* the multiplier, 1 or more */
 
-/* Snap an arbitrary number to the nearest legal size. Ties go to the SMALLER
-   one, because a tie means the player asked for something exactly between two
-   sizes and the smaller of the two hides less of the game behind the map.
-   Absent, zero, negative and unparseable all read as index 0, the Aspect
-   rule: a number that is a picture beats an error.
-
-   It returns the index and, through `snapped`, whether it had to move, so the
-   one caller that wants to say so can say it once rather than every reader
-   printing a line. */
-int minimap_scale_sanitise(double v, int *snapped)
+/* THE MAP'S DRAWN WIDTH for a multiplier, on the grid above. Absent, zero,
+   negative and unparseable all read as 1, the Aspect rule: a number that is a
+   picture beats an error. The ceiling is a sanity bound only -- the real
+   limit is "the whole panel still fits in the picture" and only the drawing
+   layer knows the picture. */
+int minimap_scale_k(double v)
 {
-    if (snapped) *snapped = 0;
-    if (!(v > 0.0)) return 0;
-    int best = 0;
-    double bestd = -1.0;
-    for (int i = 0; i < 6; ++i) {
-        double d = v - MINIMAP_SCALES[i].s;
-        if (d < 0.0) d = -d;
-        /* strictly less than keeps the FIRST (smaller) of two equal distances */
-        if (bestd < 0.0 || d < bestd) { bestd = d; best = i; }
-    }
-    if (snapped && bestd > 1e-9) *snapped = 1;
-    return best;
+    if (!(v > 0.0)) v = 1.0;
+    int k = (int)(v * 128.0 + 0.5);
+    k = (k + 2) & ~3;
+    if (k < 128) k = 128;
+    if (k > 4096) k = 4096;
+    return k;
+}
+
+/* Put a multiplier on the grid, and say through `snapped` whether it had to
+   move, so the one caller that wants to say so can say it once rather than
+   every reader printing a line. */
+double minimap_scale_sanitise(double v, int *snapped)
+{
+    const double q = minimap_scale_k(v) / 128.0;
+    if (snapped) *snapped = (v != q) ? 1 : 0;
+    return q;
 }
 
 void load_once(void)
@@ -1529,10 +1533,9 @@ void load_once(void)
             const double want = json_num(text, "MinimapScale", 1.0);
             g_minimap_scale = minimap_scale_sanitise(want, &snapped);
             if (snapped)
-                fprintf(stderr, "[settings] MinimapScale %g is not one of "
-                        "1, 1.25, 1.5, 2, 3, 4 -- using %g (the nearest, ties "
-                        "to the smaller)\n", want,
-                        MINIMAP_SCALES[g_minimap_scale].s);
+                fprintf(stderr, "[settings] MinimapScale %g is not a whole "
+                        "number of pixels in both axes -- using %g, the "
+                        "nearest that is\n", want, g_minimap_scale);
         }
         /* Both spellings of a toggle, the RunMode rule: the launcher
            serialises a C# bool as true/false and a player editing by hand may
@@ -2428,34 +2431,67 @@ extern "C" int host_setting_improved_minimap(void)
     return g_improved_minimap;
 }
 
-extern "C" int host_setting_minimap_scale(void)
+extern "C" double host_setting_minimap_scale_value(void)
 {
     static int env_read = 0;
-    static int env = -1;             /* <0 means "the environment said nothing" */
+    static double env = -1.0;        /* <0 means "the environment said nothing" */
     if (!env_read) {
         env_read = 1;
         const char *e = getenv("SM64DS_MINIMAP_SCALE");
         if (e && *e) {
             char *end = 0;
             const double v = strtod(e, &end);
-            env = (end != e) ? minimap_scale_sanitise(v, 0) : 0;
+            env = (end != e) ? minimap_scale_sanitise(v, 0) : 1.0;
         }
     }
-    if (env >= 0) return env;
+    if (env > 0.0) return env;
     load_once();
     return g_minimap_scale;
 }
 
 /* The chosen size as the exact rational the drawing and the touch inverse
-   share. ONE table, read through one function, so a size can never mean two
-   things in two files -- which is the rule the corner panel's geometry was
-   already keeping with its single integer divisor and has to keep now that
-   the divisor is a fraction. */
+   share. ONE function, so a size can never mean two things in two files --
+   which is the rule the corner panel's geometry was already keeping with its
+   single integer divisor and has to keep now that the divisor is a fraction
+   the player can drag. */
 extern "C" void host_setting_minimap_scale_ratio(int *num, int *den)
 {
-    const int i = host_setting_minimap_scale();
-    if (num) *num = MINIMAP_SCALES[i].num;
-    if (den) *den = MINIMAP_SCALES[i].den;
+    const int k = minimap_scale_k(host_setting_minimap_scale_value());
+    if (num) *num = k;
+    if (den) *den = 256;
+}
+
+/* THE DRAG'S TWO WRITES.
+ *
+ * _live moves the size for this run and nothing else: it is called on every
+ * frame of a drag, and a settings file rewritten sixty times a second would
+ * be a file the launcher is reading while it is half written.
+ *
+ * _save is the mouse-up: the same move, and then the number on disk, so the
+ * size survives a restart and the launcher's picker opens on it. It goes
+ * through save_keys like the debug menu's run and camera rows, which reloads
+ * the document and carries every key this program did not write across
+ * untouched. The environment override still wins over both for the rest of
+ * the run, deliberately: a proof run that pinned a size keeps it.
+ *
+ * %.6g is enough to print any number on the grid exactly (the grid is
+ * thirty-seconds, and 4096/128 = 32 is the ceiling), so a value written here
+ * reads back as the same value. */
+extern "C" void host_setting_minimap_scale_set_live(double s)
+{
+    load_once();
+    g_minimap_scale = minimap_scale_sanitise(s, 0);
+}
+
+extern "C" int host_setting_save_minimap_scale(double s)
+{
+    load_once();
+    g_minimap_scale = minimap_scale_sanitise(s, 0);
+    char v[32];
+    snprintf(v, sizeof v, "%.6g", g_minimap_scale);
+    const char *const keys[1] = { "MinimapScale" };
+    const char *const vals[1] = { v };
+    return save_keys(keys, vals, 1, "minimap size");
 }
 
 /* HdTextures: 1 when the replacement pack is on. SM64DS_HD_TEXTURES has the
