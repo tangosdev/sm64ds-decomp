@@ -15894,12 +15894,13 @@ int main(void)
                 }
             }
         }
-        /* SM64DS_SUBBG_DUMP=N -- AN INERT INSTRUMENT for the sub engine's BG1,
-           which is where Stage::UpdateMenuButtons recolours the level-clear
-           menu's three plates and where Message::AddChar composes their
-           lettering. On frame N it writes engine B's BG1 character block and
-           its screen block out raw, beside the bases and BG1CNT the DS itself
-           would have used to find them. Absent, nothing here runs. */
+        /* SM64DS_SUBBG_DUMP=N -- AN INERT INSTRUMENT for the sub engine's
+           backgrounds, which is where the level-clear menu lives: BG1 carries
+           the three plates Stage::UpdateMenuButtons recolours, and BG0 carries
+           the lettering func_0201b388 composes into it while the message
+           window is up. On frame N it writes engine B's whole BG window out
+           raw (0x06200000, 128K) and prints all four BGxCNT with the bases the
+           DS itself would derive from them. Absent, nothing here runs. */
         {
             static int at = -2, subframe;
             if (at == -2) {
@@ -15908,24 +15909,48 @@ int main(void)
             }
             if (at >= 0 && subframe++ == at) {
                 const unsigned dis = *(volatile unsigned *)0x04001000;
-                const unsigned cnt = *(volatile unsigned short *)0x0400100a;
-                const unsigned chars  = 0x06200000u + (((cnt >> 2) & 0xfu) << 14);
-                const unsigned screen = 0x06200000u + (((cnt >> 8) & 0x1fu) << 11);
-                FILE *f = fopen("subbg1_char.bin", "wb");
+                FILE *f = fopen("subbg_vram.bin", "wb");
                 if (f) {
-                    for (unsigned i = 0; i < 0x10000u; ++i)
-                        fputc(*(volatile unsigned char *)(chars + i), f);
+                    for (unsigned i = 0; i < 0x20000u; ++i)
+                        fputc(*(volatile unsigned char *)(0x06200000u + i), f);
                     fclose(f);
                 }
-                f = fopen("subbg1_scr.bin", "wb");
-                if (f) {
-                    for (unsigned i = 0; i < 0x800u; ++i)
-                        fputc(*(volatile unsigned char *)(screen + i), f);
-                    fclose(f);
+                printf("[subbg] frame %d DISPCNT_B %08x\n", at, dis);
+                for (int bg = 0; bg < 4; ++bg) {
+                    const unsigned cnt = *(volatile unsigned short *)
+                        (0x04001008u + (unsigned)bg * 2u);
+                    printf("[subbg]   BG%dCNT %04x char@%08x screen@%08x "
+                           "%s prio %u size %u\n", bg, cnt,
+                           0x06200000u + (((cnt >> 2) & 0xfu) << 14),
+                           0x06200000u + (((cnt >> 8) & 0x1fu) << 11),
+                           (cnt & 0x80) ? "256-colour" : "16-colour",
+                           cnt & 3u, (cnt >> 14) & 3u);
                 }
-                printf("[subbg] frame %d DISPCNT_B %08x BG1CNT %04x "
-                       "char@%08x screen@%08x %s\n", at, dis, cnt, chars,
-                       screen, (cnt & 0x80) ? "256-colour" : "16-colour");
+                /* AND THE FONTS THE COMPOSERS READ, which live on engine A:
+                   func_02054d88() (src/func_02054d88.c) is the address both
+                   Message::AddChar and func_0201b100 resolve the glyph cells
+                   against -- the small 8x16 font at +0, the big 16x16 menu
+                   font LoadFont(0) decompresses at +0x8000. Same formula as
+                   the ROM's, out of DISPCNT_A and BG3CNT_A. */
+                {
+                    const unsigned disA = *(volatile unsigned *)0x04000000;
+                    const unsigned bg3A = *(volatile unsigned short *)0x0400000e;
+                    const unsigned mode = disA & 7u;
+                    unsigned fbase = 0;
+                    if (mode < 3u || (mode < 6u && !(bg3A & 0x80u)))
+                        fbase = 0x06000000u + (((disA & 0x7000000u) >> 24) << 16)
+                                            + (((bg3A & 0x3cu) >> 2) << 14);
+                    printf("[subbg]   DISPCNT_A %08x BG3CNT_A %04x "
+                           "func_02054d88()=%08x\n", disA, bg3A, fbase);
+                    if (fbase) {
+                        FILE *g = fopen("mainfont.bin", "wb");
+                        if (g) {
+                            for (unsigned i = 0; i < 0x18000u; ++i)
+                                fputc(*(volatile unsigned char *)(fbase + i), g);
+                            fclose(g);
+                        }
+                    }
+                }
             }
         }
         /* RUNG E2, DUTY 1 (lane R3E): THE SOUND FRAME IS PHASE 9's POSITION.

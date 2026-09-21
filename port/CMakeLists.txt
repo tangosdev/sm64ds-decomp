@@ -379,7 +379,18 @@ endfunction()
 #       ahead of the include and the header's own inherits it. The same pass
 #       drops each store's +8 address-point bias, so the three rows also leave
 #       tools/vptr_addend_baseline.txt. Added run link100, lane HOSTGEN3.
+#       DS_SHIFT, run link100, lane LCTEXT1. src/func_0201b100.c composes the
+#       level-clear save menu's button captions, and its spill statement shifts
+#       a 32-bit word RIGHT BY A REGISTER COUNT that reaches 32 whenever the
+#       pen lands on an odd tile boundary (sh == 0 with the fast path above it
+#       not taken). The ARM saturates that to zero; x86 masks the count to five
+#       bits and returns the word UNSHIFTED, so the glyph's left half was
+#       duplicated eight pixels to its right -- the stray mark after the "&"
+#       and the merged "IT" of SAVE & QUIT. hostgen routes the two expressions
+#       through hal/cstd_div.c's ds_lsr; src/ is untouched and the body stays
+#       the ROM's, so linkage does not move.
 set(PORT_HOSTGEN_TU
+    src/func_0201b100.c
     src/actors/Player.cpp
     src/actors/daBmb_c.cpp
     src/game/actors/d_a_ey_bm.cpp
