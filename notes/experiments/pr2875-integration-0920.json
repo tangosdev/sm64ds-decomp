@@ -1,0 +1,1578 @@
+{
+  "schema": 1,
+  "task_id": "pr2875-source-repair-0920",
+  "stage": "compose",
+  "verdict": "ready_for_independent_verification",
+  "formal_acceptance": false,
+  "producer_session": "codex-integrator-0920",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "tested_commit": "dcf8624dc1b7fe5a4bedf6171dfeaa20b21726de",
+  "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+  "source_input": "feb8daa48b947daa6b714348180dca98e57c4851",
+  "completion": "partial",
+  "scope": "Memory2 52-function8400-byte scene/factory TU and its existing four-register drawing veneer/shadow plus16-bit fill definition. No new header, enrollment, metadata ownership, declaration baseline or attribution changes.",
+  "findings": [
+    {
+      "id": "MEM2875-01",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:95-100; PR body",
+      "summary": "New change summary overstates the actual field/alias edits.",
+      "disposition": "fixed",
+      "reason": "Source summary and final PR body describe actual named-field, sound and helper changes without invented alias/field claims."
+    },
+    {
+      "id": "MEM2875-02",
+      "kind": "reconstruction",
+      "location": "src/actors/dScMgMemory2_c.cpp:102-109",
+      "summary": "Eleven retained-method compiler constraints lack a durable, exact reproducible experiment record.",
+      "disposition": "compiler_constraint",
+      "reason": "The durable producer artifact retains all forty exact variants and measured ordinary-form failures under 2004/b56. Matching real fields/indexing were adopted. Retained forms are bounded by those experiments, not a claim that every ordinary spelling fails."
+    },
+    {
+      "id": "MEM2875-03",
+      "kind": "correctness",
+      "location": "src/actors/dScMgMemory2_c.cpp:123,189,193,209",
+      "summary": "Existing reconstructed call contracts disagree with their actual definitions.",
+      "disposition": "fixed",
+      "reason": "Actual sound, four-register shared veneer and unsigned halfword-fill contracts agree across the repaired definitions/callers. Complete objects remain identical; 95 function instances verified in producer proof."
+    },
+    {
+      "id": "MEM2875-04",
+      "kind": "provenance",
+      "location": "src/actors/dScMgMemory2_c.cpp:294-310",
+      "summary": "Destructor commentary claims an explicit raw-offset shared-state destruction that is no longer present.",
+      "disposition": "fixed",
+      "reason": "Destructor prose describes automatic shared-state then base destruction. Ordinary new was measured, compiles, and changes factory size96 to64; source and evidence state only this bounded failure."
+    },
+    {
+      "id": "MEM2875-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv: dScMgMemory2_c row",
+      "summary": "Source-only edit leaves total_lines at1683 while the TU now has1693 lines.",
+      "disposition": "fixed",
+      "reason": "Authoritative final queue measurement is one source,1548 lines,52 functions,all promoted. Only Memory2 row changed; original1683 and offered1551 remain historical measurements."
+    },
+    {
+      "id": "MEM2875-06",
+      "kind": "correctness",
+      "disposition": "fixed",
+      "location": "src/actors/dScMgMemory2_c.cpp:140,156,1430",
+      "summary": "Two remaining return contracts and one incompatible function-pointer call disagree with actual implementations.",
+      "families": [
+        {
+          "symbol": "func_ov006_020c19d0",
+          "definition": "src/func_ov006_020c19d0.cpp:12: void(char*) updates state and returns no value",
+          "candidate": "int(void*)",
+          "required": "Use actual void(char*) declaration; the only call already passes char*.",
+          "probe": "update_void"
+        },
+        {
+          "symbol": "func_ov006_020c1d80",
+          "definition": "src/func_ov006_020c1d80.c:7: int(char*) explicitly returns (int)t after constructing shared state",
+          "candidate": "void(void*)",
+          "required": "Use actual legacy int(char*) declaration here. This acknowledges a returned receiver encoded by the existing definition; it does not claim the receiver is semantically numeric or reconstruct a new class.",
+          "probe": "constructor_actual_return"
+        },
+        {
+          "symbol": "func_ov004_020b66d4",
+          "definition": "src/func_ov004_020b66d4.c:18: void(void), resets globals and does not read a receiver",
+          "candidate": "OnYoshiTryEat casts void(void) to void(*)(void*) and calls with o; InitResources already calls the genuine no-argument form.",
+          "required": "Call func_ov004_020b66d4() directly; no extra unused parameter or shared callee edit is needed.",
+          "probe": "ordinary_reset_call"
+        }
+      ],
+      "evidence": "pr2875-independent-contract-probes.json: all three separate ordinary corrections produce the identical 7e9a029d complete object and all52 functions VERIFIED, zero differences/blind. Build-only alternatives; no candidate edits.",
+      "reason": "Both remaining declarations now agree with actual void(char*) and legacy int(char*) definitions; reset uses its genuine zero-argument call. All three together preserve the complete object and52 strict checks."
+    },
+    {
+      "id": "MEM2875-07",
+      "kind": "provenance",
+      "disposition": "fixed",
+      "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
+      "summary": "Remaining narration claims typed player PMF use and explicit C linkage not present in this source.",
+      "required": "Qualify the first note to distinguish typed main/result/round/card arrays from player-table ownership proven by sinit. Remove stale tu_create comments saying real C++ method definitions were given explicit C linkage. Preserve actual method bodies and the second ownership note.",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "reason": "Removed three stale C-linkage comments and qualified manifest note to main/result/round/card typed tables and separately evidenced player-table ownership. Functional policy, table ownership and bodies remain unchanged."
+    }
+  ],
+  "source_contract_repair": {
+    "source_anchor": "dcf8624dc1b7fe5a4bedf6171dfeaa20b21726de",
+    "previous_anchor": "8df8059e2d2aee1db34684506832b7e2dd946047",
+    "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+    "formal_acceptance": false,
+    "substitutions": [
+      [
+        "extern \"C\" int func_ov006_020c19d0(void *p);",
+        "extern \"C\" void func_ov006_020c19d0(char *p);"
+      ],
+      [
+        "void func_ov006_020c1d80(void *sharedState);",
+        "int func_ov006_020c1d80(char *sharedState);"
+      ],
+      [
+        "((void (*)(void *))func_ov004_020b66d4)(o);",
+        "func_ov004_020b66d4();"
+      ]
+    ],
+    "removed_stale_C_linkage_comments": 3,
+    "manifest_note_before": "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. All address-only behavior is attached to class members, the main/result/round/card/player PMF tables are typed, the 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views and the literal factory remain; this is not a claim that the entire class is fully reconstructed.",
+    "manifest_note_after": "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. Address-only behavior is attached to class members. Main, result, round and card tables use typed member pointers; player-table ownership follows the initializer evidence below. The 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views and the literal factory remain; this is not a claim that the entire class is fully reconstructed.",
+    "raw_object_identical": true,
+    "object_sha256": "7e9a029d4cca1ad4906e6f4d755107180143af14fa02dc38dd7efa4dc568be3e",
+    "strict": [
+      {
+        "name": "_ZN14dScMgMemory2_cD1Ev",
+        "module": "ov006",
+        "addr": "0x020f5564",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_cD0Ev",
+        "module": "ov006",
+        "addr": "0x020f55b8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
+        "module": "ov006",
+        "addr": "0x020f5620",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
+        "module": "ov006",
+        "addr": "0x020f565c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
+        "module": "ov006",
+        "addr": "0x020f5694",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
+        "module": "ov006",
+        "addr": "0x020f56f8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10HideCursorEv",
+        "module": "ov006",
+        "addr": "0x020f572c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+        "module": "ov006",
+        "addr": "0x020f5740",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+        "module": "ov006",
+        "addr": "0x020f5744",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
+        "module": "ov006",
+        "addr": "0x020f58d0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
+        "module": "ov006",
+        "addr": "0x020f593c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
+        "module": "ov006",
+        "addr": "0x020f59c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c9JudgePairEv",
+        "module": "ov006",
+        "addr": "0x020f5a64",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
+        "module": "ov006",
+        "addr": "0x020f5b98",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
+        "module": "ov006",
+        "addr": "0x020f5c40",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+        "module": "ov006",
+        "addr": "0x020f5cb4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+        "module": "ov006",
+        "addr": "0x020f5de0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c8CardWaitEi",
+        "module": "ov006",
+        "addr": "0x020f5e70",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+        "module": "ov006",
+        "addr": "0x020f5e74",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10CardSelectEi",
+        "module": "ov006",
+        "addr": "0x020f5f0c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c8CardIdleEi",
+        "module": "ov006",
+        "addr": "0x020f6084",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+        "module": "ov006",
+        "addr": "0x020f6088",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+        "module": "ov006",
+        "addr": "0x020f6230",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+        "module": "ov006",
+        "addr": "0x020f639c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+        "module": "ov006",
+        "addr": "0x020f6488",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10ResultWaitEv",
+        "module": "ov006",
+        "addr": "0x020f6538",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
+        "module": "ov006",
+        "addr": "0x020f6678",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+        "module": "ov006",
+        "addr": "0x020f670c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+        "module": "ov006",
+        "addr": "0x020f67a0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+        "module": "ov006",
+        "addr": "0x020f6830",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+        "module": "ov006",
+        "addr": "0x020f6904",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+        "module": "ov006",
+        "addr": "0x020f6a00",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+        "module": "ov006",
+        "addr": "0x020f6a78",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+        "module": "ov006",
+        "addr": "0x020f6b00",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+        "module": "ov006",
+        "addr": "0x020f6b78",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10RoundStartEv",
+        "module": "ov006",
+        "addr": "0x020f6bf0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+        "module": "ov006",
+        "addr": "0x020f6c90",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
+        "module": "ov006",
+        "addr": "0x020f6f88",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c9ResetGameEv",
+        "module": "ov006",
+        "addr": "0x020f7064",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c9StateExitEv",
+        "module": "ov006",
+        "addr": "0x020f7190",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c11StateResultEv",
+        "module": "ov006",
+        "addr": "0x020f71c8",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10StateJudgeEv",
+        "module": "ov006",
+        "addr": "0x020f7210",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c9StatePlayEv",
+        "module": "ov006",
+        "addr": "0x020f7234",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c10StateSetupEv",
+        "module": "ov006",
+        "addr": "0x020f7280",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+        "module": "ov006",
+        "addr": "0x020f72c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+        "module": "ov006",
+        "addr": "0x020f730c",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13OnTurnIntoEggEi",
+        "module": "ov006",
+        "addr": "0x020f7320",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13OnYoshiTryEatEi",
+        "module": "ov006",
+        "addr": "0x020f7394",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c6RenderEv",
+        "module": "ov006",
+        "addr": "0x020f73f4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c8BehaviorEv",
+        "module": "ov006",
+        "addr": "0x020f7458",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+        "module": "ov006",
+        "addr": "0x020f74b4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "dScMgMemory2_c_classInit",
+        "module": "ov006",
+        "addr": "0x020f75d4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "queue_measurement": {
+      "module": "ov006",
+      "start": "0x20f5564",
+      "end": "0x20f7634",
+      "absorbed": [
+        "dScMgMemory2_c_classInit"
+      ],
+      "run_functions": 52,
+      "src_files": 1,
+      "total_lines": 1548,
+      "unmatched": 0,
+      "no_legacy_source": 0,
+      "sourceless": [],
+      "not_in_delinks": 0,
+      "orphans": [],
+      "pragma_files": 1,
+      "all_promoted": true
+    }
+  },
+  "queue_measurement": {
+    "module": "ov006",
+    "start": "0x20f5564",
+    "end": "0x20f7634",
+    "absorbed": [
+      "dScMgMemory2_c_classInit"
+    ],
+    "run_functions": 52,
+    "src_files": 1,
+    "total_lines": 1548,
+    "unmatched": 0,
+    "no_legacy_source": 0,
+    "sourceless": [],
+    "not_in_delinks": 0,
+    "orphans": [],
+    "pragma_files": 1,
+    "all_promoted": true
+  },
+  "production": {
+    "status": "passed",
+    "rom_artifact": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "intact_rom": {
+      "expectedSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "admittedBootstrapSha256": [
+        "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      ],
+      "actualSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "identical": true
+    },
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11208,
+      "compiledBytes": 2151584,
+      "sourceFunctions": 11208,
+      "sourceBytes": 2151584,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 96.13405608665892,
+      "reproducingFunctions": 11208,
+      "reproducingBytes": 2151584,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 26,
+      "sourceBssClaims": 3,
+      "sourceBssBytes": 172,
+      "reproducingDataClaims": 26,
+      "reproducingDataClaimBytes": 4984,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "composition": {
+      "moduleBytes": 3049600,
+      "codeBytes": 2238108,
+      "dataBytes": 811492,
+      "sourceDataBytes": 4984,
+      "unownedDataBytes": 806508,
+      "retailGapCodeBytes": 86524,
+      "retailGapBytes": 893032,
+      "retailGapBytesOfModulePercent": 29.28357817418678,
+      "sourceBytes": 2151584,
+      "sourceBytesOfModulePercent": 70.55299055613851,
+      "dataBytesVerified": 45604,
+      "sourceDataBytesOfModulePercent": 0.16343126967471144,
+      "dataBytesOfModulePercent": 26.609784889821615
+    },
+    "link": {
+      "ok": true,
+      "modulesOk": true,
+      "symbolsCommandOk": true,
+      "symbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "baselineSymbolErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "newSymbolErrors": [],
+      "storageAliasErrors": []
+    },
+    "metadata_report_counts": {
+      "symbols": 1324,
+      "verified": 760,
+      "partial": 265,
+      "differs": 3,
+      "unnamed": 296,
+      "verifiedBytes": 45604,
+      "partialBytes": 6840,
+      "verifiedRecords": 3042,
+      "partialRecords": 2294,
+      "differsRecords": 8,
+      "unnamedRecords": 827,
+      "totalRecords": 6171
+    },
+    "rom_report_sha256": "fc5c1110dd63ec60db5e90f548b1272ad39ff380c7bb10e894cebbe4ada9b857",
+    "data_report_sha256": "ac1fa5108f29793784226a1fe67e92c49a35db65ad3437ee4bced8fef1de8cb4",
+    "limits": [
+      "Full module/ROM equality includes retained retail gaps. It does not establish complete source reconstruction or new compiler-owned data enrollment.",
+      "Repository metadata report has inherited PARTIAL/DIFFERS/UNNAMED records. Memory2 complete emitted storage is checked separately; no global all-metadata pass is asserted.",
+      "Nine inherited symbol-check diagnostics remain explicitly compared with baseline; no new symbol errors."
+    ]
+  },
+  "gates": [
+    {
+      "name": "rombuild",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/rombuild.py",
+        "-j16",
+        "--report-json",
+        "build/pr2875-production/rom.json",
+        "--data-json",
+        "build/pr2875-production/data.json"
+      ],
+      "exit_code": 0,
+      "seconds": 178.34,
+      "log": "build/pr2875-production/rombuild.log",
+      "log_sha256": "d6347990aa1e4a82e3fcf6b51d3a5d081eb272abfece846eded917d9bb46b5c7",
+      "log_tail": [
+        "      -> C:\\tmp\\sm64ds-switchintegrate0920\\build\\sm64ds.nds",
+        "[6/6] analyze module and source fidelity",
+        "source-built functions: 11,208  (2,151,584 / 2,238,108 code bytes, 96.13%)",
+        "  reproducing: 11,208",
+        "  mismatching: 0",
+        "source-owned data claims: 26  (reproducing 26, mismatching 0)",
+        "source-owned BSS claims: 3  (172 NOBITS bytes; object/symbol gates)",
+        "module fidelity: 106/106 exact, 100.000000% of compared bytes",
+        "  of 3,049,600 module bytes: 2,151,584 (70.6%) source-built code, 4,984 source-owned data, 806,508 data bytes no complete source entry reaches; 45,604 compiler-emitted data bytes verified overall",
+        "  retail-gap contribution: 893,032 module bytes (86,524 function-code, 806,508 data/non-function)",
+        "ROM-build analysis: PASS",
+        "ROM data from source: 760 symbol(s) verified, 265 partial, 3 differ, 296 unnamed by config (from 6,171 object records)"
+      ]
+    },
+    {
+      "name": "prepush-linkcheck",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/prepush_linkcheck.py",
+        "--range",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1..dcf8624dc1b7fe5a4bedf6171dfeaa20b21726de",
+        "--json",
+        "build/pr2875-production/prepush-linkcheck.json"
+      ],
+      "exit_code": 0,
+      "seconds": 48.2,
+      "log": "build/pr2875-production/prepush-linkcheck.log",
+      "log_sha256": "92d2a339e632be1aeb57251a08e03387fac18696fdd8f45ef3f834829da9fdb0",
+      "log_tail": [
+        "  [OK  ]   _ZN14dScMgMemory2_c9StatePlayEv            VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c10StateSetupEv          VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c15SetupDifficultyEv     VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c15OnGroundPoundedEv     VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c13OnTurnIntoEggEi       VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c13OnYoshiTryEatEi       VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c6RenderEv               VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c8BehaviorEv             VERIFIED",
+        "  [OK  ]   _ZN14dScMgMemory2_c13InitResourcesEv       VERIFIED",
+        "  [OK  ]   dScMgMemory2_c_classInit                   VERIFIED",
+        "  [OK  ] func_ov004_020b1e34                          VERIFIED",
+        "prepush-linkcheck: 54 checked - 54 verified, 0 warning(s), 0 blocking"
+      ]
+    },
+    {
+      "name": "coverage",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/source_coverage.py",
+        "--check",
+        "--base",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+      ],
+      "exit_code": 0,
+      "seconds": 0.55,
+      "log": "build/pr2875-production/coverage.log",
+      "log_sha256": "b75cb37c74d7c77c12bd0ae961a26d5d9eb475644c3b9272abcdba22fc1641dc",
+      "log_tail": [
+        "base 5c0750245",
+        "source-built bytes   base 2,156,740 B   ->   now 2,156,740 B   (net +0 B)",
+        "  handed back to the cartridge: 0 B   |   newly built from source: 0 B",
+        "  by section: .bss 172 B, .ctor 12 B, .data 4,972 B, .init 125,712 B, .text 2,025,872 B",
+        "source-coverage: clean (no bytes handed back to the cartridge)"
+      ]
+    },
+    {
+      "name": "layout",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/layout_check.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.48,
+      "log": "build/pr2875-production/layout.log",
+      "log_sha256": "3de0ffc4ddfcbef17e355a47148c173376e91b63ba3a5e2d44ce1816ffce3efe",
+      "log_tail": [
+        "         {\"key\": \"src/BitUnPack.c\"}",
+        "         {\"key\": \"src/CleanCommonModelDataArr.c\"}",
+        "         {\"key\": \"src/CpuCopy8.c\"}",
+        "         {\"key\": \"src/CpuFastSet.c\"}",
+        "         {\"key\": \"src/CpuSet.c\"}",
+        "         {\"key\": \"src/Div.c\"}",
+        "         {\"key\": \"src/GetCRC16.c\"}",
+        "         {\"key\": \"src/Halt.c\"}",
+        "         {\"key\": \"src/HuffUnCompReadByCallback.c\"}",
+        "         {\"key\": \"src/IntrWait.c\"}",
+        "         ... and 91 more",
+        "layout-check: clean"
+      ]
+    },
+    {
+      "name": "conflicts",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_tubuild_conflicts.py",
+        "--list"
+      ],
+      "exit_code": 0,
+      "seconds": 0.25,
+      "log": "build/pr2875-production/conflicts.log",
+      "log_sha256": "493e3026ae9d8efa5bc8b36ecaa9102d30365d88cc4d34d34d9d02c0f04bba05",
+      "log_tail": [
+        "ov006/dScMgSlot1_c+dScMgSlot3_c                    41       41         0",
+        "ov006/dScMgSmartball_c                             87       87         0",
+        "ov006/dScMgTrampoline2_c                           31       31         0",
+        "ov006/dScMgTrampoline_c+MgTrampolineTime           40       40         0",
+        "ov010/PeachPainting                                 1        1         0",
+        "ov020/BookShot+BookShotSpawner+Bookend             13       13         0",
+        "ov062/Koopa+KoopaSmall                             32       32         0",
+        "ov062/KoopaFlag                                     1        1         0",
+        "ov090/daPukupuku_c                                  5        5         0",
+        "",
+        "checked 225 manifest entries (225 sources read); 13 carry a conflict note or marker",
+        "every recorded conflict matches the source, and every conflict in a source is recorded"
+      ]
+    },
+    {
+      "name": "references",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_dead_references.py"
+      ],
+      "exit_code": 0,
+      "seconds": 7.89,
+      "log": "build/pr2875-production/references.log",
+      "log_sha256": "e6661d1043b60af9fdabe99e016aef5e18532d344096194a58a777c22b49e76a",
+      "log_tail": [
+        "check_dead_references: 9404 scan target(s), 8773 C/C++ file(s), 10720 repo-rooted path reference(s), 1159 that do not resolve; 1994 markdown link(s), 0 that do not resolve relative to their own file",
+        "  5 baselined prose reference(s) now resolve -- run --update to shrink the prose baseline (not a failure)",
+        "  571 baselined C/C++ comment reference(s) now resolve -- refresh from a clean, pinned main with --update-code (not a failure)",
+        "  no new dead references",
+        "  no broken markdown links"
+      ]
+    },
+    {
+      "name": "port",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/port_refcheck.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.58,
+      "log": "build/pr2875-production/port.log",
+      "log_sha256": "91561879eca30d821d15e00edb908242d171a68e7b9bbce9d1de491d7a828fd1",
+      "log_tail": [
+        "  [OK  ] manifests      244 reference(s) checked, 0 stale",
+        "  [OK  ] cmake-symbols  21 reference(s) checked, 0 stale",
+        "  [OK  ] hal-links      153 reference(s) checked, 0 stale",
+        "port-refcheck: 418 checked - all references resolve"
+      ]
+    },
+    {
+      "name": "declarations",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_decl_agreement.py",
+        "--changed",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+      ],
+      "exit_code": 0,
+      "seconds": 8.89,
+      "log": "build/pr2875-production/declarations.log",
+      "log_sha256": "bda46e0f9ef113cad366259af97698b01979ce4a0e8ad3847503f9b5f9d5a5af",
+      "log_tail": [
+        "check_decl_agreement: 8686 file(s), 38356 extern declaration(s) of 13941 distinct symbol(s), 10604 of which the tree also defines; 2 unparsed declarator(s)",
+        "  16822 disagreement(s) across 3764 symbol(s)   arity=1103  kind=332  linkage=1  mangled=53  param=7813  return=7520",
+        "  --changed 5c075024562a469c6e4336d8540e3dfa9ffa84a1: 3 source file(s) changed defining 12 symbol(s), 0 symbol(s) named by a changed config row, 41 file(s) reached through 6 changed type name(s); 244 file(s) in scope once every declaration of those is folded in; 1853 disagreement(s) among them",
+        "  no new declaration disagreements"
+      ]
+    },
+    {
+      "name": "attribution",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/prepush_attribution.py",
+        "--base",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+        "--head",
+        "dcf8624dc1b7fe5a4bedf6171dfeaa20b21726de"
+      ],
+      "exit_code": 0,
+      "seconds": 37.33,
+      "log": "build/pr2875-production/attribution.log",
+      "log_sha256": "13938182e4372b0d05c361e6ae7bf27f32c0b44106522ae051810c882f30df7b",
+      "log_tail": [
+        "",
+        "8182 tracked, 0 moved with credit intact, 0 renamed with credit intact, 0 consolidated with credit intact, 0 changed, 0 lost"
+      ]
+    },
+    {
+      "name": "converted",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/tiers_ratchet.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 4.56,
+      "log": "build/pr2875-production/converted.log",
+      "log_sha256": "6bb9da70585b7f0ae39e079de5d32d066ad7d4c97d24ec31b85d809f51e9836e",
+      "log_tail": [
+        "CONVERTED ratchet PASS   baseline 2973   current 2990   (+17 gained, not yet banked)"
+      ]
+    },
+    {
+      "name": "queue",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/queue_audit.py",
+        "--check-promoted"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11,
+      "log": "build/pr2875-production/queue.log",
+      "log_sha256": "e53fe1902cbbfc79c7df249dd2169f30a4877813d3d3ff6cbfc30bbef1e24dad",
+      "log_tail": [
+        "queue_audit --check-promoted: 226 of 228 row(s) audited against 225 manifest entries (200 promoted class(es)); 2 row(s) make no promotion claim",
+        "  checks already_promoted ONLY; shard_count, total_lines and every blocker need the ROM dump and are NOT checked here",
+        "queue_audit: every row's already_promoted agrees with config/tu_manifest.d"
+      ]
+    },
+    {
+      "name": "offsets",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_header_offsets.py",
+        "--changed",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+      ],
+      "exit_code": 0,
+      "seconds": 0.48,
+      "log": "build/pr2875-production/offsets.log",
+      "log_sha256": "13c9a51f9b2eae8e15f47eea921cb32f70c99965ca5f4b7748d2ea2800488345",
+      "log_tail": [
+        "check_header_offsets: 8 file(s) added or modified vs 5c075024562a469c6e4336d8540e3dfa9ffa84a1, 0 of them under include/ -- nothing for this gate to check."
+      ]
+    },
+    {
+      "name": "rename-ledger",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_rename_ledger.py",
+        "--repo",
+        "."
+      ],
+      "exit_code": 0,
+      "seconds": 0.09,
+      "log": "build/pr2875-production/rename-ledger.log",
+      "log_sha256": "f57995509bad487c336e132fe86086d78a087f93ff061a8934d3b0ab154b9208",
+      "log_tail": [
+        "check_rename_ledger: every mangled/vtable row agrees with its module's symbols.txt",
+        "  checked 2202 mangled/vtable row(s); 1520 coined row(s) are out of scope and unchecked"
+      ]
+    },
+    {
+      "name": "profile-campaign",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_profile_campaign.py",
+        "--repo",
+        "."
+      ],
+      "exit_code": 0,
+      "seconds": 0.14,
+      "log": "build/pr2875-production/profile-campaign.log",
+      "log_sha256": "4b07f616b2a90cd40e45ed7e917676a3cab59b9d3600aab6a4847a351efc1fc8",
+      "log_tail": [
+        "check_profile_campaign: 401 registry row(s), 391 in scope (10 superseded)",
+        "  rows      : 391 complete, 0 pending, 0 diverged",
+        "  checks    : 998 complete, 0 pending, 0 diverged (up to three per row)",
+        "  exempt    : 173 factory source(s) folded into a promoted TU, so those rows carry no filename check",
+        "check_profile_campaign: 790 live coined ledger claim(s) resolved against 70 symbols.txt file(s); 0 diverge, 0 of them banked in config/profile-campaign-baseline.json",
+        "",
+        "OK: every campaign claim this tool can resolve is carried by the tree."
+      ]
+    },
+    {
+      "name": "langmode",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/langmode_audit.py",
+        "--check",
+        "build/pr2875-production/main-langmode.json"
+      ],
+      "exit_code": 0,
+      "seconds": 9.7,
+      "log": "build/pr2875-production/langmode.log",
+      "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
+      "log_tail": [
+        "langmode ratchet PASS"
+      ]
+    },
+    {
+      "name": "eligibility",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/eligible.py",
+        "-j16"
+      ],
+      "exit_code": 0,
+      "seconds": 188.98,
+      "log": "build/pr2875-production/eligibility.log",
+      "log_sha256": "dfc3023319438962880ca6d31a9b3a2d5255c1b7d66f8f30392615e69264167d",
+      "log_tail": [
+        "",
+        "  11252  ELIGIBLE",
+        "     41  unresolvable",
+        "      3  extra sections",
+        "      1  .text section 0xb6c != declared 0xb0",
+        "      1  .text section 0xb6c != declared 0x39c",
+        "      1  .text section 0xb6c != declared 0xec",
+        "      1  .text section 0xb6c != declared 0x518",
+        "      1  .text section 0x1364 != declared 0x1360",
+        "",
+        "eligible: 11252 / 11301",
+        "wrote C:\\tmp\\sm64ds-switchintegrate0920\\build\\eligible-names.txt"
+      ]
+    },
+    {
+      "name": "reference-baseline",
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/check_references.py",
+        "--against",
+        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+      ],
+      "exit_code": 0,
+      "seconds": 5.25,
+      "log": "build/pr2875-production/reference-baseline.log",
+      "log_sha256": "fea0abbb4255b19ca6f466e3a66e3eadc8c278bc57912a7da41a5e1ba766eb5b",
+      "log_tail": [
+        "unresolved symbols: 41  (baseline 45)",
+        "eligible:           11252  (baseline 11044)",
+        "  4 fixed since the baseline -- run --update to bank it",
+        "OK: no new unresolvable references"
+      ]
+    }
+  ],
+  "strict_production": [
+    {
+      "file": "src/MultiStore16.c",
+      "name": "MultiStore16",
+      "module": "arm9",
+      "addr": "0x205a448",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20f5564",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_cD0Ev",
+      "module": "ov006",
+      "addr": "0x20f55b8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
+      "module": "ov006",
+      "addr": "0x20f5620",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
+      "module": "ov006",
+      "addr": "0x20f565c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
+      "module": "ov006",
+      "addr": "0x20f5694",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
+      "module": "ov006",
+      "addr": "0x20f56f8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10HideCursorEv",
+      "module": "ov006",
+      "addr": "0x20f572c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+      "module": "ov006",
+      "addr": "0x20f5740",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+      "module": "ov006",
+      "addr": "0x20f5744",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
+      "module": "ov006",
+      "addr": "0x20f58d0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
+      "module": "ov006",
+      "addr": "0x20f593c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
+      "module": "ov006",
+      "addr": "0x20f59c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9JudgePairEv",
+      "module": "ov006",
+      "addr": "0x20f5a64",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
+      "module": "ov006",
+      "addr": "0x20f5b98",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
+      "module": "ov006",
+      "addr": "0x20f5c40",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+      "module": "ov006",
+      "addr": "0x20f5cb4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+      "module": "ov006",
+      "addr": "0x20f5de0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8CardWaitEi",
+      "module": "ov006",
+      "addr": "0x20f5e70",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+      "module": "ov006",
+      "addr": "0x20f5e74",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10CardSelectEi",
+      "module": "ov006",
+      "addr": "0x20f5f0c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8CardIdleEi",
+      "module": "ov006",
+      "addr": "0x20f6084",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "module": "ov006",
+      "addr": "0x20f6088",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "module": "ov006",
+      "addr": "0x20f6230",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "module": "ov006",
+      "addr": "0x20f639c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "module": "ov006",
+      "addr": "0x20f6488",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10ResultWaitEv",
+      "module": "ov006",
+      "addr": "0x20f6538",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
+      "module": "ov006",
+      "addr": "0x20f6678",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+      "module": "ov006",
+      "addr": "0x20f670c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+      "module": "ov006",
+      "addr": "0x20f67a0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6830",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6904",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+      "module": "ov006",
+      "addr": "0x20f6a00",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+      "module": "ov006",
+      "addr": "0x20f6a78",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+      "module": "ov006",
+      "addr": "0x20f6b00",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+      "module": "ov006",
+      "addr": "0x20f6b78",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10RoundStartEv",
+      "module": "ov006",
+      "addr": "0x20f6bf0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6c90",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6f88",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9ResetGameEv",
+      "module": "ov006",
+      "addr": "0x20f7064",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9StateExitEv",
+      "module": "ov006",
+      "addr": "0x20f7190",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11StateResultEv",
+      "module": "ov006",
+      "addr": "0x20f71c8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10StateJudgeEv",
+      "module": "ov006",
+      "addr": "0x20f7210",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9StatePlayEv",
+      "module": "ov006",
+      "addr": "0x20f7234",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c10StateSetupEv",
+      "module": "ov006",
+      "addr": "0x20f7280",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+      "module": "ov006",
+      "addr": "0x20f72c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+      "module": "ov006",
+      "addr": "0x20f730c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13OnTurnIntoEggEi",
+      "module": "ov006",
+      "addr": "0x20f7320",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x20f7394",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x20f73f4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x20f7458",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20f74b4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "dScMgMemory2_c_classInit",
+      "module": "ov006",
+      "addr": "0x20f75d4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/func_ov004_020b1e34.c",
+      "name": "func_ov004_020b1e34",
+      "module": "ov004",
+      "addr": "0x20b1e34",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    }
+  ],
+  "producer_proof": {
+    "commit": "feb8daa48b947daa6b714348180dca98e57c4851",
+    "path": "notes/experiments/pr2875-source-repair-0920.json",
+    "strict_instances": 95,
+    "complete_metadata_records": 13,
+    "metadata_bytes": 301,
+    "full_vtable_bytes": 152,
+    "ordinary_metadata": "7 VERIFIED /6 PARTIAL"
+  },
+  "proof_binding": "All17 production/static/reference gates ran at the final source anchor. This evidence-only successor changes exactly the two integration artifacts; all compiled sources, headers, manifests, configuration and ledgers remain identical.",
+  "next_action": "Independent verifier inspects exact final head and base with all MEM2875-01 through07 findings. Queue acceptance, public branch update and terminal private PR validation remain separate gates."
+}

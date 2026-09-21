@@ -1,0 +1,17 @@
+# Memory2 current-main integration
+
+Task `pr2875-source-repair-0920`; coordinator `codex-integrator-0920`. Source offer `feb8daa48b947daa6b714348180dca98e57c4851` is preserved in ancestry. Final source anchor `dcf8624dc1b7fe5a4bedf6171dfeaa20b21726de` contains actual main `5c075024562a469c6e4336d8540e3dfa9ffa84a1`. This is a local composition offer, pending independent exact-head review and private PR validation.
+
+The scene uses genuine sound calls, existing card/player fields and ordinary indexed card access where the pinned compiler permits them. Shared drawing calls and both veneer definitions consistently retain receiver plus three unused integer arguments. The halfword fill represents raw unsigned16 storage. The final review additionally corrected two actual return contracts, replaced an incompatible cast with the real no-argument reset call, and removed stale linkage/table claims.
+
+All original author changes and attribution are preserved. The final queue row records one TU/1548 lines/52 functions; every unrelated row is unchanged. The earlier producer handoff is an immutable historical checkpoint with its then-current1551-line count. Its pending integration items are resolved here.
+
+All seventeen final gates passed at the source anchor: full106/106 module equality,11208/11208 source functions reproducing,26/26 data claims,54 changed-production strict checks with no differences or blind relocations,thirteen static gates,eligibility and reference-baseline checks. The16MiB ROM SHA256 is `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`. Producer proof additionally covers all41 shadow bodies for95 relevant function instances overall. Memory2's13 complete emitted metadata records/301 bytes match, including the152-byte vtable; the ordinary report remains7 VERIFIED/6 PARTIAL. No compiler-owned metadata is newly enrolled.
+
+The complete Memory2 object remains27,096 bytes, SHA256 `7e9a029d4cca1ad4906e6f4d755107180143af14fa02dc38dd7efa4dc568be3e` after the final three contract corrections. All52 functions were rechecked together. No global metadata cleanliness or complete source reconstruction is implied: retained retail gaps, inherited metadata report limitations and nine baseline symbol diagnostics are recorded in the integration artifact.
+
+MEM2875-01/03/04/05/06/07 are corrected in this candidate. MEM2875-02 is bounded by the forty durable exact source experiments in the producer artifact: successful ordinary forms were adopted; specific remaining loop/factory forms retain measured compiler constraints. Ordinary new compiles but changes the factory96 to64 bytes. No blanket impossibility claim or invented follow-up waiver is made. Independent review remains responsible for judging these dispositions.
+
+See [integration proof](../../experiments/pr2875-integration-0920.json) for commands, gate logs and hashes, strict results, full-ROM accounting and all seven preserved findings. See [producer experiments](../../experiments/pr2875-source-repair-0920.json) for exact alternative patches. This commit changes only these two integration artifacts after the successful source anchor.
+
+Root publishes the reviewed candidate and accurate PR body, waits for actual required checks, and merges only after a live current-base Source review check. Luigi and the pending scene repair depend on the shared veneer/fill definitions here. No previous owner reservation is changed.
