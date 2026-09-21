@@ -1171,10 +1171,27 @@ void panel_extents(int *l, int *t, int *r, int *b)
  * composed panel takes from the player's palette when it is not. Nothing here
  * picks a colour.
  *
- * ITS SIZE IS THE PICTURE'S: ten pixels against a 384-row picture, growing
- * with the render scale, never below six. */
+ * ITS SIZE IS THE MAP'S, NOT THE PICTURE'S. The owner, on seeing it against a
+ * small map: "the yellow square on the minimap doesnt scale with map size so
+ * when the map is small its massive". It used to be ten pixels against a
+ * 384-row PICTURE, a number the map had no say in, so on the smallest map the
+ * square took a thirteenth of the map's width and on the largest it was a
+ * speck in the corner. It is EIGHT PERCENT OF THE MAP'S OWN WIDTH now,
+ * rounded to a whole pixel, so it reads the same against the thing it resizes
+ * at every size: 10 pixels on a 128-wide map, 15 on 192, 20 on 256.
+ *
+ * WITH A FLOOR AND A CEILING, both in picture pixels, because a share of a
+ * width is the wrong answer at the two ends: under eight pixels the square is
+ * too small to put a pointer on, and over thirty-two it stops being a grip and
+ * starts covering the artist's corner. The ceiling binds from a map 400 wide
+ * up, so the biggest maps all carry the same 32-pixel square.
+ *
+ * The picture's height is still the parameter and is no longer read. It stays
+ * so that the draw, the trace and the press go on asking this one function,
+ * which is the whole reason the square cannot drift from the thing you grab. */
 int handle_rect(int *hx, int *hy, int *hs, int h)
 {
+    (void)h;
     if (!improved_map_on() || hal_sub_screen_stacked()) return 0;
     /* AND NOT WHILE THE SCREENS ARE SWAPPED: the corner is the top screen's
        for those frames and the map is not on the picture at all, so there is
@@ -1184,8 +1201,9 @@ int handle_rect(int *hx, int *hy, int *hs, int h)
     if (host_setting_mouse_capture()) return 0;
     PanelGeom g;
     panel_geom(&g);
-    int s = 10 * h / 384;
-    if (s < 6) s = 6;
+    int s = (g_pan_w * 8 + 50) / 100;
+    if (s < 8) s = 8;
+    if (s > 32) s = 32;
     if (hx) *hx = g.vx;
     if (hy) *hy = g.vy;
     if (hs) *hs = s;
