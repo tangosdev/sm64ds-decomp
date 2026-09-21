@@ -1125,10 +1125,14 @@ extern "C" void port_gpu_present_offscreen_frame(const void *pixels,
     }
 
     const long long t0 = qpc();
+    /* the same bracket the windowed path takes, so the offscreen proof mode
+       measures the card over exactly the work a real present does */
+    port_gpu_timer_span_begin(PORT_GPU_SPAN_PRESENT);
     if (!upload(pixels, stride_px, src_w, src_h)) return;
     const long long t1 = qpc();
     if (!set_params(0, 0, dw, dh, dw, dh, src_w, src_h, g_filter)) return;
     draw_quad(g_off_rtv, dw, dh, g_filter);
+    port_gpu_timer_span_end(PORT_GPU_SPAN_PRESENT);
     g_ctx->Flush();
     const long long t2 = qpc();
     g_up_ms += ms_between(t0, t1);
