@@ -3417,6 +3417,20 @@ int hal_minimap_arrow_reanchor_on(void)
     return improved_map_on() && !hal_sub_screen_stacked();
 }
 
+/* THE LEVEL-CLEAR SAVE MENU'S OWN ANSWER, for the one reader outside this
+   file. The window's mouse capture pins the pointer to the middle of the
+   client area and hides it, and fences it inside that area -- so with the
+   capture on a player cannot aim at the save menu at all: not at the corner
+   panel, which the fence keeps him off, and not at the big picture either,
+   because the pointer is not his to move. The capture's own rule is that it
+   stays off wherever the pointer is really a pen, and a menu with three touch
+   boxes is exactly that. Same predicate the swap reads, so the two cannot
+   disagree about when the menu is up. */
+extern "C" int hal_save_menu_up(void)
+{
+    return save_menu_is_up() ? 1 : 0;
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)

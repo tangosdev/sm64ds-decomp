@@ -5754,6 +5754,8 @@ static int click_front(void)
 /* hal/sub_screen.cpp: the in-process stylus poll_touch consumes in its own
    live branch, and the census the finish line below prints. */
 extern "C" void port_touch_inject_client(int cx, int cy);
+/* the level-clear save menu's own answer, hal/sub_screen.cpp */
+extern "C" int hal_save_menu_up(void);
 extern "C" void port_touch_inject_release(void);
 extern "C" void port_touch_inject_census(unsigned *frames, unsigned *presses,
                                          unsigned *on_surface);
@@ -6752,6 +6754,14 @@ static int mo_capture_want(int selftest, int stacked)
     if (stacked) return 0;              /* the bottom half is a touchscreen */
     if (cam_mode == CAM_DS) return 0;   /* the mouse steers nothing there */
     if (menu_on) return 0;              /* escape is the release */
+    /* THE LEVEL-CLEAR SAVE MENU IS A PEN MOMENT (hal/sub_screen.cpp's own
+       predicate, the same one the screen swap reads). While it is up the
+       bottom screen carries three touch boxes and nothing else answers them,
+       and a pointer that is pinned to the middle of the picture, invisible,
+       and fenced out of the corner panel cannot reach any of them. So the
+       pointer is handed back for those frames and taken again afterwards,
+       which is the same bargain the scene path and the stacked window get. */
+    if (hal_save_menu_up()) return 0;
     if (g_rebind_capture) return 0;     /* a key is being chosen */
     if (g_padlearn) return 0;           /* a pad is being taught */
     if (rb_replaying()) return 0;       /* a rewound window is being re-run */
