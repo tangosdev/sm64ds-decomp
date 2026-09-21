@@ -455,7 +455,7 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
         return 0;
     DecIfAbove0_Short(&mDeathTimer);
     ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(*clsn);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
+    this->UpdatePos(0);
     UpdateWMClsn(*clsn, 0);
     return ret;
 }

@@ -498,7 +498,7 @@
     "src/_ZN12WorkElevatorD1Ev.cpp",
     "src/_ZN12dBgCh_SphCrrD0Ev.cpp",
     "src/_ZN12dBgCh_SphCrrD1Ev.cpp",
-    "src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp",
+    "src/actors/dEnemyBase_c.cpp#_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr",
     "src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp",
     "src/_ZN12dScMgAmida_c5Unk36Ev.cpp",
     "src/_ZN12dScMgAmida_c9Virtual8CEv.cpp",
