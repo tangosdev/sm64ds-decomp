@@ -684,7 +684,7 @@ the whole exercise is for.
 
 **The built ROM boots and plays.** melonDS 1.1 runs `build/sm64ds.nds` at a locked
 60/60 through title → "touch the picture" → main menu (3D Yoshi) → file select (castle
-flyover) → the opening cutscene → gameplay on the castle grounds, with the HUD, the
+flyover) → the opening cutscene → gameplay on the castle grounds, with the dMeter_c, the
 touch-screen minimap, 2D and 3D all correct. No BIOS files and no `--arm7-bios` needed.
 
 **Intentional divergences live in `mods/`, not `src/`.** `src/` must byte-reproduce the

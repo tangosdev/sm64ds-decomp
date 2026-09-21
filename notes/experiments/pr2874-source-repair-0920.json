@@ -2618,12 +2618,12 @@
     ],
     "header_consumers": [
       {
-        "source": "src/_ZN13BigBrickBlock6RenderEv.cpp",
+        "source": "src/_ZN13daObjBlockL_c6RenderEv.cpp",
         "raw_object_identical": true,
         "object_sha256": "6ef4948eb74cb5368f03420be9209411692d14da2592148ae81223e0d30a9538",
         "source_blob": "bcfb7c1664a6a4075be03b053cd617b89cada8fb",
         "strict": {
-          "name": "_ZN13BigBrickBlock6RenderEv",
+          "name": "_ZN13daObjBlockL_c6RenderEv",
           "module": "ov002",
           "addr": "0x020b3b14",
           "verdict": "VERIFIED",
@@ -2632,12 +2632,12 @@
         }
       },
       {
-        "source": "src/_ZN13BigBrickBlock8BehaviorEv.cpp",
+        "source": "src/_ZN13daObjBlockL_c8BehaviorEv.cpp",
         "raw_object_identical": true,
         "object_sha256": "1ae559bdadc9b44576ebfcc9005006679a9ba9a52643a63bb2b96940412ab32a",
         "source_blob": "5815fca489abeef6164045a8f9919870e63d4a8a",
         "strict": {
-          "name": "_ZN13BigBrickBlock8BehaviorEv",
+          "name": "_ZN13daObjBlockL_c8BehaviorEv",
           "module": "ov002",
           "addr": "0x020b3c0c",
           "verdict": "VERIFIED",

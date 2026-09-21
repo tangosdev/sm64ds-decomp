@@ -1,5 +1,5 @@
 //cpp
-/* _ZN3HUD15RenderCoinCountEv at 0x020fc81c (ov002), size 0x1fc
+/* _ZN8dMeter_c15RenderCoinCountEv at 0x020fc81c (ov002), size 0x1fc
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
@@ -17,7 +17,7 @@ extern OamAttr _ZN3OAM4COINE;
 extern int SublevelToLevel(int i);
 }
 
-struct HUD {
+struct dMeter_c {
     char pad[0x74];
     signed char digits[3];
     void CalculateDigits(unsigned short n);
@@ -28,7 +28,7 @@ namespace OAM {
     void Render(bool vis, OamAttr* attr, int x, int y, int a, int b, Matrix2x2* m);
 }
 
-void HUD::RenderCoinCount()
+void dMeter_c::RenderCoinCount()
 {
     int t = (data_0209f2d8 == 1);
     if (t != false) {

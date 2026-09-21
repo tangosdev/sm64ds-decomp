@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticle14UpdatePositionEv
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 extern "C" {
 extern Matrix4x3 data_020a0e68;

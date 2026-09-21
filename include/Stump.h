@@ -46,7 +46,7 @@ struct Stump : dBgActor_c {
        (each compares class fields and returns early, and mwcc allocates
        registers differently for `int` vs `void` even with r0 untouched) --
        measured with tools/mangle.py, not assumed. Same falsifiability shape
-       as slot 24's prior BigBrickBlock::OnKicked correction. */
+       as slot 24's prior daObjBlockL_c::OnKicked correction. */
     virtual s32 InitResources();               /* slot  0 */
     virtual s32 Behavior();                     /* slot  6 */
     void OnGroundPounded(dActor_c &other);      /* slot 21 */

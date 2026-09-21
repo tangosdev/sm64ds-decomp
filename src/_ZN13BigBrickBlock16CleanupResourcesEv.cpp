@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN13BigBrickBlock16CleanupResourcesEv
-#include "BigBrickBlock.h"
+// @symbol _ZN13daObjBlockL_c16CleanupResourcesEv
+#include "daObjBlockL_c.h"
 #include "SharedFilePtr.h"
 
 struct BigBrickBlockFileRow {
@@ -11,7 +11,7 @@ struct BigBrickBlockFileRow {
 extern BigBrickBlockFileRow data_ov002_02108ab0[];
 extern BigBrickBlockFileRow data_ov002_02108ab4[];
 
-int BigBrickBlock::CleanupResources()
+int daObjBlockL_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

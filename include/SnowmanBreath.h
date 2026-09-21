@@ -1,5 +1,5 @@
-#ifndef SNOWMANBREATH_H
-#define SNOWMANBREATH_H
+#ifndef DASNMBTH_C_H
+#define DASNMBTH_C_H
 
 #include "dActor_c.h"
 #include "dCcPos_c.h"
@@ -45,7 +45,7 @@ typedef char SnowmanBreathParticle_size_must_be_0x60[
     sizeof(SnowmanBreathParticle) == 0x60 ? 1 : -1];
 #endif
 
-/* The cartridge RTTI calls this class daSnmBth_c. SnowmanBreath is the
+/* The cartridge RTTI calls this class daSnmBth_c. daSnmBth_c is the
  * readable compatibility spelling already carried by all seven named
  * virtuals. Its __si_class_type_info record names dActor_c as its sole base at
  * offset zero, and its vtable has exactly the same 31 slots as dActor_c.
@@ -55,7 +55,7 @@ typedef char SnowmanBreathParticle_size_must_be_0x60[
  * at 0x1394 is copied as 0x30 bytes and later used as the inverse transform for
  * the player's local-range test.
  */
-struct SnowmanBreath : dActor_c {
+struct daSnmBth_c : dActor_c {
     u8 mPad0d0[0x4];                       /* 0x0d0 */
     SnowmanBreathParticle mParticles[50];  /* 0x0d4 */
     Matrix4x3 mInvModelMat;                /* 0x1394 */
@@ -67,7 +67,7 @@ struct SnowmanBreath : dActor_c {
     u8 mTalkState;                         /* 0x13d2 */
     u8 mNextParticle;                      /* 0x13d3 */
 
-    virtual ~SnowmanBreath();              /* slots 16, 17 */
+    virtual ~daSnmBth_c();              /* slots 16, 17 */
 
     virtual int InitResources();           /* slot  0 */
     virtual int CleanupResources();        /* slot  3 */
@@ -81,7 +81,7 @@ struct SnowmanBreath : dActor_c {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SnowmanBreath_size_must_be_0x13d4[
-    sizeof(SnowmanBreath) == 0x13d4 ? 1 : -1];
+    sizeof(daSnmBth_c) == 0x13d4 ? 1 : -1];
 #endif
 
 #endif

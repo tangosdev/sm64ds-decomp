@@ -11,11 +11,11 @@ extern unsigned char data_0209d454;
 void func_02012790(int);
 }
 
-struct HUD {
+struct dMeter_c {
     void UpdateVsTimer();
 };
 
-void HUD::UpdateVsTimer()
+void dMeter_c::UpdateVsTimer()
 {
     unsigned short *q;
     unsigned int v;

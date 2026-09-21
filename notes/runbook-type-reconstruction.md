@@ -81,14 +81,14 @@ so re-measure before quoting a number. The lesson below stands; the example is h
 as strong evidence, then reconcile across the whole hierarchy -- which is what pass 2
 below does for you.
 
-`include/BrickBlock.h` carries a banner naming the generator that produced it. **That
+`include/daObjBlockItemTag_c.h` carries a banner naming the generator that produced it. **That
 banner was never true.** No `tools/gen_header.py` was ever committed; the 241 headers
 carrying it were added in one commit (`be9d58ed`, PR #866) that added zero `tools/`
 files, so nothing ever checked what they claim:
 
 ```c
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BrickBlock: 5 matched functions, 7 evidenced fields.
+ * class daObjBlockItemTag_c: 5 matched functions, 7 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
 ```
@@ -190,10 +190,10 @@ Write **byte-unobservable**, not *verified*.
 
 ## 3. The ladder, with the tree's own before/after
 
-**Rung 0 -- generated skeleton** (`include/BrickBlock.h`, today):
+**Rung 0 -- generated skeleton** (`include/daObjBlockItemTag_c.h`, today):
 
 ```c
-struct BrickBlock {
+struct daObjBlockItemTag_c {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u16 unk_00c;            /* 0x00c */
@@ -232,12 +232,12 @@ fader vtables out of `extracted/arm9_dec.bin` shows 10 slots each with Fader's s
 reconstructed, hierarchy not. Treat "this header looks finished" as a hypothesis and
 check the ROM's own vtable before building on it.
 
-**Rung 2 -- unmigrated function** (`src/_ZN10BrickBlockD0Ev.cpp`, today):
+**Rung 2 -- unmigrated function** (`src/_ZN19daObjBlockItemTag_cD0Ev.cpp`, today):
 
 ```c
-int *_ZN10BrickBlockD0Ev(int *t)
+int *_ZN19daObjBlockItemTag_cD0Ev(int *t)
 {
-    t[0] = (int)_ZTV10BrickBlock;
+    t[0] = (int)_ZTV19daObjBlockItemTag_c;
     _ZN5ActorD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

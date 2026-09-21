@@ -1,11 +1,11 @@
 //cpp
 #include "OAM.h"
-// @symbol _ZN3HUD17RenderSilverStarsEv
+// @symbol _ZN8dMeter_c17RenderSilverStarsEv
 /* recovered: shared header, real C++ method
  *
  * Draws one sprite per silver star collected, in a row starting at x=0x10 and
  * stepping 0x11 across at y=0xa. The count comes from data_0209f310 indexed by
- * data_0209f250[0] -- the same byte HUD::RenderRedCoins reads, where a non-zero
+ * data_0209f250[0] -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
  * value instead pushes the red-coin row from y=0xa down to y=0x1c. So this row
  * and that one share a slot, and the red coins move when silver stars occupy it.
  *
@@ -14,7 +14,7 @@
  * ROM says this was a static -- unlike OAM's methods, whose call sites pass no
  * `this` -- so it is left a normal member.
  */
-#include "HUD.h"
+#include "dMeter_c.h"
 
 extern "C" {
 extern unsigned char data_0209f250[];
@@ -22,7 +22,7 @@ extern signed char data_0209f310[];
 extern int data_ov001_020abac8[];
 }
 
-void HUD::RenderSilverStars()
+void dMeter_c::RenderSilverStars()
 {
     int sl = 0;
     unsigned short n = (unsigned short)(short)data_0209f310[data_0209f250[0]];

@@ -25,7 +25,7 @@ struct Player { u8 GetHealth(); };
 namespace GX { void LoadOBJPltt(const void*, u32, u32); }
 namespace GXS { void LoadOBJPltt(const void*, u32, u32); }
 
-struct HUD {
+struct dMeter_c {
     char pad0[0x60];
     s16 unk60;
     s16 unk62;
@@ -42,7 +42,7 @@ struct HUD {
     int InitResources();
 };
 
-int HUD::InitResources()
+int dMeter_c::InitResources()
 {
     char* vram_a = (char*)0x6400000;
     char* vram_b = (char*)0x6600000;

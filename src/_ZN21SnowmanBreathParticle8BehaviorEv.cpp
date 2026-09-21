@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticle8BehaviorEv
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 extern "C" int DecIfAbove0_Byte(void *);
 

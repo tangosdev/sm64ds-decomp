@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3
+// @symbol _ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3
 /* recovered: shared header, real C++ method (static)
  *
  * Bends a position inside the THI painting room so the minimap draws it in the
@@ -14,11 +14,11 @@
  * correction stretches with distance rather than being a fixed factor.
  *
  * No `this`: the ROM keeps r0 (the Vector3) in r4 and clobbers r1 before any
- * use, so the only incoming pointer is the argument. See include/Minimap.h.
+ * use, so the only incoming pointer is the argument. See include/dMap_c.h.
  */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "Minimap.h"
+#include "dMap_c.h"
 
 extern "C" {
 extern void Vec3_Sub(struct Vector3* out, struct Vector3* a, struct Vector3* b);
@@ -26,7 +26,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern signed char data_0209f2f8;
 }
 
-void Minimap::FixTHIPaintingRoomPos(Vector3 & v_)
+void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
 {
     struct Vector3* v = &v_;
     struct Vector3 p0, p1, out, out2;

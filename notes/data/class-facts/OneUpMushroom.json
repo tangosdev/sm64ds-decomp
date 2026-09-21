@@ -239,7 +239,7 @@
     "method": "All 104 relocation tables scanned (config/arm9/relocs.txt plus config/arm9/overlays/*/relocs.txt), matching on destination address and then FILTERING ON DESTINATION MODULE spelled `overlay(2)` -- relocs.txt uses `overlay(2)`/`main`, never `ov002`.",
     "filter_liveness_check": "88 rows accepted with module `overlay(2)`; 6 rows REJECTED as phantoms from overlapping overlays (overlay(0) x4, overlay(3) x1, overlay(7) x1). A non-zero reject count proves the filter is live rather than silently matching nothing.",
     "intra_overlay_note": "This project's config relocs.txt DOES carry intra-overlay rows (module:overlay(2) with an ov002 `from`), so intra-run BLs were visible here without decoding .text; 63 intra-run relocations were found.",
-    "semantic_caller": "_ZN10BrickBlock18SpawnOneUpMushroomEv (ov002:0x020b429c) spawns this actor, but by profile ID through the registry -- it does NOT reference any symbol of this TU, so it is not a link-level caller and does not constrain the promotion."
+    "semantic_caller": "_ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv (ov002:0x020b429c) spawns this actor, but by profile ID through the registry -- it does NOT reference any symbol of this TU, so it is not a link-level caller and does not constrain the promotion."
   },
 
   "external_dependencies": {
@@ -314,7 +314,7 @@
       "src/_ZN13OneUpMushroomD0Ev.cpp",
       "src/_ZN13OneUpMushroomD1Ev.cpp"
     ],
-    "converted_baseline_note": "5 of the 36 shards are in config/converted-baseline.json (2696 entries). Deleting them requires `tiers_ratchet --update`; never hand-edit. A 6th match, src/_ZN10BrickBlock18SpawnOneUpMushroomEv.cpp, belongs to BrickBlock and must NOT be touched.",
+    "converted_baseline_note": "5 of the 36 shards are in config/converted-baseline.json (2696 entries). Deleting them requires `tiers_ratchet --update`; never hand-edit. A 6th match, src/_ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv.cpp, belongs to daObjBlockItemTag_c and must NOT be touched.",
     "actor_renames_live_rows": "Last live row for 0x021083c8 is `data_ov002_021083c8 -> _ZTV13OneUpMushroom`. The factories (0x020b0530, 0x020b0580) and profiles (0x02108388, 0x021083a4) have already been renamed to their da1up_c spellings; the CLASS itself has not.",
     "existing_header": "include/OneUpMushroom.h exists and already states `The ROM's RTTI names this class da1up_c`. Its member layout agrees field-for-field with what I measured. Its struct is still spelled `OneUpMushroom`. The comment labels Behavior/CleanupResources/InitResources/OnPendingDestroy/Render non-virtual, but their matching signatures already override inherited virtuals. The ROM slots 6/3/0/12/9 agree with those overrides; the comment is wrong, not their C++ virtuality."
   },

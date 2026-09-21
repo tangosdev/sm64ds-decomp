@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13SnowmanBreath6RenderEv
-#include "SnowmanBreath.h"
+// @symbol _ZN10daSnmBth_c6RenderEv
+#include "daSnmBth_c.h"
 extern unsigned char data_0209f2d8[];
 
-int SnowmanBreath::Render()
+int daSnmBth_c::Render()
 {
   int b = data_0209f2d8[0];
   b = (b == 2);

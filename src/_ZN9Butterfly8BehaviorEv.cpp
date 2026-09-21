@@ -1,8 +1,8 @@
 //cpp
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 typedef short s16;
 struct Mtx { int w[12]; };
-typedef void (Butterfly::*ButterflyState)();
+typedef void (daBtfly_c::*ButterflyState)();
 
 extern "C" {
 void Vec3_Asr(void* d, void* s, int sh);
@@ -18,7 +18,7 @@ extern struct Mtx data_020a0e68;
 extern s16 data_02082214[];
 extern "C" ButterflyState data_ov100_02148628[];
 
-int Butterfly::Behavior()
+int daBtfly_c::Behavior()
 {
     char* c = (char*)this;
     (this->*data_ov100_02148628[mState])();

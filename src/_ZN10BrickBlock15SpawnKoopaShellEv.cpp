@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10BrickBlock15SpawnKoopaShellEv
-#include "BrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c15SpawnKoopaShellEv
+#include "daObjBlockItemTag_c.h"
 #include "common.h"
 
-void BrickBlock::SpawnKoopaShell()
+void daObjBlockItemTag_c::SpawnKoopaShell()
 {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);

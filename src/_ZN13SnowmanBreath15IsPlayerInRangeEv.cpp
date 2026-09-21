@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN13SnowmanBreath15IsPlayerInRangeEv
-#include "SnowmanBreath.h"
+// @symbol _ZN10daSnmBth_c15IsPlayerInRangeEv
+#include "daSnmBth_c.h"
 
 extern "C" {
 void Vec3_Asr(Vector3 *, const Vector3 *, int);
@@ -10,7 +10,7 @@ extern Matrix4x3 data_020a0e68;
 typedef struct { s32 words[12]; } MatrixWords;
 }
 
-int SnowmanBreath::IsPlayerInRange()
+int daSnmBth_c::IsPlayerInRange()
 {
     Player *player = ClosestPlayer();
     mTalkPlayer = player;

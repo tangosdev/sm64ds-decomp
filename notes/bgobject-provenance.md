@@ -689,7 +689,7 @@ In the C twin, `0x074` becomes `mCamSpacePosX`.
 
 ---
 
-## BigBrickBlock (`include/BigBrickBlock.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x330)
+## daObjBlockL_c (`include/daObjBlockL_c.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x330)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

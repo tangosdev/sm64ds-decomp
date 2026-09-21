@@ -44,7 +44,7 @@
  * Leftover: data_ov002_0210d9* / da40 / d954 are ov002 BMD/CLPS
  *   handles this TU loads for caps/contents. Naming belongs in ov002.
  * Leftover: data_ov002_0210da18 / da30 / da58 and gPFlower* stay
- *   char[] -- SharedFilePtr decls tip ov002 plurality (BrickBlock,
+ *   char[] -- SharedFilePtr decls tip ov002 plurality (daObjBlockItemTag_c,
  *   Goomboss, daFeather, PowerFlower; S27). Init LoadFile still
  *   treats each slot as the model handle.
  * Leftover: data_ov102_0214e890 / e870 / e8c0 are sinit-owned PMF tables
@@ -141,7 +141,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
 /* da18 / da30 / da58 / gPFlower*: SharedFilePtr here tips ov002
-   plurality (BrickBlock, Goomboss, daFeather, PowerFlower). S27. */
+   plurality (daObjBlockItemTag_c, Goomboss, daFeather, PowerFlower). S27. */
 extern char data_ov002_0210da18[];
 extern char data_ov002_0210da30[];
 extern SharedFilePtr data_ov002_0210da40;

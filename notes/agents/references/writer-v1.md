@@ -1129,7 +1129,7 @@ D1-below-D0 so it promoted whole 8-of-8, while [ov091](../../../config/arm9/over
 D0-below-D1 so it promoted 9-of-11. Measure your own class.
 
 **Never infer destructor placement from a sibling header.** `daDgr_c.h` declared
-its destructor out of line by analogy with `BigBrickBlock.h`'s leaf-class
+its destructor out of line by analogy with `daObjBlockL_c.h`'s leaf-class
 convention; the ROM's own addresses refuted it, and merged, the two out-of-line
 definitions were a duplicate definition *as well as* the wrong order. Read the
 cartridge, not the neighbour.

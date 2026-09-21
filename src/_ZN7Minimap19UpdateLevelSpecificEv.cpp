@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "Minimap.h"
+#include "dMap_c.h"
 extern "C" {
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
@@ -17,7 +17,7 @@ struct Event {
     static int GetBit(unsigned int bit);
 };
 
-void Minimap::UpdateLevelSpecific()
+void dMap_c::UpdateLevelSpecific()
 {
     int state = data_0209f2f8;
     switch (state) {

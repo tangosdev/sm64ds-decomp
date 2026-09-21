@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10BrickBlock17SpawnMegaMushroomEv
-#include "BrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c17SpawnMegaMushroomEv
+#include "daObjBlockItemTag_c.h"
 #include "common.h"
 
-void BrickBlock::SpawnMegaMushroom()
+void daObjBlockItemTag_c::SpawnMegaMushroom()
 {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);

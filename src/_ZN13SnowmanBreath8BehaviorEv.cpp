@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13SnowmanBreath8BehaviorEv
+// @symbol _ZN10daSnmBth_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 extern u8 data_0209f2d8[];
 
 extern "C" {
@@ -30,7 +30,7 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
                                              unsigned int c);
 }
 
-int SnowmanBreath::Behavior()
+int daSnmBth_c::Behavior()
 {
     int b;
     SnowmanBreathParticle *slotBase;

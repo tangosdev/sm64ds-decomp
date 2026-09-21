@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticleC1Ev
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 extern "C" {
 extern Vector3 data_ov027_02113d10;

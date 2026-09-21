@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9Butterfly6State5Ev
+// @symbol _ZN9daBtfly_c6State5Ev
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Actor.h"
 /* recovered: shared common types */
 #include "common.h"
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 typedef short s16;
 
 
@@ -18,7 +18,7 @@ extern void _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
 extern int data_0209e650;
 }
 
-void Butterfly::State5()
+void daBtfly_c::State5()
 {
     char* c = (char*)this;
     s16 hAngle;

@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN13BigBrickBlock8BehaviorEv
-#include "BigBrickBlock.h"
+// @symbol _ZN13daObjBlockL_c8BehaviorEv
+#include "daObjBlockL_c.h"
 #include "daObjSwitch_c.h"
 
 /* Event has no shared namespace declaration yet. The two unnamed collision
@@ -11,7 +11,7 @@ extern "C" void func_020393a4(void *p, int v);
 extern "C" void func_02039394(void *p, int v);
 extern "C" void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 
-int BigBrickBlock::Behavior()
+int daObjBlockL_c::Behavior()
 {
     int is13 = (int)(actorID == 0x13);
     if (is13 != 0) {

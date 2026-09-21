@@ -166,7 +166,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mTimeLeft;        /* 0xb9dc -- frames; Render draws it as
                                 seconds.centiseconds, 0 ends the run */
     s32   mScore;           /* 0xb9e0 -- +1 a tick while rolling; handed to the
-                                HUD counter func_ov004_020adb1c on the crash */
+                                dMeter_c counter func_ov004_020adb1c on the crash */
     u8    mHitBreakable;    /* 0xb9e4 -- a breakable was hit this tick */
     u8    mAllWater;        /* 0xb9e5 -- every probe was in water */
     u8    mSoundPending;    /* 0xb9e6 */

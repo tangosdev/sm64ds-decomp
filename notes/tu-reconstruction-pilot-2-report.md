@@ -194,8 +194,8 @@ here rather than left standing. `LoadObjects` — which indexes that table — i
 referenced by exactly one function in the whole ROM: `Stage::LoadClsnAndObjects`,
 immediately below it in address order.
 
-**Both ends are hard.** `_ZN3HUDC1Ev` ends exactly at `0x020fe190` and is the
-last function of the `HUD` class object (which carries its own D1/D0). At the
+**Both ends are hard.** `_ZN8dMeter_cC1Ev` ends exactly at `0x020fe190` and is the
+last function of the `dMeter_c` class object (which carries its own D1/D0). At the
 other end, `tu_map` cuts at `0x020fea84`; that cut is **wrong**, and this pilot
 corrects it. The four functions at `0x020fea4c..0x020feabc` are a `RaycastLine`
 group, not loaders:
@@ -499,7 +499,7 @@ confirms or weakens it.
 `Stage::LoadClsnAndObjects`. It rests on contiguity, on being `LoadObjects`' only
 caller, and on the define-before-use reading — but it is externally linked, so
 nothing *forces* it into this TU the way internal linkage would force a static
-helper. The alternative reading is a one-function TU sandwiched between `HUD`'s
+helper. The alternative reading is a one-function TU sandwiched between `dMeter_c`'s
 object and the loader's. That is possible and is not refuted here. Dropping it
 would leave the other sixteen unchanged, and the manifest records this as a
 caveat rather than as evidence.

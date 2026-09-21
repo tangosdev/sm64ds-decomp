@@ -92,7 +92,7 @@ struct daDgr_c : dBgActor_c {
      * teardowns from the base clause alone.
      *
      * (This header previously declared it out of line, reasoning by analogy
-     * with include/BigBrickBlock.h. The analogy is wrong for this class: the
+     * with include/daObjBlockL_c.h. The analogy is wrong for this class: the
      * ROM's own D1/D0 addresses settle it, and the one-function shards could
      * not see the ordering because each held only one variant.)
      *

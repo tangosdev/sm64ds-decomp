@@ -9,7 +9,7 @@ problem, different note (`declaration-centralization.md`). See §1; they are eas
 
 ## 1. Two generators were named; neither ever existed
 
-`include/BrickBlock.h` opens with
+`include/daObjBlockItemTag_c.h` opens with
 
 ```sh
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py */

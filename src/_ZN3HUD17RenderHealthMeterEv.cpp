@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN3HUD17RenderHealthMeterEv
+// @symbol _ZN8dMeter_c17RenderHealthMeterEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "HUD.h"
-// _ZN3HUD17RenderHealthMeterEv at 0x020fcfec
+#include "dMeter_c.h"
+// _ZN8dMeter_c17RenderHealthMeterEv at 0x020fcfec
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 struct OamAttr;
 
@@ -29,7 +29,7 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 }
 
-void HUD::RenderHealthMeter()
+void dMeter_c::RenderHealthMeter()
 {
     if (_ZN6Player16IsInsideOfCannonEv(data_0209f394[data_0209f250[0]])) return;
 

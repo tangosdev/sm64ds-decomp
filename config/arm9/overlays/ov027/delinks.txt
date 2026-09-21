@@ -48,11 +48,11 @@ src/actors/daPgDfdr_c.cpp:
     complete
     .text start:0x021118c8 end:0x021120c4
 
-src/_ZN13SnowmanBreathD1Ev.cpp:
+src/_ZN10daSnmBth_cD1Ev.cpp:
     complete
     .text start:0x021120c4 end:0x02112104
 
-src/_ZN13SnowmanBreathD0Ev.cpp:
+src/_ZN10daSnmBth_cD0Ev.cpp:
     complete
     .text start:0x02112104 end:0x02112158
 
@@ -88,27 +88,27 @@ src/_ZN21SnowmanBreathParticleC1Ev.cpp:
     complete
     .text start:0x021125a8 end:0x02112618
 
-src/_ZN13SnowmanBreath15IsPlayerInRangeEv.cpp:
+src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp:
     complete
     .text start:0x02112618 end:0x02112700
 
-src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp:
+src/_ZN10daSnmBth_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112700 end:0x0211273c
 
-src/_ZN13SnowmanBreath16OnPendingDestroyEv.cpp:
+src/_ZN10daSnmBth_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211273c end:0x02112740
 
-src/_ZN13SnowmanBreath6RenderEv.cpp:
+src/_ZN10daSnmBth_c6RenderEv.cpp:
     complete
     .text start:0x02112740 end:0x021127a4
 
-src/_ZN13SnowmanBreath8BehaviorEv.cpp:
+src/_ZN10daSnmBth_c8BehaviorEv.cpp:
     complete
     .text start:0x021127a4 end:0x021129dc
 
-src/_ZN13SnowmanBreath13InitResourcesEv.cpp:
+src/_ZN10daSnmBth_c13InitResourcesEv.cpp:
     complete
     .text start:0x021129dc end:0x02112ab4
 

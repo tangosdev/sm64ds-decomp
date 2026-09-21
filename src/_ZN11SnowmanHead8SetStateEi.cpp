@@ -1,9 +1,9 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-extern "C" SnowmanHead::StateFunc data_ov072_02122c00[];
+extern "C" daBgSnmHed_c::StateFunc data_ov072_02122c00[];
 
-void SnowmanHead::SetState(int state)
+void daBgSnmHed_c::SetState(int state)
 {
     mStateFuncs = data_ov072_02122c00 + state * 2;
     CallStateInit();

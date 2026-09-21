@@ -18,13 +18,13 @@ extern u8 data_0209f2fc;
 int NumStars();
 }
 
-struct HUD {
+struct dMeter_c {
     int Behavior();
     void UpdateVsTimer();
     void UpdateHealthMeter();
 };
 
-int HUD::Behavior()
+int dMeter_c::Behavior()
 {
     int t;
 

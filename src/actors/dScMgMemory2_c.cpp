@@ -400,7 +400,7 @@ void dScMgMemory2_c::DrawCards()
     int k, flag;
     char *p;
 
-    /* p walks 20 HUD-sprite records at a0+0x51a8, stride 0x18.
+    /* p walks 20 dMeter_c-sprite records at a0+0x51a8, stride 0x18.
        data_ov006_0213d45c is indexed as [id][5]. */
     p = a0;
     i = 0;
@@ -1430,7 +1430,7 @@ void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
  *
  * Attributed by the ROM's vtable: the third of the three slots where this class's
  * table differs from dScMgSingle3DBase_c's. Three draw passes over the card field
- * plus the shared HUD, in the fixed order the ROM has.
+ * plus the shared dMeter_c, in the fixed order the ROM has.
  *
  * WAS A C99 FILE, so the three declarations move inside `extern "C"`; in C++ they
  * would mangle and resolve to nothing. */
@@ -1480,7 +1480,7 @@ s32 dScMgMemory2_c::Behavior()
  * agreed, and here it is right.
  *
  * Loads the language-specific card art into both OBJ VRAM banks with the shared
- * palette, resets the class's own state, then arms the timer and the HUD. The bail
+ * palette, resets the class's own state, then arms the timer and the dMeter_c. The bail
  * on func_ov006_020c1a88 returning 0 is the only failure path, and it returns 0
  * from InitResources -- which is what the s32 return of fBase_c::InitResources
  * is for.

@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13BigBrickBlock6RenderEv
+// @symbol _ZN13daObjBlockL_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "BigBrickBlock.h"
+#include "daObjBlockL_c.h"
 #include "daObjSwitch_c.h"
 
 /* Event has no shared namespace declaration yet. */
@@ -9,7 +9,7 @@ extern "C" int _ZN5Event6GetBitEj(unsigned int bit);
 
 extern Vector3 data_ov002_021089e0;
 
-int BigBrickBlock::Render()
+int daObjBlockL_c::Render()
 {
   int b = (actorID == 0x13);
   if (b != 0) {

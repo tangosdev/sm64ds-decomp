@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN12Flamethrower8BehaviorEv
+// @symbol _ZN19daObjFlamethrower_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
-#include "Flamethrower.h"
+#include "daObjFlamethrower_c.h"
 // 6e: keep pointer-induction un-reduced
 #pragma opt_strength_reduction off
 extern "C" {
@@ -23,7 +23,7 @@ extern void _ZN5dCc_c5ClearEv(void *thiz);
 extern void _ZN5dCc_c6UpdateEv(void *thiz);
 }
 
-int Flamethrower::Behavior()
+int daObjFlamethrower_c::Behavior()
 {
     char *self;
     int count;

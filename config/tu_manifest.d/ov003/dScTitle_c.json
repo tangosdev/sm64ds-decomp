@@ -9,7 +9,7 @@
     "contiguous linker run: 0x20ad660..0x20adc10, 8 function(s), from build/tu_map.json (tools/tu_map.py) plus the abutting factory dScTitle_c_classInit at 0x020adc10..0x020adc74",
     "class label(s): dScTitle_c",
     "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "BOUNDARY, right edge: the factory abuts InitResources at 0x020adc10 and is the last function the cartridge places before func_ov003_020adc74, which is NOT this class's -- it is the caption/HUD helper pair (0x020adc74, 0x020adcbc) that func_ov003_020ad6ec calls out to and that the dScStarSel_c run below 0x020addfc also uses. Those two stay separately enrolled, so this TU's licensed .text ends at 0x020adc74. Left edge is the ov003 .text start (0x020ad660)."
+    "BOUNDARY, right edge: the factory abuts InitResources at 0x020adc10 and is the last function the cartridge places before func_ov003_020adc74, which is NOT this class's -- it is the caption/dMeter_c helper pair (0x020adc74, 0x020adcbc) that func_ov003_020ad6ec calls out to and that the dScStarSel_c run below 0x020addfc also uses. Those two stay separately enrolled, so this TU's licensed .text ends at 0x020adc74. Left edge is the ov003 .text start (0x020ad660)."
   ],
   "sections": [
     {

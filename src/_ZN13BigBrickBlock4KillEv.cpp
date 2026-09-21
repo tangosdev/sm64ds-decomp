@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN13BigBrickBlock4KillEv
-/* BigBrickBlock::Kill() at ov002 0x020b38a0, 0x210 bytes -- vtable slot 31.
+// @symbol _ZN13daObjBlockL_c4KillEv
+/* daObjBlockL_c::Kill() at ov002 0x020b38a0, 0x210 bytes -- vtable slot 31.
  *
- * ATTRIBUTED BY THE VTABLE. _ZTV13BigBrickBlock (ov002 0x02108adc) carries
+ * ATTRIBUTED BY THE VTABLE. _ZTV13daObjBlockL_c (ov002 0x02108adc) carries
  * 0x020b38a0 at slot 31 -- vtable + 0x7c -- while _ZTV10dBgActor_c carries
  * _ZN10dBgActor_c4KillEv at the same slot and both tables carry dActor_c's 0x020100dc
  * at slot 30. So this is this class's own override of the one virtual dBgActor_c
@@ -11,9 +11,9 @@
  * derived from, is the same class under its Japanese name.
  *
  * ONE CLASS, FIVE ACTOR IDS, which is why this function is a switchboard rather
- * than five overrides: BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
+ * than five overrides: daObjBlockItemTag_c, daObjBlockL_c, BrickBlockSwitchActivated,
  * BlackBrickBlock and FortressTowerWall all allocate 816 bytes, run
- * dBgActor_c::dBgActor_c and store _ZTV13BigBrickBlock. See include/BigBrickBlock.h.
+ * dBgActor_c::dBgActor_c and store _ZTV13daObjBlockL_c. See include/daObjBlockL_c.h.
  *
  *   0x11  the block that holds a star. If mStarID is set it releases the star:
  *         through dActor_c::UntrackAndSpawnStar when param1's second byte is 0xff
@@ -45,7 +45,7 @@
  * changes how the caller passes them. include/dActor_c.h says the same thing at the
  * bottom of the class, src/_ZN10dBgActor_c4KillEv.cpp argues it in full, and
  * notes/mwccarm-codegen.md 6az is the rule. */
-#include "BigBrickBlock.h"
+#include "daObjBlockL_c.h"
 #include "Sound.h"
 
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
@@ -53,7 +53,7 @@ extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
 extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
     void *self, const Vector3 &pos, u32 count, s32 speed, s16 delay);
 
-void BigBrickBlock::Kill()
+void daObjBlockL_c::Kill()
 {
     Vector3 starPos;
     Vector3 pos;

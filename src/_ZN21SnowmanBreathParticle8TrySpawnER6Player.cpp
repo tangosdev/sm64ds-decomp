@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticle8TrySpawnER6Player
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);

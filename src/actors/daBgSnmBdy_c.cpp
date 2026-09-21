@@ -50,7 +50,7 @@
 
 #include "common.h"
 #include "daBgSnmBdy_c.h"
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
@@ -408,7 +408,7 @@ int daBgSnmBdy_c::State3()
                 (const Vector3 *)&mCamSpacePosX, 0);
             if (d < 0x17c000) {
                 dActor_c *head = dActor_c::FindWithActorID(0x111, 0); /* BIG_SNOWMAN_HEAD */
-                ((SnowmanHead *)head)->unk_336 = 1;
+                ((daBgSnmHed_c *)head)->unk_336 = 1;
                 func_0201267c(0x114, &mCamSpacePosX);
                 mVertSpeed = 0x1d000;
                 mHorzSpeed = 0xe000;

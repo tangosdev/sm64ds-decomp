@@ -1,7 +1,7 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-void SnowmanHead::CallStateInit()
+void daBgSnmHed_c::CallStateInit()
 {
     StateFunc *func = mStateFuncs;
     (this->**func)();

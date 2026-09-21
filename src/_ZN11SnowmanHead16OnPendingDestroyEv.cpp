@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11SnowmanHead16OnPendingDestroyEv
-/* SnowmanHead::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
+// @symbol _ZN12daBgSnmHed_c16OnPendingDestroyEv
+/* daBgSnmHed_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-void SnowmanHead::OnPendingDestroy()
+void daBgSnmHed_c::OnPendingDestroy()
 {
 }

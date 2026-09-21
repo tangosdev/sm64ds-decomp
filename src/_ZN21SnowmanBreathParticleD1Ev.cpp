@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticleD1Ev
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 SnowmanBreathParticle::~SnowmanBreathParticle()
 {

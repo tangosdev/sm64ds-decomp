@@ -6,7 +6,7 @@ extern void Vec3_Sub(struct Vector3* dst, struct Vector3* a, struct Vector3* b);
 extern void Vec3_MulScalarInPlace(struct Vector3* v, Fix12 s);
 extern void Vec3_RotateYAndTranslate(struct Vector3* res, const struct Vector3* trans, short angY, const struct Vector3* v);
 extern struct Vector3 data_ov002_0211116c;
-void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(struct Vector3* out, struct Vector3* a, Fix12 s, short ang, struct Vector3* res)
+void _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(struct Vector3* out, struct Vector3* a, Fix12 s, short ang, struct Vector3* res)
 {
     struct Vector3 v;
     Vec3_Sub(&v, out, a);

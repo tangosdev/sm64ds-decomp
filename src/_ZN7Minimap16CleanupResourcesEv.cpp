@@ -1,17 +1,17 @@
 //cpp
-// @symbol _ZN7Minimap16CleanupResourcesEv
+// @symbol _ZN6dMap_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Minimap.h"
-/* Minimap::CleanupResources() at 0x020f9e8c (ov002) -- vtable slot 3.
+#include "dMap_c.h"
+/* dMap_c::CleanupResources() at 0x020f9e8c (ov002) -- vtable slot 3.
  * Returns VS_FAIL (1); the minimap holds no SharedFilePtr/heap resources
- * to release on death. Minimap : dBase_c : fBase_c.
+ * to release on death. dMap_c : dBase_c : fBase_c.
  */
 
 typedef int s32;
 
-struct Minimap;
+struct dMap_c;
 
-s32 Minimap::CleanupResources()
+s32 dMap_c::CleanupResources()
 {
     (void)this;
     return 1;

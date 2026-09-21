@@ -15,7 +15,7 @@
   "AddVec3": {
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN21SnowmanBreathParticle14UpdatePositionEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/actors/dMgJump3DMario_c.cpp": ["param:#1 Jump3DVec *", "param:#2 Jump3DVec *", "param:#3 Jump3DVec *"],
    "src/actors/daObjCtMecha03_c.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/func_02007b98.c": ["param:#1 const Vector3 *", "param:#2 const Vector3 *", "param:#3 Vector3 *"],
@@ -318,8 +318,8 @@
    "src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp": ["param:#1 int"],
-   "src/_ZN3HUD13InitResourcesEv.cpp": ["param:#2 int"],
-   "src/_ZN7Minimap13InitResourcesEv.cpp": ["param:#1 int"],
+   "src/_ZN8dMeter_c13InitResourcesEv.cpp": ["param:#2 int"],
+   "src/_ZN6dMap_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN7dScMB_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN7dScMB_c8BehaviorEv.cpp": ["param:#2 int"],
    "src/actors/dScGameOver_c.cpp": ["param:#1 int"],
@@ -454,7 +454,7 @@
    "src/_Z13CopyToViewMatPK9Matrix4x3.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c": ["return:void"],
    "src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
-   "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["param:#1 Matrix4x3 *", "param:#2 const Matrix4x3 *", "return:void"],
+   "src/_ZN10daSnmBth_c13InitResourcesEv.cpp": ["param:#1 Matrix4x3 *", "param:#2 const Matrix4x3 *", "return:void"],
    "src/actors/daObjGuragura_c.cpp": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/func_0200f4f4.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
    "src/func_02044efc.c": ["param:#1 Matrix4x3 *", "param:#2 Matrix4x3 *", "return:void"],
@@ -484,7 +484,7 @@
    "src/_ZN12dScStarSel_c13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN5Stage9PS_RenderEv.cpp": ["param:#1 int"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 int"],
-   "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp": ["param:#1 int"],
+   "src/_ZN6dMap_c19UpdateLevelSpecificEv.cpp": ["param:#1 int"],
    "src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp": ["param:#1 int"],
    "src/_ZN9JetStream13InitResourcesEv.cpp": ["param:#1 int"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#1 int"],
@@ -555,7 +555,7 @@
    "src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp": ["return:void *"],
-   "src/_ZN3HUD13InitResourcesEv.cpp": ["return:void *"],
+   "src/_ZN8dMeter_c13InitResourcesEv.cpp": ["return:void *"],
    "src/_ZN5Model14LoadAndSetFileEtii.cpp": ["param:#1 unsigned short", "return:void *"],
    "src/actors/dScMgCup_c.cpp": ["return:void *"],
    "src/actors/dScMgHanachan_c.cpp": ["return:void *"],
@@ -758,10 +758,10 @@
   },
   "MulVec3Mat4x3": {
    "src/_ZN10dBgW_KcMbg12TransformPosERK7Vector3RS0_.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
-   "src/_ZN12Flamethrower13InitResourcesEv.cpp": ["param:#1 Vec3 *", "param:#3 Vec3 *"],
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#1 int *", "param:#3 int *"],
+   "src/_ZN19daObjFlamethrower_c13InitResourcesEv.cpp": ["param:#1 Vec3 *", "param:#3 Vec3 *"],
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["param:#1 int *", "param:#3 int *"],
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
-   "src/_ZN13SnowmanBreath15IsPlayerInRangeEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
+   "src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
    "src/_ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb.cpp": ["param:#1 const Vector3 *", "param:#2 const Matrix4x3 *"],
    "src/_ZN6Coffin13InitResourcesEv.cpp": ["param:#1 const Vector3 *", "param:#2 const void *"],
@@ -957,7 +957,7 @@
    "src/func_ov006_021295ac.cpp": ["arity:1"]
   },
   "NumStars": {
-   "src/_ZN3HUD8BehaviorEv.cpp": ["return:int"],
+   "src/_ZN8dMeter_c8BehaviorEv.cpp": ["return:int"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["return:unsigned int"],
    "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp": ["return:int"],
    "src/unnamed/ov063/func_ov063_02116a1c.c": ["return:unsigned int"]
@@ -1030,7 +1030,7 @@
   },
   "RandomIntInternal": {
    "src/_ZN16SpinningPlatform8BehaviorEv.cpp": ["param:#1 char *"],
-   "src/_ZN9Butterfly6State4Ev.cpp": ["return:unsigned int"],
+   "src/_ZN9daBtfly_c6State4Ev.cpp": ["return:unsigned int"],
    "src/actors/daGmch_c.cpp": ["return:unsigned int"],
    "src/actors/daKing_Donketu_c.cpp": ["param:#1 unsigned short *"],
    "src/actors/daMip_c.cpp": ["return:unsigned int"],
@@ -1447,7 +1447,7 @@
    "src/func_02018770.c": ["arity:0"]
   },
   "UpdateMinimap": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int", "param:#3 int", "param:#4 int", "param:#5 int"]
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int", "param:#3 int", "param:#4 int", "param:#5 int"]
   },
   "Vec2_Len": {
    "src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp": ["param:#1 V2 *"],
@@ -1476,7 +1476,7 @@
   "Vec3_Add": {
    "src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 const Vector3 *"],
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
    "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
@@ -1503,8 +1503,8 @@
   },
   "Vec3_Asr": {
    "src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
-   "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
-   "src/_ZN13SnowmanBreath15IsPlayerInRangeEv.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
+   "src/_ZN10daSnmBth_c13InitResourcesEv.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
+   "src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
    "src/_ZN4Fish8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *"],
    "src/actors/Goomboss.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
@@ -1544,7 +1544,7 @@
    "src/game/actors/d_a_tree.cpp": ["param:#1 Vector3 *"]
   },
   "Vec3_Dist": {
-   "src/_ZN10BrickBlock8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN19daObjBlockItemTag_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN10RockPillar8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN5Unagi8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -1585,7 +1585,7 @@
    "src/unnamed/ov063/func_ov063_0211c89c.c": ["param:#1 const Vec3 *", "param:#2 const Vec3 *"]
   },
   "Vec3_DivScalarInPlace": {
-   "src/_ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vec3 *", "return:void"]
+   "src/_ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vec3 *", "return:void"]
   },
   "Vec3_Equal": {
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 const Vector3 *", "param:#2 const Vector3 *"],
@@ -1594,7 +1594,7 @@
   },
   "Vec3_HorzAngle": {
    "src/_ZN10RockPillar8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN11SnowmanHead6State1Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN12daBgSnmHed_c6State1Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["param:#1 const Vec3Raw *", "param:#2 const Vec3Raw *"],
    "src/_ZN5Unagi13InitResourcesEv.cpp": ["param:#1 char *", "param:#2 char *"],
@@ -1603,9 +1603,9 @@
    "src/_ZN7SkiLift8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN7Tornado6State1Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN8Fireball8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN9Butterfly6State1Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN9Butterfly6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daBtfly_c6State1Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daBtfly_c6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daBtfly_c6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daPeach_c12UpdateLookAtEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/dEnemyBase_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -1670,8 +1670,8 @@
    "src/unnamed/ov063/func_ov063_0211c89c.c": ["param:#1 const Vec3 *", "param:#2 const Vec3 *"]
   },
   "Vec3_HorzDist": {
-   "src/_ZN11SnowmanHead6State0Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN11SnowmanHead6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN12daBgSnmHed_c6State0Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN12daBgSnmHed_c6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN16BowserShockwaves8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN7SkiLift8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -1712,7 +1712,7 @@
   },
   "Vec3_HorzLen": {
    "src/Vec3_ApproachHorz.c": ["param:#1 Vec3 *"],
-   "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN9daBtfly_c6State2Ev.cpp": ["param:#1 Vector3 *"],
    "src/actors/daKing_Donketu_c.cpp": ["param:#1 Vec3 *"],
    "src/actors/daOts_c.cpp": ["param:#1 int *"],
    "src/func_02010844.c": ["param:#1 Vector3 *"],
@@ -1732,7 +1732,7 @@
    "src/func_ov090_02130f94.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *"]
   },
   "Vec3_LslInPlace": {
-   "src/_ZN13SnowmanBreath15IsPlayerInRangeEv.cpp": ["param:#1 Vector3 *", "return:void"],
+   "src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp": ["param:#1 Vector3 *", "return:void"],
    "src/_ZN3Key8BehaviorEv.cpp": ["return:void"],
    "src/actors/Goomboss.cpp": ["return:void"],
    "src/actors/daPkn_c.cpp": ["param:#1 PknVec3 *", "return:void"],
@@ -1772,7 +1772,7 @@
    "src/game/actors/d_a_obj_wl_polelift.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"]
   },
   "Vec3_MulScalarInPlace": {
-   "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *"],
    "src/func_02008cb4.c": ["param:#1 Vec3 *"],
    "src/func_ov006_020ce108.cpp": ["param:#1 Vector3 *"],
    "src/func_ov075_02114300.cpp": ["param:#1 Vector3 *"],
@@ -1781,8 +1781,8 @@
   "Vec3_RotateYAndTranslate": {
    "src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#4 const Vector3 *"],
    "src/_ZN6Player20St_InYoshiMouth_MainEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#4 Vector3 *"],
-   "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#4 const Vector3 *"],
-   "src/_ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vec3 *", "param:#2 Vec3 *", "param:#4 Vec3 *"],
+   "src/_ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#4 const Vector3 *"],
+   "src/_ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vec3 *", "param:#2 Vec3 *", "param:#4 Vec3 *"],
    "src/func_020071e0.c": ["param:#1 Vec3 *", "param:#2 const Vec3 *", "param:#4 const Vec3 *"],
    "src/func_02007698.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#4 const Vector3 *"],
    "src/func_02007b0c.c": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#4 const Vector3 *"],
@@ -1806,11 +1806,11 @@
    "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN7Minimap21FixTHIPaintingRoomPosER7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/_ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/_ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["param:#1 int *", "param:#2 int *", "param:#3 int *"],
-   "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 Vector3 *"],
+   "src/_ZN9daBtfly_c6State2Ev.cpp": ["param:#1 Vector3 *"],
    "src/_ZN9daManta_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#3 Vector3 *"],
    "src/actors/Goomboss.cpp": ["param:#1 Vector3 *", "param:#2 const Vector3 *", "param:#3 const Vector3 *"],
@@ -1856,8 +1856,8 @@
   "Vec3_VertAngle": {
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN6Camera8BehaviorEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN9Butterfly6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
-   "src/_ZN9Butterfly6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daBtfly_c6State2Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
+   "src/_ZN9daBtfly_c6State3Ev.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daPeach_c12UpdateLookAtEv.cpp": ["param:#1 const void *", "param:#2 const void *"],
    "src/_ZN9daShark_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *"],
    "src/actors/daBombking_c.cpp": ["param:#1 const void *", "param:#2 const void *"],
@@ -2175,7 +2175,7 @@
    "src/game/actors/d_a_obj_maruta.cpp": ["param:#5 int"]
   },
   "_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_": {
-   "src/_ZN13BigBrickBlock8BehaviorEv.cpp": ["return:void"],
+   "src/_ZN13daObjBlockL_c8BehaviorEv.cpp": ["return:void"],
    "src/_ZN8IceBlock8BehaviorEv.cpp": ["return:void"],
    "src/actors/daPgDfdr_c.cpp": ["return:void"]
   },
@@ -2216,7 +2216,7 @@
    "src/_ZN11CrazedCrate13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/_ZN11PowerFlower13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN11RollingRock13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
-   "src/_ZN11SnowmanHead13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
+   "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN13MontyMoleRock13InitResourcesEv.cpp": ["param:#2 void *", "return:int"],
    "src/_ZN15RollingIronBall13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
@@ -2242,7 +2242,7 @@
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *", "param:#6 Vector3_16 *"],
    "src/_ZN8Snowball13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *"],
    "src/_ZN8YoshiEgg13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 void *", "param:#6 void *"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#2 void *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN9Spindrift13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 void *", "param:#6 void *"],
    "src/_ZN9WaterBomb13InitResourcesEv.cpp": ["param:#2 dActor_c *", "param:#5 Vector3_16 *"],
@@ -2357,7 +2357,7 @@
    "src/_ZN3Key8BehaviorEv.cpp": ["param:#2 void *"],
    "src/_ZN6Player17St_LedgeHang_InitEv.cpp": ["param:#2 Vec3 *"],
    "src/_ZN6Player8BehaviorEv.cpp": ["param:#2 const Vector3 *"],
-   "src/_ZN9Butterfly6State7Ev.cpp": ["param:#2 Vector3 *"],
+   "src/_ZN9daBtfly_c6State7Ev.cpp": ["param:#2 Vector3 *"],
    "src/_ZN9PowerStar8BehaviorEv.cpp": ["param:#2 const void *"],
    "src/_ZN9SpikeBomb8BehaviorEv.cpp": ["param:#2 void *"],
    "src/actors/Eyerok.cpp": ["param:#2 const void *"],
@@ -2799,8 +2799,8 @@
   },
   "_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj": {
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["param:#5 unsigned int"],
-   "src/_ZN11SnowmanHead10InitState0Ev.cpp": ["param:#5 unsigned int"],
-   "src/_ZN11SnowmanHead10InitState3Ev.cpp": ["param:#5 unsigned int"],
+   "src/_ZN12daBgSnmHed_c10InitState0Ev.cpp": ["param:#5 unsigned int"],
+   "src/_ZN12daBgSnmHed_c10InitState3Ev.cpp": ["param:#5 unsigned int"],
    "src/_ZN11daC_Jugem_c13InitResourcesEv.cpp": ["param:#2 BTP_File &", "param:#5 unsigned int"],
    "src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["param:#5 unsigned int"],
@@ -2843,7 +2843,7 @@
    "src/game/actors/daBrq_c.cpp": ["param:#2 BTP_File &", "param:#5 unsigned int", "return:unsigned int"]
   },
   "_ZN15TextureSequence8LoadFileER13SharedFilePtr": {
-   "src/_ZN11SnowmanHead13InitResourcesEv.cpp": ["param:#1 void *"],
+   "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": ["param:#1 void *", "return:int"],
    "src/_ZN5Whomp13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -3175,7 +3175,7 @@
   },
   "_ZN3G2S12GetBG3ScrPtrEv": {
    "src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp": ["return:char *"],
-   "src/_ZN7Minimap13InitResourcesEv.cpp": ["return:void *"],
+   "src/_ZN6dMap_c13InitResourcesEv.cpp": ["return:void *"],
    "src/actors/dScMgAmida_c.cpp": ["return:void *"],
    "src/actors/dScMgFlower_c.cpp": ["return:char *"],
    "src/actors/dScMgLuigi_c.cpp": ["return:char *"],
@@ -3251,7 +3251,7 @@
   "_ZN3G2S13GetBG3CharPtrEv": {
    "include/decl_common.h": ["return:char *"],
    "src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp": ["return:int *"],
-   "src/_ZN7Minimap13InitResourcesEv.cpp": ["return:void *"],
+   "src/_ZN6dMap_c13InitResourcesEv.cpp": ["return:void *"],
    "src/actors/dScMgPanel_c.cpp": ["return:char *"],
    "src/func_0200f220.c": ["return:char *"],
    "src/func_02055fb4.c": ["return:void *"],
@@ -3271,7 +3271,7 @@
    "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp": ["param:#5 unsigned short"],
    "src/_ZN15dScMgCurling2_c13OnYoshiTryEatEi.cpp": ["param:#1 volatile void *", "param:#5 unsigned short"],
    "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp": ["param:#1 volatile void *", "param:#5 unsigned short"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#5 unsigned short"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#5 unsigned short"],
    "src/actors/dScMgAmida_c.cpp": ["param:#5 unsigned short"],
    "src/actors/dScMgTeresa_c.cpp": ["param:#1 volatile void *", "param:#5 unsigned short"],
    "src/func_ov002_020f1fcc.c": ["param:#1 volatile void *", "param:#4 int", "param:#5 int"],
@@ -3473,7 +3473,7 @@
    "src/func_0206a3a4.c": ["return:void"]
   },
   "_ZN3OAM10LIFE_ICONSE": {
-   "src/_ZN3HUD15RenderLifeCountEv.cpp": ["return:OamAttr * []"]
+   "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": ["return:OamAttr * []"]
   },
   "_ZN3OAM11GetObjWidthEii": {
    "include/decl_OAM.h": ["return:int"],
@@ -3513,8 +3513,8 @@
    "src/func_ov075_021184b0.cpp": ["return:int"]
   },
   "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi": {
-   "src/_ZN3HUD13RenderVsTimerEv.cpp": ["return:void"],
-   "src/_ZN7Minimap6RenderEv.cpp": ["return:void"],
+   "src/_ZN8dMeter_c13RenderVsTimerEv.cpp": ["return:void"],
+   "src/_ZN6dMap_c6RenderEv.cpp": ["return:void"],
    "src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp": ["return:void"],
    "src/actors/dScMgCup_c.cpp": ["return:int"],
    "src/actors/dScMgHanachan_c.cpp": ["return:void"],
@@ -3532,12 +3532,12 @@
   },
   "_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2": {
    "src/RenderOamBothScreens.cpp": ["param:#1 int", "return:int"],
-   "src/_ZN3HUD13RenderVsTimerEv.cpp": ["param:#1 int"],
-   "src/_ZN3HUD15RenderLifeCountEv.cpp": ["param:#1 int"],
-   "src/_ZN3HUD15RenderStarCountEv.cpp": ["param:#1 int"],
-   "src/_ZN3HUD15RenderTimeTimerEv.cpp": ["param:#1 int"],
+   "src/_ZN8dMeter_c13RenderVsTimerEv.cpp": ["param:#1 int"],
+   "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": ["param:#1 int"],
+   "src/_ZN8dMeter_c15RenderStarCountEv.cpp": ["param:#1 int"],
+   "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp": ["param:#1 int"],
    "src/_ZN5Stage9PS_RenderEv.cpp": ["param:#1 int"],
-   "src/_ZN7Minimap6RenderEv.cpp": ["param:#1 int"],
+   "src/_ZN6dMap_c6RenderEv.cpp": ["param:#1 int"],
    "src/actors/dScStarSel_c.cpp": ["param:#1 int"],
    "src/func_0202048c.cpp": ["param:#1 int", "return:int"],
    "src/func_ov002_020f3978.cpp": ["param:#1 int"],
@@ -3547,8 +3547,8 @@
    "src/func_ov004_020b0380.cpp": ["param:#1 int", "return:int"]
   },
   "_ZN3OAM7NUMBERSE": {
-   "src/_ZN3HUD15RenderCoinCountEv.cpp": ["return:OamAttr * []"],
-   "src/_ZN3HUD15RenderLifeCountEv.cpp": ["return:OamAttr * []"],
+   "src/_ZN8dMeter_c15RenderCoinCountEv.cpp": ["return:OamAttr * []"],
+   "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": ["return:OamAttr * []"],
    "src/_ZN5Stage12RenderNumberEhiibi.cpp": ["return:OamAttr * []"]
   },
   "_ZN3OAM9RenderSubEP7OamAttriiii": {
@@ -3810,7 +3810,7 @@
    "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:struct BMD_File *"],
    "src/_ZN11PyramidStep13InitResourcesEv.cpp": ["return:BMD_File *"],
    "src/_ZN11RollingRock13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
-   "src/_ZN11SnowmanHead13InitResourcesEv.cpp": ["param:#1 void *"],
+   "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN11VolcanoRing13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN11dCapEnemy_c6AddCapEj.cpp": ["param:#1 void *"],
    "src/_ZN11daKinopio_c13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:BMD_File *"],
@@ -3863,7 +3863,7 @@
    "src/_ZN8IceBlock13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN8SignPost13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN8Snowball13InitResourcesEv.cpp": ["param:#1 void *"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["param:#1 void *"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["param:#1 void *"],
    "src/_ZN9MontyMole13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:struct BMD_File *"],
    "src/_ZN9SeesawBob13InitResourcesEv.cpp": ["param:#1 int", "return:int"],
    "src/_ZN9SpikeBomb13InitResourcesEv.cpp": ["param:#1 void *"],
@@ -4091,7 +4091,7 @@
    "src/func_02052008.c": ["return:void"]
   },
   "_ZN5Sound7PlaySubEjjj5Fix12IiEb": {
-   "src/_ZN11SnowmanHead6State2Ev.cpp": ["return:int"],
+   "src/_ZN12daBgSnmHed_c6State2Ev.cpp": ["return:int"],
    "src/_ZN11daKinopio_c12St_Talk_MainEv.cpp": ["return:int"],
    "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp": ["return:int"],
    "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp": ["return:int"],
@@ -4118,9 +4118,9 @@
   },
   "_ZN5Sound8PlayLongEjjjRK7Vector3s": {
    "src/_ZN10SlidingIce8BehaviorEv.cpp": ["param:#4 void *", "param:#5 unsigned int"],
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#4 const Vector3 *", "return:unsigned int"],
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["param:#4 const Vector3 *", "return:unsigned int"],
    "src/_ZN12WorkElevator8BehaviorEv.cpp": ["param:#4 const void *", "return:unsigned int"],
-   "src/_ZN13SnowmanBreath8BehaviorEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
+   "src/_ZN10daSnmBth_c8BehaviorEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
    "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp": ["param:#4 const Vector3 *", "param:#5 unsigned int"],
    "src/_ZN6Player16St_BurnFire_MainEv.cpp": ["param:#4 const void *", "param:#5 unsigned int"],
    "src/_ZN6Player16St_BurnLava_MainEv.cpp": ["param:#1 int", "param:#4 void *", "param:#5 unsigned int"],
@@ -4473,7 +4473,7 @@
   },
   "_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh": {
    "src/_ZN11daKinopio_c12St_Talk_MainEv.cpp": ["param:#4 const Vector3 *", "return:void"],
-   "src/_ZN13SnowmanBreath8BehaviorEv.cpp": ["param:#4 const Vector3 *"],
+   "src/_ZN10daSnmBth_c8BehaviorEv.cpp": ["param:#4 const Vector3 *"],
    "src/_ZN9daPeach_c6State3Ev.cpp": ["param:#4 const Vector3 *"],
    "src/actors/Goomboss.cpp": ["param:#4 const Vector3 *"],
    "src/actors/daBombking_c.cpp": ["param:#3 int", "param:#5 int", "param:#6 int"],
@@ -4531,7 +4531,7 @@
   },
   "_ZN6Player4BurnEv": {
    "include/decl_Player.h": ["return:void"],
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["return:void"],
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["return:void"],
    "src/_ZN7daBbl_c8BehaviorEv.cpp": ["return:void"],
    "src/_ZN8Fireball8BehaviorEv.cpp": ["return:void"],
    "src/actors/daObjFire_c.cpp": ["return:void"],
@@ -4547,7 +4547,7 @@
    "src/_ZN12daObjShell_c8BehaviorEv.cpp": ["param:#1 char *", "param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
    "src/_ZN13MontyMoleRock8BehaviorEv.cpp": ["param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
    "src/_ZN6Player20St_InYoshiMouth_MainEv.cpp": ["param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
-   "src/_ZN9Butterfly6State7Ev.cpp": ["param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
+   "src/_ZN9daBtfly_c6State7Ev.cpp": ["param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
    "src/actors/Goomboss.cpp": ["param:#1 char *", "param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
    "src/actors/Scuttlebug.cpp": ["param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int"],
    "src/actors/daBgSnmBdy_c.cpp": ["param:#1 dActor_c *", "param:#5 unsigned int", "param:#6 unsigned int", "param:#7 unsigned int", "return:void"],
@@ -4830,11 +4830,11 @@
   "_ZN7Message7DisplayEj": {
    "src/_ZN5Stage9PS_UpdateEv.cpp": ["arity:1"]
   },
-  "_ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#5 Vector3 *"]
+  "_ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_": {
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#1 Vector3 *", "param:#2 Vector3 *", "param:#5 Vector3 *"]
   },
-  "_ZN7Minimap21FixTHIPaintingRoomPosER7Vector3": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["param:#1 Vector3 *"]
+  "_ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3": {
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["param:#1 Vector3 *"]
   },
   "_ZN7Vector3D1Ev": {
    "src/_ZN4Door13InitResourcesEv.c": ["return:void"],
@@ -5116,10 +5116,10 @@
    "src/_ZN11BillBlaster4KillEv.cpp": ["return:void"],
    "src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp": ["return:void"],
    "src/_ZN11RollingRock8BehaviorEv.cpp": ["return:void"],
-   "src/_ZN11SnowmanHead6State2Ev.cpp": ["return:void"],
+   "src/_ZN12daBgSnmHed_c6State2Ev.cpp": ["return:void"],
    "src/_ZN12FortressWall4KillEv.cpp": ["return:void"],
    "src/_ZN12daObjShell_c8BehaviorEv.cpp": ["return:int"],
-   "src/_ZN13BigBrickBlock4KillEv.cpp": ["return:void"],
+   "src/_ZN13daObjBlockL_c4KillEv.cpp": ["return:void"],
    "src/_ZN21SnowmanBreathParticle12CheckSnowmanEv.cpp": ["return:void"],
    "src/_ZN21SnowmanBreathParticle9HitPlayerEv.cpp": ["return:void"],
    "src/_ZN25RotatingUpDownPlatformUtm4KillEv.cpp": ["return:System *"],
@@ -5261,7 +5261,7 @@
    "src/d_a_wanwan2.cpp": ["return:void"]
   },
   "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE": {
-   "src/_ZN11SnowmanHead6State2Ev.cpp": ["arity:3"],
+   "src/_ZN12daBgSnmHed_c6State2Ev.cpp": ["arity:3"],
    "src/_ZN14KnockDownPlank8BehaviorEv.cpp": ["arity:3"],
    "src/_ZN8Goomboss8BehaviorEv.cpp": ["arity:3"],
    "src/actors/dBgActor_c.cpp": ["arity:3"],
@@ -5296,7 +5296,7 @@
    "src/_ZN11daKinopio_c12St_Talk_MainEv.cpp": ["return:char *"],
    "src/_ZN11daKinopio_c15UpdateModelPoseEv.cpp": ["return:unsigned int"],
    "src/_ZN11daKinopio_c8BehaviorEv.cpp": ["return:void *"],
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["return:char *"],
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["return:char *"],
    "src/_ZN12HealingHeart8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN13MontyMoleRock8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["return:void *"],
@@ -5306,7 +5306,7 @@
    "src/_ZN6Klepto8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN7daBbl_c8BehaviorEv.cpp": ["return:void *"],
    "src/_ZN8Fireball8BehaviorEv.cpp": ["return:void *"],
-   "src/_ZN9Butterfly6State7Ev.cpp": ["return:void *"],
+   "src/_ZN9daBtfly_c6State7Ev.cpp": ["return:void *"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["return:char *"],
    "src/_ZN9daPeach_c10InitState3Ev.cpp": ["return:void *"],
    "src/actors/Goomboss.cpp": ["return:char *"],
@@ -5447,7 +5447,7 @@
    "src/unnamed/ov063/func_ov063_0211a3d0.cpp": ["param:#2 const Vector3 *"]
   },
   "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs": {
-   "src/_ZN13BigBrickBlock4KillEv.cpp": ["param:#2 const Vector3 &", "param:#3 unsigned int"],
+   "src/_ZN13daObjBlockL_c4KillEv.cpp": ["param:#2 const Vector3 &", "param:#3 unsigned int"],
    "src/_ZN5Stump8BehaviorEv.cpp": ["param:#2 V3", "param:#3 unsigned int"],
    "src/_ZN6Player19St_CrazedCrate_MainEv.cpp": ["param:#2 const Vector3 &", "param:#3 unsigned int"],
    "src/_ZN9daMenbo_c8BehaviorEv.cpp": ["param:#2 const void *", "param:#3 unsigned int"],
@@ -5654,7 +5654,7 @@
    "src/_ZN10StarMarker8BehaviorEv.cpp": ["param:#6 unsigned int"],
    "src/_ZN11MirrorLuigi8BehaviorEv.cpp": ["param:#1 char *", "param:#2 char *", "param:#3 char *", "param:#6 unsigned int"],
    "src/_ZN11daKinopio_c15UpdateModelPoseEv.cpp": ["param:#6 unsigned int"],
-   "src/_ZN9Butterfly8BehaviorEv.cpp": ["param:#6 unsigned int"],
+   "src/_ZN9daBtfly_c8BehaviorEv.cpp": ["param:#6 unsigned int"],
    "src/_ZN9daPeach_c11UpdateModelEv.cpp": ["param:#6 unsigned int"],
    "src/actors/Eyerok.cpp": ["param:#6 unsigned int"],
    "src/actors/Scuttlebug.cpp": ["param:#6 unsigned int"],
@@ -5774,9 +5774,9 @@
    "src/_ZN6Bowser13InitResourcesEv.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:void *"],
    "src/_ZN6Eyerok13InitResourcesEv.cpp": ["param:#3 Vector3 *", "param:#5 int", "param:#6 int", "return:void *"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:void *"],
-   "src/_ZN9Butterfly6State0Ev.cpp": ["param:#3 Vector3 *", "param:#4 Vector3_16 *", "param:#5 int", "param:#6 int", "return:char *"],
-   "src/_ZN9Butterfly6State4Ev.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
-   "src/_ZN9Butterfly6State6Ev.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
+   "src/_ZN9daBtfly_c6State0Ev.cpp": ["param:#3 Vector3 *", "param:#4 Vector3_16 *", "param:#5 int", "param:#6 int", "return:char *"],
+   "src/_ZN9daBtfly_c6State4Ev.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
+   "src/_ZN9daBtfly_c6State6Ev.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:int"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#3 Vec3 *", "param:#5 int", "param:#6 int", "return:char *"],
    "src/_ZN9daDossy_c13InitResourcesEv.cpp": ["param:#3 void *", "param:#5 int", "param:#6 int", "return:void *"],
    "src/actors/Goomboss.cpp": ["param:#3 const Vector3 *", "param:#5 int", "param:#6 int", "return:char *"],
@@ -5870,7 +5870,7 @@
    "include/decl_Actor.h": ["arity:1", "return:void"]
   },
   "_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj": {
-   "src/_ZN12Flamethrower13InitResourcesEv.cpp": ["param:#2 Vec3 *"],
+   "src/_ZN19daObjFlamethrower_c13InitResourcesEv.cpp": ["param:#2 Vec3 *"],
    "src/game/actors/d_a_tree.cpp": ["param:#2 const Vector3 &"]
   },
   "_ZN8dCcPos_cD1Ev": {
@@ -5936,7 +5936,7 @@
    "src/_ZN7Wiggler13InitResourcesEv.cpp": ["param:#1 void *", "return:void"],
    "src/_ZN8BookShot13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:void *"],
    "src/_ZN8Goomboss13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
    "src/_ZN9MontyMole13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:void *"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#1 SharedFilePtr *", "return:void"],
    "src/_ZN9Spindrift13InitResourcesEv.cpp": ["param:#1 void *", "return:void *"],
@@ -5999,7 +5999,7 @@
    "src/_ZN7Wiggler13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN8Goomboss13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN8YoshiEgg13InitResourcesEv.cpp": ["param:#5 unsigned int"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["param:#5 unsigned int"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN9KoopaFlag13InitResourcesEv.cpp": ["param:#5 unsigned int"],
    "src/_ZN9MontyMole13InitResourcesEv.cpp": ["param:#2 struct BCA_File *", "param:#5 unsigned int"],
    "src/_ZN9PowerStar13InitResourcesEv.cpp": ["param:#5 unsigned int"],
@@ -6187,7 +6187,7 @@
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN11PyramidLift13InitResourcesEv.cpp": ["param:#2 struct BMD_File *", "return:void"],
    "src/_ZN11PyramidStep13InitResourcesEv.cpp": ["return:void"],
-   "src/_ZN11SnowmanHead13InitResourcesEv.cpp": ["return:void"],
+   "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN11daKinopio_c13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN12HealingHeart13InitResourcesEv.cpp": ["return:void"],
    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": ["return:void"],
@@ -6513,7 +6513,7 @@
   },
   "_ZNK9Animation13GetFrameCountEv": {
    "include/decl_Animation.h": ["return:int"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["return:int"],
    "src/func_ov060_0211747c.c": ["return:int"],
    "src/func_ov066_021166c8.cpp": ["return:int"],
    "src/func_ov075_021143e4.cpp": ["return:int"],
@@ -6525,7 +6525,7 @@
   "_ZTV11dScMgJump_c": {
    "include/decl_common.h": ["return:void * []"]
   },
-  "_ZTV12Flamethrower": {
+  "_ZTV19daObjFlamethrower_c": {
    "src/d_a_obj_flamethrower.cpp": ["return:void * []"]
   },
   "_ZTV12daObjShell_c": {
@@ -6681,7 +6681,7 @@
    "src/_ZN10SlidingBox8BehaviorEv.cpp": ["arity:1"],
    "src/_ZN7Tornado6State1Ev.cpp": ["arity:1"],
    "src/_ZN8Fireball8BehaviorEv.cpp": ["arity:1"],
-   "src/_ZN9Butterfly6State7Ev.cpp": ["arity:1"],
+   "src/_ZN9daBtfly_c6State7Ev.cpp": ["arity:1"],
    "src/_ZN9daDossy_c8BehaviorEv.cpp": ["arity:1"],
    "src/_ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr.cpp": ["arity:1", "return:int"],
    "src/actors/dEnemyBase_c.cpp": ["arity:1"],
@@ -7017,13 +7017,13 @@
   },
   "data_0209b454": {
    "src/RunKuppaScript.c": ["return:unsigned int"],
-   "src/_ZN3HUD19RenderCameraButtonsEv.cpp": ["return:unsigned int"],
+   "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": ["return:unsigned int"],
    "src/_ZN5Crate8BehaviorEv.cpp": ["return:unsigned int"],
    "src/_ZN5Stage7VE_InitEv.cpp": ["return:unsigned int []"],
    "src/_ZN5Stage8BehaviorEv.cpp": ["return:unsigned int"],
    "src/_ZN7Message12UpdateWindowEv.cpp": ["return:unsigned int"],
    "src/_ZN7Message13DisplaySavingEt.cpp": ["return:unsigned int"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:unsigned int"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:unsigned int"],
    "src/_ZN8SignPost8BehaviorEv.cpp": ["return:unsigned int"],
    "src/func_020345b0.c": ["return:unsigned int"],
    "src/func_ov002_020e7104.c": ["return:unsigned int"],
@@ -7114,11 +7114,11 @@
    "src/_ZN12dScStarSel_c13InitResourcesEv.cpp": ["return:unsigned char []"],
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN13BowserShutter13InitResourcesEv.cpp": ["return:char []"],
-   "src/_ZN3HUD13InitResourcesEv.cpp": ["return:CAA0"],
+   "src/_ZN8dMeter_c13InitResourcesEv.cpp": ["return:CAA0"],
    "src/_ZN6Player13InitResourcesEv.cpp": ["return:CAA0"],
-   "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp": ["return:unsigned int []"],
-   "src/_ZN7Minimap6RenderEv.cpp": ["return:unsigned int []"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:unsigned int []"],
+   "src/_ZN6dMap_c19UpdateLevelSpecificEv.cpp": ["return:unsigned int []"],
+   "src/_ZN6dMap_c6RenderEv.cpp": ["return:unsigned int []"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:unsigned int []"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN8SaveData12ReadFileDataEjP12FileSaveData.cpp": ["return:int"],
    "src/_ZN8SaveData15SaveCurrentFileEv.cpp": ["return:unsigned char []"],
@@ -7457,9 +7457,9 @@
    "src/StartFile.c": ["return:unsigned char []"]
   },
   "data_0209f250": {
-   "src/_ZN3HUD14RenderRedCoinsEv.cpp": ["return:unsigned char []"],
-   "src/_ZN3HUD17RenderHealthMeterEv.cpp": ["return:unsigned char []"],
-   "src/_ZN3HUD17RenderSilverStarsEv.cpp": ["return:unsigned char []"],
+   "src/_ZN8dMeter_c14RenderRedCoinsEv.cpp": ["return:unsigned char []"],
+   "src/_ZN8dMeter_c17RenderHealthMeterEv.cpp": ["return:unsigned char []"],
+   "src/_ZN8dMeter_c17RenderSilverStarsEv.cpp": ["return:unsigned char []"],
    "src/func_0200d10c.c": ["return:int"],
    "src/func_0200d148.c": ["return:int"],
    "src/func_0200d3f8.c": ["return:int"],
@@ -7531,8 +7531,8 @@
    "src/StartFile.c": ["return:unsigned char []"],
    "src/_ZN11dCapEnemy_c11GetCapStateEv.cpp": ["return:int"],
    "src/_ZN13FortressTower8BehaviorEv.cpp": ["return:unsigned char []"],
-   "src/_ZN13SnowmanBreath6RenderEv.cpp": ["return:unsigned char []"],
-   "src/_ZN13SnowmanBreath8BehaviorEv.cpp": ["return:unsigned char []"],
+   "src/_ZN10daSnmBth_c6RenderEv.cpp": ["return:unsigned char []"],
+   "src/_ZN10daSnmBth_c8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN14UnchainedChomp8BehaviorEv.cpp": ["return:unsigned char []"],
    "src/_ZN6Player16InitWingFeathersEb.cpp": ["return:unsigned char []"],
    "src/_ZN8SaveData16CanPlayerHaveCapEv.cpp": ["return:unsigned char []"],
@@ -7549,7 +7549,7 @@
   "data_0209f2f4": {
    "src/GiveLives.c": ["return:signed char"],
    "src/SetPlayerGlobals.c": ["return:unsigned char"],
-   "src/_ZN3HUD15RenderLifeCountEv.cpp": ["return:signed char"]
+   "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": ["return:signed char"]
   },
   "data_0209f2f8": {
    "src/ExitMinigameMenu.c": ["return:unsigned char"],
@@ -7584,7 +7584,7 @@
   },
   "data_0209f318": {
    "src/_ZN11MirrorLuigi8BehaviorEv.cpp": ["return:char *"],
-   "src/_ZN3HUD19RenderCameraButtonsEv.cpp": ["return:S154 *"],
+   "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": ["return:S154 *"],
    "src/_ZN5Stage16CheckCameraInputEv.cpp": ["return:unsigned char *"],
    "src/_ZN5Stage16CleanupResourcesEv.cpp": ["return:int"],
    "src/_ZN5Stage6RenderEv.cpp": ["return:char *"],
@@ -7601,7 +7601,7 @@
    "src/_ZN6Player17St_WindCarry_InitEv.cpp": ["return:int []"],
    "src/_ZN6Player19St_TornadoSpin_InitEv.cpp": ["return:int []"],
    "src/_ZN6Player22St_GrabBowserTail_InitEv.cpp": ["return:int *"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj *"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj *"],
    "src/_ZN8Goomboss8BehaviorEv.cpp": ["return:char *"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["return:char *"],
    "src/actors/Goomboss.cpp": ["return:char *"],
@@ -7652,7 +7652,7 @@
    "src/_ZN5Stage13InitResourcesEv.cpp": ["return:int"]
   },
   "data_0209f33c": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj *"]
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj *"]
   },
   "data_0209f340": {
    "src/StartWithFarCamera.c": ["return:unsigned char *"],
@@ -7675,7 +7675,7 @@
    "src/_ZN5Event8ClearBitEj.cpp": ["return:unsigned int"]
   },
   "data_0209f358": {
-   "src/_ZN3HUD15RenderCoinCountEv.cpp": ["return:unsigned short []"],
+   "src/_ZN8dMeter_c15RenderCoinCountEv.cpp": ["return:unsigned short []"],
    "src/_ZN5Stage9LC_UpdateEv.cpp": ["return:short"]
   },
   "data_0209f394": {
@@ -7683,8 +7683,8 @@
    "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN11MirrorLuigi6RenderEv.cpp": ["return:char * []"],
    "src/_ZN11MirrorLuigi8BehaviorEv.cpp": ["return:char * []"],
-   "src/_ZN3HUD15RenderLifeCountEv.cpp": ["return:HUDInfo * []"],
-   "src/_ZN3HUD17UpdateHealthMeterEv.cpp": ["return:char * []"],
+   "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": ["return:HUDInfo * []"],
+   "src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp": ["return:char * []"],
    "src/_ZN4Door13InitResourcesEv.c": ["return:int []"],
    "src/_ZN5Stage15IsPauseDisabledEv.cpp": ["return:int []"],
    "src/_ZN5Stage16CleanupResourcesEv.cpp": ["return:int []"],
@@ -7693,8 +7693,8 @@
    "src/_ZN5Stage8BehaviorEv.cpp": ["return:char * []"],
    "src/_ZN5Whomp13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Klepto13InitResourcesEv.cpp": ["return:void *"],
-   "src/_ZN7Minimap6RenderEv.cpp": ["return:Player * []"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj * []"],
+   "src/_ZN6dMap_c6RenderEv.cpp": ["return:Player * []"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj * []"],
    "src/_ZN8MugenBgm8BehaviorEv.cpp": ["return:char * []"],
    "src/func_ov001_020aa420.c": ["return:CapRequest * []"],
    "src/func_ov001_020aaa54.cpp": ["return:void *"],
@@ -7709,17 +7709,17 @@
   },
   "data_0209f3a4": {
    "src/AddSpikeBomb.c": ["return:void * []"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj * []"]
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj * []"]
   },
   "data_0209f3c4": {
    "src/_ZN5Stage13InitResourcesEv.cpp": ["return:int"],
    "src/__sinit_02074e84.cpp": ["return:void volatile *"]
   },
   "data_0209f3e8": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj * []"]
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj * []"]
   },
   "data_0209f40c": {
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:Obj * []"]
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:Obj * []"]
   },
   "data_0209f43c": {
    "src/Camera_UpdateMatrices.c": ["return:char []"],
@@ -7734,7 +7734,7 @@
    "src/_ZN5Stage16CheckCameraInputEv.cpp": ["return:CamInput []"]
   },
   "data_0209f49c": {
-   "src/_ZN3HUD19RenderCameraButtonsEv.cpp": ["return:Rec18 []"],
+   "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": ["return:Rec18 []"],
    "src/_ZN6Player11St_Fly_MainEv.cpp": ["return:unsigned short"],
    "src/_ZN6Player11St_Owl_MainEv.cpp": ["return:unsigned char []"],
    "src/_ZN6Player12St_Wait_MainEv.cpp": ["return:unsigned char []"],
@@ -7793,7 +7793,7 @@
    "src/func_ov002_020d4748.cpp": ["return:unsigned char"]
   },
   "data_0209f4ae": {
-   "src/_ZN3HUD19RenderCameraButtonsEv.cpp": ["return:Rec18 []"],
+   "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": ["return:Rec18 []"],
    "src/func_ov002_020d4748.cpp": ["return:unsigned char"]
   },
   "data_0209f4f8": {
@@ -7805,10 +7805,10 @@
    "src/ProcessKuppaScript.cpp": ["return:UnkVis *"],
    "src/_ZN10dScEntry_c8BehaviorEv.cpp": ["return:VObj *"],
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["return:VObj *"],
-   "src/_ZN3HUD8BehaviorEv.cpp": ["return:VObj *"],
+   "src/_ZN8dMeter_c8BehaviorEv.cpp": ["return:VObj *"],
    "src/_ZN5Stage21RenderVsModeCountdownEv.cpp": ["return:Base *"],
    "src/_ZN5Stage8BehaviorEv.cpp": ["return:UnkVis *"],
-   "src/_ZN7Minimap8BehaviorEv.cpp": ["return:VtblOwner *"],
+   "src/_ZN6dMap_c8BehaviorEv.cpp": ["return:VtblOwner *"],
    "src/_ZN8dScene_c14BeforeBehaviorEv.cpp": ["return:FaderObject *"],
    "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp": ["return:FaderBrightness *"],
    "src/_ZN9BootScene8BehaviorEv.cpp": ["return:unsigned char []"],
@@ -7970,7 +7970,7 @@
    "src/actors/dScTitle_c.cpp": ["return:int []"]
   },
   "data_020a0db0": {
-   "src/_ZN7Minimap6RenderEv.cpp": ["return:unsigned int"],
+   "src/_ZN6dMap_c6RenderEv.cpp": ["return:unsigned int"],
    "src/actors/dScMgD3DBase_c.cpp": ["return:unsigned int"],
    "src/func_ov002_020f23f0.c": ["return:unsigned int"],
    "src/minigames/d_s_mg_single3_d_base.cpp": ["return:unsigned int"]
@@ -8666,13 +8666,13 @@
    "src/func_ov002_020dacb4.c": ["return:int []"]
   },
   "data_ov002_02108ab0": {
-   "src/_ZN13BigBrickBlock16CleanupResourcesEv.cpp": ["return:BigBrickBlockFileRow []"]
+   "src/_ZN13daObjBlockL_c16CleanupResourcesEv.cpp": ["return:BigBrickBlockFileRow []"]
   },
   "data_ov002_02108ab4": {
-   "src/_ZN13BigBrickBlock16CleanupResourcesEv.cpp": ["return:BigBrickBlockFileRow []"]
+   "src/_ZN13daObjBlockL_c16CleanupResourcesEv.cpp": ["return:BigBrickBlockFileRow []"]
   },
   "data_ov002_02108ab8": {
-   "src/_ZN13BigBrickBlock13InitResourcesEv.cpp": ["return:ClpsRow []"]
+   "src/_ZN13daObjBlockL_c13InitResourcesEv.cpp": ["return:ClpsRow []"]
   },
   "data_ov002_0210af2c": {
    "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp": ["return:PathLiftState []"]
@@ -8697,7 +8697,7 @@
   },
   "data_ov002_0210d9a0": {
    "src/_ZN11daKinopio_c16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN10daSnmBth_c13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
@@ -8720,7 +8720,7 @@
   },
   "data_ov002_0210d9c0": {
    "src/_ZN11daKinopio_c16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN10daSnmBth_c13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
@@ -8732,9 +8732,9 @@
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210d9d8": {
-   "src/_ZN10BrickBlock13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN10BrickBlock16CleanupResourcesEv.cpp": ["return:char []"],
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
+   "src/_ZN19daObjBlockItemTag_c13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN19daObjBlockItemTag_c16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["return:SFP"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210d9e0": {
@@ -8765,7 +8765,7 @@
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210da18": {
-   "src/_ZN10BrickBlock13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN19daObjBlockItemTag_c13InitResourcesEv.cpp": ["return:int"],
    "src/__sinit_ov002_02100560.c": ["return:void *"]
   },
   "data_ov002_0210da28": {
@@ -8773,8 +8773,8 @@
    "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0210da30": {
-   "src/_ZN10BrickBlock13InitResourcesEv.cpp": ["return:int"],
-   "src/_ZN10BrickBlock16CleanupResourcesEv.cpp": ["return:char []"],
+   "src/_ZN19daObjBlockItemTag_c13InitResourcesEv.cpp": ["return:int"],
+   "src/_ZN19daObjBlockItemTag_c16CleanupResourcesEv.cpp": ["return:char []"],
    "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/_ZN8Goomboss16CleanupResourcesEv.cpp": ["return:char"],
    "src/actors/Goomboss.cpp": ["return:char"],
@@ -8791,7 +8791,7 @@
   },
   "data_ov002_0210da40": {
    "src/_ZN11daKinopio_c16CleanupResourcesEv.cpp": ["return:int []"],
-   "src/_ZN13SnowmanBreath13InitResourcesEv.cpp": ["return:int []"],
+   "src/_ZN10daSnmBth_c13InitResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Fwoosh13InitResourcesEv.cpp": ["return:char []"],
    "src/_ZN6Klepto16CleanupResourcesEv.cpp": ["return:int []"],
    "src/_ZN6Player16CleanupResourcesEv.cpp": ["return:char []"],
@@ -9498,19 +9498,19 @@
    "src/func_02029600.c": ["return:unsigned char"]
   },
   "data_ov002_02111154": {
-   "src/_ZN7Minimap6RenderEv.cpp": ["return:unsigned char []"]
+   "src/_ZN6dMap_c6RenderEv.cpp": ["return:unsigned char []"]
   },
   "data_ov002_02111178": {
-   "src/_ZN3HUD13InitResourcesEv.cpp": ["return:signed char"]
+   "src/_ZN8dMeter_c13InitResourcesEv.cpp": ["return:signed char"]
   },
   "data_ov002_0211117c": {
-   "src/_ZN3HUD17RenderHealthMeterEv.cpp": ["return:unsigned char []"]
+   "src/_ZN8dMeter_c17RenderHealthMeterEv.cpp": ["return:unsigned char []"]
   },
   "data_ov002_02111184": {
-   "src/_ZN3HUD15RenderTimeTimerEv.cpp": ["return:unsigned char"]
+   "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp": ["return:unsigned char"]
   },
   "data_ov002_02111188": {
-   "src/_ZN3HUD13InitResourcesEv.cpp": ["return:short"]
+   "src/_ZN8dMeter_c13InitResourcesEv.cpp": ["return:short"]
   },
   "data_ov003_020b1704": {
    "include/decl_common.h": ["return:int []"]
@@ -11735,7 +11735,7 @@
    "src/_ZN6Coffin13InitResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov072_02121ffc": {
-   "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp": ["return:SharedFilePtr * []"]
+   "src/_ZN12daBgSnmHed_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr * []"]
   },
   "data_ov072_02122004": {
    "include/decl_common.h": ["return:int []"]
@@ -11751,7 +11751,7 @@
    "src/__sinit_ov072_02122018.c": ["return:int []"]
   },
   "data_ov072_02122bc4": {
-   "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
+   "src/_ZN12daBgSnmHed_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"],
    "src/__sinit_ov072_021221f8.c": ["return:int []"]
   },
   "data_ov072_02122c40": {
@@ -12690,16 +12690,16 @@
    "src/func_ov100_02144cf8.c": ["return:signed char []"]
   },
   "data_ov100_02148600": {
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["return:SFP"],
+   "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_02148608": {
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["return:SFP"],
+   "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_02148668": {
-   "src/_ZN9Butterfly13InitResourcesEv.cpp": ["return:SFP"],
-   "src/_ZN9Butterfly16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
+   "src/_ZN9daBtfly_c13InitResourcesEv.cpp": ["return:SFP"],
+   "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": ["return:SharedFilePtr"]
   },
   "data_ov100_021486a4": {
    "src/__sinit_ov100_021475a4.c": ["return:char []"]
@@ -13076,7 +13076,7 @@
    "src/func_ov075_0211427c.c": ["param:#3 void *", "return:int"]
   },
   "func_0201267c": {
-   "src/_ZN11SnowmanHead6State2Ev.cpp": ["param:#1 int", "return:int"],
+   "src/_ZN12daBgSnmHed_c6State2Ev.cpp": ["param:#1 int", "return:int"],
    "src/_ZN12daObjShell_c8BehaviorEv.cpp": ["param:#1 int", "param:#2 int *"],
    "src/_ZN7Wiggler8BehaviorEv.cpp": ["param:#1 int"],
    "src/actors/Scuttlebug.cpp": ["param:#1 int"],
@@ -13275,8 +13275,8 @@
    "src/_ZN12dScMgSlot3_c13OnYoshiTryEatEi.cpp": ["return:void"],
    "src/_ZN12dScStarSel_c8BehaviorEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp": ["param:#1 int", "return:void"],
-   "src/_ZN3HUD13UpdateVsTimerEv.cpp": ["param:#1 int", "return:void"],
-   "src/_ZN3HUD17UpdateHealthMeterEv.cpp": ["param:#1 int", "return:void"],
+   "src/_ZN8dMeter_c13UpdateVsTimerEv.cpp": ["param:#1 int", "return:void"],
+   "src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN5Stage8BehaviorEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN5Stage9LC_UpdateEv.cpp": ["param:#1 int", "return:void"],
    "src/_ZN5Stage9PS_UpdateEv.cpp": ["param:#1 int", "return:void"],
@@ -14240,10 +14240,10 @@
    "src/_ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb.cpp": ["arity:0"]
   },
   "func_02022774": {
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#5 int"]
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["param:#5 int"]
   },
   "func_02022864": {
-   "src/_ZN12Flamethrower8BehaviorEv.cpp": ["param:#5 int"]
+   "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": ["param:#5 int"]
   },
   "func_02022cbc": {
    "include/decl_common.h": ["param:#1 int", "param:#2 int", "param:#6 int"],

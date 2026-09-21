@@ -10,11 +10,11 @@
  * has been chased long enough; the others fold their scale to 0 and switch
  * to the still model.
  *
- * mState IS A DISPATCH INDEX, NOT A MOOD. Butterfly::Behavior reads it, looks
+ * mState IS A DISPATCH INDEX, NOT A MOOD. daBtfly_c::Behavior reads it, looks
  * data_ov100_02148628[mState] up as a pointer-to-member-function and calls
  * it, so State0 through State7 -- all of them inside this
- * class's own address range, between _ZN9ButterflyD0Ev and
- * _ZN9Butterfly16CleanupResourcesEv -- is one of its states. Those eight are
+ * class's own address range, between _ZN9daBtfly_cD0Ev and
+ * _ZN9daBtfly_c16CleanupResourcesEv -- is one of its states. Those eight are
  * where most of the names below come from; each of them writes mState and
  * zeroes mStateTimer to move on.
  *
@@ -25,8 +25,8 @@
  * a licence to name a shadow field something its own base contradicts.
  *
  * Provenance table: notes/butterfly-tornado-provenance.md. */
-#ifndef BUTTERFLY_H
-#define BUTTERFLY_H
+#ifndef DABTFLY_C_H
+#define DABTFLY_C_H
 #include "types.h"
 #include "ModelAnim.h"
 #include "Model.h"
@@ -35,7 +35,7 @@
 #include "dCcAcPos_c.h"
 #include "dActor_c.h"
 
-struct Butterfly : dActor_c {
+struct daBtfly_c : dActor_c {
     /* The ROM leaves the usual derived-actor word between dActor_c and the
        first owned subobject. */
     u8  pad_0d0[0x4];
@@ -52,17 +52,17 @@ struct Butterfly : dActor_c {
     Model mModel;            /* 0x138 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x188 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9ButterflyD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
     ShadowModel mShadowModel1;            /* 0x188 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x1b0 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9ButterflyD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
     ShadowModel mShadowModel2;            /* 0x1b0 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x1d8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9ButterflyD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1d8 */
-    /* dCcAcPos_c member. The cartridge's own ~Butterfly calls _ZN10dCcAcPos_cD1Ev at
+    /* dCcAcPos_c member. The cartridge's own ~daBtfly_c calls _ZN10dCcAcPos_cD1Ev at
        +0x394 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x394 */
@@ -108,7 +108,7 @@ struct Butterfly : dActor_c {
                                  State6. */
 #ifdef __cplusplus
     /* methods */
-    virtual ~Butterfly();
+    virtual ~daBtfly_c();
     virtual int InitResources();
     virtual int CleanupResources();                  /* slot  3 */
     virtual int Behavior();
@@ -130,7 +130,7 @@ struct Butterfly : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Butterfly_size_must_be_0x3f4[sizeof(struct Butterfly) == 0x3f4 ? 1 : -1];
+typedef char Butterfly_size_must_be_0x3f4[sizeof(struct daBtfly_c) == 0x3f4 ? 1 : -1];
 #endif
 
 #endif

@@ -1310,13 +1310,13 @@
    "start": "0x211ff34",
    "end": "0x2120824",
    "classes": [
-    "SnowmanHead"
+    "daBgSnmHed_c"
    ],
    "n_functions_map": 20,
    "n_files": 20,
    "files": [
-    "src/_ZN11SnowmanHeadD1Ev.cpp",
-    "src/_ZN11SnowmanHeadD0Ev.c",
+    "src/_ZN12daBgSnmHed_cD1Ev.cpp",
+    "src/_ZN12daBgSnmHed_cD0Ev.c",
     "src/func_ov072_0211ffd8.c",
     "src/func_ov072_0212001c.c",
     "src/func_ov072_02120180.c",
@@ -1329,11 +1329,11 @@
     "src/func_ov072_02120560.cpp",
     "src/func_ov072_0212059c.cpp",
     "src/func_ov072_021205d4.c",
-    "src/_ZN11SnowmanHead16CleanupResourcesEv.c",
-    "src/_ZN11SnowmanHead16OnPendingDestroyEv.c",
-    "src/_ZN11SnowmanHead6RenderEv.cpp",
-    "src/_ZN11SnowmanHead8BehaviorEv.cpp",
-    "src/_ZN11SnowmanHead13InitResourcesEv.cpp",
+    "src/_ZN12daBgSnmHed_c16CleanupResourcesEv.c",
+    "src/_ZN12daBgSnmHed_c16OnPendingDestroyEv.c",
+    "src/_ZN12daBgSnmHed_c6RenderEv.cpp",
+    "src/_ZN12daBgSnmHed_c8BehaviorEv.cpp",
+    "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp",
     "src/daBgSnmHed_c_classInit.c"
    ],
    "ext_mix": {
@@ -1661,7 +1661,7 @@
    "start": "0x20b35a0",
    "end": "0x20b412c",
    "classes": [
-    "BigBrickBlock",
+    "daObjBlockL_c",
     "BlackBrickBlock",
     "BrickBlockSwitchActivated",
     "FortressTowerWall"
@@ -1669,20 +1669,20 @@
    "n_functions_map": 18,
    "n_files": 18,
    "files": [
-    "src/_ZN13BigBrickBlockD1Ev.cpp",
-    "src/_ZN13BigBrickBlockD0Ev.cpp",
+    "src/_ZN13daObjBlockL_cD1Ev.cpp",
+    "src/_ZN13daObjBlockL_cD0Ev.cpp",
     "src/func_ov002_020b363c.c",
     "src/func_ov002_020b36a0.c",
-    "src/_ZN13BigBrickBlock15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN13BigBrickBlock8OnKickedER8dActor_c.cpp",
-    "src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp",
-    "src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp",
-    "src/_ZN13BigBrickBlock15OnGroundPoundedER8dActor_c.cpp",
-    "src/_ZN13BigBrickBlock4KillEv.cpp",
-    "src/_ZN13BigBrickBlock16CleanupResourcesEv.cpp",
-    "src/_ZN13BigBrickBlock6RenderEv.cpp",
-    "src/_ZN13BigBrickBlock8BehaviorEv.cpp",
-    "src/_ZN13BigBrickBlock13InitResourcesEv.c",
+    "src/_ZN13daObjBlockL_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN13daObjBlockL_c8OnKickedER8dActor_c.cpp",
+    "src/_ZN13daObjBlockL_c11OnAttacked2ER8dActor_c.cpp",
+    "src/_ZN13daObjBlockL_c11OnAttacked1ER8dActor_c.cpp",
+    "src/_ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN13daObjBlockL_c4KillEv.cpp",
+    "src/_ZN13daObjBlockL_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjBlockL_c6RenderEv.cpp",
+    "src/_ZN13daObjBlockL_c8BehaviorEv.cpp",
+    "src/_ZN13daObjBlockL_c13InitResourcesEv.c",
     "src/d_a_obj_block_l_bk_futa.c",
     "src/d_a_obj_block_l_block_ll.c",
     "src/d_a_obj_block_l_sw_block_l.c",
@@ -2187,31 +2187,31 @@
    "start": "0x20fb8f8",
    "end": "0x20fe190",
    "classes": [
-    "HUD"
+    "dMeter_c"
    ],
    "n_functions_map": 20,
    "n_files": 20,
    "files": [
-    "src/_ZN3HUDD1Ev.cpp",
-    "src/_ZN3HUDD0Ev.c",
-    "src/_ZN3HUD15RenderTimeTimerEv.cpp",
-    "src/_ZN3HUD15CalculateDigitsEt.cpp",
-    "src/_ZN3HUD15RenderLifeCountEv.cpp",
-    "src/_ZN3HUD19RenderCameraButtonsEv.cpp",
-    "src/_ZN3HUD17RenderSilverStarsEv.cpp",
-    "src/_ZN3HUD15RenderStarCountEv.cpp",
-    "src/_ZN3HUD14RenderRedCoinsEv.cpp",
-    "src/_ZN3HUD15RenderCoinCountEv.cpp",
-    "src/_ZN3HUD13RenderVsTimerEv.cpp",
-    "src/_ZN3HUD13UpdateVsTimerEv.cpp",
-    "src/_ZN3HUD17RenderHealthMeterEv.cpp",
-    "src/_ZN3HUD17UpdateHealthMeterEv.cpp",
-    "src/_ZN3HUD16CleanupResourcesEv.cpp",
-    "src/_ZN3HUD16OnPendingDestroyEv.cpp",
-    "src/_ZN3HUD6RenderEv.cpp",
-    "src/_ZN3HUD8BehaviorEv.cpp",
-    "src/_ZN3HUD13InitResourcesEv.cpp",
-    "src/_ZN3HUDC1Ev.c"
+    "src/_ZN8dMeter_cD1Ev.cpp",
+    "src/_ZN8dMeter_cD0Ev.c",
+    "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
+    "src/_ZN8dMeter_c15CalculateDigitsEt.cpp",
+    "src/_ZN8dMeter_c15RenderLifeCountEv.cpp",
+    "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp",
+    "src/_ZN8dMeter_c17RenderSilverStarsEv.cpp",
+    "src/_ZN8dMeter_c15RenderStarCountEv.cpp",
+    "src/_ZN8dMeter_c14RenderRedCoinsEv.cpp",
+    "src/_ZN8dMeter_c15RenderCoinCountEv.cpp",
+    "src/_ZN8dMeter_c13RenderVsTimerEv.cpp",
+    "src/_ZN8dMeter_c13UpdateVsTimerEv.cpp",
+    "src/_ZN8dMeter_c17RenderHealthMeterEv.cpp",
+    "src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp",
+    "src/_ZN8dMeter_c16CleanupResourcesEv.cpp",
+    "src/_ZN8dMeter_c16OnPendingDestroyEv.cpp",
+    "src/_ZN8dMeter_c6RenderEv.cpp",
+    "src/_ZN8dMeter_c8BehaviorEv.cpp",
+    "src/_ZN8dMeter_c13InitResourcesEv.cpp",
+    "src/_ZN8dMeter_cC1Ev.c"
    ],
    "ext_mix": {
     ".cpp": 18,
@@ -8706,22 +8706,22 @@
    "start": "0x20b412c",
    "end": "0x20b45e0",
    "classes": [
-    "BrickBlock"
+    "daObjBlockItemTag_c"
    ],
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
     "src/d_a_obj_block_l_block_l.c",
-    "src/_ZN10BrickBlockD1Ev.cpp",
-    "src/_ZN10BrickBlockD0Ev.c",
+    "src/_ZN19daObjBlockItemTag_cD1Ev.cpp",
+    "src/_ZN19daObjBlockItemTag_cD0Ev.c",
     "src/func_ov002_020b41b8.c",
     "src/func_ov002_020b41f8.cpp",
     "src/func_ov002_020b4250.cpp",
     "src/func_ov002_020b429c.cpp",
     "src/func_ov002_020b42e4.c",
-    "src/_ZN10BrickBlock16CleanupResourcesEv.cpp",
-    "src/_ZN10BrickBlock8BehaviorEv.cpp",
-    "src/_ZN10BrickBlock13InitResourcesEv.cpp"
+    "src/_ZN19daObjBlockItemTag_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjBlockItemTag_c8BehaviorEv.cpp",
+    "src/_ZN19daObjBlockItemTag_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".c": 4,
@@ -17577,23 +17577,23 @@
    "start": "0x20f975c",
    "end": "0x20fb8f8",
    "classes": [
-    "Minimap"
+    "dMap_c"
    ],
    "n_functions_map": 12,
    "n_files": 12,
    "files": [
-    "src/_ZN7MinimapD1Ev.cpp",
-    "src/_ZN7MinimapD0Ev.c",
-    "src/_ZN7Minimap21FixTHIPaintingRoomPosER7Vector3.cpp",
-    "src/_ZN7Minimap19UpdateLevelSpecificEv.cpp",
-    "src/_ZN7Minimap16CleanupResourcesEv.cpp",
-    "src/_ZN7Minimap16OnPendingDestroyEv.cpp",
-    "src/_ZN7Minimap6RenderEv.cpp",
-    "src/_ZN7Minimap8BehaviorEv.cpp",
-    "src/_ZN7Minimap13InitResourcesEv.cpp",
-    "src/_ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp",
-    "src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp",
-    "src/_ZN7MinimapC1Ev.c"
+    "src/_ZN6dMap_cD1Ev.cpp",
+    "src/_ZN6dMap_cD0Ev.c",
+    "src/_ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3.cpp",
+    "src/_ZN6dMap_c19UpdateLevelSpecificEv.cpp",
+    "src/_ZN6dMap_c16CleanupResourcesEv.cpp",
+    "src/_ZN6dMap_c16OnPendingDestroyEv.cpp",
+    "src/_ZN6dMap_c6RenderEv.cpp",
+    "src/_ZN6dMap_c8BehaviorEv.cpp",
+    "src/_ZN6dMap_c13InitResourcesEv.cpp",
+    "src/_ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp",
+    "src/_ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp",
+    "src/_ZN6dMap_cC1Ev.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -25209,13 +25209,13 @@
    "start": "0x21120c4",
    "end": "0x2112b14",
    "classes": [
-    "SnowmanBreath"
+    "daSnmBth_c"
    ],
    "n_functions_map": 17,
    "n_files": 17,
    "files": [
-    "src/_ZN13SnowmanBreathD1Ev.cpp",
-    "src/_ZN13SnowmanBreathD0Ev.cpp",
+    "src/_ZN10daSnmBth_cD1Ev.cpp",
+    "src/_ZN10daSnmBth_cD0Ev.cpp",
     "src/func_ov027_02112158.c",
     "src/func_ov027_02112170.cpp",
     "src/func_ov027_0211233c.cpp",
@@ -25225,11 +25225,11 @@
     "src/func_ov027_021124e4.c",
     "src/func_ov027_021125a8.c",
     "src/func_ov027_02112618.cpp",
-    "src/_ZN13SnowmanBreath16CleanupResourcesEv.c",
-    "src/_ZN13SnowmanBreath16OnPendingDestroyEv.c",
-    "src/_ZN13SnowmanBreath6RenderEv.cpp",
-    "src/_ZN13SnowmanBreath8BehaviorEv.cpp",
-    "src/_ZN13SnowmanBreath13InitResourcesEv.cpp",
+    "src/_ZN10daSnmBth_c16CleanupResourcesEv.c",
+    "src/_ZN10daSnmBth_c16OnPendingDestroyEv.c",
+    "src/_ZN10daSnmBth_c6RenderEv.cpp",
+    "src/_ZN10daSnmBth_c8BehaviorEv.cpp",
+    "src/_ZN10daSnmBth_c13InitResourcesEv.cpp",
     "src/d_a_snm_bth.cpp"
    ],
    "ext_mix": {
@@ -29763,15 +29763,15 @@
    "start": "0x213682c",
    "end": "0x2136f58",
    "classes": [
-    "Flamethrower"
+    "daObjFlamethrower_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN12FlamethrowerD1Ev.cpp",
-    "src/_ZN12FlamethrowerD0Ev.cpp",
-    "src/_ZN12Flamethrower8BehaviorEv.cpp",
-    "src/_ZN12Flamethrower13InitResourcesEv.cpp",
+    "src/_ZN19daObjFlamethrower_cD1Ev.cpp",
+    "src/_ZN19daObjFlamethrower_cD0Ev.cpp",
+    "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp",
+    "src/_ZN19daObjFlamethrower_c13InitResourcesEv.cpp",
     "src/d_a_obj_flamethrower.cpp"
    ],
    "ext_mix": {
@@ -30225,13 +30225,13 @@
    "start": "0x2140d80",
    "end": "0x2141f04",
    "classes": [
-    "Butterfly"
+    "daBtfly_c"
    ],
    "n_functions_map": 16,
    "n_files": 16,
    "files": [
-    "src/_ZN9ButterflyD1Ev.cpp",
-    "src/_ZN9ButterflyD0Ev.c",
+    "src/_ZN9daBtfly_cD1Ev.cpp",
+    "src/_ZN9daBtfly_cD0Ev.c",
     "src/func_ov100_02140e44.cpp",
     "src/func_ov100_0214109c.cpp",
     "src/func_ov100_0214117c.cpp",
@@ -30240,11 +30240,11 @@
     "src/func_ov100_021415bc.c",
     "src/func_ov100_02141800.cpp",
     "src/func_ov100_02141848.c",
-    "src/_ZN9Butterfly16CleanupResourcesEv.c",
-    "src/_ZN9Butterfly16OnPendingDestroyEv.c",
-    "src/_ZN9Butterfly6RenderEv.cpp",
-    "src/_ZN9Butterfly8BehaviorEv.cpp",
-    "src/_ZN9Butterfly13InitResourcesEv.cpp",
+    "src/_ZN9daBtfly_c16CleanupResourcesEv.c",
+    "src/_ZN9daBtfly_c16OnPendingDestroyEv.c",
+    "src/_ZN9daBtfly_c6RenderEv.cpp",
+    "src/_ZN9daBtfly_c8BehaviorEv.cpp",
+    "src/_ZN9daBtfly_c13InitResourcesEv.cpp",
     "src/daBtfly_c_classInit.c"
    ],
    "ext_mix": {
@@ -37907,11 +37907,11 @@
    "start": "0x211ff34",
    "end": "0x2120824",
    "classes": [
-    "SnowmanHead"
+    "daBgSnmHed_c"
    ],
    "files": [
-    "src/_ZN11SnowmanHeadD1Ev.cpp",
-    "src/_ZN11SnowmanHeadD0Ev.c",
+    "src/_ZN12daBgSnmHed_cD1Ev.cpp",
+    "src/_ZN12daBgSnmHed_cD0Ev.c",
     "src/func_ov072_0211ffd8.c",
     "src/func_ov072_0212001c.c",
     "src/func_ov072_02120180.c",
@@ -37924,11 +37924,11 @@
     "src/func_ov072_02120560.cpp",
     "src/func_ov072_0212059c.cpp",
     "src/func_ov072_021205d4.c",
-    "src/_ZN11SnowmanHead16CleanupResourcesEv.c",
-    "src/_ZN11SnowmanHead16OnPendingDestroyEv.c",
-    "src/_ZN11SnowmanHead6RenderEv.cpp",
-    "src/_ZN11SnowmanHead8BehaviorEv.cpp",
-    "src/_ZN11SnowmanHead13InitResourcesEv.cpp",
+    "src/_ZN12daBgSnmHed_c16CleanupResourcesEv.c",
+    "src/_ZN12daBgSnmHed_c16OnPendingDestroyEv.c",
+    "src/_ZN12daBgSnmHed_c6RenderEv.cpp",
+    "src/_ZN12daBgSnmHed_c8BehaviorEv.cpp",
+    "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp",
     "src/daBgSnmHed_c_classInit.c"
    ],
    "ext_mix": {

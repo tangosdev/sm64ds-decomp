@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN9Butterfly13InitResourcesEv
+// @symbol _ZN9daBtfly_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 struct Vec3 { s32 x, y, z; };
 struct SFP { void* a; void* b; };
 
@@ -25,7 +25,7 @@ extern SFP data_ov100_02148668;
 extern SFP data_ov100_02148608;
 extern int data_0209e650;
 
-int Butterfly::InitResources()
+int daBtfly_c::InitResources()
 {
     u8* c = (u8*)((void*)this);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);

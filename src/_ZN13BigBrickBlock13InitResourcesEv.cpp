@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN13BigBrickBlock13InitResourcesEv
-/* BigBrickBlock::InitResources -- one class, six actor IDs. mVariant selects the
+// @symbol _ZN13daObjBlockL_c13InitResourcesEv
+/* daObjBlockL_c::InitResources -- one class, six actor IDs. mVariant selects the
  * row of the three 0xc-stride resource tables (model, collision, CLPS) that this
  * block loads; the collision scale then varies again by ID -- 0x1800 for 0x10,
  * 0x1000 for the other variant-0/1 blocks, 0x199 for variant 2.
@@ -18,7 +18,7 @@
  * dBgW_KcMbg::SetFile takes Fix12<int> by value (wall 6az) so it stays an
  * extern-C mangled free function.
  */
-#include "BigBrickBlock.h"
+#include "daObjBlockL_c.h"
 #include "SharedFilePtr.h"
 #include "Model.h"
 #include "Player.h"
@@ -47,7 +47,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 int _ZN5Event6GetBitEj(u32 bit);
 }
 
-int BigBrickBlock::InitResources()
+int daObjBlockL_c::InitResources()
 {
     u16 id = actorID;
     u8 idx;

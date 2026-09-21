@@ -263,7 +263,7 @@ fourth arrives on the stack and it supplies its own size instead; it is
 the collision half of the ghost-leg rule, probing the 0x158-stride
 occupancy grid at +0x4710 and then delegating the drawing to
 dScMgBase_c's brush, which it is the only override in the family to
-call.  The guess recorded here -- "draws a HUD digit/glyph" -- and the
+call.  The guess recorded here -- "draws a dMeter_c digit/glyph" -- and the
 matching one in include/dScMgTeresa_c.h were both pointing at
 dScMgBase_c's slot 34 being a multi-argument virtual; it is declared and
 reconstructed tree-wide now.  Left as a raw helper by THIS migration and
@@ -427,7 +427,7 @@ name -- a wrong name is a claim the next reader will trust.
 | 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
 | 0x53d4 | `mPatternIndex` | [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
 | 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
-| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [func_ov006_020d3ba0](../src/actors/dScMgAmida_c.cpp) clamps it to 0x270f (9999); Behavior pushes it to the dMeter_c counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
 
 Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
 1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
@@ -438,7 +438,7 @@ Behavior and Render, but nothing in scope writes it), 0x4764, 0x53dc/0x53dd
 ## dScMgSnowball_c field names
 
 The slalom's own state lives in two clusters: a movement block at 0xab38 that
-the previous header held as four pads, and a run/HUD block at 0xb9d8.
+the previous header held as four pads, and a run/dMeter_c block at 0xb9d8.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -463,7 +463,7 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 | 0xb3d8 | `mArray2Kind[0x80]` | Render's `switch`: 0..2 draw one sprite, 3 picks between two by X. |
 | 0xb9d8 | `mAnimCounter` | Render bumps it and wraps it at 0x20; the obstacle frame is `(n / 4) & 7`. |
 | 0xb9dc | `mTimeLeft` | Frames. Seeded 0x960 or 0x4b0 by variant; Behavior counts it down and plays a tick sound at 60/30/15-frame intervals as it shortens; Render formats it as seconds and centiseconds; 0 ends the run. |
-| 0xb9e0 | `mScore` | Zeroed by the reset, +1 a tick while rolling, handed to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) at the crash -- the same sink dScMgAmida_c's score uses. |
+| 0xb9e0 | `mScore` | Zeroed by the reset, +1 a tick while rolling, handed to the dMeter_c counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) at the crash -- the same sink dScMgAmida_c's score uses. |
 | 0xb9f4 | `mState` | Behavior's `switch`: 0 count-in, 1 rolling, 2/3 crash, 4 melt, 5 over. |
 | 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; [_ZN15dScMgSnowball_c8OnKickedEv](../src/actors/dScMgSnowball_c.cpp) uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
 | 0xb9fc | `mCountdownTimer` | Seeded 0xf1; state 0 counts it down, plays a beep at 0xf0/0xb4/0x78 and starts the run at 0x3c; Render draws the 3-2-1 banner from `n / 60`. |
@@ -610,7 +610,7 @@ Only the fields several descendants corroborate are named here; this class has
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (part of:[d_s_mg_bsc.cpp](../src/minigames/d_s_mg_bsc.cpp), func 15 used to assemble TU) and [func_ov006_020ea3d0.c](../src/func_ov006_020ea3d0.c); dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
+| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) -- the routine that writes the dMeter_c counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (part of:[d_s_mg_bsc.cpp](../src/minigames/d_s_mg_bsc.cpp), func 15 used to assemble TU) and [func_ov006_020ea3d0.c](../src/func_ov006_020ea3d0.c); dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
 | 0x21c | `mSavedMainBgBits` | src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp (slot 29) stores [data_0209d45c](../config/arm9/symbols.txt) here; src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp (slot 30) restores it from here. |
 | 0x220 | `mSavedSubBgBits` | The same save/restore pair for [data_0209d454](../config/arm9/symbols.txt). |
 | 0x224 | `mSavedScreenSwap` | Saved as `(POWCNT1 & 0x8000) >> 15` and restored as `n << 15` by that same pair. |

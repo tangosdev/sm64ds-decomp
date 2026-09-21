@@ -891,7 +891,7 @@ void dMgMCarloCardObj_c::Update(int event)
 /* ROM ordinal 10 -- _ZN18dMgMCarloCardObj_c6RenderEv, 0x020f7e2c, size 0xb8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c6RenderEv
-/* dMgMCarloCardObj_c::Render -- draw this card through the HUD sprite bank.
+/* dMgMCarloCardObj_c::Render -- draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
  * draw nothing, and a picked card (state 3) hides while the touch state's
  * bit 8 is down. The bank index is the face's bank (mFace + 1) of five flip

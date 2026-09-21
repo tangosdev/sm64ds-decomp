@@ -5,7 +5,7 @@
  *
  * SIZE 0x5340, measured by the unique MG_MEMORY factory at 0x020f5504.
  * The complete scene TU proves twelve 0x18-byte cards, three 0x14-byte
- * player markers, a cursor/HUD object, and the state-machine scalars below.
+ * player markers, a cursor/dMeter_c object, and the state-machine scalars below.
  * Address-only handler spellings are descriptive and disclosed as coined in
  * symbols/actor_renames.tsv. */
 #ifndef DSCMGMEMORY_C_H

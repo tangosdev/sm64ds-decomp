@@ -182,7 +182,7 @@ typedef struct S {
     SlotElem arr[2];
 } S;
 
-/* func_ov006_0211e118's view of the 0x10-stride HUD sprite array at +0x4960.
+/* func_ov006_0211e118's view of the 0x10-stride dMeter_c sprite array at +0x4960.
    Named apart from SlotElem, which the legacy files also spelled `Elem`. */
 struct HudElem {
     int x;

@@ -826,7 +826,7 @@ void func_ov004_020b1de8(int r0, int r1, int r2, int r3);
 void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
 void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
-/* The top line of the HUD, once the scene is past its opening phase: a caption
+/* The top line of the dMeter_c, once the scene is past its opening phase: a caption
  * from the current language's table, a label, and the count at +0x51d4.
  * GetGameLanguage is asked twice on purpose: hoisting the second call out costs
  * eighteen words here.  Measured, this file, 2026-09-06. */
@@ -859,7 +859,7 @@ void func_ov004_020b1de8(int r0, int r1, int r2, int r3);
 void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
 void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
-/* The second line of the HUD, laid out exactly like the first, except that the
+/* The second line of the dMeter_c, laid out exactly like the first, except that the
  * number is the other player's and is read out of ov004's record -- which may
  * not exist yet, in which case it shows zero. */
 void func_ov006_020dcd74(char *thiz)

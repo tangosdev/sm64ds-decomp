@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9ButterflyD0Ev
-#include "Butterfly.h"
+// @symbol _ZN9daBtfly_cD0Ev
+#include "daBtfly_c.h"
 
-Butterfly::~Butterfly()
+daBtfly_c::~daBtfly_c()
 {
 }

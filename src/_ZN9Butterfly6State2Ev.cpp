@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN9Butterfly6State2Ev
+// @symbol _ZN9daBtfly_c6State2Ev
 /* recovered: shared common types */
 #include "common.h"
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 #pragma opt_common_subs off
 #define M(p) (p)
 
@@ -17,7 +17,7 @@ extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cyl);
 extern short data_02082214[];
 }
 
-void Butterfly::State2()
+void daBtfly_c::State2()
 {
     char *c = (char*)this;
     char *player;

@@ -1,7 +1,7 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-int SnowmanHead::InitState2()
+int daBgSnmHed_c::InitState2()
 {
     mFlags &= ~1;
     mVertAccel = -0x2000;

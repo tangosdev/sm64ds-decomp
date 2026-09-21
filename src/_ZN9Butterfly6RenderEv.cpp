@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9Butterfly6RenderEv
+// @symbol _ZN9daBtfly_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 
-int Butterfly::Render()
+int daBtfly_c::Render()
 {
   if(mState == 4) return 1;
   if(mUseAnimModel != 0){

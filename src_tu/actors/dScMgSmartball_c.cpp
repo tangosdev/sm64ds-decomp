@@ -1581,7 +1581,7 @@ s32 dScMgSmartball_c::Behavior()
 //    forces spill order pmode@0x18 before pcnt2@0x1c (div 5->0)
 // Loop2 digit-count still uses inner u64 mask form for pooled ldr form.
 //
-// TODO: shared ov006 HUD/score object layout - this file and siblings
+// TODO: shared ov006 dMeter_c/score object layout - this file and siblings
 // (func_ov006_020fd2d8, 02103ac0, 020fb7e0) re-spell the same base offsets:
 //   0x4660-0x4770  display-object pointer arrays (DispObj* at k*4 stride)
 //   0x5958-0x5998  score/coin block

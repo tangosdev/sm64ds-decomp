@@ -1,6 +1,6 @@
 #include "types.h"
 /* func_ov075_02117fe4 @ 0x02117fe4 (ov075, size 0x264)
- * Per-player two-digit counter HUD: renders tens/ones OAM digits for each
+ * Per-player two-digit counter dMeter_c: renders tens/ones OAM digits for each
  * player, then every 3 calls toggles a blink flag and refreshes per-player
  * state.
  */

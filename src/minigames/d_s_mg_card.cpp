@@ -569,7 +569,7 @@ int dScMgCard_c::OnTurnIntoEgg(int mode)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c15OnGroundPoundedEv
 /* dScMgCard_c::OnGroundPounded -- vtable slot 21, the ground-pound reaction:
- * the base family's coin-drop call, fed by this scene's HUD score -- the
+ * the base family's coin-drop call, fed by this scene's dMeter_c score -- the
  * prize tier rises with the score (1..4). This overrides the void slot
  * declared by dScMgBase_c. Recovered from the vtable slot identity. */
 void dScMgCard_c::OnGroundPounded() {
@@ -1787,7 +1787,7 @@ s32 dMgCardObj_c::GetOffscreenY()
 /* ROM ordinal 10 -- _ZN11dScMgCard_c9RenderHudEv, 0x020d9a14, size 0x1bc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c9RenderHudEv
-/* dScMgCard_c::RenderHud -- the HUD column and the hold prompt. States 4
+/* dScMgCard_c::RenderHud -- the dMeter_c column and the hold prompt. States 4
  * through 0x10 stack six face sprites at x=0x14 from y=0xb0 down; the two
  * hands' highlight pairs (unk_538e/unk_5390 for the player's hand,
  * unk_5392/unk_5394 for the dealer's) name the rows drawn in a highlight

@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN10BrickBlock15SpawnSilverStarEv
-#include "BrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c15SpawnSilverStarEv
+#include "daObjBlockItemTag_c.h"
 #include "common.h"
 
 extern "C" void LinkSilverStarAndStarMarker(void *starMarker, void *silverStar);
 
-void BrickBlock::SpawnSilverStar()
+void daObjBlockItemTag_c::SpawnSilverStar()
 {
     Vector3 spawnPos;
     dActor_c *starMarker;

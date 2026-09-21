@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11SnowmanHead8BehaviorEv
+// @symbol _ZN12daBgSnmHed_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-int SnowmanHead::Behavior()
+int daBgSnmHed_c::Behavior()
 {
     CallStateBehavior();
     mCylinder.Clear();

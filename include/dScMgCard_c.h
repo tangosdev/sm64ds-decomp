@@ -195,7 +195,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
 
     virtual void OnGroundPounded();   /* slot 21 -- ov006 0x020db6ec */
 
-    /* --- the round state machine and the HUD column ---
+    /* --- the round state machine and the dMeter_c column ---
        UpdateState is the one long switch on mState that Behavior drives
        every frame; RenderHud draws the chip column and the prompt sprite.
        Names coined from the bodies -- the ROM's symbols are address-only. */
@@ -238,7 +238,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     s16 mFrameCounter;       /* 0x5396 -- Behavior's only own statement is
                                 `+= 1`; Render blinks on bit 3 */
     s16 mScore;              /* 0x5398 -- a high-water mark of dScMgBase_c's own
-                                0xb4, pushed to the HUD counter every frame */
+                                0xb4, pushed to the dMeter_c counter every frame */
     s8  unk_539a;             /* 0x539a */
     u8  pad_539b[0x1];        /* 0x539b */
 };

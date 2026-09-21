@@ -1,6 +1,6 @@
 //cpp
 #include "OAM.h"
-// @symbol _ZN3HUD14RenderRedCoinsEv
+// @symbol _ZN8dMeter_c14RenderRedCoinsEv
 /* recovered: shared header, real C++ method
  *
  * Draws one sprite per red coin still to collect, stepping 0xb across from
@@ -8,7 +8,7 @@
  * are indexed by the same data_0209f250[0].
  *
  * That row selector is the interesting bit: it is the SAME byte
- * HUD::RenderSilverStars reads as its star COUNT. Non-zero there means silver
+ * dMeter_c::RenderSilverStars reads as its star COUNT. Non-zero there means silver
  * stars are being drawn at y=0xa, so the red coins drop to y=0x1c to make room.
  * One byte serving as both a count and an occupancy flag for a shared row.
  *
@@ -19,7 +19,7 @@
  * TOUCHES NO FIELD; the ROM body takes no `this` and now ignores the one it is
  * passed. Byte-free.
  */
-#include "HUD.h"
+#include "dMeter_c.h"
 
 struct OamAttr; struct Matrix2x2;
 extern "C" {
@@ -29,7 +29,7 @@ extern signed char data_0209f30c[];
 extern struct OamAttr data_ov002_0210c6b8;
 }
 
-void HUD::RenderRedCoins()
+void dMeter_c::RenderRedCoins()
 {
   int idx = data_0209f250[0];
   int flag = data_0209f310[idx];

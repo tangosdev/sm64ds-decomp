@@ -4,7 +4,7 @@ This commit composes the accepted Koopa repair `63c0a9605ce0742462ca4fdf2c4570aa
 with main `c04f97677c3c30b269354a36435c027bdd0afd5f`, which landed Mip Key PR #2853.
 The original accepted branch and both source histories are preserved.
 
-The Koopa source, header, manifest, HUD and Timer initializer are identical to the
+The Koopa source, header, manifest, dMeter_c and Timer initializer are identical to the
 accepted repair. The Mip source, header and manifest are identical to main.
 No new source reconstruction or compiler-constraint claim is introduced here.
 

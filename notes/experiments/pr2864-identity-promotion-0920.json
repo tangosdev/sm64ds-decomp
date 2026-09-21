@@ -66,7 +66,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/_ZN13SnowmanBreath13InitResourcesEv.cpp",
+        "src/_ZN10daSnmBth_c13InitResourcesEv.cpp",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1092,7 +1092,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/_ZN13SnowmanBreath13InitResourcesEv.cpp",
+        "src/_ZN10daSnmBth_c13InitResourcesEv.cpp",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1668,7 +1668,7 @@
         {
           "symbol": "Matrix4x3_FromTranslation",
           "kind": "param",
-          "file": "src/_ZN13SnowmanBreath13InitResourcesEv.cpp",
+          "file": "src/_ZN10daSnmBth_c13InitResourcesEv.cpp",
           "line": 8,
           "decl": "void (Matrix4x3 *, int, int, int)",
           "got": "#1 Matrix4x3 *",

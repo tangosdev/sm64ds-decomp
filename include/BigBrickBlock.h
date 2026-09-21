@@ -1,5 +1,5 @@
-#ifndef BIGBRICKBLOCK_H
-#define BIGBRICKBLOCK_H
+#ifndef DAOBJBLOCKL_C_H
+#define DAOBJBLOCKL_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -10,10 +10,10 @@
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
- * ONE CLASS, FIVE ACTORS. BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
+ * ONE CLASS, FIVE ACTORS. daObjBlockItemTag_c, daObjBlockL_c, BrickBlockSwitchActivated,
  * BlackBrickBlock and FortressTowerWall all have their own SpawnInfo, and all
  * five factories are the same three instructions: fBase_c::operator new(816),
- * dBgActor_c::dBgActor_c(), store _ZTV13BigBrickBlock. There is no second vtable and
+ * dBgActor_c::dBgActor_c(), store _ZTV13daObjBlockL_c. There is no second vtable and
  * no second size anywhere in the family, which is why every method here switches
  * on actorID (0xf, 0x10, 0x11, 0x12, 0x13, 0x2e) instead of being overridden.
  *
@@ -40,7 +40,7 @@ struct daObjSwitch_c;
 
 #include "dBgActor_c.h"
 
-struct BigBrickBlock : dBgActor_c {
+struct daObjBlockL_c : dBgActor_c {
     /* Kill sets it on the switch-activated variant instead of destroying the
        block; Render draws nothing and Behavior runs the broken path while it is
        set, and Behavior clears it the frame Event::GetBit(mEventID) disagrees
@@ -71,18 +71,18 @@ struct BigBrickBlock : dBgActor_c {
     u8  pad_32d[0x3];
 
     /* --- vtable --- */
-    virtual ~BigBrickBlock();
+    virtual ~daObjBlockL_c();
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed by
-       the vtable: _ZTV13BigBrickBlock (ov002 0x02108adc) carries 0x020b38a0 at
+       the vtable: _ZTV13daObjBlockL_c (ov002 0x02108adc) carries 0x020b38a0 at
        slot 31 -- vtable + 0x7c -- where _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv, and slot 30 is dActor_c's 0x020100dc in both. An
        override adds no slot and no field, so the size assert is unaffected.
 
-       NOT the key function: ~BigBrickBlock() above is declared out of line and
-       is defined as a real method by src/_ZN13BigBrickBlockD1Ev.cpp and
-       src/_ZN13BigBrickBlockD0Ev.cpp, so the destructor stays the first
-       non-inline virtual and those two TUs keep emitting _ZTV13BigBrickBlock.
+       NOT the key function: ~daObjBlockL_c() above is declared out of line and
+       is defined as a real method by src/_ZN13daObjBlockL_cD1Ev.cpp and
+       src/_ZN13daObjBlockL_cD0Ev.cpp, so the destructor stays the first
+       non-inline virtual and those two TUs keep emitting _ZTV13daObjBlockL_c.
        This one does not -- checked with objisolate, not assumed. */
     virtual void Kill();              /* slot 31 */
 
@@ -101,8 +101,8 @@ struct BigBrickBlock : dBgActor_c {
        include/dActor_c.h for the slot table). Attributed by the vtable, not
        by the pre-migration `recovered name:` comments, which name the wrong
        class one level down the tree (actor-class-names-off-by-one). None of
-       these is the key function: ~BigBrickBlock() above stays the first
-       out-of-line virtual, so these five TUs do not emit _ZTV13BigBrickBlock
+       these is the key function: ~daObjBlockL_c() above stays the first
+       out-of-line virtual, so these five TUs do not emit _ZTV13daObjBlockL_c
        -- checked with objisolate, not assumed.
 
        OnKicked returns `void`, not `int`: this override is what proved
@@ -123,7 +123,7 @@ struct BigBrickBlock : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char BigBrickBlock_size_must_be_0x330[sizeof(BigBrickBlock) == 0x330 ? 1 : -1];
+typedef char BigBrickBlock_size_must_be_0x330[sizeof(daObjBlockL_c) == 0x330 ? 1 : -1];
 #endif
 
 #else
@@ -131,15 +131,15 @@ typedef char BigBrickBlock_size_must_be_0x330[sizeof(BigBrickBlock) == 0x330 ? 1
 /* The C spelling of the same object, flat, retained for C translation units
    that include this header. D0 and D1 are now compiler-generated from the real
    C++ destructor definitions in their respective .cpp files. */
-struct BigBrickBlock {
+struct daObjBlockL_c {
     u8  pad_000[0xc];
     u16 mActorId;            /* 0x00c */
     u8  pad_00e[0xc6];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13BigBrickBlockD1Ev.c] */
+       checks. Was a u8 marker. [_ZN13daObjBlockL_cD1Ev.c] */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~BigBrickBlock calls _ZN10dBgW_KcMbgD1Ev
+    /* dBgW_KcMbg member. The cartridge's own ~daObjBlockL_c calls _ZN10dBgW_KcMbgD1Ev
        at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
@@ -161,4 +161,4 @@ struct BigBrickBlock {
 
 #endif /* __cplusplus */
 
-#endif /* BIGBRICKBLOCK_H */
+#endif /* DAOBJBLOCKL_C_H */

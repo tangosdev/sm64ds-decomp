@@ -1,12 +1,12 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 #include "Player.h"
 
 void ApproachLinear(short &value, short target, short step);
 extern "C" int Vec3_HorzDist(const void *a, const void *b);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *value);
 
-int SnowmanHead::State0()
+int daBgSnmHed_c::State0()
 {
     ApproachLinear(mAngleY, -0x4000, 0x514);
     mTextureSequence.Advance();

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9Butterfly16OnPendingDestroyEv
-/* Butterfly::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
+// @symbol _ZN9daBtfly_c16OnPendingDestroyEv
+/* daBtfly_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 
-void Butterfly::OnPendingDestroy()
+void daBtfly_c::OnPendingDestroy()
 {
 }

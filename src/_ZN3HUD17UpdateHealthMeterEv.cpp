@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN3HUD17UpdateHealthMeterEv
+// @symbol _ZN8dMeter_c17UpdateHealthMeterEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "HUD.h"
+#include "dMeter_c.h"
 extern "C" {
 extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern void func_02012790(int id);
@@ -18,7 +18,7 @@ extern int data_0208ee44;
 extern unsigned char data_ov002_0211117c;
 }
 
-void HUD::UpdateHealthMeter()
+void dMeter_c::UpdateHealthMeter()
 {
     int chr = data_0209f250;
     char *player = data_0209f394[chr];

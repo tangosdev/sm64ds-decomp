@@ -33,10 +33,10 @@ func_ov095_02136788 kind:function(arm,size=0x14) addr:0x02136788
 daUdlift_c_classInit_RC_RIFT02 kind:function(arm,size=0x30) addr:0x0213679c
 daUdlift_c_classInit_UDLIFT kind:function(arm,size=0x30) addr:0x021367cc
 daUdlift_c_classInit_UDLIFT_TERESA kind:function(arm,size=0x30) addr:0x021367fc
-_ZN12FlamethrowerD1Ev kind:function(arm,size=0x58) addr:0x0213682c
-_ZN12FlamethrowerD0Ev kind:function(arm,size=0x6c) addr:0x02136884
-_ZN12Flamethrower8BehaviorEv kind:function(arm,size=0x470) addr:0x021368f0
-_ZN12Flamethrower13InitResourcesEv kind:function(arm,size=0x174) addr:0x02136d60
+_ZN19daObjFlamethrower_cD1Ev kind:function(arm,size=0x58) addr:0x0213682c
+_ZN19daObjFlamethrower_cD0Ev kind:function(arm,size=0x6c) addr:0x02136884
+_ZN19daObjFlamethrower_c8BehaviorEv kind:function(arm,size=0x470) addr:0x021368f0
+_ZN19daObjFlamethrower_c13InitResourcesEv kind:function(arm,size=0x174) addr:0x02136d60
 daObjFlamethrower_c_classInit kind:function(arm,size=0x84) addr:0x02136ed4
 data_ov095_02136f58 kind:data(any) addr:0x02136f58
 data_ov095_02136f68 kind:data(any) addr:0x02136f68
@@ -78,7 +78,7 @@ _ZTV13UpDownLiftBbh kind:data(any) addr:0x02137628
 _ZTI19daObjFlamethrower_c kind:data(any) addr:0x021376a8
 _ZTS19daObjFlamethrower_c kind:data(any) addr:0x021376b4
 g_profile_OBJ_FLAMETHROWER kind:data(any) addr:0x021376cc ambiguous
-_ZTV12Flamethrower kind:data(any) addr:0x021376f0
+_ZTV19daObjFlamethrower_c kind:data(any) addr:0x021376f0
 data_ov095_02137780 kind:bss addr:0x02137780
 data_ov095_02137788 kind:bss addr:0x02137788
 data_ov095_02137790 kind:bss addr:0x02137790

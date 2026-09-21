@@ -291,8 +291,8 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x020e2e88	NO-SLOT	-	-	-	FALL_DAMAGE_BIG	data	no-slot		
 0x020e2e9c	NO-SLOT	-	-	-	FALL_DAMAGE_SMALL	data	no-slot		
 0x020e6c0c	DIVERGED	ov002	Player_Spawn	function	_ZN6PlayerC3Ev	function	plain		
-0x020fb8bc	DIVERGED	ov002	Minimap_Spawn	function	_ZN7MinimapC1Ev	function	plain		
-0x020fe154	DIVERGED	ov002	HUD_Spawn	function	_ZN3HUDC1Ev	function	plain		
+0x020fb8bc	DIVERGED	ov002	Minimap_Spawn	function	_ZN6dMap_cC1Ev	function	plain		
+0x020fe154	DIVERGED	ov002	HUD_Spawn	function	_ZN8dMeter_cC1Ev	function	plain		
 0x020ff060	CONFIG-PLACEHOLDER	ov002	data_ov002_020ff060	data	COIN_POLY4_MODEL_PTRS	data	placeholder		
 0x020ff06c	CONFIG-PLACEHOLDER	ov002	data_ov002_020ff06c	data	COIN_POLY32_MODEL_PTRS	data	placeholder		
 0x020ff480	CONFIG-PLACEHOLDER	ov002	data_ov002_020ff480	data	_ZN6Player9ANIM_PTRSE	data	placeholder		

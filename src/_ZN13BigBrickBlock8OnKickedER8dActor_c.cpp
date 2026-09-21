@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13BigBrickBlock8OnKickedER8dActor_c
-#include "BigBrickBlock.h"
+// @symbol _ZN13daObjBlockL_c8OnKickedER8dActor_c
+#include "daObjBlockL_c.h"
 #include "dActor_c.h"
 
-/* BigBrickBlock::OnKicked -- vtable slot 24, ov002 0x020b36dc.
+/* daObjBlockL_c::OnKicked -- vtable slot 24, ov002 0x020b36dc.
  *
  * `void`, NOT `int`. include/dActor_c.h declared slot 24 `int` until this
  * override proved it wrong: with two locals and two early returns, mwcc
@@ -21,7 +21,7 @@
  * `int b = (actorID == 0x2e);` / `b = (actorID == 0x11);` materialize the
  * bools the same way the pre-migration recovery did -- load-bearing
  * (cpp-bool-widening-cast). */
-void BigBrickBlock::OnKicked(dActor_c &other)
+void daObjBlockL_c::OnKicked(dActor_c &other)
 {
     int p1;
     int b = (actorID == 0x2e);

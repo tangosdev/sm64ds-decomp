@@ -1,5 +1,5 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
 extern "C" {
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
@@ -7,7 +7,7 @@ void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
 extern int data_ov072_02122bcc[];
 }
 
-int SnowmanHead::InitState3()
+int daBgSnmHed_c::InitState3()
 {
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
         &mTextureSequence, (void *)data_ov072_02122bcc[1], 0, 0x1000, 0);

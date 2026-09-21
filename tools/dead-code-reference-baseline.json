@@ -379,7 +379,7 @@
   "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp": [
    "src/_ZN15daObjMarioCap_c8BehaviorEv.cpp"
   ],
-  "src/_ZN13BigBrickBlock4KillEv.cpp": [
+  "src/_ZN13daObjBlockL_c4KillEv.cpp": [
    "src/_ZN10dBgActor_c4KillEv.cpp",
    "src/_ZN16daObjFallBlock_c4KillEv.cpp"
   ],

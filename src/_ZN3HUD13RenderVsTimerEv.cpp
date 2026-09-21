@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN3HUD13RenderVsTimerEv
+// @symbol _ZN8dMeter_c13RenderVsTimerEv
 /* recovered: named members + shared header, real C++ method
  *
  * The VS-mode countdown: a localised "TIME" caption, and below it either the
@@ -23,7 +23,7 @@
  */
 struct OamAttr;
 
-#include "HUD.h"
+#include "dMeter_c.h"
 
 extern "C" {
 
@@ -51,7 +51,7 @@ extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* at
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, struct OamAttr* attr, int x, int y, int a, int b, int s, int c);
 }
 
-void HUD::RenderVsTimer()
+void dMeter_c::RenderVsTimer()
 {
     int t = mVsTimer;
 

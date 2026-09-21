@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13SnowmanBreathD1Ev
-#include "SnowmanBreath.h"
+// @symbol _ZN10daSnmBth_cD1Ev
+#include "daSnmBth_c.h"
 
-SnowmanBreath::~SnowmanBreath()
+daSnmBth_c::~daSnmBth_c()
 {
 }

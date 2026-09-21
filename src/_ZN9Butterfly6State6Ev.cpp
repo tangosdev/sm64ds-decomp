@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9Butterfly6State6Ev
+// @symbol _ZN9daBtfly_c6State6Ev
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void*);
 
 
@@ -14,7 +14,7 @@ extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *c, int a, int b, int
 
 }
 
-void Butterfly::State6()
+void daBtfly_c::State6()
 {
     char *c = (char*)this;
     int st = *(int*)(c+0x3e8);

@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN10BrickBlock11GetSpawnPosER7Vector3RS_
-#include "BrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c11GetSpawnPosER7Vector3RS_
+#include "daObjBlockItemTag_c.h"
 #include "common.h"
 
 extern s32 data_ov002_020ff090[];
 
-void BrickBlock::GetSpawnPos(Vector3 &destination, BrickBlock &tag)
+void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c &tag)
 {
     u8 index = tag.mActionIndex;
     s32 z = tag.mPosZ;

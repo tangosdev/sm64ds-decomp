@@ -1,8 +1,8 @@
 //cpp
 #include "Model.h"
-// @symbol _ZN13SnowmanBreath13InitResourcesEv
+// @symbol _ZN10daSnmBth_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 extern "C" {
 extern void Vec3_Asr(Vector3 *d, const Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -16,7 +16,7 @@ extern Matrix4x3 data_020a0e68;
 typedef struct { int w[12]; } M48;
 }
 
-int SnowmanBreath::InitResources()
+int daSnmBth_c::InitResources()
 {
     Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da40);
     Model::LoadFile(*(SharedFilePtr *)data_ov002_0210d9a0);

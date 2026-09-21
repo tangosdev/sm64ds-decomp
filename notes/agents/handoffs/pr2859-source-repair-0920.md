@@ -10,7 +10,7 @@ source review and current-main composition acceptance remain pending.
 - Protocol pin: `18af52b49b9fb5663d417bdfa86109b7b157aaa3`.
 - PR: https://github.com/tangosdev/sm64ds-decomp/pull/2859.
 - Seven owned paths only: class TU/header/manifest, this handoff, the experiment
-  record, HUD RenderTimeTimer, and the Timer static initializer.
+  record, dMeter_c RenderTimeTimer, and the Timer static initializer.
 
 ## Changes and findings
 
@@ -68,7 +68,7 @@ baseline/final whole-object signature, and per-function strict results.
 - Port references: 423 resolve. No new dead references or broken Markdown links.
 - Full queue audit is red: 39 shard-count, 48 line-count, 17 compiler-only, and
   one no-header stale cells. Exact original-input comparison shows no derived
-  row changes from this repair. No daRNk_c/Koopa row exists; HUD remains 19 shards
+  row changes from this repair. No daRNk_c/Koopa row exists; dMeter_c remains 19 shards
   and 1364 lines. No repair-specific TSV edit is proposed.
 
 The licensed four-byte Vector3 weak destructor moves earlier in the object;

@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN10BrickBlock16CleanupResourcesEv
+// @symbol _ZN19daObjBlockItemTag_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BrickBlock.h"
+#include "daObjBlockItemTag_c.h"
 #include "SharedFilePtr.h"
 extern char data_ov002_0210d9d8[];
 extern char data_ov002_0210da30[];
 extern char data_ov002_0210da18[];
 
-int BrickBlock::CleanupResources()
+int daObjBlockItemTag_c::CleanupResources()
 {
   int v = actorID;
   switch(v){

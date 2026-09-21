@@ -1,5 +1,5 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
 extern "C" {
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
@@ -18,7 +18,7 @@ struct SnowmanHeadVec3 {
     s32 z;
 };
 
-int SnowmanHead::State2()
+int daBgSnmHed_c::State2()
 {
     SnowmanHeadVec3 pos;
     switch (mSubstate) {

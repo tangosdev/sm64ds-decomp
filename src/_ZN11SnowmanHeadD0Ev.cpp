@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11SnowmanHeadD0Ev
+// @symbol _ZN12daBgSnmHed_cD0Ev
 /* Real compiler-spelled deleting destructor. dActor_c's inline operator delete
- * supplies the actor-heap release after complete SnowmanHead destruction. */
-#include "SnowmanHead.h"
+ * supplies the actor-heap release after complete daBgSnmHed_c destruction. */
+#include "daBgSnmHed_c.h"
 
-SnowmanHead::~SnowmanHead()
+daBgSnmHed_c::~daBgSnmHed_c()
 {
 }

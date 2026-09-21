@@ -1,9 +1,9 @@
 //cpp
 #include "types.h"
-// @symbol _ZN9Butterfly6State4Ev
+// @symbol _ZN9daBtfly_c6State4Ev
 /* recovered: shared common types */
 #include "common.h"
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 extern "C" {
 extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
 extern unsigned int RandomIntInternal(void* g);
@@ -12,7 +12,7 @@ extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsig
 extern int data_0209e650;
 }
 
-void Butterfly::State4()
+void daBtfly_c::State4()
 {
     struct StateRotation { u16 w[3]; };
     char* sl = (char*)this;

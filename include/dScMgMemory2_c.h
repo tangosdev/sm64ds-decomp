@@ -16,7 +16,7 @@
  * SIZE 0x5410, from dScMgMemory2_c_classInit's own `_ZN7fBase_cnwEj(0x5410)`.
  *
  * The reconstructed scene TU proves twenty 0x18-byte cards, three 0x14-byte
- * player markers, a cursor/HUD object, and the state-machine scalars below.
+ * player markers, a cursor/dMeter_c object, and the state-machine scalars below.
  * Address-only handler spellings are descriptive and disclosed as coined in
  * symbols/actor_renames.tsv.
  *

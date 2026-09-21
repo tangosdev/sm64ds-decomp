@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticle12CheckSnowmanEv
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 
 extern "C" {
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);

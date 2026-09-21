@@ -1,12 +1,12 @@
 //cpp
 struct Vector3;
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 extern "C" {
 int _ZN8dActor_c15IsPlayerInRangeEi(void* c, int n);
 void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 short Vec3_HorzAngle(const void* a, const void* b);
 }
-void Butterfly::State1(){
+void daBtfly_c::State1(){
     char* c = (char*)this;
     if(_ZN8dActor_c15IsPlayerInRangeEi(c, 0x3e8) == 0) return;
     *(int*)(c+0x3e4) = 2;

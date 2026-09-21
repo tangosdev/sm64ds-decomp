@@ -19,7 +19,7 @@ public:
     static void RenderSub(OamAttr *attr, int x, int y, int a, int b);
 };
 
-class HUD {
+class dMeter_c {
 public:
     static void RenderCameraButtons();
 };
@@ -38,7 +38,7 @@ extern Rec18 data_0209f49c[];
 extern u8 data_0209d660;
 }
 
-void HUD::RenderCameraButtons()
+void dMeter_c::RenderCameraButtons()
 {
     int idx = data_020a0e40;
     u8 mode = *(u8 *)&data_0209f4ae[idx];

@@ -1,7 +1,7 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 
-int SnowmanHead::InitState1()
+int daBgSnmHed_c::InitState1()
 {
     mSubstate = 0;
     mStateTimer = 0x96;

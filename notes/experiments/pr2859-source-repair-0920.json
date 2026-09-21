@@ -528,16 +528,16 @@
   ],
   "timer_consumers": [
     {
-      "source": "src/_ZN3HUD15RenderTimeTimerEv.cpp",
-      "symbol": "_ZN3HUD15RenderTimeTimerEv",
+      "source": "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
+      "symbol": "_ZN8dMeter_c15RenderTimeTimerEv",
       "module": "ov002",
       "address": "0x20fb96c",
       "size": 1088,
       "baseline_sha256": "1d4ef5690b6afdface389eb064759b1bcfaac9ccb9990671e3366a12fdcb5fef",
       "candidate_sha256": "34a3bd8c907bc4e07d5ad95dc4d9c180f7d72d05446921890d3ef8de018e35cb",
       "full_object_signature_identical": true,
-      "old_source": "//cpp\n// @symbol _ZN3HUD15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"decl_Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"HUD.h\"\n// _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern int data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid HUD::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = _ZN5Timer7GetTimeEv(&data_0209d4c8) << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n",
-      "new_source": "//cpp\n// @symbol _ZN3HUD15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"HUD.h\"\n// _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern Timer data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid HUD::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = data_0209d4c8.GetTime() << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n"
+      "old_source": "//cpp\n// @symbol _ZN8dMeter_c15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"decl_Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"dMeter_c.h\"\n// _ZN8dMeter_c15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern int data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid dMeter_c::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = _ZN5Timer7GetTimeEv(&data_0209d4c8) << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n",
+      "new_source": "//cpp\n// @symbol _ZN8dMeter_c15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"dMeter_c.h\"\n// _ZN8dMeter_c15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern Timer data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid dMeter_c::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = data_0209d4c8.GetTime() << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n"
     },
     {
       "source": "src/__sinit_02074dc4.c",
@@ -576,7 +576,7 @@
     {
       "id": "RNK-05",
       "disposition": "fixed",
-      "detail": "Real Timer in TU/HUD/initializer, real GetTime and accurate Timer*(Timer*) initializer contract. Both consumer objects are identical."
+      "detail": "Real Timer in TU/dMeter_c/initializer, real GetTime and accurate Timer*(Timer*) initializer contract. Both consumer objects are identical."
     },
     {
       "id": "RNK-06",
@@ -656,7 +656,7 @@
     },
     "formal_acceptance": false,
     "strict_relocations": {
-      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp src/_ZN3HUD15RenderTimeTimerEv.cpp src/__sinit_02074dc4.c --json build/pr2859-final-links.json",
+      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp src/_ZN8dMeter_c15RenderTimeTimerEv.cpp src/__sinit_02074dc4.c --json build/pr2859-final-links.json",
       "exit": 0,
       "result": "20 VERIFIED, zero warnings or blockers; every blind=0 and diffs=[]"
     },
@@ -687,7 +687,7 @@
           "include/daRNk_c.h",
           "notes/agents/handoffs/pr2859-source-repair-0920.md",
           "notes/experiments/pr2859-source-repair-0920.json",
-          "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+          "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
           "src/__sinit_02074dc4.c",
           "src/actors/daRNk_c.cpp"
         ],
@@ -707,7 +707,7 @@
         "koopa_rows": [],
         "hud_row": {
           "stored": {
-            "class_name": "HUD",
+            "class_name": "dMeter_c",
             "shard_count": "19",
             "total_lines": "1364",
             "overlay": "ov002",
@@ -718,7 +718,7 @@
             "promotion_route": "text-only"
           },
           "baseline_derived": {
-            "class_name": "HUD",
+            "class_name": "dMeter_c",
             "shard_count": "19",
             "total_lines": "1364",
             "overlay": "ov002",
@@ -729,7 +729,7 @@
             "promotion_route": "text-only"
           },
           "candidate_derived": {
-            "class_name": "HUD",
+            "class_name": "dMeter_c",
             "shard_count": "19",
             "total_lines": "1364",
             "overlay": "ov002",
@@ -740,7 +740,7 @@
             "promotion_route": "text-only"
           }
         },
-        "proposal": "No queue row value changes between the original PR input and this repair. No daRNk_c or KoopaTheQuick identity exists in this queue; HUD measured values also remain identical. All reported stale cells are present at the input. No repair-specific TSV edit is proposed; rerun the full audit after coordinator current-main composition."
+        "proposal": "No queue row value changes between the original PR input and this repair. No daRNk_c or KoopaTheQuick identity exists in this queue; dMeter_c measured values also remain identical. All reported stale cells are present at the input. No repair-specific TSV edit is proposed; rerun the full audit after coordinator current-main composition."
       }
     }
   },
@@ -946,8 +946,8 @@
       "section_bytes_sha256": "1bbdf15e90a6b2c7347da25c62fca20232dcd761de42f0ec04c1336972dc8acc"
     },
     {
-      "file": "src/_ZN3HUD15RenderTimeTimerEv.cpp",
-      "name": "_ZN3HUD15RenderTimeTimerEv",
+      "file": "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
+      "name": "_ZN8dMeter_c15RenderTimeTimerEv",
       "module": "ov002",
       "addr": "0x20fb96c",
       "verdict": "VERIFIED",

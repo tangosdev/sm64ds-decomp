@@ -298,7 +298,7 @@ s32 dScMgBSC_c::Render()
    neither; the reconciliation pass wrongly claimed it was, citing the same
    oracle that disproves the claim, and the goal-side review pass caught it.
    Body: a mode-dispatched event handler -- when the mode argument is 3 it
-   reads the HUD score into mHudScore (func_ov004_020ad878) and forwards it
+   reads the dMeter_c score into mHudScore (func_ov004_020ad878) and forwards it
    (func_ov004_020adb1c); unconditionally it calls func_ov004_020b66d4, sets
    data_ov004_020bc7d4, and zeroes mState, restarting the state machine. The
    legacy recovered name for this slot, OnYoshiTryEat, stands uncontradicted.
@@ -341,7 +341,7 @@ void dScMgBSC_c::OnYoshiTryEat(int mode)
    running, mode 4 jumps the state machine to state 9 and mode 5 to state
    10 -- both end-of-round waits -- and once the state has reached the end
    run (0xc, gated by data_ov004_020bf9e4) the unk_0a8 / mHudScore pair is
-   pushed to the HUD (func_ov004_020ad79c). What modes 4 and 5 are is the
+   pushed to the dMeter_c (func_ov004_020ad79c). What modes 4 and 5 are is the
    caller's side of the vtable; only this slot's dispatch on them is
    evidenced here. */
 s32 dScMgBSC_c::OnTurnIntoEgg(int mode)
@@ -734,7 +734,7 @@ void dScMgBSC_c::StateWaitTable()
  * -0x40000 through Math_Function_0203b14c -- the same approach helper
  * StateWaitDeal used to deal them out -- counting each card once its
  * ride home finishes (the helper returns 0 on arrival). Only when both
- * have made it does the round fully close: the HUD is refreshed
+ * have made it does the round fully close: the dMeter_c is refreshed
  * (func_ov004_020b0a38) and the machine settles into 0xc (StateDone).
  * The card walk is a pointer step (pos++), and the lane count is read
  * straight from mDealCount every iteration -- the helper owns that

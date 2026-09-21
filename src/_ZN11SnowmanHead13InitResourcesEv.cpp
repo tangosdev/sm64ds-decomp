@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN11SnowmanHead13InitResourcesEv
+// @symbol _ZN12daBgSnmHed_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 #include "TextureSequence.h"
 /* recovered: named members + shared header, real C++ method */
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 #include "dBgCh_Gnd.h"
 
 struct BMD_File;
@@ -19,7 +19,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t,
 
 }
 
-int SnowmanHead::InitResources()
+int daBgSnmHed_c::InitResources()
 {
     struct Vector3 pos;
     int i;

@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN7Minimap13InitResourcesEv
+// @symbol _ZN6dMap_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Minimap.h"
+#include "dMap_c.h"
 #pragma opt_strength_reduction off
 extern "C" {
     int func_0202a980(void);
@@ -16,7 +16,7 @@ extern "C" {
     void _ZN3GXS16EndLoadBGExtPlttEv(void);
     void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
     void* _ZN3G2S12GetBG3ScrPtrEv(void);
-    void _ZN7Minimap19UpdateLevelSpecificEv(void);
+    void _ZN6dMap_c19UpdateLevelSpecificEv(void);
     int GetMinimapID(void* obj, int arg);
     int SublevelToLevel(int i);
     int GetMinimapScale(int idx);
@@ -35,7 +35,7 @@ extern s32 data_0209caa0[];
 extern s32 data_0209fc48;
 extern u8 data_ov002_02111150;
 
-int Minimap::InitResources()
+int dMap_c::InitResources()
 {
     u16 *p;
     s32 i;
@@ -78,7 +78,7 @@ int Minimap::InitResources()
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            _ZN7Minimap19UpdateLevelSpecificEv();
+            _ZN6dMap_c19UpdateLevelSpecificEv();
         }
     }
 

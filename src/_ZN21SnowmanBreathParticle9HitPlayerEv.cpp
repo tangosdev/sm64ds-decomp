@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN21SnowmanBreathParticle9HitPlayerEv
-#include "SnowmanBreath.h"
+#include "daSnmBth_c.h"
 #include "decl_Player.h"
 
 extern "C" {

@@ -1,5 +1,5 @@
-#ifndef MINIMAP_H
-#define MINIMAP_H
+#ifndef DMAP_C_H
+#define DMAP_C_H
 
 #include "types.h"
 #include "dBase_c.h"
@@ -15,7 +15,7 @@
 
 #ifdef __cplusplus
 
-struct Minimap : dBase_c {
+struct dMap_c : dBase_c {
     /* The BG's 2x2 affine matrix, in the order the hardware wants it:
        Behavior fills A and B from the sin/cos table data_02082214 scaled by
        mInvScale, then sets C = -B and D = A -- a rotate-and-scale -- and hands
@@ -59,8 +59,8 @@ struct Minimap : dBase_c {
     s32 mCurrentScale;                      /* 0x1f0 */
     /* The map centre actually used this frame, in world coordinates. Behavior
        seeds it from mMapOrigin*, converts the player's position through
-       Minimap::GetPosOnMinimap, clamps the icon inside the visible window,
-       converts back with Minimap::GetPosFromMinimapPos and adds the difference
+       dMap_c::GetPosOnMinimap, clamps the icon inside the visible window,
+       converts back with dMap_c::GetPosFromMinimapPos and adds the difference
        here -- so the map scrolls only as far as it must to keep the player on
        screen. Every icon on the map is projected relative to it. */
     s32 mMapCenterWorldX;                      /* 0x1f4 */
@@ -99,7 +99,7 @@ struct Minimap : dBase_c {
     u8 mStarKeyBlinkTimer;                     /* 0x256 */
 
     /* --- vtable --- */
-    virtual ~Minimap();
+    virtual ~dMap_c();
 
     int Behavior();
     static void FixTHIPaintingRoomPos(Vector3 & v_);
@@ -112,7 +112,7 @@ struct Minimap : dBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Minimap_size_must_be_0x258[sizeof(Minimap) == 0x258 ? 1 : -1];
+typedef char Minimap_size_must_be_0x258[sizeof(dMap_c) == 0x258 ? 1 : -1];
 #endif
 
 #else
@@ -120,7 +120,7 @@ typedef char Minimap_size_must_be_0x258[sizeof(Minimap) == 0x258 ? 1 : -1];
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct Minimap {
+struct dMap_c {
     u8  pad_000[0x50];
     /* Rotate-and-scale 2x2 for the minimap BG; see the C++ spelling above. */
     s32 mBgMatrixA;            /* 0x050 */
@@ -130,7 +130,7 @@ struct Minimap {
     s32 mMapCenterX;            /* 0x060 */
     s32 mMapCenterY;            /* 0x064 */
     u8  pad_068[0x8];
-    /* Minimap::Behavior carries a shadow struct that declares these ranges as
+    /* dMap_c::Behavior carries a shadow struct that declares these ranges as
        ARRAYS and indexes them; the header had them as flat padding, which is
        why the shadow existed at all. Sizes are the shadow's own, and the
        reconstruction is offset-neutral -- the struct still spans 0x256. */
@@ -196,4 +196,4 @@ struct Minimap {
 
 #endif /* __cplusplus */
 
-#endif /* MINIMAP_H */
+#endif /* DMAP_C_H */

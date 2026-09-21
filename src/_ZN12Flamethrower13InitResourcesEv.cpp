@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN12Flamethrower13InitResourcesEv
+// @symbol _ZN19daObjFlamethrower_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Flamethrower.h"
+#include "daObjFlamethrower_c.h"
 #pragma opt_strength_reduction off
 struct Vec3 { int x, y, z; };
 extern "C" void MulVec3Mat4x3(struct Vec3 *v, void *m, struct Vec3 *dst);
@@ -12,7 +12,7 @@ extern "C" void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void *self, struct Ve
 
 extern signed char data_0209f2f8;
 
-int Flamethrower::InitResources()
+int daObjFlamethrower_c::InitResources()
 {
     int count;
     int i;

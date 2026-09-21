@@ -10,7 +10,7 @@
  * comment agreed, and here it is right.
  *
  * Draws the three reels -- the win-line pass at state 6 and the scrolling pass
- * otherwise -- then the payout markers, the HUD, and the two swinging lamps whose
+ * otherwise -- then the payout markers, the dMeter_c, and the two swinging lamps whose
  * angles are mLamp1Angle/mLamp2Angle.
  *
  * The pragma is load-bearing, not tidying; the `(int)` launder on the two indexed

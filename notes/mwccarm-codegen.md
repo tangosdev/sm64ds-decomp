@@ -933,7 +933,7 @@ byte-exact, 4 verified floor. The crack levers:
   one add, no cmp) makes the const arg emit FIRST (mov before add = ROM order) with
   zero other byte changes (func_ov079_02126a84). Wrap the argument whose setup must
   move LATER; wrapping the other argument is inert. The same identical-arm select on a
-  table pointer flips ldr-over-mov promotion on _ZN3HUD13InitResourcesEv but couples
+  table pointer flips ldr-over-mov promotion on _ZN8dMeter_c13InitResourcesEv but couples
   there (a strh stops sinking) - lever real, that function still open.
 - **Loads-before-stores batching fires only in the ELSE arm.** Inverting a guard so
   the store+call arm becomes else (`==0` -> `!=0`, arms swapped) stopped a pool ldr

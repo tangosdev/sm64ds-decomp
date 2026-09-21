@@ -144,19 +144,19 @@ src/d_a_udlift_udlift_teresa.c:
     complete
     .text start:0x021367fc end:0x0213682c
 
-src/_ZN12FlamethrowerD1Ev.cpp:
+src/_ZN19daObjFlamethrower_cD1Ev.cpp:
     complete
     .text start:0x0213682c end:0x02136884
 
-src/_ZN12FlamethrowerD0Ev.cpp:
+src/_ZN19daObjFlamethrower_cD0Ev.cpp:
     complete
     .text start:0x02136884 end:0x021368f0
 
-src/_ZN12Flamethrower8BehaviorEv.cpp:
+src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp:
     complete
     .text start:0x021368f0 end:0x02136d60
 
-src/_ZN12Flamethrower13InitResourcesEv.cpp:
+src/_ZN19daObjFlamethrower_c13InitResourcesEv.cpp:
     complete
     .text start:0x02136d60 end:0x02136ed4
 

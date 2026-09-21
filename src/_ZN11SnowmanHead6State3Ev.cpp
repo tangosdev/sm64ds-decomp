@@ -1,5 +1,5 @@
 //cpp
-#include "SnowmanHead.h"
+#include "daBgSnmHed_c.h"
 #include "Player.h"
 
 void ApproachLinear(short &value, short target, short step);
@@ -10,7 +10,7 @@ struct SnowmanHeadVec3 {
     s32 z;
 };
 
-int SnowmanHead::State3()
+int daBgSnmHed_c::State3()
 {
     SnowmanHeadVec3 pos;
     pos.x = mPosX;

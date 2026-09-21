@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN3HUD15RenderStarCountEv
+// @symbol _ZN8dMeter_c15RenderStarCountEv
 /* recovered: named members + shared header, real C++ method
  *
  * Draws the star counter: the star icon, an "x", and up to three digits laid
@@ -23,7 +23,7 @@
  * The digit loop runs i = 2 down to 0 -- least significant first -- which is
  * why the cursor moves left.
  */
-#include "HUD.h"
+#include "dMeter_c.h"
 
 struct OamAttr;
 struct Matrix2x2;
@@ -47,7 +47,7 @@ extern unsigned char NumStars(void);
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, struct OamAttr* attr, int x, int y, int a, int c, struct Matrix2x2* m);
 }
 
-void HUD::RenderStarCount()
+void dMeter_c::RenderStarCount()
 {
     int x = mStarCountX;
     int b = (data_0209f2d8 == 1);

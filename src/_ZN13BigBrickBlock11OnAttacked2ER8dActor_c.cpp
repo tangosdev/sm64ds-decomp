@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13BigBrickBlock11OnAttacked2ER8dActor_c
-#include "BigBrickBlock.h"
+// @symbol _ZN13daObjBlockL_c11OnAttacked2ER8dActor_c
+#include "daObjBlockL_c.h"
 #include "dActor_c.h"
 
-/* BigBrickBlock::OnAttacked2 -- vtable slot 23, ov002 0x020b3788.
+/* daObjBlockL_c::OnAttacked2 -- vtable slot 23, ov002 0x020b3788.
  * include/dActor_c.h's own slot 23 supplies the signature, `virtual int
  * OnAttacked2(dActor_c &other)`.
  *
@@ -14,7 +14,7 @@
  *
  * `int b = (actorID == 0x11);` materializes the bool the same way the
  * pre-migration recovery did -- load-bearing (cpp-bool-widening-cast). */
-int BigBrickBlock::OnAttacked2(dActor_c &other)
+int daObjBlockL_c::OnAttacked2(dActor_c &other)
 {
     int b = (actorID == 0x11);
     if (b) {

@@ -15,7 +15,7 @@
    "Virtual50" is a placeholder, not a recovered name; see
    include/dScMgBase_c.h.  Slot 34 IS that multi-argument virtual, and it is
    declared and reconstructed tree-wide now -- `Virtual88(int, int, int, int)`,
-   the family's pixel brush.  The guess recorded here, "draws a HUD
+   the family's pixel brush.  The guess recorded here, "draws a dMeter_c
    digit/glyph", was right: this class's override stamps a shape by testing
    data_ov006_0213f9e4[row] one bit per column, so it paints a stipple pattern
    rather than a solid square, and it really does barely touch `this` -- the

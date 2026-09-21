@@ -98,7 +98,7 @@
  * destructor pair (slots 16/17), 67 OnYoshiTryEat (slot 18), 68 Render
  * (slot 9), 69 Behavior (slot 6) and 70 InitResources (slot 0).  The other 65
  * are the file-local helpers that shared the translation unit with them: the
- * board setup and pick loops, the cursor, the HUD strip, the two background
+ * board setup and pick loops, the cursor, the dMeter_c strip, the two background
  * scrollers and the particle layer.  The ROM gives none of the 65 a mangled
  * name, so none had external linkage; each keeps its address-derived spelling
  * until something better than a guess is available.  Every member's ROM

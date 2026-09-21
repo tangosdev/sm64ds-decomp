@@ -1,5 +1,5 @@
 //cpp
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 extern "C" {
 extern short data_02082214[];
 extern short Vec3_HorzAngle(const void *a, const void *b);
@@ -9,7 +9,7 @@ extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cyl);
 extern int _ZN8dActor_c15IsPlayerInRangeEi(void *self, int range);
 }
 
-void Butterfly::State3()
+void daBtfly_c::State3()
 {
     char *c = (char*)this;
     int *p;

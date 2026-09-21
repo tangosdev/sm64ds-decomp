@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN3HUD15CalculateDigitsEt
+// @symbol _ZN8dMeter_c15CalculateDigitsEt
 /* recovered: named members + shared header, real C++ method
  *
- * Splits a count into the three decimal digits the HUD draws, most significant
+ * Splits a count into the three decimal digits the dMeter_c draws, most significant
  * first, and blanks leading zeros by writing -1 rather than a digit.
  *
  * The suppression stops at i != 2, so the units digit is always drawn: a value
@@ -13,13 +13,13 @@
  * it forces the 100/10/1 loads to be re-read per iteration instead of folded
  * into immediates, which is what makes this a loop at all.
  */
-#include "HUD.h"
+#include "dMeter_c.h"
 
 extern "C" {
 extern volatile unsigned short data_ov002_0210c208[];
 }
 
-void HUD::CalculateDigits(unsigned short value)
+void dMeter_c::CalculateDigits(unsigned short value)
 {
     int flag = 0;
     int i;

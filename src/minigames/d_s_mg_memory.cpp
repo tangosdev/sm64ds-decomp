@@ -482,7 +482,7 @@ void dScMgMemory_c::DrawCards()
     int k, flag;
     char *p;
 
-    /* p walks 12 HUD-sprite records at a0+0x51a8, stride 0x18.
+    /* p walks 12 dMeter_c-sprite records at a0+0x51a8, stride 0x18.
        data_ov006_0213d168 is indexed as [id][5]. */
     p = a0;
     i = 0;

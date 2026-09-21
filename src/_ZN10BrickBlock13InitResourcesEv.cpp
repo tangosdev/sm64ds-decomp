@@ -1,7 +1,7 @@
 //cpp
 #include "Model.h"
-// @symbol _ZN10BrickBlock13InitResourcesEv
-#include "BrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c13InitResourcesEv
+#include "daObjBlockItemTag_c.h"
 
 extern "C" {
 extern void LoadSilverStarAndNumber();
@@ -10,7 +10,7 @@ extern int data_ov002_0210da30;
 extern int data_ov002_0210da18;
 }
 
-int BrickBlock::InitResources()
+int daObjBlockItemTag_c::InitResources()
 {
     mStarID = param1 & 0x7f;
     if (mStarID == 0x7f)

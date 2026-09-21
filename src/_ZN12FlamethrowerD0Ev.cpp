@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12FlamethrowerD0Ev
-#include "Flamethrower.h"
+// @symbol _ZN19daObjFlamethrower_cD0Ev
+#include "daObjFlamethrower_c.h"
 
-Flamethrower::~Flamethrower()
+daObjFlamethrower_c::~daObjFlamethrower_c()
 {
 }

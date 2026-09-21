@@ -1,4 +1,4 @@
-# Butterfly, Tornado, StarMarker, ToxBox -- field-name provenance
+# daBtfly_c, Tornado, StarMarker, ToxBox -- field-name provenance
 
 Four standalone actors whose headers came out of `tools/gen_header.py` with
 observed offsets and placeholder names. The offsets and widths were already
@@ -13,11 +13,11 @@ cartridge under 2004/b56, checked per function with `build_pin`'s `verify`
 ## A rule these four share
 
 Tornado and StarMarker remain flat shadow structs that restate `dActor_c`'s
-bytes. Butterfly has since been promoted to genuine `Butterfly : dActor_c`
+bytes. daBtfly_c has since been promoted to genuine `daBtfly_c : dActor_c`
 class form; its inherited fields therefore come directly from
 `include/dActor_c.h` rather than being repeated locally.
 
-Where `dActor_c` itself still says `unk_`, so does the shadow: `Butterfly`
+Where `dActor_c` itself still says `unk_`, so does the shadow: `daBtfly_c`
 writes 0x0a4/0x0a8/0x0ac together as an (x, vertical, z) velocity triple,
 which is a good lead that `dActor_c::unk_0a4` and `unk_0ac` are the horizontal
 halves of a velocity -- but naming them in a derived shadow while the base
@@ -25,31 +25,31 @@ they mirror contradicts it would be worse than leaving them alone. That one is
 banked for a pass that owns `include/dActor_c.h`.
 
 
-## Butterfly (`include/Butterfly.h`)
+## daBtfly_c (`include/daBtfly_c.h`)
 
 Actor 0x150. The puzzle where three butterflies flutter around and one of them
 turns into a 1-Up.
 
 `mState` is a DISPATCH INDEX, and that is the key that opened the rest of the
-class. `Butterfly::Behavior` reads it, looks
+class. `daBtfly_c::Behavior` reads it, looks
 `data_ov100_02148628[mState]` up as a pointer-to-member-function and calls it.
-Every one of the eight state methods between `_ZN9ButterflyD0Ev`
-(0x02140dd8) and `_ZN9Butterfly16CleanupResourcesEv` (0x02141988) in
+Every one of the eight state methods between `_ZN9daBtfly_cD0Ev`
+(0x02140dd8) and `_ZN9daBtfly_c16CleanupResourcesEv` (0x02141988) in
 [ov100](../config/arm9/overlays/ov100/symbols.txt) is therefore one of this class's own
 states. The ROM does not retain their descriptive source names, so they are
-named `Butterfly::State0` through `State7` from their exact PMF-table indices.
+named `daBtfly_c::State0` through `State7` from their exact PMF-table indices.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x080/0x084/0x088 | `mScaleX/Y/Z` | `dActor_c`'s own offsets. `src/_ZN9Butterfly8BehaviorEv.cpp` writes all three from `mScale` every frame. |
+| 0x080/0x084/0x088 | `mScaleX/Y/Z` | `dActor_c`'s own offsets. `src/_ZN9daBtfly_c8BehaviorEv.cpp` writes all three from `mScale` every frame. |
 | 0x08e | `mAngleY` | `dActor_c`'s offset. Behavior copies `mPrevAngleY` here and builds the render matrix from it. |
-| 0x092 | `mPrevAngleX` | `dActor_c`'s offset. `Butterfly::State5` eases it toward -0x2000 or 0x2000 to make the butterfly climb or dive. Its sine-table users deliberately load through `u16 *`. |
+| 0x092 | `mPrevAngleX` | `dActor_c`'s offset. `daBtfly_c::State5` eases it toward -0x2000 or 0x2000 to make the butterfly climb or dive. Its sine-table users deliberately load through `u16 *`. |
 | 0x094 | `mPrevAngleY` | `dActor_c`'s offset; the heading, eased toward `mWanderAngle`, toward home, or toward the player depending on state. |
 | 0x098 | `mHorzSpeed` | `dActor_c`'s offset. |
 | 0x0a8 | `mVertSpeed` | `dActor_c`'s offset. |
-| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `src/_ZN9Butterfly13InitResourcesEv.cpp` copies `mPos` here before anything moves. `State3` and `State2` snap `mPos` back to it; `State5` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
+| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `src/_ZN9daBtfly_c13InitResourcesEv.cpp` copies `mPos` here before anything moves. `State3` and `State2` snap `mPos` back to it; `State5` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
 | 0x3e0 | `mScale` | InitResources sets 0x1000 and Behavior copies it into all three scale words. `State6` winds it from 0 up to 0x800 in 0x40 steps, or drops it to 0 for a butterfly that is not kind 1; `State7` adds a sine-table wobble driven by `mFlutterPhase`. |
-| 0x3e4 | `mState` | The dispatch index above. InitResources sets 0, 1 or 4; 4 is inert (Behavior skips the matrix work and `src/_ZN9Butterfly6RenderEv.cpp` draws nothing). |
+| 0x3e4 | `mState` | The dispatch index above. InitResources sets 0, 1 or 4; 4 is inert (Behavior skips the matrix work and `src/_ZN9daBtfly_c6RenderEv.cpp` draws nothing). |
 | 0x3e8 | `mStateTimer` | Seeded to a random 0..99 by InitResources, then zeroed by every state that hands over. States compare it against 0x14, 0x3c, 0x6e, 0x78, 0x9d and 100. |
 | 0x3ec | `mWanderAngle` | `State4` rolls a random angle into it at spawn and seeds `mPrevAngleY` from it; after 0x3c frames `State5` steers toward it instead of toward home. |
 | 0x3ee | `mFlutterPhase` | `State7` advances it by 0x2710 or 0xfa0 a frame and feeds it to the sine table to pump `mScale`. Zeroed by `State6`. |

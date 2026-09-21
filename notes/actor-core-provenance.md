@@ -132,7 +132,7 @@ wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH.
 Why it is declared on `dActor_c` as well as on `fBase_c`: mwcc inlines
 `operator delete` only when it is found in the class itself or its IMMEDIATE
 base. A declaration on `fBase_c` does NOT reach `dActor_c` (two levels down), nor
-`HUD`, `Minimap` or `dScene_c`, whose immediate base is `dBase_c`. The only
+`dMeter_c`, `dMap_c` or `dScene_c`, whose immediate base is `dBase_c`. The only
 classes `fBase_c`'s copy changes are `fBase_c` itself and `dBase_c` -- the two
 whose D0 the ROM shows inlining it. `dEnemyBase_c` carries its own copy for the
 same reason: it is a flattened struct that does not derive from `dActor_c` in
@@ -224,11 +224,11 @@ read nor set -- measured by building both, not assumed.
 * slot 20 `Virtual50` -- still `int`; untested.
 * slot 21 `OnGroundPounded` -- `Stump::OnGroundPounded` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x02133648`)
   compares two class fields and returns early on either. See `include/Stump.h`.
-  `BigBrickBlock`'s and `daObjHatenaBlock_c`'s overrides happened not to trigger the
+  `daObjBlockL_c`'s and `daObjHatenaBlock_c`'s overrides happened not to trigger the
   difference under `int` and were re-verified under `void`, so the correction is
   free there.
-* slot 24 `OnKicked` -- `BigBrickBlock::OnKicked` ([ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020b36dc`) has two
-  locals and two early returns. See `include/BigBrickBlock.h`.
+* slot 24 `OnKicked` -- `daObjBlockL_c::OnKicked` ([ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020b36dc`) has two
+  locals and two early returns. See `include/daObjBlockL_c.h`.
 * slot 27 `OnHitByMegaChar` -- `Stump::OnHitByMegaChar` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x021335d4`):
   four early-return field checks, 6-word register mismatch under `int`, exact
   match under `void`. See `include/Stump.h`. The two already-landed overrides,

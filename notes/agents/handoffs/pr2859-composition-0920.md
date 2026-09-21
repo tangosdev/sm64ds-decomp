@@ -7,7 +7,7 @@ This composition preserves producer repair
 `ee2c88531810a144e3e7af72d1ad508e2b9f269c`, and current main
 `9022c77b3834c5ee77c31b4fb4af587418137d6c` as ancestors.
 The author's removal of the lineage list and six symbol markers are already in
-the repaired TU. Its source, header, manifest, HUD consumer and Timer initializer
+the repaired TU. Its source, header, manifest, dMeter_c consumer and Timer initializer
 remain equal to the reviewed repair apart from whitespace on one blank TU line.
 The producer explicitly acknowledged that narrow cleanup; source tokens are unchanged. Enrollment, symbol names and
 the inherited shared declaration-header rename remain equal to the author branch.
@@ -30,7 +30,7 @@ ledger edits. Existing owners keep their reservations; no lease was reclaimed.
 
 The producer's narrow final vector repair preserves the complete object signature
 and passes all 18 strict TU function checks. Earlier independent local checks
-covered those functions plus HUD and the Timer initializer, and reproduced all
+covered those functions plus dMeter_c and the Timer initializer, and reproduced all
 106 ROM modules. Those earlier checks used the old source base and are not a
 current-main acceptance claim. The integrator and independent verifier must run
 the committed candidate's current-base gates, including the complete shared-header

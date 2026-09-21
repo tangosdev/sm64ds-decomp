@@ -17,7 +17,7 @@
  * (0x021250e4), StateMoveCards approaches x toward 0x90000 and y toward
  * 0x30000 (0x02124e1c), StateWaitDeal runs both halves through
  * Math_Function_0203b14c as coordinates (0x02124fd8), and Render reads
- * them back with `>> 12` for the HUD -- 1:4096 fixed-point screen
+ * them back with `>> 12` for the dMeter_c -- 1:4096 fixed-point screen
  * positions, spelled s32 like the camera fields in
  * dScMgSingle3DBase_c.h. The factory still constructs it as raw bytes
  * (`__cxa_vec_ctor(p+0x51a8, 2, 8, func_0203d738,

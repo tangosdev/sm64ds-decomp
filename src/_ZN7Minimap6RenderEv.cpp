@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "Minimap.h"
+#include "dMap_c.h"
 #pragma opt_strength_reduction off
 struct Player {
     int unk0, unk4;
@@ -47,7 +47,7 @@ extern "C" u32 data_020a0db0;
 extern "C" void *_ZN3OAM12MM_STAR_KEYSE[];
 extern "C" char _ZN3OAM13MM_SPIKE_BOMBE[];
 
-int Minimap::Render()
+int dMap_c::Render()
 {
     u8 a = data_0209f20c;
     u8 b = data_0209f2c4;

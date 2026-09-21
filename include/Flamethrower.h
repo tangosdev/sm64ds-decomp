@@ -1,5 +1,5 @@
-#ifndef FLAMETHROWER_H
-#define FLAMETHROWER_H
+#ifndef DAOBJFLAMETHROWER_C_H
+#define DAOBJFLAMETHROWER_C_H
 #include "types.h"
 
 #ifdef __cplusplus
@@ -22,7 +22,7 @@
  * OBJ_FLAMETHROWER registry profile, whose descriptor at 0x021376cc is
  * reconstructed as g_profile_OBJ_FLAMETHROWER.
  * literal closes the object after the state fields below. */
-struct Flamethrower : dActor_c {
+struct daObjFlamethrower_c : dActor_c {
     u8 pad_0d0[0x4];
     dCcPos_c mColliders[12];       /* 0x0d4 */
     Vector3 mFlamePositions[12];   /* 0x3a4 */
@@ -32,14 +32,14 @@ struct Flamethrower : dActor_c {
     u16 mTimer;                    /* 0x466 */
     u32 mSoundHandle;              /* 0x468 */
 
-    virtual ~Flamethrower();
+    virtual ~daObjFlamethrower_c();
     virtual int InitResources();
     virtual int Behavior();
 };
 
 #else
 
-struct Flamethrower {
+struct daObjFlamethrower_c {
     u8  pad_000[0x5c];
     /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -63,7 +63,7 @@ struct Flamethrower {
        Vector3 mPartPos[12] at 0x3a4 (stride 0xc),
        Matrix4x3 at 0x434, then u8 state 0x464 / u8 active 0x465 /
        u16 timer 0x466 / u32 sound handle 0x468. */
-    /* trailing extent the ROM's `new Flamethrower` literal proves; see tools/opnew_sizes.py */
+    /* trailing extent the ROM's `new daObjFlamethrower_c` literal proves; see tools/opnew_sizes.py */
     u8 pad_094[0x3d8];
 };
 
@@ -71,7 +71,7 @@ struct Flamethrower {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Flamethrower_size_must_be_0x46c[sizeof(struct Flamethrower) == 0x46c ? 1 : -1];
+typedef char Flamethrower_size_must_be_0x46c[sizeof(struct daObjFlamethrower_c) == 0x46c ? 1 : -1];
 #endif
 
 #endif

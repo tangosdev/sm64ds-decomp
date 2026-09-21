@@ -887,7 +887,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x4];
     s32 mHudScore;          /* 0x0b4 -- zeroed by BeforeInitResources; the
-                                value func_ov004_020adb1c writes into the HUD
+                                value func_ov004_020adb1c writes into the dMeter_c
                                 counter word. Leaves keep their own tallies and
                                 copy the result here */
     s32 unk_0b8;            /* 0x0b8 */

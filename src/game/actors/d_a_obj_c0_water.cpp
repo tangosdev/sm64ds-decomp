@@ -35,7 +35,7 @@
    common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
 #include "daObjC0Water_c.h"
 #include "SharedFilePtr.h"
-#include "Minimap.h"
+#include "dMap_c.h"
 #include "Sound.h"
 
 struct BMD_File;
@@ -114,7 +114,7 @@ int daObjC0Water_c::Behavior()
         mWasJustDrained = 1;
         if (mPosY <= mLoweredY) {
             mPosY = mLoweredY;
-            Minimap::UpdateLevelSpecific();
+            dMap_c::UpdateLevelSpecific();
         }
     }
     data_0209f32c = mPosY;

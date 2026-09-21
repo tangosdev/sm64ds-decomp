@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN3HUD15RenderTimeTimerEv
+// @symbol _ZN8dMeter_c15RenderTimeTimerEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "Timer.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "HUD.h"
-// _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)
+#include "dMeter_c.h"
+// _ZN8dMeter_c15RenderTimeTimerEv at 0x020fb96c (ov002)
 struct OamAttr;
 
 extern "C" {
@@ -25,7 +25,7 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr*
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);
 }
 
-void HUD::RenderTimeTimer()
+void dMeter_c::RenderTimeTimer()
 {
     unsigned long long t;
     unsigned long long min;

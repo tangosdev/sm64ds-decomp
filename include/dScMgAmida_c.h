@@ -175,7 +175,7 @@ struct dScMgAmida_c : dScMgBase_c {
                                  round and picks replay or finish */
     s32 unk_53e4;                /* 0x53e4 */
     s32 mScore;                  /* 0x53e8 -- mLevel * 5, clamped to 9999;
-                                 pushed to the HUD every Behavior tick */
+                                 pushed to the dMeter_c every Behavior tick */
     u8  pad_53ec[0x10];          /* tail padding to the 0x53fc allocation */
 };
 

@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN7Minimap8BehaviorEv
+// @symbol _ZN6dMap_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, shadow struct removed
  *
  * One frame of the minimap. This file's whole point is that it no longer
- * carries its own idea of what a Minimap is: the pre-image declared a private
- * `struct Minimap` describing the object in full, and every field access went
+ * carries its own idea of what a dMap_c is: the pre-image declared a private
+ * `struct dMap_c` describing the object in full, and every field access went
  * through it. That shadow is gone and the shared header serves instead.
  *
- * The shadow was RICHER than Minimap.h, which is why it existed. It declared
+ * The shadow was RICHER than dMap_c.h, which is why it existed. It declared
  * twelve ranges as ARRAYS and indexed them -- 0x070, 0x080, 0x0a0, 0x0d0,
  * 0x100, 0x124, 0x180, 0x1a0, 0x21e, 0x222, 0x23a, 0x249 -- where the header
  * had flat padding, so the header simply could not express what this function
@@ -22,7 +22,7 @@
  *   0x21c            the shadow said s16 and then cast EVERY read to (u16).
  *                    The header's u16 says the same thing without the casts.
  */
-#include "Minimap.h"
+#include "dMap_c.h"
 
 struct Obj {
     char pad0[0x5c];
@@ -82,9 +82,9 @@ extern void SetSubBg2Offset(s32 a, s32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern s32  SublevelToLevel(s32 i);
 extern int _ZN4cstd4fdivEii(s32 a, s32 b);
-extern void _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(Vector3 *v);
-extern void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
-extern void _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
+extern void _ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3(Vector3 *v);
+extern void _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
+extern void _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(Obj *obj, s32 arg);
@@ -98,9 +98,9 @@ extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
 #define FMUL(a, b) ((s32)((((long long)(a) * (b)) + 0x800) >> 12))
 
 
-s32 Minimap::Behavior()
+s32 dMap_c::Behavior()
 {
-    Minimap *self = this;
+    dMap_c *self = this;
     Obj *obj;
     Vector3 v8, v14, v20, v2c, v38;
     Vector3 *op;
@@ -255,8 +255,8 @@ L4d8:
 
     op = (Vector3 *)(((int)obj + 0x5c));
     v14 = *op;
-    _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v14);
-    _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v14, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+    _ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3(&v14);
+    _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v14, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
     {
         s32 p = data_0209f250;
         self->mPlayerIconX[p] = (v8.x + 0x800) >> 12;
@@ -282,7 +282,7 @@ L6f0:
         else if (self->mPlayerIconY[p] > 0x9c) { v8.z = 0x9c000; }
     }
 L738:
-    _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(&v8, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v20);
+    _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(&v8, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v20);
     Vec3_Sub(&v38, &v14, &v20);
     AddVec3((Vector3*)&self->mMapCenterWorldX, &v38, (Vector3*)&self->mMapCenterWorldX);
     self->mMapCenterX = self->mMapCenterOffset + ((FMUL(((Vector3*)&self->mMapCenterWorldX)->x, self->mScale) + 0x800) >> 12);
@@ -292,8 +292,8 @@ L738:
         Obj *o = data_0209f394[i];
         if (o != 0) {
         v2c = *(Vector3 *)(((int)o + 0x5c));
-        _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v2c);
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        _ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3(&v2c);
+        _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
         self->mPlayerIconX[i] = (v8.x + 0x800) >> 12;
         self->mPlayerIconY[i] = (v8.z + 0x800) >> 12;
         if (i != data_0209f250)
@@ -308,7 +308,7 @@ L738:
     for (i = 0; i < 0xc; i++) {
         Obj *o = data_0209f40c[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
         self->mStarIconX[i] = (v8.x + 0x800) >> 12;
         self->mStarIconY[i] = (v8.z + 0x800) >> 12;
         if (data_0209f37c[i] != 4)
@@ -323,7 +323,7 @@ L738:
     for (i = 0; i < 9; i++) {
         Obj *o = data_0209f3e8[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
         self->mCapIconX[i] = (v8.x + 0x800) >> 12;
         self->mCapIconY[i] = (v8.z + 0x800) >> 12;
         self->mCapMapIDs[i] = (s8)GetMinimapID(o, -1);
@@ -335,7 +335,7 @@ L738:
     {
         Obj *o = data_0209f33c;
         if (o == 0) { self->mStarKeyMapID = -1; goto La64; }
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
         self->mStarKeyIconX = (v8.x + 0x800) >> 12;
         self->mStarKeyIconY = (v8.z + 0x800) >> 12;
         self->mStarKeyMapID = 1;
@@ -345,7 +345,7 @@ La64:
     for (i = 0; i < 8; i++) {
         Obj *o = data_0209f3a4[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
         self->mSpikeBombIconX[i] = (v8.x + 0x800) >> 12;
         self->mSpikeBombIconY[i] = (v8.z + 0x800) >> 12;
         self->mSpikeBombMapIDs[i] = o->f0cc;

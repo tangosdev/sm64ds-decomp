@@ -96,7 +96,7 @@ typedef char Crate_size_must_be_0x608[sizeof(Crate) == 0x608 ? 1 : -1];
 #else
 
 /* The same object for a C translation unit, flat. Kept for parity with the
- * rest of the family (include/BigBrickBlock.h, include/daObjFallBlock_c.h)
+ * rest of the family (include/daObjBlockL_c.h, include/daObjFallBlock_c.h)
  * even though no remaining C translation unit needs it. */
 struct Crate {
     u8  pad_000[0xc];

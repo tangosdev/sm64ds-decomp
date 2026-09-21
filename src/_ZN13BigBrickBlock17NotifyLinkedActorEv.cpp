@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN13BigBrickBlock17NotifyLinkedActorEv
-#include "BigBrickBlock.h"
+// @symbol _ZN13daObjBlockL_c17NotifyLinkedActorEv
+#include "daObjBlockL_c.h"
 
-/* The helper belongs to BigBrickBlock's recovered TU and has one caller:
-   BigBrickBlock::Kill. It follows mLinkedActor and clears the per-actor state
+/* The helper belongs to daObjBlockL_c's recovered TU and has one caller:
+   daObjBlockL_c::Kill. It follows mLinkedActor and clears the per-actor state
    used by actor 0x121 or sets the equivalent state on actors 0x141..0x144. */
-void BigBrickBlock::NotifyLinkedActor()
+void daObjBlockL_c::NotifyLinkedActor()
 {
     dActor_c* linkedActor = mLinkedActor;
     int actorID;

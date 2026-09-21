@@ -1,12 +1,12 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef DMETER_C_H
+#define DMETER_C_H
 
 /* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
  * implementation(s) below; the registry profile object and the factory
  * spelling are Tier B reconstructions -- evidence-bounded proposals, not
  * recovered SM64DS symbols. Exact original spellings are not preserved.
  *
- *   dMeter_c -- dMeter_c_classInit (was HUD_Spawn), g_profile_METER (was _ZN3HUD9spawnDataE)
+ *   dMeter_c -- dMeter_c_classInit (was HUD_Spawn), g_profile_METER (was _ZN8dMeter_c9spawnDataE)
  */
 
 #include "types.h"
@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 
-struct HUD : dBase_c {
+struct dMeter_c : dBase_c {
     u8  pad_050[0x10];
     u16 mVsTimer;                     /* 0x060 */
     u8  pad_062[0x4];
@@ -38,14 +38,14 @@ struct HUD : dBase_c {
     s8 mDigits[3];                    /* 0x074 */
 
     /* --- vtable --- */
-    virtual ~HUD();
+    virtual ~dMeter_c();
 
     /* Two overrides the cartridge proves and this header never declared -- and both
        are already decompiled and byte-matching in this tree, which is what makes
-       them worth reading twice. _ZTV3HUD slot 0 pointed at fBase_c::InitResources
+       them worth reading twice. _ZTV8dMeter_c slot 0 pointed at fBase_c::InitResources
        and slot 6 at fBase_c::Behavior, while the ROM has
-       ov002:_ZN3HUD13InitResourcesEv (0x020fda04) and ov002:_ZN3HUD8BehaviorEv
-       (0x020fd7a4) -- src/_ZN3HUD13InitResourcesEv.cpp and src/_ZN3HUD8BehaviorEv.cpp
+       ov002:_ZN8dMeter_c13InitResourcesEv (0x020fda04) and ov002:_ZN8dMeter_c8BehaviorEv
+       (0x020fd7a4) -- src/_ZN8dMeter_c13InitResourcesEv.cpp and src/_ZN8dMeter_c8BehaviorEv.cpp
        compiled and matched all along; nothing pointed the vtable at them.
        No `virtual` keyword, matching the overrides beside it: a derived declaration
        of a base virtual overrides whether or not it repeats the word.
@@ -73,7 +73,7 @@ struct HUD : dBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char HUD_size_must_be_0x7c[sizeof(HUD) == 0x7c ? 1 : -1];
+typedef char HUD_size_must_be_0x7c[sizeof(dMeter_c) == 0x7c ? 1 : -1];
 #endif
 
 #else
@@ -81,7 +81,7 @@ typedef char HUD_size_must_be_0x7c[sizeof(HUD) == 0x7c ? 1 : -1];
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct HUD {
+struct dMeter_c {
     u8  pad_000[0x60];
     /* Seconds left on the VS-mode clock. RenderVsTimer splits it /10 and %10
        into two glyphs, and recolours to palette 0xb at <= 5 -- so the field is
@@ -115,4 +115,4 @@ struct HUD {
 
 #endif /* __cplusplus */
 
-#endif /* HUD_H */
+#endif /* DMETER_C_H */

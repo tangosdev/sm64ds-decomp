@@ -5,7 +5,7 @@
  * unit a frame while looping the drain sound, and when the surface reaches
  * mMinPosY play the secret jingle and destroy the actor once it finishes.
  *
- * Sound, Event and Minimap have no headers in this tree, so those three stay
+ * Sound, Event and dMap_c have no headers in this tree, so those three stay
  * extern-C mangled free functions. Animation::Advance and
  * fBase_c::MarkForDestruction are declared, and are reached as members.
  */
@@ -13,7 +13,7 @@
 
 extern "C" {
 int  _ZN5Event6GetBitEj(u32 bit);
-void _ZN7Minimap19UpdateLevelSpecificEv(void);
+void _ZN6dMap_c19UpdateLevelSpecificEv(void);
 }
 
 int TinyWater::Behavior()
@@ -27,7 +27,7 @@ int TinyWater::Behavior()
             mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, *(const Vector3 *)&mCamSpacePosX, 0);
             if (mPosY <= mMinPosY) {
                 mPosY = mMinPosY;
-                _ZN7Minimap19UpdateLevelSpecificEv();
+                _ZN6dMap_c19UpdateLevelSpecificEv();
             }
         }
     }

@@ -1,16 +1,16 @@
 //cpp
 #include "dActor_c.h"
-// @symbol _ZN10BrickBlock8BehaviorEv
-#include "BrickBlock.h"
-#include "BigBrickBlock.h"
+// @symbol _ZN19daObjBlockItemTag_c8BehaviorEv
+#include "daObjBlockItemTag_c.h"
+#include "daObjBlockL_c.h"
 
-typedef void (BrickBlock::*BrickBlockAction)();
+typedef void (daObjBlockItemTag_c::*BrickBlockAction)();
 extern "C" BrickBlockAction data_ov002_0210dd30[];
 extern "C" {
 extern s32 Vec3_Dist(const void *a, const void *b);
 }
 
-int BrickBlock::Behavior()
+int daObjBlockItemTag_c::Behavior()
 {
     dActor_c *block = 0;
     if (mIsAttached != 0)
@@ -30,7 +30,7 @@ int BrickBlock::Behavior()
             }
         }
         if (Vec3_Dist(&mPosX, &block->mPosX) < 0x32000) {
-            ((BigBrickBlock *)block)->mLinkedActor = this;
+            ((daObjBlockL_c *)block)->mLinkedActor = this;
             mIsAttached = 1;
             return 1;
         }

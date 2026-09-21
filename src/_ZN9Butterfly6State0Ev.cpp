@@ -1,5 +1,5 @@
 //cpp
-#include "Butterfly.h"
+#include "daBtfly_c.h"
 #include "common.h"
 extern "C" {
 extern int RandomIntInternal(int* seed);
@@ -7,7 +7,7 @@ extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, uns
 extern int data_0209e650;
 }
 
-void Butterfly::State0(){
+void daBtfly_c::State0(){
   char* c = (char*)this;
   struct StateRotation { u16 w[3]; };
   StateRotation rot;

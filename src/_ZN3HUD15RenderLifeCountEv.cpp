@@ -23,7 +23,7 @@ void _ZN3OAM9RenderSubEP7OamAttriiii(OamAttr* attr, int x, int y, int priority, 
 
 }
 
-struct HUD {
+struct dMeter_c {
     char pad0[0x6e];
     short xBase;
     char pad1[4];
@@ -32,7 +32,7 @@ struct HUD {
     void RenderLifeCount();
 };
 
-void HUD::RenderLifeCount()
+void dMeter_c::RenderLifeCount()
 {
     unsigned char idx = data_0209f250;
     HUDInfo* info = data_0209f394[idx];
