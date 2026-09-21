@@ -22,8 +22,8 @@ bytes total. Historical observations below remain evidence of their stated
 revisions; they do not override these corrections.
 
 The integration review also corrects the table ownership described below.
-The twelve PMF constants at `ov096:0x02137920..0x02137980` are read by
-`__sinit_ov096_0213770c`, which reorders them into six entry/update pairs in
+The twelve PMF constants at [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x02137920..0x02137980` are read by
+[__sinit_ov096_0213770c](../../../src/__sinit_ov096_0213770c.c), which reorders them into six entry/update pairs in
 BSS at `0x02137b48..0x02137ba8`. Dispatch uses that BSS table. The initializer
 remains separately enrolled; an additional initializer is not an established
 consequence of every possible C++ table definition. The dated integration
@@ -54,7 +54,7 @@ shard counts below describe the pre-fold inputs, not the current queue row.
   Facts: `notes/data/class-facts/daSanbo_c.json` -- the scout's blob, moved with
   the class, prose preserved verbatim plus one added key saying so. Stage
   artifacts: `src/actors/daSanbo_c.cpp`,
-  `config/tu_manifest.d/ov096/daSanbo_c.json`, `include/daSanbo_c.h`.
+  [config/tu_manifest.d/ov096/daSanbo_c.json](../../../config/tu_manifest.d/ov096/daSanbo_c.json), `include/daSanbo_c.h`.
 - Next action, responsible role and blockers: independent verification of this
   historical commit (verifier). The original no-blocker assessment was superseded
   by source review; see the current correction and repair handoff above.
@@ -65,20 +65,20 @@ shard counts below describe the pre-fold inputs, not the current queue row.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `daSanbo_c` in `ov096`, the
+- Class/TU/symbol and module-qualified ROM scope: `daSanbo_c` in [ov096](../../../config/arm9/overlays/ov096/symbols.txt), the
   contiguous run `0x02135700..0x02136db0`, 36 functions, folded from 36
   one-function sources into `src/actors/daSanbo_c.cpp` with a single `complete`
   delink span.
 - Reserved source/header/config surfaces actually touched: the class header,
   renamed from its coined spelling to `include/daSanbo_c.h` and given an inline
   destructor; `include/decl_common.h`, one `_ZTV` declaration renamed;
-  `config/arm9/overlays/ov096/symbols.txt` and that overlay's delinks file;
-  `config/tu_manifest.d/ov096/daSanbo_c.json`; `config/converted-baseline.json`;
+  [config/arm9/overlays/ov096/symbols.txt](../../../config/arm9/overlays/ov096/symbols.txt) and that overlay's [delinks](../../../config/arm9/overlays/ov096/delinks.txt) file;
+  [config/tu_manifest.d/ov096/daSanbo_c.json](../../../config/tu_manifest.d/ov096/daSanbo_c.json); `config/converted-baseline.json`;
   `attribution.json`; `symbols/actor_renames.tsv` and its report;
   `notes/actor-leaf-provenance.md`, `notes/data/class-build-worklist.tsv`,
   `notes/data/tu-promotion-queue.tsv`, `notes/cpp-tu-current-state.md`.
 - ROM observations:
-  - `ov096:0x02137980` holds the eleven bytes of the typeinfo string for
+  - [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x02137980` holds the eleven bytes of the typeinfo string for
     `daSanbo_c`. `_ZTI9daSanbo_c` at `0x0213798c` is
     `{0x0209a764 = the __si_class_type_info vtable, 0x02137980 = that string,
     0x0208e390 = _ZTI8dActor_c}`. The vtable object begins at `0x021379d0` with a
@@ -91,11 +91,11 @@ shard counts below describe the pre-fold inputs, not the current queue row.
     virtual is declared.
   - D1 sits at `0x02135700` ABOVE D0 at `0x02135748`, and there is no D2 anywhere
     in the image. That is the layout an inline in-class destructor emits.
-  - `ov096` delinks no `.data`, so the route is text-only.
-  - `ov096:0x02137920` holds twelve eight-byte pointer-to-member records, running
+  - [ov096](../../../config/arm9/overlays/ov096/symbols.txt) delinks no `.data`, so the route is text-only.
+  - [ov096](../../../config/arm9/overlays/ov096/delinks.txt):`0x02137920` holds twelve eight-byte pointer-to-member records, running
     up to the typeinfo string. All twelve point at `func_ov096_*` addresses inside
     this run.
-  - `ov096` has exactly two static initializers and two `.ctor` entries.
+  - [ov096](../../../config/arm9/overlays/ov096/delinks.txt) has exactly two static initializers and two `.ctor` entries.
 - Lineage evidence or structural inference: the two `ACTOR_SPAWN_TABLE` factories
   both allocate 944 bytes, both store this class's vptr and both inline the same
   constructor body; there is no out-of-line constructor in the image. SANBO and
@@ -204,7 +204,7 @@ worktree, against merge-base `11ef9a7dd`, after the rebase.
 - Complete emitted TU and data/metadata checks: `python tools/romdata_check.py
   --files src/actors/daSanbo_c.cpp` -- 9 data records emitted, 5 VERIFIED (168
   bytes equal to the cartridge), 4 PARTIAL, 0 DIFFERS, 0 UNNAMED. The vtable
-  verifies all 124 bytes of its 31 slots against `ov096:0x021379d8`, and the
+  verifies all 124 bytes of its 31 slots against [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x021379d8`, and the
   class's own typeinfo record all 12 bytes. The 4 PARTIAL are typeinfo NAME
   strings, whose ROM extent runs to the next symbol and so includes alignment that
   belongs to nobody; that is the documented normal verdict, not a shortfall. The
@@ -263,7 +263,7 @@ worktree, against merge-base `11ef9a7dd`, after the rebase.
    text-only entry can never have. The real production build never does this:
    `tools/rombuild.py` admits only entries that request
    `production_mode: intact-object`, and this entry does not. Reproduced verbatim
-   on the landed, merged, text-only precedent `ov002/daObjFloatBoard_c`, so it is a
+   on the landed, merged, text-only precedent [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daObjFloatBoard_c`, so it is a
    property of the route, not of this class. Reported, not worked around.
 2. The published contributor chart moves even though the gate does not.
    `tools/chaos_db_ci.py` resolves attribution overrides by WHOLE PATH, so the 36
@@ -293,7 +293,7 @@ worktree, against merge-base `11ef9a7dd`, after the rebase.
    carries a coined name. That is issue #2436, and the measurement recorded above
    is its evidence.
 
-## Revise stage: sanbo-ov096-0907b
+## Revise stage: sanbo-[ov096](../../../config/arm9/overlays/ov096/symbols.txt)-0907b
 
 Independent verification of `b8fd30fcc` confirmed every byte claim above -- 36/36
 MATCH, 36 symbol-driven link checks VERIFIED with zero blind slots, the built overlay
@@ -311,7 +311,7 @@ and all 36 functions still MATCH.
   names, and each records what was actually done instead of the generator's "the other
   is commented out for review", which was no longer true of any of them. Two of the
   five were not simple "keep the winner" choices and now say so: the live
-  `func_ov096_02135800` and `Vec3_HorzAngle` declarations each take part of their
+  [func_ov096_02135800](../../../src/actors/daSanbo_c.cpp)(ROM Ordinal 5 used to assemble `daSanbo_c.cpp`) and `Vec3_HorzAngle` declarations each take part of their
   signature from the losing observation, and the `struct Obj` conflict was two
   different objects the generator collided on one name, so the loser became
   `RenderView` rather than being discarded.
@@ -331,7 +331,7 @@ and all 36 functions still MATCH.
 - `boundary_confidence` stays `medium`, and `boundary_evidence` now records why:
   `tools/tubuild.py` reuses `tu_map.boundary_confidence` exactly, as a mechanical
   per-boundary score taken as the worse of the TU's two edges, not as a place to record
-  how strong the evidence is. `ov102/daBmb_c` and `ov081/daGmch_c` both extended their
+  how strong the evidence is. [ov102](../../../config/arm9/overlays/ov102/symbols.txt)/`daBmb_c` and [ov081](../../../config/arm9/overlays/ov081/symbols.txt)/`daGmch_c` both extended their
   run over a factory `tu_map` had cut off, on the same kind of cartridge evidence, and
   both kept `medium`.
 - A stray NUL that a shell heredoc left inside one `compiler_only_output` reason string

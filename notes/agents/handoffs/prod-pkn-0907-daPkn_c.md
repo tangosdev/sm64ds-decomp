@@ -1,4 +1,4 @@
-# Handoff: prod-pkn-0907 — daPkn_c (ov084)
+# Handoff: prod-pkn-0907 — daPkn_c ([ov084](../../../config/arm9/overlays/ov084/symbols.txt))
 
 2026-09-08 continuation: this is the original promotion record; its proof stays
 scoped to the commits named below. Current source-review corrections and remaining
@@ -18,7 +18,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `797f49dd669279d8a3d3e48b0e978ac2445171a2` (`origin/main`, #2442). Workflow pin
   `d7e28406933497ff40150f9b912efe64666a00b2`.
   **The brief pinned base `11ef9a7dd`. main moved three times during this task
-  (#2439 stamp, #2437 daMip_c, #2442 daObjBk_Dossunbar_c); this branch was
+  (#2439 stamp, #2437 `daMip_c`, #2442 `daObjBk_Dossunbar_c`); this branch was
   restacked onto the tip and every figure below is measured against
   `797f49dd6`, with a rebuilt base control at that same SHA.**
 - Separate evidence commits and required artifacts in this commit: three commits —
@@ -31,18 +31,18 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `daPkn_c`, ov084
+- Class/TU/symbol and module-qualified ROM scope: `daPkn_c`, [ov084](../../../config/arm9/overlays/ov084/symbols.txt). The class is a Piranha Plant enemy.
   `.text 0x0212eaf0..0x02130174`, 24 functions, folded into one translation unit at
-  `src/actors/daPkn_c.cpp`. This also opens ov084, which had no manifest before.
-- Reserved source/header/config surfaces actually touched: `ov084/delinks.txt`
-  (24 per-function entries → one `complete` span), `ov084/symbols.txt` (8 member
+  `src/actors/daPkn_c.cpp`. This also opens [ov084](../../../config/arm9/overlays/ov084/symbols.txt), which had no manifest before.
+- Reserved source/header/config surfaces actually touched: [ov084/delinks.txt](../../../config/arm9/overlays/ov084/delinks.txt)
+  (24 per-function entries → one `complete` span), [ov084/symbols.txt](../../../config/arm9/overlays/ov084/symbols.txt) (8 member
   rows and one `_ZTV` row renamed; the duplicate coined `_ZTV` alias row dropped),
-  a new `ov084/daPkn_c.json` manifest, the class header (renamed from the coined
+  a new [ov084/daPkn_c.json](../../../config/tu_manifest.d/ov084/daPkn_c.json) manifest, the class header (renamed from the coined
   spelling), `decl_common.h`, `attribution.json`, `converted-baseline.json`,
   `actor_renames.tsv`, the queue and worklist rows, the class-facts dossier, the
   enemy provenance note and the generated TU-state note.
 - ROM observations:
-  - **The name is the cartridge's.** ov084 0x02130bec holds the nine bytes of the
+  - **The name is the cartridge's.** [ov084](../../../config/arm9/overlays/ov084/symbols.txt) 0x02130bec holds the nine bytes of the
     length-prefixed `_ZTS` payload for `daPkn_c`; `_ZTI7daPkn_c` at 0x02130bf8
     points its +4 word at that string and the vtable's −4 header word at 0x02130c24
     points back at the `_ZTI`. `PiranhaPlant` occurs in none of the 106 extracted
@@ -51,7 +51,7 @@ This document describes this commit. The queue records its immutable output SHA.
     vtable, destroys six member subobjects in reverse declaration order and tails
     into `_ZN12dEnemyBase_cD2Ev`. Chain daPkn_c → dEnemyBase_c → dActor_c →
     dBase_c → fBase_c. 31 vtable slots, 8 own overrides, no new virtuals.
-  - **Vtable extent, corrected 2026-09-08.** The 31 slots at ov084:0x02130c28
+  - **Vtable extent, corrected 2026-09-08.** The 31 slots at [ov084](../../../config/arm9/overlays/ov084/symbols.txt):0x02130c28
     end at 0x02130ca4; seven zero words separate them from the `.data` end at
     0x02130cc0. The base/peer slot counts and inherited final slot support this
     extent, as recorded in the dossier. The section boundary alone does not:
@@ -95,7 +95,7 @@ This document describes this commit. The queue records its immutable output SHA.
   0x02130110 does not look like a member of this class, so it was cut off from a
   run it physically abuts. Confirmed by address against `delinks.txt`: no gap
   between 0x02130110 and the function below it, and the factory closes exactly on
-  the end of ov084 `.text` at 0x02130174. This is issue #2436. The run below the
+  the end of [ov084](../../../config/arm9/overlays/ov084/delinks.txt) `.text` at 0x02130174. This is issue #2436. The run below the
   TU (0x0212ea18..0x0212eaf0) is daFPkn_c's three factories and is NOT absorbed.
 - Genuine methods; remaining free-function/ABI bridges: 6 C++-named members
   (`InitResources`, `Behavior`, `Render`, `OnPendingDestroy`, `CleanupResources`,
@@ -108,7 +108,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `PknStateCls`) plus one two-word view of the shared-file records
   (`PknSharedFile`); the byte match is in those spellings.
 - Lifecycle, vtable/RTTI, initializer and data ownership: **route is text-only.**
-  ov084 delinks no `.data` at all — every entry in its delinks file is a `.text`
+  [ov084](../../../config/arm9/overlays/ov084/delinks.txt) delinks no `.data` at all — every entry in its delinks file is a `.text`
   range — so the TU claims `.text` only. It still compiles a vtable and an RTTI
   group, because the inline destructor makes `daPkn_c::OnAimedAtWithEgg` the key
   function and it is defined here; 12 sections are licensed as
@@ -132,10 +132,10 @@ This document describes this commit. The queue records its immutable output SHA.
   function and byte for byte.
 - Remaining agreed issue scope: **the nine pointer-to-member records are left
   name-resolved by address.** They live at 0x02130ba4..0x02130bec and
-  `__sinit_ov084_02130654` builds them into the state table in `.bss` at
+  [__sinit_ov084_02130654](../../../src/__sinit_ov084_02130654.c) builds them into the state table in `.bss` at
   0x02130e80; `daPkn_c::Behavior` dispatches through it. `dsd` resolves those
   `.data` words by SYMBOL NAME, so renaming any target is a same-commit
-  `ov084/symbols.txt` edit, and a mangled TU beside a stale name there links every
+  [ov084/symbols.txt](../../../config/arm9/overlays/ov084/symbols.txt) edit, and a mangled TU beside a stale name there links every
   one of those words as 0. The evidence to name them safely was not gathered, so
   the address names stay and this is recorded as the next improvement rather than
   guessed at.
@@ -193,7 +193,7 @@ this commit's tree. No cached report reused.
     (−23), consolidation, bytes flat.
   - `check_rename_ledger`: 2,014 mangled/vtable rows all agree with symbols.txt.
     Rows were rewritten IN PLACE for the 8 renamed members and the `_ZTV`, with the
-    9 hop rows appended at the tail; the rebase conflict against the parallel ov085
+    9 hop rows appended at the tail; the rebase conflict against the parallel [ov085](../../../config/arm9/overlays/ov085/symbols.txt)
     ledger append was resolved as a union in landing order, never hand-edited.
   - `check_dead_references`: no new dead references, no broken markdown links.
   - `check_tubuild_conflicts`: every recorded conflict matches the source and every
@@ -216,11 +216,11 @@ this commit's tree. No cached report reused.
 - Private validation, if run, and the exact PR head/base it tested: not run — no PR
   was opened, per the brief.
 
-Retired shards, by basename only: `d_a_pkn.c`, `func_ov084_0212ebb4.c`,
-`func_ov084_0212ec04.c`, `func_ov084_0212ec60.c`, `func_ov084_0212ef00.c`,
-`func_ov084_0212f1d0.c`, `func_ov084_0212f204.c`, `func_ov084_0212f298.c`,
-`func_ov084_0212f2dc.c`, `func_ov084_0212f33c.cpp`, `func_ov084_0212f460.cpp`,
-`func_ov084_0212f588.cpp`, `func_ov084_0212f630.cpp`, `func_ov084_0212f6d8.c`,
-`func_ov084_0212fa7c.c`, `func_ov084_0212fc10.c`, and the eight mangled member
-files for D1, D0, InitResources, Behavior, Render, OnPendingDestroy,
-CleanupResources and OnAimedAtWithEgg.
+Retired shards, by basename only: `d_a_pkn.c`, [func_ov084_0212ebb4.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212ec04.c](../../../config/tu_manifest.d/ov084/daPkn_c.json),
+[func_ov084_0212ec04.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212ec60.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212ef00.c](../../../config/tu_manifest.d/ov084/daPkn_c.json),
+[func_ov084_0212f1d0.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f204.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f298.c](../../../config/tu_manifest.d/ov084/daPkn_c.json),
+[func_ov084_0212f2dc.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f33c.cpp](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f460.cpp](../../../config/tu_manifest.d/ov084/daPkn_c.json),
+[func_ov084_0212f588.cpp](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f630.cpp](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212f6d8.c](../../../config/tu_manifest.d/ov084/daPkn_c.json),
+[func_ov084_0212fa7c.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), [func_ov084_0212fc10.c](../../../config/tu_manifest.d/ov084/daPkn_c.json), and the eight mangled member
+files for D1, D0, `InitResources`, `Behavior`, `Render`, `OnPendingDestroy`,
+`CleanupResources` and `OnAimedAtWithEgg`.

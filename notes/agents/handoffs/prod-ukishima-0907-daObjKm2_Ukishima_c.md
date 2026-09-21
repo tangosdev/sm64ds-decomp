@@ -1,4 +1,4 @@
-# Handoff: prod-ukishima-0907 — ov045/daObjKm2_Ukishima_c
+# Handoff: prod-ukishima-0907 — [ov045](../../../config/arm9/overlays/ov045/symbols.txt)/daObjKm2_Ukishima_c
 
 ## Identity and resumption
 
@@ -18,7 +18,7 @@
 ## What changed and why
 
 The cartridge names this class. Five symbols were renamed in place in
-`config/arm9/overlays/ov045/symbols.txt`; **no alias or bounding row was added.**
+[config/arm9/overlays/ov045/symbols.txt](../../../config/arm9/overlays/ov045/symbols.txt); **no alias or bounding row was added.**
 
 | address | was | now |
 |---|---|---|
@@ -33,7 +33,7 @@ was not renamed.
 
 ### The fold is 5, and here is the address derivation
 
-Derived **by address** from `config/arm9/overlays/ov045/delinks.txt`, not from
+Derived **by address** from [config/arm9/overlays/ov045/delinks.txt](../../../config/arm9/overlays/ov045/delinks.txt), not from
 `build/tu_map.json`. The five legacy entries tile the run end-to-start with no gap:
 
 | absorbed shard | .text start | .text end | size |
@@ -61,16 +61,16 @@ involving one is a floor.
 
 ### Route: text-only, and why
 
-`ov045`'s `.data` is unclaimed across `0x02112efc..0x02112fd0` — the whole band
+[ov045](../../../config/arm9/overlays/ov045/delinks.txt)'s `.data` is unclaimed across `0x02112efc..0x02112fd0` — the whole band
 holding this class's `_ZTI`, the three-word resource descriptor, `_ZTS`,
-`g_profile_KM2_UKISHIMA` and `_ZTV`. The only `.data` claim anywhere in ov045's
+`g_profile_KM2_UKISHIMA` and `_ZTV`. The only `.data` claim anywhere in [ov045](../../../config/arm9/overlays/ov045/delinks.txt)'s
 delinks is gura's `0x02112fdc..0x021130a0`, which starts *past* gura's own
 typeinfo record.
 
 An intact-object claim would therefore have to carve that band out first, and the
-band carries two vtable-interior phantom rows — `data_ov045_02112f58` and
-`data_ov045_02112f7c`, both marked `ambiguous`, both *inside* `_ZTV` — plus the
-`ambiguous` `g_profile_KM2_UKISHIMA` row. The landed ov045 sibling
+band carries two vtable-interior phantom rows — [data_ov045_02112f58](../../../config/arm9/overlays/ov045/symbols.txt) and
+[data_ov045_02112f7c](../../../config/arm9/overlays/ov045/symbols.txt), both marked `ambiguous`, both *inside* `_ZTV` — plus the
+`ambiguous` `g_profile_KM2_UKISHIMA` row. The landed [ov045](../../../config/arm9/overlays/ov045/symbols.txt) sibling
 `d_a_obj_km2_fall_block.cpp` is text-only for the same reason. Text-only here is a
 **scope** decision, not a codegen limitation.
 
@@ -78,7 +78,7 @@ band carries two vtable-interior phantom rows — `data_ov045_02112f58` and
 
 `src/game/actors/d_a_obj_km2_gura.cpp` for overlay house style (it supplied the
 profile-struct field spelling, since the two profiles are neighbours in the same
-`.data` band). The ov043 class `daObjKm1_Kurumajiku_c` — identical member-size
+`.data` band). The [ov043](../../../config/arm9/overlays/ov043/symbols.txt) class `daObjKm1_Kurumajiku_c` — identical member-size
 signature `0x50/0x64/0x14/0x18/0x3c` — supplied the TU shape, manifest shape and
 the factory spelling. `d_a_obj_km2_fall_block.cpp` supplied the text-only
 precedent.
@@ -104,16 +104,16 @@ zero backslide exceptions were needed.**
 ## Proof, read from the cartridge
 
 Every call target and vptr store was re-derived from
-`extracted/overlays/overlay_0045.bin` (ov045 base `0x021111a0`) and its literal
+`extracted/overlays/overlay_0045.bin` ([ov045](../../../config/arm9/overlays/ov045/symbols.txt) base `0x021111a0`) and its literal
 pools, **not** from `relocs.txt` — `match.py` wildcards every relocated word.
 
 | site | cartridge evidence | resolves to |
 |---|---|---|
 | class name | `0x02112f14` = NUL-terminated `19daObjKm2_Ukishima_c` | `_ZTI` middle word `0x02112f00` points at it |
-| base class | `_ZTI+8` at `0x02112f04` = `0x02109104` | `_ZTI14daObjUkiyuka_c` (ov002) |
-| `CleanupResources` tail call | literal at `0x02111bd4` | `0x020b6424` = `func_ov002_020b6424` |
-| `InitResources` tail call | literal at `0x02111bec` | `0x020b6584` = `func_ov002_020b6584` |
-| both resource methods, arg 1 | literals `0x02111bd8` / `0x02111bf0` | `0x02112f08` = `data_ov045_02112f08` |
+| base class | `_ZTI+8` at `0x02112f04` = `0x02109104` | `_ZTI14daObjUkiyuka_c` ([ov002](../../../config/arm9/overlays/ov002/symbols.txt)) |
+| `CleanupResources` tail call | literal at `0x02111bd4` | `0x020b6424` = [func_ov002_020b6424](../../../src/actors/daObjUkiyuka_c.cpp)(ROM Ordinal 0 used to assemble `daObjUkiyuka_c.cpp`) |
+| `InitResources` tail call | literal at `0x02111bec` | `0x020b6584` = [func_ov002_020b6584](../../../src/actors/daObjUkiyuka_c.cpp)(ROM Ordinal 3 used to assemble `daObjUkiyuka_c.cpp`) |
+| both resource methods, arg 1 | literals `0x02111bd8` / `0x02111bf0` | `0x02112f08` = [data_ov045_02112f08](../../../config/arm9/overlays/ov045/symbols.txt) |
 | `InitResources` arg 2 | `0x02111be4` = `mov r2, #0xf50` | actor id `0xf50` |
 | `classInit` allocation | `0x02111bf8` = `mov r0, #0x32c` | 812, the RTTI-proven class size |
 | `classInit` calls | `BL` at `0x02111bfc` / `0x02111c08` | `0x02043444` = `_ZN7fBase_cnwEj`, `0x020eea50` = `_ZN10dBgActor_cC2Ev` |
@@ -129,7 +129,7 @@ chain. All were read back out of the ROM and all hold. The address point is
 `&_ZTI19daObjKm2_Ukishima_c`); the table is **32 slots**, `0x02112f50..0x02112fd0`,
 ending exactly where `_ZTI15daObjKm2_Gura_c` begins. Slot 0 = `0x02111bdc`, slot 3
 = `0x02111bc8`, slots 16/17 = `0x02111b14`/`0x02111b64`. Slots 6 and 9 hold
-`0x020b6494` and `0x020b646c` — `daObjUkiyuka_c`'s own ov002 `Behavior` and
+`0x020b6494` and `0x020b646c` — `daObjUkiyuka_c`'s own [ov002](../../../config/arm9/overlays/ov002/symbols.txt) `Behavior` and
 `Render` — so they are **inherited and must not be redeclared**.
 
 Independently of that reading, `romdata_check` compiles this TU and compares its
@@ -145,7 +145,7 @@ All figures below are from the **rebased** branch on base `fed0c5e05`.
 | gate | verdict | control |
 |---|---|---|
 | `tubuild verify` | **5/5 MATCH**, objisolate clean, reloc-destinations clean, emission order ROM-ascending → TEXT-VERIFIED | perturbing `0xf50`→`0xf51` gives `4/5 MATCH`, `DIFF` on `InitResources` |
-| `tubuild linkcheck` | **REFUSED** — "intact production requires one .text claim and at least one non-text claim" | **not ours:** identical refusal on the landed, untouched `ov045/daObjKm2_Fall_Block_c`; it is a text-only-route property |
+| `tubuild linkcheck` | **REFUSED** — "intact production requires one .text claim and at least one non-text claim" | **not ours:** identical refusal on the landed, untouched [ov045](../../../config/arm9/overlays/ov045/symbols.txt)/`daObjKm2_Fall_Block_c`; it is a text-only-route property |
 | `linkcheck.py --name` ×5 | **VERIFIED**, `blind=0`, no diffs, on all five members | same perturbation returns `NO-REPRO` |
 | `rombuild -j16` | **PASS**, 106/106 modules exact, 100.000000% of compared bytes, 11,192 functions reproducing / **0** mismatching | — |
 | ROM sha256 | `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8` — **hashed off `build/sm64ds.nds` directly**, not read from the build log | — |
@@ -168,7 +168,7 @@ All figures below are from the **rebased** branch on base `fed0c5e05`.
 ## Things worth flagging to the next stage
 
 1. **The base moved under this lane.** `origin/main` went `e24940a57` →
-   `fed0c5e05` mid-run (three commits: the ov022/ov013 batch-2 promotions, a
+   `fed0c5e05` mid-run (three commits: the [ov022](../../../config/arm9/overlays/ov022/symbols.txt)/[ov013](../../../config/arm9/overlays/ov013/symbols.txt) batch-2 promotions, a
    progress refresh, and the denominator-gate carve-out). Settled with
    `git merge-tree`, not a file list: the file **sets** overlapped in five paths,
    of which two actually conflicted. `notes/cpp-tu-current-state.md` was

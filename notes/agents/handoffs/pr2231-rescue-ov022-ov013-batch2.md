@@ -1,4 +1,4 @@
-# Handoff: pr2231-rescue-ov022-ov013-batch2
+# Handoff: pr2231-rescue-[ov022](../../../config/arm9/overlays/ov022/symbols.txt)-[ov013](../../../config/arm9/overlays/ov013/symbols.txt)-batch2
 
 This document describes this commit. The queue records its immutable output SHA.
 
@@ -34,7 +34,7 @@ This document describes this commit. The queue records its immutable output SHA.
   evidence commit. Stage artifacts: `src/actors/daObjFl_London_c.cpp`,
   `src/actors/daObjClock_c.cpp`, `src_tu/actors/daObj_volcanoCannon_c.cpp`
   (shadow, text-verified), their headers in `include/`, and the three manifests
-  under `config/tu_manifest.d/ov022/` and `config/tu_manifest.d/ov013/`.
+  under [config/tu_manifest.d/ov022/](../../../config/tu_manifest.d/ov022/) and [config/tu_manifest.d/ov013/](../../../config/tu_manifest.d/ov013/).
 - Next action, responsible role and blockers: independent verification of this
   commit (verifier), then integration. One class is HELD, not blocked by this
   batch: see "daObj_volcanoCannon_c" below; a separate lane owns the dsd extent
@@ -43,21 +43,21 @@ This document describes this commit. The queue records its immutable output SHA.
   run on this commit).
 - Remaining uncommitted/local-only material and where it is preserved: the other
   classes of PR #2231 (heart on `cpp/promote-ov002-heart-tu`, still WIP;
-  ov045/ov010/ov012/ov026/ov030/ov033/ov062 on the original branch only). Gate
+  [ov045](../../../config/arm9/overlays/ov045/symbols.txt)/[ov010](../../../config/arm9/overlays/ov010/symbols.txt)/[ov012](../../../config/arm9/overlays/ov012/symbols.txt)/[ov026](../../../config/arm9/overlays/ov026/symbols.txt)/[ov030](../../../config/arm9/overlays/ov030/symbols.txt)/[ov033](../../../config/arm9/overlays/ov033/symbols.txt)/[ov062](../../../config/arm9/overlays/ov062/symbols.txt) on the original branch only). Gate
   logs live in the worktree's ignored `build/`.
 
 ## What changed and why
 
 - Class/TU/symbol and module-qualified ROM scope: two promotions and one rename.
   - `daObjFl_London_c` (was coined `LavaBridge`; base `dBgActor_c`, size
-    0x320): text `ov022:[0x02111980,0x02111cac)` (8 functions, 812 bytes) and
-    `.data` `ov022:[0x02113f2c,0x02113ff0)` (196 bytes: `_ZTI`, `_ZTS`,
+    0x320): text [ov022](../../../config/arm9/overlays/ov022/symbols.txt):`[0x02111980,0x02111cac)` (8 functions, 812 bytes) and
+    `.data` [ov022](../../../config/arm9/overlays/ov022/symbols.txt):`[0x02113f2c,0x02113ff0)` (196 bytes: `_ZTI`, `_ZTS`,
     `g_profile_FL_LONDON`, the 32-slot `_ZTV` whose address point is
     0x02113f70). Promoted from eight one-function shards into
     `src/actors/daObjFl_London_c.cpp`.
   - `daObjClock_c` (was coined `ClockPaintingHandShort`; base `dActor_c`, size
-    0x128): text `ov013:[0x021113bc,0x021116ac)` (9 functions, 752 bytes) and
-    `.data` `ov013:[0x021121a4,0x0211227c)` (216 bytes: `_ZTI`, `_ZTS`,
+    0x128): text [ov013](../../../config/arm9/overlays/ov013/symbols.txt):`[0x021113bc,0x021116ac)` (9 functions, 752 bytes) and
+    `.data` [ov013](../../../config/arm9/overlays/ov013/symbols.txt):`[0x021121a4,0x0211227c)` (216 bytes: `_ZTI`, `_ZTS`,
     `g_profile_CLOCK_LONG`, `g_profile_CLOCK_SHORT`, the 31-slot `_ZTV` at
     0x02112200). Promoted from nine shards into `src/actors/daObjClock_c.cpp`.
     One class, two registry profiles: the byte-identical factories keep
@@ -72,24 +72,24 @@ This document describes this commit. The queue records its immutable output SHA.
     `daObj_volcanoCannon_c+daObjFlMaruta_c`; that row stays
     `already_promoted=no`.
 - Reserved source/header/config surfaces actually touched:
-  - `config/arm9/overlays/ov022/symbols.txt`, `ov013/symbols.txt`: coined
+  - [config/arm9/overlays/ov022/symbols.txt](../../../config/arm9/overlays/ov022/symbols.txt), [config/arm9/overlays/ov013/symbols.txt](../../../config/arm9/overlays/ov013/symbols.txt): coined
     method, destructor and vtable names replaced by the ROM RTTI spellings
     (`_ZN16daObjFl_London_c*`, `_ZN21daObj_volcanoCannon_c*`,
     `_ZN12daObjClock_c*`); the pre-existing duplicate `_ZTV21daObj_volcanoCannon_c`
     / `_ZTV12daObjClock_c` rows that main carried beside the coined ones are
     the surviving single rows; four interior phantom rows inside the two
-    promoted data runs removed (`data_ov022_02113f78`, `data_ov013_021121b8`,
-    `data_ov013_021121f8`, `data_ov013_02112258`), following the landed shape
+    promoted data runs removed ([data_ov022_02113f78](../../../config/arm9/overlays/ov022/symbols.txt)), [data_ov013_021121b8](../../../config/arm9/overlays/ov013/symbols.txt),
+    [data_ov013_021121f8](../../../config/arm9/overlays/ov013/symbols.txt), [data_ov013_02112258](../../../config/arm9/overlays/ov013/symbols.txt)), following the landed shape
     of the `daObjKm3_Kuruma_c` (#2119, 8 rows) and `daObjKm1_Dorifu_c` (#2120,
     6 rows) promotions. The removals are load-bearing, not tidying: with
-    `data_ov022_02113f78` present, dsd declares `_ZTV16daObjFl_London_c` as
+    [data_ov022_02113f78](../../../config/arm9/overlays/ov022/symbols.txt) present, dsd declares `_ZTV16daObjFl_London_c` as
     an 8-byte symbol and hands the remaining 120 bytes of the one 128-byte
     table to the phantom, which the compiled TU cannot define (measured by
     the independent verifier of `d6292397d`); with the row present the
     linkcheck's `dsd check symbols` also reports it as the one NEW error.
-    The row inside the held volcano vtable (`data_ov022_02114498`) stays as
+    The row inside the held volcano vtable [data_ov022_02114498](../../../config/arm9/overlays/ov022/symbols.txt)) stays as
     main has it. NO row was added.
-  - `config/arm9/overlays/ov022/delinks.txt`, `ov013/delinks.txt`: the shard
+  - [config/arm9/overlays/ov022/delinks.txt](../../../config/arm9/overlays/ov022/delinks.txt), [config/arm9/overlays/ov013/delinks.txt](../../../config/arm9/overlays/ov013/delinks.txt): the shard
     entries folded into one `complete` entry per promoted TU (by
     `tu_promote.py`).
   - `include/decl_common.h`: renamed declarations; the duplicate
@@ -106,7 +106,7 @@ This document describes this commit. The queue records its immutable output SHA.
     `config/converted-baseline.json` (12 shard identities rewritten to
     `TU#symbol`).
   - `notes/data/tu-promotion-queue.tsv`: regenerated with
-    `queue_audit.py --write`; the diff is exactly six rows -- the three ov002
+    `queue_audit.py --write`; the diff is exactly six rows -- the three [ov002](../../../config/arm9/overlays/ov002/symbols.txt)
     rows #2435 landed without refreshing (`daObjFire_c`,
     `daObjLava_c+daObjLava_c`, `daSCoin_c`; main is red on `--check` by itself
     for them), the two promoted here, and the volcano row (shard count 10 to
@@ -117,15 +117,15 @@ This document describes this commit. The queue records its immutable output SHA.
     `daObj_volcanoCannon_c`); nothing else touched.
   - `notes/cpp-tu-current-state.md`: regenerated with
     `cpp_tu_state.py --write-note`, not hand-merged.
-- ROM observations: `_ZTS16daObjFl_London_c` at ov022:0x02113f38,
-  `_ZTS21daObj_volcanoCannon_c` at ov022:0x02114440, `_ZTS12daObjClock_c` at
-  ov013:0x021121b0 are the ROM's own names for these classes (the RTTI ruling
+- ROM observations: `_ZTS16daObjFl_London_c` at [ov022](../../../config/arm9/overlays/ov022/symbols.txt):0x02113f38,
+  `_ZTS21daObj_volcanoCannon_c` at [ov022](../../../config/arm9/overlays/ov022/symbols.txt):0x02114440, `_ZTS12daObjClock_c` at
+  [ov013](../../../config/arm9/overlays/ov013/symbols.txt):0x021121b0 are the ROM's own names for these classes (the RTTI ruling
   applies). `build/rtti_vtables.json` (ROM walk) gives `dActor_c` 31 slots,
   `dBgActor_c` 32, clock 31, volcano 31, London 32, which the headers match.
 - Lineage evidence or structural inference: unchanged from main's headers.
 - Hypothesized names/filenames, explicitly not recovered facts: the two clock
   factory names are coined (`_CLOCK_LONG` / `_CLOCK_SHORT` after their
-  profiles); `func_ov022_02111a1c` and `func_ov013_02111430` (the state
+  profiles); [func_ov022_02111a1c](../../../src/actors/daObjFl_London_c.cpp) and [func_ov013_02111430](../../../src/actors/daObjClock_c.cpp) (the state
   helpers) keep their address names.
 - Compiler experiments and measured barriers:
   - Baseline ordering: `linkcheck --baseline` builds the working tree, so a
@@ -134,10 +134,10 @@ This document describes this commit. The queue records its immutable output SHA.
     link one). Order used: header declared-and-undefined, baseline, then the
     inline body and the shard fold in the same step. Volcano is the opposite
     case -- its shards are forcing helpers that need the inline body -- and
-    porting it out-of-line broke the ov022 baseline (ov022 linked 64 bytes
+    porting it out-of-line broke the [ov022](../../../config/arm9/overlays/ov022/symbols.txt) baseline ([ov022](../../../config/arm9/overlays/ov022/symbols.txt) linked 64 bytes
     short, first missing symbol its D0 at 0x02112610); restoring the inline
     body fixed it.
-  - daObj_volcanoCannon_c, the HELD promotion: on the shipped tree `tubuild
+  - `daObj_volcanoCannon_c`, the HELD promotion: on the shipped tree `tubuild
     linkcheck` refuses in `[2/8] dsd delink` -- `Last symbol
     'data_ov022_02114498' in section '.data' of file
     'src_tu/actors/daObj_volcanoCannon_c.cpp' has the range
@@ -148,13 +148,13 @@ This document describes this commit. The queue records its immutable output SHA.
     only effect is on which symbol overruns (its presence matters solely to
     `romdata_check`'s exact grade, see Proof). The vtable (storage
     0x02114474, 8-byte preamble + 31 slots, ends 0x021144f8) is the last
-    `.data` object in ov022; the ROM's 0x021144f8..0x02114500 are eight zero
+    `.data` object in [ov022](../../../config/arm9/overlays/ov022/symbols.txt); the ROM's 0x021144f8..0x02114500 are eight zero
     bytes of `.data` end padding (`align:32`, the overlay file ends at
     0x02114500) and the next `symbols.txt` row is the `.bss` at 0x02114500.
     dsd, like `romdata_check`, sizes an unsized last symbol up to the next
     row, past the section end. PR #2231 solved this by adding a bounding row
-    (`data_ov022_021144f8`) at an address main never carried, and #2120 did
-    the same once (`data_ov043_021125dc`), so there is precedent -- the hold
+    ([data_ov022_021144f8](../../../config/arm9/overlays/ov022/symbols.txt)) at an address main never carried, and #2120 did
+    the same once ([data_ov043_021125dc](../../../config/arm9/overlays/ov043/symbols.txt)), so there is precedent -- the hold
     does not rest on its absence. It rests on the argument: a bounding row
     declares alignment padding to be a ROM object, and the honest fix is for
     both tools to stop sizing a section's last symbol past the section end.
@@ -180,7 +180,7 @@ This document describes this commit. The queue records its immutable output SHA.
   emits its own `_ZTI`/`_ZTS`/`_ZTV` and profile descriptor(s) inside its
   `.data` claim (London 196 bytes, clock 216 bytes, both IDENTICAL to retail);
   the inherited base RTTI copies are `compiler_only_output` deadstrip-data
-  policies, as in the landed ov002 batch.
+  policies, as in the landed [ov002](../../../config/arm9/overlays/ov002/symbols.txt) batch.
 - Attribution preserved through each move/rename: NOT preserved in the
   contributions chart -- `git` records the shard-to-TU folds as delete + add,
   and the `path#symbol` overrides added by `tu_promote.py` are inert there.
@@ -236,7 +236,7 @@ inherited from PR #2231's own manifests or logs.
 - Complete emitted TU and data/metadata checks:
   - `python tools/tubuild.py linkcheck --baseline --module <ov> -j16 --clean`
     then `python tools/tubuild.py linkcheck <id> -j16` on each PROMOTED TU
-    (final tree): both `SCRATCH-DATA-VERIFIED`; TU .text and .data ranges
+    (final tree): both `SCRATCH-DATA-VERIFIED`; TU `.text` and `.data` ranges
     IDENTICAL (London 812+196 bytes, clock 752+216); 12 and 14 LICENSED
     symbols, 0 COLLIDES, 0 HOMELESS; `106/106 exact`; scratch ROM sha256
     `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`,
@@ -279,8 +279,8 @@ inherited from PR #2231's own manifests or logs.
   build/rtti_vtables.json` and `tu_map.py --out build/tu_map.json`
   regenerated AFTER the last config edit or it refuses on staleness): clean
   at `d6292397d`; after the restack it exited 1 on exactly ONE row,
-  `daObjBk_Dossunbar_c` (ov015), which #2442 landed on `main` without
-  refreshing the queue -- the same failure mode as #2435's three ov002 rows
+  `daObjBk_Dossunbar_c` ([ov015](../../../config/arm9/overlays/ov015/symbols.txt)), which #2442 landed on `main` without
+  refreshing the queue -- the same failure mode as #2435's three [ov002](../../../config/arm9/overlays/ov002/symbols.txt) rows
   this batch refreshes. `origin/main` `b36ed7808` is red on the gate by
   itself (4 rows: that one plus the three). By the coordinator's decision
   that row is repaired here too, in its own commit: `queue_audit --write`

@@ -1,4 +1,4 @@
-# Handoff: prod-kuruma-0907 — ov043/daObjKm1_Kurumajiku_c
+# Handoff: prod-kuruma-0907 — [ov043](../../../config/arm9/overlays/ov043/symbols.txt) — [daObjKm1_Kurumajiku_c](../../../src/game/actors/d_a_obj_km1_kurumajiku.cpp)
 
 This document describes this commit. The queue records its immutable output SHA.
 
@@ -36,11 +36,11 @@ This document describes this commit. The queue records its immutable output SHA.
 ## What changed and why
 
 `RickshawBdw` is a coined tree name. The cartridge names this class: the bytes
-at ov043 `0x02112350` are the NUL-terminated `21daObjKm1_Kurumajiku_c`, and the
+at [ov043](../../../config/arm9/overlays/ov043/symbols.txt) `0x02112350` are the NUL-terminated `21daObjKm1_Kurumajiku_c`, and the
 typeinfo record's middle word at `0x0211233c` points at exactly that address.
 Under the standing ruling this is a rename-and-promote.
 
-Renamed **in place** in `config/arm9/overlays/ov043/symbols.txt` — five rows,
+Renamed **in place** in [config/arm9/overlays/ov043/symbols.txt](../../../config/arm9/overlays/ov043/symbols.txt) — five rows,
 no alias added and no bounding row added:
 
 | address | was | now |
@@ -56,18 +56,18 @@ carried the ROM name and were not touched.
 
 ### The fold is 5, and here is the address derivation
 
-`build/tu_map.json` cuts this run as `ov043/RickshawBdw`, 4 functions,
+`build/tu_map.json` cuts this run as [ov043](../../../config/arm9/overlays/ov043/symbols.txt)/`RickshawBdw`, 4 functions,
 `0x21113fc-0x21114dc`, and puts the factory in a separate anonymous candidate
 `@021114dc-02111518`. Its factory rule matches names ending `_Spawn`, and
 nothing in this image ends that way, so the count is a floor.
 
-Derived instead by address from `config/arm9/overlays/ov043/delinks.txt` before
+Derived instead by address from [config/arm9/overlays/ov043/delinks.txt](../../../config/arm9/overlays/ov043/delinks.txt) before
 the fold — five entries, each carrying `complete`, each one's `end` equal to the
 next one's `start`:
 
 Shards are named by symbol, not by path: the paths are deleted by this commit
 and are recorded per function as `legacy_source` in
-`config/tu_manifest.d/ov043/daObjKm1_Kurumajiku_c.json`, which is where a
+[config/tu_manifest.d/ov043/daObjKm1_Kurumajiku_c.json](../../../config/tu_manifest.d/ov043/daObjKm1_Kurumajiku_c.json), which is where a
 reference to a removed file belongs.
 
 | absorbed shard | .text start | .text end | size |
@@ -95,15 +95,15 @@ at `0x02112368` holds `0x021114dc` in its first word.
 ### The name trap, resolved from the ROM
 
 `src/_ZN17daObjKurumajiku_cD1Ev.cpp` is a **different class and a different
-overlay**. `config/arm9/overlays/ov002/symbols.txt` puts
-`_ZN17daObjKurumajiku_cD1Ev` at `0x020b6a3c` and `ov002/delinks.txt` owns its
+overlay**. [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) puts
+`_ZN17daObjKurumajiku_cD1Ev` at `0x020b6a3c` and [ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt) owns its
 run; nothing of it lies in `0x021113fc..0x02111518`. It was not folded in.
 
 It is, however, this class's **BASE**, which the briefing did not say.
 `_ZTI21daObjKm1_Kurumajiku_c` at `0x02112338` reads
 `{0x0209a764, 0x02112350, 0x021092f8}` — an `__si_class_type_info` with one
 base at subobject offset 0, and `0x021092f8` is `_ZTI17daObjKurumajiku_c` in
-ov002. Corroborated independently of the RTTI: both destructors store **three**
+[ov002](../../../config/arm9/overlays/ov002/symbols.txt). Corroborated independently of the RTTI: both destructors store **three**
 vptrs, `0x0211238c` then `0x02109320` then `0x0210ae38`, read out of the
 literal pools at `0x02111440` and `0x021114a0`. A direct `dBgActor_c` subclass
 stores two. The header already carried this base clause and it is confirmed,
@@ -112,12 +112,12 @@ not changed.
 ### Route: text-only, and why
 
 `.text 0x021113fc..0x02111518` only. `.data` was **not** claimed. No delinks
-entry in ov043 reaches `0x02112338..0x0211240c`, so this class's typeinfo,
-type-name string, profile and vtable sit in unclaimed `.data`; the only ov043
+entry in [ov043](../../../config/arm9/overlays/ov043/symbols.txt) reaches `0x02112338..0x0211240c`, so this class's typeinfo,
+type-name string, profile and vtable sit in unclaimed `.data`; the only [ov043](../../../config/arm9/overlays/ov043/symbols.txt)
 `.data` claim anywhere is `d_a_obj_km1_dorifu.cpp` over
 `0x021124dc..0x021125dc`. An intact-object claim would have to carve that band
 out first, and the band also carries three vtable-interior phantom rows
-(`data_ov043_021123e4`, `_021123f4`, `_02112404`). Both landed ov043 siblings
+([data_ov043_021123e4](../../../config/arm9/overlays/ov043/symbols.txt), `_021123f4`, `_02112404`). Both landed [ov043](../../../config/arm9/overlays/ov043/symbols.txt) siblings
 took text-only. I did not attempt the intact-object route and make no claim
 about it.
 
@@ -129,19 +129,19 @@ data symbols against the cartridge through the compiler-only policy — see Proo
 The briefing looked for `daObjKm1_Ukishima_c` under the `src/actors/`
 directory, did not find it there, and concluded that what exists is a shard.
 **Both halves of that are wrong.** `src/game/actors/d_a_obj_km1_ukishima.cpp` is
-a genuinely promoted TU — `config/tu_manifest.d/ov043/daObjKm1_Ukishima_c.json`
+a genuinely promoted TU — [config/tu_manifest.d/ov043/daObjKm1_Ukishima_c.json](../../../config/tu_manifest.d/ov043/daObjKm1_Ukishima_c.json)
 reads `"status": "promoted"` with 7/7 functions matched and a full verification
-block. The ov043 family simply lives in the `src/game/actors/` directory under
+block. The [ov043](../../../config/arm9/overlays/ov043/symbols.txt) family simply lives in the `src/game/actors/` directory under
 snake-case `d_a_obj_km1_<name>.cpp` stems, not as `<Class>.cpp` under
 `src/actors/`.
 
 I used two better oracles than the briefing's fallbacks:
 
-- **`src/game/actors/d_a_obj_km3_kurumajiku.cpp`** (ov047) — the same class's
+- **`src/game/actors/d_a_obj_km3_kurumajiku.cpp`** ([ov047](../../../config/arm9/overlays/ov047/symbols.txt)) — the same class's
   twin: same base `daObjKurumajiku_c`, same size `0x330`, same five-member fold,
   and identical member sizes (`InitResources` `0x18`, `CleanupResources` `0x14`,
   `classInit` `0x3c`). This is where the shape came from.
-- **`src/game/actors/d_a_obj_km1_kuruma.cpp`** (ov043) — the immediately
+- **`src/game/actors/d_a_obj_km1_kuruma.cpp`** ([ov043](../../../config/arm9/overlays/ov043/symbols.txt)) — the immediately
   adjacent class in the same overlay, same route (text-only), same
   compiler-only policy shape. This is where the `operator new` spelling came
   from.
@@ -150,7 +150,7 @@ I used two better oracles than the briefing's fallbacks:
 
 ### The factory spelling, which was a real decision
 
-Written first the way the ov047 twin writes it — a raw `_ZN7fBase_cnwEj(0x330)`
+Written first the way the [ov047](../../../config/arm9/overlays/ov047/symbols.txt) twin writes it — a raw `_ZN7fBase_cnwEj(0x330)`
 call plus two hand-rolled vptr stores — it byte-matched 5/5. But
 `tiers_ratchet --check` then failed: the `classInit` member fails the "Calls
 things by real names, not mangled `_Z`" criterion, which makes the whole fold a
@@ -170,7 +170,7 @@ is untouched, and no backslide exception was added. The readability tier went
 
 `tools/tubuild.py verify ov043/daObjKm1_Kurumajiku_c`:
 
-```
+```python
 MATCH _ZN21daObjKm1_Kurumajiku_cD1Ev                 0x021113fc  0x050
 MATCH _ZN21daObjKm1_Kurumajiku_cD0Ev                 0x0211144c  0x064
 MATCH _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv 0x021114b0  0x014
@@ -193,9 +193,9 @@ functions reproducing, **0 mismatching**; ROM sha256
 
 | site | cartridge evidence | resolves to |
 |---|---|---|
-| `CleanupResources` tail call | literal at `0x021114bc` | `0x020b6ac8` = `func_ov002_020b6ac8` |
-| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = `func_ov002_020b6c54` |
-| both resource methods, arg 1 | literals `0x021114c0` / `0x021114d8` | `0x02112344` = `data_ov043_02112344` |
+| `CleanupResources` tail call | literal at `0x021114bc` | `0x020b6ac8` = [func_ov002_020b6ac8](../../../config/tu_manifest.d/ov002/daObjKurumajiku_c.json)(ROM Ordinal 3 used to assemble `daObjKurumajiku_c`) |
+| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = [func_ov002_020b6c54](../../../src/func_ov002_020b6c54.c) |
+| both resource methods, arg 1 | literals `0x021114c0` / `0x021114d8` | `0x02112344` = [data_ov043_02112344](../../../config/arm9/overlays/ov043/symbols.txt) |
 | `InitResources` arg 2 | `0x021114cc` = `mov r2, #0x88` | profile ID of `KM1_KURUMA`, the cart this axle drives |
 | `classInit` allocation | `0x021114e0` = `mov r0, #0x330` | class size, matching the RTTI-proven `0x330` |
 | `classInit` calls | `BL` at `0x021114e4` / `0x021114f0` | `0x02043444` = `_ZN7fBase_cnwEj`, `0x020eea50` = `_ZN10dBgActor_cC2Ev` |
@@ -206,12 +206,12 @@ words were read out of `extracted/overlays/overlay_0043.bin`: `0x02112384` is
 the offset-to-top `0`, `0x02112388` is `0x02112338` (this class's `_ZTI`), so
 `0x0211238c` is the address point and the table is 32 slots ending at
 `0x0211240c` where `_ZTI17daObjKm1_Kuruma_c` begins. Slot 0 = `0x021114c4`
-(InitResources), slot 3 = `0x021114b0` (CleanupResources), slots 16/17 =
+(`InitResources`), slot 3 = `0x021114b0` (`CleanupResources`), slots 16/17 =
 `0x021113fc`/`0x0211144c` (D1 then D0) — every one inside this run. Slots 6 and
-9 hold `0x020b6b38` and `0x020b6b10`, both **ov002** and both
-`daObjKurumajiku_c`'s own Behavior and Render, so they are inherited and are
+9 hold `0x020b6b38` and `0x020b6b10`, both **[ov002](../../../config/arm9/overlays/ov002/symbols.txt)** and both
+`daObjKurumajiku_c`'s own `Behavior` and `Render`, so they are inherited and are
 deliberately not redeclared. Member offsets the bodies touch (`+0x124`
-dBgW_KcMbg, `+0xd4` Model) lie inside `dBgActor_c`, consistent with a class that
+`dBgW_KcMbg`, `+0xd4` Model) lie inside `dBgActor_c`, consistent with a class that
 adds no fields.
 
 **`rombuild` byte-verifies this class's data even on the text-only route.** All
@@ -294,8 +294,8 @@ speaking, not a defect:
   this change accounts for. The regenerated note is committed.
 - **`tubuild linkcheck`** — refuses with `intact production requires one .text
   claim and at least one non-text claim`. Reproduced by me on landed
-  `ov102/daBmb_c` in the clean worktree: same message, same exit 1. That run
-  also failed `ov036/daObjRcCarpet_c` and `ov070/daPropeller_Heyho_c` on a
+  [ov102](../../../config/arm9/overlays/ov102/symbols.txt)/`daBmb_c` in the clean worktree: same message, same exit 1. That run
+  also failed [ov036](../../../config/arm9/overlays/ov036/symbols.txt)/`daObjRcCarpet_c` and [ov070](../../../config/arm9/overlays/ov070/symbols.txt)/`daPropeller_Heyho_c` on a
   related vtable-partition refusal, so this is a tree-wide post-promotion
   condition. Not this class's.
 - **`linkcheck.py --name`** — cannot run anywhere in this environment: it reads
@@ -344,7 +344,7 @@ speaking, not a defect:
    The strongest argument is in `delinks.txt`, which now lists the family as
    three consecutive entries tiling one address range:
 
-   ```
+   ```text
    src/game/actors/d_a_obj_km1_ukishima.cpp    .text 0x021111a0..0x021113fc
    src/game/actors/d_a_obj_km1_kurumajiku.cpp  .text 0x021113fc..0x02111518
    src/game/actors/d_a_obj_km1_kuruma.cpp      .text 0x02111518..0x02111630
@@ -353,7 +353,7 @@ speaking, not a defect:
    The two classes that bound this run are its neighbours in the file as well as
    in the ROM. The old path filed it away from the family it was cut out of.
    Note `src/actors/` still holds 39 other classes, so the migration is partial
-   and the wrong path looked plausible — but every ov043 `km1` sibling was
+   and the wrong path looked plausible — but every [ov043](../../../config/arm9/overlays/ov043/symbols.txt) `km1` sibling was
    already in `src/game/actors/`, which settles it for this class.
 3. **`daObjKurumajiku_c` is the base, not merely a trap.** Recorded above.
 4. **The rename ledger already records a one-class shift on this exact stem, and
@@ -376,9 +376,9 @@ speaking, not a defect:
    (`0x021114dc`) and `RickshawBdw_SpawnInfo` (`0x02112368`). Both sit on *this*
    class's real addresses, both are already superseded by a following row
    (`daObjKm1_Kurumajiku_c_classInit`, `g_profile_KM1_KURUMAJIKU`), and both are
-   coined spellings `check_rename_ledger` counts as out of scope. So ov043's
+   coined spellings `check_rename_ledger` counts as out of scope. So [ov043](../../../config/arm9/overlays/ov043/symbols.txt)'s
    coined rows do **not** carry the shift that checker's docstring warns about
-   for ov009.
+   for [ov009](../../../config/arm9/overlays/ov009/symbols.txt).
 
    **Five rows for this rename were added in the revise stage** — one per
    renamed address, in the five-column `module / addr / old / new / why` shape

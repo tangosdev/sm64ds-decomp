@@ -9,32 +9,32 @@ for both tasks. Active review policy: `262fe4e44cc1e658b1a37e4b64e32270c750e32c`
 
 The composition includes main `ddeb8f88788703eb16b1e8227777ec43c31e80b3`.
 The renamed class header inherits main's corrected `void OnTurnIntoEgg` contract;
-the TU definition now agrees. The old Pokey shard was modified on main after
+the TU definition now agrees. The old `Pokey` shard was modified on main after
 this promotion deleted it. It remains retired, with its contract correction
-carried into the promoted TU. The shared Actor contract is retained.
+carried into the promoted TU. The shared `Actor` contract is retained.
 
 Three model-loading calls use `Model::LoadFile`, and two model-setup calls use
 `mModel.SetFile`. Each replacement was first tested against the preserved
 checkpoint. The composed TU verifies all 36 functions, 5,808 text bytes, with
 zero blind words or differences; all 164 emitted symbol references resolve to
 the ROM's permitted modules. Every function's bytes equal the freshly compiled
-checkpoint object, including the corrected 64-byte OnTurnIntoEgg body.
+checkpoint object, including the corrected **64-byte** `OnTurnIntoEgg` body.
 Emitted metadata remains five VERIFIED and four PARTIAL records. This is a
 text-only production entry; it owns no data or BSS.
 
 The other interface probes remain limited findings. Passing `Fix12<int>`
 objects to `dCcAc_c::Init`, using either aggregate initialization or explicit
-field assignment, grew InitResources from 544 to 560 bytes. Calling the existing
+field assignment, grew `InitResources` from 544 to 560 bytes. Calling the existing
 scalar-parameter `dBgCh_Actr::Init` preserved masked instruction bytes but emitted
 an unresolved external identity, giving strict BLIND-1. Neither variant is used.
 These measurements justify retaining those two bridges in this candidate; they
 do not prove that every typed implementation is impossible. The composed-tree
-probes repeated the same two failures. Local scripts, objects and JSON reports
+probes repeated the same two failures. Local scripts, objects and `JSON` reports
 are preserved in the producer worktree and identified by the queue evidence.
 
 The current provenance note now describes the previous-segment link, propagation
 of root position through that link, and the reader and clear of `unk_3a8`.
-It identifies the real Matrix4x3 member and existing matrix header. The dated
+It identifies the real `Matrix4x3` member and existing matrix header. The dated
 scout correction preserves original observations while superseding obsolete
 writer instructions. The historical handoff and manifest now distinguish removed
 render/PMF/link shadows, ten native method symbols, and the eleven-byte RTTI

@@ -41,13 +41,13 @@ This document describes this commit. The queue records its immutable output SHA.
 ## What changed and why
 
 - Class/TU/symbol and module-qualified ROM scope: `daObjBk_Dossunbar_c` in
-  ov015, `.text` `0x02111ba0..0x02112290` (half-open), 25 functions, folded into
+  [ov015](../../../config/arm9/overlays/ov015/symbols.txt), `.text` `0x02111ba0..0x02112290` (half-open), 25 functions, folded into
   `src/game/actors/d_a_obj_bk_dossunbar.cpp` and enrolled as one `complete` entry
-  in `config/arm9/overlays/ov015/delinks.txt`.
+  in [config/arm9/overlays/ov015/delinks.txt](../../../config/arm9/overlays/ov015/delinks.txt).
 - **The fold is 25, not the queue's 23.** Re-derived by address rather than taken
   from the queue row: the 25 delinks entries over that span are contiguous, they
   are bounded below by the botaosi shard that ends at `0x02111ba0` and above by
-  the daObjBk_Lift_c destructor shard that starts at `0x02112290`, and they include
+  the `daObjBk_Lift_c` destructor shard that starts at `0x02112290`, and they include
   the two zero-gap registry factories
   `daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L` and `..._S`, whose shards were
   named `d_a_obj_bk_dossunbar_bk_dossunbar_l.c` and `..._s.c`. The queue's
@@ -59,9 +59,11 @@ This document describes this commit. The queue records its immutable output SHA.
   (see Identity). Touched: `include/daObjBk_Dossunbar_c.h` (renamed from the
   coined name and rewritten), `include/decl_common.h` (shared: the class's
   `_ZTV` row renamed in place by the rename tool, and one exact duplicate of that
-  same declaration removed), `config/arm9/overlays/ov015/symbols.txt` (renames in
+  same declaration removed), [config/arm9/overlays/ov015/symbols.txt](../../../config/arm9/overlays/ov015/symbols.txt) (renames in
   place at unchanged addresses; **no alias row was added**),
-  `config/arm9/overlays/ov015/delinks.txt`, the class manifest,
+  [config/arm9/overlays/ov015/delinks.txt](../../../config/arm9/overlays/ov015/delinks.txt) (renames in
+  place at unchanged addresses; **no alias row was added**),
+  the class manifest,
   `symbols/actor_renames.tsv`, `attribution.json`,
   `config/converted-baseline.json`, and five notes files the rename and the fold
   keep current: `notes/data/class-facts/daObjBk_Dossunbar_c.json`,
@@ -69,8 +71,8 @@ This document describes this commit. The queue records its immutable output SHA.
   `notes/data/tu-merge-candidates.json` and `notes/bgobject-provenance.md`,
   whose section for this class gains the new field and loses its description of
   a C twin this commit deletes.
-- ROM observations: `_ZTS19daObjBk_Dossunbar_c` at ov015 `0x0211451c` spells the
-  class name, `_ZTI` at `0x02114510` points at `_ZTI10dBgActor_c` (ov002
+- ROM observations: `_ZTS19daObjBk_Dossunbar_c` at [ov015](../../../config/arm9/overlays/ov015/symbols.txt) `0x0211451c` spells the
+  class name, `_ZTI` at `0x02114510` points at `_ZTI10dBgActor_c` ([ov002](../../../config/arm9/overlays/ov002/symbols.txt)
   `0x021089ec`) through its `__si_class_type_info` base word, and `_ZTV` at
   `0x0211458c` is a 32-word table of which eight words differ from
   `_ZTV10dBgActor_c` and all eight land inside this overlay's `.text` -- slots 0,
@@ -92,7 +94,7 @@ This document describes this commit. The queue records its immutable output SHA.
   from this cartridge. The fourteen address-named state helpers **keep their
   names on purpose**: fourteen pointer-to-member constants at `0x021144a0` are
   resolved by name, so renaming any of them is a same-commit
-  `config/arm9/overlays/ov015/symbols.txt` edit, and the evidence for real names
+  [config/arm9/overlays/ov015/symbols.txt](../../../config/arm9/overlays/ov015/symbols.txt) edit, and the evidence for real names
   has not been gathered. That is the next concrete improvement for this class.
 - Compiler experiments and measured barriers: the destructor is the load-bearing
   decision and the **inline** form -- `virtual ~daObjBk_Dossunbar_c() {}` written
@@ -100,7 +102,7 @@ This document describes this commit. The queue records its immutable output SHA.
   at `0x02111ba0` followed by D0 at `0x02111be4` with no D2 on the first attempt.
   No partial was taken, so the out-of-line variants and the `defer_codegen off`
   lever were not needed. The cost of the inline form is that the object carries
-  the vague-linkage RTTI records; ov015 delinks no `.data`, so all eleven are
+  the vague-linkage RTTI records; [ov015](../../../config/arm9/overlays/ov015/symbols.txt) delinks no `.data`, so all eleven are
   licensed as `deadstrip-data` and the TU emits no `_ZTV`, `_ZTI` or `_ZTS` of
   its own. `_ZN7Vector3D1Ev` is licensed as `deadstrip-duplicate` against its
   real home at arm9 `0x020072c0`. Members are written highest-address-first
@@ -140,12 +142,12 @@ This document describes this commit. The queue records its immutable output SHA.
   the merge gate reports no movement.
 - Remaining agreed issue scope: (1) the fourteen address-named helpers need
   evidenced names plus the matching symbols.txt edit; (2) **a naming defect that
-  is reported here, not fixed**: the ov015 `.bss` symbols
+  is reported here, not fixed**: the [ov015](../../../config/arm9/overlays/ov015/symbols.txt) `.bss` symbols
   `MovingBarSmall_ClsnFile` (`0x02114a5c`) and `MovingBarSmall_ModelFile`
-  (`0x02114a64`) carry this class's old coined prefix but belong to daObjBk_Lift_c --
+  (`0x02114a64`) carry this class's old coined prefix but belong to `daObjBk_Lift_c` --
   the one file that used to reference either has since been absorbed into
   `src/actors/daObjBk_Lift_c.cpp`, which reaches both addresses by their
-  address-true `data_ov015_02114a5c` / `data_ov015_02114a64` spellings instead.
+  address-true [data_ov015_02114a5c / data_ov015_02114a64](../../../config/arm9/overlays/ov015/symbols.txt) spellings instead.
   Nothing in the tree references the coined names now. They are outside this
   fold, the rename tool left them alone because there is no word boundary after
   the coined prefix, and the promoted TU does not reference them. They need an
@@ -179,14 +181,14 @@ worktrees' gitignored build directories.
   is a property of that command's one-function isolation route, not of this
   class**: its externalise branch accepts only a non-zero addend while the
   consolidated production route accepts addend 0, and the same command reports
-  the same message on the landed, merged ov015 siblings' own factories. The
+  the same message on the landed, merged [ov015](../../../config/arm9/overlays/ov015/symbols.txt) siblings' own factories. The
   addend-0 `R_ARM_ABS32` is correct, and the per-symbol link check above verifies
   both factories' linked bytes against the cartridge.
   `python tools/tubuild.py linkcheck ov015/daObjBk_Dossunbar_c` now **refuses**
   at its compile step with "intact production requires one .text claim and at
   least one non-text claim" -- a text-only promoted TU cannot take that route
   once it is enrolled. **Control: the same command refuses identically on
-  `ov015/daObjBk_Rotebar_c`, which is landed and merged.** The whole-range link
+  [ov015/`daObjBk_Rotebar_c`](../../../config/arm9/overlays/ov015/symbols.txt), which is landed and merged.** The whole-range link
   proof for this span was taken before promotion and is recorded in the manifest:
   scratch-link-verified, 25 of 25 MATCH including both factories, 0 differing
   bytes over `0x02111ba0..0x02112290`, 25 LICENSED objects with 0 unlicensed, and

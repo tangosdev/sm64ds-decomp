@@ -1,4 +1,4 @@
-# Handoff: pr2231-rescue-ov002-batch1
+# Handoff: pr2231-rescue-[ov002](../../../config/arm9/overlays/ov002/symbols.txt)-batch1
 
 This document describes this commit. The queue records its immutable output SHA.
 
@@ -15,7 +15,7 @@ This document describes this commit. The queue records its immutable output SHA.
   There is no accepted input: the rescued branch was NOT merged (a trial merge of
   `origin/main` into it produced 40 conflicts and was abandoned). Its content for
   these three classes was re-derived file by file on top of main, and one of its
-  commits, `8ba4d118d` "Enroll func_ov002_020f051c by compiling it as C++", was
+  commits, `8ba4d118d` "Enroll [func_ov002_020f051c](../../../src/actors/daSCoin_c.cpp) (ROM ordinal 3 used to assemble `daSCoin_c.cpp` ) by compiling it as C++", was
   cherry-picked with `-x`. `cpp/promote-da-obj-lava` is untouched on the remote
   and must not be deleted: it still holds the other 14 classes. Its head is
   `118aee137` (re-confirmed with `gh pr view 2231` and
@@ -33,7 +33,7 @@ This document describes this commit. The queue records its immutable output SHA.
   evidence commit. Stage artifacts: `src/actors/daObjLava_c.cpp`,
   `src/actors/daObjFire_c.cpp`, `src/actors/daSCoin_c.cpp`, their headers in
   `include/`, and the three promoted manifests under
-  `config/tu_manifest.d/ov002/`.
+  [config/tu_manifest.d/ov002/](../../../config/arm9/overlays/ov002/tu_manifest.d/).
 - Next action, responsible role and blockers: independent verification of this
   commit (verifier), then integration. No known blocker: the `tubuild.py
   linkcheck` [4/8] refusal the brief anticipated for an already-promoted TU did
@@ -42,31 +42,31 @@ This document describes this commit. The queue records its immutable output SHA.
   run on this commit).
 - Remaining uncommitted/local-only material and where it is preserved: the other
   14 classes of PR #2231 (heart on `cpp/promote-ov002-heart-tu` in the same
-  worktree, still WIP; ov045/ov010/ov012/ov013/ov022/ov026/ov030/ov033/ov062 on
+  worktree, still WIP; [ov045](../../../config/arm9/overlays/ov045/symbols.txt)/[ov010](../../../config/arm9/overlays/ov010/symbols.txt)/[ov012](../../../config/arm9/overlays/ov012/symbols.txt)/[ov013](../../../config/arm9/overlays/ov013/symbols.txt)/[ov022](../../../config/arm9/overlays/ov022/symbols.txt)/[ov026](../../../config/arm9/overlays/ov026/symbols.txt)/[ov030](../../../config/arm9/overlays/ov030/symbols.txt)/[ov033](../../../config/arm9/overlays/ov033/symbols.txt)/[ov062](../../../config/arm9/overlays/ov062/symbols.txt) on
   the original branch only). Gate logs live in the worktree's ignored `build/`.
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: three ov002 classes, each now
+- Class/TU/symbol and module-qualified ROM scope: three [ov002](../../../config/arm9/overlays/ov002/symbols.txt) classes, each now
   one intact-object TU owning its .text run and its .data run:
   - `daObjLava_c` (was coined `PoppingLavaBubbles`): text
-    `ov002:[0x020b6d28,0x020b6e08)` (5 functions), data
-    `ov002:[0x021093a0,0x0210945c)` = `_ZTS` 0x021093ac, `_ZTI` 0x021093a0,
+    [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x020b6d28,0x020b6e08)` (5 functions), data
+    [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x021093a0,0x0210945c)` = `_ZTS` 0x021093ac, `_ZTI` 0x021093a0,
     spawn-info record, `_ZTV` storage with address point 0x021093e0.
-  - `daObjFire_c` (was coined `BlueFlame`): text `ov002:[0x020b5734,0x020b5a18)`
-    (8 functions; one class, two profiles OBJ_RED_FIRE/OBJ_BLUE_FIRE with
-    byte-identical factories), data `ov002:[0x02108edc,0x02108fb4)` = `_ZTS`
+  - `daObjFire_c` (was coined `BlueFlame`): text [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x020b5734,0x020b5a18)`
+    (8 functions; one class, two profiles `OBJ_RED_FIRE`/`OBJ_BLUE_FIRE` with
+    byte-identical factories), data [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x02108edc,0x02108fb4)` = `_ZTS`
     0x02108ee8, `_ZTI`, two spawn-info records, `_ZTV` with address point
     0x02108f38.
-  - `daSCoin_c` (already the ROM name): text `ov002:[0x020f03c4,0x020f0894)`
+  - `daSCoin_c` (already the ROM name): text [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x020f03c4,0x020f0894)`
     (9 functions: 3 methods, D1/D0, 3 file-local helpers, factory), data
-    `ov002:[0x0210aff4,0x0210b0ac)`.
+    [ov002](../../../config/arm9/overlays/ov002/symbols.txt):`[0x0210aff4,0x0210b0ac)`.
 - Reserved source/header/config surfaces actually touched:
-  `config/arm9/overlays/ov002/symbols.txt` (renames only: the coined
+  [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) (renames only: the coined
   `PoppingLavaBubbles`/`BlueFlame` rows become the RTTI names,
-  `func_ov002_020b6d84` becomes `_ZN11daObjLava_c8BehaviorEv`; the duplicate
+  `func_ov002_020b6d84` becomes [_ZN11daObjLava_c8BehaviorEv](../../../src/actors/daObjLava_c.cpp)(ROM Ordinal 3 used for assembling `daObjLava_c.cpp`); the duplicate
   coined `_ZTV9BlueFlame` alias row is DELETED; no row is added),
-  `config/arm9/overlays/ov002/delinks.txt` (three intact-object splices written by
+  [config/arm9/overlays/ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt) (three intact-object splices written by
   `tu_promote.py`), `include/decl_common.h` (the duplicate
   `extern int _ZTV11daObjFire_c[]` declaration deleted, net -1 line),
   `attribution.json` (22 per-function overrides written by `tu_promote.py`),
@@ -74,13 +74,13 @@ This document describes this commit. The queue records its immutable output SHA.
   `tu_promote.py`; shape audited, not hand-merged), `symbols/actor_renames.tsv`
   (12 appended rows; five historical BlueFlame rows moved to the live names by
   `check_rename_ledger.py --fix`), `notes/actor-leaf-provenance.md` (one source
-  citation repointed), `config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json`
+  citation repointed), [config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json](../../../config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json)
   (prose neighbour name only). Legacy one-function shards and the two coined
   headers are removed. The cherry-picked commit turned the C shard of
-  `func_ov002_020f051c` into a C++ one (its first source build); the scoin
+  [func_ov002_020f051c](../../../src/actors/dScMgCoin_c.cpp) into a C++ one (its first source build); the scoin
   promotion then folded that shard into the TU, so no shard file remains.
-- ROM observations: `_ZTS11daObjLava_c` at ov002:0x021093ac and
-  `_ZTS11daObjFire_c` at ov002:0x02108ee8 are the ROM's own class names, so the
+- ROM observations: `_ZTS11daObjLava_c` at [ov002](../../../config/arm9/overlays/ov002/symbols.txt):0x021093ac and
+  `_ZTS11daObjFire_c` at [ov002](../../../config/arm9/overlays/ov002/symbols.txt):0x02108ee8 are the ROM's own class names, so the
   coined names are retired per the ROM-RTTI ruling. All three vtables are 31 slots
   (dActor_c-shaped, 0x84 bytes of storage each). Factories allocate 0xd8 (lava), 0x118 (fire), 0x114 (scoin)
   and plant `&_ZTV<C>[2]`. D1 precedes D0 in the cartridge; no D2 exists.
@@ -108,11 +108,11 @@ This document describes this commit. The queue records its immutable output SHA.
   `tubuild.py verify` (5+8+9), objisolate clean, reloc destinations clean; both
   ranges of each TU IDENTICAL in the scratch link (see Proof).
 - Genuine methods; remaining free-function/ABI bridges: every vtable slot the
-  classes override is a real member. The factories and daSCoin_c's three
-  file-local helpers (`func_ov002_020f0438/051c/05f4`) stay `extern "C"` free
+  classes override is a real member. The factories and `daSCoin_c`'s three
+  file-local helpers ([func_ov002_020f0438 - ROM ordinal 2/051c - ROM Ordinal 3/05f4 - ROM Ordinal 4](../../../config/tu_manifest.d/ov002/daSCoin_c.json)) stay `extern "C"` free
   functions, as on main.
 - Recovered layout/fields; remaining shadow structs/raw offsets: main's headers
-  as they were (daSCoin_c's named fields per `notes/actor-leaf-provenance.md`;
+  as they were (`daSCoin_c`'s named fields per `notes/actor-leaf-provenance.md`;
   lava's `mEffectHandle` at 0xd4). The factories still write the vptr and call
   the base ctor through raw `int *` as every intact-object TU on main does.
 - Lifecycle, vtable/RTTI, initializer and data ownership: each TU emits its own
@@ -155,7 +155,7 @@ quoted verdict; nothing here is inherited from PR #2231's own manifests or logs.
     by hand.
   - `validate_merge.py --base 006d1f2c3 --head HEAD` with the two ROM reports
     above: exit 0; byte-verified functions 11,164/11,347 (+1: the cherry-picked
-    C++ compile of `func_ov002_020f051c`, +216 bytes); `Contributor credit 0
+    C++ compile of [func_ov002_020f051c](../../../config/tu_manifest.d/ov002/daSCoin_c.json), +216 bytes); `Contributor credit 0
     added, 0 changed, 0 lost`; `Relocation check: 0 checked; no affected
     slots`; `ROM data reproduced from source: 693 exact, 217 partial, 4 differ`
     (base 686/215/5). Its warning that 21 address ranges "left the byte-verified
@@ -205,7 +205,7 @@ quoted verdict; nothing here is inherited from PR #2231's own manifests or logs.
   13 `CREDIT LOST` rows on this tree (it is in the pre-push hook). 12 are this
   batch's folded shards -- exactly the ones whose CLASS was renamed
   (`PoppingLavaBubbles*`, `BlueFlame*`, `d_a_obj_lava`, `d_a_obj_fire_*`,
-  `d_a_s_coin`, `func_ov002_020b6d84`); the 5 daSCoin_c shards whose basename
+  `d_a_s_coin`, [func_ov002_020b6d84](../../../config/tu_manifest.d/ov002/daObjLava_c.json)); the 5 daSCoin_c shards whose basename
   still equals the surviving symbol are reported "consolidated, credit intact".
   The 13th (`daBmb_c`) comes from main. This is issue #2433's basename-keyed
   false positive, adjudicated as such by the verifier; the underlying credit

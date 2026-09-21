@@ -1,16 +1,16 @@
 # Sanbo integration, 2026-09-10
 
 This composition preserves source acceptance `c37a24cbd64baf8a91aa27d4f697312eb605484f`
-and incorporates main `ffe4a122af239a775463928acb0f88b156b55a1a` after BombKing landed
+and incorporates main `ffe4a122af239a775463928acb0f88b156b55a1a` after `BombKing` landed
 and its three-file progress refresh.
-The class header and both ov096 enrollment files are unchanged from that
+The class header and both [ov096](../../../config/arm9/overlays/ov096/symbols.txt) enrollment files are unchanged from that
 accepted source. Integration review corrects the TU comment, manifest census
 and historical provenance; the 36 functions and 5,808 text bytes remain a
 text-only promotion. Emitted class metadata is not newly owned data.
 
 The converted-function conflict is resolved as the exact three-way set. All
-2,715 main identities survive, including seven old Pokey paths mapped to their
-existing Sanbo method identities. The combined set has 2,716 entries and passes
+2,715 main identities survive, including seven old `Pokey` paths mapped to their
+existing `Sanbo` method identities. The combined set has 2,716 entries and passes
 the converted-form ratchet. No baseline entry is added merely to make a count fit.
 The complete attribution mapping is the recursive three-way merge. Rename,
 attempt and provenance records retain their exact three-way multisets: 3,617,

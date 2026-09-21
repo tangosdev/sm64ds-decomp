@@ -1,17 +1,17 @@
-# Pkn integration, 2026-09-10
+# `Pkn` integration, 2026-09-10
 
 This composition starts from accepted source
 `b1c8e0611f53aaf1063752a849caf4cf1a7f7794` and incorporates actual main
-`e415731933773ff4110f2dd58d4118bce65e5796` after Sanbo's merge and progress refresh.
-Sanbo's squash has the exact reviewed `e1c837107` tree. The two apparent
-conflicts in the converted baseline and TU note preserve the staged Pkn values;
-the complete resulting tree is the reviewed Pkn staging tree plus main's
+`e415731933773ff4110f2dd58d4118bce65e5796` after `Sanbo`'s merge and progress refresh.
+`Sanbo`'s squash has the exact reviewed `e1c837107` tree. The two apparent
+conflicts in the converted baseline and TU note preserve the staged `Pkn` values;
+the complete resulting tree is the reviewed `Pkn` staging tree plus main's
 4 progress files and this updated handoff.
 
-Pkn remains a text-only promotion of 24 functions and 5,764 bytes. Six ordinary
+`Pkn` remains a text-only promotion of 24 functions and 5,764 bytes. Six ordinary
 method definitions plus the compiler-generated destructor pair, fifteen
 address-named helpers and a manual factory remain. The shared class header,
-manifest policy and both ov084 enrollment files retain their accepted content.
+manifest policy and both [ov084](../../../config/arm9/overlays/ov084/symbols.txt) enrollment files retain their accepted content.
 The TU comments are shorter; @symbol annotations and ROM ordinals are retained.
 
 Integration review preserves PKN-01 through PKN-06 and corrects three further
@@ -20,7 +20,7 @@ provenance findings:
 - PKN-07: the 23-function queue census predates promotion and omitted the factory.
   The current row counts one TU; its line count is derived from the current file.
 - PKN-08: the field notes now describe actual reads and writes, including the
-  Sound::PlaySub byte, selected-player data, particle and sound handles, and the
+  `Sound::PlaySub` byte, selected-player data, particle and sound handles, and the
   additional state-2 condition for the position collider. The word at 0x478
   occupies all four bytes through 0x47b. Earlier scout observations remain intact,
   with a dated correction where they inferred padding from instruction starts.
@@ -32,7 +32,7 @@ Nothing here establishes original field names or a universal compiler limit.
 
 The global composition is checked as an exact recursive attribution merge and
 record multiset merge. All 2,716 current-main converted identities survive,
-including six PiranhaPlant paths mapped to their existing daPkn_c method symbols.
+including six `PiranhaPlant` paths mapped to their existing `daPkn_c` method symbols.
 The combined converted set still has 2,716 entries. The attempt, provenance and
 rename ledgers contain 2,073, 721 and 3,626 records respectively. Generated queue
 and TU-state notes are refreshed from the staged authorities.

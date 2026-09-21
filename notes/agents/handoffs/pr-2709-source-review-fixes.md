@@ -15,7 +15,7 @@ head.
   this commit.
 - Source base: `491c2eea764f01e498611270e565c814afb928b4`.
 - Compiler: `2004/b56`, the tracked `tools/mwccarm` install.
-- Owned span: ov063 `0x0211cdec..0x0211d270` (`d_a_trs_trap.cpp`, 5 functions),
+- Owned span: [ov063](../../../config/arm9/overlays/ov063/symbols.txt) `0x0211cdec..0x0211d270` (`d_a_trs_trap.cpp`, 5 functions),
   `0x0211d2a0..0x0211d3a0` (`d_a_trs_trap_classinits.cpp`, 4 factories), and the
   two single-function destructor shards at `0x0211c600` and `0x0211c638`.
   11 defined functions total. Unchanged by this commit.
@@ -30,8 +30,8 @@ head.
 | `dBgW_KcMbg::SetFile` mangled TU-local spelling | `compiler_constraint` | `notes/experiments/trap-2709-setfile.md` -- method form measured at size `0x388` vs the ROM's `0x370`. |
 | Spawn offset table referenced by symbol, not a named local | `compiler_constraint` | `notes/experiments/trap-2709-offstable.md` -- named local measured, 7 words differ (table load hoisted to `+0x294`). |
 | `v16` field-write order x, y, z | `compiler_constraint` | `notes/experiments/trap-2709-v16order.md` -- y/z swap measured, 2 words differ at `+0x2a0`/`+0x2a4`. |
-| Synthesized ctor's vague-linkage `_ZN9Matrix4x3D1Ev` | `compiler_constraint` (packaging form) | `notes/experiments/trap-2709-matrixd1.md` -- no source-side alternative exists to measure; the durable artifact is the committed `compiler_only_output` deadstrip row in `config/tu_manifest.d/ov063/daTrsTrap_c_classInit.json`. The reviewer decides whether that substitution holds or the entry is re-labelled `deferred`. |
-| `func_020393d4`/`func_020393c4` callback-word stores; `SharedFilePtr+4` re-read; `+0x418` / `+0x154` / S14 | `deferred`, `completion: partial` | `notes/experiments/trap-2709-notexperimentable.md`. Each item names the work that would unblock it. Durable thread: this PR, until a daTrsTrap_c class issue exists (sibling ov063 classes carry #2720 and #2721). Next owner: the humanizer integrator through @andrewboudreau, who is coordinating this PR's integration. |
+| Synthesized ctor's vague-linkage `_ZN9Matrix4x3D1Ev` | `compiler_constraint` (packaging form) | `notes/experiments/trap-2709-matrixd1.md` -- no source-side alternative exists to measure; the durable artifact is the committed `compiler_only_output` deadstrip row in [config/tu_manifest.d/ov063/daTrsTrap_c_classInit.json](../../../config/tu_manifest.d/ov063/daTrsTrap_c_classInit.json). The reviewer decides whether that substitution holds or the entry is re-labelled `deferred`. |
+| `func_020393d4`/`func_020393c4` callback-word stores; `SharedFilePtr+4` re-read; `+0x418` / `+0x154` / S14 | `deferred`, `completion: partial` | `notes/experiments/trap-2709-notexperimentable.md`. Each item names the work that would unblock it. Durable thread: this PR, until a `daTrsTrap_c` class issue exists (sibling [ov063](../../../config/arm9/overlays/ov063/symbols.txt) classes carry #2720 and #2721). Next owner: the humanizer integrator through @andrewboudreau, who is coordinating this PR's integration. |
 | Behavior's dual `mStateTimer` spelling | `fixed` | `notes/experiments/trap-2709-statetimer.md` disproved the "one instruction short" claim; `1477adc72` adopted the unified spelling and deleted the claim. |
 
 Every artifact above is committed on this branch: the experiment notes by

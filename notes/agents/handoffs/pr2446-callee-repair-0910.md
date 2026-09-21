@@ -9,17 +9,17 @@ checkout, observed at `0b99f3a97fc3714b9a1f413267d5bd50fefa5cfb`.
 
 ## Correction
 
-**BKG-07 (provenance):** two BombKing state handlers named the unrelated
+**BKG-07 (provenance):** two `BombKing` state handlers named the unrelated
 `_ZN13MontyMoleRockD0Ev` destructor as their callee. That symbol's only configured
-home is **ov080:0x02123804**, size 0x54. Both ROM call records instead identify
-**ov078:0x02123804**, size 0x60, the local `func_ov078_02123804` helper:
+home is **[ov080](../../../config/arm9/overlays/ov080/symbols.txt):0x02123804**, size 0x54. Both ROM call records instead identify
+**[ov078](../../../config/arm9/overlays/ov078/symbols.txt):0x02123804**, size 0x60, the local [func_ov078_02123804](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 2 used to assemble `daBombking_c.cpp`) helper:
 
 | Caller | Call address | ROM target | Corrected emitted symbol |
 | --- | --- | --- | --- |
-| `func_ov078_02123aa0` | `0x02123ac0` | `overlay(78):0x02123804` | `func_ov078_02123804` |
-| `func_ov078_02123c20` | `0x02123c28` | `overlay(78):0x02123804` | `func_ov078_02123804` |
+| [func_ov078_02123aa0](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 6) | `0x02123ac0` | `overlay(78):0x02123804` | [func_ov078_02123804](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 2) |
+| [func_ov078_02123c20](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 8) | `0x02123c28` | `overlay(78):0x02123804` | [func_ov078_02123804](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 2) |
 
-The evidence is in `config/arm9/overlays/ov078/relocs.txt` and the ov078/ov080
+The evidence is in [config/arm9/overlays/ov078/relocs.txt](../../../config/arm9/overlays/ov078/relocs.txt) and the [ov078](../../../config/arm9/overlays/ov078/symbols.txt)/[ov080](../../../config/arm9/overlays/ov080/symbols.txt)
 symbol tables. Both calls now use the helper already defined earlier in this TU,
 and the unused `decl_MontyMoleRock.h` include is removed. No symbol or relocation
 configuration is changed. The helper keeps its existing neutral name.

@@ -1,27 +1,27 @@
 # PR #2446 composition checkpoint
 
-This checkpoint composes independently accepted Bombking source
-`ff9766c6c59958b804576e04284dc5a001549880` after the reviewed Snowman
+This checkpoint composes independently accepted `Bombking` source
+`ff9766c6c59958b804576e04284dc5a001549880` after the reviewed `Snowman`
 composition `7ed0a7c6be6e06a91081a3db75ebd52d2db58753`. The latter's GitHub PR
 is still awaiting terminal private validation at this checkpoint. This is a
 local staging order, not a claim that either commit has landed on main.
 
-The accepted Bombking source, header and manifest are unchanged. In particular,
-the two state handlers retain calls to the local ov078 helper
-`func_ov078_02123804`, rather than the unrelated ov080 destructor at the same
+The accepted `Bombking` source, header and manifest are unchanged. In particular,
+the two state handlers retain calls to the local [ov078](../../../config/arm9/overlays/ov078/symbols.txt) helper
+[func_ov078_02123804](../../../src/actors/daBombking_c.cpp)(ROM Ordinal 2 used to assemble `daBombking_c.cpp`), rather than the unrelated [ov080](../../../config/arm9/overlays/ov080/symbols.txt) destructor at the same
 numeric address. The prior independent review covered all 52 functions and all
 427 emitted reference identities, including this module distinction.
 
-The ledger conflict comprised 39 preceding records and nine ov078 records.
+The ledger conflict comprised 39 preceding records and nine [ov078](../../../config/arm9/overlays/ov078/symbols.txt) records.
 All are preserved; the complete resulting record multiset matches the two
 parents and their merge base. Attribution was compared recursively, and both
-matching-history JSONL files retain the exact combined records and historical
+matching-history `JSONL` files retain the exact combined records and historical
 source paths. The converted baseline's merged identity set passed its ratchet
 before regeneration; the generator then banked 14 existing gains and lost none.
 
 The promotion queue was regenerated from fresh RTTI, vtable and TU-map inputs,
-after identifying its retired KingBobOmb row as daBombking_c. This preserves
-main's Door row and derives the Bombking row from the actual tree. The C++ TU
+after identifying its retired KingBobOmb row as `daBombking_c`. This preserves
+main's `Door` row and derives the `Bombking` row from the actual tree. The C++ TU
 summary was regenerated as well.
 
 This remains a text-only promotion: 52 functions cover 12,064 bytes. Compiler
@@ -44,7 +44,7 @@ signature inference. This is a documentation correction; source is unchanged.
 
 A second independent staging review found BKG-09 and BKG-10. The field note
 now records actual writes to +0x499, reads/toggles of +0x4a0, and the live actor
-ID/flag arrays at +0x424/+0x42c. It does not invent original field names. The TU
+ID/flag arrays at +0x424/+0x42c. *It does not invent original field names.* The TU
 comments now distinguish the historical 51-shard queue from its 52 functions
 and current one-source promoted row. These are comment/provenance corrections;
 executable source tokens and manifest policy remain unchanged.

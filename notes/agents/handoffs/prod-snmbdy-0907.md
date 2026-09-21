@@ -33,7 +33,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
 - Separate evidence commits and required artifacts in this commit:
   no separate evidence commits. Required artifacts present:
   `src/actors/daBgSnmBdy_c.cpp`, `include/daBgSnmBdy_c.h` and
-  `config/tu_manifest.d/ov072/daBgSnmBdy_c.json`.
+  [config/tu_manifest.d/ov072/daBgSnmBdy_c.json](../../../config/tu_manifest.d/ov072/daBgSnmBdy_c.json).
 - Next action, responsible role and blockers:
   independent verification (verifier), then central sequencing. No PR was opened
   and nothing was merged, as instructed. No known blocker. Two scope notes below:
@@ -52,19 +52,19 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
 ## What changed and why
 
 - Class/TU/symbol and module-qualified ROM scope:
-  `daBgSnmBdy_c` in ov072 — the big rolling snowman's body actor. The promoted TU
+  `daBgSnmBdy_c` in [ov072](../../../config/arm9/overlays/ov072/symbols.txt) — the big rolling snowman's body actor. The promoted TU
   claims two ranges and nothing else: `.text 0x0211f000..0x0211ff34` (29 functions)
   and `.data 0x02122780..0x0212283c`. The route is `intact-object`, so the `.data`
   claim is load-bearing rather than optional.
 - Reserved source/header/config surfaces actually touched by THIS stage:
-  the class's own source, header and manifest; `config/arm9/overlays/ov072`
-  `delinks.txt` and `symbols.txt`; `include/decl_common.h` (one duplicate
+  the class's own source, header and manifest; [config/arm9/overlays/ov072](../../../config/arm9/overlays/ov072/)
+  [delinks.txt](../../../config/arm9/overlays/ov072/delinks.txt) and [symbols.txt](../../../config/arm9/overlays/ov072/symbols.txt); `include/decl_common.h` (one duplicate
   declaration removed); `config/converted-baseline.json`; `attribution.json`;
   `symbols/actor_renames.tsv`; and one row of `notes/data/tu-promotion-queue.tsv`.
   The remaining touched files are mechanical re-spellings written by
   `tools/class_rename.py`.
 - ROM observations:
-  ov072 0x0212278c holds the length-prefixed Itanium `_ZTS` payload
+  [ov072](../../../config/arm9/overlays/ov072/symbols.txt) 0x0212278c holds the length-prefixed Itanium `_ZTS` payload
   `12daBgSnmBdy_c`, NUL-terminated. `_ZTI12daBgSnmBdy_c` at 0x02122780 points its
   +4 word at that string; the vtable's -4 header word at 0x021227bc points back at
   the `_ZTI`. The `_ZTI` is a three-word `__si_class_type_info` whose +8 word is
@@ -80,13 +80,13 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
   0x0211fedc..0x0211ff34 unattributed. An earlier draft of this note explained
   that by saying the tree spelled the factory under the retired coined class
   name. That explanation is false and is withdrawn: at the pinned base
-  `config/arm9/overlays/ov072/symbols.txt` already read
+  [config/arm9/overlays/ov072/symbols.txt](../../../config/arm9/overlays/ov072/symbols.txt) already read
   `daBgSnmBdy_c_classInit` at 0x0211fedc, and regenerating `tu_map` at this tree,
   with all 29 names ROM-spelled, still leaves the run unattributed. The
   observation reproduces; the causal claim does not. The mechanism is in
   `tools/tu_map.py`: `factory_vtable_labels` only ever considers a name ending
   `_Spawn`, so a `_classInit` factory never enters the attribution path no matter
-  how its class is spelled. Regenerated on this tree, ov072 has four one-function
+  how its class is spelled. Regenerated on this tree, [ov072](../../../config/arm9/overlays/ov072/symbols.txt) has four one-function
   units each holding nothing but a `_classInit` and each carrying no class:
   `daBgSnmBdy_c_classInit` at 0x0211fedc, `daBgSnmHed_c_classInit` at 0x021207d4,
   `daBgSnwmn_c_classInit` at 0x02120c00 and `daPgBby_c_classInit` at 0x02121fac.
@@ -101,7 +101,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
   on either side of the join.
   The six state pairs are likewise read, not guessed from adjacency: the static
   initializer at 0x02122018 copies twelve ROM pointer-to-member constants into
-  `data_ov072_02122b64` in those exact pairs; `SetState` indexes that table at
+  [data_ov072_02122b64](../../../config/arm9/overlays/ov072/symbols.txt) in those exact pairs; `SetState` indexes that table at
   `state * 0x10`, `CallStateInit` invokes the first of each pair and
   `CallStateBehavior` the second.
 - Hypothesized names/filenames, explicitly not recovered facts:
@@ -126,7 +126,7 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
 - Compiler experiments and measured barriers:
   three, all recorded because each changed the shape of the result.
   1. The first compile emitted a static initializer object and a
-     `data_ov072_02122b20` definition of size 1. Cause: six extern data
+     [data_ov072_02122b20](../../../config/arm9/overlays/ov072/symbols.txt) definition of size 1. Cause: six extern data
      declarations inside the `extern "C"` block were written without `extern`, so
      they were definitions, and `SharedFilePtr`'s constructor forced an sinit.
      Adding `extern` removed the sinit and the spurious definition.
@@ -143,8 +143,8 @@ identified at adopted input `dc12411cff6a88cb2789e6ded97df809b499c9e3`.
 
 ### Oracle decisions copied from `daBgSnwmn_c`
 
-`config/tu_manifest.d/ov072/daBgSnwmn_c.json` and
-`src/game/actors/d_a_bg_snwmn.cpp` were used as a line-by-line template. What was
+[config/tu_manifest.d/ov072/daBgSnwmn_c.json](../../../config/tu_manifest.d/ov072/daBgSnwmn_c.json) and
+[src/game/actors/d_a_bg_snwmn.cpp](../../../src/game/actors/d_a_bg_snwmn.cpp) were used as a line-by-line template. What was
 copied, and nothing else:
 
 - the `intact-object` route with a real `.data` claim rather than the text-only
@@ -234,7 +234,7 @@ Recorded separately, not combined into one score.
   29 CREDIT LOST. Both blocks sit beside this class's own rows rather than at the
   tail of the object, so the diff against the base is two insertion hunks with
   zero deletions and no collision with any other class doing the same thing. The
-  landed ov030 sibling carries the same pair (60 rows for 44 functions).
+  landed [ov030](../../../config/arm9/overlays/ov030/symbols.txt) sibling carries the same pair (60 rows for 44 functions).
   Five of the current-name rows had the wrong author on the first attempt and were
   corrected against the base tree's own resolution — override, then match
   finisher, then first matcher — rather than by guesswork.
@@ -278,7 +278,7 @@ these exact trees; neither is a cached report from an earlier base.
   changed headers fan out to 917 files, all checked. `src/actors/daBgSnmBdy_c.cpp`
   is VERIFIED on all 29 slots. Five files are not plain VERIFIED — one DRAFT
   (`_ZN12dScStarSel_c8BehaviorEv`) and four BLIND (`RollingIronBall`,
-  `daObjMarioCap_c`, `dScDSMT_c`, `func_ov089_0213162c`) — and every one of them is
+  `daObjMarioCap_c`, `dScDSMT_c`, [func_ov089_0213162c](../../../src/func_ov089_0213162c.c)) — and every one of them is
   in a file and module this candidate does not touch.
   `python tools/prepush_linkcheck.py --range 516a883c4..HEAD` — exit 0, 914
   checked, 620 verified, 294 warnings, 0 blocking. Coverage limit: this class is
@@ -324,7 +324,7 @@ these exact trees; neither is a cached report from an earlier base.
   inherited vague-linkage RTTI records that the manifest already declares under
   `externalized_output`; `verify` reads only the `data`/`bss` lists and reports
   them as "not in manifest". This is a harness path, not a property of this TU:
-  the identical command on the LANDED sibling `ov072/daBgSnwmn_c` on main exits 1
+  the identical command on the LANDED sibling [ov072](../../../config/arm9/overlays/ov072/symbols.txt)/`daBgSnwmn_c` on main exits 1
   with the identical six records and the identical wording. `tubuild.py linkcheck`
   looks at the same object with `externalized_output` in scope and reports 0
   unlicensed sections.
@@ -361,7 +361,7 @@ these exact trees; neither is a cached report from an earlier base.
   described above were added; it was red with 29 CREDIT LOST before them.
   `queue_audit.py` exit 0 and reports four disagreeing rows. One is this class's
   own, re-derived here. The other three (`daObjFire_c`, `daObjLava_c`,
-  `daSCoin_c`) are ov002 rows that main's own just-landed promotion staled; they
+  `daSCoin_c`) are [ov002](../../../config/arm9/overlays/ov002/symbols.txt) rows that main's own just-landed promotion staled; they
   belong to that change and were deliberately left alone.
   `cpp_tu_state.py` exit 0.
   `config/converted-baseline.json` was audited by SHAPE, not arithmetic, because
@@ -394,8 +394,8 @@ these exact trees; neither is a cached report from an earlier base.
 ### Two things a reader should not over-read
 
 - **`rom_data_regressions` did not fire, and did not need help to not fire.** This
-  change retires the coined `_ZTV11SnowmanBody` alias row from ov072
-  `symbols.txt`, leaving one spelling at an unchanged address 0x021227c0. A
+  change retires the coined `_ZTV11SnowmanBody` alias row from [ov072
+  symbols.txt](../../../config/arm9/overlays/ov072/symbols.txt), leaving one spelling at an unchanged address 0x021227c0. A
   name-anchored comparison reads that de-aliasing as a lost symbol. The tools on
   this tree anchor on `(module, addr, bytes)` instead, and both ROM reports were
   regenerated with them, so the gate saw the truth: 697 exact at head against 695
@@ -427,7 +427,7 @@ these exact trees; neither is a cached report from an earlier base.
 Two integration-lane files are not reserved to this task and were edited anyway,
 each isolated in its own commit so it can be dropped or replayed alone.
 
-1. `symbols/actor_renames.tsv` — 29 in-place re-spellings of existing ov072 rows
+1. `symbols/actor_renames.tsv` — 29 in-place re-spellings of existing [ov072](../../../config/arm9/overlays/ov072/symbols.txt) rows
    plus 29 new rows. It conflicted on BOTH merges of `origin/main`, always for the
    same reason: it is an append log and every branch in this wave appends at the
    tail. It was resolved by replay, never by hand-merge and never by letting
@@ -435,7 +435,7 @@ each isolated in its own commit so it can be dropped or replayed alone.
    re-spellings were re-applied to the rows they came from, and this branch's new
    rows re-appended. The two address sets are disjoint.
 2. `notes/data/tu-promotion-queue.tsv` — one row. `queue_audit.py --write` was run
-   and then reduced to this class's own line, so the three unrelated ov002 rows
+   and then reduced to this class's own line, so the three unrelated [ov002](../../../config/arm9/overlays/ov002/symbols.txt) rows
    main staled are untouched.
 
 Please ratify both with `classqueue.py v2 amend` on this task, or tell the

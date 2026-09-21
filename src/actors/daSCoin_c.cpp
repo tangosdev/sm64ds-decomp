@@ -146,6 +146,7 @@ s32 daSCoin_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020f05f4
 extern "C" void func_ov002_020f05f4(void *self)
 {
     /* MATCH form: dActor_c::Spawn as a real method size-DIFFs (s8/s16
@@ -177,6 +178,7 @@ extern "C" void func_ov002_020f05f4(void *self)
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020f051c
 extern "C" void func_ov002_020f051c(void *self)
 {
     daSCoin_c *c = (daSCoin_c *)self;
