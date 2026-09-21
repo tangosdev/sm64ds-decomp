@@ -1,0 +1,11 @@
+# Luigi scene integration
+
+Task `pr2876-source-repair-0920`; producer/integrator `codex-integrator-0920`. Source input `b8fb4e4ef4474a779acc05c9d921b4fa568e4e84` remains in ancestry. Tested source `f95af86543aa763546c53344c9783134362d2d73` contains actual accepted main `195f19efb317967fa05cfd7edb567a8cbcb92e5a`. This is an offer for independent review.
+
+Wanted uses genuine Luigi PMF dispatch, named timers, reward fields and iris/game state, and real sound and IRQ interfaces. Ordinary scene construction preserves the complete base initialization sequence, and StopPicture uses its velocity fields. Buffer allocation, file loading and deallocation agree across the concrete caller/definition population. The accepted Memory drawing and halfword-fill fixes are inherited. The original six-object contract packet and its71strict checks remain historical controls. Final Luigi's ELF is36,712bytes: the native factory changes the vtable import, while all58 function bodies and11 full metadata records/265bytes remain exact. No output policies were added and no whole-object identity with the literal factory is claimed.
+
+Current composition passes all 71 expanded strict function checks across 6 files, all 106 modules and 11208 source functions, thirteen static checks and eligibility/reference validation. The stock ROM SHA256 is `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`. Actual metadata partials and inherited symbol diagnostics remain visible.
+
+Only the final Luigi and Flower queue rows are reconciled from the authoritative mapper. All eleven findings remain in the [integration evidence](../../experiments/pr2876-integration-0920.json). The two converted-score regressions are repaired through observed fields, preserving layout and the baseline. Matching ordinary forms were adopted; remaining named-timer and three halfword-local alternatives have specific measured negative results. Raw storage and original helper provenance remain bounded partial reconstruction.
+
+This evidence successor adds only this handoff and its JSON artifact. A separate reviewer must accept the exact final source and current base before the original PR is updated and private validation is awaited. Root owns merging. Cup inherits these shared repairs and applies only its remaining interface changes.
