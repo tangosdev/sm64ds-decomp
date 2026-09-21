@@ -423,9 +423,9 @@ extern "C" void *dScMgSound_c_classInit(void)
  * The split literals retain the measured instruction shape; they do not
  * recover an original C++ spelling. `r7 + 0x5000 + 0xe0` lets mwccarm
  * build a shared base before the displacement, as the cartridge does.
- * Folding those expressions needs a fresh comparison. Offsets 0x50e0,
- * 0x5608, 0x5618 and 0x5626 lie within the declared mTable storage, whose
- * component/state boundary is not established by the ctor/dtor calls.
+ * Folding those expressions needs a fresh comparison. Offset 0x50e0 is
+ * mTable.mSuppressSound; 0x5608 and 0x5626 are named scene fields. The
+ * countdown at 0x5618 remains in the indexed raw storage.
  *
  * mHudScore is dScMgBase_c's, and reads as an inherited member; the
  * pre-migration file wrote it as `*(int *)(r7 + 0xb4)`.
@@ -471,7 +471,7 @@ s32 dScMgSound_c::InitResources()
     Deallocate((void *)r5);
 
     func_ov006_020c225c((void *)(r7 + 0x4660));
-    if (func_ov006_020c3050((void *)mTable) == 0)
+    if (func_ov006_020c3050((void *)&mTable) == 0)
         return 0;
 
     *(int *)(r7 + 0x5000 + 0xe0) = 1;
@@ -498,10 +498,9 @@ s32 dScMgSound_c::InitResources()
  *
  * The minigame's state machine, on the word at 0x5608: 0 = init, 1 = intro
  * countdown at 0x5618, 2 = result countdown at 0x5616 with the win/lose
- * handling and the 9999-capped win counter, 3 = retry countdown. Every one of
- * those offsets lies within the unreconstructed mTable storage. The
- * component's full extent and the ownership of these live state fields
- * remain uncertain; their current raw accesses need measured replacements.
+ * handling and the 9999-capped win counter, 3 = retry countdown. The state
+ * word is named mState; the countdowns remain raw accesses within the
+ * indexed storage at 0x5610, pending a consistent array reconstruction.
  *
  * mPromptBlinkTimer, mPromptEnabled and mPromptBlinkCount are dScMgBase_c's, and read as inherited
  * members. The pre-migration file wrote all three as `*(u8 *)(c + 0xc3)` and
@@ -544,8 +543,8 @@ s32 dScMgSound_c::Behavior()
             (*(u16 *)(int)(c + 0x5616))--;
             if (*(u16 *)(c + 0x5616) == 0) {
                 if (unk_5626 != 0) {
-                    unk_50e0 = 0;
-                    func_ov006_020c2594((char *)mTable);
+                    mTable.mSuppressSound = 0;
+                    func_ov006_020c2594((char *)&mTable);
                     if (unk_5626 == 3)
                         func_ov004_020b67f8();
                     func_ov004_020b0a54(0);
@@ -580,8 +579,8 @@ s32 dScMgSound_c::Behavior()
         if (*(u16 *)(c + 0x5616) != 0) {
             (*(u16 *)(int)(c + 0x5616))--;
             if (*(s16 *)(c + 0x5616) <= 0) {
-                unk_50e0 = 0;
-                func_ov006_020c2440((char *)mTable);
+                mTable.mSuppressSound = 0;
+                func_ov006_020c2440((char *)&mTable);
                 func_ov004_020b0a54(0x12);
                 mPromptEnabled = 0;
                 *(u16 *)(c + 0x5616) = 0;
@@ -590,7 +589,7 @@ s32 dScMgSound_c::Behavior()
         break;
     }
 
-    func_ov006_020c2b8c((char *)mTable);
+    func_ov006_020c2b8c((char *)&mTable);
     return 1;
 }
 
@@ -617,7 +616,7 @@ s32 dScMgSound_c::Render()
     func_ov006_02119bc4(c);
     func_ov006_021199c0(c);
     func_ov006_02119aa8(c);
-    func_ov006_020c29dc(mTable);
+    func_ov006_020c29dc(&mTable);
     return 1;
 }
 
@@ -676,7 +675,7 @@ void dScMgSound_c::OnYoshiTryEat(int r1)
         func_ov004_020adb1c(v);
     }
 
-    unk_50e0 = 1;
+    mTable.mSuppressSound = 1;
     func_ov006_0211c478(self);
 
     unk_5626 = 3;
@@ -973,9 +972,9 @@ void func_ov006_0211bf44(char* base, int slot)
  * destinations wired differently. Finally, when the mode byte at +0x5624 is
  * 1, the whole helper object at +0x4f38 is retriggered.
  *
- * These offsets lie within the current mTable storage, but the component
- * and scene-state boundary remains unresolved. The raw accesses are a
- * reconstruction limit, not evidence that all fields belong to one helper.
+ * These scene fields follow mTable's observed footprint. The remaining
+ * raw array accesses are a reconstruction limit; the component's full
+ * original extent remains unresolved.
  *
  * TWO SPELLINGS ARE LOAD-BEARING, both measured. First,
  * func_ov006_0211b654's SECOND argument: the callee is (scene, slot) --
@@ -1047,7 +1046,7 @@ extern "C" void func_ov006_0211bc8c(dScMgSound_c *self, int idx)
         }
     }
 
-    if (*(u8 *)(c + 0x5624) == 1) func_ov006_020c2300((char *)self->mTable);
+    if (*(u8 *)(c + 0x5624) == 1) func_ov006_020c2300((char *)&self->mTable);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2442,4 +2441,5 @@ void func_ov006_021199c0(void*pv){
    other way to emit its variant; merged they are a duplicate definition AND
    the wrong order. mwccarm 2004/b56 emits D1 then D0 for an in-class body,
    which is the order ov006 uses -- D1 at 0x02119904 below D0 at 0x02119958.
-   The body itself is unchanged: `func_ov006_020c3288((char *)mTable)`. */
+   The body calls the same component destructor at the same address:
+   `func_ov006_020c3288((char *)&mTable)`. */

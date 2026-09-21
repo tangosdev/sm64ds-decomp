@@ -14,9 +14,10 @@
  * objects through +0x178 and writes +0x1a4/+0x1a8; those accesses do not
  * prove that the component fills the tail. Matched scene state also uses
  * 0x50e0, 0x5608, 0x5616, 0x5618 and tail bytes through 0x5628.
- * mTable retains raw storage containing the component and live state;
- * the component boundary and typed fields remain to be established under
- * issue #2492.
+ * mTable covers the observed component accesses through +0x1ab, including
+ * the sound-suppression word at +0x1a8. This establishes a minimum storage
+ * extent, not the original component size. The following raw array region
+ * and its ownership remain unresolved under issue #2492.
  *
  * THE DESTRUCTOR IS DEFINED INLINE AND DECLARED FIRST. Its class TU emits
  * _ZTV/_ZTI/_ZTS and the destructor variants. The inline form reproduces the
@@ -66,18 +67,30 @@ struct dMgSoundSprite_c {
 typedef char dMgSoundSprite_c_size_must_be_0x10[sizeof(dMgSoundSprite_c) == 0x10 ? 1 : -1];
 #endif
 
+/* Storage for the component accesses observed at scene offset 0x4f38.
+ * The constructor clears +0x1a8 and the animation callbacks test it before
+ * requesting sound. The type and field names below are descriptive; 0x1ac
+ * is the observed minimum extent, not a recovered original class boundary. */
+struct dMgSoundComponentStorage {
+    u8 raw_000[0x1a8];
+    s32 mSuppressSound;       /* +0x1a8 -- zero permits animation sounds */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char dMgSoundComponentStorage_size_must_be_0x1ac[
+    sizeof(dMgSoundComponentStorage) == 0x1ac ? 1 : -1];
+#endif
+
 struct dScMgSound_c : dScMgSingle3DBase_c {
-    virtual ~dScMgSound_c() { func_ov006_020c3288((char *)mTable); }
+    virtual ~dScMgSound_c() { func_ov006_020c3288((char *)&mTable); }
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual void Virtual50();                          /* slot 20 */
 
     /* --- the 0x4f38 tail, partially resolved (was one u8 mTable[0x6f4]) -----
-       The component boundary is now established at mTable+0x1a8. Two things
-       agree on it: the constructor's own writes into the component stop at
-       +0x1a4/+0x1a8, and 0x50e0 is the LOWEST address in the whole tail that
-       this TU's scene code touches -- nothing reads 0x4f38..0x50e0 at all.
-       func_ov006_020c33dc and func_ov006_020c3288 still take mTable by
-       address, which is the only way they ever used it.
+       The component constructor writes four-byte words at +0x1a4/+0x1a8.
+       Its animation callbacks also read +0x1a8 through the component pointer,
+       so that word belongs inside mTable's storage. Scene code accessing it
+       at 0x50e0 does not establish a boundary between component and scene.
 
        What remains raw is the array region 0x50e4..0x55e8. That is not
        unexamined, it is contested: the TU carries three shadow views of it
@@ -90,8 +103,7 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
        Every field named below is reached only by a constant offset and at one
        consistent width -- across all 193 offset accesses in this TU, no
        address is ever read at two different widths. */
-    u8  mTable[0x1a8];        /* 0x4f38 -- opaque component; used by address only */
-    s32 unk_50e0;             /* 0x50e0 -- set to 1 once the component reports ready */
+    dMgSoundComponentStorage mTable; /* 0x4f38; mSuppressSound at 0x50e0 */
     u8  raw_50e4[0x504];      /* 0x50e4 -- contested array region; see #2492 */
     dMgSoundSprite_c mSpriteA;/* 0x55e8 -- frame limit 2, table 0212ee28 */
     dMgSoundSprite_c mSpriteB;/* 0x55f8 -- frame limit 3, table 0212ee38 */
@@ -116,8 +128,9 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
        copied unchanged.
 
        Their accesses at 0x50e0, 0x5608, 0x5616, 0x5618 and 0x5626 lie
-       within the declared mTable storage. Their location alone does not
-       establish whether they belong to the component or to scene state.
+       in the partially reconstructed tail above. Only the word at 0x50e0
+       is part of the observed mTable footprint; the scene countdowns retain
+       raw accesses pending reconstruction of their array/indexed storage.
        Everything else they touch is inherited (unk_0b4 from dScMgBase_c,
        +0x4660 from dScMgSingle3DBase_c). --- */
     s32 InitResources();      /* slot 0 -- ov006 0x0211c984 */
