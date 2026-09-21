@@ -356,6 +356,25 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
 void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2));
 long ppu_sub_obj_veto_count(void);
 
+/* ---- AND THE SAME IDEA ONE LAYER UP: SUPPRESSING A WHOLE BG ----------------
+ *
+ * DISPCNT_B bits this engine's scan-out is to treat as CLEAR. It can only ever
+ * turn a layer off; the register is not written, so the game reads back what it
+ * wrote and its own logic is untouched.
+ *
+ * It exists for the improved minimap's other removal. The touch marker the
+ * owner calls "the target" is NOT a sprite -- measured: engine B's 128 OAM
+ * entries are byte-identical with the screen touched and untouched -- it is
+ * BG2, which the game ENABLES only while the bottom screen registers a touch
+ * (DISPCNT_B goes 0x40011803 to 0x40011c03, layer mask 0x18 to 0x1c, bit 10).
+ * On a mouse player's screen that marker is drawn in the map's top-left corner
+ * wherever the click actually was, so with the improved map on the host stops
+ * presenting that layer.
+ *
+ * Set it every frame, from the code that knows the scene and the option; zero
+ * is the behaviour this file shipped with.  */
+void ppu_sub_set_bg_suppress(uint32_t mask);
+
 // ---- the stacked presentation -----------------------------------------------
 //
 // BOTH DS SCREENS AT THE SAME SIZE, top above bottom, which is the shape a

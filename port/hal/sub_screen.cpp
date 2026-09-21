@@ -1913,6 +1913,21 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         }
     }
     hal_sub_panel_geometry(w, h);
+    /* THE TOUCH TARGET, not presented with the option on. Measured on this
+       build: the marker is BG2 of the sub engine, which the game enables only
+       while the bottom screen registers a touch (DISPCNT_B 0x40011803 ->
+       0x40011c03, bit 10), and the port draws it in the map's TOP-LEFT CORNER
+       whatever point was actually touched -- a click at the middle of the map
+       moves 1260 pixels and every one of them is inside a quarter disc of
+       radius 40 at DS (0,0). A marker that does not follow the touch is worse
+       than no marker, and a player clicking with a mouse needs no marker at
+       all, so with the improved map on this layer is not presented.
+       ONLY IN THE CORNER-INSET LAYOUT, which is a course: menus and minigames
+       take the stacked layout, where the bottom screen is the thing being
+       played on and BG2 is nobody's marker. Zero otherwise, which is the
+       raster's own old behaviour. */
+    ntr::ppu_sub_set_bg_suppress(
+        (improved_map_on() && !hal_sub_screen_stacked()) ? (1u << 10) : 0u);
     /* Publish the layer mask, the way nine ROM functions do with this exact
        line. Minimap::Behavior and Message::UpdateWindow both write
        data_0209d454 and then push it themselves; doing it once more here is

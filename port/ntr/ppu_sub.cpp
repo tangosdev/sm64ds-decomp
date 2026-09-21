@@ -439,6 +439,10 @@ uint8_t g_objwin[192][256];
  */
 int (*g_obj_veto_b)(unsigned short a2);
 
+/* DISPCNT_B bits the host wants this scan-out to treat as clear. See the use
+   at the register read, and ppu_sub_set_bg_suppress for what it is for. */
+uint32_t g_bg_suppress;
+
 /* How many entries this run declined, and the census of what engine B was
    asked to draw on one frame. SM64DS_MINIMAP_TRACE=<frame> prints every sub
    OBJ entry on that frame -- index, position, tile, palette -- and marks the
@@ -947,7 +951,14 @@ void ppu_scanout_sub(SubFramebuffer &fb)
     // and this lane does not own that file. Inert unless SM64DS_PPU_AUDIT is set.
     ppu_audit_sample("ppu_scanout_sub");
 
-    const uint32_t dispcnt = rd32(kRegBase);
+    /* THE HOST'S LAYER SUPPRESSION, applied at the ONE read of DISPCNT_B this
+       scan-out makes, so every layer decision below -- the BG rasters, the
+       window logic, the blend targets -- sees one consistent register value.
+       Zero unless something installed a mask, and then it can only CLEAR
+       enable bits: nothing here can turn a layer on that the game turned off.
+       The register itself is not written, so the ROM reads back exactly what
+       it wrote. See ppu_sub_set_bg_suppress. */
+    const uint32_t dispcnt = rd32(kRegBase) & ~g_bg_suppress;
     const unsigned disp_mode = (dispcnt >> 16) & 3;
     const bool forced_blank = (dispcnt >> 7) & 1;
 
@@ -1064,6 +1075,11 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb)
 void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2))
 {
     g_obj_veto_b = fn;
+}
+
+void ppu_sub_set_bg_suppress(uint32_t mask)
+{
+    g_bg_suppress = mask;
 }
 
 /* How many entries the veto has declined this run. The proof that the arrows
