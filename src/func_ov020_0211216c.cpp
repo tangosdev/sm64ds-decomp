@@ -1,7 +1,11 @@
 //cpp
+struct dActor_c;
+struct ShadowModel;
+struct Matrix4x3;
+
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void* m, int x, int y, int z);
-extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* mtx, int f, int g, unsigned int h);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(dActor_c* thiz, ShadowModel* sm, Matrix4x3* mtx, int f, int g, unsigned char h);
 
 void func_ov020_0211216c(char* c)
 {
@@ -16,6 +20,6 @@ void func_ov020_0211216c(char* c)
     *(int*)(c + 0x214) = *(int*)(c + 0x430) >> 3;
     *(int*)(c + 0x218) = *(int*)(c + 0x64) >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x1c4, c + 0x1ec, *(int*)(c + 0x80) * 0x64, 0x12c000, 0xf);
+        (dActor_c*)c, (ShadowModel*)(c + 0x1c4), (Matrix4x3*)(c + 0x1ec), *(int*)(c + 0x80) * 0x64, 0x12c000, 0xf);
 }
 }

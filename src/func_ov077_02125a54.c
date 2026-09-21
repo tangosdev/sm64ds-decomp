@@ -1,8 +1,10 @@
-extern void _Z14ApproachLinearRsss(short *a, short b, short c);
+struct Vector3;
+
+extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
 extern void _ZN8dActor_c8PoofDustEv(void *);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern void func_ov077_02124d08(void *c, void *p);
@@ -23,7 +25,7 @@ int func_ov077_02125a54(char *c){
     d = 0;
   if(d < -0xc8000){
     _ZN8dActor_c8PoofDustEv(c);
-    func_02012694(0x166, c + 0x74);
+    func_02012694(0x166, (const struct Vector3*)(c + 0x74));
     _ZN7fBase_c18MarkForDestructionEv(c);
   }
   _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);

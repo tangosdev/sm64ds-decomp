@@ -1,3 +1,5 @@
+struct Vector3;
+
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
 extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
@@ -8,7 +10,7 @@ extern void _ZN9Animation7AdvanceEv(void *p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *p, void *cc);
 extern void _ZN5dCc_c5ClearEv(void *p);
 extern void _ZN5dCc_c6UpdateEv(void *p);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern void func_ov077_02125e94(void *p, int v);
 extern void func_ov077_02124eb0(void *p);
 
@@ -38,7 +40,7 @@ int func_ov077_02125908(char *c)
     if (v < -0xc8000)
     {
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0x166, c + 0x74);
+        func_02012694(0x166, (const struct Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
 

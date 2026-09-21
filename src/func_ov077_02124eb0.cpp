@@ -1,8 +1,11 @@
 //cpp
+struct Vector3;
+struct Player;
+
 extern "C" void *_ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn);
 extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int a, int fix, short b);
 extern "C" void _ZN8dActor_c8PoofDustEv(void *self);
-extern "C" void func_02012694(int a, void *pos);
+extern "C" void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void func_ov077_02125e94(void *c, int i);
@@ -10,7 +13,7 @@ extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *pos);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
 extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
-extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
+extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, void *pos, unsigned int a, int fix, unsigned char b, unsigned char cc, unsigned char d);
 
 extern "C" void func_ov077_02124eb0(void *thiz)
 {
@@ -25,7 +28,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         v[2] = *(int *)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 1, 0x2000, 0);
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0xc4, c + 0x74);
+        func_02012694(0xc4, (const struct Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
@@ -75,6 +78,6 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, v, 2, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player*)r4, v, 2, 0xc000, 1, 0, 1);
     }
 }

@@ -1,4 +1,6 @@
 //cpp
+#include "dActor_c.h"
+
 extern "C" {
 void _ZN9Animation7AdvanceEv(void* self);
 void AddVec3(void* a, void* b, void* c);
@@ -9,9 +11,8 @@ void func_ov020_02112110(char* c);
 int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 int _ZNK10dBgCh_Actr13GetWallResultEv(void* self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, void* v);
-int _ZN4cstd5atan2E5Fix12IiES1_(int x, int y);
-short _ZN8dActor_c14GetSubtractionEss(void* self, short a, int b);
-void func_0201267c(int a, void* p);
+short _ZN4cstd5atan2E5Fix12IiES1_(int x, int y);
+void func_0201267c(unsigned int soundID, const Vector3* cameraPosition);
 
 void func_ov020_02111b28(char* c){
   if (*(unsigned char*)(c+0x450) != 0) {
@@ -23,7 +24,7 @@ void func_ov020_02111b28(char* c){
   if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x25c) != 0) {
     *(unsigned char*)(c+0x108) = 0;
     func_ov020_02112110(c);
-    func_0201267c(0xc5, c+0x74);
+    func_0201267c(0xc5, (const Vector3*)(c+0x74));
     return;
   }
   if (_ZNK10dBgCh_Actr8IsOnWallEv(c+0x25c) == 0) return;
@@ -31,11 +32,11 @@ void func_ov020_02111b28(char* c){
     int v[3];
     void* w = (void*)_ZNK10dBgCh_Actr13GetWallResultEv(c+0x25c);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)w+4, v);
-    int a = _ZN4cstd5atan2E5Fix12IiES1_(v[0], v[2]);
-    if (_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c+0x94), a) <= 0x4000) return;
+    short angle = _ZN4cstd5atan2E5Fix12IiES1_(v[0], v[2]);
+    if (((dActor_c*)c)->GetSubtraction(*(short*)(c+0x94), angle) <= 0x4000) return;
   }
   *(unsigned char*)(c+0x108) = 0;
   func_ov020_02112110(c);
-  func_0201267c(0xc5, c+0x74);
+  func_0201267c(0xc5, (const Vector3*)(c+0x74));
 }
 }

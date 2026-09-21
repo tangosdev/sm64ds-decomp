@@ -12,7 +12,7 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);
 extern void _ZN8dActor_c8PoofDustEv(void*);
-extern void func_02012694(int a, void* b);
+extern void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 
 int func_ov077_021253a4(char* c)
@@ -34,7 +34,7 @@ int func_ov077_021253a4(char* c)
         v.z = *(int*)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, 1, 0x2000, 0);
         _ZN8dActor_c8PoofDustEv(c);
-        func_02012694(0xc4, c + 0x74);
+        func_02012694(0xc4, (const struct Vector3*)(c + 0x74));
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
     return 1;

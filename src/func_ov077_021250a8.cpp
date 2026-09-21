@@ -7,7 +7,7 @@ dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov077_02125e94(void* c, int a);
 short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 void _ZN6Player16IncMegaKillCountEv(Player* p);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player* p, const Vector3* v, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);
+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player* p, void* v, unsigned int a, int b, unsigned char d, unsigned char e, unsigned char f);
 
 void func_ov077_021250a8(char* c){
   unsigned int id = *(unsigned int*)(c+0x1d4);

@@ -2,11 +2,15 @@
 // @symbol func_ov077_02125480
 /* recovered: shared common types */
 #include "common.h"
+
+struct ModelAnim;
+struct BCA_File;
+
 extern "C" {
 
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim* thiz, BCA_File* f, int a, int b, unsigned short e);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern int data_ov077_02127c14[];
 }
 
@@ -51,7 +55,7 @@ extern "C" int func_ov077_02125480(char* c)
     *(short*)(c + 0x8c) = 0;
     *(short*)(c + 0x90) = 0;
     *(unsigned char*)(c + 0x3e8) = 0x2d;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x124, *(void**)((char*)data_ov077_02127c14 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0x124), *(BCA_File**)((char*)data_ov077_02127c14 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x180) = 0x4000;
     Base* b = (Base*)c;
     int r1 = b->m();

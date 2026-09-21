@@ -16,12 +16,12 @@ struct SurfaceInfo;
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
 extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern "C" void _ZN8dActor_c8PoofDustEv(void* self);
-extern "C" void func_02012694(int a, void* b);
+extern "C" void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
-extern "C" s16 func_02010844(void* unused, Vector3* v, s16 angle);
+extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle);
 extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 
 extern "C" void func_ov077_02124d08(char* a, char* w) {
@@ -45,7 +45,7 @@ extern "C" void func_ov077_02124d08(char* a, char* w) {
         if (rc.DetectClsn()) {
             if (func_02037e20((int*)&rc.surface) != 0 && *(int*)(a+0x60) < rc.clsnY) {
                 _ZN8dActor_c8PoofDustEv(a);
-                func_02012694(0xc4, a+0x74);
+                func_02012694(0xc4, (const struct Vector3*)(a+0x74));
                 _ZN7fBase_c18MarkForDestructionEv(a);
                 return;
             }

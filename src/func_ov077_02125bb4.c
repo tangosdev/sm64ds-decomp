@@ -11,7 +11,7 @@ typedef int Fix12i;
 
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-extern void func_02012694(int id, void *pos);
+extern void func_02012694(unsigned int soundID, const struct Vector3* cameraPosition);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     Fix12i x, Fix12i y, Fix12i z,
@@ -20,8 +20,8 @@ extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
-extern void func_0201267c(int id, void *pos);
+extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
+extern void func_0201267c(unsigned int soundID, const struct Vector3* cameraPosition);
 extern void _ZN5dCc_c5ClearEv(void *p);
 extern void _ZN5dCc_c6UpdateEv(void *p);
 
@@ -43,7 +43,7 @@ int func_ov077_02125bb4(char *c)
     r4 = func_ov077_02124ce4(c);
     if (r4) {
         if (*(unsigned char *)(c + 0x3e4) == 0) {
-            func_02012694(0xe2, c + 0x74);
+            func_02012694(0xe2, (const struct Vector3*)(c + 0x74));
             _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(
                 *(int *)(c + 0x5c), data_0209f32c, *(int *)(c + 0x64));
             *(unsigned int *)(c + 0x3e0) =
@@ -67,7 +67,7 @@ int func_ov077_02125bb4(char *c)
         d = *(int *)(c + 0x3dc) ? *(int *)(c + 0x60) - *(int *)(c + 0x3dc) : 0;
         if (d < -0xc8000) {
             _ZN8dActor_c8PoofDustEv(c);
-            func_02012694(0x166, c + 0x74);
+            func_02012694(0x166, (const struct Vector3*)(c + 0x74));
             _ZN7fBase_c18MarkForDestructionEv(c);
         } else if (*(int *)(c + 0xa8) < 0xa000) {
             *(int *)(c + 0xa8) = 0;
@@ -85,7 +85,7 @@ int func_ov077_02125bb4(char *c)
             ((int *)&vec)[1] = y;
             ((int *)&vec)[2] = z;
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, vec.x, vec.y, vec.z);
-            func_0201267c(0x109, c + 0x74);
+            func_0201267c(0x109, (const struct Vector3*)(c + 0x74));
         }
     }
 
