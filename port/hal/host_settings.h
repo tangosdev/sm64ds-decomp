@@ -815,8 +815,11 @@ int host_setting_vsync(void);
    a multiplier. A value off the grid moves to the nearest one on it and the
    move is announced once. The DRAWING layer clamps further, to the largest
    size whose whole decorated panel still fits in the picture, because only it
-   knows the picture's size. SM64DS_MINIMAP_SCALE overrides the file and, once
-   set, also outranks the drag for the rest of the run.
+   knows the picture's size. SM64DS_MINIMAP_SCALE overrides the file and is the
+   size a run starts at; a run that never drags stays pinned there exactly,
+   which is every scripted run, and a drag takes the size over from the moment
+   it happens. The pin used to outrank the drag for the whole run, and that
+   made the drag do nothing at all under a shortcut that set it.
 
    ImprovedMinimap is read once and latched. MinimapScale is read live,
    because the drag moves it while the game is running.
