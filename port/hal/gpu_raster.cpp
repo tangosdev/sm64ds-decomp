@@ -122,6 +122,12 @@ int g_want_warp = -1;  /* SM64DS_RENDERER_DEVICE */
 int g_perf;            /* SM64DS_RENDERER_PERF: the cost breakdown */
 int g_fail_after;      /* SM64DS_RENDERER_FAIL_AFTER: the fallback drill */
 int g_fail_readback;   /* SM64DS_RENDERER_FAIL_READBACK: the other drill */
+/* SM64DS_RENDERER_FAIL_DEVICE: the third drill, and the only one that cannot
+   be reached any other way on a machine that has a working card. It takes the
+   SAME branch, with the same message, that a box with no Direct3D 11 at all
+   takes: the setting is on, no device starts, the game draws every frame the
+   ordinary way and says so once. */
+int g_fail_device;
 
 /* ---- THE DEPTH RANGE, AND WHY IT IS HALVED ------------------------------
    ntr/gx.cpp clears its depth buffer to 1e30 and tests LESS, so "nothing has
@@ -555,6 +561,12 @@ bool start()
 {
     if (g_down) return false;
     if (g_dev) return true;
+    if (g_fail_device) {
+        fprintf(stderr, "[renderer] SM64DS_RENDERER_FAIL_DEVICE is set; "
+                "pretending no device exists\n");
+        fall_back("no Direct3D device would start", 0);
+        return false;
+    }
     if (port_gpu_device_failed()) { fall_back("no Direct3D device would start", 0); return false; }
     port_gpu_device_address_rows("before", g_addrcheck);
     if (!port_gpu_device_acquire(g_want_warp)) {
@@ -917,6 +929,7 @@ extern "C" void port_gpu_raster_configure(void)
     g_fail_after = env_int("SM64DS_RENDERER_FAIL_AFTER", 0);
     g_fail_readback = env_int("SM64DS_RENDERER_FAIL_READBACK", 0);
     g_addrcheck = env_int("SM64DS_RENDERER_ADDRCHECK", 0);
+    g_fail_device = env_int("SM64DS_RENDERER_FAIL_DEVICE", 0);
     ntr::gx_set_gpu_opaque(&backend);
 }
 

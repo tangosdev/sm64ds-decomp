@@ -3444,21 +3444,24 @@ static void aa_report(void) {
 namespace {
 
 /* ---- THE THRESHOLDS, AND WHERE EACH NUMBER CAME FROM ---------------------
-   Every one of these was set AFTER the first honest run rather than guessed
-   before it, and each leaves room for a scene this lane did not measure. The
-   first measurements, castle grounds at the default render size, 300 frames,
-   TextureFilter 0, on both the card and WARP:
-     coverage IoU        0.99894 (worst frame 0.99868)
-     colour mean         0.0136 of a 0..255 channel
-     outlier share       0.00040 of interior pixels, at a tolerance of 2
-     depth interior max  measured below; the ALL-COVERED max is 2.4e-3, and
-                         that one is an edge pixel where the two rasterisers
-                         legitimately picked different triangles, which is why
-                         the gate is on the interior number
-     polygon id wrong    0
-   The floors and ceilings below are those numbers with between five and forty
-   times of room, because a lane cannot measure every scene and a gate that
-   only just passes the scene it was tuned on is not a gate. */
+   Every one of these was set AFTER an honest run rather than guessed before
+   it, and each leaves room for a scene this lane did not measure. The numbers
+   below are the WORST value over the full table of 32 rows -- the card and
+   WARP, render scale 0 and 4, levels 1, 6, 8, 12 and 29 and scenes 372, 384
+   and 390, 600 frames each, TextureFilter 0, every tenth frame compared:
+     coverage IoU        0.999944 at worst   (floor 0.995)
+     colour mean         0.0315 of a 0..255 channel   (ceiling 0.5)
+     outlier share       0.000861 of interior pixels at a tolerance of 2
+                         (ceiling 0.002)
+     depth, flat pixels  9.090e-05   (ceiling 1e-4; see the depth block below)
+     depth, step pixels  0.999 of the step under the pixel   (ceiling 2.0)
+     polygon id wrong    0           (ceiling 0.001)
+   A gate that only just passes the scene it was tuned on is not a gate, so
+   every ceiling above leaves between two and ninety times of room. The one
+   that does not is the flat depth ceiling, and it cannot: a flat pixel is by
+   definition one whose neighbourhood spans no more than that same 1e-4, so a
+   fold sitting just under the boundary can produce an error just under the
+   ceiling and nothing above it. Only a genuinely wrong depth can pass it. */
 int g_ab_mode = -1;      /* -1 not read yet */
 int g_ab_every = 30;
 int g_ab_tol = 2;
@@ -4278,6 +4281,14 @@ void gx_render(Framebuffer &fb) {
        With nothing registered -- every run with the "Renderer" key absent --
        this is one test against a null pointer and the line below runs both
        passes exactly as it always has. */
+    /* THE THREE PARTS OF A FRAME'S RASTER TIME (run hd2, lane GPU2R), taken
+        only when SM64DS_FRAME_MS is on. The whole point of moving the opaque
+        pass to the card is a number, and one raster total cannot say whether
+        what is left is the card, the translucent pass this file still runs,
+        or the edge-smoothing pass after it. Three clock reads a frame. */
+    std::chrono::steady_clock::time_point t_seam0, t_seam1, t_pass1, t_aa1;
+    if (tm) t_seam0 = std::chrono::steady_clock::now();
+
     int gpu_drew = 0;
     if (g_gpu_opaque) {
         GxGpuFrame f;
@@ -4562,7 +4573,11 @@ void gx_render(Framebuffer &fb) {
         }
     }
 
+    if (tm) t_seam1 = std::chrono::steady_clock::now();
+
     run_passes(gpu_drew ? 1 : 0, 1);
+
+    if (tm) t_pass1 = std::chrono::steady_clock::now();
 
     /* EDGE SMOOTHING, LAST, AND STILL INSIDE gx_render (run hd2). Here rather
        than at present time because here is the only moment the framebuffer
@@ -4576,23 +4591,38 @@ void gx_render(Framebuffer &fb) {
     aa_pass(fb, cw, ch, nt);
     aa_report();
 
+    if (tm) t_aa1 = std::chrono::steady_clock::now();
+
     if (tm) {
         using clk = std::chrono::steady_clock;
         using ms = std::chrono::duration<double, std::milli>;
         const clk::time_point t_exit = clk::now();
         static clk::time_point prev;
         static double acc_raster, acc_frame;
+        static double acc_seam, acc_pass, acc_aa;
         static long long acc_tris;
         static int n;
         acc_raster += ms(t_exit - t_enter).count();
+        acc_seam += ms(t_seam1 - t_seam0).count();
+        acc_pass += ms(t_pass1 - t_seam1).count();
+        acc_aa += ms(t_aa1 - t_pass1).count();
         if (prev.time_since_epoch().count()) acc_frame += ms(t_exit - prev).count();
         prev = t_exit;
         acc_tris += static_cast<long long>(g.tris.size());
         if (++n >= 30) {
+            /* The three new numbers are APPENDED, so anything that already
+                reads this line by its prefix reads it unchanged. With the card
+                off "opaque" is zero and "rest" is the whole software raster;
+                with the card on "opaque" is the card's pass including the
+                readback and "rest" is the translucent and shadow pass this
+                file still runs over the card's buffers. */
             fprintf(stderr, "[perf] frame %6.2fms raster %6.2fms tris %6lld "
-                    "decodes %.1f\n", acc_frame / n, acc_raster / n,
-                    acc_tris / n, (double)g_tex_decodes / n);
+                    "decodes %.1f opaque %6.2fms rest %6.2fms aa %6.2fms\n",
+                    acc_frame / n, acc_raster / n,
+                    acc_tris / n, (double)g_tex_decodes / n,
+                    acc_seam / n, acc_pass / n, acc_aa / n);
             acc_raster = acc_frame = 0; acc_tris = 0; n = 0; g_tex_decodes = 0;
+            acc_seam = acc_pass = acc_aa = 0;
         }
     }
 }
