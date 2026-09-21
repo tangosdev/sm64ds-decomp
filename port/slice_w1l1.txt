@@ -96,21 +96,24 @@
 # ---------------------------------------------------------------------------
 # THE 32 WITH A LIVE HOLDER, AND WHY EACH STAYS STRIPPED.
 #
-# (1) QUARANTINED ACTOR, 9 TUs. The whole Mr Blizzard family
+# (1) QUARANTINED ACTOR, 9 TUs. NO LONGER TRUE -- KEPT AS THE RECORD.
+#     The whole Mr Blizzard family
 #     (_ZN10MrBlizzard{13InitResourcesEv,16CleanupResourcesEv,6RenderEv,
 #     16OnPendingDestroyEv,D1Ev,D0Ev}, daSnowman_c_classInit, _ZN10MrBlizzard16OnAimedAtWithEggEv,
 #     func_ov081_021261b8, plus func_ov081_021243cc and func_ov081_021254d8 in
 #     the stranded set) is held by _ZTV11daSnowman_c, whose slots the ROM fills
-#     with exactly these bodies. The port already has the fill that seats them,
-#     hal/actor_classes_ov081.cpp's hal_fill_mr_blizzard_vtable. Nothing calls
-#     it: hal/actor_classes.inc:957 says "MR_BLIZZARD (223) is NOT registered
-#     here" over a long note about an unresolved callee-saved register
-#     violation, ending "223 stays out: it cannot meet the zero-quarantine
-#     bar". The fill function is absent from the map, so _ZTV10MrBlizzard is
-#     all zeros at runtime, by design. Seating this family from another file
-#     would be a second writer for a table whose owner deliberately parked it,
-#     and would put a known-faulting actor back in the image. The honest fix is
-#     the register-state investigation actor_classes.inc asks for, not a seat.
+#     with exactly these bodies. The port already had the fill that seats them,
+#     hal/actor_classes_ov081.cpp's hal_fill_mr_blizzard_vtable, and for six
+#     weeks nothing called it, because hal/actor_classes.inc's gate-192 note
+#     said "MR_BLIZZARD (223) is NOT registered here" over an unresolved
+#     callee-saved register violation. That violation did not exist: the seam
+#     was the class's own pointer-to-member state dispatch (receiver in r0 on
+#     the ROM, ecx on the host, flat f(self) cells reading [esp+4]), and it was
+#     cured by the host copies port/unmatched/MrBlizzard_StateDispatch.cpp and
+#     port/unmatched/MrBlizzard_Behavior.cpp. 223 is registered now, the fill
+#     is called, and this family links with the rest of the trio. The paragraph
+#     stays so the "stays stripped" count above is readable against its own
+#     date; it is not a reason any more.
 #
 # (2) ROM SLOT 17, THE DELETING DESTRUCTOR THE PORT TRAPS ON PURPOSE.
 #     _ZN4CoinD0Ev            from:0x02108830 -> _ZTV8daCoin_c+0x44, slot 17

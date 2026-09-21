@@ -414,19 +414,51 @@ static int __fastcall mb_init(void *s, void *)
 { return _ZN10MrBlizzard13InitResourcesEv(s); }
 static int __fastcall mb_clean(void *s, void *)
 { (void)s; return _ZN10MrBlizzard16CleanupResourcesEv(); }
+/* SM64DS_ACTOR_PROBE=3: is MrBlizzard's own Behavior really being dispatched,
+   and is its state machine moving? The class was parked unregistered for six
+   weeks on a "frame-0 fault in Behavior's callee chain" that the PMF host
+   copies later cured, so the claim that the tick runs is worth an instrument
+   rather than an inference from "nothing crashed". Prints the first tick and
+   every 300th, per call: the instance, the live position at +0x5c and the
+   state-record pointer at +0x3f8, which func_ov081_02125488 rewrites on every
+   state change. A pointer that never moves is a state machine that is not
+   running. Costs one getenv and one counter when the knob is off. */
 static int __fastcall mb_behavior(void *s, void *)
-{ return _ZN10MrBlizzard8BehaviorEv(s); }
-/* HISTORY: the func_0204488c raw-DMA fear that first excluded MR_BLIZZARD
-   is RESOLVED (the dma verdict -- Part.fc/f8 are rebased at load; the
-   garbage fc the original probe read was pre-rebase, not a bad forward).
-   Registration was then attempted and found a DIFFERENT real blocker: a
-   deterministic frame-0 register-state corruption in Behavior's callee
-   chain (the `this` register comes back from a callee skewed to
-   this+0x150, the mWithMeshClsn; the tail's +0x368 store then stomps the
-   NEXT instance's render node). Full evidence chain + candidate list in
-   the gate-192 registry comment (port/hal/actor_classes.inc). 223 stays
-   unregistered until that seam is pinned; MrBlizzard::Render itself is
-   clean (calls Model::Render BY NAME -- no ModelAnim slot-5 exposure). */
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_ACTOR_PROBE");
+        on = e && e[0] == '3';
+    }
+    if (on) {
+        static unsigned long n;
+        if (++n == 1 || n % 300 == 0) {
+            const char *c = (const char *)s;
+            const int *p = (const int *)(c + 0x5c);
+            std::printf("[mb-beh] tick %lu  actor %p  pos (%d,%d,%d)  "
+                        "state %p\n", n, s, p[0] >> 12, p[1] >> 12, p[2] >> 12,
+                        *(void *const *)(c + 0x3f8));
+        }
+    }
+    return _ZN10MrBlizzard8BehaviorEv(s);
+}
+/* HISTORY, CLOSED: both reasons MR_BLIZZARD was kept out of the registry are
+   spent. The func_0204488c raw-DMA fear is RESOLVED (the dma verdict --
+   Part.fc/f8 are rebased at load; the garbage fc the original probe read was
+   pre-rebase, not a bad forward). The second one, "a frame-0 register-state
+   corruption in Behavior's callee chain", was the POINTER-TO-MEMBER RECEIVER
+   seam, not a callee-saved violation: the ROM dispatches the tick half with
+   the receiver in r0 and nothing on the stack (0x02125a98), MSVC spells that
+   as ecx with an empty stack, and the ten seated cells are flat f(self)
+   bodies reading [esp+4]. The stale word one of them read was a spilled
+   &this->mWithMeshClsn = this+0x150, and 0x150 + 0x368 = 0x4b8 is the stomp
+   that was measured. Cured before this registration by the host copies
+   port/unmatched/MrBlizzard_StateDispatch.cpp (the installer 0x02125488) and
+   port/unmatched/MrBlizzard_Behavior.cpp (the tick dispatch), which call the
+   cell as a plain function pointer through PortMrBlizzardPair. Full
+   derivation in the gate-192 registry comment (port/hal/actor_classes.inc).
+   MrBlizzard::Render itself was always clean (calls Model::Render BY NAME --
+   no ModelAnim slot-5 exposure). */
 static int __fastcall mb_render(void *s, void *)
 { port_actor_render_probe("MR_BLIZZARD", (char *)s + 0x30c);
   return _ZN10MrBlizzard6RenderEv(s); }
