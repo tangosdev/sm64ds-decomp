@@ -17383,6 +17383,12 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # nothing and allocates nothing. Same LoadLibrary rule as the file above:
     # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
     hal/gpu_device.cpp
+    # run hd2 lane GPU2: the optional renderer that draws the opaque 3D pass
+    # on that device. Off by default and inert when off: with Renderer absent
+    # or 0 it registers no backend, asks for no device and allocates nothing.
+    # Its shaders are compiled offline into hal/gpu_raster_shaders.h, same as
+    # the present path's, so d3dcompiler never loads here either.
+    hal/gpu_raster.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
@@ -17806,6 +17812,12 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # nothing and allocates nothing. Same LoadLibrary rule as the file above:
     # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
     hal/gpu_device.cpp
+    # run hd2 lane GPU2: the optional renderer that draws the opaque 3D pass
+    # on that device. Off by default and inert when off: with Renderer absent
+    # or 0 it registers no backend, asks for no device and allocates nothing.
+    # Its shaders are compiled offline into hal/gpu_raster_shaders.h, same as
+    # the present path's, so d3dcompiler never loads here either.
+    hal/gpu_raster.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.

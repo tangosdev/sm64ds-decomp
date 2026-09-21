@@ -1232,6 +1232,23 @@ int vsync_sanitise(int n)
     return n;
 }
 
+/* ---- THE RENDERER KEY'S BAND (run hd2, lane GPU2) -----------------------
+     Renderer   0 the software rasteriser the port has always drawn the 3D
+                picture with, which is the default and the only byte-exact
+                reference; 1 Direct3D 11, which draws the opaque 3D pass on
+                the graphics card and reads it back. Absent, unparseable, 0
+                itself and negative all land on 0; above 1 clamps to 1 rather
+                than being refused, the Aspect rule. The ceiling is 1 because
+                Direct3D 11 is the only other renderer that exists.
+     It is INDEPENDENT of PresentBackend: either can be on without the other,
+     and with both on the process still makes exactly one device. */
+int renderer_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
 /* The three keys' stored values. BOOT-LATCHED like g_aspect and g_frame_rate
    and for the same kind of reason: the render size is threaded into the
    framebuffer, the pack is opened once and the subdivision level sizes
@@ -1256,6 +1273,13 @@ int g_anti_aliasing = 0;
 int g_present_backend = 0;
 int g_present_filter = 0;
 int g_vsync = 0;
+
+/* run hd2 lane GPU2's one, latched beside them and for the same kind of
+   reason: which rasteriser draws the frame decides which library is loaded,
+   which device exists and which buffers are allocated on the card, so it is
+   settled before the first frame and a mid-run change would be a second code
+   path nobody tests. */
+int g_renderer = 0;
 
 void load_once(void)
 {
@@ -1320,6 +1344,7 @@ void load_once(void)
        port has always shipped, so a missing file and a file that will not
        parse both have to land on them. */
     g_present_backend = 0;
+    g_renderer = 0;
     g_present_filter = 0;
     g_vsync = 0;
 
@@ -1592,6 +1617,13 @@ void load_once(void)
             present_filter_sanitise(json_int(text, "PresentFilter", 0));
         g_vsync = vsync_sanitise((json_int(text, "VSync", 0) != 0 ||
                                   json_bool(text, "VSync", 0) != 0) ? 1 : 0);
+        /* run hd2 lane GPU2's one, read the same way and sanitised here for
+           the same reason. A file written before this key existed reads as one
+           that left it off, which is the software rasteriser the port has
+           always drawn with. Both spellings, the RunMode rule. */
+        g_renderer = renderer_sanitise(
+            (json_int(text, "Renderer", 0) != 0 ||
+             json_bool(text, "Renderer", 0) != 0) ? 1 : 0);
     }
     free(text);
 
@@ -1785,6 +1817,18 @@ void load_once(void)
                         "PresentBackend is 0, so nothing reads them: the "
                         "ordinary Windows present path has its own scaler and "
                         "no vsync. (%s)\n", g_present_filter, g_vsync, path);
+    /* run hd2 lane GPU2's one, one plain line and only off its default. It is
+       a line of its own rather than a clause on the backend's, because the two
+       settings are independent: either can be on without the other. */
+    if (g_renderer)
+        fprintf(stderr, "[settings] Renderer 1 -- the solid part of the 3D "
+                        "picture is drawn by the graphics card instead of by "
+                        "the processor and handed straight back, so the "
+                        "see-through polygons, the shadows and everything "
+                        "after them carry on exactly as before. It is not "
+                        "pixel for pixel the same picture as the ordinary "
+                        "renderer, and it falls back to it if the card will "
+                        "not have it. (%s)\n", path);
 }
 
 /* ---- the live re-read -----------------------------------------------------
@@ -2660,6 +2704,27 @@ extern "C" int host_setting_present_filter(void)
     if (env >= 0) return env;
     load_once();
     return g_present_filter;
+}
+
+/* Renderer: 0 the software rasteriser, 1 Direct3D 11. INDEPENDENT of
+   PresentBackend: either can be on without the other, and with both on the
+   process still makes exactly one device (hal/gpu_device.cpp). */
+extern "C" int host_setting_renderer(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_RENDERER");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? renderer_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_renderer;
 }
 
 /* VSync: 0 off, 1 on. Only read when the backend is 1, for the same reason. */
