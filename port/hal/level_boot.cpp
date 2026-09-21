@@ -3642,6 +3642,51 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         star_knob_seated = true;
         data_0209f220[0] = data_0209f1f0;
     }
+    /* SM64DS_EVENT_SEED=<word>:<hex>[,<word>:<hex>...] -- the level-event bits
+       a loaded save file would have left in the save block, written ONCE on the
+       first stage boot of the process. <word> indexes data_0209caa0 AS THE
+       32-BIT WORDS src/ reads it as (0..4 over its 0x14 bytes), which is the
+       only spelling the game's own readers use.
+
+       WHY IT HAS TO EXIST FOR THE CHARACTER CAPS TO BE MEASURABLE AT ALL.
+       data_0209caa0 is the save/event block, and the ROM's own game init clears
+       every byte of it (the R2a arm, func_02013e64 -> memset(data_0209caa0, 0,
+       0x32c)). On a cartridge the bits come back off the card with the chosen
+       file; a direct boot into a level takes no file-select route, so every
+       event a level reads AT SPAWN TIME reads false. Word 2 is the flags2 word
+       SaveData::IsCharacterUnlocked tests (bit 0 Mario, 1 Luigi, 2 Wario:
+       src/_ZN8SaveData19IsCharacterUnlockedEj.cpp), and word 2 bit 0x80000 is
+       the drained moat the basement's pillars set.
+
+       This ORs in the same bits the ROM's own setters OR in and does nothing
+       else; it never clears a bit and never runs twice. INERT UNLESS SET. */
+    {
+        static bool events_seeded = false;
+        const char *es = std::getenv("SM64DS_EVENT_SEED");
+        if (es && !events_seeded) {
+            unsigned *const w = (unsigned *)data_0209caa0;
+            const char *p = es;
+            while (*p) {
+                char *end;
+                const long word = std::strtol(p, &end, 10);
+                p = end;
+                if (*p == ':') {
+                    ++p;
+                    const unsigned long bits = std::strtoul(p, &end, 16);
+                    p = end;
+                    if (word >= 0 && word < 5) {
+                        w[word] |= (unsigned)bits;
+                        std::fprintf(stderr, "[event-seed] data_0209caa0 word "
+                                     "%d now %08x\n", (int)word, w[word]);
+                    }
+                }
+                while (*p && *p != ',') ++p;
+                if (*p == ',') ++p;
+            }
+            std::fflush(stderr);
+        }
+        events_seeded = true;
+    }
     /* SM64DS_STARS_SEED=<course>:<hex>[,<course>:<hex>...] -- the collected-star
        bitmask a loaded save file would have left in the save block, written ONCE
        on the first stage boot of the process.
