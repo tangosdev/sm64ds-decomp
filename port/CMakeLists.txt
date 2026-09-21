@@ -2950,6 +2950,21 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN4Fish16CleanupResourcesEv.cpp"
     PROPERTIES COMPILE_DEFINITIONS "func_ov100_02146280=hal_ov100_02146280_ridethrough")
+# PORT_HOST_ABI, run link100 wave 20 (lane CAMTICK_FIX): the camera-rotate
+# effect's stop fade. src/func_02009e70.cpp declares Sound_PlayIfNotActive
+# with three parameters and calls it with three (:102 and :551); the ROM's
+# definition (src/Sound_PlayIfNotActive.c) takes four and stores the fourth
+# as the effect's stop fade. At 0x0200ae44 the cartridge materialises r3 = 0
+# for the data_0209b000 = 0 store and the call at 0x0200ae64 reuses it, so
+# the rotate effect is always registered with fade 0 on the ROM; on this ABI
+# the callee read an unwritten stack slot instead. Renaming the symbol FOR
+# THAT ONE TU sends its call to the ride-through in port/hal/sdat/sound_abi.cpp,
+# which supplies the fourth argument as 0; the definition and every other
+# caller are untouched.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02009e70.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "Sound_PlayIfNotActive=hal_Sound_PlayIfNotActive_ridethrough")
 # R3, run linkw wave 12 (lane w12): THE SAME DISEASE, a fourth time, and this
 # one arrived from the OTHER side -- not a newly sliced body under an alias's
 # LHS but a newly MOUNTED datum under it. src/actors/Scuttlebug.cpp (Scuttlebug's

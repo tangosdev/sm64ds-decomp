@@ -21,6 +21,8 @@
 //   func_0204f7cc  (1 -> 3)  pan mode + value ride into Snd_SendCommand(4).
 //   func_0204f86c  (1 -> 3)  two riders into Snd_SendCommand(5, ...).
 //   func_0204fa2c  (1 -> 2)  the fade length rides into func_0204f5a0.
+//   func_02009e70's call (3 -> 4) the stop fade rides into
+//                            Sound_PlayIfNotActive.
 //
 // The rest are not ride-throughs; each says why below.
 #include "sdat.h"
@@ -39,6 +41,7 @@ void func_0205aaf4(void *a, int b, int c);
 void func_0204f4bc(void *obj);
 void *func_0205afb4(void);
 void func_0204f5a0(u8 *thiz, int arg1);
+int  Sound_PlayIfNotActive(int a, int b, int c, int d);
 
 // func_0204f600(thiz) on ARM; r1 = sequence data, r2 = entry offset,
 // r3 = resident bank, all of which ride into func_0205adc4.
@@ -85,6 +88,22 @@ int func_0204fa2c(int *p, int fade)
 {
     func_0204f5a0((u8 *)(size_t)(unsigned)*p, fade);
     return 0;
+}
+
+// src/func_02009e70.cpp declares Sound_PlayIfNotActive with three
+// parameters and calls it with three; the definition takes four and
+// stores the fourth as the effect's stop fade (func_0201186c ->
+// func_02011b38 a5 -> entry+4 -> func_0204f5a0's arg1, where 0 stops
+// the effect at once and non-zero ramps it down). The cartridge's
+// fourth argument is the r3 = 0 it materialised two instructions
+// earlier for the data_0209b000 = 0 store, so the camera's rotate
+// effect is registered with fade 0. On the host the callee read an
+// unwritten stack slot, and the effect kept sounding for whatever
+// that word happened to say.
+// PORT_HOST_ABI: ARM r3 argument ride-through (stop fade, 0).
+int hal_Sound_PlayIfNotActive_ridethrough(int a, int b, int c)
+{
+    return Sound_PlayIfNotActive(a, b, c, 0);
 }
 
 // Sound::Play. Its src declares the resolver as func_02050cdc(void) and
