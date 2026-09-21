@@ -1,108 +1,22 @@
 //cpp
-/* Reconstructed translation unit.
- * ov006/dScMgMemory2_c  (52 functions)
+/* Memory Master: deal the cards, move the player markers and judge pairs.
+ * Round, result and card states control the reveal, selection and reward phases.
+ * The cartridge RTTI names this scene dScMgMemory2_c.
  *
- * The contiguous Memory Master scene run and immediately adjacent unique
- * MG_MEMORY_J factory are one original object. The class identity is ROM-proven
- * by RTTI; state/helper names attached to address-only symbols are descriptive
- * coinage, documented in the TU manifest and actor rename ledger.
- *
- * FUNCTION ORDER IS ROM-ASCENDING. This TU disables deferred code generation
- * so CodeWarrior emits each definition as encountered. That keeps the two
- * measured legacy optimization settings local to their own members while one
- * object reproduces all 52 cartridge sections in order.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f5564  src/_ZN14dScMgMemory2_cD1Ev.cpp
- *   [1] 0x020f55b8  src/_ZN14dScMgMemory2_cD0Ev.cpp
- *   [2] 0x020f5620  src/_ZN14dScMgMemory2_c11DrawMessageEv.c
- *   [3] 0x020f565c  src/_ZN14dScMgMemory2_c10DrawCursorEv.c
- *   [4] 0x020f5694  src/_ZN14dScMgMemory2_c12UpdateCursorEv.c
- *   [5] 0x020f56f8  src/_ZN14dScMgMemory2_c10ShowCursorEv.c
- *   [6] 0x020f572c  src/_ZN14dScMgMemory2_c10HideCursorEv.c
- *   [7] 0x020f5740  src/_ZN14dScMgMemory2_c10PlayerWaitEi.c
- *   [8] 0x020f5744  src/_ZN14dScMgMemory2_c10PlayerMoveEi.c
- *   [9] 0x020f58d0  src/_ZN14dScMgMemory2_c10PlayerDropEi.c
- *   [10] 0x020f593c  src/_ZN14dScMgMemory2_c11InitPlayersEv.c
- *   [11] 0x020f59c0  src/_ZN14dScMgMemory2_c13CheckFinishedEv.c
- *   [12] 0x020f5a64  src/_ZN14dScMgMemory2_c9JudgePairEv.cpp
- *   [13] 0x020f5b98  src/_ZN14dScMgMemory2_c9DrawCardsEv.c
- *   [14] 0x020f5c40  src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp
- *   [15] 0x020f5cb4  src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c
- *   [16] 0x020f5de0  src/_ZN14dScMgMemory2_c12CardFlipDownEi.c
- *   [17] 0x020f5e70  src/_ZN14dScMgMemory2_c8CardWaitEi.c
- *   [18] 0x020f5e74  src/_ZN14dScMgMemory2_c10CardFlipUpEi.c
- *   [19] 0x020f5f0c  src/_ZN14dScMgMemory2_c10CardSelectEi.c
- *   [20] 0x020f6084  src/_ZN14dScMgMemory2_c8CardIdleEi.c
- *   [21] 0x020f6088  src/_ZN14dScMgMemory2_c8CardMoveEi.c
- *   [22] 0x020f6230  src/_ZN14dScMgMemory2_c12ResultFinishEv.c
- *   [23] 0x020f639c  src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c
- *   [24] 0x020f6488  src/_ZN14dScMgMemory2_c12ResultRewardEv.c
- *   [25] 0x020f6538  src/_ZN14dScMgMemory2_c10ResultWaitEv.c
- *   [26] 0x020f6678  src/_ZN14dScMgMemory2_c11RoundRevealEv.c
- *   [27] 0x020f670c  src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c
- *   [28] 0x020f67a0  src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c
- *   [29] 0x020f6830  src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c
- *   [30] 0x020f6904  src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c
- *   [31] 0x020f6a00  src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c
- *   [32] 0x020f6a78  src/_ZN14dScMgMemory2_c13RoundDealHardEv.c
- *   [33] 0x020f6b00  src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c
- *   [34] 0x020f6b78  src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c
- *   [35] 0x020f6bf0  src/_ZN14dScMgMemory2_c10RoundStartEv.c
- *   [36] 0x020f6c90  src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c
- *   [37] 0x020f6f88  src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c
- *   [38] 0x020f7064  src/_ZN14dScMgMemory2_c9ResetGameEv.c
- *   [39] 0x020f7190  src/_ZN14dScMgMemory2_c9StateExitEv.c
- *   [40] 0x020f71c8  src/_ZN14dScMgMemory2_c11StateResultEv.cpp
- *   [41] 0x020f7210  src/_ZN14dScMgMemory2_c10StateJudgeEv.c
- *   [42] 0x020f7234  src/_ZN14dScMgMemory2_c9StatePlayEv.cpp
- *   [43] 0x020f7280  src/_ZN14dScMgMemory2_c10StateSetupEv.c
- *   [44] 0x020f72c0  src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c
- *   [45] 0x020f730c  src/_ZN14dScMgMemory2_c15OnGroundPoundedEv.cpp
- *   [46] 0x020f7320  src/_ZN14dScMgMemory2_c13OnTurnIntoEggEi.cpp
- *   [47] 0x020f7394  src/_ZN14dScMgMemory2_c13OnYoshiTryEatEi.cpp
- *   [48] 0x020f73f4  src/_ZN14dScMgMemory2_c6RenderEv.cpp
- *   [49] 0x020f7458  src/_ZN14dScMgMemory2_c8BehaviorEv.cpp
- *   [50] 0x020f74b4  src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp
- *   [51] 0x020f75d4  src/dScMgMemory2_c_classInit.c
- */
-
-/* CODEWARRIOR CODEGEN BOUNDARY. With deferred emission enabled, later option
- * state leaks across push/pop. Eager emission lets DrawCards keep
- * opt_propagation off and ResultFinish keep opt_loop_invariants off without
- * recompiling unrelated members. Removing either measured setting changes ROM
- * bytes. */
-
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  30 func_ov004_* + 30 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  1 _ZN..E call(s)              class header exists, member not yet
- *                                declared in it.
- *  1 _ZN..E call(s)              no include/<class>.h yet, so there is
- *                                no member to call.
- *  3 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  41 `(void *)this` launder(s)  bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  ~228 *(T *)(p + 0x..)         class layout does not name these offsets.
- *  2 shadow struct(s)            fake interfaces for the real classes:
- *                                B, Sound
+ * This promoted TU owns 52 text functions, including both destructor variants.
+ * Source order and local optimization pragmas preserve their measured emission.
+ * Some loops retain their offset views after bounded ordinary-member probes.
+ * See notes/experiments/pr2875-source-repair-0920.json for those alternatives.
  */
 
 #include "dScMgMemory2_c.h"
+#include "Sound.h"
 #include "types.h"
 #include "common.h"
 #include "decl_common.h"
 
-/* Local implementation views retained where replacing an exact legacy view
- * with direct typed array expressions measurably changes CodeWarrior register
- * allocation or scheduling. The owning scene layout is typed in the header. */
-/* shadow struct 'Sound' */
-struct Sound { static void PlayBank2_2D(unsigned int); };
+/* Remaining legacy views describe loop windows over the scene layout.
+ * They are not recovered original class definitions. */
 
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
 typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
@@ -172,7 +86,7 @@ extern void func_ov004_020b1e34(void *thiz, int a, int b, int c);
 extern void func_ov004_020b0d8c(void *c, int arg1, int arg2);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern s16 data_02082214[];
-extern "C" void func_02012790(int x);
+extern "C" unsigned int func_02012790(unsigned int x);
 extern "C" void func_ov004_020b5dd4(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 data_ov006_0213d45c[];
@@ -188,7 +102,6 @@ extern void func_ov004_020ad79c(int a, int b);
 extern u16* data_ov006_0213d338[];
 extern int data_ov006_0212e8e8[];
 extern int data_ov006_0212e8f4[];
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern void func_ov004_020b56c8(char* p);
 extern short data_ov004_020bf9e4;
 extern void func_ov004_020b67f8(void);
@@ -223,7 +136,7 @@ void func_ov006_020c0aa8(char *);
 void func_ov004_020b1bc8(char *, int, int, int);
 void func_ov006_020c1804(char *);
 extern "C" void func_ov004_020b65e4(void);
-extern "C" int func_ov006_020c19d0(void *p);
+extern "C" void func_ov006_020c19d0(char *p);
 void func_ov006_0210a534(void);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
@@ -236,12 +149,6 @@ void func_ov004_020b04d0(int v);
 void func_ov004_020b682c(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN11dScMgBase_cC2Ev(void *scene);
-void _ZN8Particle10SysTrackerC1Ev(void *tracker);
-void func_ov006_020c1d80(void *sharedState);
-extern void *_ZTV19dScMgSingle3DBase_c[];
-extern void *_ZTV14dScMgMemory2_c[];
 }
 
 #pragma defer_codegen off
@@ -250,22 +157,8 @@ extern void *_ZTV14dScMgMemory2_c[];
 /* ROM ordinal 0 -- _ZN14dScMgMemory2_cD1Ev, 0x020f5564, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMemory2_cD1Ev
-/* recovered: real C++ destructor. The one explicit call reproduces the
-   ROM's own recovered body exactly: destroy the shared 0x270-byte table at
-   0x4f38, addressed by raw offset from `this` because the header keeps it
-   opaque. Everything after -- own vtable store, mSysTracker destruction,
-   chain to ~dScMgBase_c() -- is the compiler's own inlining of
-   dScMgSingle3DBase_c's now-inline destructor (see
-   include/dScMgSingle3DBase_c.h's own note).
-
-   The pre-migration source destroyed mSysTracker through a LOCAL
-   `struct SysTracker { ~SysTracker(); char pad[4]; };` shadow. That
-   mangles to _ZN10SysTrackerD1Ev, a symbol that exists nowhere in the ROM
-   -- the real one is namespaced, _ZN8Particle10SysTrackerD1Ev. The bytes
-   matched anyway, because build_pin and fdiff wildcard relocated words, so
-   the file byte-matched while eligible.py quietly refused to enroll it and
-   dsd served the ROM's own bytes. Inheriting the base's real member is what
-   retires that phantom reference. */
+/* Member destruction releases mShared before the inherited scene destructor.
+ * CodeWarrior emits both D1 and D0 from the single definition below. */
 dScMgMemory2_c::~dScMgMemory2_c()
 {
     /* mShared is destroyed automatically before the inherited scene. */
@@ -274,22 +167,7 @@ dScMgMemory2_c::~dScMgMemory2_c()
 /* ROM ordinal 1 -- _ZN14dScMgMemory2_cD0Ev, 0x020f55b8, size 0x68 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMemory2_cD0Ev
-/* recovered: real C++ destructor. The one explicit call reproduces the
-   ROM's own recovered body exactly: destroy the shared 0x270-byte table at
-   0x4f38, addressed by raw offset from `this` because the header keeps it
-   opaque. Everything after -- own vtable store, mSysTracker destruction,
-   chain to ~dScMgBase_c() -- is the compiler's own inlining of
-   dScMgSingle3DBase_c's now-inline destructor (see
-   include/dScMgSingle3DBase_c.h's own note).
-
-   The pre-migration source destroyed mSysTracker through a LOCAL
-   `struct SysTracker { ~SysTracker(); char pad[4]; };` shadow. That
-   mangles to _ZN10SysTrackerD1Ev, a symbol that exists nowhere in the ROM
-   -- the real one is namespaced, _ZN8Particle10SysTrackerD1Ev. The bytes
-   matched anyway, because build_pin and fdiff wildcard relocated words, so
-   the file byte-matched while eligible.py quietly refused to enroll it and
-   dsd served the ROM's own bytes. Inheriting the base's real member is what
-   retires that phantom reference. */
+/* Compiler-emitted deleting variant of the destructor above. */
 /* D1 is emitted with D0 from the single destructor definition above. */
 
 /* -------------------------------------------------------------------------- */
@@ -298,7 +176,7 @@ dScMgMemory2_c::~dScMgMemory2_c()
 void dScMgMemory2_c::DrawMessage()
 {
     char *thiz = (char *)this;
-    if (*(unsigned char *)(thiz + 0x540b) == 0) return;
+    if (mMessageVisible == 0) return;
     func_ov004_020b1e34(thiz, 0xe0, 0x14, 1);
 }
 
@@ -307,7 +185,7 @@ void dScMgMemory2_c::DrawMessage()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::DrawCursor() {
     char *c = (char *)this;
-    if (*(unsigned char *)(c + 0x53d2) == 0) return;
+    if (mCursor.enabled == 0) return;
     func_ov004_020b0d8c(c, 0xe0, 0xa0);
 }
 
@@ -316,7 +194,7 @@ void dScMgMemory2_c::DrawCursor() {
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::UpdateCursor() {
   char *c = (char *)this;
-  if (*(unsigned char*)(c + 0x5000 + 0x3d0) == 0) return;
+  if (mCursor.visible == 0) return;
   {
     unsigned short* h = (unsigned short*)(c + 0x53cc);
     *h = *h + 1;
@@ -335,13 +213,12 @@ void dScMgMemory2_c::UpdateCursor() {
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::ShowCursor()
 {
-    char *p = (char *)this;
-    *(char *)(p + 0x53d0) = 1;
-    *(char *)(p + 0x53d2) = 1;
-    *(int *)(p + 0x53c4) = 966656;
-    *(int *)(p + 0x53c8) = 688128;
-    *(short *)(p + 0x53cc) = 0;
-    *(char *)(p + 0x53d1) = 0;
+    mCursor.visible = 1;
+    mCursor.enabled = 1;
+    mCursor.x = 966656;
+    mCursor.y = 688128;
+    mCursor.angle = 0;
+    mCursor.frame = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -349,9 +226,8 @@ void dScMgMemory2_c::ShowCursor()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::HideCursor()
 {
-    char *p = (char *)this;
-    *(char *)(p + 0x53d0) = 0;
-    *(char *)(p + 0x53d2) = 0;
+    mCursor.visible = 0;
+    mCursor.enabled = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -398,19 +274,18 @@ void dScMgMemory2_c::PlayerMove(int i)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov006_020f58d0, 0x020f58d0, size 0x6c */
 /* -------------------------------------------------------------------------- */
-void dScMgMemory2_c::PlayerDrop(int i){
-    char *c = (char *)this;
-    short *e = (short*)(c + 0x5396 + i*0x14);
-    if(*(unsigned short*)e != 0){
+void dScMgMemory2_c::PlayerDrop(int i) {
+    short *e = &mPlayers[i].delay;
+    if (*(unsigned short*)e != 0) {
         *e = *(unsigned short*)e - 1;
-        if(*e < 0) *e = 0;
+        if (*e < 0) *e = 0;
         return;
     }
-    *(int*)(c+i*0x14+0x5000+0x388)=0xc000;
-    *(int*)(c+i*0x14+0x5000+0x38c)=0xc000;
-    *(unsigned char*)(c+i*0x14+0x5000+0x399)=1;
-    *(unsigned char*)(c+i*0x14+0x5000+0x39a)=1;
-    *(int*)(c+i*0x14+0x5000+0x390)=0xc00;
+    mPlayers[i].x = 0xc000;
+    mPlayers[i].y = 0xc000;
+    mPlayers[i].unk_11 = 1;
+    mPlayers[i].state = 1;
+    mPlayers[i].speed = 0xc00;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -433,7 +308,7 @@ void dScMgMemory2_c::InitPlayers()
 
     entry = self;
     i = 0;
-    *(unsigned char *)(self + 0x5409) = (unsigned char)n;
+    mMaxMisses = (unsigned char)n;
     if (n <= 0)
         return;
 
@@ -481,35 +356,33 @@ void dScMgMemory2_c::CheckFinished()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::JudgePair()
 {
-    char *c = (char *)this;
     int a, b;
     unsigned char *sa, *sb;
-    if (*(unsigned char *)(c + 0x5406) < 2) return;
-    a = *(unsigned char *)(c + 0x53f0);
-    sa = (unsigned char *)(c + 0x51bc + a * 0x18);
-    b = *(unsigned char *)(c + 0x53f1);
+    if (mSelectedCount < 2) return;
+    a = mSelectedCards[0];
+    sa = &mCards[a].state;
+    b = mSelectedCards[1];
     if (*sa != 4) return;
-    sb = (unsigned char *)(c + 0x51bc + b * 0x18);
+    sb = &mCards[b].state;
     if (*sb != 4) return;
-    if (*(unsigned char *)(c + 0x5000 + a * 0x18 + 0x1b8) ==
-        *(unsigned char *)(c + 0x5000 + b * 0x18 + 0x1b8)) {
-        *(unsigned char *)(c + 0x5000 + a * 0x18 + 0x1bb) = 0;
-        *(unsigned char *)(c + 0x5000 + a * 0x18 + 0x1ba) = 0;
-        *(unsigned char *)(c + 0x5000 + b * 0x18 + 0x1bb) = 0;
-        *(unsigned char *)(c + 0x5000 + b * 0x18 + 0x1ba) = 0;
+    if (mCards[a].value == mCards[b].value) {
+        mCards[a].active = 0;
+        mCards[a].visible = 0;
+        mCards[b].active = 0;
+        mCards[b].visible = 0;
         func_02012790(0x26);
         Sound::PlayBank2_2D(0x13d);
-        *(unsigned char *)(((int)c + 0x5405)) += 1;
-        *(unsigned char *)(c + 0x5406) = 0;
+        mPairsFound += 1;
+        mSelectedCount = 0;
     } else {
         func_02012790(0xe);
         Sound::PlayBank2_2D(0x13e);
-        *(unsigned char *)(((int)c + 0x5408)) += 1;
+        mMisses += 1;
         func_ov004_020b5dd4();
-        if (*(unsigned char *)(c + 0x5408) < *(unsigned char *)(c + 0x5409)) {
+        if (mMisses < mMaxMisses) {
             *sa = 5;
             *sb = 5;
-            *(unsigned char *)(c + 0x5406) = 0;
+            mSelectedCount = 0;
         }
     }
 }
@@ -534,7 +407,7 @@ void dScMgMemory2_c::DrawCards()
     do {
         if (*(u8 *)(p + 0x51ba) != 0) {
             flag = 0;
-            if (*(int *)(a0 + 0x53d4) != 2)
+            if (mState != 2)
                 flag = 1;
             k = data_ov006_0213d45c[*(u8 *)(p + 0x51b8) * 5
                                     + *(u8 *)(p + 0x51bd)];
@@ -554,11 +427,9 @@ void dScMgMemory2_c::DrawCards()
 void dScMgMemory2_c::UpdateCards()
 {
     int i;
-    char *s = (char *)this;
     for (i = 0; i < 0x14; i++) {
-        if (*(unsigned char *)(s + 0x51bb))
-            (this->*data_ov006_02142408[*(unsigned char *)(s + 0x51bc)])(i);
-        s += 0x18;
+        if (mCards[i].active)
+            (this->*data_ov006_02142408[mCards[i].state])(i);
     }
 }
 
@@ -616,17 +487,15 @@ void dScMgMemory2_c::CardFlyAway(int idx)
 /* ROM ordinal 16 -- func_ov006_020f5de0, 0x020f5de0, size 0x90 */
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::CardFlipDown(int i){
-    char *c = (char *)this;
-    int o = i * 0x18;
     unsigned short cnt;
-    *(unsigned short*)(c + 0x51b6 + o) += 1;
-    cnt = *(unsigned short*)(c + 0x51b6 + o);
-    if(cnt < (data_ov006_0213d344[*(unsigned char*)(c + 0x5000 + o + 0x1bd)] & 0xff))
+    mCards[i].animTimer += 1;
+    cnt = mCards[i].animTimer;
+    if(cnt < (data_ov006_0213d344[mCards[i].frame] & 0xff))
         return;
-    *(unsigned short*)(c + 0x51b6 + o) = 0;
-    *(unsigned char*)(c + 0x51bd + o) -= 1;
-    if(*(unsigned char*)(c + 0x51bd + o) == 0)
-        *(unsigned char*)(c + 0x5000 + o + 0x1bc) = 2;
+    mCards[i].animTimer = 0;
+    mCards[i].frame -= 1;
+    if(mCards[i].frame == 0)
+        mCards[i].state = 2;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -649,7 +518,7 @@ void dScMgMemory2_c::CardFlipUp(int idx){
   *st = *st + 1;
   if (*st > 4) {
     *st = 4;
-    *(unsigned char*)(base + idx*0x18 + 0x5000 + 0x1bc) = 4;
+    mCards[idx].state = 4;
   }
 }
 
@@ -665,7 +534,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     int n;
     int v, w;
 
-    e = *(u8*)(self + 0x5406);
+    e = mSelectedCount;
     if (e >= 2) return;
 
     i = data_020a0e40;
@@ -687,7 +556,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     if (w > 0x16) return;
 
     *(u8*)(self + 0x53ee + e) = *(u8*)(self + 0x51b8 + n);
-    *(u8*)(self + 0x53f0 + *(u8*)(self + 0x5406)) = (u8)idx;
+    *(u8*)(self + 0x53f0 + mSelectedCount) = (u8)idx;
     {
         u8 *pc = (u8*)(self + 0x5406);
         *pc = *pc + 1;
@@ -695,7 +564,7 @@ void dScMgMemory2_c::CardSelect(int idx)
     *(u8*)(self + 0x51bc + n) = 3;
     func_02012718(0x143, *(int*)(self + 0x51a8 + n));
 
-    if (*(u8*)(self + 0x540c) != 0) return;
+    if (mInputSeen != 0) return;
     {
         u8 *pd = (u8*)(self + 0x540c);
         *pd = *pd + 1;
@@ -715,25 +584,23 @@ void dScMgMemory2_c::CardIdle(int /* card */)
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::CardMove(int i)
 {
-    char *self = (char *)this;
     int i2 = i * 2;
-    u16* row = data_ov006_0213d338[*(u8*)(self + 0x540a)];
-    int i18 = i * 0x18;
+    u16* row = data_ov006_0213d338[mDifficulty];
     int dx, dy, a, b;
     a = row[i2];
-    dx = a - (*(int*)(self + 0x51a8 + i18) >> 12);
+    dx = a - (mCards[i].x >> 12);
     b = row[i2 + 1];
-    dy = b - (*(int*)(self + 0x51ac + i18) >> 12);
+    dy = b - (mCards[i].y >> 12);
 
-    *(u16*)(self + 0x51b4 + i18) = (u16)_ZN4cstd5atan2E5Fix12IiES1_(dy, dx);
+    mCards[i].angle = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx);
 
     {
-        s16 tv = data_02082214[((*(u16*)(self + 0x51b4 + i18) >> 4) << 1) + 1];
-        *(int*)(self + 0x51a8 + i18) += (int)(((s64)tv * *(int*)(self + 0x51b0 + i18) + 0x800) >> 0xc);
+        s16 tv = data_02082214[((static_cast<u16>(mCards[i].angle) >> 4) << 1) + 1];
+        mCards[i].x += (int)(((s64)tv * mCards[i].speed + 0x800) >> 0xc);
     }
     {
-        s16 tv = data_02082214[(*(u16*)(self + 0x51b4 + i18) >> 4) << 1];
-        *(int*)(self + 0x51ac + i18) += (int)(((s64)tv * *(int*)(self + 0x51b0 + i18) + 0x800) >> 0xc);
+        s16 tv = data_02082214[(static_cast<u16>(mCards[i].angle) >> 4) << 1];
+        mCards[i].y += (int)(((s64)tv * mCards[i].speed + 0x800) >> 0xc);
     }
 
     if (dx < -6)
@@ -745,9 +612,9 @@ void dScMgMemory2_c::CardMove(int i)
     if (dy > 6)
         return;
 
-    *(int*)(self + 0x51a8 + i18) = a << 12;
-    *(int*)(self + 0x51ac + i18) = b << 12;
-    *(u8*)(self + i18 + 0x51bc) = 1;
+    mCards[i].x = a << 12;
+    mCards[i].y = b << 12;
+    *&mCards[i].state = 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -769,7 +636,7 @@ void dScMgMemory2_c::ResultFinish()
     UpdateCards();
     UpdateCursor();
 
-    if (*(unsigned short *)(p + 0x53e2) != 0) {
+    if (mCardTimer != 0) {
         q = (unsigned short *)(unsigned int)(p + 0x53e2);
         *q = *q - 1;
         return;
@@ -789,25 +656,25 @@ void dScMgMemory2_c::ResultFinish()
     func_02012790(0x62);
 
     if (*(int *)(p + 0xa8) == 0) {
-        for (i = 0; i < data_ov006_0212e8e8[*(unsigned char *)(p + 0x540a)]; i++) {
+        for (i = 0; i < data_ov006_0212e8e8[mDifficulty]; i++) {
             best = 0xff;
             j = 0;
-            n = data_ov006_0212e8f4[*(unsigned char *)(p + 0x540a)];
-            for (; j < data_ov006_0212e8f4[*(unsigned char *)(p + 0x540a)]; j++) {
+            n = data_ov006_0212e8f4[mDifficulty];
+            for (; j < data_ov006_0212e8f4[mDifficulty]; j++) {
                 if (*(unsigned char *)(p + 0x51bb + (i * n + j) * 0x18) != 0) {
                     best = j;
                     best = best + i * n;
                 }
             }
             if (best != 0xff) {
-                *(unsigned char *)(p + 0x51bc + best * 0x18) = 6;
+                mCards[best].state = 6;
             }
         }
-        *(unsigned char *)(p + 0x540b) = 0;
+        mMessageVisible = 0;
     }
 
     HideCursor();
-    *(int *)(p + 0x53d4) = 4;
+    mState = 4;
 }
 #pragma pop
 
@@ -816,39 +683,36 @@ void dScMgMemory2_c::ResultFinish()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::ResultTurnCards()
 {
-    char *c = (char *)this;
-    if (*(unsigned short*)(c + 0x5300 + 0xe2)) {
-        unsigned short* q = (unsigned short*)(((int)c + 0x53e2));
+    if (mCardTimer) {
+        unsigned short* q = &mCardTimer;
         *q = *q - 1;
         return;
     }
-    if (*(unsigned char*)(c + 0x5000 + 0x405) >= *(unsigned short*)(c + 0x5300 + 0xea)) {
-        *(int*)(c + 0x5000 + 0x3d4) = 4;
-        *(unsigned short*)(c + 0x5300 + 0xe2) = 0;
+    if (mPairsFound >= mTargetPairs) {
+        mState = 4;
+        mCardTimer = 0;
         return;
     }
     {
         int count = 0;
         int i = 0;
-        char* p = c;
         for (; i < 0x14; i++) {
-            if (*(unsigned char*)(p + 0x5000 + 0x1bb) != 0) {
-                if (*(unsigned char*)(p + 0x5000 + 0x1bc) == 2) {
-                    *(unsigned char*)(p + 0x5000 + 0x1bc) = 3;
+            if (mCards[i].active != 0) {
+                if (mCards[i].state == 2) {
+                    mCards[i].state = 3;
                     count++;
                 }
             }
-            p += 0x18;
         }
         if (count <= 2) {
-            _ZN5Sound12PlayBank2_2DEj(0x145);
+            Sound::PlayBank2_2D(0x145);
         } else {
-            _ZN5Sound12PlayBank2_2DEj(0x146);
+            Sound::PlayBank2_2D(0x146);
         }
     }
-    *(int*)(c + 0x5000 + 0x3d8) = 3;
+    mSubstate = 3;
     ShowCursor();
-    *(unsigned short*)(c + 0x5300 + 0xe2) = 0x20;
+    mCardTimer = 0x20;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -892,8 +756,8 @@ void dScMgMemory2_c::ResultWait()
 
     *(unsigned short *)(c + 0x53e4) = 0;
 
-    if (*(unsigned char *)(c + 0x5405) >= *(unsigned short *)(c + 0x53ea)) {
-        if (*(unsigned char *)(c + 0x5408) == 0)
+    if (mPairsFound >= mTargetPairs) {
+        if (mMisses == 0)
             func_ov004_020b67f8();
         func_ov004_020b0a54(4);
         p = (struct B *)data_ov004_020beb68;
@@ -1013,7 +877,7 @@ void dScMgMemory2_c::RoundReadyCards(){
         }
     }
     if(found == 0)
-        *(int*)(c+0x53d8) = 8;
+        mSubstate = 8;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1105,15 +969,15 @@ void dScMgMemory2_c::RoundShowCards()
     }
 
     if (cntB == 1)
-        _ZN5Sound12PlayBank2_2DEj(0x148);
+        Sound::PlayBank2_2D(0x148);
     else if (cntB == 2)
-        _ZN5Sound12PlayBank2_2DEj(0x145);
+        Sound::PlayBank2_2D(0x145);
     else if (cntB >= 3)
-        _ZN5Sound12PlayBank2_2DEj(0x146);
+        Sound::PlayBank2_2D(0x146);
     if (cntA != 0)
         return;
-    *(int *)(c + 0x53d8) = 6;
-    *(short *)(c + 0x53ec) = *(unsigned char *)(c + 0x540a) * 20 + 0x50;
+    mSubstate = 6;
+    mPreviewTimer = mDifficulty * 20 + 0x50;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1150,13 +1014,12 @@ void dScMgMemory2_c::RoundDealFourth()
  * set state 5 (mode 1) or 4 (otherwise). */
 void dScMgMemory2_c::RoundDealHard()
 {
-    char *c = (char *)this;
     Work* w = (Work*)this;
     u8 mode;
     if (w->ready < 3)
         return;
     w->slots[w->total * 2 - 1 - w->count].done = 1;
-    (*(short*)(c + 0x53e8))++;
+    (mDealCount)++;
     mode = w->mode;
     if (w->count < data_ov006_0212e93c[mode])
         return;
@@ -1224,14 +1087,14 @@ void dScMgMemory2_c::RoundDealEasy()
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::RoundStart(){
     char *c = (char *)this;
-    *(short*)(c+0x53e6) = 0;
-    *(short*)(c+0x53e8) = 0;
-    if (*(unsigned char*)(c+0x540a) == 1)
+    mReadyCount = 0;
+    mDealCount = 0;
+    if (mDifficulty == 1)
         func_ov006_020c1604(c+0x4f38, 4, 3, (int)(c+0x53e6));
     else
         func_ov006_020c1604(c+0x4f38, 4, 4, (int)(c+0x53e6));
-    *(short*)(c+0x511e) = 1;
-    *(int*)(c+0x53d8) = 1;
+    mShared.ready = 1;
+    mSubstate = 1;
     if (*(unsigned char*)(c+0xc4) == 0) {
         *(unsigned char*)(c+0xc3) = 1;
         *(unsigned char*)(c+0xc4) = 1;
@@ -1250,7 +1113,7 @@ void dScMgMemory2_c::ShuffleCards()
     for (int i = 0; i < 8; i++)
         *(u8 *)(c + i + 0x53fd) = 0xff;
 
-    u8 flag = *(u8 *)(c + 0x540a);
+    u8 flag = mDifficulty;
     if (flag == 0) {
         int i = 0;
         char *p = c;
@@ -1341,7 +1204,7 @@ void dScMgMemory2_c::ShuffleCards()
 void dScMgMemory2_c::ChoosePreviewCards()
 {
     char *obj = (char *)this;
-    int idx = *(unsigned char *)(obj + 0x5000 + 0x40a);
+    int idx = mDifficulty;
     int n = data_ov006_0212e900[idx];
     int mul = data_ov006_0212e90c[idx];
     int i;
@@ -1447,10 +1310,9 @@ void dScMgMemory2_c::ResetGame()
 // laundered RMW pool-loads the offset for the predicated tail.
 void dScMgMemory2_c::StateExit()
 {
-    char *self = (char *)this;
     UpdateCards();
-    if (*(unsigned short *)(self + 0x53e2))
-        *(unsigned short *)(self + 0x53e2) -= 1;
+    if (mCardTimer)
+        mCardTimer -= 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1487,7 +1349,7 @@ void dScMgMemory2_c::StateSetup(){
     ShuffleCards();
     FreeGfxSlotsById(0x1d);
     func_ov006_020c1764(c + 0x4f38);
-    *(int*)(c + 0x53d4) = 1;
+    mState = 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1495,17 +1357,17 @@ void dScMgMemory2_c::StateSetup(){
 /* -------------------------------------------------------------------------- */
 void dScMgMemory2_c::SetupDifficulty() {
     char *c = (char *)this;
-    *(unsigned char*)(c + 0x540a) = 0;
-    *(unsigned short*)(c + 0x53ea) = 8;
+    mDifficulty = 0;
+    mTargetPairs = 8;
     int x = *(int*)(c + 0xb4);
     if (x >= 0xa) {
-        *(unsigned char*)(c + 0x540a) = 2;
-        *(unsigned short*)(c + 0x53ea) = 0xa;
+        mDifficulty = 2;
+        mTargetPairs = 0xa;
         return;
     }
     if (x >= 5) {
-        *(unsigned char*)(c + 0x540a) = 1;
-        *(unsigned short*)(c + 0x53ea) = 9;
+        mDifficulty = 1;
+        mTargetPairs = 9;
     }
 }
 
@@ -1515,10 +1377,8 @@ void dScMgMemory2_c::SetupDifficulty() {
 // @symbol _ZN14dScMgMemory2_c15OnGroundPoundedEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnGroundPounded()
 {
-    char *p = (char *)this;
 
     func_ov004_020b63a0(mMaxMisses);
 }
@@ -1528,7 +1388,6 @@ void dScMgMemory2_c::OnGroundPounded()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMemory2_c13OnTurnIntoEggEi
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 {
     char *c = (char *)this;
@@ -1547,10 +1406,8 @@ int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 // @symbol _ZN14dScMgMemory2_c13OnYoshiTryEatEi
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
 {
-    char *c = (char *)this;
 
     char *o;
     int v;
@@ -1560,7 +1417,7 @@ void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
     v = 0;
     if (o != 0) v = *(int *)(o + 0xa8);
     if (v >= 5) v = 5;
-    ((void (*)(void *))func_ov004_020b66d4)(o);
+    func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;
     mMaxMisses = (unsigned char)v;
 }
@@ -1656,7 +1513,7 @@ s32 dScMgMemory2_c::InitResources()
     *(int *)(self + 0xb4) = func_ov004_020ad878();
     func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;
-    *(u8 *)(self + 0x5409) = 5;
+    mMaxMisses = 5;
     func_ov004_020b04d0(0x20);
     func_ov004_020b682c();
     return 1;
@@ -1666,18 +1523,9 @@ s32 dScMgMemory2_c::InitResources()
 /* ROM ordinal 51 -- dScMgMemory2_c_classInit, 0x020f75d4, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol dScMgMemory2_c_classInit
-/* Actor-table factory. The profile, allocation size, RTTI and vptr transition
- * identify dScMgMemory2_c. This literal construction spelling preserves the
- * fully folded CodeWarrior sequence at the measured placement-new boundary. */
+/* Ordinary construction initializes the inherited particle tracker and
+ * shared minigame state in the cartridge's observed order. */
 extern "C" void *dScMgMemory2_c_classInit()
 {
-    char *scene = (char *)_ZN7fBase_cnwEj(sizeof(dScMgMemory2_c));
-    if (scene) {
-        _ZN11dScMgBase_cC2Ev(scene);
-        *(void **)scene = _ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(scene + 0x471c);
-        *(void **)scene = _ZTV14dScMgMemory2_c + 2;
-        func_ov006_020c1d80(scene + 0x4f38);
-    }
-    return scene;
+    return new dScMgMemory2_c;
 }

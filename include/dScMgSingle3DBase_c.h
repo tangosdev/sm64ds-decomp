@@ -11,8 +11,8 @@
  * include/Stage.h. Every field below is spelled exactly as Stage.h spells it,
  * because two headers describing one class under two sets of names is a trap
  * for whoever reads them next -- this copy used to call 0x754/0x760/0x79c/0x7a8
- * mParticle1..4 and leave the head three fields unk_. Only D0/D1 files include
- * this header and none of them touch these members, so the alignment is free.
+ * mParticle1..4 and leave the head three fields unk_. This view declares the
+ * existing tracker constructor and destructor for scene member lifetime.
  * Merging the four into one definition is still its own change. */
 namespace Particle {
 struct SysTracker {
@@ -77,6 +77,7 @@ struct SysTracker {
     s32 Initialise();
     s32 Update();
 
+    SysTracker();
     ~SysTracker();
 };
 
