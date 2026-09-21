@@ -17365,6 +17365,15 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
     # both targets that compile tests/walk_window.cpp, which is its caller.
     hal/pad_backend.cpp
+    # run hd2 lane GPU1: the optional Direct3D 11 present path. Off by default
+    # and inert when off: with PresentBackend absent or 0 it loads nothing,
+    # creates nothing and prints nothing. d3d11 is LoadLibrary'd and its one
+    # entry point GetProcAddress'd, the same rule hal/pad_backend.cpp keeps
+    # above, so no d3d11, dxgi or dxguid lib is linked and the exe's import
+    # table does not move. Its shaders are compiled offline into
+    # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
+    # targets that compile tests/walk_window.cpp, which is its caller.
+    hal/gpu_present.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
@@ -17770,6 +17779,15 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
     # both targets that compile tests/walk_window.cpp, which is its caller.
     hal/pad_backend.cpp
+    # run hd2 lane GPU1: the optional Direct3D 11 present path. Off by default
+    # and inert when off: with PresentBackend absent or 0 it loads nothing,
+    # creates nothing and prints nothing. d3d11 is LoadLibrary'd and its one
+    # entry point GetProcAddress'd, the same rule hal/pad_backend.cpp keeps
+    # above, so no d3d11, dxgi or dxguid lib is linked and the exe's import
+    # table does not move. Its shaders are compiled offline into
+    # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
+    # targets that compile tests/walk_window.cpp, which is its caller.
+    hal/gpu_present.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.

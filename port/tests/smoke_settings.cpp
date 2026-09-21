@@ -304,13 +304,61 @@ static int child(const char *which)
         check(host_setting_hd_textures_dir() != 0, "pack dir is never null");
         check(!strcmp(host_setting_hd_textures_dir(), "textures_hd"),
               "pack dir with no asset root is the working directory's");
+        /* run hd2's two: nearest sampling and no smoothing pass are the
+           picture the port shipped with, so no file at all must read as both
+           off and NOT as "some filtering, probably" */
+        check_eq(host_setting_texture_filter(), 0, "TextureFilter default 0");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing default 0");
+        /* run hd2 lane GPU1's three: the ordinary Windows present path, its
+           own nearest scaler and no vsync are what the port shipped with, so
+           no file at all must read as all three off */
+        check_eq(host_setting_present_backend(), 0, "PresentBackend default 0");
+        check_eq(host_setting_present_filter(), 0, "PresentFilter default 0");
+        check_eq(host_setting_vsync(), 0, "VSync default 0");
     } else if (!strcmp(which, "quality")) {
         check_eq(host_setting_render_scale(), 3, "RenderScale 3");
         check_eq(host_setting_hd_textures(), 1, "HdTextures 1 is on");
         check_eq(host_setting_smooth_models(), 2, "SmoothModels 2");
+        check_eq(host_setting_texture_filter(), 1, "TextureFilter 1 bilinear");
+        check_eq(host_setting_anti_aliasing(), 1, "AntiAliasing 1");
         /* the keys around them still parse: a new key must not move an old
            one, which is the whole reason this case carries CameraMode */
         check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "present")) {
+        /* run hd2 lane GPU1: all three set, each to a value that is not the
+           default, read from a file */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend 1");
+        check_eq(host_setting_present_filter(), 2, "PresentFilter 2 sharp");
+        check_eq(host_setting_vsync(), 1, "VSync 1");
+        /* the keys around them still parse: a new key must not move an old
+           one, the rule the quality case carries CameraMode for */
+        check_eq(host_setting_render_scale(), 3, "RenderScale beside them");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "present_bool")) {
+        /* the launcher serialises a C# bool, so true means on for both
+           toggles, and the middle value of the filter is read from a file
+           rather than only through a clamp */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend true is on");
+        check_eq(host_setting_vsync(), 1, "VSync true is on");
+        check_eq(host_setting_present_filter(), 1, "PresentFilter 1 smooth");
+    } else if (!strcmp(which, "present_clamp")) {
+        /* out of range is a setting that presents, not an error: the Aspect
+           rule the header states for all three */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend 5 clamps to 1");
+        check_eq(host_setting_present_filter(), 2, "PresentFilter 9 clamps to 2");
+        check_eq(host_setting_vsync(), 1, "VSync 3 clamps to 1");
+    } else if (!strcmp(which, "present_junk")) {
+        /* unparseable and negative both read as the default, like every other
+           key in this file */
+        check_eq(host_setting_present_backend(), 0, "PresentBackend junk is 0");
+        check_eq(host_setting_present_filter(), 0, "PresentFilter -4 is 0");
+        check_eq(host_setting_vsync(), 0, "VSync junk is off");
+    } else if (!strcmp(which, "quality_filter")) {
+        /* run hd2: the other filter value on its own, so both 1 and 2 are
+           read from a file somewhere rather than only through a clamp */
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter 2 trilinear");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing 0 is off");
+        check_eq(host_setting_render_scale(), 2, "RenderScale beside them");
     } else if (!strcmp(which, "quality_bool")) {
         /* the launcher serialises a C# bool, so true means on */
         check_eq(host_setting_hd_textures(), 1, "HdTextures true is on");
@@ -321,12 +369,16 @@ static int child(const char *which)
         check_eq(host_setting_render_scale(), 4, "RenderScale 9 clamps to 4");
         check_eq(host_setting_smooth_models(), 3, "SmoothModels 99 clamps to 3");
         check_eq(host_setting_hd_textures(), 0, "HdTextures 0 is off");
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter 7 clamps to 2");
+        check_eq(host_setting_anti_aliasing(), 1, "AntiAliasing 4 clamps to 1");
     } else if (!strcmp(which, "quality_junk")) {
         /* unparseable and negative both read as the default, like every
            other key in this file */
         check_eq(host_setting_render_scale(), 0, "RenderScale -2 is the default");
         check_eq(host_setting_smooth_models(), 0, "SmoothModels junk is 0");
         check_eq(host_setting_hd_textures(), 0, "HdTextures junk is off");
+        check_eq(host_setting_texture_filter(), 0, "TextureFilter junk is 0");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing -5 is 0");
     } else if (!strcmp(which, "padtranslate")) {
         check(port_pad_selftest(), "pad_backend translation selftest");
     } else {
@@ -494,14 +546,33 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "quality_defaults", 0);
     bad |= run_case(exe, dir, "quality",
         "{ \"RenderScale\": 3, \"HdTextures\": 1, \"SmoothModels\": 2,\n"
+        "  \"TextureFilter\": 1, \"AntiAliasing\": 1,\n"
         "  \"CameraMode\": \"ds\" }");
     bad |= run_case(exe, dir, "quality_bool",
         "{ \"HdTextures\": true, \"RenderScale\": 1 }");
     bad |= run_case(exe, dir, "quality_clamp",
-        "{ \"RenderScale\": 9, \"SmoothModels\": 99, \"HdTextures\": 0 }");
+        "{ \"RenderScale\": 9, \"SmoothModels\": 99, \"HdTextures\": 0,\n"
+        "  \"TextureFilter\": 7, \"AntiAliasing\": 4 }");
     bad |= run_case(exe, dir, "quality_junk",
         "{ \"RenderScale\": -2, \"SmoothModels\": \"lots\",\n"
-        "  \"HdTextures\": \"maybe\" }");
+        "  \"HdTextures\": \"maybe\", \"TextureFilter\": \"smooth\",\n"
+        "  \"AntiAliasing\": -5 }");
+    /* run hd2: TextureFilter 2 read from a file rather than through a clamp */
+    bad |= run_case(exe, dir, "quality_filter",
+        "{ \"TextureFilter\": 2, \"AntiAliasing\": 0, \"RenderScale\": 2 }");
+    /* run hd2 lane GPU1's three present keys: all three set, the launcher's
+       boolean spelling, the clamps and the junk. The default case is covered
+       by quality_defaults above, which runs with no file at all. */
+    bad |= run_case(exe, dir, "present",
+        "{ \"PresentBackend\": 1, \"PresentFilter\": 2, \"VSync\": 1,\n"
+        "  \"RenderScale\": 3, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "present_bool",
+        "{ \"PresentBackend\": true, \"VSync\": true, \"PresentFilter\": 1 }");
+    bad |= run_case(exe, dir, "present_clamp",
+        "{ \"PresentBackend\": 5, \"PresentFilter\": 9, \"VSync\": 3 }");
+    bad |= run_case(exe, dir, "present_junk",
+        "{ \"PresentBackend\": \"card\", \"PresentFilter\": -4,\n"
+        "  \"VSync\": \"yes please\" }");
     bad |= run_case(exe, dir, "padtranslate", 0);
     _rmdir(dir);
     if (bad) {
@@ -510,6 +581,6 @@ int main(int argc, char **argv)
     }
     /* the count is the run_case calls above, counted rather than remembered:
        it was one out of date before run hd1 added five cases to it */
-    printf("smoke_settings: ok, 19 cases\n");
+    printf("smoke_settings: ok, 24 cases\n");
     return 0;
 }

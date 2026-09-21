@@ -59,6 +59,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <chrono>
 #include <map>
 #include <vector>
 
@@ -165,11 +166,13 @@ void smooth_eval_patch(const SmoothPatch &patch, float a, float b, float c,
             out[k] += patch.b[i][k] * w[i];
 }
 
-int smooth_tess_factor(const SmoothVertex &p1, const SmoothVertex &p2,
-                       const SmoothVertex &p3, const SmoothPolicy &pol,
-                       int *why) {
-    if (why) *why = SMOOTH_WHY_OK;
-    if (pol.level <= 0) { if (why) *why = SMOOTH_WHY_LEVEL; return 1; }
+void smooth_shape(const SmoothVertex &p1, const SmoothVertex &p2,
+                  const SmoothVertex &p3, const SmoothPolicy &pol,
+                  SmoothShape &out) {
+    out.no_normal = 0;
+    out.curved = 0;
+    out.longest = 0.0f;
+    out.tightest = 3.4e38f;
 
     float N[3][3];
     unit_normal(p1, N[0]);
@@ -178,27 +181,31 @@ int smooth_tess_factor(const SmoothVertex &p1, const SmoothVertex &p2,
     // A corner with no authored normal: nothing to curve towards.
     for (int i = 0; i < 3; ++i)
         if (N[i][0] == 0.0f && N[i][1] == 0.0f && N[i][2] == 0.0f) {
-            if (why) *why = SMOOTH_WHY_NO_NORMAL;
-            return 1;
+            out.no_normal = 1;
+            return;
         }
 
-    const float P[3][3] = {{p1.x, p1.y, p1.z}, {p2.x, p2.y, p2.z},
-                           {p3.x, p3.y, p3.z}};
     static const int E0[3] = {0, 1, 2};
     static const int E1[3] = {1, 2, 0};
 
-    bool curved = false;
-    float tightest = 3.4e38f;   // smallest implied radius over the three edges
-    float longest = 0.0f;
+    /* THE FLAT TEST FIRST, AND ON ITS OWN. Three dot products decide it, and
+       between a third and three quarters of every frame's candidates are
+       refused here, so the six square roots the lengths below need were being
+       spent on triangles whose verdict was already settled. The verdict is
+       the same one -- `curved` never depended on a length -- so this reorder
+       changes nothing about WHICH triangles get smoothed. */
+    for (int e = 0; e < 3; ++e)
+        if (v_dot(N[E0[e]], N[E1[e]]) < pol.flat_cos) out.curved = 1;
+    if (!out.curved) return;
+
+    const float P[3][3] = {{p1.x, p1.y, p1.z}, {p2.x, p2.y, p2.z},
+                           {p3.x, p3.y, p3.z}};
     for (int e = 0; e < 3; ++e) {
         const int i = E0[e], j = E1[e];
-        const float cosij = v_dot(N[i], N[j]);
-        if (cosij < pol.flat_cos) curved = true;
-
         float d[3];
         v_sub(P[j], P[i], d);
         const float len = sqrtf(v_dot(d, d));
-        if (len > longest) longest = len;
+        if (len > out.longest) out.longest = len;
 
         // Chord between the unit normals: 2*sin(theta/2), which IS the turn
         // angle to within a percent over the range that matters and costs no
@@ -208,17 +215,29 @@ int smooth_tess_factor(const SmoothVertex &p1, const SmoothVertex &p2,
         const float turn = sqrtf(v_dot(nd, nd));
         if (turn > 1e-6f) {
             const float r = len / turn;
-            if (r < tightest) tightest = r;
+            if (r < out.tightest) out.tightest = r;
         }
     }
+}
+
+int smooth_shape_factor(const SmoothShape &sh, const SmoothPolicy &pol,
+                        float scale, int *why) {
+    if (why) *why = SMOOTH_WHY_OK;
+    if (pol.level <= 0) { if (why) *why = SMOOTH_WHY_LEVEL; return 1; }
+    if (sh.no_normal) { if (why) *why = SMOOTH_WHY_NO_NORMAL; return 1; }
     // Three normals that agree: the patch is flat, so leave the triangle
     // exactly as it arrived.
-    if (!curved) { if (why) *why = SMOOTH_WHY_FLAT; return 1; }
-    if (pol.max_edge > 0.0f && longest >= pol.max_edge) {
+    if (!sh.curved) { if (why) *why = SMOOTH_WHY_FLAT; return 1; }
+    /* Both caps are LENGTHS, so both scale with the matrix. A shape measured
+       in local units is `scale` times smaller than the same shape in view
+       units, and the caps are written in view units. At scale exactly 1.0f
+       these two multiplies are exact and this is the comparison the shipped
+       policy has always made. */
+    if (pol.max_edge > 0.0f && sh.longest * scale >= pol.max_edge) {
         if (why) *why = SMOOTH_WHY_EDGE;
         return 1;
     }
-    if (pol.max_radius > 0.0f && tightest > pol.max_radius) {
+    if (pol.max_radius > 0.0f && sh.tightest * scale > pol.max_radius) {
         if (why) *why = SMOOTH_WHY_RADIUS;
         return 1;
     }
@@ -226,6 +245,120 @@ int smooth_tess_factor(const SmoothVertex &p1, const SmoothVertex &p2,
     int level = pol.level;
     if (level > SMOOTH_MAX_LEVEL) level = SMOOTH_MAX_LEVEL;
     return 1 << level;
+}
+
+int smooth_tess_factor(const SmoothVertex &p1, const SmoothVertex &p2,
+                       const SmoothVertex &p3, const SmoothPolicy &pol,
+                       int *why) {
+    if (why) *why = SMOOTH_WHY_OK;
+    if (pol.level <= 0) { if (why) *why = SMOOTH_WHY_LEVEL; return 1; }
+    SmoothShape sh;
+    smooth_shape(p1, p2, p3, pol, sh);
+    return smooth_shape_factor(sh, pol, 1.0f, why);
+}
+
+int smooth_grid_points(int tf) {
+    if (tf <= 1) return 1;
+    if (tf > SMOOTH_MAX_TF) tf = SMOOTH_MAX_TF;
+    return (tf + 1) * (tf + 2) / 2;
+}
+
+int smooth_grid_tris(int tf) {
+    if (tf <= 1) return 1;
+    if (tf > SMOOTH_MAX_TF) tf = SMOOTH_MAX_TF;
+    return tf * tf;
+}
+
+namespace {
+
+// The COMPACT index of grid point (ia, ib): its ordinal in the fill order
+// `for ia 0..tf { for ib 0..tf-ia }`. Row ia starts after the rows above it,
+// which hold (tf+1) + tf + ... + (tf-ia+2) points.
+inline int grid_ix(int ia, int ib, int tf) {
+    return ia * (tf + 1) - ia * (ia - 1) / 2 + ib;
+}
+
+/* The sub-triangle index tables, one per tessellation factor (2, 4 and 8 are
+   the only ones: tf is 1 << level and level is 1..3). Built on first use and
+   never rebuilt. The walk is smooth_subdivide's own, unchanged, so the
+   emission ORDER is the submission order the game chose, which is what
+   translucent sorting and the mode-3 shadow stencil both depend on. */
+uint16_t g_tri_index[SMOOTH_MAX_LEVEL + 1][SMOOTH_MAX_TRIS * 3];
+int g_tri_index_built[SMOOTH_MAX_LEVEL + 1];
+
+int level_of_tf(int tf) {
+    for (int l = 0; l <= SMOOTH_MAX_LEVEL; ++l)
+        if ((1 << l) == tf) return l;
+    return -1;
+}
+
+}  // namespace
+
+const uint16_t *smooth_grid_tri_index(int tf) {
+    const int l = level_of_tf(tf);
+    if (l <= 0) return 0;
+    if (!g_tri_index_built[l]) {
+        uint16_t *t = g_tri_index[l];
+        int n = 0;
+        for (int ia = 0; ia < tf; ++ia) {
+            for (int ib = 0; ib < tf - ia; ++ib) {
+                // Upward sub-triangle: winding matches the parent's.
+                t[n++] = (uint16_t)grid_ix(ia, ib, tf);
+                t[n++] = (uint16_t)grid_ix(ia + 1, ib, tf);
+                t[n++] = (uint16_t)grid_ix(ia, ib + 1, tf);
+                if (ib < tf - ia - 1) {
+                    t[n++] = (uint16_t)grid_ix(ia + 1, ib, tf);
+                    t[n++] = (uint16_t)grid_ix(ia + 1, ib + 1, tf);
+                    t[n++] = (uint16_t)grid_ix(ia, ib + 1, tf);
+                }
+            }
+        }
+        g_tri_index_built[l] = 1;
+    }
+    return g_tri_index[l];
+}
+
+int smooth_grid_positions(const SmoothVertex &p1, const SmoothVertex &p2,
+                          const SmoothVertex &p3, int tf, float *out) {
+    if (tf <= 1) {
+        out[0] = p1.x; out[1] = p1.y; out[2] = p1.z;
+        return 1;
+    }
+    if (tf > SMOOTH_MAX_TF) tf = SMOOTH_MAX_TF;
+
+    SmoothPatch patch;
+    smooth_build_patch(p1, p2, p3, patch);
+
+    // tf is a power of two, so 1/tf is exact and ia*inv lands on 1.0 exactly
+    // at the corner -- which is what makes corner preservation bit-exact
+    // rather than merely close.
+    const float inv = 1.0f / (float)tf;
+    int n = 0;
+    for (int ia = 0; ia <= tf; ++ia) {
+        for (int ib = 0; ib <= tf - ia; ++ib, ++n) {
+            const float a = (float)ia * inv;
+            const float b = (float)ib * inv;
+            float c = 1.0f - a - b;
+            if (c < 0.0f) c = 0.0f;
+            smooth_eval_patch(patch, a, b, c, out + n * 3);
+        }
+    }
+    return n;
+}
+
+void smooth_grid_attrs(const SmoothVertex &p1, const SmoothVertex &p2,
+                       const SmoothVertex &p3, float a, float b, float c,
+                       SmoothVertex &o) {
+    // Linear in barycentrics: textures never swim, and a corner gets its own
+    // coordinate back bit for bit.
+    o.u = p1.u * a + p2.u * b + p3.u * c;
+    o.v = p1.v * a + p2.v * b + p3.v * c;
+    o.color = bary_color(p1.color, p2.color, p3.color, a, b, c);
+    // Carried for a future relighting pass; nothing reads it today (the
+    // colour above is the lighting, already baked at NORMAL).
+    o.nx = p1.nx * a + p2.nx * b + p3.nx * c;
+    o.ny = p1.ny * a + p2.ny * b + p3.ny * c;
+    o.nz = p1.nz * a + p2.nz * b + p3.nz * c;
 }
 
 int smooth_subdivide(const SmoothVertex &p1, const SmoothVertex &p2,
@@ -237,59 +370,36 @@ int smooth_subdivide(const SmoothVertex &p1, const SmoothVertex &p2,
     }
     if (tf > SMOOTH_MAX_TF) tf = SMOOTH_MAX_TF;
 
-    SmoothPatch patch;
-    smooth_build_patch(p1, p2, p3, patch);
+    /* THE ORIGINAL SHAPE, KEPT. This is 0.4.0's path: it hands over one
+       sub-triangle at a time, so an interior grid point is handed over once
+       per sub-triangle that touches it. The engine reaches the grid directly
+       now (smooth_grid_positions above), but the A/B switch
+       SM64DS_SMOOTH_LIVE=1 comes back here, and so does the standalone
+       selftest, which is what keeps this the definition of "what the kernel
+       is supposed to produce" rather than a second opinion about it. */
+    float pos[SMOOTH_MAX_GRID * 3];
+    smooth_grid_positions(p1, p2, p3, tf, pos);
 
-    // The whole tessellation lives in this one stack array: 81 vertices at the
-    // top level, no allocation on any path.
     SmoothVertex grid[SMOOTH_MAX_GRID];
-    const int stride = tf + 1;
-    // tf is a power of two, so 1/tf is exact and ia*inv lands on 1.0 exactly
-    // at the corner -- which is what makes corner preservation bit-exact
-    // rather than merely close.
     const float inv = 1.0f / (float)tf;
-
+    int m = 0;
     for (int ia = 0; ia <= tf; ++ia) {
-        for (int ib = 0; ib <= tf - ia; ++ib) {
+        for (int ib = 0; ib <= tf - ia; ++ib, ++m) {
             const float a = (float)ia * inv;
             const float b = (float)ib * inv;
             float c = 1.0f - a - b;
             if (c < 0.0f) c = 0.0f;
-
-            SmoothVertex &o = grid[ia * stride + ib];
-            float pos[3];
-            smooth_eval_patch(patch, a, b, c, pos);
-            o.x = pos[0]; o.y = pos[1]; o.z = pos[2];
-            // Linear in barycentrics: textures never swim, and a corner gets
-            // its own coordinate back bit for bit.
-            o.u = p1.u * a + p2.u * b + p3.u * c;
-            o.v = p1.v * a + p2.v * b + p3.v * c;
-            o.color = bary_color(p1.color, p2.color, p3.color, a, b, c);
-            // Carried for a future relighting pass; nothing reads it today
-            // (the colour above is the lighting, already baked at NORMAL).
-            o.nx = p1.nx * a + p2.nx * b + p3.nx * c;
-            o.ny = p1.ny * a + p2.ny * b + p3.ny * c;
-            o.nz = p1.nz * a + p2.nz * b + p3.nz * c;
+            SmoothVertex &o = grid[m];
+            o.x = pos[m * 3]; o.y = pos[m * 3 + 1]; o.z = pos[m * 3 + 2];
+            smooth_grid_attrs(p1, p2, p3, a, b, c, o);
         }
     }
 
-    int n = 0;
-    for (int ia = 0; ia < tf; ++ia) {
-        for (int ib = 0; ib < tf - ia; ++ib) {
-            // Upward sub-triangle: winding matches the parent's.
-            sink(ctx, grid[ia * stride + ib],
-                      grid[(ia + 1) * stride + ib],
-                      grid[ia * stride + ib + 1]);
-            ++n;
-            if (ib < tf - ia - 1) {
-                sink(ctx, grid[(ia + 1) * stride + ib],
-                          grid[(ia + 1) * stride + ib + 1],
-                          grid[ia * stride + ib + 1]);
-                ++n;
-            }
-        }
-    }
-    return n;
+    const uint16_t *idx = smooth_grid_tri_index(tf);
+    const int ntris = smooth_grid_tris(tf);
+    for (int i = 0; i < ntris; ++i)
+        sink(ctx, grid[idx[i * 3]], grid[idx[i * 3 + 1]], grid[idx[i * 3 + 2]]);
+    return ntris;
 }
 
 // ---------------------------------------------------------------------------
@@ -397,6 +507,11 @@ void edge_eval(const float c[4][3], float t, float o[3]) {
 void smooth_configure(int level) {
     if (level < 0) level = 0;
     if (level > SMOOTH_MAX_LEVEL) level = SMOOTH_MAX_LEVEL;
+    /* A GRID IS BUILT AT ONE LEVEL. The level is part of the key, so a stale
+       entry could never be handed to a different level anyway, but a level
+       change makes every existing entry dead weight, and this is the one
+       clean hook the geometry stage owns. */
+    if (level != g_level) smooth_store_clear();
     g_level = level;
     g_policy.level = level;
 }
@@ -627,14 +742,308 @@ void counters_report(uint64_t frame) {
             (unsigned long long)(c.skip_ortho - prev.skip_ortho),
             (unsigned long long)c.tris_in, (unsigned long long)c.tris_out);
     prev = c;
+
+    SmoothStoreStats s;
+    smooth_store_stats(s);
+    fprintf(stderr,
+            "[smoothstore] f%llu hits %llu misses %llu entries %llu "
+            "bytes %llu cap %llu clears %llu | live %llu crossmtx %llu "
+            "nonsim %llu zeronrm %llu\n",
+            (unsigned long long)frame,
+            (unsigned long long)s.hits, (unsigned long long)s.misses,
+            (unsigned long long)s.entries, (unsigned long long)s.bytes,
+            (unsigned long long)s.cap_bytes, (unsigned long long)s.clears,
+            (unsigned long long)s.live_calls,
+            (unsigned long long)s.skip_crossmtx,
+            (unsigned long long)s.skip_nonsim,
+            (unsigned long long)s.skip_zeronrm);
+    fprintf(stderr,
+            "[smoothwhy] f%llu cross corner %llu normal %llu stale %llu | "
+            "nonsim len %llu ortho %llu vec %llu\n",
+            (unsigned long long)frame,
+            (unsigned long long)s.cross_corner,
+            (unsigned long long)s.cross_normal,
+            (unsigned long long)s.cross_stale,
+            (unsigned long long)s.nonsim_len,
+            (unsigned long long)s.nonsim_ortho,
+            (unsigned long long)s.nonsim_vec);
 }
 
 }  // namespace
+
+// ---------------------------------------------------------------------------
+// THE SHAPE STORE. Header has the contract and the invariant the caller owes.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+std::vector<SmoothEntry> g_st_entry;   // one row per distinct triangle shape
+std::vector<int32_t> g_st_table;       // open-addressed index, -1 empty
+std::vector<float> g_st_pool;          // every grid, back to back
+uint32_t g_st_mask;                    // g_st_table.size() - 1
+SmoothStoreStats g_st;
+int g_st_cap_loaded;
+
+size_t store_cap_bytes() {
+    if (!g_st_cap_loaded) {
+        g_st_cap_loaded = 1;
+        /* THE CAP, and why it is a cap rather than a policy. A levels=all
+           sweep measured the steady state at a small fraction of this (the
+           lane report has the number), so the eviction rule below never
+           fires in play; the cap is here so a scene nobody measured cannot
+           eat the machine, and 32 MB is small enough to be harmless on the
+           4 GB a 32-bit process can address and large enough that no
+           measured level came close. Heap, never static: the image has to
+           end below 0x02000000. */
+        double mb = 32.0;
+        const char *s = getenv("SM64DS_SMOOTH_STORE_MB");
+        if (s && *s) {
+            const double v = atof(s);
+            if (v >= 0.0) mb = v;
+        }
+        g_st.cap_bytes = (uint64_t)(mb * 1024.0 * 1024.0);
+    }
+    return (size_t)g_st.cap_bytes;
+}
+
+size_t store_bytes() {
+    return g_st_entry.size() * sizeof(SmoothEntry)
+         + g_st_table.size() * sizeof(int32_t)
+         + g_st_pool.size() * sizeof(float);
+}
+
+uint32_t key_hash(const SmoothKey &k) {
+    // FNV-1a over the key's own bytes. The hash only picks a slot; every
+    // candidate slot is then checked against the WHOLE key, so a collision
+    // costs a compare and can never hand back another triangle's grid.
+    const unsigned char *p = (const unsigned char *)&k;
+    uint32_t h = 2166136261u;
+    for (size_t i = 0; i < sizeof(SmoothKey); ++i) {
+        h ^= p[i];
+        h *= 16777619u;
+    }
+    return h;
+}
+
+bool key_equal(const SmoothKey &a, const SmoothKey &b) {
+    if (a.level != b.level) return false;
+    for (int i = 0; i < 3; ++i) {
+        if (a.n[i] != b.n[i]) return false;
+        for (int k = 0; k < 3; ++k)
+            if (a.p[i][k] != b.p[i][k]) return false;
+    }
+    return true;
+}
+
+void store_rehash(size_t want) {
+    size_t cap = 256;
+    while (cap < want * 2) cap <<= 1;
+    g_st_table.assign(cap, -1);
+    g_st_mask = (uint32_t)(cap - 1);
+    for (size_t i = 0; i < g_st_entry.size(); ++i) {
+        uint32_t s = key_hash(g_st_entry[i].key) & g_st_mask;
+        while (g_st_table[s] >= 0) s = (s + 1) & g_st_mask;
+        g_st_table[s] = (int32_t)i;
+    }
+}
+
+}  // namespace
+
+void smooth_store_clear() {
+    g_st_entry.clear();
+    g_st_pool.clear();
+    g_st_table.clear();
+    g_st_mask = 0;
+    g_st.entries = 0;
+    g_st.bytes = 0;
+    ++g_st.clears;
+}
+
+const SmoothEntry *smooth_store_find(const SmoothKey &k) {
+    if (g_st_table.empty()) { ++g_st.misses; return 0; }
+    uint32_t s = key_hash(k) & g_st_mask;
+    for (;;) {
+        const int32_t i = g_st_table[s];
+        if (i < 0) { ++g_st.misses; return 0; }
+        if (key_equal(g_st_entry[(size_t)i].key, k)) {
+            ++g_st.hits;
+            return &g_st_entry[(size_t)i];
+        }
+        s = (s + 1) & g_st_mask;
+    }
+}
+
+const SmoothEntry *smooth_store_add(const SmoothKey &k, int tf,
+                                    const float *grid) {
+    const int npts = (tf > 1 && grid) ? smooth_grid_points(tf) : 0;
+    const size_t add = sizeof(SmoothEntry) + (size_t)npts * 3 * sizeof(float);
+    /* EVICTION IS A CLEAR. Every entry is equally cheap to rebuild (one patch
+       and one grid), the working set of a level is far below the cap, and an
+       LRU would cost more bookkeeping per lookup than the work it saves. So
+       the full pool empties, once, loudly enough to be counted. */
+    if (store_bytes() + add > store_cap_bytes()) {
+        smooth_store_clear();
+        if (add > store_cap_bytes()) return 0;
+    }
+    if (g_st_table.empty() || g_st_entry.size() * 2 + 2 > g_st_table.size())
+        store_rehash(g_st_entry.size() + 64);
+
+    SmoothEntry e;
+    e.key = k;
+    e.tf = npts ? tf : 1;
+    e.off = (uint32_t)g_st_pool.size();
+    if (npts) g_st_pool.insert(g_st_pool.end(), grid, grid + npts * 3);
+    g_st_entry.push_back(e);
+
+    uint32_t s = key_hash(k) & g_st_mask;
+    while (g_st_table[s] >= 0) s = (s + 1) & g_st_mask;
+    g_st_table[s] = (int32_t)(g_st_entry.size() - 1);
+
+    ++g_st.inserts;
+    g_st.entries = g_st_entry.size();
+    g_st.bytes = store_bytes();
+    return &g_st_entry.back();
+}
+
+const float *smooth_store_grid(const SmoothEntry *e) {
+    if (!e || e->tf <= 1) return 0;
+    return &g_st_pool[e->off];
+}
+
+void smooth_store_stats(SmoothStoreStats &out) {
+    g_st.entries = g_st_entry.size();
+    g_st.bytes = store_bytes();
+    store_cap_bytes();
+    out = g_st;
+}
+
+void smooth_store_count(int which, uint64_t n) {
+    switch (which) {
+        case SMOOTH_STORE_CROSSMTX: g_st.skip_crossmtx += n; break;
+        case SMOOTH_STORE_NONSIM:   g_st.skip_nonsim += n; break;
+        case SMOOTH_STORE_ZERONRM:  g_st.skip_zeronrm += n; break;
+        case SMOOTH_STORE_LIVE:     g_st.live_calls += n; break;
+        case SMOOTH_STORE_CROSS_CORNER: g_st.cross_corner += n; break;
+        case SMOOTH_STORE_CROSS_NORMAL: g_st.cross_normal += n; break;
+        case SMOOTH_STORE_CROSS_STALE:  g_st.cross_stale += n; break;
+        case SMOOTH_STORE_NONSIM_LEN:   g_st.nonsim_len += n; break;
+        case SMOOTH_STORE_NONSIM_ORTHO: g_st.nonsim_ortho += n; break;
+        case SMOOTH_STORE_NONSIM_VEC:   g_st.nonsim_vec += n; break;
+        default: break;
+    }
+}
+
+// --- SM64DS_SMOOTH_ABDIFF: the stored patch against the live one -----------
+
+namespace {
+int g_ab = -1;
+uint64_t g_ab_tris, g_ab_disagree;
+double g_ab_worst, g_ab_worst_rel;
+}  // namespace
+
+int smooth_abdiff_on() {
+    if (g_ab < 0) g_ab = getenv("SM64DS_SMOOTH_ABDIFF") ? 1 : 0;
+    return g_ab;
+}
+
+void smooth_abdiff_add(int verdict_differs, float worst_dev, float longest) {
+    ++g_ab_tris;
+    if (verdict_differs) ++g_ab_disagree;
+    if (worst_dev > g_ab_worst) g_ab_worst = worst_dev;
+    if (longest > 0.0f) {
+        const double rel = (double)worst_dev / (double)longest;
+        if (rel > g_ab_worst_rel) g_ab_worst_rel = rel;
+    }
+}
+
+int smooth_live_mode() {
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_SMOOTH_LIVE");
+        on = (e && *e && *e != '0') ? 1 : 0;
+        if (on)
+            fprintf(stderr, "  [smooth] SM64DS_SMOOTH_LIVE=1: every patch is "
+                    "rebuilt from its view-space corners every frame\n");
+    }
+    return on;
+}
+
+// ---------------------------------------------------------------------------
+// THE SCOPED PROFILER. Header has the contract and the honesty note about the
+// clock read perturbing the SINK bucket.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+int g_prof = -1;
+long long g_prof_ns[SMOOTH_PROF_BUCKETS];
+unsigned long long g_prof_n[SMOOTH_PROF_BUCKETS];
+
+void prof_report(uint64_t frame) {
+    static long long prev_ns[SMOOTH_PROF_BUCKETS];
+    static unsigned long long prev_n[SMOOTH_PROF_BUCKETS];
+    // maths = the whole subdivide minus the sink calls nested inside it, so
+    // it is the patch build plus the grid evaluation and nothing else.
+    const double pol = (double)(g_prof_ns[SMOOTH_PROF_POLICY]
+                              - prev_ns[SMOOTH_PROF_POLICY]) / 1e6;
+    const double sub = (double)(g_prof_ns[SMOOTH_PROF_SUBDIV]
+                              - prev_ns[SMOOTH_PROF_SUBDIV]) / 1e6;
+    const double snk = (double)(g_prof_ns[SMOOTH_PROF_SINK]
+                              - prev_ns[SMOOTH_PROF_SINK]) / 1e6;
+    fprintf(stderr,
+            "[smoothprof] f%llu policy %.3f ms (%llu) maths %.3f ms (%llu) "
+            "sink %.3f ms (%llu) | TOT policy %.1f maths %.1f sink %.1f\n",
+            (unsigned long long)frame, pol,
+            g_prof_n[SMOOTH_PROF_POLICY] - prev_n[SMOOTH_PROF_POLICY],
+            sub - snk,
+            g_prof_n[SMOOTH_PROF_SUBDIV] - prev_n[SMOOTH_PROF_SUBDIV],
+            snk, g_prof_n[SMOOTH_PROF_SINK] - prev_n[SMOOTH_PROF_SINK],
+            (double)g_prof_ns[SMOOTH_PROF_POLICY] / 1e6,
+            (double)(g_prof_ns[SMOOTH_PROF_SUBDIV]
+                   - g_prof_ns[SMOOTH_PROF_SINK]) / 1e6,
+            (double)g_prof_ns[SMOOTH_PROF_SINK] / 1e6);
+    for (int i = 0; i < SMOOTH_PROF_BUCKETS; ++i) {
+        prev_ns[i] = g_prof_ns[i];
+        prev_n[i] = g_prof_n[i];
+    }
+}
+
+}  // namespace
+
+int smooth_prof_on() {
+    if (g_prof < 0) {
+        const char *e = getenv("SM64DS_SMOOTH_PROF");
+        g_prof = (e && *e) ? atoi(e) : 0;
+        if (g_prof < 0) g_prof = 0;
+    }
+    return g_prof;
+}
+
+long long smooth_prof_ticks() {
+    return (long long)std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+void smooth_prof_add(int bucket, long long dt_ns, unsigned n) {
+    if (bucket < 0 || bucket >= SMOOTH_PROF_BUCKETS) return;
+    g_prof_ns[bucket] += dt_ns;
+    g_prof_n[bucket] += n;
+}
 
 void smooth_frame_mark() {
     ++g_counters.frames;
     if (smooth_census_on()) census_report(g_counters.frames);
     if (counters_on()) counters_report(g_counters.frames);
+    if (smooth_prof_on()) prof_report(g_counters.frames);
+    /* HERE rather than inside counters_report, because the audit's own
+       accumulators live with the store they audit, further up this file. */
+    if (smooth_abdiff_on())
+        fprintf(stderr,
+                "[smoothab] f%llu tris %llu verdict-disagree %llu "
+                "worst_dev %.3e view units (%.3e of the longest edge)\n",
+                (unsigned long long)g_counters.frames,
+                (unsigned long long)g_ab_tris,
+                (unsigned long long)g_ab_disagree, g_ab_worst, g_ab_worst_rel);
 }
 
 // The counter block the geometry stage bumps. Out of line so gx.cpp holds no

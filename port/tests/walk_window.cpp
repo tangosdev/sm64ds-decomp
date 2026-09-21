@@ -418,6 +418,7 @@ static bool winapi_load(void)
    contract and in hal/comms_conductor.cpp. */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
+#include "hal/gpu_present.h"      /* run hd2 lane GPU1: the optional D3D11 present */
 
 /* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
    harness computes them to where hal/comms_conductor.cpp publishes them into
@@ -6656,8 +6657,17 @@ static void present(void)
     /* MINIMISED is a zero-by-zero client area, and every arithmetic step
        below divides by one of them. Nothing to present to, so nothing is
        presented -- and no StretchDIBits with a zero destination, which is
-       what a restore used to come back through. */
-    if (cw <= 0 || ch <= 0) return;
+       what a restore used to come back through.
+
+       run hd2 lane GPU1: the offscreen proof mode is the one caller that has
+       work to do without a client area -- it draws the identical upload, quad
+       and filter into a target of its own so the graphics-card path can be
+       checked byte for byte without a window existing anywhere. The call is a
+       cached int that is 0 in every run nobody asked, which is every run a
+       player ever makes, so with the setting absent this is the same early
+       return it has always been. */
+    const int gpu_offscreen = port_gpu_present_offscreen_mode();
+    if ((cw <= 0 || ch <= 0) && !gpu_offscreen) return;
 
     /* WHICH IMAGE IS BEING PRESENTED. Everything below is the same fit, the
        same bars and the same blit whichever it is; only the source pointer,
@@ -6691,11 +6701,41 @@ static void present(void)
         sw = ntr::active_w;
         sh = ntr::active_h;
     }
+    /* run hd2 lane GPU1: the offscreen proof mode, which presents to nothing
+       and is the only path here that does not need a window. It reads the
+       same three numbers the blit below reads -- the pixels, the DIB's width
+       as a row stride and the live sub-rectangle -- so what it checks is what
+       would have been shown. */
+    if (gpu_offscreen) {
+        port_gpu_present_offscreen_frame(bits, bi->bmiHeader.biWidth, sw, sh);
+        return;
+    }
+    if (cw <= 0 || ch <= 0) return;
+
     /* the largest sw:sh rectangle inside cw x ch, via hal_present_fit (the
        one copy of this arithmetic; see port/hal/sub_screen.cpp, next to
        hal_present_set_rect). The layout selftest drives the same code. */
     int dw, dh, dx, dy;
     hal_present_fit(cw, ch, sw, sh, &dx, &dy, &dw, &dh);
+
+    /* run hd2 lane GPU1: THE GRAPHICS CARD, when the player asked for it.
+       Same picture, same destination rectangle -- the four numbers above are
+       handed over rather than recomputed, so there is no second copy of the
+       fit -- and the black bars are that path's clear colour instead of four
+       PatBlts. A 0 back means the backend is off or has just fallen back, and
+       then the GDI blit below runs for this very frame: no picture is ever
+       lost to it. The two extra arguments are for the vsync rule, which has
+       to know how long this frame's budget is (the ROM's own vblank divider)
+       and whether the presentation clock is running; both are read only when
+       the backend is on, because port_gpu_present_enabled short-circuits. */
+    if (port_gpu_present_enabled() &&
+        port_gpu_present_frame(g_present_hwnd, bits, bi->bmiHeader.biWidth,
+                               sw, sh, dx, dy, dw, dh, cw, ch,
+                               PORT_VBLANK_MS * port_frame_divider(),
+                               port_frame_rate_target())) {
+        hal_present_set_rect(dx, dy, dw, dh, sw, sh);
+        return;
+    }
 
     /* the four strips around it, black. Written before the picture so a
        stretch that lands a pixel wide of the arithmetic covers the bar
@@ -9173,6 +9213,23 @@ int main(void)
     ntr::hdtex_configure(host_setting_hd_textures(),
                          host_setting_hd_textures_dir());
     ntr::smooth_configure(host_setting_smooth_models());
+    /* AND RUN hd2's SAMPLING MODE, in the same place and for the same reason:
+       it decides whether the texture cache builds a mip chain as each texture
+       enters it, so it has to be settled before the first bind. At 0 -- the
+       key absent -- no chain is built and the raster runs the body it ran
+       before this call existed. */
+    ntr::gx_configure_texture_filter(host_setting_texture_filter());
+    if (ntr::gx_texture_filter())
+        fprintf(stderr, "[render] TextureFilter %d: textures are sampled %s\n",
+                ntr::gx_texture_filter(),
+                ntr::gx_texture_filter() >= 2 ? "trilinear" : "bilinear");
+    /* AND THE EDGE-SMOOTHING PASS, beside it: it sizes a scratch copy of the
+       picture on its first frame, and it is off by default. */
+    ntr::gx_configure_anti_aliasing(host_setting_anti_aliasing());
+    if (ntr::gx_anti_aliasing())
+        fprintf(stderr, "[render] AntiAliasing %d: the edges of the 3D picture "
+                "are smoothed after it is drawn, before anything 2D goes over "
+                "it\n", ntr::gx_anti_aliasing());
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address
@@ -15926,6 +15983,37 @@ int main(void)
             fprintf(stderr, "[layout] dsstate=%p..%p\n",
                     (void *)&dsstate_lo, (void *)&dsstate_hi);
             ntr::ppu_write_bmp("walk_window_selftest.bmp", fb);
+            /* SM64DS_COVER_DUMP=1 (run hd2): the 3D coverage mask of this very
+               frame, beside the picture, as a plain binary PGM at the live
+               extent -- 255 where the 3D engine wrote a pixel, 0 where it left
+               the framebuffer alone.
+
+               IT EXISTS TO MAKE ONE CLAIM MEASURABLE RATHER THAN ARGUED. The
+               AntiAliasing pass writes only where this mask is set, which is
+               how it can promise that text, the HUD and the touch-screen art
+               are untouched. With this dump, that promise stops being a
+               sentence about the source and becomes a comparison: every pixel
+               that differs between an AA-off and an AA-on run of the same row
+               must have a 255 here, and any pixel with a 0 here must be
+               identical in the two pictures. Nothing at all without the
+               variable. */
+            if (getenv("SM64DS_COVER_DUMP")) {
+                const uint8_t *cov = ntr::gx_coverage();
+                if (FILE *cf = fopen("walk_window_selftest_cover.pgm", "wb")) {
+                    fprintf(cf, "P5\n%d %d\n255\n", ntr::active_w,
+                            ntr::active_h);
+                    for (int cy = 0; cy < ntr::active_h; ++cy)
+                        for (int cx = 0; cx < ntr::active_w; ++cx) {
+                            const unsigned char v =
+                                cov[(size_t)cy * ntr::SCREEN_W + cx] ? 255 : 0;
+                            fwrite(&v, 1, 1, cf);
+                        }
+                    fclose(cf);
+                    fprintf(stderr, "[cover] wrote the %dx%d 3D coverage mask "
+                            "beside the selftest picture\n",
+                            ntr::active_w, ntr::active_h);
+                }
+            }
             /* SM64DS_PRESENT_BENCH: the two StretchDIBits scalers timed on
                this very frame and written out as two BMPs. Nothing at all
                without the variable, so every existing selftest is unchanged.

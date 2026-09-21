@@ -1,8 +1,9 @@
 """Headless, silent boot sweep, same knobs for every binary, so builds compare.
 usage: python bootab.py <walk_window.exe> <outdir> [frames] [budget_s]
        [levels=2,4,5 | scenes=4,5 | levels=all | scenes=all] [idle=1] [aspect=<ratio>]
-       [smooth=<0..3>]
-       [workers=<n>]
+       [smooth=<0..3>] [texfilter=<0..2>] [aa=<0..1>] [scale=<0..4>]
+       [present=<0|1>] [presentfilter=<0..2>] [vsync=<0|1>]
+       [presentdev=warp|hw] [presentoff=<0|1>] [workers=<n>]
 workers=<n> (run link100, lane SWEEPPAR1) runs up to n rows at a time instead of one
 after another. Default 1 is this tool's whole history, byte for byte: nobody who does
 not name workers= (or export SM64DS_SWEEP_WORKERS, an equivalent default) sees any
@@ -34,6 +35,19 @@ smooth=<0..3> sets SM64DS_SMOOTH_MODELS on EVERY row, level and scene alike, whi
 is the "SmoothModels" setting (run hd1, lane MDL). Same shape and same reason as
 aspect= below: the environment scrub drops an inherited one, so a sweep that does
 not name it is byte-identical to one from before this argument existed.
+texfilter=<0..2> and aa=<0..1> set SM64DS_TEXTURE_FILTER and SM64DS_ANTI_ALIASING the
+same way on every row (run hd2, lane PIC): the "TextureFilter" and "AntiAliasing"
+settings. Same shape and same reason as smooth= above; unnamed, a sweep is byte for
+byte the one this tool ran before they existed. scale=<0..4> is the same again
+for SM64DS_RENDER_SCALE ("RenderScale", run hd1).
+present=<0|1>, presentfilter=<0..2> and vsync=<0|1> are the same shape once more,
+for SM64DS_PRESENT_BACKEND, SM64DS_PRESENT_FILTER_D3D and SM64DS_VSYNC (the
+"PresentBackend", "PresentFilter" and "VSync" settings, run hd2 lane GPU1): which
+path hands the finished picture to the screen. presentdev=warp|hw pins the device
+(SM64DS_PRESENT_DEVICE) and presentoff=1 puts the backend in its offscreen proof
+mode (SM64DS_PRESENT_OFFSCREEN), which draws the identical upload, quad and filter
+into a target of its own and needs no window -- which is what makes it usable from
+a headless sweep at all. All five are inert unless named.
 aspect=<ratio> sets SM64DS_ASPECT to that ratio on EVERY row, level and scene alike,
 so one sweep boots the whole table at one presentation width. It is the only way to
 reach the wide path from here: the environment scrub above drops an inherited
@@ -129,6 +143,32 @@ for a in sys.argv[5:]:
 SMOOTH = ""
 for a in sys.argv[5:]:
     if a.startswith("smooth="): SMOOTH = a[7:]
+TEXFILTER = ""
+for a in sys.argv[5:]:
+    if a.startswith("texfilter="): TEXFILTER = a[10:]
+AA = ""
+for a in sys.argv[5:]:
+    if a.startswith("aa="): AA = a[3:]
+SCALE = ""
+for a in sys.argv[5:]:
+    if a.startswith("scale="): SCALE = a[6:]
+# run hd2, lane GPU1: the present backend, its two settings and the two test
+# knobs a headless sweep needs to reach the graphics-card path with no window.
+PRESENT = ""
+for a in sys.argv[5:]:
+    if a.startswith("present="): PRESENT = a[8:]
+PRESENTFILTER = ""
+for a in sys.argv[5:]:
+    if a.startswith("presentfilter="): PRESENTFILTER = a[14:]
+VSYNC = ""
+for a in sys.argv[5:]:
+    if a.startswith("vsync="): VSYNC = a[6:]
+PRESENTDEV = ""
+for a in sys.argv[5:]:
+    if a.startswith("presentdev="): PRESENTDEV = a[11:]
+PRESENTOFF = ""
+for a in sys.argv[5:]:
+    if a.startswith("presentoff="): PRESENTOFF = a[11:]
 WARPIN = any(a == "warpin=1" for a in sys.argv[5:])
 REENTRY = any(a == "reentry=1" for a in sys.argv[5:])
 PRESS = "200:A"
@@ -170,7 +210,7 @@ WORKERS = max(1, min(WORKERS, MAX_SWEEP_WORKERS))
 # the row filter is positional but the flags are not, so a run that passes only a
 # flag must not have that flag read as a filter (it would then match no prefix and
 # sweep everything by accident)
-if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "workers=")): FILTER = ""
+if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "workers=")): FILTER = ""
 if FILTER.startswith("levels="):
     sel = FILTER[7:]; SCENES = ()
     if sel != "all": LEVELS = tuple(i for i in LEVELS if str(i) in sel.split(","))
@@ -459,6 +499,31 @@ def run(kind, ident, label, ent=None, wdir=None):
     # to one from before this argument existed, and naming it is the only way
     # to reach the model smoother from here.
     if SMOOTH: env["SM64DS_SMOOTH_MODELS"] = SMOOTH
+    # texfilter=N and aa=N (run hd2, lane PIC), the same shape and the same
+    # reason as smooth= and aspect= above: the scrub drops an inherited
+    # SM64DS_TEXTURE_FILTER / SM64DS_ANTI_ALIASING with the rest of the
+    # SM64DS_* block, so a sweep that does not name either is byte-identical to
+    # one from before these arguments existed, and naming one is the only way
+    # to sweep the whole table with the sampler or the edge pass switched on.
+    if TEXFILTER: env["SM64DS_TEXTURE_FILTER"] = TEXFILTER
+    if AA: env["SM64DS_ANTI_ALIASING"] = AA
+    # scale=N is the same again for "RenderScale" (run hd1, lane RES).
+    # That lane had to put a settings.json beside the exe to sweep at a
+    # scale, because the scrub drops the variable; this is the one line
+    # that makes it an argument like the three above, and it is inert
+    # unless it is named.
+    if SCALE: env["SM64DS_RENDER_SCALE"] = SCALE
+    # present=N and its four companions (run hd2, lane GPU1), the same shape
+    # and the same reason as scale= above: the scrub drops an inherited
+    # SM64DS_PRESENT_* / SM64DS_VSYNC with the rest of the SM64DS_* block, so a
+    # sweep that names none of them is byte-identical to one from before these
+    # arguments existed, and naming them is the only way to sweep the whole
+    # table with the graphics-card present path switched on.
+    if PRESENT: env["SM64DS_PRESENT_BACKEND"] = PRESENT
+    if PRESENTFILTER: env["SM64DS_PRESENT_FILTER_D3D"] = PRESENTFILTER
+    if VSYNC: env["SM64DS_VSYNC"] = VSYNC
+    if PRESENTDEV: env["SM64DS_PRESENT_DEVICE"] = PRESENTDEV
+    if PRESENTOFF: env["SM64DS_PRESENT_OFFSCREEN"] = PRESENTOFF
     exe_path = os.path.join(wdir, os.path.basename(EXE))
     t0 = time.time()
     rc, out = _run_proc([exe_path], wdir, env, BUDGET)

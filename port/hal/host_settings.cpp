@@ -1168,6 +1168,70 @@ int smooth_models_sanitise(int n)
     return n;
 }
 
+/* ---- THE TWO PICTURE-SMOOTHING KEYS' BANDS (run hd2) --------------------
+   The same shape again, one sanitiser each, both readers through it.
+
+     TextureFilter  0 nearest (the sampler the port has always used), 1
+                    bilinear, 2 trilinear. Absent, unparseable, 0 itself and
+                    negative all land on 0; above 2 clamps to 2 rather than
+                    being refused, the Aspect rule. The ceiling is 2 because
+                    trilinear is the last mode the raster has a chain for:
+                    anisotropic filtering would need a per-pixel footprint
+                    the sampler does not compute.
+     AntiAliasing   0 off, 1 edge smoothing. Same band, ceiling 1, because 1
+                    is the only mode measured on this renderer. */
+int texture_filter_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 2) return 2;
+    return n;
+}
+
+int anti_aliasing_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+/* ---- THE THREE PRESENT KEYS' BANDS (run hd2, lane GPU1) -----------------
+   The same shape once more, one sanitiser each, both readers through it.
+
+     PresentBackend  0 the ordinary Windows path the port has always used
+                     (StretchDIBits), 1 Direct3D 11. Absent, unparseable, 0
+                     itself and negative all land on 0; above 1 clamps to 1
+                     rather than being refused, the Aspect rule. The ceiling
+                     is 1 because Direct3D 11 is the only other path that
+                     exists.
+     PresentFilter   0 nearest (the whole-pixel drop-and-duplicate the port
+                     has always presented with), 1 smooth, 2 sharp. Ceiling 2
+                     because sharp is the last mode the present shader has.
+                     READ ONLY WHEN THE BACKEND IS 1; the Windows path has
+                     its own filter knob.
+     AntiAliasing's band shape exactly for VSync: 0 off, 1 on, ceiling 1.
+     READ ONLY WHEN THE BACKEND IS 1, because the Windows path has no vsync
+     of any kind to switch on. */
+int present_backend_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+int present_filter_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 2) return 2;
+    return n;
+}
+
+int vsync_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
 /* The three keys' stored values. BOOT-LATCHED like g_aspect and g_frame_rate
    and for the same kind of reason: the render size is threaded into the
    framebuffer, the pack is opened once and the subdivision level sizes
@@ -1176,6 +1240,22 @@ int smooth_models_sanitise(int n)
 int g_render_scale = 0;
 int g_hd_textures = 0;
 int g_smooth_models = 0;
+
+/* run hd2's two, latched beside them and for the same kind of reason: the
+   filter mode decides whether the texture cache builds a mip chain at the
+   first bind of each texture, and the smoothing pass sizes a scratch buffer
+   the width of the picture, so both are settled before the first frame. */
+int g_texture_filter = 0;
+int g_anti_aliasing = 0;
+
+/* run hd2 lane GPU1's three, latched beside them and for the same kind of
+   reason: which backend presents the picture decides which library is loaded
+   and which device exists, and the filter sizes nothing but is read at the
+   same moment, so all three are settled before the first picture is handed
+   over and a mid-run change would be a second code path nobody tests. */
+int g_present_backend = 0;
+int g_present_filter = 0;
+int g_vsync = 0;
 
 void load_once(void)
 {
@@ -1230,6 +1310,18 @@ void load_once(void)
     g_render_scale = 0;
     g_hd_textures = 0;
     g_smooth_models = 0;
+    /* run hd2's two, here for the same reason: nearest sampling and no
+       smoothing pass are the picture the port shipped with, so a missing file
+       and a file that will not parse both have to land on them. */
+    g_texture_filter = 0;
+    g_anti_aliasing = 0;
+    /* run hd2 lane GPU1's three, here for the same reason: the ordinary
+       Windows present path, its own nearest scaler and no vsync are what the
+       port has always shipped, so a missing file and a file that will not
+       parse both have to land on them. */
+    g_present_backend = 0;
+    g_present_filter = 0;
+    g_vsync = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -1476,6 +1568,30 @@ void load_once(void)
                          json_bool(text, "HdTextures", 0) != 0) ? 1 : 0;
         g_smooth_models =
             smooth_models_sanitise(json_int(text, "SmoothModels", 0));
+        /* run hd2's two, read the same way and sanitised here rather than at
+           the accessor, so the stored value is always one the sampler can
+           choose a tap count from and the smoothing pass can size itself
+           against. A file written before these keys existed reads as one that
+           left both off, which is the shipped picture. */
+        g_texture_filter =
+            texture_filter_sanitise(json_int(text, "TextureFilter", 0));
+        g_anti_aliasing =
+            anti_aliasing_sanitise(json_int(text, "AntiAliasing", 0));
+        /* run hd2 lane GPU1's three, read the same way and sanitised here
+           rather than at the accessor, so the stored value is always one the
+           present path can pick a backend, a sampler and a wait from. A file
+           written before these keys existed reads as one that left all three
+           off, which is the present path the port shipped with. Both
+           spellings of the two toggles, the RunMode rule: the launcher
+           serialises a C# bool as true/false and a player editing by hand may
+           write 1. */
+        g_present_backend = present_backend_sanitise(
+            (json_int(text, "PresentBackend", 0) != 0 ||
+             json_bool(text, "PresentBackend", 0) != 0) ? 1 : 0);
+        g_present_filter =
+            present_filter_sanitise(json_int(text, "PresentFilter", 0));
+        g_vsync = vsync_sanitise((json_int(text, "VSync", 0) != 0 ||
+                                  json_bool(text, "VSync", 0) != 0) ? 1 : 0);
     }
     free(text);
 
@@ -1627,6 +1743,48 @@ void load_once(void)
                         "silhouettes are rounder than the ROM's. This is a "
                         "mod, not the game. (%s)\n",
                 g_smooth_models, g_smooth_models, path);
+    /* run hd2's two, one plain line each and only off their default, the rule
+       every key above follows. */
+    if (g_texture_filter)
+        fprintf(stderr, "[settings] TextureFilter %d -- textures are sampled "
+                        "%s instead of one texel per pixel, so surfaces read "
+                        "smoother and the texel grid stops showing up close. "
+                        "This is a mod, not the game. (%s)\n",
+                g_texture_filter,
+                g_texture_filter >= 2
+                    ? "trilinear (four texels blended, at the two texture "
+                      "sizes nearest the surface's distance)"
+                    : "bilinear (the four texels around the sample point, "
+                      "blended)",
+                path);
+    if (g_anti_aliasing)
+        fprintf(stderr, "[settings] AntiAliasing %d -- the edges of the 3D "
+                        "picture are smoothed after it is drawn and before "
+                        "anything 2D is put over it, so text and the HUD are "
+                        "untouched. This is a mod, not the game. (%s)\n",
+                g_anti_aliasing, path);
+    /* run hd2 lane GPU1's three, one plain line each and only off their
+       default, the rule every key above follows. The filter and the wait are
+       said on the backend's line rather than on lines of their own, because
+       with the backend off they are settings nothing reads and a support log
+       that listed them as if they were in force would be lying. */
+    if (g_present_backend)
+        fprintf(stderr, "[settings] PresentBackend 1 -- the finished picture is "
+                        "handed to the screen through the graphics card "
+                        "(Direct3D 11) instead of the ordinary Windows drawing "
+                        "call. Scaling %s, VSync %s. The picture itself is "
+                        "drawn exactly as before; this is only how it reaches "
+                        "the screen, and it falls back to the old way if the "
+                        "card will not have it. (%s)\n",
+                g_present_filter >= 2 ? "sharp"
+                                      : (g_present_filter == 1 ? "smooth"
+                                                               : "nearest"),
+                g_vsync ? "on" : "off", path);
+    else if (g_present_filter || g_vsync)
+        fprintf(stderr, "[settings] PresentFilter %d and VSync %d are set but "
+                        "PresentBackend is 0, so nothing reads them: the "
+                        "ordinary Windows present path has its own scaler and "
+                        "no vsync. (%s)\n", g_present_filter, g_vsync, path);
 }
 
 /* ---- the live re-read -----------------------------------------------------
@@ -2407,4 +2565,118 @@ extern "C" int host_setting_smooth_models(void)
     if (env >= 0) return env;
     load_once();
     return g_smooth_models;
+}
+
+/* ---- run hd2's two accessors, host_setting_render_scale's shape exactly --
+   an environment override read once, in front of load_once and the stored
+   value, through the same sanitiser the file goes through, so a proof run can
+   pin either off ONE build without editing a player's settings file. */
+
+/* TextureFilter: 0 nearest, 1 bilinear, 2 trilinear.
+   SM64DS_TEXTURE_FILTER overrides; junk reads as 0. */
+extern "C" int host_setting_texture_filter(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_TEXTURE_FILTER");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? texture_filter_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_texture_filter;
+}
+
+/* AntiAliasing: 0 off, 1 edge smoothing.
+   SM64DS_ANTI_ALIASING overrides; junk reads as 0. */
+extern "C" int host_setting_anti_aliasing(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_ANTI_ALIASING");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? anti_aliasing_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_anti_aliasing;
+}
+
+/* ---- run hd2 lane GPU1's three accessors, the same shape once more -------
+   an environment override read once, in front of load_once and the stored
+   value, through the same sanitiser the file goes through, so a proof run can
+   pin any of them off ONE build without editing a player's settings file.
+
+   SM64DS_PRESENT_FILTER_D3D rather than SM64DS_PRESENT_FILTER: that name has
+   belonged to the ordinary Windows path's halftone knob since before this key
+   existed (tests/walk_window.cpp reads it), and two settings answering to one
+   variable is how a proof run comes to mean something it did not say. */
+
+/* PresentBackend: 0 the ordinary Windows path, 1 Direct3D 11. */
+extern "C" int host_setting_present_backend(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_PRESENT_BACKEND");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? present_backend_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_present_backend;
+}
+
+/* PresentFilter: 0 nearest, 1 smooth, 2 sharp. Only read when the backend
+   is 1; this accessor answers either way and the backend is the one that
+   decides whether the answer matters. */
+extern "C" int host_setting_present_filter(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_PRESENT_FILTER_D3D");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? present_filter_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_present_filter;
+}
+
+/* VSync: 0 off, 1 on. Only read when the backend is 1, for the same reason. */
+extern "C" int host_setting_vsync(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_VSYNC");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? vsync_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_vsync;
 }

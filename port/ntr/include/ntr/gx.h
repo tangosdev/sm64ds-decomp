@@ -104,6 +104,57 @@ void gx_invalidate_textures();
 // Bind a decoded texture for subsequent geometry. Pass null for untextured.
 void gx_bind_texture(const uint32_t *rgba, int width, int height);
 
+// HOW A TEXEL IS CHOSEN (run hd2, the "TextureFilter" setting). 0 is nearest,
+// the sampler this renderer has always used and the DS's own behaviour; 1 is
+// bilinear; 2 is trilinear, which adds a chain of halved copies of each
+// texture and blends the two sizes nearest the surface's distance.
+//
+// CALL IT ONCE, AT BOOT, BEFORE ANY GEOMETRY. The mode decides whether the
+// texture cache builds a mip chain as each texture enters it, so a run that
+// changed it half way would have chains for some textures and not others. At
+// 0 no chain is built, no extra memory is held, and the raster runs the same
+// instructions it ran before this existed: the mode is resolved once per
+// frame into one of three whole raster bodies, never as a test per pixel.
+void gx_configure_texture_filter(int mode);
+int gx_texture_filter();
+
+// EDGE SMOOTHING OVER THE FINISHED 3D PICTURE (run hd2, the "AntiAliasing"
+// setting). 0 is off and is no pass at all; 1 runs a contrast-edge filter
+// over the picture at the END of gx_render -- before any 2D layer is
+// composited over it, so text, the HUD and the touch-screen art are never
+// read and never written.
+//
+// Call it once at boot, beside gx_configure_texture_filter: the pass keeps a
+// scratch copy of the picture, allocated on first use and never freed.
+void gx_configure_anti_aliasing(int mode);
+int gx_anti_aliasing();
+
+// What the smoothing pass has done since the program started: how many pixels
+// it rewrote and how many frames it ran on. The A/B evidence that a key-absent
+// run does no work at all. (It used to carry a third number, the frames the
+// pass refused to run on because the display capture unit was already armed.
+// That mechanism is gone -- see gx_aa_preimage below -- and the pass now runs
+// on every frame, so the number could only ever have been zero.)
+void gx_aa_counters(unsigned long long &changed, unsigned long long &frames);
+
+// THE FRAME AS IT WAS BEFORE THE SMOOTHING PASS, or null when there is no such
+// frame (the setting is off, or gx_render has not finished one this frame).
+// Same SCREEN_W stride as the framebuffer, so an index into one indexes the
+// other.
+//
+// THIS IS WHAT KEEPS THE GAME FROM NOTICING THE SETTING, and it replaced a
+// weaker rule that measurement broke. SM64DS reads its own top screen back
+// through the DS display capture unit for the dual-screen minigames, and the
+// frame it arms that unit on is NOT always one the raster has already drawn:
+// on a running minigame the arm lands after gx_render, so refusing to smooth
+// an already-armed frame missed five hundred captured frames out of twelve
+// hundred. Instead the pass keeps the picture it started from,
+// hal/message_compositor.cpp mirrors its own writes into it so it stays a
+// finished frame, and ntr::ppu_display_capture reads it in place of the live
+// framebuffer. The game gets the setting-off picture whenever it asks, with no
+// assumption about when it asks.
+uint32_t *gx_aa_preimage();
+
 // The game path: TEXIMAGE_PARAM / PLTT_BASE writes (ports 0x2A/0x2B) bind by
 // decoding lazily out of the mapped VRAM texture/palette slot windows.
 void gx_teximage_param(uint32_t value);
