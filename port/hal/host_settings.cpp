@@ -1297,6 +1297,14 @@ int g_vsync = 0;
    for those six reduces to the 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1 they used
    before and draws the identical picture. */
 int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
+
+/* SaveMenuOnTop: while the level-clear save menu is up, the two DS screens
+   trade places -- the menu becomes the big picture and the course-clear tally
+   drops into the corner. ABSENT MEANS ON, the second key in this file with
+   that default and for the same reason the improved minimap has it: it is a
+   mod the owner asked for and recommended on. 0 is the picture the port drew
+   before it existed. */
+int g_save_menu_on_top = 1;   /* ABSENT MEANS ON: the owner's recommendation */
 double g_minimap_scale = 1.0; /* the multiplier, 1 or more */
 /* A HAND HAS MOVED THE SIZE THIS RUN. Set by the drag's own write and by
    nothing else; read in host_setting_minimap_scale_value, where the block
@@ -1649,6 +1657,11 @@ void load_once(void)
            player editing by hand may write 1. */
         g_improved_minimap = (json_int(text, "ImprovedMinimap", 1) != 0 &&
                               json_bool(text, "ImprovedMinimap", 1) != 0) ? 1 : 0;
+        /* THE SAVE MENU ON THE TOP SCREEN, the same absent-is-on shape and
+           both spellings of the toggle, because the launcher serialises a C#
+           bool and a player editing by hand may write 1. */
+        g_save_menu_on_top = (json_int(text, "SaveMenuOnTop", 1) != 0 &&
+                              json_bool(text, "SaveMenuOnTop", 1) != 0) ? 1 : 0;
         {
             int snapped = 0;
             const double want = json_num(text, "MinimapScale", 1.0);
@@ -1704,6 +1717,11 @@ void load_once(void)
        non-default choices were in force. */
     if (g_swap_camera_turn)
         fprintf(stderr, "[settings] SwapCameraTurnDirection on (%s)\n", path);
+    /* Off its default, so it is said once: this copy keeps the level-clear
+       save menu on the corner panel instead of swapping the screens. */
+    if (!g_save_menu_on_top)
+        fprintf(stderr, "[settings] SaveMenuOnTop off -- the save menu "
+                "after a star stays on the corner panel (%s)\n", path);
     /* Off its default (rollback again as of 0.3.7), so it is said, and said
        in plain words: a support log for "online play feels laggy" should
        carry on one line that this copy opted back into lockstep, which waits
@@ -2656,6 +2674,39 @@ extern "C" int host_setting_improved_minimap(void)
  *
  * So: the pin answers until a drag happens, and the drag answers afterwards.
  * One value, one hand, for the rest of the run. */
+/* ---- THE SAVE MENU ON THE TOP SCREEN ---------------------------------------
+
+   The same three-layer shape the improved minimap's getter has, and for the
+   same three reasons.
+
+   ABSENT IS ON. It is a mod the owner asked for and recommended on, so a
+   settings file written before the key existed gets the swap.
+
+   IT IS PINNED OFF ON EVERY COMPARATOR ROUTE. A window selftest and a scene
+   sweep row are the two shapes every recorded baseline capture in this tree
+   is taken in. This option changes what a frame LOOKS LIKE, so left free it
+   would move recorded hashes on any route that reaches a level-clear screen,
+   for a reason that has nothing to do with the code under test. Pinning it
+   here, in the getter, covers both frame loops and every proof tool in
+   port/tools at once.
+
+   THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
+   run that means to look at the swap sets SM64DS_SAVE_MENU_ON_TOP=1 and gets
+   it, selftest or not, which is how this lane's own captures were taken. */
+extern "C" int host_setting_save_menu_on_top(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_SAVE_MENU_ON_TOP");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    if (getenv("SM64DS_WINDOW_SELFTEST") || getenv("SM64DS_SCENE_FRAMES"))
+        return 0;
+    load_once();
+    return g_save_menu_on_top;
+}
+
 extern "C" double host_setting_minimap_scale_value(void)
 {
     static int env_read = 0;

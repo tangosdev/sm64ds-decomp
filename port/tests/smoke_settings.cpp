@@ -319,6 +319,10 @@ static int child(const char *which)
            with and is the only path with a byte-exact reference, so no file at
            all must read as off and never as "the card, probably" */
         check_eq(host_setting_renderer(), 0, "Renderer default 0");
+        /* SaveMenuOnTop is the second key in this file whose ABSENT is ON,
+           so "no file at all" is the one case that has to say so out loud. */
+        check_eq(host_setting_save_menu_on_top(), 1,
+                 "SaveMenuOnTop absent is ON");
     } else if (!strcmp(which, "quality")) {
         check_eq(host_setting_render_scale(), 3, "RenderScale 3");
         check_eq(host_setting_hd_textures(), 1, "HdTextures 1 is on");
@@ -405,6 +409,24 @@ static int child(const char *which)
         check_eq(host_setting_hd_textures(), 0, "HdTextures junk is off");
         check_eq(host_setting_texture_filter(), 0, "TextureFilter junk is 0");
         check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing -5 is 0");
+    } else if (!strcmp(which, "savemenutop_off")) {
+        check_eq(host_setting_save_menu_on_top(), 0, "SaveMenuOnTop 0 is off");
+        /* the keys around it still parse: a new key must not move an old one */
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_improved_minimap(), 1,
+                 "ImprovedMinimap still absent-is-on beside it");
+    } else if (!strcmp(which, "savemenutop_bool")) {
+        /* the launcher serialises a C# bool, so false means off */
+        check_eq(host_setting_save_menu_on_top(), 0,
+                 "SaveMenuOnTop false is off");
+        check_eq(host_setting_volume(), 44, "Volume beside it survived");
+    } else if (!strcmp(which, "savemenutop_true")) {
+        check_eq(host_setting_save_menu_on_top(), 1, "SaveMenuOnTop true is on");
+    } else if (!strcmp(which, "savemenutop_junk")) {
+        /* unparseable reads as the default, like every other key in this file,
+           and the default here is ON */
+        check_eq(host_setting_save_menu_on_top(), 1,
+                 "SaveMenuOnTop junk is the default, which is on");
     } else if (!strcmp(which, "padtranslate")) {
         check(port_pad_selftest(), "pad_backend translation selftest");
     } else {
@@ -493,6 +515,11 @@ int main(int argc, char **argv)
     _putenv("SM64DS_HD_TEXTURES=");
     _putenv("SM64DS_HD_TEXTURES_DIR=");
     _putenv("SM64DS_SMOOTH_MODELS=");
+    /* and the swap's own override, for the same reason: a developer who
+       exported it for a capture run must not turn the four cases below into a
+       test of his own shell */
+    _putenv("SM64DS_SAVE_MENU_ON_TOP=");
+    _putenv("SM64DS_IMPROVED_MINIMAP=");
 
     char tmp[MAX_PATH], dir[MAX_PATH];
     if (!GetTempPathA(MAX_PATH, tmp)) return 1;
@@ -611,6 +638,14 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "renderer_clamp", "{ \"Renderer\": 7 }");
     bad |= run_case(exe, dir, "renderer_junk",
         "{ \"Renderer\": \"the card\", \"RenderScale\": 4 }");
+    bad |= run_case(exe, dir, "savemenutop_off",
+        "{ \"SaveMenuOnTop\": 0, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "savemenutop_bool",
+        "{ \"SaveMenuOnTop\": false, \"Volume\": 44 }");
+    bad |= run_case(exe, dir, "savemenutop_true",
+        "{ \"SaveMenuOnTop\": true }");
+    bad |= run_case(exe, dir, "savemenutop_junk",
+        "{ \"SaveMenuOnTop\": \"maybe\" }");
     bad |= run_case(exe, dir, "padtranslate", 0);
     _rmdir(dir);
     if (bad) {
@@ -619,6 +654,6 @@ int main(int argc, char **argv)
     }
     /* the count is the run_case calls above, counted rather than remembered:
        it was one out of date before run hd1 added five cases to it */
-    printf("smoke_settings: ok, 28 cases\n");
+    printf("smoke_settings: ok, 32 cases\n");
     return 0;
 }
