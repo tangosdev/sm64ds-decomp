@@ -34,6 +34,11 @@ smooth=<0..3> sets SM64DS_SMOOTH_MODELS on EVERY row, level and scene alike, whi
 is the "SmoothModels" setting (run hd1, lane MDL). Same shape and same reason as
 aspect= below: the environment scrub drops an inherited one, so a sweep that does
 not name it is byte-identical to one from before this argument existed.
+savemenutop=<0|1> turns the level-clear save menu's screen swap on or off on every
+row ("SaveMenuOnTop"), and lcmenu=<0|1> sets SM64DS_LC_MENU, the measuring knob that
+leaves the ROM's own level-clear flag alone so the menu comes up at all. Same shape
+and same reason as minimap= below: unnamed, a sweep is byte-identical to one from
+before they existed.
 minimap=<size> turns the improved minimap ON at that size on every row (the
 "ImprovedMinimap" and "MinimapScale" settings), and minimapdir=<folder> points its
 panel artwork at a folder. Same shape and same reason as smooth= above, with one
@@ -139,8 +144,14 @@ MINIMAP = ""
 for a in sys.argv[5:]:
     if a.startswith("minimap="): MINIMAP = a[8:]
 MINIMAPDIR = ""
+SAVEMENUTOP = ""
+for a in sys.argv[5:]:
+    if a.startswith("savemenutop="): SAVEMENUTOP = a[12:]
+LCMENU = ""
 for a in sys.argv[5:]:
     if a.startswith("minimapdir="): MINIMAPDIR = a[11:]
+for a in sys.argv[5:]:
+    if a.startswith("lcmenu="): LCMENU = a[7:]
 WARPIN = any(a == "warpin=1" for a in sys.argv[5:])
 REENTRY = any(a == "reentry=1" for a in sys.argv[5:])
 PRESS = "200:A"
@@ -182,7 +193,7 @@ WORKERS = max(1, min(WORKERS, MAX_SWEEP_WORKERS))
 # the row filter is positional but the flags are not, so a run that passes only a
 # flag must not have that flag read as a filter (it would then match no prefix and
 # sweep everything by accident)
-if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "workers=", "minimap=", "minimapdir=")): FILTER = ""
+if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "workers=", "minimap=", "minimapdir=", "savemenutop=", "lcmenu=")): FILTER = ""
 if FILTER.startswith("levels="):
     sel = FILTER[7:]; SCENES = ()
     if sel != "all": LEVELS = tuple(i for i in LEVELS if str(i) in sel.split(","))
@@ -451,6 +462,16 @@ def run(kind, ident, label, ent=None, wdir=None):
         env["SM64DS_IMPROVED_MINIMAP"] = "1"
         env["SM64DS_MINIMAP_SCALE"] = MINIMAP
     if MINIMAPDIR: env["SM64DS_MINIMAP_DIR"] = MINIMAPDIR
+    # savemenutop=<0|1>, lcmenu=<0|1>: the level-clear save menu's two keys,
+    # the same shape and the same reason as minimap= above. SaveMenuOnTop is
+    # pinned OFF under SM64DS_WINDOW_SELFTEST for exactly the reason the
+    # improved minimap is, so the environment is the only channel a sweep has;
+    # and SM64DS_LC_MENU is the measuring knob that leaves the ROM's own
+    # level-clear flag alone, which is what puts the menu on the screen at all
+    # on a line that still clears it. Unset, both lines do nothing and a sweep
+    # is byte-identical to one from before this argument existed.
+    if SAVEMENUTOP: env["SM64DS_SAVE_MENU_ON_TOP"] = SAVEMENUTOP
+    if LCMENU: env["SM64DS_LC_MENU"] = LCMENU
     exe_path = os.path.join(wdir, os.path.basename(EXE))
     t0 = time.time()
     rc, out = _run_proc([exe_path], wdir, env, BUDGET)

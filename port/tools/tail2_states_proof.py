@@ -92,8 +92,15 @@ def main():
     # keys survive the scrub above. Every one of them unset is a loop that does
     # nothing, so a run that names none is byte-identical to one from before
     # this existed.
+    # The level-clear save menu's screen swap, carried for the same reason and
+    # in the same shape: the gate is run BOTH with the key absent and with it
+    # set, the swap is picture only, and the opening has to take the same
+    # distinct positions either way. SM64DS_LC_MENU rides with it because the
+    # swap has nothing to do without it on a line that still clears the ROM's
+    # own level-clear flag. Unset, the loop does nothing.
     for k in ("SM64DS_IMPROVED_MINIMAP", "SM64DS_MINIMAP_SCALE",
-              "SM64DS_MINIMAP_DIR"):
+              "SM64DS_MINIMAP_DIR", "SM64DS_SAVE_MENU_ON_TOP",
+              "SM64DS_LC_MENU"):
         if os.environ.get(k):
             e[k] = os.environ[k]
     log = out / "run.log"
