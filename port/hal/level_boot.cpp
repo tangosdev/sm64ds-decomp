@@ -3424,6 +3424,10 @@ extern "C" int data_0208ee44;
    performs on ov080, which the port's empty LoadOverlay face does not. */
 extern "C" void port_painting_texcache_overlay_load(int id);
 
+/* src/func_ov001_020ab2e4.c: the cap system's own per-level reset,
+   Stage::InitResources:313. Called from port_stage_boot_body below. */
+extern "C" void func_ov001_020ab2e4(void);
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3642,6 +3646,51 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         star_knob_seated = true;
         data_0209f220[0] = data_0209f1f0;
     }
+    /* SM64DS_EVENT_SEED=<word>:<hex>[,<word>:<hex>...] -- the level-event bits
+       a loaded save file would have left in the save block, written ONCE on the
+       first stage boot of the process. <word> indexes data_0209caa0 AS THE
+       32-BIT WORDS src/ reads it as (0..4 over its 0x14 bytes), which is the
+       only spelling the game's own readers use.
+
+       WHY IT HAS TO EXIST FOR THE CHARACTER CAPS TO BE MEASURABLE AT ALL.
+       data_0209caa0 is the save/event block, and the ROM's own game init clears
+       every byte of it (the R2a arm, func_02013e64 -> memset(data_0209caa0, 0,
+       0x32c)). On a cartridge the bits come back off the card with the chosen
+       file; a direct boot into a level takes no file-select route, so every
+       event a level reads AT SPAWN TIME reads false. Word 2 is the flags2 word
+       SaveData::IsCharacterUnlocked tests (bit 0 Mario, 1 Luigi, 2 Wario:
+       src/_ZN8SaveData19IsCharacterUnlockedEj.cpp), and word 2 bit 0x80000 is
+       the drained moat the basement's pillars set.
+
+       This ORs in the same bits the ROM's own setters OR in and does nothing
+       else; it never clears a bit and never runs twice. INERT UNLESS SET. */
+    {
+        static bool events_seeded = false;
+        const char *es = std::getenv("SM64DS_EVENT_SEED");
+        if (es && !events_seeded) {
+            unsigned *const w = (unsigned *)data_0209caa0;
+            const char *p = es;
+            while (*p) {
+                char *end;
+                const long word = std::strtol(p, &end, 10);
+                p = end;
+                if (*p == ':') {
+                    ++p;
+                    const unsigned long bits = std::strtoul(p, &end, 16);
+                    p = end;
+                    if (word >= 0 && word < 5) {
+                        w[word] |= (unsigned)bits;
+                        std::fprintf(stderr, "[event-seed] data_0209caa0 word "
+                                     "%d now %08x\n", (int)word, w[word]);
+                    }
+                }
+                while (*p && *p != ',') ++p;
+                if (*p == ',') ++p;
+            }
+            std::fflush(stderr);
+        }
+        events_seeded = true;
+    }
     /* SM64DS_STARS_SEED=<course>:<hex>[,<course>:<hex>...] -- the collected-star
        bitmask a loaded save file would have left in the save block, written ONCE
        on the first stage boot of the process.
@@ -3687,6 +3736,32 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         }
         stars_seeded = true;
     }
+    /* Stage::InitResources:313 is `func_ov001_020ab2e4();` -- the cap system's
+       own per-level reset. It empties the three per-character cap registries
+       and then, for Mario, Luigi and Wario in turn, sets bit 0x10 of
+       data_ov001_020ad628[c] when SaveData::IsCharacterUnlocked(c) says that
+       character has been rescued (src/func_ov001_020ab2e4.c).
+
+       THAT BIT IS THE ONLY THING THAT LETS AN ORDINARY CHARACTER CAP APPEAR.
+       The adventure cap manager func_ov001_020aaa54, which Stage::Render
+       reaches every frame through func_ov001_020aaf40, skips every cap of
+       registry priority below 2 while the byte lacks it, then latches that
+       character's list to "finished" for the rest of the level; a cap the
+       manager never raises never gets bit 1 of its dCapIcon_c node, and
+       daObjMarioCap_c::Behavior (src/actors/daObjMarioCap_c.cpp:206-212) then
+       hides it and returns before its own state machine, so it can be neither
+       seen nor picked up. Measured before this line: Luigi's and Wario's caps
+       were hidden in every course for every save file, seeded or not.
+
+       WHY IT LANDS HERE. The port declines Stage::InitResources' ROM body by
+       default (hal/stage_bridges.cpp's slot-0 thunk keeps the host answer
+       unless SM64DS_SLOT0_ROM is set), so this boot body is where that
+       function's lines land, and this is the ROM's own order: :229 is the star
+       filter seated just above, :313 is this, :363 is LoadClsnAndObjects,
+       which is what spawns the caps that register themselves. It has to run
+       BEFORE them, and on EVERY stage boot -- the registries hold pointers
+       into the previous level's cap actors otherwise. */
+    func_ov001_020ab2e4();
     /* data_0209f344: the VS star-order pointer Stage::InitResources:427 seats to
        &VS_STAR_SPAWN_ORDERS[func_0203dad4() % 6]. The port hand-rolls the boot
        and skips InitResources, so without this the pointer stays NULL and the
@@ -6331,8 +6406,12 @@ extern "C" void port_level_reset_host(void)
        InitResources loop above, so a port that skips that loop keeps a Whomp
        pointer alive into the next level.
 
-       Not carried, and why. func_ov001_020ab2e4 is in ov001, which the port
-       does not mount.
+       Carried now, and not here. func_ov001_020ab2e4 is the cap system's own
+       reset; ov001's cap half is mounted (port/slice_cap.txt) and the six
+       words it writes are hosted (port/ov001_syms.txt:54), so the call sits
+       in port_stage_boot_body at the ROM's own position instead -- it has to
+       run on every stage boot, not only on a level change, and before
+       LoadClsnAndObjects spawns the caps that register themselves.
 
        data_0209f1f8 (the view-object count) is the interesting one, and the
        first version of this comment got its reason wrong. It said the count is
