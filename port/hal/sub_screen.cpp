@@ -201,6 +201,13 @@ extern int data_0209f498[];      /* the Ctrl[4] block, stride 0x18 */
 extern char data_0209f49c[];     /* split: held buttons  (DS: f498 + 4) */
 extern char data_0209f49e[];     /* split: pressed       (DS: f498 + 6) */
 extern void *data_0209f318;      /* the Camera actor */
+/* THE LEVEL-CLEAR SCREEN'S OWN TWO WORDS, and the swap below reads nothing
+   else. data_0209f20c is "the level-clear screen owns the game": the player's
+   own star animation raises it (src/actors/Player.cpp:6522, :6718, :6742) and
+   src/_ZN5Stage8BehaviorEv.cpp:206 runs Stage::LC_Update only while it is up.
+   data_0209f2d4 is that function's own state word. */
+extern unsigned char data_0209f20c;
+extern unsigned char data_0209f2d4;
 }
 
 namespace {
@@ -270,6 +277,14 @@ void panel_extents(int *l, int *t, int *r, int *b);
 /* The inset selftest's size override, in g_pan_num's own units. Zero at every
    other moment, including in every player's run. */
 int g_size_force;
+
+/* THE SCREEN SWAP'S two per-frame answers, declared up here because
+   handle_rect reads the first of them and sits above the block that defines
+   the rest. Zero in every frame that is not a level-clear save menu, and
+   zero for the whole of every run with the option off. See the banner over
+   swap_geom_for. */
+int g_swap;                      /* the compose's answer for this frame */
+int g_menu_up;                   /* the ROM pair's answer for this frame */
 
 /* SM64DS_MINIMAP_TRACE=1: every rectangle the geometry above and the panel's
    own settled on, printed when one of them changes. It exists so that a
@@ -1045,6 +1060,11 @@ void panel_extents(int *l, int *t, int *r, int *b)
 int handle_rect(int *hx, int *hy, int *hs, int h)
 {
     if (!improved_map_on() || hal_sub_screen_stacked()) return 0;
+    /* AND NOT WHILE THE SCREENS ARE SWAPPED: the corner is the top screen's
+       for those frames and the map is not on the picture at all, so there is
+       no map corner to grab. One test, and it covers the draw and the press
+       both, because both come through here. */
+    if (g_swap) return 0;
     if (host_setting_mouse_capture()) return 0;
     PanelGeom g;
     panel_geom(&g);
@@ -1249,6 +1269,327 @@ void inset_map_selftest(int w, int h)
     g_x0 = s_x;
     g_y0 = s_y;
     g_pan_margin = s_m;
+}
+
+
+/* ---- THE LEVEL-CLEAR SAVE MENU, AND THE SCREEN SWAP -----------------------
+ *
+ * WHAT IT IS, in the owner's own words: "Could we just have it appear on the
+ * top screen?" -- said about the save menu that comes up after a Power Star,
+ * which on the DS is in the player's hand on the touch screen and on this
+ * port is a 128x96 corner panel he has to aim a mouse at.
+ *
+ * SO THE TWO SCREENS TRADE PLACES WHILE IT IS UP. The bottom screen -- the
+ * three buttons -- becomes the BIG picture at the size the top screen is
+ * normally drawn at, and the top screen -- the course-clear text and the coin
+ * tally -- drops into the corner. The frame the menu is answered they trade
+ * back. The ROM draws exactly what it drew before: this is the host's
+ * presentation and the host's stylus inverse, and nothing else.
+ *
+ * THE TRIGGER IS THE ROM'S OWN STATE AND NEVER A TIMER, and it is a PAIR:
+ *
+ *      data_0209f20c != 0   AND   data_0209f2d4 between 1 and 3
+ *
+ * Read straight out of src/_ZN5Stage9LC_UpdateEv.cpp. Case 0 calls
+ * Stage::UpdateMenuButtons(1) -- the call that recolours BG1's screen entries
+ * into the three plates -- and sets data_0209f2d4 = 1 in the same statement
+ * block, so the plates are on from the frame that word becomes 1. Every one
+ * of the three answer arms in case 3 calls Stage::UpdateMenuButtons(0) and
+ * moves the state to 4 or to 6 in the same tick, so the plates are off from
+ * the frame the answer is taken. The word is 0 before case 0 runs and is put
+ * back to 0 by case 6.
+ *
+ * WHY THE PAIR AND NOT THE STATE ALONE: data_0209f2d4 is only a state word
+ * while the level-clear machinery is running at all, and what says it is
+ * running is data_0209f20c -- Stage::Behavior's own gate. The pair is true
+ * over exactly the frames the plates are on the screen and over no others.
+ *
+ * WHERE THE RECTANGLES COME FROM: this one place, once a frame, exactly the
+ * way hal_sub_panel_geometry is the one place that decides where the map
+ * panel is. The compose draws these rectangles and poll_touch's inverse reads
+ * these same rectangles; neither recomputes the other's arithmetic. That is
+ * the rule this file already lives by and the swap gets no exception.
+ *
+ * WHERE THE CORNER INSET GOES, AND IT IS MEASURED. The menu's three touch
+ * boxes are at DS rows 0x28, 0x50 and 0x78, each 0x20 tall, and each plate is
+ * the full 256 pixels wide (lane STARMENU1 measured the bands; a pixel census
+ * of the banked bottom-screen capture agrees: rows 40..71, 80..111 and
+ * 120..151 are 93.7 per cent non-backdrop, the rest of the screen 43 to 49).
+ * So no corner of the bottom screen is free of a button, and an inset the
+ * size of the map panel would cover part of one whichever corner it took. The
+ * band BELOW the last plate -- DS rows 152..191, forty of them -- is free, so
+ * the inset is sized to that band and put flush in the corner the bottom
+ * screen normally sits in. It covers no button at any picture size, and its
+ * width follows the TOP screen's own aspect so nothing is squashed.
+ *
+ * WHAT FILLS THE PICTURE BESIDE THE MENU on a wide aspect: backdrop, the same
+ * pillarbox the stacked layout draws round the bottom screen at 16:9. The
+ * bottom screen is a fixed 256x192 raster and cannot gain a wider field of
+ * view the way the 3D top screen can.
+ */
+struct SwapGeom {
+    int bx, by, bw, bh;          /* the big picture: the bottom screen */
+    int bnum, bden;              /* its size as a fraction of a DS screen */
+    int tx, ty, tw, th;          /* the corner inset: the top screen */
+};
+SwapGeom g_sw;
+unsigned *g_swap_snap;           /* the top screen, kept while it is overdrawn */
+int g_swap_snap_n;
+
+/* The option, asked once per process and latched, like the improved map's. */
+int save_menu_on_top(void)
+{
+    static int v = -1;
+    if (v < 0) v = host_setting_save_menu_on_top() ? 1 : 0;
+    return v;
+}
+
+/* THE PAIR. See the banner. */
+int save_menu_is_up(void)
+{
+    return data_0209f20c != 0 && data_0209f2d4 >= 1 && data_0209f2d4 <= 3;
+}
+
+/* The DS row one past the third plate: 0x78 + 0x20. The three offsets are
+   LC_Update's own, out of case 3's touch tests. */
+const int kMenuLastRow = 0x78 + 0x20;
+
+void swap_geom_for(int w, int h, SwapGeom *o)
+{
+    SwapGeom g;
+    /* THE BIG PICTURE. The bottom screen at the scale the top screen is drawn
+       at, which is the picture's height over one DS screen's -- 2 at the
+       ordinary tier, 4 at RenderScale 4 -- reduced so the compose is handed
+       small numbers. Centred, and never wider than the picture: a picture
+       narrower than 4:3 (which no aspect this port offers produces, the
+       widening is all Hor+) sizes from the width instead. */
+    int num = h, den = ntr::SUB_H;
+    if (ntr::SUB_W * num / den > w) { num = w; den = ntr::SUB_W; }
+    if (num < 1) num = 1;
+    if (den < 1) den = 1;
+    {
+        int a = num, b = den;
+        while (b) { const int t = a % b; a = b; b = t; }
+        if (a > 1) { num /= a; den /= a; }
+    }
+    g.bnum = num;
+    g.bden = den;
+    g.bw = ntr::SUB_W * num / den;
+    g.bh = ntr::SUB_H * num / den;
+    g.bx = (w - g.bw) / 2;
+    g.by = (h - g.bh) / 2;
+    if (g.bx < 0) g.bx = 0;
+    if (g.by < 0) g.by = 0;
+    /* THE CORNER INSET, sized to the free band under the last plate and put
+       one pixel in from the corner so its frame has somewhere to be. */
+    const int band = (ntr::SUB_H - kMenuLastRow) * g.bh / ntr::SUB_H;
+    g.th = band - 2;
+    if (g.th < 8) g.th = 8;
+    if (g.th > h - 2) g.th = h - 2;
+    g.tw = h > 0 ? (int)(((long long)g.th * w + h / 2) / h) : g.th;
+    if (g.tw < 8) g.tw = 8;
+    if (g.tw > w - 2) g.tw = w - 2;
+    g.tx = w - 1 - g.tw;
+    g.ty = h - 1 - g.th;
+    if (g.tx < 1) g.tx = 1;
+    if (g.ty < 1) g.ty = 1;
+    *o = g;
+}
+
+/* SM64DS_SWAP_TRACE=1: every change of the ROM's two words and of the swap's
+   own answer, with the rectangles this frame settled on. It exists so that a
+   capture can be measured against the numbers the program actually drew, and
+   so that the frame the swap begins can be joined to the frame the plates
+   turn on, rather than to a restatement of this arithmetic somewhere else. */
+void swap_trace(int w, int h, int frame)
+{
+    static int on = -1;
+    static int last[3] = { -1, -1, -1 };
+    if (on < 0) on = std::getenv("SM64DS_SWAP_TRACE") ? 1 : 0;
+    if (!on) return;
+    const int now[3] = { (int)data_0209f20c, (int)data_0209f2d4, g_swap };
+    if (now[0] == last[0] && now[1] == last[1] && now[2] == last[2]) return;
+    last[0] = now[0];
+    last[1] = now[1];
+    last[2] = now[2];
+    std::fprintf(stderr, "[swap] f%d f20c=%d f2d4=%d swap=%d picture %dx%d "
+                 "big %d,%d %dx%d (%d/%d) top %d,%d %dx%d\n", frame, now[0],
+                 now[1], now[2], w, h, g_sw.bx, g_sw.by, g_sw.bw, g_sw.bh,
+                 g_sw.bnum, g_sw.bden, g_sw.tx, g_sw.ty, g_sw.tw, g_sw.th);
+    std::fflush(stderr);
+}
+
+/* engine B's own raster target, defined with the rest of the raster state
+   further down this file and named here because the swapped present is above
+   it. Same object, same internal linkage. */
+extern ntr::SubFramebuffer g_sub;
+
+/* THE SWAPPED PRESENT. Three steps and no fourth: keep the top screen, paint
+   the bottom screen over the whole picture, put the kept top screen in the
+   corner. */
+void swap_present(unsigned *dst, int w, int h)
+{
+    const int n = w * h;
+    if (n <= 0 || g_sw.bnum <= 0) return;
+    if (g_swap_snap_n < n) {
+        unsigned *p = (unsigned *)std::realloc(g_swap_snap,
+                                               (size_t)n * sizeof *p);
+        if (!p) return;              /* no room to keep it, so nothing moves */
+        g_swap_snap = p;
+        g_swap_snap_n = n;
+    }
+    /* THE STRIDE IS SCREEN_W, NOT w. Every drawing helper in this file reads
+       the framebuffer that way: on a wide render target the buffer's pitch is
+       the tier's maximum and w is the narrower live picture inside it. The
+       snapshot is packed at w, which is its own buffer's business. */
+    for (int y = 0; y < h; ++y)
+        std::memcpy(g_swap_snap + (size_t)y * w,
+                    dst + (size_t)y * ntr::SCREEN_W,
+                    (size_t)w * sizeof *dst);
+    px_fill(dst, w, h, 0, 0, w, h, 0xFF000000u);
+    ntr::ppu_compose_sub(g_sub, dst, w, h, g_sw.bx, g_sw.by, g_sw.bnum,
+                         g_sw.bden);
+    /* the kept top screen, box-averaged into the corner so its text survives
+       as shading rather than falling between samples -- the same rule
+       ppu_compose_sub follows when it reduces the bottom screen */
+    for (int y = 0; y < g_sw.th; ++y) {
+        const int sy0 = (int)(((long long)y * h) / g_sw.th);
+        int sy1 = (int)(((long long)(y + 1) * h) / g_sw.th);
+        if (sy1 <= sy0) sy1 = sy0 + 1;
+        if (sy1 > h) sy1 = h;
+        for (int x = 0; x < g_sw.tw; ++x) {
+            const int sx0 = (int)(((long long)x * w) / g_sw.tw);
+            int sx1 = (int)(((long long)(x + 1) * w) / g_sw.tw);
+            if (sx1 <= sx0) sx1 = sx0 + 1;
+            if (sx1 > w) sx1 = w;
+            unsigned rr = 0, gg = 0, bb = 0, k = 0;
+            for (int sy = sy0; sy < sy1; ++sy) {
+                const unsigned *row = g_swap_snap + (size_t)sy * w;
+                for (int sx = sx0; sx < sx1; ++sx) {
+                    const unsigned c = row[sx];
+                    rr += (c >> 16) & 0xFFu;
+                    gg += (c >> 8) & 0xFFu;
+                    bb += c & 0xFFu;
+                    ++k;
+                }
+            }
+            if (!k) k = 1;
+            px_put(dst, w, h, g_sw.tx + x, g_sw.ty + y,
+                   0xFF000000u | ((rr / k) << 16) | ((gg / k) << 8) | (bb / k));
+        }
+    }
+    /* the one-pixel frame the corner panel has always been drawn with */
+    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty - 1, g_sw.tw + 2, 1, 0xFF000000u);
+    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty + g_sw.th, g_sw.tw + 2, 1,
+            0xFF000000u);
+    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty, 1, g_sw.th, 0xFF000000u);
+    px_fill(dst, w, h, g_sw.tx + g_sw.tw, g_sw.ty, 1, g_sw.th, 0xFF000000u);
+}
+
+
+/* ---- THE SWAPPED ARM OF SM64DS_LAYOUT_SELFTEST ----------------------------
+ *
+ * The third arm of the same selftest. The stacked arm asserts the stacked
+ * layout and the inset arm asserts the map panel; this one asserts the
+ * picture the screens are swapped in, over the shapes the option can be asked
+ * for: both framebuffer tiers and the five aspects the launcher offers. It
+ * runs the SAME function the compose and the stylus inverse run -- nothing
+ * here restates that arithmetic -- and it needs no game state, because the
+ * rectangles depend only on the picture.
+ *
+ *   S1 the four corners of the big picture, run back through the exact
+ *      expression poll_touch's swapped arm uses, land within ONE DS pixel of
+ *      DS (0,0), (255,0), (0,191) and (255,191).
+ *   S2 one pixel outside each of its four edges reads OUTSIDE.
+ *   S3 the big picture is 4:3 exactly and fits inside the picture.
+ *   S4 the corner inset is inside the picture and overlaps NONE of the
+ *      menu's three plates (DS rows 0x28, 0x50 and 0x78, each 0x20 tall,
+ *      full width), which is the whole reason it is sized off the free band
+ *      below the last one.
+ */
+void swap_layout_selftest(void)
+{
+    const char *env = std::getenv("SM64DS_LAYOUT_SELFTEST");
+    if (!env || !*env) return;
+    static const double asp[5] = { 0.0, 1.7777778, 2.3333333, 3.5555556, 4.0 };
+    static const int hs[2] = { 384, 768 };
+    int passed = 0, total = 0;
+    for (int hi = 0; hi < 2; ++hi) {
+        for (int ai = 0; ai < 5; ++ai) {
+            const int h = hs[hi];
+            int w = asp[ai] > 0.0 ? (int)(h * asp[ai] + 0.5) : h * 4 / 3;
+            w &= ~1;
+            SwapGeom g;
+            swap_geom_for(w, h, &g);
+            char fails[8];
+            int nf = 0, dx, dy, ok = 1;
+            const int x1 = g.bx + g.bw - 1, y1 = g.by + g.bh - 1;
+#define SINV(px, py) (dx = fdiv(((px) - g.bx) * g.bden, g.bnum), \
+                      dy = fdiv(((py) - g.by) * g.bden, g.bnum))
+            SINV(g.bx, g.by);
+            if (dx > 1 || dy > 1 || dx < 0 || dy < 0) ok = 0;
+            SINV(x1, g.by);
+            if (dx < ntr::SUB_W - 2 || dx > ntr::SUB_W - 1 || dy > 1) ok = 0;
+            SINV(g.bx, y1);
+            if (dy < ntr::SUB_H - 2 || dy > ntr::SUB_H - 1 || dx > 1) ok = 0;
+            SINV(x1, y1);
+            if (dx < ntr::SUB_W - 2 || dy < ntr::SUB_H - 2) ok = 0;
+            if (!ok) fails[nf++] = '1';
+            ok = 1;
+            SINV(g.bx - 1, g.by);
+            if (dx >= 0) ok = 0;
+            SINV(g.bx, g.by - 1);
+            if (dy >= 0) ok = 0;
+            SINV(x1 + 1, g.by);
+            if (dx < ntr::SUB_W) ok = 0;
+            SINV(g.bx, y1 + 1);
+            if (dy < ntr::SUB_H) ok = 0;
+#undef SINV
+            if (!ok) fails[nf++] = '2';
+            if (g.bw * 3 != g.bh * 4 || g.bx < 0 || g.by < 0 ||
+                g.bx + g.bw > w || g.by + g.bh > h)
+                fails[nf++] = '3';
+            ok = g.tx >= 0 && g.ty >= 0 && g.tx + g.tw <= w &&
+                 g.ty + g.th <= h;
+            for (int b = 0; b < 3; ++b) {
+                const int r0 = g.by + (0x28 + b * 0x28) * g.bh / ntr::SUB_H;
+                const int r1 = g.by + (0x28 + b * 0x28 + 0x20) * g.bh /
+                                      ntr::SUB_H - 1;
+                const int c0 = g.bx, c1 = g.bx + g.bw - 1;
+                if (g.ty <= r1 && g.ty + g.th - 1 >= r0 &&
+                    g.tx <= c1 && g.tx + g.tw - 1 >= c0)
+                    ok = 0;
+            }
+            if (!ok) fails[nf++] = '4';
+            fails[nf] = 0;
+            ++total;
+            if (!nf) {
+                ++passed;
+                std::fprintf(stderr, "[swapst] picture %dx%d: big %d,%d %dx%d "
+                             "(%d/%d) top %d,%d %dx%d S1..S4 PASS\n", w, h,
+                             g.bx, g.by, g.bw, g.bh, g.bnum, g.bden, g.tx,
+                             g.ty, g.tw, g.th);
+            } else {
+                std::fprintf(stderr, "[swapst] picture %dx%d: big %d,%d %dx%d "
+                             "(%d/%d) top %d,%d %dx%d FAIL S%s\n", w, h,
+                             g.bx, g.by, g.bw, g.bh, g.bnum, g.bden, g.tx,
+                             g.ty, g.tw, g.th, fails);
+            }
+        }
+    }
+    std::fprintf(stderr, "SWAPPED LAYOUT SELFTEST: %s %d/%d\n",
+                 passed == total ? "PASS" : "FAIL", passed, total);
+    std::fflush(stderr);
+}
+
+/* Is the picture swapped RIGHT NOW, for a reader that is not the compose?
+   The rectangles are recomputed every frame whatever the answer, so a reader
+   asking this on the same frame the plates come on gets the rectangles that
+   frame's compose is using. */
+int swap_now(void)
+{
+    return save_menu_on_top() && save_menu_is_up() &&
+           !hal_sub_screen_stacked() && g_sw.bnum > 0;
 }
 
 /* The square itself, drawn in the pass above the map so nothing covers it. */
@@ -1899,8 +2240,29 @@ void poll_touch(void)
                    of its four sides. Harmless while the map was a bare inset
                    over the 3D view; not harmless with the artist's frame
                    drawn on exactly those pixels. */
-                fx = fdiv((bx - g_x0) * g_pan_den, g_pan_num);
-                fy = fdiv((by - g_y0) * g_pan_den, g_pan_num);
+                if (g_swap) {
+                    /* THE SCREENS ARE SWAPPED: the BIG picture is the bottom
+                       screen, so the inverse reads the big rectangle the
+                       compose just drew -- the same numbers, the same floor
+                       divide, one arithmetic. */
+                    fx = fdiv((bx - g_sw.bx) * g_sw.bden, g_sw.bnum);
+                    fy = fdiv((by - g_sw.by) * g_sw.bden, g_sw.bnum);
+                    /* AND THE CORNER IS THE TOP SCREEN, which no stylus has
+                       ever reached. A click there answers nothing, exactly
+                       as a click on the top screen does in the ordinary
+                       picture: what is drawn is what is clicked. The old
+                       inset positions are inside this rectangle, so the
+                       three button points a player learned on the small
+                       panel do nothing while the menu is big -- which is the
+                       honest answer, because the buttons are not there any
+                       more. */
+                    if (bx >= g_sw.tx - 1 && bx < g_sw.tx + g_sw.tw + 1 &&
+                        by >= g_sw.ty - 1 && by < g_sw.ty + g_sw.th + 1)
+                        on_picture = 0;
+                } else {
+                    fx = fdiv((bx - g_x0) * g_pan_den, g_pan_num);
+                    fy = fdiv((by - g_y0) * g_pan_den, g_pan_num);
+                }
             }
             live_cx = (int)p.x;
             live_cy = (int)p.y;
@@ -1917,7 +2279,16 @@ void poll_touch(void)
                IT ALSO ENDS A DRAG rather than clamping one: a press that
                wanders into the zone is dropped for as long as it is in there,
                which is what a player who cannot see a button expects. */
-            if (on_surface && improved_map_on() &&
+            /* NOT WHILE THE LEVEL-CLEAR MENU IS UP, whichever way round the
+               screens are. The zone is DS y >= 0x8a with x outside the middle,
+               and the menu's third plate runs to DS y 0x97 across the whole
+               width -- so with the improved map on, the bottom twelve rows of
+               that button's left and right thirds were a dead zone. The four
+               camera arrows are not what the bottom screen is showing while
+               the menu owns it, and the menu's own touch boxes are the only
+               hit test running. g_menu_up is the ROM's own pair, taken once a
+               frame at the presentation seam. */
+            if (on_surface && improved_map_on() && !g_menu_up &&
                 in_camera_button_zone(fx, fy)) {
                 on_surface = 0;
                 drag_own = 0;
@@ -3069,6 +3440,17 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         }
     }
     hal_sub_panel_geometry(w, h);
+    /* THE SWAP'S OWN ANSWER AND ITS RECTANGLES, once a frame, beside the
+       panel's and by the same rule: one place decides, everybody else reads.
+       They are computed whatever the answer is, so poll_touch's inverse has
+       this frame's numbers on the very frame the plates come on. */
+    {
+        static int swap_frame;
+        swap_geom_for(w, h, &g_sw);
+        g_menu_up = save_menu_is_up();
+        g_swap = swap_now();
+        swap_trace(w, h, swap_frame++);
+    }
     /* the inset arm of SM64DS_LAYOUT_SELFTEST, once per process and only in a
        course, which is the only place this map exists */
     {
@@ -3076,6 +3458,7 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         if (!done && !hal_sub_screen_stacked()) {
             done = 1;
             inset_map_selftest(w, h);
+            swap_layout_selftest();
         }
     }
     /* THE TOUCH TARGET, not presented with the option on. Measured on this
@@ -3251,7 +3634,13 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        the framebuffer this function is handed comes out of a stacked frame
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
-    if (!hal_sub_screen_stacked()) {
+    if (!hal_sub_screen_stacked() && g_swap) {
+        /* THE SCREENS ARE THE OTHER WAY ROUND THIS FRAME. Nothing of the map
+           panel is drawn: the corner belongs to the top screen now, and the
+           plate, the banner, the handle and the attention arrows would every
+           one of them land on it. */
+        swap_present(dst, w, h);
+    } else if (!hal_sub_screen_stacked()) {
         /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
            compose below writes the map over the middle of it and its own one
            pixel frame lands on the panel's inner edge. Only with the option

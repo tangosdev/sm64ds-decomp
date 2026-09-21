@@ -3483,6 +3483,31 @@ static int key_live(int vk)
    gates; 0 (unbound) never reads down. pad_act is the pad half: the bound
    mask against the buttons word, and 0 never matches. Both load the tables
    on first use, see bindings_load. */
+/* ---- SM64DS_LC_MENU: RUN THE CARTRIDGE'S OWN LEVEL-CLEAR MENU -------------
+ *
+ * A TEST KNOB AND NOTHING ELSE, and absent it changes not one statement.
+ *
+ * WHY IT EXISTS. This line of the port still clears data_0209f20c every tick
+ * (the stand-in a few thousand lines below), so the save menu after a Power
+ * Star never comes up and a lane working on how that menu is PRESENTED has
+ * nothing to present. Retiring that clear for real, and publishing the DS's
+ * own Start and Select on the level path so a player can answer the menu at
+ * all, is lane STARSAVE1's fix and lives on its own branch; it is not this
+ * lane's to make and must not ride into this lane's commit.
+ *
+ * So this knob stands in for that fix, for a measuring run only: with
+ * SM64DS_LC_MENU set the flag is left alone and Start / Select reach the
+ * level path. Absent -- which is every sweep row, every proof, every recorded
+ * baseline and every player's game -- the program is byte for byte the one it
+ * was.
+ */
+static int lc_menu_knob(void)
+{
+    static int v = -1;
+    if (v < 0) v = getenv("SM64DS_LC_MENU") ? 1 : 0;
+    return v;
+}
+
 static int key_act(int action)
 {
     bindings_load();
@@ -11437,8 +11462,25 @@ int main(void)
                inlined (run link100, lane INPUTRAW) because the pad-mirror
                store just below wants this SAME value: the mirror and the
                comms stash must agree bit for bit. */
+            /* THE LEVEL PATH'S OWN START AND SELECT, under SM64DS_LC_MENU
+               only. The scene loop has published these two raw DS bits for a
+               long time (0x08 and 0x04, folded in beside the d-pad); the level
+               loop never has, so no button a player owns reaches
+               IsButtonInputValid's special branch -- the one arm that answers
+               a menu while a level is up. Same two bindings the scene loop
+               reads. See lc_menu_knob's banner for why this is a knob here
+               rather than a change. */
+            unsigned short lc_raw_extra = 0;
+            if (lc_menu_knob() && !menu_on) {
+                if (key_act(HOST_KEY_START))  lc_raw_extra |= 0x08;
+                if (key_act(HOST_KEY_SELECT)) lc_raw_extra |= 0x04;
+                if (pad_live) {
+                    if (pad_act(&pad, HOST_PAD_START))  lc_raw_extra |= 0x08;
+                    if (pad_act(&pad, HOST_PAD_SELECT)) lc_raw_extra |= 0x04;
+                }
+            }
             const unsigned short port_raw_bt_bits_for_mirror = (unsigned short)(
-                host_btn_to_raw_keys(btn) |
+                host_btn_to_raw_keys(btn) | lc_raw_extra |
                 (menu_on ? 0 : port_input_probe_bits(
                     port_rom_frame_checked(frame, "input-probe-raw"))));
             port_raw_btn_stash(port_raw_bt_bits_for_mirror);
@@ -13225,7 +13267,7 @@ int main(void)
                prompt it would have opened is not hosted. Retiring this is the
                same named job as the +0x13 stand-in in stage_bridges.cpp: run
                the Stage as an actor and let LC_Update own its flag. */
-            if (data_0209f20c[0]) {
+            if (data_0209f20c[0] && !lc_menu_knob()) {
                 static int said_lc;
                 if (!said_lc) {
                     said_lc = 1;

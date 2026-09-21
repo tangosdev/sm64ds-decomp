@@ -764,6 +764,26 @@ int host_setting_save_minimap_scale(double s);
    them; the code reads a folder. */
 const char *host_setting_minimap_dir(void);
 
+/* ---- THE SAVE MENU ON THE TOP SCREEN (one key) -----------------------------
+
+   SaveMenuOnTop: while the level-clear save menu is up after a Power Star,
+   the two DS screens trade places. The bottom screen -- the three buttons the
+   player has to answer -- is presented as the BIG picture at full size, and
+   the top screen -- the course-clear text and the coin tally -- drops into the
+   corner inset the bottom screen normally sits in. The frame the menu is
+   answered, by a click on any row or by Start, they swap back.
+
+   ABSENT MEANS ON. It is a mod the owner asked for and recommended on, the
+   same default ImprovedMinimap carries and for the same reason. 0 is the
+   picture the port drew before this key existed, to the pixel.
+
+   IT IS PINNED OFF ON EVERY COMPARATOR ROUTE (a window selftest or a scene
+   run) unless SM64DS_SAVE_MENU_ON_TOP names it, so no recorded baseline moves.
+   The environment overrides the file in either direction and outranks the pin.
+
+   It is read once and latched, like ImprovedMinimap and Aspect. */
+int host_setting_save_menu_on_top(void);
+
 #ifdef __cplusplus
 }
 #endif
