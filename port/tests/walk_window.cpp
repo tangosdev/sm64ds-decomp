@@ -6172,8 +6172,6 @@ static int click_front(void)
 /* hal/sub_screen.cpp: the in-process stylus poll_touch consumes in its own
    live branch, and the census the finish line below prints. */
 extern "C" void port_touch_inject_client(int cx, int cy);
-/* the level-clear save menu's own answer, hal/sub_screen.cpp */
-extern "C" int hal_save_menu_up(void);
 extern "C" void port_touch_inject_release(void);
 extern "C" void port_touch_inject_census(unsigned *frames, unsigned *presses,
                                          unsigned *on_surface);
@@ -7229,6 +7227,11 @@ static void mo_capture_set(HWND h, int on)
 
    `stacked` is passed rather than asked, because this is a header-free file
    scope and the loops already hold the answer their window was built for. */
+/* The level-clear save menu's own answer, hal/sub_screen.cpp, declared here
+   rather than beside the synthetic-click externs above: that group sits
+   inside #ifndef PORT_ROM_CLEAN and this predicate is read unconditionally,
+   one line below. */
+extern "C" int hal_save_menu_up(void);
 static int mo_capture_want(int selftest, int stacked)
 {
     if (!mo_capture_opt) return 0;      /* the setting, and it is off by default */
