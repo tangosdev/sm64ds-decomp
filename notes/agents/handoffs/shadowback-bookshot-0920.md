@@ -6,9 +6,91 @@ This describes the local candidate containing this handoff. The producer lease i
 held in the v2 task named above. No source commit or review evidence has been
 published through the queue; `formal_acceptance: false`.
 
-The current scope is two already-enrolled production functions. Shared headers, symbols,
+The current scope is eight already-enrolled production files. Shared headers, symbols,
 delinks, attribution, lifecycle definitions and the shadow TU are unchanged.
 No whole-TU promotion or completion of the parent reconstruction is claimed.
+
+## Current 24-file production candidate
+
+Source candidate: `9b825c3d3c0ff0af5f04ff1151649069a3872136`. Tested composition base:
+`5c075024562a469c6e4336d8540e3dfa9ffa84a1`, still the live main when this continuation began.
+The user approved retrying the exact 18-helper proposal. Its six BookShot and
+12 Spiny file/range reservations succeeded under the existing producer tasks;
+no full-class ROM range or extra source scope was acquired. The original workflow
+input and stage artifact lists remain unchanged. Source-review coverage follows
+all amended file resources, not the original initializer-only artifact list.
+
+The combined candidate contains 24 existing production files and covers 6,956
+function bytes: the prior six methods plus 18 helpers (14 C++ and four C files).
+The state-3 helper change is comment-only. No file was moved or renamed, and no
+header, compiler configuration, manifest, delink or baseline was changed.
+
+- All 24 strict relocation checks pass: VERIFIED, empty differences, zero blind
+  relocations. The independent verifier freshly compiled both base and candidate
+  for all 18 helpers and compared whole objects; all are byte-identical. The prior
+  six-file independent proof was retained only after confirming its source,
+  header and tool inputs remain unchanged.
+- Five objects carry an unchanged four-byte Vector3 destructor passenger:
+  Toad St_Talk_Main and helpers 02111fc4, 02124d08, 021253a4 and 02125550.
+  All defined symbol bindings were inspected, including STB_LOPROC.
+- Full `rombuild.py -j 16 --no-rom`: PASS; 11,208/11,208 source-built functions,
+  106/106 exact modules, 26/26 initialized-data claims and three BSS claims.
+  7,987 cached objects and 18 compiles; candidate ROM packaging skipped.
+  Intact-TU gates retain zero new symbol errors. Broad emitted-data diagnostics
+  remain three differing and 296 unnamed records, unaffected by these
+  object-identical changes.
+- Port: 418/418 references resolve. Attribution: 8,182 tracked, zero changed/lost.
+  Language-mode and CONVERTED ratchets pass against the unchanged baselines;
+  CONVERTED remains 2,990 against 2,973. Whitespace check passes.
+- Independent BookShot and Spiny source reviews found no new source blocker,
+  subject to the recorded partial-reconstruction limits. This does not establish
+  full class reconstruction, TU promotion or formal Source review acceptance.
+
+### Open declaration gate: SHADOWBACK3-DECL-01
+
+`check_decl_agreement.py --changed 5c075024562a469c6e4336d8540e3dfa9ffa84a1` fails on
+one newly reported return mismatch in `src/func_ov077_02125a54.c`. Its corrected
+`int _Z14ApproachLinearRsss(short*, short, short)` declaration agrees with the
+actual native `int ApproachLinear(short&, short, short)` definition in
+`src/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
+symbol and independently passes strict comparison at `arm9:0x0203adec`, 108 bytes.
+The checker does not associate the unmarked native definition with its mangled
+name, so it instead votes among older declarations and chooses void.
+
+An independent, in-memory annotation experiment identifies the real definition,
+but then exposes 185 unbanked diagnostic rows (179 unique keys across 114 files),
+including a literal comparison of the C pointer with the C++ reference spelling.
+There is no supported narrow override for this caller. The correct int return is
+retained. No annotation, checker change, baseline entry or incorrect void rollback
+was applied. Definition recognition and cross-language reference comparison need
+separate scoped work; this gate remains failed and the candidate is not claimed
+merge-ready. Byte correctness and source plausibility remain separately passed.
+
+Current producer evidence: `build/shadow-backport3/checks.json`, `baseline.json`,
+`gates.json`, `declarations.log`, `rombuild-report.json`, `rombuild.log`,
+`romdata.json`, `attribution.json`, and `approach-linear-definition-proof.json`.
+Independent byte evidence is in the verifier's `build/shadow-backport-review3/`.
+All evidence and source commits remain local; `formal_acceptance: false`.
+
+The six helper backports correct the state helper's void return, angle-result
+width, Player damage/bounce declarations, animation start-frame width, sound
+position declarations and shadow opacity. Available native ApproachLinear,
+ModelBase and actor calls replace their hand-spelled bridges. The actual
+collision-update veneer destination and current GetWallResult int return remain.
+Raw offsets, aggregate views, anonymous helper names and several scalar bridges
+remain partial reconstruction. The existing native fixed-point experiments are
+bounded evidence, not universal impossibility claims.
+
+| Additional production helper | Exact half-open range |
+|---|---|
+| `src/func_ov020_02111ee0.cpp` | `ov020:0x02111ee0..0x02111fc4` |
+| `src/func_ov020_02111b28.cpp` | `ov020:0x02111b28..0x02111c30` |
+| `src/func_ov020_02112110.cpp` | `ov020:0x02112110..0x0211216c` |
+| `src/func_ov020_02111fc4.cpp` | `ov020:0x02111fc4..0x02112080` |
+| `src/func_ov020_02111418.cpp` | `ov020:0x02111418..0x021115ac` |
+| `src/func_ov020_0211216c.cpp` | `ov020:0x0211216c..0x02112244` |
+
+## Earlier backport description and proof
 
 Backport the useful initializer changes from shadow PRs #2868/#2869 into
 `src/_ZN8BookShot13InitResourcesEv.cpp`. Six calls now use the real `Model`,
@@ -46,7 +128,7 @@ unreconstructed offset vector remains explicit. Its complete object stays
 `48bc7eeec97b7ad0eab91b9f6a183d98cbe0f38438ce3f5da9947d087220643b`.
 No new function, RTTI, vtable or other nonzero symbol is emitted.
 
-## Current six-function candidate
+## Previous six-function candidate (historical proof)
 
 Current composition base: `5c075024562a469c6e4336d8540e3dfa9ffa84a1` (merged locally before
 this continuation). Source candidate: `a5edafd2280d93bb61c002b9ca2849ec96e53341`.
@@ -92,8 +174,9 @@ Current local producer evidence is under `build/shadow-backport2/`:
 `checks.json`, `gates.json`, `secondary-gates.json`, `rombuild-report.json`,
 `rombuild.log`, `romdata.json` and `attribution.json`. Independent controls and
 review live in the separate wired verifier's `build/shadow-backport-review2/`.
-The additional 18 helper backports are a read-only proposal only: their queue
-reservation was rejected by automatic approval review and none was edited.
+At this historical checkpoint the additional 18 helpers were still a read-only
+proposal after automatic approval review rejected their reservation. The current
+24-file section records the later explicit approval and completed backports.
 
 ## Initial slice proof (077483 base)
 
