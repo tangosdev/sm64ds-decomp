@@ -119,7 +119,7 @@ void func_ov084_02129498(char* r0);
 dActor_c *_ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
 dActor_c *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void* p);
 extern "C" void func_ov084_02129238(char* c);
-extern void func_02012694(unsigned int id, const ::Vector3 *pos);
+extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
 extern char* _ZNK10dBgCh_Actr14GetFloorResultEv(void*);
@@ -289,7 +289,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern int Vec3_HorzLen(void* v);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void func_02012694(unsigned int id, const ::Vector3 *pos);
+extern void func_02012694(unsigned int id, const Vector3 *pos);
 
 void func_ov084_02129168(char* c, char* actor)
 {
@@ -548,7 +548,7 @@ void _ZN12dEnemyBase_c9SpawnCoinEv(void* self);
 void func_ov084_02129498(char* r0);
 void _ZN5dCc_c5ClearEv(void* self);
 void _ZN5dCc_c6UpdateEv(void* self);
-void func_02012694(unsigned int id, const ::Vector3 *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 dActor_c *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void* self);
 void _ZN8dActor_c19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];

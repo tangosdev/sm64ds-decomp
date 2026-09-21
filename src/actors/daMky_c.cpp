@@ -182,7 +182,7 @@ void  _ZN8dActor_c13SpawnSoundObjEj(void *self, unsigned int id);
 void  _ZN5dCc_c5ClearEv(void *self);
 void  _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 int   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, void *a, void *out, int flag);
-void func_0201267c(unsigned int id, const ::Vector3 *pos);
+void func_0201267c(unsigned int id, const Vector3 *pos);
 
 }
 
@@ -291,7 +291,7 @@ done:
 extern "C" {
 void func_ov030_02111890(char *c)
 {
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int data_ov030_02115d18[];
     int b = (int)(*(int *)(c + 0x134) == data_ov030_02115d18[1]);
     if (b == 0)
@@ -312,7 +312,7 @@ void func_ov030_02111908(char* c)
     extern int data_ov030_02115cf0[];
     extern int data_ov030_02115cd0[];
     extern int data_ov030_02115cf8[];
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
 
     enum Bool { FALSE, TRUE };
     int r3 = (short)(((unsigned)(*(int*)(c + 0x12c) << 4)) >> 16);
@@ -850,7 +850,7 @@ int func_ov030_02112578(void *arg0)
     void func_ov030_02111908(void *c);
     int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
     void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
-    void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    void func_0201267c(unsigned int id, const Vector3 *pos);
     int _ZN6Player12GetTalkStateEv(void);
     void _ZN6Player18HasFinishedTalkingEv(void *player);
     int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
@@ -1176,7 +1176,7 @@ int func_ov030_02112da0(char *a) {
     extern void func_ov030_021141a8(void *a, int m);
     extern int Vec3_Dist(void *a, void *b);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void *p);
     extern int _ZN6Player9DropActorEv(void *p);
     extern u8 DecIfAbove0_Byte(u8 *p);
@@ -1301,7 +1301,7 @@ int func_ov030_02113094(char* self)
     extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
     extern void func_ov030_021141a8(char* self, int a);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(char* p);
     extern int _ZN6Player9DropActorEv(char* p);
     extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
@@ -1415,7 +1415,7 @@ int func_ov030_02113324(void* thiz)
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);
     extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void* self);
     extern int _ZN6Player9DropActorEv(void* self);
     extern void _ZN9Animation7AdvanceEv(void* self);
@@ -1575,7 +1575,7 @@ int func_ov030_021136b0(char *c)
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
         void *self, void *actor, unsigned int msgId, const Vector3 *pos,
         unsigned int d, unsigned int e);
-    extern void func_0201267c(unsigned int id, const ::Vector3 *pos);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void *self);
     extern int _ZN6Player9DropActorEv(void *self);
     extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);

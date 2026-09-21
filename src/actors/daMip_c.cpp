@@ -179,7 +179,7 @@ u8    NumStars(void);
 u16   DecIfAbove0_Short(void *);
 int   func_02013890(int, int);
 void  func_02013944(void);
-void func_02012694(unsigned int id, const ::Vector3 *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned int func_02012790(unsigned int);
 void  func_02016acc(void *, int);
 void  func_02016b24(void *, int);

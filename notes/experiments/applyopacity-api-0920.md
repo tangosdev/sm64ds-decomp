@@ -1,7 +1,7 @@
 # ApplyOpacity interface reconstruction
 
 This changes the shared method to `void ModelBase::ApplyOpacity(u32 opacity,
-u32 unused)`. The method still passes the embedded model-components view and
+u32 /* unused */)`. The method still passes the embedded model-components view and
 opacity to the same retail implementation. The added parameter is unused.
 
 The old one-word mangling was already a reconstructed label in the initial
@@ -31,3 +31,9 @@ unrelated configuration and ledger records are preserved. The approved patch
 SHA256 is `d65fee7c9be670e364db24524856a1051a4fe4efd5344c8405a9c60bf1bb1c6a`. Mirrored-input proof is recorded separately;
 the full header-consumer gate, current-main production ROM, final static gates,
 and independent formal source review remain required before acceptance.
+
+The unused second parameter is unnamed in both declaration and definition.
+This ordinary spelling preserves the existing compiler-local identities in
+other translation units. Independent controls verify all27 complete objects
+against current main after only the canonical ApplyOpacity symbol rename;
+no manifest or overlay-symbol renumbering is part of the final change.

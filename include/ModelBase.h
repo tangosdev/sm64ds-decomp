@@ -144,7 +144,7 @@ struct ModelBase {
     /* Retail callers pass two scalar words. The second is unused here;
        its unsigned type/name are reconstructed, not recovered source spelling.
        See notes/experiments/applyopacity-api-0920.md. */
-    void ApplyOpacity(u32 opacity, u32 unused);
+    void ApplyOpacity(u32 opacity, u32);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
