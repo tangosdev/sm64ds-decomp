@@ -856,6 +856,16 @@ extern "C" unsigned char data_0209f248[];  /* the pause sub-state that RAN */
 extern "C" unsigned char data_0209f1ec[];  /* the pause sub-state asked for */
 extern "C" unsigned char data_0209f22c[];  /* the whole-function cooldown */
 extern "C" unsigned char data_0209f2b4[];  /* how many menu buttons are up */
+/* THE LEVEL-CLEAR SCREEN'S OWN WORDS, for the SM64DS_LC_WATCH instrument
+   below: the state Stage::LC_Update is in, the entry reason the boot latched,
+   the sublevel the player came out of (which is what the screen names the
+   course from, src/_ZN5Stage9LC_UpdateEv.cpp:73) and the message id
+   Message::DisplayLevelClearText selected. */
+extern "C" unsigned char data_0209f2d4;
+extern "C" unsigned char data_02092124[];
+extern "C" unsigned char data_0209f2fc[];
+extern "C" unsigned short data_0209d6d4;
+extern "C" int SublevelToLevel(int i);
 /* the fader CURRENTLY IN MOTION (run link100, lane FRAME: read by the
    SM64DS_PAUSE_WATCH line). hal/cxx_aliases.cpp defines it as an int[8];
    its first word is the installed fader or 0, which is the term
@@ -15854,6 +15864,68 @@ int main(void)
                     snprintf(nm, sizeof nm, "walk_frame_%03d.bmp", rf);
                     ntr::ppu_write_bmp(nm, fb);
                 }
+            }
+        }
+        /* SM64DS_LC_WATCH=1 -- AN INERT INSTRUMENT for the level-clear screen.
+           It prints, and only when one of the words moves, the pair that gates
+           Stage::LC_Update (data_0209f20c, data_0209f2d4), the word the screen
+           names the course from (data_02092124, plus SUBLEVEL_LEVEL_TABLE's
+           answer for it and the course number the text will print, which is
+           that answer + 1) and the message id Message::DisplayLevelClearText
+           left in data_0209d6d4. Absent, nothing here runs. */
+        {
+            static int lcw = -1;
+            static unsigned last_lc[5];
+            if (lcw < 0) lcw = getenv("SM64DS_LC_WATCH") ? 1 : 0;
+            if (lcw) {
+                const int sub = (int)(signed char)data_02092124[0];
+                const unsigned now[5] = {
+                    (unsigned)(data_0209f20c[0] & 0xff), (unsigned)data_0209f2d4,
+                    (unsigned)(sub & 0xff), (unsigned)data_0209d6d4,
+                    (unsigned)(data_0209f2fc[0] & 0xff),
+                };
+                if (memcmp(now, last_lc, sizeof now) != 0) {
+                    memcpy(last_lc, now, sizeof now);
+                    const int course = SublevelToLevel(sub);
+                    fprintf(stderr, "[lcwatch] f%d f20c=%u f2d4=%u f2fc=%u "
+                            "data_02092124=%d SublevelToLevel=%d COURSE %d "
+                            "msgid=0x%x\n", frame, now[0], now[1], now[4],
+                            sub, course, course + 1, now[3]);
+                }
+            }
+        }
+        /* SM64DS_SUBBG_DUMP=N -- AN INERT INSTRUMENT for the sub engine's BG1,
+           which is where Stage::UpdateMenuButtons recolours the level-clear
+           menu's three plates and where Message::AddChar composes their
+           lettering. On frame N it writes engine B's BG1 character block and
+           its screen block out raw, beside the bases and BG1CNT the DS itself
+           would have used to find them. Absent, nothing here runs. */
+        {
+            static int at = -2, subframe;
+            if (at == -2) {
+                const char *e = getenv("SM64DS_SUBBG_DUMP");
+                at = e ? atoi(e) : -1;
+            }
+            if (at >= 0 && subframe++ == at) {
+                const unsigned dis = *(volatile unsigned *)0x04001000;
+                const unsigned cnt = *(volatile unsigned short *)0x0400100a;
+                const unsigned chars  = 0x06200000u + (((cnt >> 2) & 0xfu) << 14);
+                const unsigned screen = 0x06200000u + (((cnt >> 8) & 0x1fu) << 11);
+                FILE *f = fopen("subbg1_char.bin", "wb");
+                if (f) {
+                    for (unsigned i = 0; i < 0x10000u; ++i)
+                        fputc(*(volatile unsigned char *)(chars + i), f);
+                    fclose(f);
+                }
+                f = fopen("subbg1_scr.bin", "wb");
+                if (f) {
+                    for (unsigned i = 0; i < 0x800u; ++i)
+                        fputc(*(volatile unsigned char *)(screen + i), f);
+                    fclose(f);
+                }
+                printf("[subbg] frame %d DISPCNT_B %08x BG1CNT %04x "
+                       "char@%08x screen@%08x %s\n", at, dis, cnt, chars,
+                       screen, (cnt & 0x80) ? "256-colour" : "16-colour");
             }
         }
         /* RUNG E2, DUTY 1 (lane R3E): THE SOUND FRAME IS PHASE 9's POSITION.

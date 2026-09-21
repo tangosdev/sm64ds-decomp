@@ -118,6 +118,13 @@ extern signed char data_0209f2f8;    /* current level */
 extern int data_0209f264[];          /* current entrance */
 extern int data_0209f220[];          /* current star */
 extern unsigned char data_0209f26c;  /* why we are entering (1 fresh, 2 death) */
+/* THE SUBLEVEL THE PLAYER JUST CAME OUT OF, and the queued sublevel beside it
+   (Stage::InitResources:222-223, written in port_level_latch below). Both are
+   romdata-hosted -- host-src/romdata.c ships 6 and -1, StartFile's own values
+   -- so they are declared as arrays, which is their host storage, while the
+   ROM reads each as one signed byte. */
+extern unsigned char data_02092124[];
+extern unsigned char data_02092118[];
 
 /* the ROM tables, from romdata.py */
 extern unsigned char data_02092208[];   /* level -> LVL_Overlay (DS address) */
@@ -1023,9 +1030,46 @@ extern "C" unsigned port_level_heap_free_bytes(void)
        star      = next star
    and then clears the request, which is Stage::InitResources' own last
    statement (data_02092110 = -1). Everything between those two in the ROM is
-   the level boot itself. */
+   the level boot itself.
+
+   THE "prev" LINE IS A REAL STATEMENT, NOT A COMMENT. Stage::InitResources
+   :221-223 is
+
+       data_0209f2fc = data_0209f26c;
+       if (data_0209f2fc == 1) {
+           data_02092124 = data_0209f2f8;    <- the sublevel being LEFT
+           data_02092118 = -1;
+       }
+
+   immediately above the `data_0209f2f8 = data_02092110` below, and the port
+   used to keep only the first of the three (hal/level_boot.cpp latches
+   data_0209f2fc at the boot). data_02092124 was therefore pinned forever at
+   romdata's 6, and 6 is Bob-omb Battlefield: src/_ZN5Stage9LC_UpdateEv.cpp:73
+   hands SublevelToLevel(data_02092124) to Message::DisplayLevelClearText as
+   THE COURSE (func_0201d850 prints that value + 1 as the course number and
+   indexes the course name at value + 0x196 and the star name at value * 7 +
+   0x1b3), and :95 uses it again for the 100-coin record. So every star in the
+   game, in any course, came up as COURSE 1 / BOB-OMB BATTLEFIELD with a
+   Bob-omb Battlefield star name.
+
+   THE GUARD IS SPELLED data_0209f26c BECAUSE THAT IS WHAT data_0209f2fc IS
+   ABOUT TO BE: the ROM tests the copy one statement after making it, and the
+   port's copy is made in the boot body a moment after this latch. 1 is a
+   fresh entry and 2 is a death, so a death return leaves both words alone,
+   exactly as on the cartridge.
+
+   WHAT THIS ARMS, said plainly: a data_02092124 that tracks the previous
+   sublevel lets func_ov002_020c7cbc (src/actors/Player.cpp:7025) reach
+   LoadKeyModels. Its switch takes only sublevels 0x24, 0x26, 0x2d, 0x2f and
+   0x31 -- the five Bowser fights -- so it arms on a key handover and on
+   nothing else; every course sublevel falls through the switch, leaves the
+   key slot at its -1 and returns 0. */
 static void port_level_latch(void)
 {
+    if (data_0209f26c == 1) {
+        data_02092124[0] = (unsigned char)data_0209f2f8;
+        data_02092118[0] = 0xffu;         /* -1 */
+    }
     data_0209f2f8 = data_02092110;
     data_0209f264[0] = data_0209f268;
     data_0209f220[0] = data_0209f1f0;
