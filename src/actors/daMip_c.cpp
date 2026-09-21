@@ -179,7 +179,7 @@ u8    NumStars(void);
 u16   DecIfAbove0_Short(void *);
 int   func_02013890(int, int);
 void  func_02013944(void);
-void  func_02012694(int, void *);
+void func_02012694(unsigned int id, const ::Vector3 *pos);
 unsigned int func_02012790(unsigned int);
 void  func_02016acc(void *, int);
 void  func_02016b24(void *, int);
@@ -706,7 +706,7 @@ int daMip_c::StateCaughtMain()
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
                             mActionStep = 1;
                             if (r4 != 0)
-                                func_02012694(r4, c + 0x74);
+                                func_02012694(r4, (const ::Vector3 *)(c + 0x74));
                         }
                     }
                     return 1;
@@ -929,12 +929,12 @@ int daMip_c::StateFleeMain()
       {
         if (TestWaterBelow() == 1)
         {
-          func_02012694(0x124, c + 0x74);
+          func_02012694(0x124, (const ::Vector3 *)(c + 0x74));
           func_02022a4c(*((s32 *) (c + 0x5c)), (*((s32 *) (c + 0x464))) + 0x3000, *((s32 *) (c + 0x64)));
         }
         else
         {
-          func_02012694(0x123, c + 0x74);
+          func_02012694(0x123, (const ::Vector3 *)(c + 0x74));
         }
       }
     }
@@ -1584,7 +1584,7 @@ int daMip_c::Behavior()
                         }
                         pos.y += 0x64000;
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
-                            func_02012694(var_r6, &mCamSpacePosX);
+                            func_02012694(var_r6, (const ::Vector3 *)(&mCamSpacePosX));
                             mTalkState = 1;
                         }
                     } else if (temp_r1 == 1 && _ZN6Player12GetTalkStateEv(temp_r4) == -1) {
