@@ -4522,10 +4522,20 @@ static int port_menu_relaunch(int scene_id, int level_id)
         snprintf(sid, sizeof sid, "%d", scene_id);
         SetEnvironmentVariableA("SM64DS_SCENE", sid);
         SetEnvironmentVariableA("SM64DS_DUAL_SCREEN", "1");
-    } else {
+    } else if (level_id >= 0) {
         snprintf(sid, sizeof sid, "%d", level_id);
         SetEnvironmentVariableA("SM64DS_LEVEL", sid);
     }
+    /* THE THIRD DESTINATION IS NO DESTINATION AT ALL: both ids negative
+       leaves every name above cleared, which is the FRONT DOOR. A launch that
+       names nothing boots the title by itself -- hal/title_entry.cpp's
+       port_boot_default_scene returns SCENE_TITLE when SM64DS_LEVEL,
+       SM64DS_VS_MAP and SM64DS_BOOT_CLASSIC are all absent -- and the title
+       carries itself into the adventure in place. So this destination is the
+       same one the player got when they pressed Play, with their own settings
+       (SM64DS_SKIP_INTRO / SM64DS_SKIP_MENU are the launcher's and are not in
+       the clear table) still on. Its one caller is the front-end request
+       below. */
     memset(&si, 0, sizeof si);
     si.cb = sizeof si;
     memset(&pi, 0, sizeof pi);
@@ -4668,6 +4678,124 @@ static int port_menu_relaunch_vs(int vs_map)
         return 0;
     CloseHandle(pi.hThread);
     CloseHandle(pi.hProcess);
+    return 1;
+}
+
+/* ---- THE ROM'S OWN "BACK TO THE FRONT END" REQUEST, ON THE LEVEL PATH -----
+ *
+ * WHAT ASKS. Three menu rows the cartridge has and the port now reaches:
+ *
+ *   the level-clear save menu's SAVE AND QUIT row
+ *       src/_ZN5Stage9LC_UpdateEv.cpp case 6, the data_0209f2e0 == 1 arm
+ *   the pause menu's QUIT rows
+ *       src/_ZN5Stage9PS_UpdateEv.cpp case 6 (:630), case 0xf's save-then-quit
+ *       arm (:1362) and case 0x12 (:1445)
+ *
+ * All four call dScene_c::StartSceneFade(1, 0, 0) and latch
+ * data_0209b454/b464 |= 0x40000000. StartSceneFade is SetSceneToSpawn, which
+ * parks the id in data_02092664, and scene 1 is SCENE_TITLE
+ * (hal/scene_boot.cpp's own table). The row means: leave the adventure, go
+ * back to the front end. On every one of them the SAVE HAS ALREADY COMPLETED
+ * -- LC_Update's state 5 and PS_Update's case 0xf call
+ * SaveData::SaveCurrentFile and then show the 0x296 confirmation, and the
+ * quit is state 6 AFTER that -- so nothing here can cost a star.
+ *
+ * The pause menu's EXIT COURSE row is NOT one of them: PS_Update case 0x13
+ * calls LoadLevelNoReturn(2, 0, -1, 0), an ordinary level change, and it is
+ * unchanged by this block.
+ *
+ * WHAT THE PORT DID WITH IT UNTIL NOW: nothing, and then it died. Nothing on
+ * the level path consumes a pending scene id unless a LEVEL change is pending
+ * too (the handoff gate below only reaches port_scene_fade_clear through
+ * port_level_change_poll), so the id stayed out of its 0x187 sentinel and
+ * Scene::BeforeBehavior -- the ROM's own body in _ZTV5Stage slot 7, dispatched
+ * on the Stage every frame -- took its `data_02092664 != 0x187` arm: fade
+ * forward while the fader is at its start, and ActorBase::MarkForDestruction
+ * on the Stage once the fader is at its end. The frame after that the cleanup
+ * Process dispatches slot 3 and the port aborts by name -- "Stage vtable slot
+ * 3 (CleanupResources) is not hosted", rc 0xC0000409. hal/level_change.cpp's
+ * port_scene_request_release banner traces the identical chain for the three
+ * OTHER writers of that word and says why the abort is the correct answer:
+ * a port whose Stage is being torn down has lost the scene root, the level
+ * collider and the level model, and the port has no Stage teardown.
+ *
+ * WHAT THIS DOES INSTEAD, and it is the port's own shipped hand-off rather
+ * than anything new. The ROM's fade runs first (BeforeBehavior's own
+ * SetForwardTime, so the screen really does go dark the way the cartridge's
+ * does); once it has covered, the port starts the game again at its front
+ * door -- the title, port_menu_relaunch's third destination above -- and ends
+ * this process through the window's own WM_QUIT escape. That is exactly what
+ * the debug menu's level and minigame rows do when they cross to another
+ * destination, and what port_vs_match_end_poll does at the end of a VS match:
+ * the pump returns from the frame, main returns 0, and every atexit the
+ * process installed still runs. The launcher treats a successor started before
+ * the parent quits as the SAME session (its GameRunner session loop), so a
+ * player sees the world fade out and the title come up.
+ *
+ * AND IF THE CHILD CANNOT BE STARTED, THE PROCESS STILL ENDS CLEANLY. That is
+ * the whole point of the row: an exit code 0 with no crash.txt, no dump and
+ * nothing new in the crash sink is a normal quit to everything downstream --
+ * the player lands back in the launcher exactly as if they had closed the
+ * window. The one thing that must never happen again on this row is the abort.
+ *
+ * NO CHILD FROM A HARNESS RUN. A frame-budget selftest has no player and no
+ * window to hand anything over to, and the relaunch clear table deliberately
+ * strips SM64DS_WINDOW_SELFTEST so a child of one would be a full windowed
+ * session that nobody asked for and nothing would ever close. Under a selftest
+ * this row prints what it would have done and quits, which is the same ending
+ * minus the successor.
+ *
+ * THE FADE HAS A CEILING. The fade is the ROM's own and normally covers in its
+ * 0x1e frames, but a port whose fader is stubbed on some future path must not
+ * be able to turn "quit" into "hang": after PORT_FRONT_END_FADE_CAP frames the
+ * row goes anyway. Measured on the Save and Quit route, the cover arrives
+ * well inside it and the cap is never the thing that fires. */
+extern "C" unsigned short data_02092664;   /* Scene::SetSceneToSpawn's id */
+enum { PORT_FRONT_END_FADE_CAP = 90 };
+
+static int port_front_end_quit_poll(int frame)
+{
+    static int seen = -1;       /* the frame the request first appeared */
+    static int fired;
+    if (fired) return 1;
+    if (data_02092664 != 1) return 0;
+    if (seen < 0) {
+        seen = frame;
+        fprintf(stderr, "[quit] f%d the ROM asked for scene 1 (the title): "
+                "the level-clear menu's Save and Quit row or one of the pause "
+                "menu's quit rows. The save, if the row saves, is already "
+                "written.\n", frame);
+    }
+    int evy = 0, tw = 0;
+    const int covered = port_fader_blend_state(&evy, &tw) && evy >= 16;
+    const int waited = frame - seen;
+    if (!covered && waited < PORT_FRONT_END_FADE_CAP) {
+        if (waited % 10 == 0)
+            fprintf(stderr, "[quit] f%d waiting for the ROM's fade to cover "
+                    "(evy %d of 16, %d frames)\n", frame, evy, waited);
+        return 0;
+    }
+    fired = 1;
+    fprintf(stderr, "[quit] f%d the fade has %s (evy %d after %d frames): "
+            "ending this session\n", frame,
+            covered ? "covered" : "NOT covered, ceiling reached", evy, waited);
+    /* the other half of Scene::SpawnIfNecessary, the half the port can do:
+       the request has now had every effect this port can give it, so the
+       sentinel goes back and BeforeBehavior stops marking the Stage. */
+    port_scene_request_release("the front-end request is being answered by "
+                              "ending this session");
+    if (g_selftest_frames) {
+        fprintf(stderr, "[quit] no successor: this run is a %d-frame selftest, "
+                "which has no window to hand over\n", g_selftest_frames);
+    } else if (port_menu_relaunch(-1, -1)) {
+        fprintf(stderr, "[quit] started the game again at its front door (the "
+                "title), this process is quitting\n");
+    } else {
+        fprintf(stderr, "[quit] could not start the front door (win32 %lu): "
+                "quitting anyway, which lands the player back in the "
+                "launcher\n", (unsigned long)GetLastError());
+    }
+    W.PostQuitMessage_(0);
     return 1;
 }
 
@@ -12640,6 +12768,15 @@ int main(void)
            loads and the pop is hidden. Without a scene fade -- the ExitLevel,
            death and warp-pipe paths -- the change applies the frame it is
            pending, as before. */
+        /* THE FRONT-END REQUEST IS ANSWERED HERE, at the ROM's own position
+           for it: this is where Scene::SpawnIfNecessary sits in the frame
+           (phase 3 of func_020197b8), so a pending scene id is honoured in the
+           frame the ROM would have honoured it. Once it has posted the quit
+           the rest of this frame still runs -- the same shape
+           port_vs_match_end_poll's quit has -- and the pump at the top of the
+           next frame ends the run before the cleanup Process can dispatch the
+           trapped slot. */
+        port_front_end_quit_poll(frame);
         int scene_fade = 0, scene_id = -1;
         if (port_scene_fade_pending(&scene_id)) {
             int evy = 0, tw = 0;
