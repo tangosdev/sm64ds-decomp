@@ -2448,6 +2448,58 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
     }
     g_ready = true;
 
+    /* SM64DS_BG2_TRACE=1: engine B's BG2 control and affine registers, once a
+       frame and only when one of them has changed. The touch marker the owner
+       calls "the target" is that layer (lane MINIMAP1 measured it: the sub
+       engine's 128 sprite entries are byte-identical touched and untouched,
+       and DISPCNT_B's layer mask goes 0x18 to 0x1c on touch), and it is drawn
+       in the map's top-left corner wherever the touch actually was. An affine
+       layer is PLACED by its reference point, so this prints what the game
+       writes there against where the touch is: if the reference point moves
+       with the stylus the port is misreading it, and if it does not the
+       cartridge places the marker some other way. */
+    {
+        static int on = -1;
+        static unsigned last[6];
+        if (on < 0) on = std::getenv("SM64DS_BG2_TRACE") ? 1 : 0;
+        if (on) {
+            const unsigned cnt = *(volatile unsigned short *)0x0400100c;
+            /* the map's own occupancy, because a text background can also be
+               placed by REDRAWING it: the box of non-empty entries says which
+               it is. Screen base is BGxCNT bits 8..12 in 2K units. */
+            const unsigned screen = 0x06200000u + (((cnt & 0x1f00u) >> 8) << 11);
+            unsigned bx0 = 64, bx1 = 0, by0 = 64, by1 = 0, nz = 0;
+            for (unsigned ty = 0; ty < 32; ++ty)
+                for (unsigned tx = 0; tx < 64; ++tx) {
+                    const unsigned short e = *(volatile unsigned short *)
+                        (screen + (ty * 64u + tx) * 2u);
+                    if (!(e & 0x3FFu)) continue;
+                    ++nz;
+                    if (tx < bx0) bx0 = tx;
+                    if (tx > bx1) bx1 = tx;
+                    if (ty < by0) by0 = ty;
+                    if (ty > by1) by1 = ty;
+                }
+            const unsigned now[6] = {
+                *(volatile unsigned *)0x04001000,
+                cnt,
+                (unsigned)(*(volatile unsigned short *)0x04001018)
+                    | (unsigned)(*(volatile unsigned short *)0x0400101a) << 16,
+                *(volatile unsigned *)0x04001028,
+                *(volatile unsigned *)0x0400102c,
+                (bx0 << 24) | (bx1 << 16) | (by0 << 8) | by1,
+            };
+            if (std::memcmp(now, last, sizeof now) != 0) {
+                std::memcpy(last, now, sizeof now);
+                std::fprintf(stderr, "[bg2b] DISPCNT %08x BG2CNT %04x "
+                             "HOFS %u VOFS %u BG2X %08x BG2Y %08x  map@%08x "
+                             "%u entries, tiles x %u..%u y %u..%u\n",
+                             now[0], now[1], now[2] & 0xFFFFu, now[2] >> 16,
+                             now[3], now[4], screen, nz, bx0, bx1, by0, by1);
+            }
+        }
+    }
+
     /* SM64DS_SUB_DUMP=N: the bottom screen alone, at 256x192, on frame N. */
     {
         static int at = -2, frame;

@@ -267,14 +267,26 @@ unsigned data_020a60a4;               /* GXS ext-palette: the saved VRAM bank */
 
 /* The stylus half of the Ctrl block. On the DS these are bytes 0x10 and 0x11
    of each 0x18-byte record and the readers index them [player * 0x18], which
-   is why they are sized for the whole four-record block rather than one byte.
+   is why they are sized for the whole record block rather than one byte.
    The port keeps them as separate storage the way hal/actor_vtables.cpp
-   already does for data_0209f4ac / data_0209f4ae. Nothing on the host writes
-   them: the host stylus goes to data_020a0de8, so the recentre-the-minimap
-   branch Minimap::Behavior gates on data_0209f4ac stays shut and these are
-   never read for a value that matters. */
-unsigned char data_0209f4a8[0x60];
-unsigned char data_0209f4a9[0x60];
+   already does for data_0209f4ac / data_0209f4ae.
+
+   THEY ARE WRITTEN NOW, and the paragraph that used to stand here said they
+   never were: "the recentre-the-minimap branch Minimap::Behavior gates on
+   data_0209f4ac stays shut and these are never read for a value that
+   matters". Both halves were wrong on a course. The branch is not shut --
+   data_0209f4ac is fanned out of the Ctrl block every frame, so a touch opens
+   it -- and what it reads these two for is where to put the touch marker:
+   `SetSubBg2Offset(0x100 - x, 0x80 - y)`. Stuck at zero they put the marker in
+   the map's top-left corner whatever point the player touched, which is the
+   defect the owner reported as "the target". The Ctrl fan-out in
+   hal/stage_frame.cpp and tests/walk_window.cpp fills them from +0x10 and
+   +0x11 now, beside the flag at +0x14 it always filled.
+
+   SIZED FOR EVERY SEAT, because that fan-out walks one record per player and
+   a sixteen-wide session would have run off a four-record array. */
+unsigned char data_0209f4a8[0x18 * 16];
+unsigned char data_0209f4a9[0x18 * 16];
 DSSTATE_END
 }
 
