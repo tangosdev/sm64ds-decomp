@@ -33,7 +33,7 @@ This document describes this commit. The queue records its immutable output SHA.
   evidence commit. Stage artifacts: `src/actors/daObjLava_c.cpp`,
   `src/actors/daObjFire_c.cpp`, `src/actors/daSCoin_c.cpp`, their headers in
   `include/`, and the three promoted manifests under
-  [config/tu_manifest.d/ov002/](../../../config/arm9/overlays/ov002/tu_manifest.d/).
+  [config/tu_manifest.d/ov002/](../../../config/tu_manifest.d/ov002/).
 - Next action, responsible role and blockers: independent verification of this
   commit (verifier), then integration. No known blocker: the `tubuild.py
   linkcheck` [4/8] refusal the brief anticipated for an already-promoted TU did
