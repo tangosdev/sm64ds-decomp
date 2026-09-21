@@ -559,6 +559,53 @@ static int __fastcall ff_st_1ef8(void *s) { return func_ov070_02121ef8(s); }
 static int __fastcall ff_st_1f18(void *s) { return func_ov070_02121f18(s); }
 static int __fastcall ff_st_1eb0(void *s) { return func_ov070_02121eb0(s); }
 
+// ---- THE AMP'S SIX STATE BODIES NEED THE SAME THUNK ------------------------
+//
+// Same defect as FlameChomp's above, one class over, and the note there is the
+// whole argument: MSVC's pointer-to-member call sequence always puts
+// `this + delta` in ECX and pushes NOTHING, so a raw cdecl body seated in a
+// cell reads the caller's own stack as its receiver.
+//
+// daBrq_c's dispatchers are compiled /vmg /vmm (port/CMakeLists.txt R8), and
+// _ZN7daBrq_c8SetStateEi / _ZN7daBrq_c10EnterStateEv are small enough that /O2
+// inlines them into their callers, so the PMF call comes out inside the
+// caller's frame exactly as daKrpa_c::InitResources did. Read off this build's
+// own image, not reasoned about:
+//
+//   ?UpdateCooldownState@daBrq_c@@AAEHXZ +0x21   (the inlined SetState(1))
+//     mov  dword ptr [esi+41Ch], offset <table>+10h   ; mStateHandlers
+//     mov  ecx,dword ptr [<table>+14h]                ; the record's delta = 0
+//     lea  ecx,[ecx+esi]                              ; this + delta
+//     call dword ptr [<table>+10h]                    ; a REAL CALL
+//
+// while every one of the six cells held a face whose whole body is
+// `push ebp / mov ebp,esp / mov ecx,[ebp+8] / pop ebp / jmp <member>`: the
+// receiver taken from the first STACK argument the call site never pushed.
+// Measured as the junk word left in that slot, which on a snow course is the
+// small integer 1, so EnterActiveState formed &mModelAnim as 1 + 0xd4 and
+// ModelAnim::SetAnim faulted 0xd bytes in reading the BCA slot at 0x135 --
+// the "a few bytes into SetAnim on a garbage pointer" shape the note above
+// names, this time with an address low enough to fault every run.
+//
+// On all six rows and not just the one that was caught, for the reason given
+// there: the thunk is right whether the transfer is a call or a tail jump.
+// Cells and their records are __sinit_ov070_02122d80's, not a comment's:
+//   record 0212320c -> cell[0].enter   record 02123224 -> cell[0].update
+//   record 02123214 -> cell[1].enter   record 02123234 -> cell[1].update
+//   record 0212321c -> cell[2].enter   record 0212322c -> cell[2].update
+static int __fastcall brq_st_enter_cool(void *s)
+{ return _ZN7daBrq_c18EnterCooldownStateEv(s); }
+static int __fastcall brq_st_enter_active(void *s)
+{ return _ZN7daBrq_c16EnterActiveStateEv(s); }
+static int __fastcall brq_st_enter_dead(void *s)
+{ return _ZN7daBrq_c18EnterDefeatedStateEv(s); }
+static int __fastcall brq_st_tick_cool(void *s)
+{ return _ZN7daBrq_c19UpdateCooldownStateEv(s); }
+static int __fastcall brq_st_tick_dead(void *s)
+{ return _ZN7daBrq_c19UpdateDefeatedStateEv(s); }
+static int __fastcall brq_st_tick_active(void *s)
+{ return _ZN7daBrq_c17UpdateActiveStateEv(s); }
+
 static void ov70_seat_state_pmfs(void)
 {
     struct Row { unsigned char *rec; void *fn; };
@@ -577,12 +624,12 @@ static void ov70_seat_state_pmfs(void)
         { data_ov070_02123110, (void *)fg_enter_f5f0 }  /* ENTER: cell 0212358c[0] */,
         { data_ov070_02123118, (void *)fg_tick_f6e0 }   /* TICK: cell 021235cc[1] */,
         /* Amp's six */
-        { data_ov070_0212320c, (void *)_ZN7daBrq_c18EnterCooldownStateEv },
-        { data_ov070_02123214, (void *)_ZN7daBrq_c16EnterActiveStateEv },
-        { data_ov070_0212321c, (void *)_ZN7daBrq_c18EnterDefeatedStateEv },
-        { data_ov070_02123224, (void *)_ZN7daBrq_c19UpdateCooldownStateEv },
-        { data_ov070_0212322c, (void *)_ZN7daBrq_c19UpdateDefeatedStateEv },
-        { data_ov070_02123234, (void *)_ZN7daBrq_c17UpdateActiveStateEv },
+        { data_ov070_0212320c, (void *)brq_st_enter_cool }   /* ENTER: cell[0] */,
+        { data_ov070_02123214, (void *)brq_st_enter_active } /* ENTER: cell[1] */,
+        { data_ov070_0212321c, (void *)brq_st_enter_dead }   /* ENTER: cell[2] */,
+        { data_ov070_02123224, (void *)brq_st_tick_cool }    /* TICK:  cell[0] */,
+        { data_ov070_0212322c, (void *)brq_st_tick_dead }    /* TICK:  cell[2] */,
+        { data_ov070_02123234, (void *)brq_st_tick_active }  /* TICK:  cell[1] */,
         /* FlameChomp's eight; state 0 is the matched Kill root */
         { data_ov070_021232f4, (void *)fc_st_1438 },
         { data_ov070_021232fc, (void *)fc_st_1548 },
