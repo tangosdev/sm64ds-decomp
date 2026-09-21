@@ -1,6 +1,6 @@
 # Memory scene integration
 
-Task `pr2875-source-repair-0920`, producer/integrator `codex-integrator-0920`. Source offer `feb8daa48b947daa6b714348180dca98e57c4851` remains in ancestry. Tested source `7fc2614ec3ec2be0a1deec690f7b7bdde2900895` includes actual main `5c075024562a469c6e4336d8540e3dfa9ffa84a1`. This is an offer for independent review, not final acceptance.
+Task `pr2875-source-repair-0920`, producer/integrator `codex-integrator-0920`. Source offer `feb8daa48b947daa6b714348180dca98e57c4851` remains in ancestry. Tested source `e96876809c861ecefacca58e68bfc9a19546cb0d` includes actual main `5c15824ff6317ca3993f80d8dade0b738557bdfb`. This is an offer for independent review, not final acceptance.
 
 Memory Master uses existing card/player fields, ordinary indexed card access and genuine sound calls where the pinned compiler matches. The shared drawing veneer and both production/shadow definitions retain the four retail argument registers. The halfword fill uses unsigned16 storage. Return declarations and the zero-argument reset call agree with actual definitions.
 
@@ -12,6 +12,6 @@ All17final gates passed:106/106modules,11208 source functions and all26data clai
 
 All MEM2875-01 through08 are retained. Correctness/provenance findings and the literal factory are fixed. MEM02 is restricted to equivalent remaining method/loop alternatives in the forty-variant producer experiment; it excludes every incomplete factory probe. Remaining legacy views are bounded partial reconstruction.
 
-See [current integration proof](../../experiments/pr2875-integration-0920.json) for complete factory alternatives, output ownership, fresh byte/ROM checks and findings. The [producer artifact](../../experiments/pr2875-source-repair-0920.json) remains historical. This evidence successor changes only these two artifacts and manifest notes[3]; compiler inputs and functional policies are identical to the tested anchor.
+See [current integration proof](../../experiments/pr2875-integration-0920.json) for complete factory alternatives, output ownership, fresh byte/ROM checks and findings. The [producer artifact](../../experiments/pr2875-source-repair-0920.json) remains historical. This evidence successor changes only these two artifacts and manifest prose; compiler inputs and functional policies are identical to the tested anchor.
 
 Root obtains independent exact-head/current-base Source review, updates the original PR, and waits for terminal private validation before merging. Luigi and Cup consume the repaired shared helpers afterward. Existing external owners' work and reservations are preserved.

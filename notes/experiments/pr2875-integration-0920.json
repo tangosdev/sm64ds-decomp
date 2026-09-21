@@ -6,8 +6,8 @@
   "formal_acceptance": false,
   "producer_session": "codex-integrator-0920",
   "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
-  "tested_commit": "7fc2614ec3ec2be0a1deec690f7b7bdde2900895",
-  "tested_base": "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+  "tested_commit": "e96876809c861ecefacca58e68bfc9a19546cb0d",
+  "tested_base": "5c15824ff6317ca3993f80d8dade0b738557bdfb",
   "source_input": "feb8daa48b947daa6b714348180dca98e57c4851",
   "completion": "partial",
   "findings": [
@@ -4327,8 +4327,8 @@
       "newSymbolErrors": [],
       "storageAliasErrors": []
     },
-    "rom_report_sha256": "4563a55b7cd72457223594dc367b20df51592553e52de75e612d0e78eaa971d1",
-    "data_report_sha256": "66119ef5395a696fd99053ff0eac3613953735d9fbe8a01db424f787e7a7e21c"
+    "rom_report_sha256": "989e0d077370a54d54b244fc28b6f312c13ad87d1be38dad9945022adea0ae35",
+    "data_report_sha256": "f8311c7ac84d40919ac84613154a503060713608c54538446f7bebfb465adad5"
   },
   "gates": [
     {
@@ -4345,9 +4345,9 @@
         "build/pr2875-production/data.json"
       ],
       "exit_code": 0,
-      "seconds": 167.64,
+      "seconds": 274.83,
       "log": "build/pr2875-production/rombuild.log",
-      "log_sha256": "b57d3cccebf348b22de703a02e2f6ce621f0aad48a5acedb37f7411a940ccdcf",
+      "log_sha256": "57543f3022324523d0e0b3dfab9bda7a389f7573ee9b55cd8f3c9ddb945e7eb0",
       "log_tail": [
         "      -> C:\\tmp\\sm64ds-switchintegrate0920\\build\\sm64ds.nds",
         "[6/6] analyze module and source fidelity",
@@ -4364,37 +4364,6 @@
       ]
     },
     {
-      "name": "prepush-linkcheck",
-      "command": [
-        "python",
-        "-X",
-        "utf8",
-        "tools/prepush_linkcheck.py",
-        "--range",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1..7fc2614ec3ec2be0a1deec690f7b7bdde2900895",
-        "--json",
-        "build/pr2875-production/prepush-linkcheck.json"
-      ],
-      "exit_code": 0,
-      "seconds": 305.59,
-      "log": "build/pr2875-production/prepush-linkcheck.log",
-      "log_sha256": "88b237764b595b1195ba4605bb8dca6f850762e22e92d1b2e8c0417fd5ec1a81",
-      "log_tail": [
-        "  [OK  ]   dScMgMemory_c_classInit                    VERIFIED",
-        "  src/minigames/d_s_mg_single3_d_base.cpp  (9 functions)",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_cD1Ev               VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_cD0Ev               VERIFIED",
-        "  [OK  ]   func_ov006_0210a534                        VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c12BeforeRenderEv   VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj VERIFIED",
-        "  [OK  ]   _ZN19dScMgSingle3DBase_c9Virtual84Ev       VERIFIED",
-        "prepush-linkcheck: 438 checked - 438 verified, 0 warning(s), 0 blocking"
-      ]
-    },
-    {
       "name": "coverage",
       "command": [
         "python",
@@ -4403,14 +4372,14 @@
         "tools/source_coverage.py",
         "--check",
         "--base",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+        "5c15824ff6317ca3993f80d8dade0b738557bdfb"
       ],
       "exit_code": 0,
       "seconds": 0.44,
       "log": "build/pr2875-production/coverage.log",
-      "log_sha256": "b75cb37c74d7c77c12bd0ae961a26d5d9eb475644c3b9272abcdba22fc1641dc",
+      "log_sha256": "cd20cfaca87a1c64ac51834184c5a71b04575fe3744b182325e973d2793fda20",
       "log_tail": [
-        "base 5c0750245",
+        "base 5c15824ff",
         "source-built bytes   base 2,156,740 B   ->   now 2,156,740 B   (net +0 B)",
         "  handed back to the cartridge: 0 B   |   newly built from source: 0 B",
         "  by section: .bss 172 B, .ctor 12 B, .data 4,972 B, .init 125,712 B, .text 2,025,872 B",
@@ -4454,7 +4423,7 @@
         "--list"
       ],
       "exit_code": 0,
-      "seconds": 0.2,
+      "seconds": 0.22,
       "log": "build/pr2875-production/conflicts.log",
       "log_sha256": "493e3026ae9d8efa5bc8b36ecaa9102d30365d88cc4d34d34d9d02c0f04bba05",
       "log_tail": [
@@ -4481,11 +4450,11 @@
         "tools/check_dead_references.py"
       ],
       "exit_code": 0,
-      "seconds": 6.66,
+      "seconds": 9.52,
       "log": "build/pr2875-production/references.log",
-      "log_sha256": "86b6e7ca863239587fd85ec7816f290f094b2c85f01c5f1fe254f607ff827a8f",
+      "log_sha256": "6bd4660712b8bec338861af9bf8a0e68fcb70d2172357c24087201a781af7718",
       "log_tail": [
-        "check_dead_references: 9405 scan target(s), 8773 C/C++ file(s), 10720 repo-rooted path reference(s), 1159 that do not resolve; 1996 markdown link(s), 0 that do not resolve relative to their own file",
+        "check_dead_references: 9407 scan target(s), 8773 C/C++ file(s), 10716 repo-rooted path reference(s), 1159 that do not resolve; 1997 markdown link(s), 0 that do not resolve relative to their own file",
         "  5 baselined prose reference(s) now resolve -- run --update to shrink the prose baseline (not a failure)",
         "  571 baselined C/C++ comment reference(s) now resolve -- refresh from a clean, pinned main with --update-code (not a failure)",
         "  no new dead references",
@@ -4501,7 +4470,7 @@
         "tools/port_refcheck.py"
       ],
       "exit_code": 0,
-      "seconds": 1.08,
+      "seconds": 1.33,
       "log": "build/pr2875-production/port.log",
       "log_sha256": "91561879eca30d821d15e00edb908242d171a68e7b9bbce9d1de491d7a828fd1",
       "log_tail": [
@@ -4519,16 +4488,16 @@
         "utf8",
         "tools/check_decl_agreement.py",
         "--changed",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+        "5c15824ff6317ca3993f80d8dade0b738557bdfb"
       ],
       "exit_code": 0,
-      "seconds": 8.38,
+      "seconds": 12.91,
       "log": "build/pr2875-production/declarations.log",
-      "log_sha256": "694d6db2441b113c0bca42ed16e084afc5639a1531f89f4568632ccaf39bc67f",
+      "log_sha256": "1b6b14865f708b56e83857b76363258e2381246e102cf2ea33bdc0fac06e893d",
       "log_tail": [
-        "check_decl_agreement: 8686 file(s), 38351 extern declaration(s) of 13941 distinct symbol(s), 10604 of which the tree also defines; 2 unparsed declarator(s)",
-        "  16821 disagreement(s) across 3764 symbol(s)   arity=1103  kind=332  linkage=1  mangled=53  param=7813  return=7519",
-        "  --changed 5c075024562a469c6e4336d8540e3dfa9ffa84a1: 5 source file(s) changed defining 12 symbol(s), 0 symbol(s) named by a changed config row, 51 file(s) reached through 22 changed type name(s); 260 file(s) in scope once every declaration of those is folded in; 1913 disagreement(s) among them",
+        "check_decl_agreement: 8686 file(s), 38343 extern declaration(s) of 13941 distinct symbol(s), 10604 of which the tree also defines; 2 unparsed declarator(s)",
+        "  16759 disagreement(s) across 3760 symbol(s)   arity=1086  kind=332  linkage=1  mangled=36  param=7803  return=7501",
+        "  --changed 5c15824ff6317ca3993f80d8dade0b738557bdfb: 5 source file(s) changed defining 12 symbol(s), 0 symbol(s) named by a changed config row, 51 file(s) reached through 22 changed type name(s); 260 file(s) in scope once every declaration of those is folded in; 1891 disagreement(s) among them",
         "  no new declaration disagreements"
       ]
     },
@@ -4540,12 +4509,12 @@
         "utf8",
         "tools/prepush_attribution.py",
         "--base",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+        "5c15824ff6317ca3993f80d8dade0b738557bdfb",
         "--head",
-        "7fc2614ec3ec2be0a1deec690f7b7bdde2900895"
+        "e96876809c861ecefacca58e68bfc9a19546cb0d"
       ],
       "exit_code": 0,
-      "seconds": 35.44,
+      "seconds": 42.58,
       "log": "build/pr2875-production/attribution.log",
       "log_sha256": "13938182e4372b0d05c361e6ae7bf27f32c0b44106522ae051810c882f30df7b",
       "log_tail": [
@@ -4563,11 +4532,11 @@
         "--check"
       ],
       "exit_code": 0,
-      "seconds": 5.26,
+      "seconds": 6.48,
       "log": "build/pr2875-production/converted.log",
-      "log_sha256": "48380a20b6e2a529e82517e5684cb58f760b45e74c21e4f21f173924ab33738c",
+      "log_sha256": "fd2ffc77d33652cac43d6f558d24e45fb3729f92c4e1fbd63707280342652473",
       "log_tail": [
-        "CONVERTED ratchet PASS   baseline 2973   current 2991   (+18 gained, not yet banked)"
+        "CONVERTED ratchet PASS   baseline 2973   current 2992   (+19 gained, not yet banked)"
       ]
     },
     {
@@ -4580,7 +4549,7 @@
         "--check-promoted"
       ],
       "exit_code": 0,
-      "seconds": 0.11,
+      "seconds": 0.09,
       "log": "build/pr2875-production/queue.log",
       "log_sha256": "e53fe1902cbbfc79c7df249dd2169f30a4877813d3d3ff6cbfc30bbef1e24dad",
       "log_tail": [
@@ -4597,14 +4566,14 @@
         "utf8",
         "tools/check_header_offsets.py",
         "--changed",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+        "5c15824ff6317ca3993f80d8dade0b738557bdfb"
       ],
       "exit_code": 0,
-      "seconds": 0.53,
+      "seconds": 0.5,
       "log": "build/pr2875-production/offsets.log",
-      "log_sha256": "11102ca956bb6d0811b457ac33a883265aeb616dd0c684a5c9f3edad7e97b1e5",
+      "log_sha256": "c2c2e2c28d4724e8c994355627671ae26ee1aeb66d119bc5643bd0c9764e91e2",
       "log_tail": [
-        "check_header_offsets: 2 changed header(s) vs 5c075024562a469c6e4336d8540e3dfa9ffa84a1",
+        "check_header_offsets: 2 changed header(s) vs 5c15824ff6317ca3993f80d8dade0b738557bdfb",
         "include/dScMgMemory2_c.h: 27 commented fields, 0 mismatched, 0 unparsed, struct spans 0x5410",
         "include/dScMgSingle3DBase_c.h: 1 commented fields, 0 mismatched, 0 unparsed, struct spans 0x4f38"
       ]
@@ -4620,12 +4589,12 @@
         "."
       ],
       "exit_code": 0,
-      "seconds": 0.11,
+      "seconds": 0.08,
       "log": "build/pr2875-production/rename-ledger.log",
-      "log_sha256": "f57995509bad487c336e132fe86086d78a087f93ff061a8934d3b0ab154b9208",
+      "log_sha256": "55dd3ce41ec544dd9315eb1683adbdab7a554a351ca30be943ba1507a3d15266",
       "log_tail": [
         "check_rename_ledger: every mangled/vtable row agrees with its module's symbols.txt",
-        "  checked 2202 mangled/vtable row(s); 1520 coined row(s) are out of scope and unchecked"
+        "  checked 2203 mangled/vtable row(s); 1520 coined row(s) are out of scope and unchecked"
       ]
     },
     {
@@ -4639,7 +4608,7 @@
         "."
       ],
       "exit_code": 0,
-      "seconds": 0.12,
+      "seconds": 0.11,
       "log": "build/pr2875-production/profile-campaign.log",
       "log_sha256": "4b07f616b2a90cd40e45ed7e917676a3cab59b9d3600aab6a4847a351efc1fc8",
       "log_tail": [
@@ -4663,7 +4632,7 @@
         "build/pr2875-production/main-langmode.json"
       ],
       "exit_code": 0,
-      "seconds": 8.88,
+      "seconds": 9.66,
       "log": "build/pr2875-production/langmode.log",
       "log_sha256": "6fb3a5b4f4c82b75ed399e871dfa753b7d4f76724245f0472484ba0cb6245765",
       "log_tail": [
@@ -4680,7 +4649,7 @@
         "-j16"
       ],
       "exit_code": 0,
-      "seconds": 184.28,
+      "seconds": 198.86,
       "log": "build/pr2875-production/eligibility.log",
       "log_sha256": "dfc3023319438962880ca6d31a9b3a2d5255c1b7d66f8f30392615e69264167d",
       "log_tail": [
@@ -4706,10 +4675,10 @@
         "utf8",
         "tools/check_references.py",
         "--against",
-        "5c075024562a469c6e4336d8540e3dfa9ffa84a1"
+        "5c15824ff6317ca3993f80d8dade0b738557bdfb"
       ],
       "exit_code": 0,
-      "seconds": 3.95,
+      "seconds": 3.84,
       "log": "build/pr2875-production/reference-baseline.log",
       "log_sha256": "fea0abbb4255b19ca6f466e3a66e3eadc8c278bc57912a7da41a5e1ba766eb5b",
       "log_tail": [
@@ -4717,6 +4686,33 @@
         "eligible:           11252  (baseline 11044)",
         "  4 fixed since the baseline -- run --update to bank it",
         "OK: no new unresolvable references"
+      ]
+    },
+    {
+      "name": "prepush-linkcheck",
+      "command": [
+        "python",
+        "C:\\Users\\andre\\source\\tangosdev\\sm64ds-decomp\\build\\reviewer-0919\\run_parallel_consumers.py",
+        "2875"
+      ],
+      "exit_code": 0,
+      "seconds": 88.36,
+      "log": "build/pr2875-production/prepush-linkcheck.log",
+      "execution": "Exact original range expansion split into six disjoint file populations; actual unchanged prepush tool commands are recorded in consumer-partitions.json.",
+      "log_sha256": "a8e58f7e7763fbb64ed46f23c6bd027191078b70c5b37a783fd9de8c3ff81a96",
+      "log_tail": [
+        "    {",
+        "      \"part\": 4,",
+        "      \"exit_code\": 0,",
+        "      \"log\": \"build/pr2875-production/consumers-part-4.log\"",
+        "    },",
+        "    {",
+        "      \"part\": 5,",
+        "      \"exit_code\": 0,",
+        "      \"log\": \"build/pr2875-production/consumers-part-5.log\"",
+        "    }",
+        "  ]",
+        "}"
       ]
     }
   ],
@@ -4885,9 +4881,117 @@
     },
     {
       "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_cD1Ev",
+      "name": "_ZN10dScMgCup_c10StateSetupEv",
       "module": "ov006",
-      "addr": "0x20de988",
+      "addr": "0x20dfd48",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c11StateFinishEv",
+      "module": "ov006",
+      "addr": "0x20df1c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c11StateResultEv",
+      "module": "ov006",
+      "addr": "0x20df28c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c11StateSelectEv",
+      "module": "ov006",
+      "addr": "0x20df3bc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c12StateShuffleEv",
+      "module": "ov006",
+      "addr": "0x20df5b8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20e0308",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x20dfeec",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c17StateWaitForInputEv",
+      "module": "ov006",
+      "addr": "0x20df540",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c19StatePrepareShuffleEv",
+      "module": "ov006",
+      "addr": "0x20dfcd8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x20e0068",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x20e0204",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c9StateIdleEv",
+      "module": "ov006",
+      "addr": "0x20df1bc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_c9Virtual50Ev",
+      "module": "ov006",
+      "addr": "0x20dfed4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -4897,6 +5001,24 @@
       "name": "_ZN10dScMgCup_cD0Ev",
       "module": "ov006",
       "addr": "0x20dea1c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "_ZN10dScMgCup_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20de988",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgCup_c.cpp",
+      "name": "dScMgCup_c_classInit",
+      "module": "ov006",
+      "addr": "0x20e0574",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5038,132 +5160,6 @@
     },
     {
       "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c9StateIdleEv",
-      "module": "ov006",
-      "addr": "0x20df1bc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c11StateFinishEv",
-      "module": "ov006",
-      "addr": "0x20df1c0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c11StateResultEv",
-      "module": "ov006",
-      "addr": "0x20df28c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c11StateSelectEv",
-      "module": "ov006",
-      "addr": "0x20df3bc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c17StateWaitForInputEv",
-      "module": "ov006",
-      "addr": "0x20df540",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c12StateShuffleEv",
-      "module": "ov006",
-      "addr": "0x20df5b8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c19StatePrepareShuffleEv",
-      "module": "ov006",
-      "addr": "0x20dfcd8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c10StateSetupEv",
-      "module": "ov006",
-      "addr": "0x20dfd48",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c9Virtual50Ev",
-      "module": "ov006",
-      "addr": "0x20dfed4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x20dfeec",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x20e0068",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c8BehaviorEv",
-      "module": "ov006",
-      "addr": "0x20e0204",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "_ZN10dScMgCup_c13InitResourcesEv",
-      "module": "ov006",
-      "addr": "0x20e0308",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
-      "name": "dScMgCup_c_classInit",
-      "module": "ov006",
-      "addr": "0x20e0574",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgCup_c.cpp",
       "name": "func_ov006_020e0634",
       "module": "ov006",
       "addr": "0x20e0634",
@@ -5173,45 +5169,9 @@
     },
     {
       "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "_ZN13dScMgFlower_cD1Ev",
+      "name": "_ZN13dScMgFlower_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x212a554",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "_ZN13dScMgFlower_cD0Ev",
-      "module": "ov006",
-      "addr": "0x212a5c8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "func_ov006_0212a650",
-      "module": "ov006",
-      "addr": "0x212a650",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "func_ov006_0212a654",
-      "module": "ov006",
-      "addr": "0x212a654",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "func_ov006_0212a764",
-      "module": "ov006",
-      "addr": "0x212a764",
+      "addr": "0x212b480",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5245,171 +5205,45 @@
     },
     {
       "file": "src/actors/dScMgFlower_c.cpp",
-      "name": "_ZN13dScMgFlower_c13InitResourcesEv",
+      "name": "_ZN13dScMgFlower_cD0Ev",
       "module": "ov006",
-      "addr": "0x212b480",
+      "addr": "0x212a5c8",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_cD1Ev",
+      "file": "src/actors/dScMgFlower_c.cpp",
+      "name": "_ZN13dScMgFlower_cD1Ev",
       "module": "ov006",
-      "addr": "0x20f5564",
+      "addr": "0x212a554",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_cD0Ev",
+      "file": "src/actors/dScMgFlower_c.cpp",
+      "name": "func_ov006_0212a650",
       "module": "ov006",
-      "addr": "0x20f55b8",
+      "addr": "0x212a650",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
+      "file": "src/actors/dScMgFlower_c.cpp",
+      "name": "func_ov006_0212a654",
       "module": "ov006",
-      "addr": "0x20f5620",
+      "addr": "0x212a654",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
+      "file": "src/actors/dScMgFlower_c.cpp",
+      "name": "func_ov006_0212a764",
       "module": "ov006",
-      "addr": "0x20f565c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
-      "module": "ov006",
-      "addr": "0x20f5694",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
-      "module": "ov006",
-      "addr": "0x20f56f8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10HideCursorEv",
-      "module": "ov006",
-      "addr": "0x20f572c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
-      "module": "ov006",
-      "addr": "0x20f5740",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
-      "module": "ov006",
-      "addr": "0x20f5744",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
-      "module": "ov006",
-      "addr": "0x20f58d0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
-      "module": "ov006",
-      "addr": "0x20f593c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
-      "module": "ov006",
-      "addr": "0x20f59c0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c9JudgePairEv",
-      "module": "ov006",
-      "addr": "0x20f5a64",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
-      "module": "ov006",
-      "addr": "0x20f5b98",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
-      "module": "ov006",
-      "addr": "0x20f5c40",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
-      "module": "ov006",
-      "addr": "0x20f5cb4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
-      "module": "ov006",
-      "addr": "0x20f5de0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c8CardWaitEi",
-      "module": "ov006",
-      "addr": "0x20f5e70",
+      "addr": "0x212a764",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5434,45 +5268,45 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c8CardIdleEi",
+      "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
       "module": "ov006",
-      "addr": "0x20f6084",
+      "addr": "0x20f565c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "name": "_ZN14dScMgMemory2_c10HideCursorEv",
       "module": "ov006",
-      "addr": "0x20f6088",
+      "addr": "0x20f572c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
       "module": "ov006",
-      "addr": "0x20f6230",
+      "addr": "0x20f58d0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
       "module": "ov006",
-      "addr": "0x20f639c",
+      "addr": "0x20f5744",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
       "module": "ov006",
-      "addr": "0x20f6488",
+      "addr": "0x20f5740",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5488,87 +5322,6 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
-      "module": "ov006",
-      "addr": "0x20f6678",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
-      "module": "ov006",
-      "addr": "0x20f670c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
-      "module": "ov006",
-      "addr": "0x20f67a0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
-      "module": "ov006",
-      "addr": "0x20f6830",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
-      "module": "ov006",
-      "addr": "0x20f6904",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
-      "module": "ov006",
-      "addr": "0x20f6a00",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
-      "module": "ov006",
-      "addr": "0x20f6a78",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
-      "module": "ov006",
-      "addr": "0x20f6b00",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
-      "module": "ov006",
-      "addr": "0x20f6b78",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
       "name": "_ZN14dScMgMemory2_c10RoundStartEv",
       "module": "ov006",
       "addr": "0x20f6bf0",
@@ -5578,45 +5331,9 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+      "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
       "module": "ov006",
-      "addr": "0x20f6c90",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
-      "module": "ov006",
-      "addr": "0x20f6f88",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c9ResetGameEv",
-      "module": "ov006",
-      "addr": "0x20f7064",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c9StateExitEv",
-      "module": "ov006",
-      "addr": "0x20f7190",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c11StateResultEv",
-      "module": "ov006",
-      "addr": "0x20f71c8",
+      "addr": "0x20f56f8",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5632,15 +5349,6 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c9StatePlayEv",
-      "module": "ov006",
-      "addr": "0x20f7234",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgMemory2_c.cpp",
       "name": "_ZN14dScMgMemory2_c10StateSetupEv",
       "module": "ov006",
       "addr": "0x20f7280",
@@ -5650,18 +5358,117 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+      "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
       "module": "ov006",
-      "addr": "0x20f72c0",
+      "addr": "0x20f5cb4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+      "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
       "module": "ov006",
-      "addr": "0x20f730c",
+      "addr": "0x20f5620",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
+      "module": "ov006",
+      "addr": "0x20f593c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
+      "module": "ov006",
+      "addr": "0x20f6678",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11StateResultEv",
+      "module": "ov006",
+      "addr": "0x20f71c8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
+      "module": "ov006",
+      "addr": "0x20f5c40",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+      "module": "ov006",
+      "addr": "0x20f5de0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "module": "ov006",
+      "addr": "0x20f6230",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "module": "ov006",
+      "addr": "0x20f6488",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6c90",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
+      "module": "ov006",
+      "addr": "0x20f5694",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
+      "module": "ov006",
+      "addr": "0x20f59c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20f74b4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5686,6 +5493,114 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+      "module": "ov006",
+      "addr": "0x20f6b78",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+      "module": "ov006",
+      "addr": "0x20f6a78",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+      "module": "ov006",
+      "addr": "0x20f670c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6830",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6904",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+      "module": "ov006",
+      "addr": "0x20f730c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "module": "ov006",
+      "addr": "0x20f639c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+      "module": "ov006",
+      "addr": "0x20f6a00",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+      "module": "ov006",
+      "addr": "0x20f6b00",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+      "module": "ov006",
+      "addr": "0x20f67a0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+      "module": "ov006",
+      "addr": "0x20f72c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
+      "module": "ov006",
+      "addr": "0x20f6f88",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
       "name": "_ZN14dScMgMemory2_c6RenderEv",
       "module": "ov006",
       "addr": "0x20f73f4",
@@ -5704,9 +5619,90 @@
     },
     {
       "file": "src/actors/dScMgMemory2_c.cpp",
-      "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+      "name": "_ZN14dScMgMemory2_c8CardIdleEi",
       "module": "ov006",
-      "addr": "0x20f74b4",
+      "addr": "0x20f6084",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "module": "ov006",
+      "addr": "0x20f6088",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c8CardWaitEi",
+      "module": "ov006",
+      "addr": "0x20f5e70",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
+      "module": "ov006",
+      "addr": "0x20f5b98",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9JudgePairEv",
+      "module": "ov006",
+      "addr": "0x20f5a64",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9ResetGameEv",
+      "module": "ov006",
+      "addr": "0x20f7064",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9StateExitEv",
+      "module": "ov006",
+      "addr": "0x20f7190",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_c9StatePlayEv",
+      "module": "ov006",
+      "addr": "0x20f7234",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_cD0Ev",
+      "module": "ov006",
+      "addr": "0x20f55b8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgMemory2_c.cpp",
+      "name": "_ZN14dScMgMemory2_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20f5564",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5722,9 +5718,54 @@
     },
     {
       "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_cD1Ev",
+      "name": "_ZN15dScMgRoulette_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x210788c",
+      "addr": "0x210a194",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+      "module": "ov006",
+      "addr": "0x21096c8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x21095cc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+      "module": "ov006",
+      "addr": "0x210980c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x2109834",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x2109aac",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -5734,6 +5775,15 @@
       "name": "_ZN15dScMgRoulette_cD0Ev",
       "module": "ov006",
       "addr": "0x2107920",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgRoulette_c.cpp",
+      "name": "_ZN15dScMgRoulette_cD1Ev",
+      "module": "ov006",
+      "addr": "0x210788c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6019,42 +6069,6 @@
     },
     {
       "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x21095cc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
-      "module": "ov006",
-      "addr": "0x21096c8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c16CleanupResourcesEv",
-      "module": "ov006",
-      "addr": "0x210980c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x2109834",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgRoulette_c.cpp",
       "name": "func_ov006_02109aa0",
       "module": "ov006",
       "addr": "0x2109aa0",
@@ -6063,19 +6077,46 @@
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c8BehaviorEv",
+      "file": "src/actors/dScMgSlot1_c.cpp",
+      "name": "_ZN12dScMgSlot1_c13OnYoshiTryEatEi",
       "module": "ov006",
-      "addr": "0x2109aac",
+      "addr": "0x210c674",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgRoulette_c.cpp",
-      "name": "_ZN15dScMgRoulette_c13InitResourcesEv",
+      "file": "src/actors/dScMgSlot1_c.cpp",
+      "name": "_ZN12dScMgSlot1_c15OnHitByMegaCharEv",
       "module": "ov006",
-      "addr": "0x210a194",
+      "addr": "0x210c4dc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSlot1_c.cpp",
+      "name": "_ZN12dScMgSlot1_c19OnHitFromUnderneathEv",
+      "module": "ov006",
+      "addr": "0x210c4b8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSlot1_c.cpp",
+      "name": "_ZN12dScMgSlot1_c9betIcon_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x210c374",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSlot1_c.cpp",
+      "name": "_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x210c410",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6172,45 +6213,9 @@
     },
     {
       "file": "src/actors/dScMgSlot1_c.cpp",
-      "name": "_ZN12dScMgSlot1_c9betIcon_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x210c374",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSlot1_c.cpp",
-      "name": "_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv",
-      "module": "ov006",
-      "addr": "0x210c410",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSlot1_c.cpp",
       "name": "func_ov006_0210c478",
       "module": "ov006",
       "addr": "0x210c478",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSlot1_c.cpp",
-      "name": "_ZN12dScMgSlot1_c19OnHitFromUnderneathEv",
-      "module": "ov006",
-      "addr": "0x210c4b8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSlot1_c.cpp",
-      "name": "_ZN12dScMgSlot1_c15OnHitByMegaCharEv",
-      "module": "ov006",
-      "addr": "0x210c4dc",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6234,19 +6239,73 @@
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSlot1_c.cpp",
-      "name": "_ZN12dScMgSlot1_c13OnYoshiTryEatEi",
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c11OnAttacked2Ev",
       "module": "ov006",
-      "addr": "0x210c674",
+      "addr": "0x21291d4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_cD1Ev",
+      "name": "_ZN15dScMgSnowball_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x212568c",
+      "addr": "0x2129268",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x212921c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c16CleanupResourcesEv",
+      "module": "ov006",
+      "addr": "0x21291f8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x2127d10",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x21283a4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c8OnKickedEv",
+      "module": "ov006",
+      "addr": "0x2128fb8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_c8OnPushedEv",
+      "module": "ov006",
+      "addr": "0x21291b0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6256,6 +6315,15 @@
       "name": "_ZN15dScMgSnowball_cD0Ev",
       "module": "ov006",
       "addr": "0x212573c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/actors/dScMgSnowball_c.cpp",
+      "name": "_ZN15dScMgSnowball_cD1Ev",
+      "module": "ov006",
+      "addr": "0x212568c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6378,73 +6446,55 @@
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c6RenderEv",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x2127d10",
+      "addr": "0x211c984",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c8BehaviorEv",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_c13OnYoshiTryEatEi",
       "module": "ov006",
-      "addr": "0x21283a4",
+      "addr": "0x211c5d0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c8OnKickedEv",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_c6RenderEv",
       "module": "ov006",
-      "addr": "0x2128fb8",
+      "addr": "0x211c6c4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c8OnPushedEv",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_c8BehaviorEv",
       "module": "ov006",
-      "addr": "0x21291b0",
+      "addr": "0x211c720",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c11OnAttacked2Ev",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_c9Virtual50Ev",
       "module": "ov006",
-      "addr": "0x21291d4",
+      "addr": "0x211c5b8",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c16CleanupResourcesEv",
+      "file": "src/actors/dScMgSound_c.cpp",
+      "name": "_ZN12dScMgSound_cD0Ev",
       "module": "ov006",
-      "addr": "0x21291f8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x212921c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSnowball_c.cpp",
-      "name": "_ZN15dScMgSnowball_c13InitResourcesEv",
-      "module": "ov006",
-      "addr": "0x2129268",
+      "addr": "0x2119958",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -6460,9 +6510,9 @@
     },
     {
       "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_cD0Ev",
+      "name": "dScMgSound_c_classInit",
       "module": "ov006",
-      "addr": "0x2119958",
+      "addr": "0x211cb70",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7134,60 +7184,6 @@
       "diffs": []
     },
     {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_c9Virtual50Ev",
-      "module": "ov006",
-      "addr": "0x211c5b8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x211c5d0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x211c6c4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_c8BehaviorEv",
-      "module": "ov006",
-      "addr": "0x211c720",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "_ZN12dScMgSound_c13InitResourcesEv",
-      "module": "ov006",
-      "addr": "0x211c984",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/actors/dScMgSound_c.cpp",
-      "name": "dScMgSound_c_classInit",
-      "module": "ov006",
-      "addr": "0x211cb70",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
       "file": "src/func_ov004_020b1e34.c",
       "name": "func_ov004_020b1e34",
       "module": "ov004",
@@ -7198,126 +7194,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_cD1Ev",
+      "name": "_ZN10dScMgBSC_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x2124908",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_cD0Ev",
-      "module": "ov006",
-      "addr": "0x212497c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c9StateDoneEv",
-      "module": "ov006",
-      "addr": "0x2124a04",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c16StateReturnCardsEv",
-      "module": "ov006",
-      "addr": "0x2124a08",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c14StateWaitTableEv",
-      "module": "ov006",
-      "addr": "0x2124ae4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c18StateTableReactionEv",
-      "module": "ov006",
-      "addr": "0x2124b58",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c15StateJudgeCardsEv",
-      "module": "ov006",
-      "addr": "0x2124bb4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c16StateRevealCardsEv",
-      "module": "ov006",
-      "addr": "0x2124cb4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c13StateWaitMoveEv",
-      "module": "ov006",
-      "addr": "0x2124dc0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c14StateMoveCardsEv",
-      "module": "ov006",
-      "addr": "0x2124e1c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c15StateChooseCardEv",
-      "module": "ov006",
-      "addr": "0x2124ec4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c13StateWaitDealEv",
-      "module": "ov006",
-      "addr": "0x2124fd8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c14StateDealCardsEv",
-      "module": "ov006",
-      "addr": "0x21250e4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c15OnGroundPoundedEv",
-      "module": "ov006",
-      "addr": "0x2125248",
+      "addr": "0x212551c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7342,6 +7221,105 @@
     },
     {
       "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c13StateWaitDealEv",
+      "module": "ov006",
+      "addr": "0x2124fd8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c13StateWaitMoveEv",
+      "module": "ov006",
+      "addr": "0x2124dc0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c14StateDealCardsEv",
+      "module": "ov006",
+      "addr": "0x21250e4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c14StateMoveCardsEv",
+      "module": "ov006",
+      "addr": "0x2124e1c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c14StateWaitTableEv",
+      "module": "ov006",
+      "addr": "0x2124ae4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c15OnGroundPoundedEv",
+      "module": "ov006",
+      "addr": "0x2125248",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c15StateChooseCardEv",
+      "module": "ov006",
+      "addr": "0x2124ec4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c15StateJudgeCardsEv",
+      "module": "ov006",
+      "addr": "0x2124bb4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c16StateReturnCardsEv",
+      "module": "ov006",
+      "addr": "0x2124a08",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c16StateRevealCardsEv",
+      "module": "ov006",
+      "addr": "0x2124cb4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_c18StateTableReactionEv",
+      "module": "ov006",
+      "addr": "0x2124b58",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
       "name": "_ZN10dScMgBSC_c6RenderEv",
       "module": "ov006",
       "addr": "0x21253bc",
@@ -7360,9 +7338,27 @@
     },
     {
       "file": "src/minigames/d_s_mg_bsc.cpp",
-      "name": "_ZN10dScMgBSC_c13InitResourcesEv",
+      "name": "_ZN10dScMgBSC_c9StateDoneEv",
       "module": "ov006",
-      "addr": "0x212551c",
+      "addr": "0x2124a04",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_cD0Ev",
+      "module": "ov006",
+      "addr": "0x212497c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_bsc.cpp",
+      "name": "_ZN10dScMgBSC_cD1Ev",
+      "module": "ov006",
+      "addr": "0x2124908",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7378,135 +7374,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_cD1Ev",
+      "name": "_ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci",
       "module": "ov006",
-      "addr": "0x20d95a4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_cD0Ev",
-      "module": "ov006",
-      "addr": "0x20d9638",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_cD1Ev",
-      "module": "ov006",
-      "addr": "0x20d96e0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN17dMgDilarCardObj_cD1Ev",
-      "module": "ov006",
-      "addr": "0x20d96f0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN17dMgDilarCardObj_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x20d970c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN17dMgDilarCardObj_c6UpdateEv",
-      "module": "ov006",
-      "addr": "0x20d978c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN17dMgDilarCardObj_c13GetOffscreenYEv",
-      "module": "ov006",
-      "addr": "0x20d9998",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c6FlyOffEv",
-      "module": "ov006",
-      "addr": "0x20d99a4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c7SetHomeEi",
-      "module": "ov006",
-      "addr": "0x20d99ec",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c9RenderHudEv",
-      "module": "ov006",
-      "addr": "0x20d9a14",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c13GetOffscreenYEv",
-      "module": "ov006",
-      "addr": "0x20d9bd0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x20d9bdc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c6UpdateEv",
-      "module": "ov006",
-      "addr": "0x20d9c5c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c6RedealEv",
-      "module": "ov006",
-      "addr": "0x20da00c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_c6DealInEPKi",
-      "module": "ov006",
-      "addr": "0x20da0ac",
+      "addr": "0x20da860",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7531,54 +7401,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c",
+      "name": "_ZN11dScMgCard_c11FillWeightsEi",
       "module": "ov006",
-      "addr": "0x20da420",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs",
-      "module": "ov006",
-      "addr": "0x20da4ac",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_",
-      "module": "ov006",
-      "addr": "0x20da5e8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c",
-      "module": "ov006",
-      "addr": "0x20da834",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci",
-      "module": "ov006",
-      "addr": "0x20da860",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci",
-      "module": "ov006",
-      "addr": "0x20da88c",
+      "addr": "0x20da974",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7594,6 +7419,51 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c",
+      "module": "ov006",
+      "addr": "0x20da420",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c11UpdateStateEv",
+      "module": "ov006",
+      "addr": "0x20dac34",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_",
+      "module": "ov006",
+      "addr": "0x20da5e8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci",
+      "module": "ov006",
+      "addr": "0x20da88c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs",
+      "module": "ov006",
+      "addr": "0x20da4ac",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
       "name": "_ZN11dScMgCard_c13DrawCardValueEv",
       "module": "ov006",
       "addr": "0x20da8e4",
@@ -7603,9 +7473,36 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c11FillWeightsEi",
+      "name": "_ZN11dScMgCard_c13InitResourcesEv",
       "module": "ov006",
-      "addr": "0x20da974",
+      "addr": "0x20dbaf0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c13OnTurnIntoEggEi",
+      "module": "ov006",
+      "addr": "0x20db720",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x20db9dc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN11dScMgCard_c15OnGroundPoundedEv",
+      "module": "ov006",
+      "addr": "0x20db6ec",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7639,54 +7536,144 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c11UpdateStateEv",
+      "name": "_ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c",
       "module": "ov006",
-      "addr": "0x20dac34",
+      "addr": "0x20da834",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c15OnGroundPoundedEv",
+      "name": "_ZN11dScMgCard_c9RenderHudEv",
       "module": "ov006",
-      "addr": "0x20db6ec",
+      "addr": "0x20d9a14",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c13OnTurnIntoEggEi",
+      "name": "_ZN11dScMgCard_cD0Ev",
       "module": "ov006",
-      "addr": "0x20db720",
+      "addr": "0x20d9638",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c13OnYoshiTryEatEi",
+      "name": "_ZN11dScMgCard_cD1Ev",
       "module": "ov006",
-      "addr": "0x20db9dc",
+      "addr": "0x20d95a4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN11dScMgCard_c13InitResourcesEv",
+      "name": "_ZN12dMgCardObj_c13GetOffscreenYEv",
       "module": "ov006",
-      "addr": "0x20dbaf0",
+      "addr": "0x20d9bd0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "dScMgCard_c_classInit",
+      "name": "_ZN12dMgCardObj_c6DealInEPKi",
       "module": "ov006",
-      "addr": "0x20dbd54",
+      "addr": "0x20da0ac",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_c6FlyOffEv",
+      "module": "ov006",
+      "addr": "0x20d99a4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_c6RedealEv",
+      "module": "ov006",
+      "addr": "0x20da00c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x20d9bdc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_c6UpdateEv",
+      "module": "ov006",
+      "addr": "0x20d9c5c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_c7SetHomeEi",
+      "module": "ov006",
+      "addr": "0x20d99ec",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_cC1Ev",
+      "module": "ov006",
+      "addr": "0x20dbe30",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN12dMgCardObj_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20d96e0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN17dMgDilarCardObj_c13GetOffscreenYEv",
+      "module": "ov006",
+      "addr": "0x20d9998",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN17dMgDilarCardObj_c6RenderEv",
+      "module": "ov006",
+      "addr": "0x20d970c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "_ZN17dMgDilarCardObj_c6UpdateEv",
+      "module": "ov006",
+      "addr": "0x20d978c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7702,63 +7689,18 @@
     },
     {
       "file": "src/minigames/d_s_mg_card.cpp",
-      "name": "_ZN12dMgCardObj_cC1Ev",
+      "name": "_ZN17dMgDilarCardObj_cD1Ev",
       "module": "ov006",
-      "addr": "0x20dbe30",
+      "addr": "0x20d96f0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_cD1Ev",
+      "file": "src/minigames/d_s_mg_card.cpp",
+      "name": "dScMgCard_c_classInit",
       "module": "ov006",
-      "addr": "0x20f7634",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_cD0Ev",
-      "module": "ov006",
-      "addr": "0x20f76a8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN18dMgMCarloCardObj_cD1Ev",
-      "module": "ov006",
-      "addr": "0x20f7730",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c11UpdateBoardEv",
-      "module": "ov006",
-      "addr": "0x20f7740",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c14FlipDealtCardsEv",
-      "module": "ov006",
-      "addr": "0x20f7994",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c13DrawCardValueEv",
-      "module": "ov006",
-      "addr": "0x20f7a00",
+      "addr": "0x20dbd54",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7774,9 +7716,63 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c9BoardBusyEv",
+      "name": "_ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c",
       "module": "ov006",
-      "addr": "0x20f7b10",
+      "addr": "0x20f7c10",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c11UpdateBoardEv",
+      "module": "ov006",
+      "addr": "0x20f7740",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c13DrawCardValueEv",
+      "module": "ov006",
+      "addr": "0x20f7a00",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20f8d08",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c13OnTurnIntoEggEi",
+      "module": "ov006",
+      "addr": "0x20f8a3c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x20f8c68",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c14FlipDealtCardsEv",
+      "module": "ov006",
+      "addr": "0x20f7994",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7792,9 +7788,81 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c",
+      "name": "_ZN13dScMgMCarlo_c6RenderEv",
       "module": "ov006",
-      "addr": "0x20f7c10",
+      "addr": "0x20f85b0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x20f869c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c9BoardBusyEv",
+      "module": "ov006",
+      "addr": "0x20f7b10",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_c9RenderHudEv",
+      "module": "ov006",
+      "addr": "0x20f8540",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_cD0Ev",
+      "module": "ov006",
+      "addr": "0x20f76a8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN13dScMgMCarlo_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20f7634",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN18dMgMCarloCardObj_c10IsPairWithEPS_",
+      "module": "ov006",
+      "addr": "0x20f8224",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN18dMgMCarloCardObj_c4InitEi",
+      "module": "ov006",
+      "addr": "0x20f84a8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN18dMgMCarloCardObj_c6DealInEi",
+      "module": "ov006",
+      "addr": "0x20f8320",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7828,99 +7896,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN18dMgMCarloCardObj_c10IsPairWithEPS_",
-      "module": "ov006",
-      "addr": "0x20f8224",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
       "name": "_ZN18dMgMCarloCardObj_c8FlipAwayEi",
       "module": "ov006",
       "addr": "0x20f82d0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN18dMgMCarloCardObj_c6DealInEi",
-      "module": "ov006",
-      "addr": "0x20f8320",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN18dMgMCarloCardObj_c4InitEi",
-      "module": "ov006",
-      "addr": "0x20f84a8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c9RenderHudEv",
-      "module": "ov006",
-      "addr": "0x20f8540",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x20f85b0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c8BehaviorEv",
-      "module": "ov006",
-      "addr": "0x20f869c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c13OnTurnIntoEggEi",
-      "module": "ov006",
-      "addr": "0x20f8a3c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x20f8c68",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "_ZN13dScMgMCarlo_c13InitResourcesEv",
-      "module": "ov006",
-      "addr": "0x20f8d08",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo.cpp",
-      "name": "dScMgMCarlo_c_classInit",
-      "module": "ov006",
-      "addr": "0x20f8e44",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7935,55 +7913,19 @@
       "diffs": []
     },
     {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_cD1Ev",
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "_ZN18dMgMCarloCardObj_cD1Ev",
       "module": "ov006",
-      "addr": "0x20f8ef4",
+      "addr": "0x20f7730",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_cD0Ev",
+      "file": "src/minigames/d_s_mg_m_carlo.cpp",
+      "name": "dScMgMCarlo_c_classInit",
       "module": "ov006",
-      "addr": "0x20f8f68",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN19dMgMCarlo2CardObj_cD1Ev",
-      "module": "ov006",
-      "addr": "0x20f8ff0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c11UpdateBoardEv",
-      "module": "ov006",
-      "addr": "0x20f9000",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c14FlipDealtCardsEv",
-      "module": "ov006",
-      "addr": "0x20f94f4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c13DrawCardValueEv",
-      "module": "ov006",
-      "addr": "0x20f9560",
+      "addr": "0x20f8e44",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -7999,9 +7941,72 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c9BoardBusyEv",
+      "name": "_ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c",
       "module": "ov006",
-      "addr": "0x20f9668",
+      "addr": "0x20f9760",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c11UpdateBoardEv",
+      "module": "ov006",
+      "addr": "0x20f9000",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c13DrawCardValueEv",
+      "module": "ov006",
+      "addr": "0x20f9560",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20fa56c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c13OnTurnIntoEggEi",
+      "module": "ov006",
+      "addr": "0x20fa3d0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c13OnYoshiTryEatEi",
+      "module": "ov006",
+      "addr": "0x20fa4d4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c14FlipDealtCardsEv",
+      "module": "ov006",
+      "addr": "0x20f94f4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c16CleanupResourcesEv",
+      "module": "ov006",
+      "addr": "0x20f9fe0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8017,9 +8022,72 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c",
+      "name": "_ZN14dScMgMCarlo2_c6RenderEv",
       "module": "ov006",
-      "addr": "0x20f9760",
+      "addr": "0x20f9ffc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c8BehaviorEv",
+      "module": "ov006",
+      "addr": "0x20fa13c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_c9BoardBusyEv",
+      "module": "ov006",
+      "addr": "0x20f9668",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_cD0Ev",
+      "module": "ov006",
+      "addr": "0x20f8f68",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN14dScMgMCarlo2_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20f8ef4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_",
+      "module": "ov006",
+      "addr": "0x20f9cbc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN19dMgMCarlo2CardObj_c4InitEi",
+      "module": "ov006",
+      "addr": "0x20f9f40",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN19dMgMCarlo2CardObj_c6DealInEi",
+      "module": "ov006",
+      "addr": "0x20f9db8",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8053,99 +8121,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_",
-      "module": "ov006",
-      "addr": "0x20f9cbc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
       "name": "_ZN19dMgMCarlo2CardObj_c8FlipAwayEi",
       "module": "ov006",
       "addr": "0x20f9d68",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN19dMgMCarlo2CardObj_c6DealInEi",
-      "module": "ov006",
-      "addr": "0x20f9db8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN19dMgMCarlo2CardObj_c4InitEi",
-      "module": "ov006",
-      "addr": "0x20f9f40",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c16CleanupResourcesEv",
-      "module": "ov006",
-      "addr": "0x20f9fe0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c6RenderEv",
-      "module": "ov006",
-      "addr": "0x20f9ffc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c8BehaviorEv",
-      "module": "ov006",
-      "addr": "0x20fa13c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c13OnTurnIntoEggEi",
-      "module": "ov006",
-      "addr": "0x20fa3d0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c13OnYoshiTryEatEi",
-      "module": "ov006",
-      "addr": "0x20fa4d4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "_ZN14dScMgMCarlo2_c13InitResourcesEv",
-      "module": "ov006",
-      "addr": "0x20fa56c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
-      "name": "dScMgMCarlo2_c_classInit",
-      "module": "ov006",
-      "addr": "0x20fa6ac",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8160,163 +8138,19 @@
       "diffs": []
     },
     {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_cD1Ev",
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "_ZN19dMgMCarlo2CardObj_cD1Ev",
       "module": "ov006",
-      "addr": "0x20f3834",
+      "addr": "0x20f8ff0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_cD0Ev",
+      "file": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "name": "dScMgMCarlo2_c_classInit",
       "module": "ov006",
-      "addr": "0x20f3888",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11DrawMessageEv",
-      "module": "ov006",
-      "addr": "0x20f38f0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10DrawCursorEv",
-      "module": "ov006",
-      "addr": "0x20f392c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c12UpdateCursorEv",
-      "module": "ov006",
-      "addr": "0x20f3964",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10ShowCursorEv",
-      "module": "ov006",
-      "addr": "0x20f39c8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10HideCursorEv",
-      "module": "ov006",
-      "addr": "0x20f39fc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10PlayerWaitEi",
-      "module": "ov006",
-      "addr": "0x20f3a10",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10PlayerMoveEi",
-      "module": "ov006",
-      "addr": "0x20f3a14",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c10PlayerDropEi",
-      "module": "ov006",
-      "addr": "0x20f3ba0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11InitPlayersEv",
-      "module": "ov006",
-      "addr": "0x20f3c0c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c13CheckFinishedEv",
-      "module": "ov006",
-      "addr": "0x20f3c90",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c9JudgePairEv",
-      "module": "ov006",
-      "addr": "0x20f3d34",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c9DrawCardsEv",
-      "module": "ov006",
-      "addr": "0x20f3e68",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11UpdateCardsEv",
-      "module": "ov006",
-      "addr": "0x20f3f10",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11CardFlyAwayEi",
-      "module": "ov006",
-      "addr": "0x20f3f84",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c12CardFlipDownEi",
-      "module": "ov006",
-      "addr": "0x20f411c",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c8CardWaitEi",
-      "module": "ov006",
-      "addr": "0x20f41ac",
+      "addr": "0x20fa6ac",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8341,45 +8175,45 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c8CardIdleEi",
+      "name": "_ZN13dScMgMemory_c10DrawCursorEv",
       "module": "ov006",
-      "addr": "0x20f43c0",
+      "addr": "0x20f392c",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c8CardMoveEi",
+      "name": "_ZN13dScMgMemory_c10HideCursorEv",
       "module": "ov006",
-      "addr": "0x20f43c4",
+      "addr": "0x20f39fc",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c12ResultFinishEv",
+      "name": "_ZN13dScMgMemory_c10PlayerDropEi",
       "module": "ov006",
-      "addr": "0x20f456c",
+      "addr": "0x20f3ba0",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c15ResultTurnCardsEv",
+      "name": "_ZN13dScMgMemory_c10PlayerMoveEi",
       "module": "ov006",
-      "addr": "0x20f46ec",
+      "addr": "0x20f3a14",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c12ResultRewardEv",
+      "name": "_ZN13dScMgMemory_c10PlayerWaitEi",
       "module": "ov006",
-      "addr": "0x20f47d8",
+      "addr": "0x20f3a10",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8395,51 +8229,6 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11RoundRevealEv",
-      "module": "ov006",
-      "addr": "0x20f49ac",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c13RoundWaitDealEv",
-      "module": "ov006",
-      "addr": "0x20f4a40",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c13RoundDealHardEv",
-      "module": "ov006",
-      "addr": "0x20f4ad4",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c15RoundDealNormalEv",
-      "module": "ov006",
-      "addr": "0x20f4b30",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c13RoundDealEasyEv",
-      "module": "ov006",
-      "addr": "0x20f4bbc",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
       "name": "_ZN13dScMgMemory_c10RoundStartEv",
       "module": "ov006",
       "addr": "0x20f4c38",
@@ -8449,36 +8238,9 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c12ShuffleCardsEv",
+      "name": "_ZN13dScMgMemory_c10ShowCursorEv",
       "module": "ov006",
-      "addr": "0x20f4cd8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c9ResetGameEv",
-      "module": "ov006",
-      "addr": "0x20f4f94",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c9StateExitEv",
-      "module": "ov006",
-      "addr": "0x20f50c0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c11StateResultEv",
-      "module": "ov006",
-      "addr": "0x20f50f8",
+      "addr": "0x20f39c8",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8494,15 +8256,6 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c9StatePlayEv",
-      "module": "ov006",
-      "addr": "0x20f5164",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_memory.cpp",
       "name": "_ZN13dScMgMemory_c10StateSetupEv",
       "module": "ov006",
       "addr": "0x20f51b0",
@@ -8512,18 +8265,117 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c15SetupDifficultyEv",
+      "name": "_ZN13dScMgMemory_c11CardFlyAwayEi",
       "module": "ov006",
-      "addr": "0x20f51f0",
+      "addr": "0x20f3f84",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c15OnGroundPoundedEv",
+      "name": "_ZN13dScMgMemory_c11DrawMessageEv",
       "module": "ov006",
-      "addr": "0x20f523c",
+      "addr": "0x20f38f0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c11InitPlayersEv",
+      "module": "ov006",
+      "addr": "0x20f3c0c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c11RoundRevealEv",
+      "module": "ov006",
+      "addr": "0x20f49ac",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c11StateResultEv",
+      "module": "ov006",
+      "addr": "0x20f50f8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c11UpdateCardsEv",
+      "module": "ov006",
+      "addr": "0x20f3f10",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c12CardFlipDownEi",
+      "module": "ov006",
+      "addr": "0x20f411c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c12ResultFinishEv",
+      "module": "ov006",
+      "addr": "0x20f456c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c12ResultRewardEv",
+      "module": "ov006",
+      "addr": "0x20f47d8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c12ShuffleCardsEv",
+      "module": "ov006",
+      "addr": "0x20f4cd8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c12UpdateCursorEv",
+      "module": "ov006",
+      "addr": "0x20f3964",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c13CheckFinishedEv",
+      "module": "ov006",
+      "addr": "0x20f3c90",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c13InitResourcesEv",
+      "module": "ov006",
+      "addr": "0x20f53e4",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8548,6 +8400,69 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c13RoundDealEasyEv",
+      "module": "ov006",
+      "addr": "0x20f4bbc",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c13RoundDealHardEv",
+      "module": "ov006",
+      "addr": "0x20f4ad4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c13RoundWaitDealEv",
+      "module": "ov006",
+      "addr": "0x20f4a40",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c15OnGroundPoundedEv",
+      "module": "ov006",
+      "addr": "0x20f523c",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c15ResultTurnCardsEv",
+      "module": "ov006",
+      "addr": "0x20f46ec",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c15RoundDealNormalEv",
+      "module": "ov006",
+      "addr": "0x20f4b30",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c15SetupDifficultyEv",
+      "module": "ov006",
+      "addr": "0x20f51f0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
       "name": "_ZN13dScMgMemory_c6RenderEv",
       "module": "ov006",
       "addr": "0x20f5324",
@@ -8566,9 +8481,90 @@
     },
     {
       "file": "src/minigames/d_s_mg_memory.cpp",
-      "name": "_ZN13dScMgMemory_c13InitResourcesEv",
+      "name": "_ZN13dScMgMemory_c8CardIdleEi",
       "module": "ov006",
-      "addr": "0x20f53e4",
+      "addr": "0x20f43c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c8CardMoveEi",
+      "module": "ov006",
+      "addr": "0x20f43c4",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c8CardWaitEi",
+      "module": "ov006",
+      "addr": "0x20f41ac",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c9DrawCardsEv",
+      "module": "ov006",
+      "addr": "0x20f3e68",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c9JudgePairEv",
+      "module": "ov006",
+      "addr": "0x20f3d34",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c9ResetGameEv",
+      "module": "ov006",
+      "addr": "0x20f4f94",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c9StateExitEv",
+      "module": "ov006",
+      "addr": "0x20f50c0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_c9StatePlayEv",
+      "module": "ov006",
+      "addr": "0x20f5164",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_cD0Ev",
+      "module": "ov006",
+      "addr": "0x20f3888",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_memory.cpp",
+      "name": "_ZN13dScMgMemory_cD1Ev",
+      "module": "ov006",
+      "addr": "0x20f3834",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8578,51 +8574,6 @@
       "name": "dScMgMemory_c_classInit",
       "module": "ov006",
       "addr": "0x20f5504",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
-      "name": "_ZN19dScMgSingle3DBase_cD1Ev",
-      "module": "ov006",
-      "addr": "0x210a4b0",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
-      "name": "_ZN19dScMgSingle3DBase_cD0Ev",
-      "module": "ov006",
-      "addr": "0x210a4e8",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
-      "name": "func_ov006_0210a534",
-      "module": "ov006",
-      "addr": "0x210a534",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
-      "name": "_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv",
-      "module": "ov006",
-      "addr": "0x210a600",
-      "verdict": "VERIFIED",
-      "blind": 0,
-      "diffs": []
-    },
-    {
-      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
-      "name": "_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj",
-      "module": "ov006",
-      "addr": "0x210a608",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8656,9 +8607,54 @@
     },
     {
       "file": "src/minigames/d_s_mg_single3_d_base.cpp",
+      "name": "_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj",
+      "module": "ov006",
+      "addr": "0x210a608",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
+      "name": "_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv",
+      "module": "ov006",
+      "addr": "0x210a600",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
       "name": "_ZN19dScMgSingle3DBase_c9Virtual84Ev",
       "module": "ov006",
       "addr": "0x210a708",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
+      "name": "_ZN19dScMgSingle3DBase_cD0Ev",
+      "module": "ov006",
+      "addr": "0x210a4e8",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
+      "name": "_ZN19dScMgSingle3DBase_cD1Ev",
+      "module": "ov006",
+      "addr": "0x210a4b0",
+      "verdict": "VERIFIED",
+      "blind": 0,
+      "diffs": []
+    },
+    {
+      "file": "src/minigames/d_s_mg_single3_d_base.cpp",
+      "name": "func_ov006_0210a534",
+      "module": "ov006",
+      "addr": "0x210a534",
       "verdict": "VERIFIED",
       "blind": 0,
       "diffs": []
@@ -8678,7 +8674,7 @@
     "interpretation": "Original source/dependency proof before the genuine factory repair. Final Memory factory/object/policy are superseded by the current complete construction proof; unchanged three helper sources retain their prior41+2 strict proof."
   },
   "current_manifest_note_correction": {
-    "before": "BOUNDED FACTORY PROBE: dScMgMemory2_c_classInit retains the literal scene construction sequence. Under the pinned2004/b56 options a direct new dScMgMemory2_c expression compiles, but changes this function from96 to64 bytes and fails strict relocation-aware verification. This supersedes the unsupported claim that semantic construction is unavailable; it does not establish an absolute compiler wall. Exact source and results are retained in notes/experiments/pr2875-source-repair-0920.json.",
+    "before": "The scene factory now uses ordinary new dScMgMemory2_c. Declaring the existing Particle::SysTracker constructor and initializing the real shared-state member preserve both observed component calls and the exact96-byte factory under2004/b56. All52 licensed bodies and13 complete metadata records match; emission order is unchanged. Two additional,unreferenced compiler-emitted destructor bodies have exact-symbol deadstrip policies below. The earlier64-byte direct-new probe omitted component initialization and is retained only as a historical incomplete experiment,not as an equivalent-form compiler constraint. See notes/experiments/pr2875-integration-0920.json for the complete construction proof.",
     "after": "The scene factory now uses ordinary new dScMgMemory2_c. Declaring the existing Particle::SysTracker constructor and initializing the real shared-state member preserve both observed component calls and the exact96-byte factory under2004/b56. All52 licensed bodies and13 complete metadata records match; emission order is unchanged. Two additional,unreferenced compiler-emitted destructor bodies have exact-symbol deadstrip policies below. The earlier64-byte direct-new probe omitted component initialization and is retained only as a historical incomplete experiment,not as an equivalent-form compiler constraint. See notes/experiments/pr2875-integration-0920.json for the complete construction proof.",
     "functional_manifest_fields_unchanged": true
   },
@@ -8688,6 +8684,2243 @@
     "All13 full emitted metadata records/301bytes match,including152-byte vtable; ordinary report7 VERIFIED/6 PARTIAL. No new compiler-owned metadata enrollment.",
     "FullROM equality retains retail gaps. Global metadata report has inherited partial,differing and unnamed records,and nine baseline symbol diagnostics remain explicitly tracked."
   ],
-  "proof_binding": "All17gates ran at the source anchor. Final delta is the two integration artifacts and manifest notes[3] only; all sources,headers,ledgers,symbol/enrollment maps and functional manifest policy remain unchanged.",
-  "next_action": "Independent verifier judges exact final head/current base and allMEM01\u201308,then root updates original PR and waits for real terminal private validation before guarded merge."
+  "proof_binding": "All17gates ran at the source anchor. Final delta is the two integration artifacts and manifest prose only; all sources,headers,ledgers,symbol/enrollment maps and functional manifest policy remain unchanged.",
+  "next_action": "Independent verifier judges exact final head/current base and allMEM01\u201308,then root updates original PR and waits for real terminal private validation before guarded merge.",
+  "current_manifest_note_corrections": [
+    {
+      "index": 4,
+      "before": "FACTORY RELOCATION PROOF: the TU-local _ZTV14dScMgMemory2_c reference uses the ABI two-word preamble (+8); objisolate rebases it to the ROM slot-array convention. This makes focused verification genuinely 52/52 with clean relocation destinations, rather than relying on a same-object exception.",
+      "after": "FACTORY RELOCATION PROOF: native references to the dScMgMemory2_c and dScMgSingle3DBase_c vtables use the ABI two-word preamble (+8). Existing objisolate normalization resolves these to their canonical ROM slot-array targets. The former literal base-vtable view used addend0 against its external public-symbol convention. Fresh strict verification proves all52 licensed bodies and actual relocation destinations; complete raw object identity with the literal factory is not claimed."
+    },
+    {
+      "index": 7,
+      "before": "COMPILER-ONLY ROW COUNT IS 13 DATA + 1 FUNCTION, DERIVED not copied. dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c is SIX levels, so 2 x 6 typeinfo rows + 1 vtable = 13, with no Vector3 term (the class has no Vector3 member and no member's locals odr-use one). The queue row's compiler-only:~11 estimate was copied from sibling_oracle dScMgSingle3DBase_c, which sits one level shallower (2 x 5 + 1 = 11); the estimate is short by exactly the two rows this class's own extra ancestry adds. The 14th row is _ZN14dScMgMemory2_cD2Ev, a genuinely homeless base-object destructor -- plain deadstrip.",
+      "after": "COMPILER-ONLY OUTPUT:13 data policies and3 exact-symbol deadstrip function policies,16 rows total. The six-class chain dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c gives2x6 typeinfo rows plus1 vtable. The function policies cover the existing dScMgMemory2_c D2 and the additional dMgMemory2SharedState_c D1 and dScMgSingle3DBase_c D2 emitted by ordinary construction. Each has no configured ROM home and no retained relocation references it. The queue row records the ancestry-derived minimum of13 compiler-only data records; it is not a total of all function policies."
+    }
+  ],
+  "independent_post_actor_recheck": {
+    "tested_commit": "e96876809c861ecefacca58e68bfc9a19546cb0d",
+    "tested_base": "5c15824ff6317ca3993f80d8dade0b738557bdfb",
+    "historical_author_base": "4679d2a9a319abc7c5b43a04211a0e6b877d471e",
+    "formal_acceptance": false,
+    "reviewer": "codex-memory2875-independent0921",
+    "compiler": "2004/b56",
+    "current_main_composition": true,
+    "rows": [
+      {
+        "path": "src/actors/dScMgMemory2_c.cpp",
+        "versions": {
+          "input": {
+            "source_sha256": "45d099d48d5a66d83686dc83480b594b071d48760d635329c9c313107a21d857",
+            "object_sha256": "7e9a029d4cca1ad4906e6f4d755107180143af14fa02dc38dd7efa4dc568be3e",
+            "object_bytes": 27096,
+            "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "_ZN14dScMgMemory2_cD1Ev",
+                "module": "ov006",
+                "addr": "0x020f5564",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_cD0Ev",
+                "module": "ov006",
+                "addr": "0x020f55b8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
+                "module": "ov006",
+                "addr": "0x020f5620",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
+                "module": "ov006",
+                "addr": "0x020f565c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
+                "module": "ov006",
+                "addr": "0x020f5694",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
+                "module": "ov006",
+                "addr": "0x020f56f8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10HideCursorEv",
+                "module": "ov006",
+                "addr": "0x020f572c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+                "module": "ov006",
+                "addr": "0x020f5740",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+                "module": "ov006",
+                "addr": "0x020f5744",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
+                "module": "ov006",
+                "addr": "0x020f58d0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
+                "module": "ov006",
+                "addr": "0x020f593c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
+                "module": "ov006",
+                "addr": "0x020f59c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9JudgePairEv",
+                "module": "ov006",
+                "addr": "0x020f5a64",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
+                "module": "ov006",
+                "addr": "0x020f5b98",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
+                "module": "ov006",
+                "addr": "0x020f5c40",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+                "module": "ov006",
+                "addr": "0x020f5cb4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+                "module": "ov006",
+                "addr": "0x020f5de0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardWaitEi",
+                "module": "ov006",
+                "addr": "0x020f5e70",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+                "module": "ov006",
+                "addr": "0x020f5e74",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10CardSelectEi",
+                "module": "ov006",
+                "addr": "0x020f5f0c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardIdleEi",
+                "module": "ov006",
+                "addr": "0x020f6084",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+                "module": "ov006",
+                "addr": "0x020f6088",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+                "module": "ov006",
+                "addr": "0x020f6230",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+                "module": "ov006",
+                "addr": "0x020f639c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+                "module": "ov006",
+                "addr": "0x020f6488",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10ResultWaitEv",
+                "module": "ov006",
+                "addr": "0x020f6538",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
+                "module": "ov006",
+                "addr": "0x020f6678",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+                "module": "ov006",
+                "addr": "0x020f670c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+                "module": "ov006",
+                "addr": "0x020f67a0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6830",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6904",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+                "module": "ov006",
+                "addr": "0x020f6a00",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+                "module": "ov006",
+                "addr": "0x020f6a78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+                "module": "ov006",
+                "addr": "0x020f6b00",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+                "module": "ov006",
+                "addr": "0x020f6b78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10RoundStartEv",
+                "module": "ov006",
+                "addr": "0x020f6bf0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6c90",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6f88",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9ResetGameEv",
+                "module": "ov006",
+                "addr": "0x020f7064",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9StateExitEv",
+                "module": "ov006",
+                "addr": "0x020f7190",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11StateResultEv",
+                "module": "ov006",
+                "addr": "0x020f71c8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10StateJudgeEv",
+                "module": "ov006",
+                "addr": "0x020f7210",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9StatePlayEv",
+                "module": "ov006",
+                "addr": "0x020f7234",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10StateSetupEv",
+                "module": "ov006",
+                "addr": "0x020f7280",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+                "module": "ov006",
+                "addr": "0x020f72c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+                "module": "ov006",
+                "addr": "0x020f730c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13OnTurnIntoEggEi",
+                "module": "ov006",
+                "addr": "0x020f7320",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13OnYoshiTryEatEi",
+                "module": "ov006",
+                "addr": "0x020f7394",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c6RenderEv",
+                "module": "ov006",
+                "addr": "0x020f73f4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8BehaviorEv",
+                "module": "ov006",
+                "addr": "0x020f7458",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+                "module": "ov006",
+                "addr": "0x020f74b4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "dScMgMemory2_c_classInit",
+                "module": "ov006",
+                "addr": "0x020f75d4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          },
+          "candidate": {
+            "source_sha256": "1c267fe28ac6af302f6a9060cf0328395223463243b7632b18b2650c2392d1b2",
+            "object_sha256": "6ce5f6d7a7c72f31b150be561b563332bf04a7add1af2161fe5c56d8e1a66a96",
+            "object_bytes": 27624,
+            "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "_ZN14dScMgMemory2_cD1Ev",
+                "module": "ov006",
+                "addr": "0x020f5564",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_cD0Ev",
+                "module": "ov006",
+                "addr": "0x020f55b8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11DrawMessageEv",
+                "module": "ov006",
+                "addr": "0x020f5620",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10DrawCursorEv",
+                "module": "ov006",
+                "addr": "0x020f565c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12UpdateCursorEv",
+                "module": "ov006",
+                "addr": "0x020f5694",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10ShowCursorEv",
+                "module": "ov006",
+                "addr": "0x020f56f8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10HideCursorEv",
+                "module": "ov006",
+                "addr": "0x020f572c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+                "module": "ov006",
+                "addr": "0x020f5740",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+                "module": "ov006",
+                "addr": "0x020f5744",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10PlayerDropEi",
+                "module": "ov006",
+                "addr": "0x020f58d0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11InitPlayersEv",
+                "module": "ov006",
+                "addr": "0x020f593c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13CheckFinishedEv",
+                "module": "ov006",
+                "addr": "0x020f59c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9JudgePairEv",
+                "module": "ov006",
+                "addr": "0x020f5a64",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9DrawCardsEv",
+                "module": "ov006",
+                "addr": "0x020f5b98",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11UpdateCardsEv",
+                "module": "ov006",
+                "addr": "0x020f5c40",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+                "module": "ov006",
+                "addr": "0x020f5cb4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+                "module": "ov006",
+                "addr": "0x020f5de0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardWaitEi",
+                "module": "ov006",
+                "addr": "0x020f5e70",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+                "module": "ov006",
+                "addr": "0x020f5e74",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10CardSelectEi",
+                "module": "ov006",
+                "addr": "0x020f5f0c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardIdleEi",
+                "module": "ov006",
+                "addr": "0x020f6084",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8CardMoveEi",
+                "module": "ov006",
+                "addr": "0x020f6088",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ResultFinishEv",
+                "module": "ov006",
+                "addr": "0x020f6230",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+                "module": "ov006",
+                "addr": "0x020f639c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ResultRewardEv",
+                "module": "ov006",
+                "addr": "0x020f6488",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10ResultWaitEv",
+                "module": "ov006",
+                "addr": "0x020f6538",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11RoundRevealEv",
+                "module": "ov006",
+                "addr": "0x020f6678",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+                "module": "ov006",
+                "addr": "0x020f670c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+                "module": "ov006",
+                "addr": "0x020f67a0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6830",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6904",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+                "module": "ov006",
+                "addr": "0x020f6a00",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+                "module": "ov006",
+                "addr": "0x020f6a78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+                "module": "ov006",
+                "addr": "0x020f6b00",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+                "module": "ov006",
+                "addr": "0x020f6b78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10RoundStartEv",
+                "module": "ov006",
+                "addr": "0x020f6bf0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6c90",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
+                "module": "ov006",
+                "addr": "0x020f6f88",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9ResetGameEv",
+                "module": "ov006",
+                "addr": "0x020f7064",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9StateExitEv",
+                "module": "ov006",
+                "addr": "0x020f7190",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c11StateResultEv",
+                "module": "ov006",
+                "addr": "0x020f71c8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10StateJudgeEv",
+                "module": "ov006",
+                "addr": "0x020f7210",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c9StatePlayEv",
+                "module": "ov006",
+                "addr": "0x020f7234",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c10StateSetupEv",
+                "module": "ov006",
+                "addr": "0x020f7280",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
+                "module": "ov006",
+                "addr": "0x020f72c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c15OnGroundPoundedEv",
+                "module": "ov006",
+                "addr": "0x020f730c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13OnTurnIntoEggEi",
+                "module": "ov006",
+                "addr": "0x020f7320",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13OnYoshiTryEatEi",
+                "module": "ov006",
+                "addr": "0x020f7394",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c6RenderEv",
+                "module": "ov006",
+                "addr": "0x020f73f4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c8BehaviorEv",
+                "module": "ov006",
+                "addr": "0x020f7458",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN14dScMgMemory2_c13InitResourcesEv",
+                "module": "ov006",
+                "addr": "0x020f74b4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "dScMgMemory2_c_classInit",
+                "module": "ov006",
+                "addr": "0x020f75d4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          }
+        },
+        "raw_object_identical": false,
+        "raw_difference": "Ordinary factory adds two unreferenced lifecycle bodies and native base-vtable relocation addend8. Existing policy proves safe exact-symbol reduction; retained payloads and normalized targets were independently checked in pr2875-complete-factory-output-audit.json.",
+        "output_policy": {
+          "policies": {
+            "requested": [
+              "_ZN14dScMgMemory2_cD2Ev",
+              "_ZN23dMgMemory2SharedState_cD1Ev",
+              "_ZN19dScMgSingle3DBase_cD2Ev"
+            ],
+            "deadstripped": [
+              "_ZN14dScMgMemory2_cD2Ev",
+              "_ZN19dScMgSingle3DBase_cD2Ev",
+              "_ZN23dMgMemory2SharedState_cD1Ev"
+            ],
+            "droppedSections": [
+              9,
+              10,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111,
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119,
+              120,
+              121,
+              122
+            ],
+            "data": [
+              "_ZTI7fBase_c",
+              "_ZTS7fBase_c",
+              "_ZTS7dBase_c",
+              "_ZTS8dScene_c",
+              "_ZTI7dBase_c",
+              "_ZTI11dScMgBase_c",
+              "_ZTS11dScMgBase_c",
+              "_ZTI8dScene_c",
+              "_ZTI14dScMgMemory2_c",
+              "_ZTS14dScMgMemory2_c",
+              "_ZTI19dScMgSingle3DBase_c",
+              "_ZTS19dScMgSingle3DBase_c",
+              "_ZTV14dScMgMemory2_c"
+            ],
+            "dataExternalized": [
+              "_ZTI11dScMgBase_c",
+              "_ZTI14dScMgMemory2_c",
+              "_ZTI19dScMgSingle3DBase_c",
+              "_ZTI7dBase_c",
+              "_ZTI7fBase_c",
+              "_ZTI8dScene_c",
+              "_ZTS11dScMgBase_c",
+              "_ZTS14dScMgMemory2_c",
+              "_ZTS19dScMgSingle3DBase_c",
+              "_ZTS7dBase_c",
+              "_ZTS7fBase_c",
+              "_ZTS8dScene_c",
+              "_ZTV14dScMgMemory2_c"
+            ]
+          },
+          "errors": [],
+          "unlicensed": [
+            [],
+            [],
+            []
+          ]
+        },
+        "licensed_order_exact": true,
+        "standard_metadata": [
+          {
+            "symbol": "_ZTV14dScMgMemory2_c",
+            "size": 152,
+            "result": {
+              "symbol": "_ZTV14dScMgMemory2_c",
+              "module": "ov006",
+              "addr": 34854100,
+              "bytes": 144,
+              "emitted": 144,
+              "romExtent": 144,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTI14dScMgMemory2_c",
+            "size": 12,
+            "result": {
+              "symbol": "_ZTI14dScMgMemory2_c",
+              "module": "ov006",
+              "addr": 34853712,
+              "bytes": 12,
+              "emitted": 12,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS14dScMgMemory2_c",
+            "size": 17,
+            "result": {
+              "symbol": "_ZTS14dScMgMemory2_c",
+              "module": "ov006",
+              "addr": 34853724,
+              "bytes": 16,
+              "emitted": 17,
+              "romExtent": 20,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          },
+          {
+            "symbol": "_ZTI19dScMgSingle3DBase_c",
+            "size": 12,
+            "result": {
+              "symbol": "_ZTI19dScMgSingle3DBase_c",
+              "module": "ov006",
+              "addr": 34847844,
+              "bytes": 12,
+              "emitted": 12,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS19dScMgSingle3DBase_c",
+            "size": 22,
+            "result": {
+              "symbol": "_ZTS19dScMgSingle3DBase_c",
+              "module": "ov006",
+              "addr": 34848000,
+              "bytes": 20,
+              "emitted": 22,
+              "romExtent": 24,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          },
+          {
+            "symbol": "_ZTI11dScMgBase_c",
+            "size": 12,
+            "result": {
+              "symbol": "_ZTI11dScMgBase_c",
+              "module": "ov004",
+              "addr": 34324332,
+              "bytes": 12,
+              "emitted": 12,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS11dScMgBase_c",
+            "size": 14,
+            "result": {
+              "symbol": "_ZTS11dScMgBase_c",
+              "module": "ov004",
+              "addr": 34324356,
+              "bytes": 12,
+              "emitted": 14,
+              "romExtent": 16,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          },
+          {
+            "symbol": "_ZTI8dScene_c",
+            "size": 12,
+            "result": {
+              "symbol": "_ZTI8dScene_c",
+              "module": "arm9",
+              "addr": 34149588,
+              "bytes": 12,
+              "emitted": 12,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS8dScene_c",
+            "size": 10,
+            "result": {
+              "symbol": "_ZTS8dScene_c",
+              "module": "arm9",
+              "addr": 34149552,
+              "bytes": 8,
+              "emitted": 10,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          },
+          {
+            "symbol": "_ZTI7dBase_c",
+            "size": 12,
+            "result": {
+              "symbol": "_ZTI7dBase_c",
+              "module": "arm9",
+              "addr": 34107000,
+              "bytes": 12,
+              "emitted": 12,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS7dBase_c",
+            "size": 9,
+            "result": {
+              "symbol": "_ZTS7dBase_c",
+              "module": "arm9",
+              "addr": 34106964,
+              "bytes": 8,
+              "emitted": 9,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          },
+          {
+            "symbol": "_ZTI7fBase_c",
+            "size": 8,
+            "result": {
+              "symbol": "_ZTI7fBase_c",
+              "module": "arm9",
+              "addr": 34106736,
+              "bytes": 8,
+              "emitted": 8,
+              "romExtent": 8,
+              "blindWords": 0,
+              "verdict": "VERIFIED"
+            }
+          },
+          {
+            "symbol": "_ZTS7fBase_c",
+            "size": 9,
+            "result": {
+              "symbol": "_ZTS7fBase_c",
+              "module": "arm9",
+              "addr": 34106976,
+              "bytes": 8,
+              "emitted": 9,
+              "romExtent": 12,
+              "blindWords": 0,
+              "verdict": "PARTIAL"
+            }
+          }
+        ],
+        "complete_metadata": [
+          {
+            "symbol": "_ZTV14dScMgMemory2_c",
+            "module": "ov006",
+            "address": "0x213d4cc",
+            "size": 152,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "0000000050d31302b4740f0230090b02e4a61002f03b0402f0e5020208a6100258740f0298a61002c8e30202f4730f0264a6100298e30202e8040b027c3504029c3404029434040264550f02b8550f0294730f0220730f0290290b020c730f0298e10a02a0e10a0240e10a0228e10a0200a610027cf20a024cf00a0294f00a02d8ee0a0280280b02f4270b0208a71002b4e30a0260d60a02",
+            "retail_hex": "0000000050d31302b4740f0230090b02e4a61002f03b0402f0e5020208a6100258740f0298a61002c8e30202f4730f0264a6100298e30202e8040b027c3504029c3404029434040264550f02b8550f0294730f0220730f0290290b020c730f0298e10a02a0e10a0240e10a0228e10a0200a610027cf20a024cf00a0294f00a02d8ee0a0280280b02f4270b0208a71002b4e30a0260d60a02"
+          },
+          {
+            "symbol": "_ZTI14dScMgMemory2_c",
+            "module": "ov006",
+            "address": "0x213d350",
+            "size": 12,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "64a709025cd3130264bc1302",
+            "retail_hex": "64a709025cd3130264bc1302"
+          },
+          {
+            "symbol": "_ZTS14dScMgMemory2_c",
+            "module": "ov006",
+            "address": "0x213d35c",
+            "size": 17,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "31346453634d674d656d6f7279325f6300",
+            "retail_hex": "31346453634d674d656d6f7279325f6300"
+          },
+          {
+            "symbol": "_ZTI19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "address": "0x213bc64",
+            "size": 12,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "64a7090200bd13026cbf0b02",
+            "retail_hex": "64a7090200bd13026cbf0b02"
+          },
+          {
+            "symbol": "_ZTS19dScMgSingle3DBase_c",
+            "module": "ov006",
+            "address": "0x213bd00",
+            "size": 22,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "31396453634d6753696e676c653344426173655f6300",
+            "retail_hex": "31396453634d6753696e676c653344426173655f6300"
+          },
+          {
+            "symbol": "_ZTI11dScMgBase_c",
+            "module": "ov004",
+            "address": "0x20bbf6c",
+            "size": 12,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "64a7090284bf0b02d4140902",
+            "retail_hex": "64a7090284bf0b02d4140902"
+          },
+          {
+            "symbol": "_ZTS11dScMgBase_c",
+            "module": "ov004",
+            "address": "0x20bbf84",
+            "size": 14,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "31316453634d67426173655f6300",
+            "retail_hex": "31316453634d67426173655f6300"
+          },
+          {
+            "symbol": "_ZTI8dScene_c",
+            "module": "arm9",
+            "address": "0x20914d4",
+            "size": 12,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "64a70902b0140902786e0802",
+            "retail_hex": "64a70902b0140902786e0802"
+          },
+          {
+            "symbol": "_ZTS8dScene_c",
+            "module": "arm9",
+            "address": "0x20914b0",
+            "size": 10,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "38645363656e655f6300",
+            "retail_hex": "38645363656e655f6300"
+          },
+          {
+            "symbol": "_ZTI7dBase_c",
+            "module": "arm9",
+            "address": "0x2086e78",
+            "size": 12,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "64a70902546e0802706d0802",
+            "retail_hex": "64a70902546e0802706d0802"
+          },
+          {
+            "symbol": "_ZTS7dBase_c",
+            "module": "arm9",
+            "address": "0x2086e54",
+            "size": 9,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "3764426173655f6300",
+            "retail_hex": "3764426173655f6300"
+          },
+          {
+            "symbol": "_ZTI7fBase_c",
+            "module": "arm9",
+            "address": "0x2086d70",
+            "size": 8,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "74a70902606e0802",
+            "retail_hex": "74a70902606e0802"
+          },
+          {
+            "symbol": "_ZTS7fBase_c",
+            "module": "arm9",
+            "address": "0x2086e60",
+            "size": 9,
+            "blind": [],
+            "exact_all_bytes": true,
+            "linked_hex": "3766426173655f6300",
+            "retail_hex": "3766426173655f6300"
+          }
+        ]
+      },
+      {
+        "path": "src_tu/actors/unit_ov004_020b0a38.cpp",
+        "versions": {
+          "input": {
+            "source_sha256": "526dc646f73e6725bb040ea81998a9da9415f6c5e79f8c55849b9d20ff736dab",
+            "object_sha256": "986eb227cc3b7f9b4fc1efad85ff10a9f61ace0e2240d05cad975e72790d3d2d",
+            "object_bytes": 23728,
+            "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "func_ov004_020b0a38",
+                "module": "ov004",
+                "addr": "0x020b0a38",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0a54",
+                "module": "ov004",
+                "addr": "0x020b0a54",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "FreeGfxSlotsById",
+                "module": "ov004",
+                "addr": "0x020b0aa0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0b1c",
+                "module": "ov004",
+                "addr": "0x020b0b1c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0cac",
+                "module": "ov004",
+                "addr": "0x020b0cac",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0d30",
+                "module": "ov004",
+                "addr": "0x020b0d30",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0d8c",
+                "module": "ov004",
+                "addr": "0x020b0d8c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0de0",
+                "module": "ov004",
+                "addr": "0x020b0de0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0e84",
+                "module": "ov004",
+                "addr": "0x020b0e84",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b14f0",
+                "module": "ov004",
+                "addr": "0x020b14f0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1710",
+                "module": "ov004",
+                "addr": "0x020b1710",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b19f0",
+                "module": "ov004",
+                "addr": "0x020b19f0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1a5c",
+                "module": "ov004",
+                "addr": "0x020b1a5c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1aec",
+                "module": "ov004",
+                "addr": "0x020b1aec",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b08",
+                "module": "ov004",
+                "addr": "0x020b1b08",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b40",
+                "module": "ov004",
+                "addr": "0x020b1b40",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b78",
+                "module": "ov004",
+                "addr": "0x020b1b78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1ba0",
+                "module": "ov004",
+                "addr": "0x020b1ba0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1bc8",
+                "module": "ov004",
+                "addr": "0x020b1bc8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1c68",
+                "module": "ov004",
+                "addr": "0x020b1c68",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1cf0",
+                "module": "ov004",
+                "addr": "0x020b1cf0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1d60",
+                "module": "ov004",
+                "addr": "0x020b1d60",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1de8",
+                "module": "ov004",
+                "addr": "0x020b1de8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1e34",
+                "module": "ov004",
+                "addr": "0x020b1e34",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1e44",
+                "module": "ov004",
+                "addr": "0x020b1e44",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1ea4",
+                "module": "ov004",
+                "addr": "0x020b1ea4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2444",
+                "module": "ov004",
+                "addr": "0x020b2444",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2574",
+                "module": "ov004",
+                "addr": "0x020b2574",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b265c",
+                "module": "ov004",
+                "addr": "0x020b265c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b27f4",
+                "module": "ov004",
+                "addr": "0x020b27f4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2880",
+                "module": "ov004",
+                "addr": "0x020b2880",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b290c",
+                "module": "ov004",
+                "addr": "0x020b290c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2980",
+                "module": "ov004",
+                "addr": "0x020b2980",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b298c",
+                "module": "ov004",
+                "addr": "0x020b298c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2990",
+                "module": "ov004",
+                "addr": "0x020b2990",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2994",
+                "module": "ov004",
+                "addr": "0x020b2994",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b299c",
+                "module": "ov004",
+                "addr": "0x020b299c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b29a0",
+                "module": "ov004",
+                "addr": "0x020b29a0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD2Ev",
+                "module": "ov004",
+                "addr": "0x020b29c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD0Ev",
+                "module": "ov004",
+                "addr": "0x020b2a18",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD1Ev",
+                "module": "ov004",
+                "addr": "0x020b2a84",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          },
+          "candidate": {
+            "source_sha256": "f56a46213227c236f6cbdb8f72540c7b3c0b8a839d4955752cc090af9e59f06a",
+            "object_sha256": "986eb227cc3b7f9b4fc1efad85ff10a9f61ace0e2240d05cad975e72790d3d2d",
+            "object_bytes": 23728,
+            "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "func_ov004_020b0a38",
+                "module": "ov004",
+                "addr": "0x020b0a38",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0a54",
+                "module": "ov004",
+                "addr": "0x020b0a54",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "FreeGfxSlotsById",
+                "module": "ov004",
+                "addr": "0x020b0aa0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0b1c",
+                "module": "ov004",
+                "addr": "0x020b0b1c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0cac",
+                "module": "ov004",
+                "addr": "0x020b0cac",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0d30",
+                "module": "ov004",
+                "addr": "0x020b0d30",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0d8c",
+                "module": "ov004",
+                "addr": "0x020b0d8c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0de0",
+                "module": "ov004",
+                "addr": "0x020b0de0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b0e84",
+                "module": "ov004",
+                "addr": "0x020b0e84",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b14f0",
+                "module": "ov004",
+                "addr": "0x020b14f0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1710",
+                "module": "ov004",
+                "addr": "0x020b1710",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b19f0",
+                "module": "ov004",
+                "addr": "0x020b19f0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1a5c",
+                "module": "ov004",
+                "addr": "0x020b1a5c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1aec",
+                "module": "ov004",
+                "addr": "0x020b1aec",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b08",
+                "module": "ov004",
+                "addr": "0x020b1b08",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b40",
+                "module": "ov004",
+                "addr": "0x020b1b40",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1b78",
+                "module": "ov004",
+                "addr": "0x020b1b78",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1ba0",
+                "module": "ov004",
+                "addr": "0x020b1ba0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1bc8",
+                "module": "ov004",
+                "addr": "0x020b1bc8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1c68",
+                "module": "ov004",
+                "addr": "0x020b1c68",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1cf0",
+                "module": "ov004",
+                "addr": "0x020b1cf0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1d60",
+                "module": "ov004",
+                "addr": "0x020b1d60",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1de8",
+                "module": "ov004",
+                "addr": "0x020b1de8",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1e34",
+                "module": "ov004",
+                "addr": "0x020b1e34",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1e44",
+                "module": "ov004",
+                "addr": "0x020b1e44",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b1ea4",
+                "module": "ov004",
+                "addr": "0x020b1ea4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2444",
+                "module": "ov004",
+                "addr": "0x020b2444",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2574",
+                "module": "ov004",
+                "addr": "0x020b2574",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b265c",
+                "module": "ov004",
+                "addr": "0x020b265c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b27f4",
+                "module": "ov004",
+                "addr": "0x020b27f4",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2880",
+                "module": "ov004",
+                "addr": "0x020b2880",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b290c",
+                "module": "ov004",
+                "addr": "0x020b290c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2980",
+                "module": "ov004",
+                "addr": "0x020b2980",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b298c",
+                "module": "ov004",
+                "addr": "0x020b298c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2990",
+                "module": "ov004",
+                "addr": "0x020b2990",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b2994",
+                "module": "ov004",
+                "addr": "0x020b2994",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b299c",
+                "module": "ov004",
+                "addr": "0x020b299c",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "func_ov004_020b29a0",
+                "module": "ov004",
+                "addr": "0x020b29a0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD2Ev",
+                "module": "ov004",
+                "addr": "0x020b29c0",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD0Ev",
+                "module": "ov004",
+                "addr": "0x020b2a18",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              },
+              {
+                "name": "_ZN11dScMgBase_cD1Ev",
+                "module": "ov004",
+                "addr": "0x020b2a84",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          }
+        },
+        "raw_object_identical": true
+      },
+      {
+        "path": "src/func_ov004_020b1e34.c",
+        "versions": {
+          "input": {
+            "source_sha256": "ba383c93ac281fa63dfe5b982abd15d3013fb92c3abe35622be8ddd52ea1c741",
+            "object_sha256": "5992a1f0ea04492cad4d9f754456ea0f041dc3735ce5034d993f257a94e4df0c",
+            "object_bytes": 616,
+            "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "func_ov004_020b1e34",
+                "module": "ov004",
+                "addr": "0x020b1e34",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          },
+          "candidate": {
+            "source_sha256": "2730fd45fb549c0757f9102049d8ee7dc5e472b3da256839c1ef6378e49e4ebb",
+            "object_sha256": "5992a1f0ea04492cad4d9f754456ea0f041dc3735ce5034d993f257a94e4df0c",
+            "object_bytes": 616,
+            "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "func_ov004_020b1e34",
+                "module": "ov004",
+                "addr": "0x020b1e34",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          }
+        },
+        "raw_object_identical": true
+      },
+      {
+        "path": "src/MultiStore16.c",
+        "versions": {
+          "input": {
+            "source_sha256": "7fb3469b9fcfbe1c6462f359268fdeaab8c221327ba18afd25163534dccb6514",
+            "object_sha256": "d94d77f287d0184da3fa6e2dccffd0eb4afc6412a40b30df483c2fbfe339393c",
+            "object_bytes": 512,
+            "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "MultiStore16",
+                "module": "arm9",
+                "addr": "0x0205a448",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          },
+          "candidate": {
+            "source_sha256": "9345fbc6a95bb349804a4e122470a5508d2cc943af6226d41d1b76bedac4853d",
+            "object_sha256": "d94d77f287d0184da3fa6e2dccffd0eb4afc6412a40b30df483c2fbfe339393c",
+            "object_bytes": 512,
+            "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+            "strict": [
+              {
+                "name": "MultiStore16",
+                "module": "arm9",
+                "addr": "0x0205a448",
+                "verdict": "VERIFIED",
+                "diffs": [],
+                "blind": 0
+              }
+            ]
+          }
+        },
+        "raw_object_identical": true
+      }
+    ],
+    "canary": [
+      true,
+      "2004/b56"
+    ],
+    "summary": {
+      "strict_functions_each_version": 95,
+      "raw_object_pairs_identical": 3,
+      "raw_object_pairs_changed_with_explicit_policy": 1,
+      "complete_memory_metadata": 13,
+      "blind": 0,
+      "diffs": 0,
+      "no_formal_acceptance": true
+    }
+  },
+  "independent_consumer_partition_audit": {
+    "schema": 1,
+    "reviewer": "codex-memory2875-independent0921",
+    "formal_acceptance": false,
+    "tested_commit": "e96876809c861ecefacca58e68bfc9a19546cb0d",
+    "tested_base": "5c15824ff6317ca3993f80d8dade0b738557bdfb",
+    "independently_recomputed_exact_inventory": true,
+    "input_files": 32,
+    "function_rows": 438,
+    "skipped_drafts": [],
+    "parts": [
+      {
+        "part": 0,
+        "files": [
+          "src/actors/dScMgSound_c.cpp"
+        ],
+        "function_rows": 82,
+        "exit_code": 0,
+        "result_sha256": "12df9af62018a0116029a0733fc43a75ea3b616daa1fd244f259b528007fd666",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/actors/dScMgSound_c.cpp",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-0.json"
+        ]
+      },
+      {
+        "part": 1,
+        "files": [
+          "src/actors/dScMgMemory2_c.cpp",
+          "src/actors/dScMgSlot1_c.cpp",
+          "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
+          "src/func_ov004_020b1e34.c"
+        ],
+        "function_rows": 72,
+        "exit_code": 0,
+        "result_sha256": "4ad3aac5c58e08830089ac3194fadfeeb291d71751fe9fa5f1a477a00d6385de",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/actors/dScMgMemory2_c.cpp",
+          "src/actors/dScMgSlot1_c.cpp",
+          "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
+          "src/func_ov004_020b1e34.c",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-1.json"
+        ]
+      },
+      {
+        "part": 2,
+        "files": [
+          "src/minigames/d_s_mg_memory.cpp",
+          "src/minigames/d_s_mg_bsc.cpp",
+          "src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp",
+          "src/_ZN12dScMg3DEsp_cD1Ev.cpp",
+          "src/_ZN12dScMgSlot3_c16OnAimedAtWithEggEv.cpp",
+          "src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp"
+        ],
+        "function_rows": 71,
+        "exit_code": 0,
+        "result_sha256": "9d1d17530486d0ba3e9bdc284af6e37d877e4bb1012286afe17e6baea5552c85",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/minigames/d_s_mg_memory.cpp",
+          "src/minigames/d_s_mg_bsc.cpp",
+          "src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp",
+          "src/_ZN12dScMg3DEsp_cD1Ev.cpp",
+          "src/_ZN12dScMgSlot3_c16OnAimedAtWithEggEv.cpp",
+          "src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-2.json"
+        ]
+      },
+      {
+        "part": 3,
+        "files": [
+          "src/actors/dScMgRoulette_c.cpp",
+          "src/actors/dScMgSnowball_c.cpp",
+          "src/MultiStore16.c",
+          "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
+          "src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp",
+          "src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp",
+          "src/_ZN12dScMg3DEsp_c9Virtual50Ev.cpp",
+          "src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp",
+          "src/_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv.cpp",
+          "src/_ZN12dScMgSlot3_cD0Ev.cpp"
+        ],
+        "function_rows": 71,
+        "exit_code": 0,
+        "result_sha256": "27773b5d97b946b490276b9fd3706ee31d28ef09e8ca7c9ca77c6d3decc080c6",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/actors/dScMgRoulette_c.cpp",
+          "src/actors/dScMgSnowball_c.cpp",
+          "src/MultiStore16.c",
+          "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
+          "src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp",
+          "src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp",
+          "src/_ZN12dScMg3DEsp_c9Virtual50Ev.cpp",
+          "src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp",
+          "src/_ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv.cpp",
+          "src/_ZN12dScMgSlot3_cD0Ev.cpp",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-3.json"
+        ]
+      },
+      {
+        "part": 4,
+        "files": [
+          "src/minigames/d_s_mg_card.cpp",
+          "src/minigames/d_s_mg_m_carlo2.cpp",
+          "src/minigames/d_s_mg_single3_d_base.cpp"
+        ],
+        "function_rows": 71,
+        "exit_code": 0,
+        "result_sha256": "4cd37695f65c81f6d6386eed86f76169bb44cd42a0559bf03033dc8c114c8727",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/minigames/d_s_mg_card.cpp",
+          "src/minigames/d_s_mg_m_carlo2.cpp",
+          "src/minigames/d_s_mg_single3_d_base.cpp",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-4.json"
+        ]
+      },
+      {
+        "part": 5,
+        "files": [
+          "src/actors/dScMgCup_c.cpp",
+          "src/minigames/d_s_mg_m_carlo.cpp",
+          "src/actors/dScMgFlower_c.cpp",
+          "src/_ZN12dScMg3DEsp_c6RenderEv.cpp",
+          "src/_ZN12dScMg3DEsp_cD0Ev.cpp",
+          "src/_ZN12dScMgSlot3_c13OnYoshiTryEatEi.cpp",
+          "src/_ZN12dScMgSlot3_c6RenderEv.cpp",
+          "src/_ZN12dScMgSlot3_cD1Ev.cpp"
+        ],
+        "function_rows": 71,
+        "exit_code": 0,
+        "result_sha256": "015620fb3902f1441e2174c4683e65a24eecead98028974e30452a93d1cbe150",
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/prepush_linkcheck.py",
+          "--files",
+          "src/actors/dScMgCup_c.cpp",
+          "src/minigames/d_s_mg_m_carlo.cpp",
+          "src/actors/dScMgFlower_c.cpp",
+          "src/_ZN12dScMg3DEsp_c6RenderEv.cpp",
+          "src/_ZN12dScMg3DEsp_cD0Ev.cpp",
+          "src/_ZN12dScMgSlot3_c13OnYoshiTryEatEi.cpp",
+          "src/_ZN12dScMgSlot3_c6RenderEv.cpp",
+          "src/_ZN12dScMgSlot3_cD1Ev.cpp",
+          "--json",
+          "C:\\tmp\\sm64ds-switchintegrate0920\\build\\pr2875-production\\consumers-part-5.json"
+        ]
+      }
+    ],
+    "verified": 438,
+    "warnings": [],
+    "blocking": 0,
+    "exact_file_multiset_preserved": true,
+    "exact_function_multiset_preserved": true,
+    "unchanged_validator_paths": [
+      "tools/prepush_linkcheck.py",
+      "tools/affected_src.py",
+      "tools/srcpath.py",
+      "tools/build_pin.py",
+      "tools/linkcheck.py",
+      "tools/objisolate.py"
+    ],
+    "reviewed_runner": "build/reviewer-0919/run_parallel_consumers.py",
+    "runner_sha256": "d472628c1c0ee55ca8bf15e53ebdef64652c1bcd04f1e9bd2bc2164e1e8ebd09",
+    "aggregate_sha256": "ed028ff0f12fc88a199c724ac66e058540d469b9fa7ee5af92bbd2810586abc0",
+    "proof_attribution": "Root ran the438 expanded strict checks in six disjoint unchanged-tool invocations. This reviewer independently recomputed the original range/header expansion and function population, inspected actual argv/exit codes/allresult JSON and exact multiset equality; these are not reviewer-executed consumer compiles.",
+    "remaining": "Bind this exact source/base result to final immutable evidence head with no compiler-input change."
+  }
 }
