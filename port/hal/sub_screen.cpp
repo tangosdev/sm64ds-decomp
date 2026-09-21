@@ -286,6 +286,331 @@ void hal_sub_panel_geometry(int w, int h)
     if (g_y0 < 0) g_y0 = 0;
 }
 
+/* ---- THE DECORATIVE PANEL, COMPOSED FROM THE PLAYER'S OWN GAME DATA -------
+ *
+ * WHAT IT IS. A bordered panel behind the map, tiled with the game's own
+ * wallpaper, with a plaque on its top edge reading MAP -- the design an artist
+ * sent the owner. His two PNGs are DERIVED FROM THE CARTRIDGE (lane MINIMAP1
+ * measured it: every colour in both sits on the DS's own BGR555 ladder, the
+ * panel interior is an exact 32x32 repeat, and its fifteen wallpaper colours
+ * are one 16-entry DS palette, in palette order, inside the ROM). The public
+ * bundle is ROM-clean, so those files are never committed, copied, embedded or
+ * read. The look comes from the player's own copy of the game instead, and
+ * only the DESIGN'S GEOMETRY is taken from the artist's work, which is what
+ * geometry is.
+ *
+ * WHERE THE WALLPAPER LIVES, MEASURED RATHER THAN GUESSED. The palette lane
+ * MINIMAP1 found in the cartridge is ARCHIVE/en1.narc member 6, bank 2 -- the
+ * ONLY bank in that whole archive whose sixteen entries carry those fifteen
+ * colours, searched bank by bank. Drawing member 1's background map with
+ * member 2's tiles through that bank paints exactly those fifteen colours and
+ * repeats every 32 pixels horizontally with a 0.991 match, which is the same
+ * 32x32 motif MINIMAP1 measured in the artist's panel. So the three members
+ * are the wallpaper, and this reads them straight out of the archive:
+ *
+ *     0x8401  the background map   LZ-compressed, 32x32 entries
+ *     0x8402  the tiles            LZ-compressed, 4bpp
+ *     0x8406  the palettes         plain, nine banks of sixteen
+ *
+ * It is a MENU screen's background, so a course never loads it and there is no
+ * copy in VRAM to borrow -- hence the archive read. It happens ONCE, the first
+ * frame a course draws the panel, and only with the option on.
+ *
+ * THE GEOMETRY, off the artist's design, in DS pixels against its own 240x180
+ * interior: six pixels of wallpaper outside a frame one pixel thick on the
+ * left and top and two on the right and bottom, so the panel stands seven
+ * pixels proud of the map on the left and top and eight on the right and
+ * bottom. The plaque is 109 wide and 32 tall against a 255-wide panel, centred
+ * on its top edge with ten of those rows above it. Every one of those numbers
+ * is a size or a position.
+ *
+ * THE COLOURS ARE ROLES, taken from the player's palette and never from the
+ * PNG: the wallpaper is the player's tiles as they are, the frame is the
+ * darkest colour in the player's own wallpaper bank taken down to a shadow of
+ * itself, and the plaque is the brightest one.
+ *
+ * WHAT IS STILL OWED. The word MAP is drawn in this file's own block letters,
+ * not in the game's font: finding the cartridge's own MAP label, or its HUD
+ * glyphs, is a hunt this lane did not have the clock for. Everything else on
+ * the panel is the player's own data. */
+extern "C" const unsigned char *port_fs_archive_member(unsigned fileID,
+                                                       unsigned *len_out);
+extern "C" void DecompressLZ16(void *src, void *dst);
+
+const unsigned kWallScreen = 0x8401, kWallTiles = 0x8402, kWallPltt = 0x8406;
+const int kWallBank = 2;          /* measured; see the banner above */
+
+/* the motif, 32x32 ARGB, and the two colour roles taken from the same bank */
+unsigned g_motif[32][32];
+unsigned g_panel_dark, g_panel_bright;
+int g_motif_state;                /* 0 not tried, 1 ready, -1 unavailable */
+
+unsigned bgr555_to_argb(unsigned c)
+{
+    const unsigned r = c & 0x1F, g = (c >> 5) & 0x1F, b = (c >> 10) & 0x1F;
+    return 0xFF000000u | ((r << 3 | r >> 2) << 16) | ((g << 3 | g >> 2) << 8)
+           | (b << 3 | b >> 2);
+}
+
+/* The compressed member, expanded with the game's own decompressor. The size
+   is the LZ header's own, which is what every caller of DecompressLZ16 in the
+   ROM relies on; a member that is not LZ at all is refused rather than run. */
+unsigned char *wall_expand(unsigned fileID, unsigned *out_len)
+{
+    unsigned n = 0;
+    const unsigned char *raw = port_fs_archive_member(fileID, &n);
+    if (!raw || n < 4 || raw[0] != 0x10) return 0;
+    const unsigned size = (unsigned)raw[1] | (unsigned)raw[2] << 8
+                        | (unsigned)raw[3] << 16;
+    if (size < 32 || size > (1u << 20)) return 0;
+    unsigned char *dst = (unsigned char *)std::malloc(size);
+    if (!dst) return 0;
+    /* DecompressLZ16 takes a writable source pointer the way the ROM's own
+       callers hand it one; the bytes are not modified. */
+    DecompressLZ16((void *)raw, dst);
+    *out_len = size;
+    return dst;
+}
+
+int wall_build(void)
+{
+    unsigned scr_n = 0, til_n = 0, pal_n = 0;
+    unsigned char *scr = wall_expand(kWallScreen, &scr_n);
+    unsigned char *til = scr ? wall_expand(kWallTiles, &til_n) : 0;
+    const unsigned char *pal = port_fs_archive_member(kWallPltt, &pal_n);
+    int ok = 0;
+    if (scr && til && pal && scr_n >= 2048 && til_n >= 1024
+        && pal_n >= (unsigned)(kWallBank + 1) * 32) {
+        unsigned bank[16];
+        int distinct = 0;
+        for (int k = 0; k < 16; ++k) {
+            const unsigned c = (unsigned)pal[kWallBank * 32 + k * 2]
+                             | (unsigned)pal[kWallBank * 32 + k * 2 + 1] << 8;
+            bank[k] = bgr555_to_argb(c);
+            int seen = 0;
+            for (int j = 0; j < k; ++j) if (bank[j] == bank[k]) seen = 1;
+            distinct += !seen;
+        }
+        /* THE GUARD ON THE WHOLE DERIVATION. A wallpaper bank is sixteen
+           distinct colours; a bank that is mostly one colour is not the one
+           this was measured against, and the panel falls back rather than
+           painting a flat rectangle and calling it the artist's design. */
+        if (distinct >= 12) {
+            /* The first 4x4 block of the background map whose sixteen entries
+               all carry ONE non-zero palette, which is a block of wallpaper
+               and not the header or the frame the menu draws around it. */
+            int bx = -1, by = -1;
+            for (int ty = 0; ty + 4 <= 32 && by < 0; ++ty)
+                for (int tx = 0; tx + 4 <= 32; ++tx) {
+                    int pl = -1, good = 1;
+                    for (int j = 0; j < 4 && good; ++j)
+                        for (int i = 0; i < 4; ++i) {
+                            const unsigned e =
+                                (unsigned)scr[((ty + j) * 32 + tx + i) * 2]
+                                | (unsigned)scr[((ty + j) * 32 + tx + i) * 2 + 1] << 8;
+                            const int p = (int)(e >> 12);
+                            if (!p || (pl >= 0 && p != pl)) { good = 0; break; }
+                            pl = p;
+                        }
+                    if (good) { bx = tx; by = ty; break; }
+                }
+            if (bx >= 0) {
+                unsigned lo = 0xFFFFFFFFu, hi = 0;
+                /* INDEX 0 IS NOT A COLOUR. On the DS a 4bpp background pixel
+                   of index 0 is transparent and the layer under it shows
+                   through, so painting it with the bank's entry 0 would put a
+                   colour on the panel that the wallpaper never shows -- the
+                   first build of this did, and the frame came out blue. The
+                   motif paints those pixels with the pattern's own field
+                   colour instead: the non-transparent index that covers most
+                   of the block. */
+                int hist[16] = {0};
+                for (int j = 0; j < 4; ++j)
+                    for (int i = 0; i < 4; ++i) {
+                        const unsigned e =
+                            (unsigned)scr[((by + j) * 32 + bx + i) * 2]
+                            | (unsigned)scr[((by + j) * 32 + bx + i) * 2 + 1] << 8;
+                        const unsigned t = e & 0x3FFu;
+                        for (int k = 0; k < 32; ++k) {
+                            const unsigned o = t * 32u + (unsigned)k;
+                            if (o >= til_n) break;
+                            ++hist[til[o] & 0xF];
+                            ++hist[til[o] >> 4];
+                        }
+                    }
+                int field = 1;
+                for (int k = 2; k < 16; ++k)
+                    if (hist[k] > hist[field]) field = k;
+                bank[0] = bank[field];
+                for (int j = 0; j < 4; ++j)
+                    for (int i = 0; i < 4; ++i) {
+                        const unsigned e =
+                            (unsigned)scr[((by + j) * 32 + bx + i) * 2]
+                            | (unsigned)scr[((by + j) * 32 + bx + i) * 2 + 1] << 8;
+                        const unsigned t = e & 0x3FFu;
+                        const int hf = (e >> 10) & 1, vf = (e >> 11) & 1;
+                        for (int y = 0; y < 8; ++y)
+                            for (int x = 0; x < 8; ++x) {
+                                const int sx = hf ? 7 - x : x;
+                                const int sy = vf ? 7 - y : y;
+                                const unsigned o = t * 32u + (unsigned)sy * 4u
+                                                 + (unsigned)(sx >> 1);
+                                unsigned idx = 0;
+                                if (o < til_n)
+                                    idx = (sx & 1) ? (unsigned)(til[o] >> 4)
+                                                   : (unsigned)(til[o] & 0xF);
+                                const unsigned c = bank[idx];
+                                g_motif[j * 8 + y][i * 8 + x] = c;
+                                const unsigned l = ((c >> 16) & 0xFF)
+                                                 + ((c >> 8) & 0xFF) + (c & 0xFF);
+                                if (l < lo) { lo = l; g_panel_dark = c; }
+                                if (l > hi) { hi = l; g_panel_bright = c; }
+                            }
+                    }
+                /* THE FRAME'S COLOUR ROLE: the darkest colour the player's own
+                   wallpaper actually uses, taken down to a third of itself so
+                   it reads as a shadow line round the panel. A role, computed
+                   from the player's palette; nothing is sampled from anyone's
+                   artwork. */
+                g_panel_dark = 0xFF000000u
+                    | ((((g_panel_dark >> 16) & 0xFF) / 3) << 16)
+                    | ((((g_panel_dark >> 8) & 0xFF) / 3) << 8)
+                    | ((g_panel_dark & 0xFF) / 3);
+                ok = 1;
+            }
+        }
+    }
+    std::free(scr);
+    std::free(til);
+    if (!ok && std::getenv("SM64DS_MINIMAP_TRACE"))
+        std::fprintf(stderr, "[mmtrace] wallpaper not available "
+                     "(screen %u tiles %u palette %u); plain panel\n",
+                     scr_n, til_n, pal_n);
+    else if (ok && std::getenv("SM64DS_MINIMAP_TRACE"))
+        std::fprintf(stderr, "[mmtrace] wallpaper motif built from the "
+                     "player's data; frame %06x plaque %06x\n",
+                     g_panel_dark & 0xFFFFFF, g_panel_bright & 0xFFFFFF);
+    return ok;
+}
+
+/* M, A and P in a 5x7 grid, one bit per column, this file's own lettering.
+   Named for what it is: the game's own MAP label is still owed. */
+const unsigned char kGlyphMAP[3][7] = {
+    { 0x11, 0x1B, 0x15, 0x11, 0x11, 0x11, 0x11 },   /* M */
+    { 0x0E, 0x11, 0x11, 0x1F, 0x11, 0x11, 0x11 },   /* A */
+    { 0x1E, 0x11, 0x11, 0x1E, 0x10, 0x10, 0x10 },   /* P */
+};
+
+void px_put(unsigned *dst, int dw, int dh, int x, int y, unsigned c)
+{
+    if (x < 0 || y < 0 || x >= dw || y >= dh) return;
+    dst[y * ntr::SCREEN_W + x] = c;
+}
+
+void px_fill(unsigned *dst, int dw, int dh, int x0, int y0, int w, int h,
+             unsigned c)
+{
+    for (int y = y0; y < y0 + h; ++y)
+        for (int x = x0; x < x0 + w; ++x)
+            px_put(dst, dw, dh, x, y, c);
+}
+
+/* THE PANEL, DRAWN BEHIND THE MAP. Called from hal_sub_screen_present with the
+   framebuffer, just before the map itself is composed over the middle of it. */
+void hal_sub_panel_decor(unsigned *dst, int w, int h)
+{
+    if (!g_motif_state) g_motif_state = wall_build() ? 1 : -1;
+
+    /* The artist's margins, carried onto whatever size the map is drawn at.
+       Seven DS pixels proud on the left and top, eight on the right and
+       bottom, at the map's own scale, and never less than one pixel so the
+       smallest map still has a panel round it. */
+    const int sx7 = ntr::SUB_W * 7 * g_pan_num / (256 * g_pan_den);
+    const int sx8 = ntr::SUB_W * 8 * g_pan_num / (256 * g_pan_den);
+    const int sy7 = ntr::SUB_H * 7 * g_pan_num / (192 * g_pan_den);
+    const int sy8 = ntr::SUB_H * 8 * g_pan_num / (192 * g_pan_den);
+    /* A FLOOR OF SIX PIXELS, because the artist's margin is a PROPORTION of
+       his own 240-wide map and the smallest map here is 128 wide: three pixels
+       of margin is one pixel of wallpaper once the frame lines have taken
+       their share, which is a smudge rather than a panel. Above the smallest
+       couple of sizes the proportion is what rules. */
+    const int ml = sx7 < 6 ? 6 : sx7, mt = sy7 < 6 ? 6 : sy7;
+    const int mr = sx8 < 7 ? 7 : sx8, mb = sy8 < 7 ? 7 : sy8;
+
+    const int x0 = g_x0 - ml, y0 = g_y0 - mt;
+    const int pw = g_pan_w + ml + mr, ph = g_pan_h + mt + mb;
+
+    const unsigned flat = (g_motif_state == 1) ? g_motif[0][0] : 0xFF4A3B18u;
+    const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;
+    const unsigned bright = (g_motif_state == 1) ? g_panel_bright : 0xFFE0C060u;
+
+    /* the wallpaper, at the map's own pixel grid so the panel and the map read
+       as one picture; a plain fill if the archive could not be read */
+    /* The column's motif index, worked out once for the row loop rather than
+       twice per pixel: the biggest panel is a whole framebuffer of them. */
+    static unsigned char col[ntr::SCREEN_W];
+    for (int x = x0 < 0 ? 0 : x0; x < x0 + pw && x < w; ++x)
+        col[x] = (unsigned char)(((x - x0) * g_pan_den / g_pan_num) & 31);
+    for (int y = y0; y < y0 + ph; ++y) {
+        if (y < 0 || y >= h) continue;
+        const unsigned *row = g_motif[((y - y0) * g_pan_den / g_pan_num) & 31];
+        for (int x = x0 < 0 ? 0 : x0; x < x0 + pw && x < w; ++x)
+            dst[y * ntr::SCREEN_W + x] =
+                (g_motif_state == 1) ? row[col[x]] : flat;
+    }
+
+    /* THE FRAME, one artist pixel thick on the left and top and two on the
+       right and bottom -- drawn ONE PIXEL FURTHER OUT than the artist has it,
+       because the map already arrives with a one-pixel black frame of its own
+       (ntr/ppu_sub.cpp's compose draws it, after this). Sitting the dark line
+       exactly where that black line goes would simply hide it. Outside it,
+       the two read as the artist's border: black against the map, then the
+       dark line, then the wallpaper. */
+    const int ft = ml / 7 < 1 ? 1 : ml / 7;
+    const int fb_ = (mr * 2) / 8 < 1 ? 1 : (mr * 2) / 8;
+    const int fx = g_x0 - 1, fy = g_y0 - 1;           /* outside the black line */
+    const int fw = g_pan_w + 2, fh = g_pan_h + 2;
+    px_fill(dst, w, h, fx - ft, fy - ft, fw + ft * 2, ft, dark);
+    px_fill(dst, w, h, fx - ft, fy + fh, fw + ft + fb_, fb_, dark);
+    px_fill(dst, w, h, fx - ft, fy - ft, ft, fh + ft * 2, dark);
+    px_fill(dst, w, h, fx + fw, fy - ft, fb_, fh + ft + fb_, dark);
+
+    /* THE PLAQUE. 109 wide and 32 tall against the artist's 255-wide panel,
+       centred, with ten of its rows above the panel's top edge, and its
+       corners cut at forty-five degrees over seven of its own pixels. */
+    int tw = pw * 109 / 255, th = ph * 32 / 195;
+    if (tw < 12) tw = 12;
+    if (th < 6) th = 6;
+    const int tx = x0 + (pw - tw) / 2;
+    const int ty = y0 - ph * 10 / 195;
+    const int cut = tw * 7 / 109;
+    for (int y = 0; y < th; ++y) {
+        int in = 0;
+        if (y < cut) in = cut - y;
+        else if (y >= th - cut) in = cut - (th - 1 - y);
+        if (in < 0) in = 0;
+        px_fill(dst, w, h, tx + in, ty + y, tw - in * 2, 1, bright);
+        px_put(dst, w, h, tx + in, ty + y, dark);
+        px_put(dst, w, h, tx + tw - 1 - in, ty + y, dark);
+    }
+    px_fill(dst, w, h, tx + cut, ty, tw - cut * 2, 1, dark);
+    px_fill(dst, w, h, tx + cut, ty + th - 1, tw - cut * 2, 1, dark);
+
+    /* MAP, in this file's own letters, scaled to the plaque and centred. */
+    int gs = th / 9;
+    if (gs < 1) gs = 1;
+    const int gw = (5 * 3 + 2 * 2) * gs;          /* three glyphs, two gaps */
+    int gx = tx + (tw - gw) / 2;
+    const int gy = ty + (th - 7 * gs) / 2;
+    for (int gi = 0; gi < 3; ++gi) {
+        for (int r = 0; r < 7; ++r)
+            for (int c = 0; c < 5; ++c)
+                if (kGlyphMAP[gi][r] & (0x10 >> c))
+                    px_fill(dst, w, h, gx + c * gs, gy + r * gs, gs, gs, dark);
+        gx += 7 * gs;
+    }
+}
+
 /* ---- THE ROM'S OWN CAMERA-BUTTON ZONE, quoted -----------------------------
  *
  * src/_ZN5Stage16CheckCameraInputEv.cpp:52-58 decides whether a stylus press
@@ -2106,6 +2431,11 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
     if (!hal_sub_screen_stacked()) {
+        /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
+           compose below writes the map over the middle of it and its own one
+           pixel frame lands on the panel's inner edge. Only with the option
+           on; with it off not a pixel of this runs. */
+        if (improved_map_on()) hal_sub_panel_decor(dst, w, h);
         ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, g_pan_num, g_pan_den);
         /* AFTER THE PANEL, DELIBERATELY. The arrows sit just above the panel's
            top edge, so at every size but the largest they do not touch it; at
