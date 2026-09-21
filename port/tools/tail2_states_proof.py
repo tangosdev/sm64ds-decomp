@@ -116,12 +116,9 @@ def main():
     # The level-clear save menu's screen swap, carried for the same reason and
     # in the same shape: the gate is run BOTH with the key absent and with it
     # set, the swap is picture only, and the opening has to take the same
-    # distinct positions either way. SM64DS_LC_MENU rides with it because the
-    # swap has nothing to do without it on a line that still clears the ROM's
-    # own level-clear flag. Unset, the loop does nothing.
+    # distinct positions either way. Unset, the loop does nothing.
     for k in ("SM64DS_IMPROVED_MINIMAP", "SM64DS_MINIMAP_SCALE",
-              "SM64DS_MINIMAP_DIR", "SM64DS_SAVE_MENU_ON_TOP",
-              "SM64DS_LC_MENU"):
+              "SM64DS_MINIMAP_DIR", "SM64DS_SAVE_MENU_ON_TOP"):
         if os.environ.get(k):
             e[k] = os.environ[k]
     # Run hd2, lane GPU2: which rasteriser draws the 3D picture, and the knob

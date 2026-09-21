@@ -50,10 +50,8 @@ mode (SM64DS_PRESENT_OFFSCREEN), which draws the identical upload, quad and filt
 into a target of its own and needs no window -- which is what makes it usable from
 a headless sweep at all. All five are inert unless named.
 savemenutop=<0|1> turns the level-clear save menu's screen swap on or off on every
-row ("SaveMenuOnTop"), and lcmenu=<0|1> sets SM64DS_LC_MENU, the measuring knob that
-leaves the ROM's own level-clear flag alone so the menu comes up at all. Same shape
-and same reason as minimap= below: unnamed, a sweep is byte-identical to one from
-before they existed.
+row ("SaveMenuOnTop"). Same shape and same reason as minimap= below: unnamed, a
+sweep is byte-identical to one from before it existed.
 minimap=<size> turns the improved minimap ON at that size on every row (the
 "ImprovedMinimap" and "MinimapScale" settings), and minimapdir=<folder> points its
 panel artwork at a folder. Same shape and same reason as smooth= above, with one
@@ -195,7 +193,6 @@ MINIMAPDIR = ""
 SAVEMENUTOP = ""
 for a in sys.argv[5:]:
     if a.startswith("savemenutop="): SAVEMENUTOP = a[12:]
-LCMENU = ""
 for a in sys.argv[5:]:
     if a.startswith("minimapdir="): MINIMAPDIR = a[11:]
 # run hd2, lane GPU2: the optional renderer and the one knob a headless proof
@@ -206,8 +203,6 @@ for a in sys.argv[5:]:
 RENDERERDEV = ""
 for a in sys.argv[5:]:
     if a.startswith("rendererdev="): RENDERERDEV = a[12:]
-for a in sys.argv[5:]:
-    if a.startswith("lcmenu="): LCMENU = a[7:]
 WARPIN = any(a == "warpin=1" for a in sys.argv[5:])
 REENTRY = any(a == "reentry=1" for a in sys.argv[5:])
 PRESS = "200:A"
@@ -249,7 +244,7 @@ WORKERS = max(1, min(WORKERS, MAX_SWEEP_WORKERS))
 # the row filter is positional but the flags are not, so a run that passes only a
 # flag must not have that flag read as a filter (it would then match no prefix and
 # sweep everything by accident)
-if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "renderer=", "rendererdev=", "workers=", "minimap=", "minimapdir=", "savemenutop=", "lcmenu=")): FILTER = ""
+if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "renderer=", "rendererdev=", "workers=", "minimap=", "minimapdir=", "savemenutop=")): FILTER = ""
 if FILTER.startswith("levels="):
     sel = FILTER[7:]; SCENES = ()
     if sel != "all": LEVELS = tuple(i for i in LEVELS if str(i) in sel.split(","))
@@ -582,16 +577,13 @@ def run(kind, ident, label, ent=None, wdir=None):
     # a sweep is byte for byte the one this tool ran before they existed.
     if RENDERER: env["SM64DS_RENDERER"] = RENDERER
     if RENDERERDEV: env["SM64DS_RENDERER_DEVICE"] = RENDERERDEV
-    # savemenutop=<0|1>, lcmenu=<0|1>: the level-clear save menu's two keys,
-    # the same shape and the same reason as minimap= above. SaveMenuOnTop is
-    # pinned OFF under SM64DS_WINDOW_SELFTEST for exactly the reason the
-    # improved minimap is, so the environment is the only channel a sweep has;
-    # and SM64DS_LC_MENU is the measuring knob that leaves the ROM's own
-    # level-clear flag alone, which is what puts the menu on the screen at all
-    # on a line that still clears it. Unset, both lines do nothing and a sweep
-    # is byte-identical to one from before this argument existed.
+    # savemenutop=<0|1>: the level-clear save menu's screen swap, the same
+    # shape and the same reason as minimap= above. SaveMenuOnTop is pinned OFF
+    # under SM64DS_WINDOW_SELFTEST for exactly the reason the improved minimap
+    # is, so the environment is the only channel a sweep has. Unset, the line
+    # does nothing and a sweep is byte-identical to one from before this
+    # argument existed.
     if SAVEMENUTOP: env["SM64DS_SAVE_MENU_ON_TOP"] = SAVEMENUTOP
-    if LCMENU: env["SM64DS_LC_MENU"] = LCMENU
     exe_path = os.path.join(wdir, os.path.basename(EXE))
     t0 = time.time()
     rc, out = _run_proc([exe_path], wdir, env, BUDGET)
