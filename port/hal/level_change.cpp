@@ -185,6 +185,11 @@ extern void *data_020a0eac;              /* Memory::gameHeapPtr */
 extern void *data_0209f394[];        /* the local players, [0] is ours */
 extern void *data_0209f318;          /* the Camera */
 extern unsigned char data_0209f2c4;  /* the input/VS-timer suppress flag */
+extern int data_0209f20c[];            /* the level-clear screen is up       */
+extern unsigned char data_0209f2d4[];  /* LC_Update's / PS_Update's state     */
+extern unsigned char data_0209f2e0[];  /* the menu row chosen                 */
+extern unsigned char data_0209f244[];  /* menu-button state                   */
+extern unsigned char data_0209f2b0[];  /* menu-button state                   */
 
 extern int data_020a4b6c[];   /* scene tree     {head, cb, 0} */
 /* the spawn parent ActorDerived::Spawn hands func_02043098 for every actor a
@@ -955,6 +960,34 @@ extern "C" int port_level_teardown(void)
         data_0209f394[k] = 0;
     data_0209f318 = 0;
     data_0209f2c4 = 0;
+
+    /* The next statement of the same ROM function the three lines above come
+       from, src/_ZN5Stage16CleanupResourcesEv.cpp:120-127, and here for the
+       same reason: the port keeps one Stage alive across every level change,
+       so Stage::CleanupResources never runs and nothing else clears them.
+       data_0209f20c is "the level-clear screen is up" and data_0209f2d4 is
+       its state machine's step (src/_ZN5Stage8BehaviorEv.cpp:206 runs
+       Stage::LC_Update off the first, and src/_ZN5Stage9LC_UpdateEv.cpp case 6
+       is what clears both when a player answers the menu).
+
+       Left behind, they carry a level-clear screen into the next level: a
+       level booted at an entrance the game never sends a player to can end
+       its arrival animation in the one that sets the flag
+       (src/actors/Player.cpp:6741), and the courtyard's second boot under
+       that stale flag took an access violation in a Boo's model render.
+
+       The DS's other clear of the same words is
+       src/_ZN5Stage13InitResourcesEv.cpp:412-418, under
+       `data_0209f2fc != 1`, and it is deliberately NOT ported here: on a
+       fresh entry that guard declines, so the teardown line is the one that
+       does the work on every path. port/hal/level_boot.cpp clears the same
+       word once per process at the shared bring-up, which is the first
+       boot's half and stays. */
+    data_0209f2e0[0] = 0;
+    data_0209f2d4[0] = 0;
+    data_0209f244[0] = 0;
+    data_0209f2b0[0] = 0;
+    data_0209f20c[0] = 0;
 
     /* The freeze set was reaped and cleared BEFORE the verdict, not here. There
        used to be a port_quarantine_reset() at this line and it was the second
