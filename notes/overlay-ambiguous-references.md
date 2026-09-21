@@ -28,8 +28,8 @@ something, and the two disagree**:
 | references | name in source | candidates |
 |---:|---|---|
 | 22 | `func_020beb68` | [ov000](../config/arm9/overlays/ov000/symbols.txt):`data_ov000_020beb68` vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`data_ov004_020beb68` |
-| 9 | `func_020aea30` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020aea30](../src/func_ov002_020aea30.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy12KillByAttack...` |
-| 8 | `func_020ada40` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020ada40](../src_tu/actors/Enemy.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy20KillByInvincib...` |
+| 9 | `func_020aea30` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020aea30](../src/actors/dEnemyBase_c.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy12KillByAttack...` |
+| 8 | `func_020ada40` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020ada40](../src/actors/dEnemyBase_c.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy20KillByInvincib...` |
 | 6 | `func_020aed98` | [ov002](../config/arm9/overlays/ov002/symbols.txt):`_ZN5EnemyC2Ev` vs [ov007](../config/arm9/overlays/ov007/symbols.txt):[func_ov007_020aed98](../src/func_ov007_020aed98.cpp) |
 | 5 | `func_020bc7d4` | [ov000](../config/arm9/overlays/ov000/symbols.txt):`data_ov000_020bc7d4` vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`data_ov004_020bc7d4` |
 | 5 | `_ZTV10dBgActor_c` | [ov006](../config/arm9/overlays/ov006/symbols.txt):`data_ov006_0213c5bc` vs [ov098](../config/arm9/overlays/ov098/symbols.txt):`data_ov098_0213c5bc` |

@@ -6,8 +6,10 @@
  * types.h's Vector3 is NOT a POD, and the two cannot both be named Vector3 in one
  * TU; keeping the POD spelling is deliberate (a C++ struct copy scalarises to the
  * members' own types, which is what a non-POD substitution would change here).
- * Renaming a file-local type cannot move a byte -- see the same note in
- * src_tu/actors/Enemy.cpp, where the merge forced the identical choice.
+ * Renaming a file-local type cannot move a byte. The choice is per-function and
+ * has to be measured: src/actors/dEnemyBase_c.cpp carried the same POD shadow and
+ * dropping it for types.h's real Vector3 cost nothing there, so the shadow is gone
+ * in that TU. Re-measure before assuming either answer applies here.
  */
 #include "Fireball.h"
 
