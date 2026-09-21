@@ -122,6 +122,32 @@ int g_want_warp = -1;  /* SM64DS_RENDERER_DEVICE */
 int g_perf;            /* SM64DS_RENDERER_PERF: the cost breakdown */
 int g_fail_after;      /* SM64DS_RENDERER_FAIL_AFTER: the fallback drill */
 int g_fail_readback;   /* SM64DS_RENDERER_FAIL_READBACK: the other drill */
+
+/* ---- THE DEPTH RANGE, AND WHY IT IS HALVED ------------------------------
+   ntr/gx.cpp clears its depth buffer to 1e30 and tests LESS, so "nothing has
+   been drawn here" is a value no geometry can reach. A depth target has no
+   such value: the card's viewport transform clamps to [MinDepth, MaxDepth],
+   both of which must lie in [0, 1], so a clear of 1.0 is a value geometry CAN
+   reach -- and does. The screen z ntr/gx.cpp computes is
+   (clip.z / clip.w + 1) * 0.5 with no far clip at all, so anything past the
+   projection's far plane comes out ABOVE 1.0. Measured, Bob-omb Battlefield's
+   sky on the first frame of the level, through SM64DS_PROBE_PX:
+     z = 1.00022 at all three vertices
+   Clamped to 1.0 that fails LESS against a 1.0 clear, so the whole sky and
+   every far surface simply was not drawn: the card's first frames of levels
+   6, 8 and 12 came back empty and filled in over about thirty frames as the
+   intro camera brought the geometry in under z = 1.
+
+   So the card is handed HALF the depth and the readback doubles it back.
+   Halving and doubling are exact in binary floating point, so ordering, the
+   LESS tie-break (equal z stays equal, and the first submitted keeps the
+   pixel) and the value the software translucent pass reads are all unchanged
+   to the last bit. The range this buys is z < 2.0, against a measured maximum
+   of about 1.0002: a surface at z >= 2.0 would still clamp and lose, and a
+   projection that produced one would be far outside anything this game has
+   been measured to make. */
+const float kDepthScale = 0.5f;     /* z on the card */
+const float kDepthUnscale = 2.0f;   /* and back again, both exact */
 int g_addrcheck;       /* SM64DS_RENDERER_ADDRCHECK: the six DS address ranges */
 
 /* ---- what the run learned, for the one line at exit ---------------------- */
@@ -685,7 +711,7 @@ int draw_frame(const ntr::GxGpuFrame *f)
             const float yn = 1.0f - (float)v.y * inv_ch;
             o.x = xn * v.w;
             o.y = yn * v.w;
-            o.z = v.z * v.w;
+            o.z = v.z * kDepthScale * v.w;   /* see kDepthScale above */
             o.w = v.w;
             o.u = textured ? v.u * tsc * iw : 0.0f;
             o.v = textured ? v.v * tsc * ih : 0.0f;
@@ -835,7 +861,7 @@ int draw_frame(const ntr::GxGpuFrame *f)
             fbrow[x] = 0xFF000000u | (crow[x] & 0x00FFFFFFu);
             cvrow[x] = 1;
             if (f->want_attrid) idrow[x] = (uint8_t)(idv & 0x3Fu);
-            if (drow) dprow[x] = drow[x];
+            if (drow) dprow[x] = drow[x] * kDepthUnscale;
         }
     }
 

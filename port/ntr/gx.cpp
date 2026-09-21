@@ -2221,7 +2221,17 @@ void gx_invalidate_textures() {
 
 uint32_t gx_texture_generation() { return g_tex_generation; }
 
-void gx_set_gpu_opaque(GxGpuOpaqueFn fn) { g_gpu_opaque = fn; }
+/* THE A/B'S EXIT SUMMARY IS ARMED HERE, at boot, rather than on the first
+   frame the opaque pass draws. A scene that never reaches gx_render would
+   otherwise print nothing at all and read as a missing row; armed here it
+   prints "no 3D frames" instead, which is a result. Defined further down in
+   this file's own unnamed namespace. */
+namespace { int ab_mode(); }
+
+void gx_set_gpu_opaque(GxGpuOpaqueFn fn) {
+    g_gpu_opaque = fn;
+    ab_mode();
+}
 int gx_gpu_opaque_registered() { return g_gpu_opaque != nullptr; }
 
 /* ---- THE TWO PICTURE-SMOOTHING SETTINGS' LATCHES (run hd2) ---------------
@@ -3455,7 +3465,53 @@ int g_ab_tol = 2;
 double g_ab_iou_floor = 0.995;          /* measured 0.99868 at worst */
 double g_ab_mean_ceiling = 0.5;         /* measured 0.0136, 36x of room */
 double g_ab_outlier_ceiling = 0.002;    /* measured 0.00040, 5x of room */
-double g_ab_depth_ceiling = 1e-4;       /* interior only; see above */
+double g_ab_depth_ceiling = 1e-4;       /* FLAT pixels; see below */
+
+/* ---- THE DEPTH GATE IS TWO QUESTIONS, BECAUSE ONE NUMBER CANNOT ASK BOTH --
+   (run hd2, lane GPU2R, measured rather than assumed)
+
+   A DEPTH DISCONTINUITY IS AN EDGE THE POLYGON-ID TEST CANNOT SEE. Two
+   triangles of the SAME polygon id that fold over one another -- a hill's
+   silhouette against the rest of the same mesh, a wall meeting the floor it
+   belongs to -- put two surfaces on one pixel under one id, so the 3x3
+   id-and-coverage test above calls that pixel interior. The two rasterisers'
+   fill rules are then free to give the pixel to different surfaces, and the
+   depths they report differ by the gap between those surfaces. That gap says
+   nothing about how accurately either one interpolates.
+
+   MEASURED, five levels, 600 frames each, the card, TextureFilter 0, with the
+   split switched off: between 1 and 470 interior pixels per level out of
+   about 1.95 million came in over 1e-4, and EVERY ONE of them sat in a 3x3
+   neighbourhood whose own depth span was over 1e-4 in BOTH buffers. At each
+   level's worst pixel the disagreement was just under the local span:
+     level  1  error 2.008e-3  span 2.043e-3   (0.98 of the step)
+     level  6  error 2.588e-3  span 2.639e-3   (0.98)
+     level  8  error 4.039e-3  span 4.091e-3   (0.99)
+     level 12  error 2.297e-4  span 2.671e-4   (0.86)
+     level 29  error 1.609e-4  span 1.652e-4   (0.97)
+   The polygon ids agreed at all five. So the disagreement is never bigger
+   than the step under the pixel: it is always "which of these two surfaces
+   owns this pixel", never a wrong depth.
+
+   SIMPLY EXCLUDING THOSE PIXELS WAS REJECTED. Marking every pixel whose
+   neighbourhood spans more than 1e-4 as an edge and dropping it excludes 51%
+   of level 1 and 44% of level 6 -- half the picture ungraded, which is not a
+   gate. So the pixels are SPLIT instead, and each half is asked the question
+   it can answer:
+
+     FLAT pixels (3x3 span at or under kFlat in both buffers: one surface, no
+       fold) are asked the original question, how accurately the card
+       interpolates depth, against the original 1e-4 ceiling.
+     STEP pixels (3x3 span over kFlat) are asked whether the disagreement is
+       explained by the step under them: |error| must not exceed the local
+       span times the ratio below. A pixel that disagrees by MORE than the
+       step it sits on is a real mismatch and fails.
+
+   Nothing is loosened: the 1e-4 ceiling still applies to every pixel it can
+   be asked of, and the pixels it could not be asked of gained a test rather
+   than an exemption. Both counts are printed beside the verdict. */
+double g_ab_depth_flat = 1e-4;   /* SM64DS_RENDERER_AB_DEPTH_FLAT */
+double g_ab_depth_ratio = 2.0;   /* SM64DS_RENDERER_AB_DEPTH_RATIO */
 double g_ab_id_ceiling = 0.001;         /* measured 0 */
 int g_ab_shot_frame = -1;
 const char *g_ab_shot_dir = nullptr;
@@ -3463,10 +3519,32 @@ const char *g_ab_shot_dir = nullptr;
 /* the run's totals */
 unsigned long long g_ab_frames, g_ab_both, g_ab_union, g_ab_inter;
 unsigned long long g_ab_outliers, g_ab_interior, g_ab_id_bad;
+unsigned long long g_ab_cov_card, g_ab_cov_soft;
+/* HOW MANY INTERIOR PIXELS ARE OVER THE DEPTH CEILING AT ALL, and how far
+   their own neighbourhood's depth spans, because a maximum cannot say whether
+   it is three pixels or a million and a ceiling cannot be judged without
+   that. The three spans are measured over BOTH arms' 3x3 neighbourhoods. */
+unsigned long long g_ab_dep_over, g_ab_dep_over_span4;
+unsigned long long g_ab_dep_over_span3, g_ab_dep_over_span2;
+unsigned long long g_ab_dep_flat_n, g_ab_dep_step_n, g_ab_dep_step_bad;
+double g_ab_dep_flat_max, g_ab_dep_ratio_max;
+int g_ab_rw_x = -1, g_ab_rw_y = -1, g_ab_rw_frame = -1;
+double g_ab_rw_err, g_ab_rw_span;
 double g_ab_colsum, g_ab_depsum, g_ab_depmax, g_ab_depmax_in;
 double g_ab_worst_iou = 2.0;
 int g_ab_worst_frame = -1;
 double g_ab_worst_outshare;
+
+/* THE WORST INTERIOR DEPTH PIXEL OF THE RUN, kept whole rather than as one
+   number. A maximum on its own cannot say whether a depth disagreement is a
+   silhouette inside one object that the polygon-ID edge test cannot see or a
+   real interior mismatch; the pixel's position, both depths and both polygon
+   IDs can, and that is the question lane GPU2R had to answer about this
+   number rather than move it. */
+int g_ab_dw_x = -1, g_ab_dw_y = -1, g_ab_dw_frame = -1;
+double g_ab_dw_card, g_ab_dw_soft;
+int g_ab_dw_id_card, g_ab_dw_id_soft;
+double g_ab_dw_span_card, g_ab_dw_span_soft;
 
 /* B, the software arm's copy of the four buffers, and the framebuffer as it
    was before either arm drew. Heap, allocated once, only in this mode. */
@@ -3490,7 +3568,18 @@ int env_i(const char *n, int dflt) {
 }
 
 void ab_summary() {
-    if (!g_ab_frames) return;
+    if (!g_ab_frames) {
+        /* A ROW WITH NO 3D FRAMES IS A MEASUREMENT, NOT A MISSING ONE. A
+           scene that never reaches the opaque pass -- a 2D one, or a run that
+           ended before anything was drawn -- has nothing to compare, and
+           saying so is the answer. The verdict is its own word so that no
+           table can read it as a pass or as a crash. */
+        std::fprintf(stderr, "[renderer-ab] summary over 0 frame(s): the "
+                     "opaque pass never ran on the card, so there was nothing "
+                     "to compare VERDICT=NOFRAMES\n");
+        std::fflush(stderr);
+        return;
+    }
     const double iou = g_ab_union ? (double)g_ab_inter / (double)g_ab_union : 1.0;
     const double mean = g_ab_both ? g_ab_colsum / (double)(g_ab_both * 3) : 0.0;
     const double outshare =
@@ -3500,20 +3589,54 @@ void ab_summary() {
         g_ab_interior ? (double)g_ab_id_bad / (double)g_ab_interior : 0.0;
     const bool pass = iou >= g_ab_iou_floor && mean <= g_ab_mean_ceiling &&
                       outshare <= g_ab_outlier_ceiling &&
-                      g_ab_depmax_in <= g_ab_depth_ceiling &&
+                      g_ab_dep_flat_max <= g_ab_depth_ceiling &&
+                      g_ab_dep_step_bad == 0 &&
                       idshare <= g_ab_id_ceiling;
     std::fprintf(stderr,
                  "[renderer-ab] summary over %llu frame(s): coverage IoU %.6f "
-                 "(floor %.6f), colour mean %.4f (ceiling %.4f), outliers "
-                 "%llu of %llu interior = %.6f (ceiling %.6f), depth interior "
-                 "max %.3e (ceiling %.3e) all-covered max %.3e mean %.3e, "
+                 "(floor %.6f) card covered %llu software covered %llu, "
+                 "colour mean %.4f (ceiling %.4f), outliers "
+                 "%llu of %llu interior = %.6f (ceiling %.6f), edge-excluded "
+                 "%llu of %llu both-covered, depth flat "
+                 "max %.3e (ceiling %.3e) over %llu flat pixel(s), depth step "
+                 "worst %.3f of its own span (ceiling %.3f) over %llu step "
+                 "pixel(s), %llu of them bad, depth interior "
+                 "max %.3e all-covered max %.3e mean %.3e, "
                  "polygon-id wrong %llu = %.6f (ceiling %.6f), worst frame %d "
                  "at IoU %.6f outliers %.6f VERDICT=%s\n",
-                 g_ab_frames, iou, g_ab_iou_floor, mean, g_ab_mean_ceiling,
+                 g_ab_frames, iou, g_ab_iou_floor, g_ab_cov_card,
+                 g_ab_cov_soft, mean, g_ab_mean_ceiling,
                  g_ab_outliers, g_ab_interior, outshare, g_ab_outlier_ceiling,
-                 g_ab_depmax_in, g_ab_depth_ceiling, g_ab_depmax, depmean,
+                 g_ab_both - g_ab_interior, g_ab_both,
+                 g_ab_dep_flat_max, g_ab_depth_ceiling, g_ab_dep_flat_n,
+                 g_ab_dep_ratio_max, g_ab_depth_ratio, g_ab_dep_step_n,
+                 g_ab_dep_step_bad,
+                 g_ab_depmax_in, g_ab_depmax, depmean,
                  g_ab_id_bad, idshare, g_ab_id_ceiling, g_ab_worst_frame,
                  g_ab_worst_iou, g_ab_worst_outshare, pass ? "PASS" : "FAIL");
+    /* THE WORST INTERIOR DEPTH PIXEL, WHOLE, beside the number it produced. */
+    if (g_ab_dw_x >= 0)
+        std::fprintf(stderr,
+                     "[renderer-ab] worst interior depth pixel: frame %d at "
+                     "(%d,%d) card %.9f software %.9f difference %.3e "
+                     "polygon id card %d software %d, 3x3 depth span card "
+                     "%.3e software %.3e\n",
+                     g_ab_dw_frame, g_ab_dw_x, g_ab_dw_y, g_ab_dw_card,
+                     g_ab_dw_soft, g_ab_dw_card - g_ab_dw_soft,
+                     g_ab_dw_id_card, g_ab_dw_id_soft, g_ab_dw_span_card,
+                     g_ab_dw_span_soft);
+    std::fprintf(stderr,
+                 "[renderer-ab] interior pixels over the depth ceiling: %llu "
+                 "of %llu; of those, 3x3 depth span over 1e-4: %llu, over "
+                 "1e-3: %llu, over 1e-2: %llu\n",
+                 g_ab_dep_over, g_ab_interior, g_ab_dep_over_span4,
+                 g_ab_dep_over_span3, g_ab_dep_over_span2);
+    if (g_ab_rw_x >= 0)
+        std::fprintf(stderr,
+                     "[renderer-ab] worst step pixel: frame %d at (%d,%d) "
+                     "error %.3e on a local span of %.3e = %.3f of it\n",
+                     g_ab_rw_frame, g_ab_rw_x, g_ab_rw_y, g_ab_rw_err,
+                     g_ab_rw_span, g_ab_dep_ratio_max);
     std::fflush(stderr);
 }
 
@@ -3533,6 +3656,9 @@ int ab_mode() {
         g_ab_outlier_ceiling =
             env_d("SM64DS_RENDERER_AB_OUTLIERS", g_ab_outlier_ceiling);
         g_ab_depth_ceiling = env_d("SM64DS_RENDERER_AB_DEPTH", g_ab_depth_ceiling);
+        g_ab_depth_flat = env_d("SM64DS_RENDERER_AB_DEPTH_FLAT", g_ab_depth_flat);
+        g_ab_depth_ratio =
+            env_d("SM64DS_RENDERER_AB_DEPTH_RATIO", g_ab_depth_ratio);
         g_ab_id_ceiling = env_d("SM64DS_RENDERER_AB_ID", g_ab_id_ceiling);
         g_ab_shot_frame = env_i("SM64DS_RENDERER_AB_SHOT_FRAME", -1);
         g_ab_shot_dir = getenv("SM64DS_RENDERER_AB_SHOT_DIR");
@@ -4226,12 +4352,18 @@ void gx_render(Framebuffer &fb) {
             if (gpu_drew && (frame % g_ab_every) == 0) {
                 unsigned long long inter = 0, uni = 0, both = 0, interior = 0;
                 unsigned long long out = 0, idbad = 0;
+                unsigned long long cov_a = 0, cov_b = 0;
                 double colsum = 0.0, depsum = 0.0, depmax = 0.0;
                 double depmax_in = 0.0;
                 for (int y = y0; y < y0 + h; ++y) {
                     for (int x = x0; x < x0 + w; ++x) {
                         const size_t o = (size_t)y * SCREEN_W + x;
                         const int ca = g_cover[y][x], cb = g_ab_cov[o];
+                        /* EACH ARM'S OWN PIXEL COUNT, because an IoU near
+                           zero does not say WHICH side drew nothing and that
+                           is the first thing anybody reading the row wants. */
+                        if (ca) ++cov_a;
+                        if (cb) ++cov_b;
                         if (ca || cb) ++uni;
                         if (!(ca && cb)) continue;
                         ++inter;
@@ -4271,9 +4403,82 @@ void gx_render(Framebuffer &fb) {
                                 }
                             }
                         if (edge) continue;
+                        /* THE DEPTH SPAN OF THIS PIXEL'S 3x3 NEIGHBOURHOOD,
+                           in each arm, over the neighbours that arm covered.
+                           Measured for every interior pixel because the
+                           question it answers -- is this a fold inside one
+                           polygon id -- is asked of the pixels that fail, and
+                           they are not known until they have failed. */
+                        double sa_lo = 1e30, sa_hi = -1e30;
+                        double sb_lo = 1e30, sb_hi = -1e30;
+                        for (int dy = -1; dy <= 1; ++dy)
+                            for (int dx = -1; dx <= 1; ++dx) {
+                                const int nx = x + dx, ny = y + dy;
+                                if (nx < x0 || ny < y0 || nx >= x0 + w ||
+                                    ny >= y0 + h)
+                                    continue;
+                                const size_t no = (size_t)ny * SCREEN_W + nx;
+                                if (g_cover[ny][nx]) {
+                                    const double v = (double)g_depth[ny][nx];
+                                    if (v < sa_lo) sa_lo = v;
+                                    if (v > sa_hi) sa_hi = v;
+                                }
+                                if (g_ab_cov[no]) {
+                                    const double v = (double)g_ab_dep[no];
+                                    if (v < sb_lo) sb_lo = v;
+                                    if (v > sb_hi) sb_hi = v;
+                                }
+                            }
+                        const double span_a = sa_hi > sa_lo ? sa_hi - sa_lo : 0.0;
+                        const double span_b = sb_hi > sb_lo ? sb_hi - sb_lo : 0.0;
+                        const double span = span_a > span_b ? span_a : span_b;
+                        if (ad > g_ab_depth_ceiling) {
+                            ++g_ab_dep_over;
+                            if (span > 1e-4) ++g_ab_dep_over_span4;
+                            if (span > 1e-3) ++g_ab_dep_over_span3;
+                            if (span > 1e-2) ++g_ab_dep_over_span2;
+                        }
+                        /* THE SPLIT, the block above ab_summary's thresholds */
+                        if (span <= g_ab_depth_flat) {
+                            ++g_ab_dep_flat_n;
+                            if (ad > g_ab_dep_flat_max) g_ab_dep_flat_max = ad;
+                        } else {
+                            ++g_ab_dep_step_n;
+                            const double ratio = ad / span;
+                            if (ratio > g_ab_depth_ratio) ++g_ab_dep_step_bad;
+                            if (ratio > g_ab_dep_ratio_max) {
+                                g_ab_dep_ratio_max = ratio;
+                                g_ab_rw_x = x;
+                                g_ab_rw_y = y;
+                                g_ab_rw_frame = frame;
+                                g_ab_rw_err = ad;
+                                g_ab_rw_span = span;
+                            }
+                        }
                         ++interior;
                         if (worst > g_ab_tol) ++out;
-                        if (ad > depmax_in) depmax_in = ad;
+                        if (ad > depmax_in) {
+                            depmax_in = ad;
+                            /* and if it beats every frame before it, the
+                               whole pixel is kept: the run's worst interior
+                               depth disagreement, with both depths and both
+                               polygon ids, is what says whether it is a
+                               silhouette the id test cannot see or a real
+                               mismatch. g_ab_depmax_in is still the previous
+                               frames' maximum here, which is what makes the
+                               last pixel kept the run's worst one. */
+                            if (ad > g_ab_depmax_in) {
+                                g_ab_dw_x = x;
+                                g_ab_dw_y = y;
+                                g_ab_dw_frame = frame;
+                                g_ab_dw_card = (double)g_depth[y][x];
+                                g_ab_dw_soft = (double)g_ab_dep[o];
+                                g_ab_dw_id_card = (int)g_attrid[y][x];
+                                g_ab_dw_id_soft = (int)g_ab_id[o];
+                                g_ab_dw_span_card = span_a;
+                                g_ab_dw_span_soft = span_b;
+                            }
+                        }
                         if (g_attrid[y][x] != g_ab_id[o]) ++idbad;
                     }
                 }
@@ -4282,15 +4487,18 @@ void gx_render(Framebuffer &fb) {
                 const double oshare =
                     interior ? (double)out / (double)interior : 0.0;
                 std::fprintf(stderr,
-                             "[renderer-ab] frame %d cover IoU %.6f both %llu "
+                             "[renderer-ab] frame %d cover IoU %.6f card %llu "
+                             "software %llu both %llu "
                              "interior %llu colour mean %.4f outliers %llu "
                              "(%.6f) depth interior max %.3e all max %.3e "
                              "mean %.3e id wrong %llu\n",
-                             frame, iou, both, interior, mean, out, oshare,
-                             depmax_in, depmax,
+                             frame, iou, cov_a, cov_b, both, interior, mean,
+                             out, oshare, depmax_in, depmax,
                              both ? depsum / (double)both : 0.0, idbad);
                 std::fflush(stderr);
                 ++g_ab_frames;
+                g_ab_cov_card += cov_a;
+                g_ab_cov_soft += cov_b;
                 g_ab_inter += inter;
                 g_ab_union += uni;
                 g_ab_both += both;
