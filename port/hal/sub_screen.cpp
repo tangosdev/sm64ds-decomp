@@ -271,6 +271,14 @@ void panel_extents(int *l, int *t, int *r, int *b);
    other moment, including in every player's run. */
 int g_size_force;
 
+/* SM64DS_MINIMAP_TRACE=1: every rectangle the geometry above and the panel's
+   own settled on, printed when one of them changes. It exists so that a
+   capture can be MEASURED against the numbers the program actually drew,
+   rather than against a restatement of this arithmetic in some other
+   language -- which is the one thing a proof about a picture must not be.
+   Silent without the variable. Defined beside the panel's geometry. */
+void panel_trace(int w, int h);
+
 /* THE ONE ARITHMETIC. See the banner over g_pan_num.
  *
  * THE PANEL IS WHAT IS ANCHORED, not the map, whenever there is a panel. The
@@ -332,6 +340,8 @@ void hal_sub_panel_geometry(int w, int h)
     g_y0 = h - m - eb - g_pan_h;
     if (g_x0 < 0) g_x0 = 0;
     if (g_y0 < 0) g_y0 = 0;
+
+    if (on) panel_trace(w, h);
 }
 
 /* ---- THE DECORATIVE PANEL, COMPOSED FROM THE PLAYER'S OWN GAME DATA -------
@@ -1116,6 +1126,35 @@ void handle_release(void)
                  s, g_pan_w, g_pan_h);
 }
 
+/* See the declaration near the top of the file. One line per change, so a
+   windowed run that presents every frame prints one line and not sixty a
+   second. */
+void panel_trace(int w, int h)
+{
+    static int trace = -1;
+    static int last[8];
+    if (trace < 0) trace = std::getenv("SM64DS_MINIMAP_TRACE") ? 1 : 0;
+    if (!trace) return;
+    const int now[8] = { w, h, g_pan_num, g_pan_den, g_x0, g_y0,
+                         g_pan_w, g_pan_h };
+    int moved = 0;
+    for (int i = 0; i < 8; ++i)
+        if (now[i] != last[i]) { moved = 1; last[i] = now[i]; }
+    if (!moved) return;
+    PanelGeom g;
+    const int art = panel_geom(&g);
+    int hx = 0, hy = 0, hs = 0;
+    handle_rect(&hx, &hy, &hs, h);
+    std::fprintf(stderr,
+                 "[mmtrace] geom: picture %dx%d scale %.5f ratio %d/%d "
+                 "map %d,%d %dx%d panel %d,%d %dx%d plaque %d,%d %dx%d "
+                 "handle %d,%d %d well %d,%d %dx%d gap %d,%d art %d\n",
+                 w, h, 2.0 * g_pan_num / g_pan_den, g_pan_num, g_pan_den,
+                 g_x0, g_y0, g_pan_w, g_pan_h, g.x0, g.y0, g.pw, g.ph,
+                 g.tx, g.ty, g.tw, g.th, hx, hy, hs,
+                 g.wx, g.wy, g.ww, g.wh, g_art_gapx, g_art_gapy, art);
+}
+
 /* ---- THE INSET MAP'S OWN SELFTEST -----------------------------------------
  *
  * SM64DS_LAYOUT_SELFTEST's other half. The one further down this file asserts
@@ -1141,9 +1180,12 @@ void inset_map_selftest(int w, int h)
 {
     const char *env = std::getenv("SM64DS_LAYOUT_SELFTEST");
     if (!env || !*env) return;
-    /* 128 is scale 1 and 512 is scale 4; 218, 300 and 461 are off the picker
-       on purpose, because the size is a free number now */
-    static const int forced[9] = { 128, 160, 192, 218, 256, 300, 384, 461, 512 };
+    /* 128 is scale 1 and 512 is scale 4; 220, 300 and 460 are off the
+       launcher's picker on purpose, because the size is a free number now.
+       Every one is on the grid -- a multiple of four -- because that is the
+       only thing a size is allowed to be, and a fixture that asks for a size
+       the program cannot produce is testing nothing. */
+    static const int forced[9] = { 128, 160, 192, 220, 256, 300, 384, 460, 512 };
     const int s_num = g_pan_num, s_den = g_pan_den, s_w = g_pan_w,
               s_h = g_pan_h, s_x = g_x0, s_y = g_y0, s_m = g_pan_margin;
 
