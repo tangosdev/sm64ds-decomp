@@ -156,7 +156,7 @@ extern u8 data_020a0deb[];
 void *func_ov004_020adc74(void *arg);
 char *_ZN2G213GetBG2CharPtrEv(void);
 void DecompressLZ16(int src, void *dst);
-void Ov004_Deallocate(int handle);
+void Ov004_Deallocate(void *ptr);
 void *_ZN3G2S13GetBG2CharPtrEv(void);
 char *_ZN2G212GetBG2ScrPtrEv(void);
 char *_ZN3G2S12GetBG2ScrPtrEv(void);
@@ -775,30 +775,30 @@ s32 dScMgFlower_c::InitResources()
 
     h = (int)func_ov004_020adc74(&data_ov006_021401d0);
     DecompressLZ16(h, _ZN2G213GetBG2CharPtrEv());
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_021401f4);
     DecompressLZ16(h, _ZN3G2S13GetBG2CharPtrEv());
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_02140218);
     DecompressLZ16(h, _ZN2G212GetBG2ScrPtrEv());
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_0214023c);
     DecompressLZ16(h, _ZN3G2S12GetBG2ScrPtrEv());
     DecompressLZ16(h, _ZN3G2S12GetBG3ScrPtrEv());
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_02140260);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN2GX10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_02140284);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN3GXS10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
@@ -809,13 +809,13 @@ s32 dScMgFlower_c::InitResources()
     h = (int)func_ov004_020adc74(&data_ov006_021402a8);
     DecompressLZ16(h, (void *)0x6400000);
     DecompressLZ16(h, (void *)0x6600000);
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     h = (int)func_ov004_020adc74(&data_ov006_021402c4);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x100);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
-    Ov004_Deallocate(h);
+    Ov004_Deallocate((void *)h);
 
     data_ov004_020bc8a8 = 0x40;
     data_ov004_020bc898 = 0xa0;

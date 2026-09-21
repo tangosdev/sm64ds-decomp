@@ -119,10 +119,8 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess)
 /* ROM ordinal 3 -- func_ov006_020efcf8, 0x020efcf8, size 0xb4 */
 /* ------------------------------------------------------------------ */
 // @symbol func_ov006_020efcf8
-/* IRQ 2's handler, installed by ordinal 10 through
-   _ZN3IRQ13SetIRQHandlerEjPFvvE, whose parameter mangles PFvvE = void(*)().
-   It has to stay a free function: a member function has a different type and
-   would not bind. */
+/* IRQ 2's handler uses the void(*)() callback installed by StartIris.
+ * It accesses shared scanline state and remains a free function. */
 extern "C" {
 void func_ov006_020efcf8(void)
 {
@@ -221,8 +219,6 @@ void dScMgLuigi_c::BuildIrisTable(int i)
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c8IrisStopEi
 extern "C" {
-extern void _ZN3IRQ11DisableIRQsEj(unsigned int);
-extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int, void(*)(void));
 extern unsigned char data_0209d454;
 }
 void dScMgLuigi_c::IrisStop(int idx) {
@@ -232,9 +228,9 @@ void dScMgLuigi_c::IrisStop(int idx) {
     *(unsigned char *)(c + idx * 0x14 + 0x47f4) = 0;
     saved = *ime;
     *ime = 0;
-    _ZN3IRQ11DisableIRQsEj(2);
+    IRQ::DisableIRQs(2);
     func_02053c10(0);
-    _ZN3IRQ13SetIRQHandlerEjPFvvE(2, 0);
+    IRQ::SetIRQHandler(2, 0);
     if (saved != 0) { *ime; *ime = 1; }
     REG_DISPCNT &= ~0xe000;
     REG_DISPCNT_SUB &= ~0xe000;
@@ -2078,14 +2074,7 @@ void dScMgLuigi_c::StateSetup()
     ChooseTarget();
 }
 
-/* ---------------------------------------------------------------------------
- * From here down the members are C++-named, so none of them may sit inside a
- * linkage-specification region and none of them may declare a ROM symbol in its
- * own body -- a block-scope declaration inside a C++-named member gets C++
- * linkage and the reference mangles.  Everything ordinals 53..57 call that this
- * TU does not itself define is therefore declared here, once, at file scope,
- * AFTER the last wrapped member so that none of them can see it.
- * ------------------------------------------------------------------------- */
+/* Engine calls used by scene setup and rendering. */
 
 extern "C" {
 /* ordinal 53 -- dScMgLuigi_c::OnYoshiTryEat */
@@ -2100,8 +2089,8 @@ extern void func_ov004_020b1e34(void *c, int a, int b, int d);
 extern LuigiStateHandler data_ov006_02142234[];
 /* ordinal 56 -- dScMgLuigi_c::InitResources */
 extern void *data_ov006_0213cfa0;
-extern int func_ov004_020adc74(void *p);
-extern void DecompressLZ16(int src, void *dst);
+extern void *func_ov004_020adc74(const char *path);
+extern void DecompressLZ16(void *src, void *dst);
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
@@ -2112,7 +2101,7 @@ extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void Ov004_Deallocate(int a);
+extern void Ov004_Deallocate(void *ptr);
 extern int func_02054d88(void);
 extern void func_02056314(void *, u32, u32);
 extern void func_02056374(const void *, u32, u32);
@@ -2216,11 +2205,11 @@ s32 dScMgLuigi_c::InitResources()
        by 16 bytes under 2004/b56; see the recorded source-form experiment. */
     volatile u16 fillMain;
     volatile u16 fillSub;
-    int arc;
+    void *arc;
     int file;
     int objChar;
 
-    arc = func_ov004_020adc74(&data_ov006_0213cfa0);
+    arc = func_ov004_020adc74((const char *)&data_ov006_0213cfa0);
     if (arc == 0) return 0;
 
     data_0209d45c |= 8;
@@ -2244,7 +2233,7 @@ s32 dScMgLuigi_c::InitResources()
     *(volatile u16 *)0x0400000c = (*(volatile u16 *)0x0400000c & 0x43) | 0x1410;
 
     file = LoadFile(0x4b);
-    DecompressLZ16(file, (void *)(_ZN2G213GetBG2CharPtrEv() + 0x4000));
+    DecompressLZ16((void *)file, (void *)(_ZN2G213GetBG2CharPtrEv() + 0x4000));
     Deallocate((void *)file);
 
     file = LoadFile(0x4c);
@@ -2257,7 +2246,7 @@ s32 dScMgLuigi_c::InitResources()
 
     objChar = LoadFile(0xd3);
     file = LoadFile(0xd4);
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16((void *)objChar, (void *)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)file, 0, 0x100);
 
     *(volatile u16 *)0x0400100c &= ~3;
@@ -2268,7 +2257,7 @@ s32 dScMgLuigi_c::InitResources()
     {
         int subFile;
         subFile = LoadFile(0x4b);
-        DecompressLZ16(subFile, (void *)(_ZN3G2S13GetBG2CharPtrEv() + 0x4000));
+        DecompressLZ16((void *)subFile, (void *)(_ZN3G2S13GetBG2CharPtrEv() + 0x4000));
         Deallocate((void *)subFile);
 
         subFile = LoadFile(0x4c);
@@ -2290,7 +2279,7 @@ s32 dScMgLuigi_c::InitResources()
         Deallocate((void *)subFile);
     }
 
-    DecompressLZ16(objChar, (void *)0x6600000);
+    DecompressLZ16((void *)objChar, (void *)0x6600000);
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)file, 0, 0x100);
     Deallocate((void *)objChar);
     Deallocate((void *)file);

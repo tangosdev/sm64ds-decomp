@@ -5,12 +5,12 @@ extern int func_02018dc4(int buf, struct V2 ab);
 extern void Crash(void);
 extern int func_0201834c(int *buf, int x);
 
-int func_020182ec(int a, int b, int c, ...)
+int func_020182ec(struct V2 file, int c, ...)
 {
     int buf[0x11];
     int r = 0;
     FS_InitFile(buf);
-    if (func_02018dc4((int)buf, *(struct V2 *)&a) == 0)
+    if (func_02018dc4((int)buf, file) == 0)
         Crash();
     else
         r = func_0201834c(buf, c);

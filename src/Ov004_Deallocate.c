@@ -1,2 +1,6 @@
-extern void Deallocate(void);
-void Ov004_Deallocate(void) { Deallocate(); }
+extern void Deallocate(void *ptr);
+
+void Ov004_Deallocate(void *ptr)
+{
+    Deallocate(ptr);
+}
