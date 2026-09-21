@@ -508,6 +508,56 @@ struct Ov074Seat {
     const char *name;
 };
 
+/* ---- RUN link100 LANE PMFCELLS1: EVERY ONE OF THE EIGHTEEN IS A FACE NOW ---
+ *
+ * The note above names the two flat dispatchers and that reading is right as
+ * far as it goes: func_ov074_021203e4 and func_ov074_0212042c are matched C++
+ * compiled /vmg /vmm, and each ends
+ *     mov ecx,[<cell>+4] / add ecx,<this> / pop ebp / jmp eax
+ * -- a TAIL JUMP that leaves the caller's own pushed receiver at [esp+4], so a
+ * raw cdecl body found its receiver there.
+ *
+ * WHAT THAT READING MISSES is that /O2 inlines both dispatchers into the
+ * class's own state bodies in the same translation unit, and inside a live
+ * frame the same sequence is a REAL CALL with NOTHING pushed. Read off this
+ * build's own image, not reasoned about:
+ *
+ *   _func_ov074_0211ffcc +0x77
+ *     mov  dword ptr [edi+0x5cc], 2            ; the state index
+ *     mov  ecx, dword ptr [<cell>+4]           ; the record's delta = 0
+ *     lea  ecx, [ecx+edi]                      ; this + delta
+ *     call dword ptr [<cell>]                  ; A REAL CALL
+ *
+ * and again in _func_ov074_0211fa74 +0x48, _func_ov074_02120080 and
+ * _func_ov074_021201f0. So every enter and tick word has been running on
+ * whatever the caller last spilled whenever the dispatch came out inlined.
+ * Same defect and same remedy as the Amp's rows in
+ * hal/actor_classes_ov070.cpp: a __fastcall face per word, on all eighteen
+ * rather than on the sites that were caught, because MSVC's pointer-to-member
+ * sequence puts `this + delta` in ECX whether it transfers with a call or with
+ * a tail jump, so reading the receiver from ECX is right on both paths while
+ * reading it from the stack is right only on one. */
+#define OV74_STATE_FACE(sym)                                                  static void __fastcall ov74_st_##sym(void *self, void *dead_edx)          {                                                                             (void)dead_edx;                                                           sym(self);                                                            }
+
+OV74_STATE_FACE(func_ov074_0211f5b8)
+OV74_STATE_FACE(func_ov074_0211fa08)
+OV74_STATE_FACE(func_ov074_0211fa74)
+OV74_STATE_FACE(func_ov074_0211fb84)
+OV74_STATE_FACE(func_ov074_0211fbd0)
+OV74_STATE_FACE(func_ov074_0211fc34)
+OV74_STATE_FACE(func_ov074_0211fc38)
+OV74_STATE_FACE(func_ov074_0211fd48)
+OV74_STATE_FACE(func_ov074_0211fd74)
+OV74_STATE_FACE(func_ov074_0211ffac)
+OV74_STATE_FACE(func_ov074_0211ffcc)
+OV74_STATE_FACE(func_ov074_0212007c)
+OV74_STATE_FACE(func_ov074_02120080)
+OV74_STATE_FACE(func_ov074_0212016c)
+OV74_STATE_FACE(func_ov074_0212018c)
+OV74_STATE_FACE(func_ov074_021201ec)
+OV74_STATE_FACE(func_ov074_021201f0)
+OV74_STATE_FACE(func_ov074_021203e0)
+
 /* Nine {enter, tick} cells, in the order src/__sinit_ov074_02122978.c copies
    them into data_ov074_021230f8[0..17]: index 2k is state k's ENTER and index
    2k+1 is its TICK. func_ov074_021203e4 dispatches the enter half and
@@ -517,32 +567,32 @@ struct Ov074Seat {
    own address. */
 const Ov074Seat g_ov074_seats[] = {
     /* state 0 */
-    {data_ov074_02122dbc, 0x021203e0, (void *)func_ov074_021203e0,          "s0.enter/02122dbc"},
-    {data_ov074_02122de4, 0x021201f0, (void *)func_ov074_021201f0,          "s0.tick /02122de4"},
+    {data_ov074_02122dbc, 0x021203e0, (void *)ov74_st_func_ov074_021203e0,          "s0.enter/02122dbc"},
+    {data_ov074_02122de4, 0x021201f0, (void *)ov74_st_func_ov074_021201f0,          "s0.tick /02122de4"},
     /* state 1 */
-    {data_ov074_02122e0c, 0x021201ec, (void *)func_ov074_021201ec,          "s1.enter/02122e0c"},
-    {data_ov074_02122dc4, 0x0212018c, (void *)func_ov074_0212018c,          "s1.tick /02122dc4"},
+    {data_ov074_02122e0c, 0x021201ec, (void *)ov74_st_func_ov074_021201ec,          "s1.enter/02122e0c"},
+    {data_ov074_02122dc4, 0x0212018c, (void *)ov74_st_func_ov074_0212018c,          "s1.tick /02122dc4"},
     /* state 2 */
-    {data_ov074_02122d8c, 0x0211ffac, (void *)func_ov074_0211ffac,          "s2.enter/02122d8c"},
-    {data_ov074_02122dcc, 0x0211fd74, (void *)func_ov074_0211fd74,          "s2.tick /02122dcc"},
+    {data_ov074_02122d8c, 0x0211ffac, (void *)ov74_st_func_ov074_0211ffac,          "s2.enter/02122d8c"},
+    {data_ov074_02122dcc, 0x0211fd74, (void *)ov74_st_func_ov074_0211fd74,          "s2.tick /02122dcc"},
     /* state 3 */
-    {data_ov074_02122dd4, 0x0212016c, (void *)func_ov074_0212016c,          "s3.enter/02122dd4"},
-    {data_ov074_02122d94, 0x02120080, (void *)func_ov074_02120080,          "s3.tick /02122d94"},
+    {data_ov074_02122dd4, 0x0212016c, (void *)ov74_st_func_ov074_0212016c,          "s3.enter/02122dd4"},
+    {data_ov074_02122d94, 0x02120080, (void *)ov74_st_func_ov074_02120080,          "s3.tick /02122d94"},
     /* state 4 */
-    {data_ov074_02122d9c, 0x0212007c, (void *)func_ov074_0212007c,          "s4.enter/02122d9c"},
-    {data_ov074_02122da4, 0x0211ffcc, (void *)func_ov074_0211ffcc,          "s4.tick /02122da4"},
+    {data_ov074_02122d9c, 0x0212007c, (void *)ov74_st_func_ov074_0212007c,          "s4.enter/02122d9c"},
+    {data_ov074_02122da4, 0x0211ffcc, (void *)ov74_st_func_ov074_0211ffcc,          "s4.tick /02122da4"},
     /* state 5 */
-    {data_ov074_02122d84, 0x0211fd48, (void *)func_ov074_0211fd48,          "s5.enter/02122d84"},
-    {data_ov074_02122dac, 0x0211fc38, (void *)func_ov074_0211fc38,          "s5.tick /02122dac"},
+    {data_ov074_02122d84, 0x0211fd48, (void *)ov74_st_func_ov074_0211fd48,          "s5.enter/02122d84"},
+    {data_ov074_02122dac, 0x0211fc38, (void *)ov74_st_func_ov074_0211fc38,          "s5.tick /02122dac"},
     /* state 6 */
-    {data_ov074_02122e1c, 0x0211fb84, (void *)func_ov074_0211fb84,          "s6.enter/02122e1c"},
-    {data_ov074_02122e14, 0x0211fa74, (void *)func_ov074_0211fa74,          "s6.tick /02122e14"},
+    {data_ov074_02122e1c, 0x0211fb84, (void *)ov74_st_func_ov074_0211fb84,          "s6.enter/02122e1c"},
+    {data_ov074_02122e14, 0x0211fa74, (void *)ov74_st_func_ov074_0211fa74,          "s6.tick /02122e14"},
     /* state 7 */
-    {data_ov074_02122db4, 0x0211fa08, (void *)func_ov074_0211fa08,          "s7.enter/02122db4"},
-    {data_ov074_02122df4, 0x0211f5b8, (void *)func_ov074_0211f5b8,          "s7.tick /02122df4"},
+    {data_ov074_02122db4, 0x0211fa08, (void *)ov74_st_func_ov074_0211fa08,          "s7.enter/02122db4"},
+    {data_ov074_02122df4, 0x0211f5b8, (void *)ov74_st_func_ov074_0211f5b8,          "s7.tick /02122df4"},
     /* state 8 */
-    {data_ov074_02122dec, 0x0211fc34, (void *)func_ov074_0211fc34,          "s8.enter/02122dec"},
-    {data_ov074_02122ddc, 0x0211fbd0, (void *)func_ov074_0211fbd0,          "s8.tick /02122ddc"},
+    {data_ov074_02122dec, 0x0211fc34, (void *)ov74_st_func_ov074_0211fc34,          "s8.enter/02122dec"},
+    {data_ov074_02122ddc, 0x0211fbd0, (void *)ov74_st_func_ov074_0211fbd0,          "s8.tick /02122ddc"},
 };
 DSSTATE_BEGIN
 bool g_ov074_seated;
