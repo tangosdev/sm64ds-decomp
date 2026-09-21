@@ -555,6 +555,10 @@ int g_art_state;               /* 0 not tried, 1 both here, -1 not available */
 int g_art_ix0, g_art_iy0, g_art_ix1, g_art_iy1;
 int g_art_notch;               /* fully transparent rows at the top */
 unsigned g_art_bright, g_art_dark;   /* the artwork's own two extremes */
+/* how far the map is inset inside the well when the well is not 4:3. Zero on
+   the owner's own picture, whose well is 240 x 180 and so is exactly 4:3;
+   published for the boot line and for the captures' measured rows. */
+int g_art_gapx, g_art_gapy;
 
 int art_load_one(const char *dir, const char *name, ArtImage *im)
 {
@@ -694,10 +698,22 @@ int art_build(void)
     } else {
         const int iw = g_art_ix1 - g_art_ix0 + 1, ih = g_art_iy1 - g_art_iy0 + 1;
         std::fprintf(stderr, "[minimap] panel artwork from %s: plate %dx%d, "
-                     "plaque %dx%d, inner rectangle %d,%d %dx%d (%s 4:3), "
-                     "notch %d rows\n", dir, g_art_base.w, g_art_base.h,
-                     g_art_tab.w, g_art_tab.h, g_art_ix0, g_art_iy0, iw, ih,
-                     iw * 3 == ih * 4 ? "exactly" : "not", g_art_notch);
+                     "plaque %dx%d, map well %d,%d %dx%d, notch %d rows\n",
+                     dir, g_art_base.w, g_art_base.h, g_art_tab.w, g_art_tab.h,
+                     g_art_ix0, g_art_iy0, iw, ih, g_art_notch);
+        /* THE MAP IS 4:3 AND SO, ON THE OWNER'S PICTURE, IS THE WELL. Said out
+           loud either way, because a well that is not 4:3 means the map no
+           longer touches all four of its sides and a reader is owed the number
+           rather than a squint at a screenshot. */
+        if (iw * 3 == ih * 4)
+            std::fprintf(stderr, "[minimap] the well is exactly 4:3, so the map "
+                         "fills it to all four sides at every size\n");
+        else
+            std::fprintf(stderr, "[minimap] the well is %dx%d, which is %d "
+                         "pixels off 4:3 in width (4:3 at that height is %d): "
+                         "the map keeps its own shape and is centred in the "
+                         "well, so it touches two sides and not four\n",
+                         iw, ih, iw - ih * 4 / 3, ih * 4 / 3);
     }
     return ok;
 }
@@ -708,23 +724,75 @@ inline int art_on(void)
     return g_art_state == 1;
 }
 
-/* One picture, nearest-neighbour, into a destination rectangle, honouring the
-   source's alpha as a stencil (0 or 255 is all this artwork has, and anything
-   between reads as present -- the plate is a stencil, not a blend). */
+/* FLOOR division, because the picture extends OUTWARD from the rectangle the
+   arithmetic below is anchored on and the coordinates going into it are
+   therefore negative as often as not. C's own division truncates towards
+   zero, which would fold the two pixels either side of the anchor onto the
+   same destination row and put a seam at the anchor's own edge. */
+inline int fdiv(int a, int b)
+{
+    return a >= 0 ? a / b : -((-a + b - 1) / b);
+}
+
+/* ONE PICTURE, PLACED BY AN ANCHOR RECTANGLE RATHER THAN BY ITS OWN.
+ *
+ * The caller names a rectangle INSIDE the source picture and the destination
+ * rectangle it has to land on exactly; the rest of the picture follows from
+ * the same linear map and spills outside as far as it goes. That is the shape
+ * this needs because the thing being placed is the artist's map well: the well
+ * must sit exactly on the map, and where the plate's outer edge then falls is
+ * an answer, not an input. Placing the picture by its own rectangle and hoping
+ * the well lands right is how a border ends up a pixel inside the map.
+ *
+ * The source's alpha is a stencil (0 or 255 is all this artwork has, and
+ * anything between reads as present -- the plate is a stencil, not a blend).
+ *
+ * MAGNIFIED: nearest neighbour, one source pixel per destination block, for
+ * the reason ntr's own compose gives for the map -- a filter would invent
+ * pixels the artist did not draw.
+ *
+ * REDUCED: the box average of the block, and NOT nearest, because this artwork
+ * is mostly flat plate with THIN DARK LINES on it: the well's outline is one
+ * pixel wide, and at the smallest map the plate is drawn at about half size,
+ * where nearest neighbour simply steps over that line about half the time and
+ * the panel loses the very border this was asked to match up with. An average
+ * turns it into a softer line instead of no line. Same argument, same answer,
+ * as the map's own reduction in ntr/ppu_sub.cpp. */
 void art_blit(const ArtImage *im, unsigned *dst, int w, int h,
+              int sx, int sy, int sw, int sh,
               int dx, int dy, int dw, int dh)
 {
-    if (dw < 1 || dh < 1) return;
-    for (int y = 0; y < dh; ++y) {
-        const int py = dy + y;
-        if (py < 0 || py >= h) continue;
-        const unsigned *srow = im->px + (size_t)(y * im->h / dh) * im->w;
-        unsigned *drow = dst + (size_t)py * ntr::SCREEN_W;
-        for (int x = 0; x < dw; ++x) {
-            const int px_ = dx + x;
-            if (px_ < 0 || px_ >= w) continue;
-            const unsigned c = srow[x * im->w / dw];
-            if (c >> 24) drow[px_] = c | 0xFF000000u;
+    if (sw < 1 || sh < 1 || dw < 1 || dh < 1) return;
+    const int shrink = (dw < sw || dh < sh);
+    const int X0 = dx + fdiv(-sx * dw, sw), X1 = dx + fdiv((im->w - sx) * dw, sw);
+    const int Y0 = dy + fdiv(-sy * dh, sh), Y1 = dy + fdiv((im->h - sy) * dh, sh);
+    for (int Y = Y0; Y < Y1; ++Y) {
+        if (Y < 0 || Y >= h) continue;
+        int v0 = sy + fdiv((Y - dy) * sh, dh);
+        int v1 = shrink ? sy + fdiv((Y + 1 - dy) * sh, dh) : v0 + 1;
+        if (v0 < 0) v0 = 0;
+        if (v1 > im->h) v1 = im->h;
+        if (v0 >= im->h || v1 <= v0) continue;
+        unsigned *drow = dst + (size_t)Y * ntr::SCREEN_W;
+        for (int X = X0; X < X1; ++X) {
+            if (X < 0 || X >= w) continue;
+            int u0 = sx + fdiv((X - dx) * sw, dw);
+            int u1 = shrink ? sx + fdiv((X + 1 - dx) * sw, dw) : u0 + 1;
+            if (u0 < 0) u0 = 0;
+            if (u1 > im->w) u1 = im->w;
+            if (u0 >= im->w || u1 <= u0) continue;
+            unsigned r = 0, g = 0, b = 0, n = 0;
+            for (int v = v0; v < v1; ++v)
+                for (int u = u0; u < u1; ++u) {
+                    const unsigned c = im->px[(size_t)v * im->w + u];
+                    if (!(c >> 24)) continue;
+                    r += (c >> 16) & 0xFF;
+                    g += (c >> 8) & 0xFF;
+                    b += c & 0xFF;
+                    ++n;
+                }
+            if (!n) continue;             /* the block is all notch: draw nothing */
+            drow[X] = 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
         }
     }
 }
@@ -767,6 +835,7 @@ void px_fill(unsigned *dst, int dw, int dh, int x0, int y0, int w, int h,
 struct PanelGeom {
     int x0, y0, pw, ph;        /* the plate, or the composed panel */
     int tx, ty, tw, th;        /* the MAP plaque */
+    int wx, wy, ww, wh;        /* the artist's well, placed (art only) */
 };
 
 int panel_geom(PanelGeom *g)
@@ -790,19 +859,58 @@ int panel_geom(PanelGeom *g)
     const int x0 = g_x0 - ml, y0 = g_y0 - mt;
     const int pw = g_pan_w + ml + mr, ph = g_pan_h + mt + mb;
 
+    /* ---- THE MAP GOES INSIDE THE PICTURE'S OWN SQUARE ---------------------
+     *
+     * The owner: "make it match up with the outline and be inside the square
+     * on the image i sent". So the plate is not scaled to some rectangle of
+     * this program's choosing and the map dropped roughly in the middle of it;
+     * the WELL the artist drew is placed exactly onto the map, and the rest of
+     * the picture follows from that. plate_to_fb_x / _y below are that one
+     * linear map, and everything -- the plate's rectangle, the plaque's, the
+     * resize handle's corner -- is read out of it, so nothing can drift.
+     *
+     * ITS SHAPE. The map is 4:3 at every size and so, on the owner's picture,
+     * is the well: 240 x 180 at 7,17 inside a 255 x 205 plate. When a picture
+     * turns up whose well is NOT 4:3 the map keeps its own shape and is
+     * centred in the well instead, with the plate scaled by whichever axis
+     * binds, so the map is inscribed rather than stretched. The boot line says
+     * which of the two the picture got. */
     if (art_on()) {
         const int bw = g_art_base.w, bh = g_art_base.h;
-        const int psrc = bh - g_art_notch;       /* the plate's opaque rows */
-        if (psrc > 0) {
-            const int fullh = bh * ph / psrc;    /* the whole picture, in fb px */
-            g->x0 = x0;
-            g->y0 = y0 - g_art_notch * ph / psrc;
-            g->pw = pw;
-            g->ph = fullh;
-            g->tw = g_art_tab.w * pw / bw;
-            g->th = g_art_tab.h * fullh / bh;
-            g->tx = x0 + (pw - g->tw) / 2;
-            g->ty = g->y0;
+        const int iw = g_art_ix1 - g_art_ix0 + 1;
+        const int ih = g_art_iy1 - g_art_iy0 + 1;
+        if (iw > 0 && ih > 0 && g_pan_w > 0 && g_pan_h > 0) {
+            /* the well, grown to hold the map: whichever axis binds sets the
+               scale, and the map is centred across the other one */
+            int wellw = g_pan_w, wellh = g_pan_h;
+            if ((long)ih * g_pan_w >= (long)iw * g_pan_h)
+                wellh = (int)((long)ih * g_pan_w / iw);
+            else
+                wellw = (int)((long)iw * g_pan_h / ih);
+            const int gapx = (wellw - g_pan_w) / 2, gapy = (wellh - g_pan_h) / 2;
+            g_art_gapx = gapx;
+            g_art_gapy = gapy;
+            const int wx = g_x0 - gapx, wy = g_y0 - gapy;
+
+            const int px0 = wx + fdiv(-g_art_ix0 * wellw, iw);
+            const int px1 = wx + fdiv((bw - g_art_ix0) * wellw, iw);
+            const int py0 = wy + fdiv(-g_art_iy0 * wellh, ih);
+            const int py1 = wy + fdiv((bh - g_art_iy0) * wellh, ih);
+            const int tu = (bw - g_art_tab.w) / 2;
+            const int tx0 = wx + fdiv((tu - g_art_ix0) * wellw, iw);
+
+            g->x0 = px0;
+            g->y0 = py0;
+            g->pw = px1 - px0;
+            g->ph = py1 - py0;
+            g->tx = tx0;
+            g->ty = py0;
+            g->tw = fdiv(g_art_tab.w * wellw, iw);
+            g->th = fdiv(g_art_tab.h * wellh, ih);
+            g->wx = wx;
+            g->wy = wy;
+            g->ww = wellw;
+            g->wh = wellh;
             return 1;
         }
     }
@@ -817,6 +925,10 @@ int panel_geom(PanelGeom *g)
     if (g->th < 6) g->th = 6;
     g->tx = x0 + (pw - g->tw) / 2;
     g->ty = y0 - ph * 10 / 195;
+    g->wx = g_x0;
+    g->wy = g_y0;
+    g->ww = g_pan_w;
+    g->wh = g_pan_h;
     return 0;
 }
 
@@ -831,13 +943,16 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
     if (!art_on() && !g_motif_state) g_motif_state = wall_build() ? 1 : -1;
 
     PanelGeom g;
-    const int art = panel_geom(&g);
-    const int x0 = g.x0, y0 = g.y0, pw = g.pw, ph = g.ph;
-
-    if (art) {
-        art_blit(&g_art_base, dst, w, h, x0, y0, pw, ph);
+    if (panel_geom(&g)) {
+        /* THE WELL ONTO THE MAP, and the rest of the picture wherever that
+           puts it. See the banner over art_blit. */
+        art_blit(&g_art_base, dst, w, h,
+                 g_art_ix0, g_art_iy0,
+                 g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
+                 g.wx, g.wy, g.ww, g.wh);
         return;
     }
+    const int x0 = g.x0, y0 = g.y0, pw = g.pw, ph = g.ph;
 
     /* the two margins the frame lines are proportioned from, read back out of
        the rectangle rather than recomputed, so there is still one arithmetic */
@@ -862,16 +977,16 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
     }
 
     /* THE FRAME, one artist pixel thick on the left and top and two on the
-       right and bottom -- drawn ONE PIXEL FURTHER OUT than the artist has it,
-       because the map already arrives with a one-pixel black frame of its own
-       (ntr/ppu_sub.cpp's compose draws it, after this). Sitting the dark line
-       exactly where that black line goes would simply hide it. Outside it,
-       the two read as the artist's border: black against the map, then the
-       dark line, then the wallpaper. */
+       right and bottom, drawn WHERE THE ARTIST HAS IT: immediately against the
+       map, with nothing between. It used to be pushed one pixel further out to
+       make room for the map's own black outline; the owner asked for that
+       outline to go ("Remove the black outline that is usually around the
+       minimap and make it match up with the outline"), it is gone with the
+       option on, and this line moves into the space it left. */
     const int ft = ml / 7 < 1 ? 1 : ml / 7;
     const int fb_ = (mr * 2) / 8 < 1 ? 1 : (mr * 2) / 8;
-    const int fx = g_x0 - 1, fy = g_y0 - 1;           /* outside the black line */
-    const int fw = g_pan_w + 2, fh = g_pan_h + 2;
+    const int fx = g_x0, fy = g_y0;
+    const int fw = g_pan_w, fh = g_pan_h;
     px_fill(dst, w, h, fx - ft, fy - ft, fw + ft * 2, ft, dark);
     px_fill(dst, w, h, fx - ft, fy + fh, fw + ft + fb_, fb_, dark);
     px_fill(dst, w, h, fx - ft, fy - ft, ft, fh + ft * 2, dark);
@@ -893,7 +1008,12 @@ void hal_sub_panel_plaque(unsigned *dst, int w, int h)
     const int tx = g.tx, ty = g.ty, tw = g.tw, th = g.th;
 
     if (art) {
-        art_blit(&g_art_tab, dst, w, h, tx, ty, tw, th);
+        /* the plaque rides the plate's scale exactly -- the same well-to-map
+           ratio -- with its own top-left corner as the anchor */
+        art_blit(&g_art_tab, dst, w, h,
+                 0, 0,
+                 g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
+                 tx, ty, g.ww, g.wh);
         return;
     }
 
@@ -2603,6 +2723,17 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        raster's own old behaviour. */
     ntr::ppu_sub_set_bg_suppress(
         (improved_map_on() && !hal_sub_screen_stacked()) ? (1u << 10) : 0u);
+    /* THE MAP'S BLACK OUTLINE, and where it comes from. It is not the
+       cartridge's: the DS bottom screen's own outermost rows and columns are
+       whatever the game drew there. It is this port's, one pixel wide, drawn
+       by ntr::ppu_compose_sub immediately outside the map so a bare inset
+       reads as a panel rather than as a hole in the 3D picture. With a
+       decorated panel round the map that line sits on top of the artist's own
+       border, which is precisely what the owner asked to be rid of, so with
+       the improved map on it is not drawn and the panel's own frame takes its
+       place. Off, and in the stacked layout, it is exactly what it was. */
+    ntr::ppu_sub_set_compose_border(
+        (improved_map_on() && !hal_sub_screen_stacked()) ? 0 : 1);
     /* Publish the layer mask, the way nine ROM functions do with this exact
        line. Minimap::Behavior and Message::UpdateWindow both write
        data_0209d454 and then push it themselves; doing it once more here is

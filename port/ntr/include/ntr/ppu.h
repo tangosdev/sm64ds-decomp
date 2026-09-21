@@ -335,6 +335,16 @@ void ppu_vram_publish(void);
 void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
                      int dst_h, int x0, int y0, int num, int den);
 
+/* THE ONE-PIXEL BLACK FRAME IS NOW OPTIONAL. It exists so the map reads as a
+   panel and not as a corruption of the 3D view, which is the right default for
+   a bare map floating in the corner. A map sitting inside a decorated panel
+   has a border already, and a black line drawn on top of the artist's own one
+   is exactly what the owner asked to be rid of ("Remove the black outline that
+   is usually around the minimap and make it match up with the outline ... on
+   the image"). So the host says which it wants; 1, the frame, is what this
+   file has always drawn and is the value nothing-installed keeps. */
+void ppu_sub_set_compose_border(int on);
+
 /* ---- THE HOST'S VETO OVER ENGINE B'S SPRITES -------------------------------
  *
  * A predicate the host may install to decline individual sub-engine OBJ

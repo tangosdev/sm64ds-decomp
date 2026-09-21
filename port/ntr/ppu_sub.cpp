@@ -1082,6 +1082,14 @@ void ppu_sub_set_bg_suppress(uint32_t mask)
     g_bg_suppress = mask;
 }
 
+/* The host's say over the one-pixel black frame. See the header. */
+int g_compose_border = 1;
+
+void ppu_sub_set_compose_border(int on)
+{
+    g_compose_border = on ? 1 : 0;
+}
+
 /* How many entries the veto has declined this run. The proof that the arrows
    are gone is a pixel diff of their four rectangles; this is the cheap
    corroborating number that says the filter fired at all, so a diff of zero
@@ -1111,22 +1119,24 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
        Every one of these four used to be unconditional behind a single
        `x0 < 1 || y0 < 1` early return that skipped the WHOLE panel; a player
        who picked the biggest map would have got no map at all. */
-    if (y0 - 1 >= 0)
-        for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
-             x <= x0 + out_w && x < dst_w; ++x)
-            dst[(y0 - 1) * stride + x] = 0xFF000000u;
-    if (y0 + out_h < dst_h)
-        for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
-             x <= x0 + out_w && x < dst_w; ++x)
-            dst[(y0 + out_h) * stride + x] = 0xFF000000u;
-    if (x0 - 1 >= 0)
-        for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
-             y <= y0 + out_h && y < dst_h; ++y)
-            dst[y * stride + (x0 - 1)] = 0xFF000000u;
-    if (x0 + out_w < dst_w)
-        for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
-             y <= y0 + out_h && y < dst_h; ++y)
-            dst[y * stride + (x0 + out_w)] = 0xFF000000u;
+    if (g_compose_border) {
+        if (y0 - 1 >= 0)
+            for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+                 x <= x0 + out_w && x < dst_w; ++x)
+                dst[(y0 - 1) * stride + x] = 0xFF000000u;
+        if (y0 + out_h < dst_h)
+            for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+                 x <= x0 + out_w && x < dst_w; ++x)
+                dst[(y0 + out_h) * stride + x] = 0xFF000000u;
+        if (x0 - 1 >= 0)
+            for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+                 y <= y0 + out_h && y < dst_h; ++y)
+                dst[y * stride + (x0 - 1)] = 0xFF000000u;
+        if (x0 + out_w < dst_w)
+            for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+                 y <= y0 + out_h && y < dst_h; ++y)
+                dst[y * stride + (x0 + out_w)] = 0xFF000000u;
+    }
 
     if (num == 1 && den == 1) {
         for (int y = 0; y < SUB_H; ++y)
