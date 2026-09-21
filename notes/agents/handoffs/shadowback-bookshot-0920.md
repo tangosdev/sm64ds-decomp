@@ -2,9 +2,9 @@
 
 Producer: `codex-shadowback-0920` (Codex). Initial source and workflow base:
 `077483245976d72477eba0d2a7ccca4390da2b1b`. Branch: `fix/shadow-backports-0920`.
-This describes the local candidate containing this handoff. The producer lease is
-held in the v2 task named above. No source commit or review evidence has been
-published through the queue; `formal_acceptance: false`.
+This records the candidate prepared for the user-requested draft PR. The producer
+lease is held in the v2 task named above. No successful verification handoff has
+been published through the queue; `formal_acceptance: false`.
 
 The current scope is eight already-enrolled production files. Shared headers, symbols,
 delinks, attribution, lifecycle definitions and the shadow TU are unchanged.
@@ -70,7 +70,9 @@ Current producer evidence: `build/shadow-backport3/checks.json`, `baseline.json`
 `gates.json`, `declarations.log`, `rombuild-report.json`, `rombuild.log`,
 `romdata.json`, `attribution.json`, and `approach-linear-definition-proof.json`.
 Independent byte evidence is in the verifier's `build/shadow-backport-review3/`.
-All evidence and source commits remain local; `formal_acceptance: false`.
+The source and this handoff are prepared for draft-PR publication at the user's
+request. Raw local evidence and private compiler objects remain untracked. The
+declaration blocker is retained; `formal_acceptance: false`.
 
 The six helper backports correct the state helper's void return, angle-result
 width, Player damage/bounce declarations, animation start-frame width, sound
