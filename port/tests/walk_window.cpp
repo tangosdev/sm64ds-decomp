@@ -844,6 +844,10 @@ extern void *data_0209f394[];        /* per-player Actor* */
 extern unsigned char data_0209f1f8;  /* view-object count */
 extern signed char data_0209f2f8;    /* level/sublevel id (weather select) */
 extern int data_0209f32c[];          /* water level */
+/* the camera-mode preset run (hal/camera_bridges.cpp asserts its layout): the
+   base of the 33 records func_0200cb58 indexes, so a watch line can name the
+   record the camera is on by its ROM index instead of by a host address */
+extern unsigned char data_02086fcc[];
 extern int data_0209f20c[], data_0209f294[], data_0209f2c4[];
 /* THE PAUSE MENU'S OWN WORDS (run link100, lane EXITS1, the exit-course arm).
    Stage::PS_Update (src/_ZN5Stage9PS_UpdateEv.cpp) runs a switch on
@@ -14444,6 +14448,60 @@ int main(void)
                            side being pushed. Nothing reads it, it just makes
                            the camera binding measurable without a screenshot. */
                         (unsigned short)*(short *)(c + 0x8e));
+        }
+        /* SM64DS_CAM_WATCH=1: the ROM camera's own follow geometry, once per
+           frame, for a question no existing instrument answers -- whether the
+           camera TILTS. [cam-in] above carries the heading cam+0x17c, which is
+           horizontal only; the tilt is cam+0x17e, and it is not a control but
+           a RESTATEMENT: func_02009e70 places the eye and then reads the angle
+           back off the eye and the look-at at its tail (src/func_02009e70.cpp
+           :555), so a tilt that will not move is really an eye height that
+           will not move. mode is the index the ROM's own func_0200cb58 wrote
+           into cam+0x13c -- index 1 is the swim preset, the one record
+           func_02009e70 gives its own eye-height rule to -- so a swim camera
+           that never became mode 1 and a mode-1 camera whose eye is pinned
+           somewhere else are two different findings, and this line separates
+           them. Inert unless set; it reads and writes nothing. */
+        if (cam && getenv("SM64DS_CAM_WATCH")) {
+            const char *k = (const char *)cam;
+            const int *at = (const int *)(k + 0x80);
+            const int *eye = (const int *)(k + 0x8c);
+            const char *md = *(const char *const *)(k + 0x13c);
+            const int mi = md ? (int)((md - (const char *)data_02086fcc) / 0x28)
+                              : -1;
+            int d[3] = {eye[0] - at[0], eye[1] - at[1], eye[2] - at[2]};
+            /* THE ONE BRANCH IN MODE 0 THAT TILTS THE CAMERA AT ALL. At
+               src/func_02009e70.cpp:426-429 the follow state swings the eye
+               towards the TARGET'S OWN MOVEMENT PITCH -- atan2 of the frame's
+               vertical step over its horizontal one, clamped to +-0x3f80 --
+               and it does that for mode record 0 ONLY, and only while the
+               camera is still FARTHER OUT than its own converging distance
+               (`if (sp28 <= sl) goto L_A984`). sp28 is the eye-to-look-at
+               length this frame, sl the mode record's f20 scaled by the
+               camera's own +0x104. Both are printed so a row can say which
+               side of that test the frame was on instead of inferring it from
+               the picture: d3 <= sl every frame means the branch never ran and
+               the tilt has no source. */
+            const int dist3 = LenVec3(d);
+            const int f20 = md ? *(const int *)(md + 0x20) : 0;
+            const int s104 = *(const int *)(k + 0x104);
+            const int sl = (int)(((long long)(f20 < 0 ? -f20 : f20)
+                                  * s104 + 0x800) >> 12);
+            fprintf(stderr,
+                    "[camw] f%03d mode=%d at=(%.1f,%.1f,%.1f) "
+                    "eye=(%.1f,%.1f,%.1f) pitch=%04x head=%04x fl=%08x "
+                    "dy=%.1f py=%.1f under=%u water=%.1f d3=%.1f sl=%.1f "
+                    "s104=%d\n",
+                    frame, mi, at[0] / 4096.0f, at[1] / 4096.0f,
+                    at[2] / 4096.0f, eye[0] / 4096.0f, eye[1] / 4096.0f,
+                    eye[2] / 4096.0f,
+                    (unsigned short)*(const short *)(k + 0x17e),
+                    (unsigned short)*(const short *)(k + 0x17c),
+                    *(const unsigned *)(k + 0x154), d[1] / 4096.0f,
+                    *(const int *)(c + 0x60) / 4096.0f,
+                    *(const unsigned char *)(c + 0x706),
+                    data_0209f32c[0] / 4096.0f, dist3 / 4096.0f,
+                    sl / 4096.0f, s104);
         }
         ph_end(PH_CAMERA, t_phase);
         /* no speed clamp: the accel tables get real input-mode data now
