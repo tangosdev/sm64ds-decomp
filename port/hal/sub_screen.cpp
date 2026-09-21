@@ -743,14 +743,34 @@ void px_fill(unsigned *dst, int dw, int dh, int x0, int y0, int w, int h,
             px_put(dst, dw, dh, x, y, c);
 }
 
-/* THE PANEL, DRAWN BEHIND THE MAP. Called from hal_sub_screen_present with the
-   framebuffer, just before the map itself is composed over the middle of it. */
-void hal_sub_panel_decor(unsigned *dst, int w, int h)
-{
-    /* the archive read only matters when this program has to compose the
-       panel itself, so a player with the artwork never pays for it */
-    if (!art_on() && !g_motif_state) g_motif_state = wall_build() ? 1 : -1;
+/* ---- THE PANEL'S RECTANGLES, COMPUTED ONCE FOR BOTH PASSES ----------------
+ *
+ * THE PANEL IS DRAWN IN TWO PASSES NOW, on either side of the map, because
+ * the owner asked for exactly that: "the MAP banner and text should be above
+ * the minimap layer and the background should be behind the minimap layer".
+ * So the plate goes down first, the map is composed over it, and the plaque
+ * goes on top of the map. That is the whole reason this arithmetic is here
+ * rather than inside one drawing function: two passes reading one set of
+ * numbers cannot disagree about where the plaque is, and the plaque now
+ * overlaps something (the map) where before it only ever overlapped the
+ * plate.
+ *
+ * WHERE THE PLAQUE GOES IS MEASURED OFF THE ARTIST'S OWN MOCK-UP rather than
+ * chosen: in it the plate picture's top row and the plaque's top row are the
+ * SAME row, and the plaque is centred across the plate's width -- (255 - 109)
+ * / 2 = 73, and 73 is where it sits. The plate picture carries ten fully
+ * transparent rows at the top for exactly that, the notch the plaque drops
+ * into, so the plate is blitted whole, notch and all, and its transparent
+ * rows draw nothing.
+ *
+ * Returns 1 when the artwork is the panel, 0 when it is the composed one. */
+struct PanelGeom {
+    int x0, y0, pw, ph;        /* the plate, or the composed panel */
+    int tx, ty, tw, th;        /* the MAP plaque */
+};
 
+int panel_geom(PanelGeom *g)
+{
     /* The artist's margins, carried onto whatever size the map is drawn at.
        Seven DS pixels proud on the left and top, eight on the right and
        bottom, at the map's own scale, and never less than one pixel so the
@@ -770,39 +790,61 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
     const int x0 = g_x0 - ml, y0 = g_y0 - mt;
     const int pw = g_pan_w + ml + mr, ph = g_pan_h + mt + mb;
 
-    /* ---- THE ARTIST'S PLATE AND PLAQUE, WHEN THE PLAYER HAS THEM ----------
-     *
-     * The two pictures ARE the panel: drawn into the rectangle the runtime
-     * panel would have occupied, so the map, the attention arrows and the
-     * stylus all go on reading the same numbers they did. Below this branch
-     * is the panel this program composes for itself, and it is what a player
-     * with no artwork folder still gets.
-     *
-     * WHERE THE PLAQUE GOES, MEASURED OFF THE ARTIST'S OWN MOCK-UP rather
-     * than chosen: in it the plate picture's top row and the plaque's top row
-     * are the SAME row, and the plaque is centred across the plate's width
-     * ((plate 255 - plaque 109) / 2 = 73, and 73 is where it sits). The plate
-     * picture carries transparent rows at the top for exactly that -- the
-     * notch the plaque drops into -- so the plate is blitted whole, notch and
-     * all, and its transparent rows draw nothing. */
     if (art_on()) {
         const int bw = g_art_base.w, bh = g_art_base.h;
         const int psrc = bh - g_art_notch;       /* the plate's opaque rows */
         if (psrc > 0) {
             const int fullh = bh * ph / psrc;    /* the whole picture, in fb px */
-            const int fully = y0 - g_art_notch * ph / psrc;
-            art_blit(&g_art_base, dst, w, h, x0, fully, pw, fullh);
-            const int ttw = g_art_tab.w * pw / bw;
-            const int tth = g_art_tab.h * fullh / bh;
-            art_blit(&g_art_tab, dst, w, h, x0 + (pw - ttw) / 2, fully,
-                     ttw, tth);
-            return;
+            g->x0 = x0;
+            g->y0 = y0 - g_art_notch * ph / psrc;
+            g->pw = pw;
+            g->ph = fullh;
+            g->tw = g_art_tab.w * pw / bw;
+            g->th = g_art_tab.h * fullh / bh;
+            g->tx = x0 + (pw - g->tw) / 2;
+            g->ty = g->y0;
+            return 1;
         }
     }
 
+    g->x0 = x0;
+    g->y0 = y0;
+    g->pw = pw;
+    g->ph = ph;
+    g->tw = pw * 109 / 255;
+    g->th = ph * 32 / 195;
+    if (g->tw < 12) g->tw = 12;
+    if (g->th < 6) g->th = 6;
+    g->tx = x0 + (pw - g->tw) / 2;
+    g->ty = y0 - ph * 10 / 195;
+    return 0;
+}
+
+/* THE PANEL, DRAWN BEHIND THE MAP. Called from hal_sub_screen_present with the
+   framebuffer, just before the map itself is composed over the middle of it.
+   The plaque is NOT drawn here: it belongs above the map and is the second
+   pass, hal_sub_panel_plaque below. */
+void hal_sub_panel_decor(unsigned *dst, int w, int h)
+{
+    /* the archive read only matters when this program has to compose the
+       panel itself, so a player with the artwork never pays for it */
+    if (!art_on() && !g_motif_state) g_motif_state = wall_build() ? 1 : -1;
+
+    PanelGeom g;
+    const int art = panel_geom(&g);
+    const int x0 = g.x0, y0 = g.y0, pw = g.pw, ph = g.ph;
+
+    if (art) {
+        art_blit(&g_art_base, dst, w, h, x0, y0, pw, ph);
+        return;
+    }
+
+    /* the two margins the frame lines are proportioned from, read back out of
+       the rectangle rather than recomputed, so there is still one arithmetic */
+    const int ml = g_x0 - x0, mr = x0 + pw - (g_x0 + g_pan_w);
+
     const unsigned flat = (g_motif_state == 1) ? g_motif[0][0] : 0xFF4A3B18u;
     const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;
-    const unsigned bright = (g_motif_state == 1) ? g_panel_bright : 0xFFE0C060u;
 
     /* the wallpaper, at the map's own pixel grid so the panel and the map read
        as one picture; a plain fill if the archive could not be read */
@@ -834,15 +876,33 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
     px_fill(dst, w, h, fx - ft, fy + fh, fw + ft + fb_, fb_, dark);
     px_fill(dst, w, h, fx - ft, fy - ft, ft, fh + ft * 2, dark);
     px_fill(dst, w, h, fx + fw, fy - ft, fb_, fh + ft + fb_, dark);
+}
+
+/* THE PLAQUE, DRAWN ABOVE THE MAP. The second of the panel's two passes,
+   called from hal_sub_screen_present AFTER ppu_compose_sub has put the map
+   down -- the owner's own order, "the MAP banner and text should be above the
+   minimap layer". It overlaps the top of the map now, which is what the
+   artist's mock-up shows too: there the plaque covers the top fifteen rows of
+   the 180-row map well, across its middle 109 columns.
+
+   The attention arrows are drawn after this and stay above everything. */
+void hal_sub_panel_plaque(unsigned *dst, int w, int h)
+{
+    PanelGeom g;
+    const int art = panel_geom(&g);
+    const int tx = g.tx, ty = g.ty, tw = g.tw, th = g.th;
+
+    if (art) {
+        art_blit(&g_art_tab, dst, w, h, tx, ty, tw, th);
+        return;
+    }
+
+    const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;
+    const unsigned bright = (g_motif_state == 1) ? g_panel_bright : 0xFFE0C060u;
 
     /* THE PLAQUE. 109 wide and 32 tall against the artist's 255-wide panel,
        centred, with ten of its rows above the panel's top edge, and its
        corners cut at forty-five degrees over seven of its own pixels. */
-    int tw = pw * 109 / 255, th = ph * 32 / 195;
-    if (tw < 12) tw = 12;
-    if (th < 6) th = 6;
-    const int tx = x0 + (pw - tw) / 2;
-    const int ty = y0 - ph * 10 / 195;
     const int cut = tw * 7 / 109;
     for (int y = 0; y < th; ++y) {
         int in = 0;
@@ -2697,6 +2757,10 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
            on; with it off not a pixel of this runs. */
         if (improved_map_on()) hal_sub_panel_decor(dst, w, h);
         ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, g_pan_num, g_pan_den);
+        /* AND THE PANEL'S SECOND PASS, the MAP plaque, which the owner asked
+           to sit ABOVE the map rather than behind it. Three layers in his own
+           order: the plate, the map, the banner. */
+        if (improved_map_on()) hal_sub_panel_plaque(dst, w, h);
         /* AFTER THE PANEL, DELIBERATELY. The arrows sit just above the panel's
            top edge, so at every size but the largest they do not touch it; at
            the largest size on a 4:3 picture the panel IS the picture and the
