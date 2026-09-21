@@ -237,6 +237,9 @@ struct GxGpuFrame {
 typedef int (*GxGpuOpaqueFn)(const GxGpuFrame *);
 void gx_set_gpu_opaque(GxGpuOpaqueFn fn);
 int gx_gpu_opaque_registered();
+// The registered backend, so a caller can take it out and put it back and
+// draw one list both ways.
+GxGpuOpaqueFn gx_gpu_opaque();
 
 // Rasterise them into fb with a depth buffer. Does not clear fb -- the 3D layer
 // composites over whatever the 2D engine already drew.
@@ -264,6 +267,14 @@ void gx_render(Framebuffer &fb);
 // is looking at the previous frame's coverage; both live callers sit directly
 // after the gx_render that filled it.
 const uint8_t *gx_coverage();
+
+// The polygon-ID plane and the depth plane the same pass fills, on the same
+// contract as the coverage mask above: SCREEN_W stride, SCREEN_H rows, valid
+// only immediately after gx_render. Read-only, and for the same reason the
+// mask is public: a caller that has to ask "which surface won this pixel" or
+// "was the depth written" is asking about a value, not about a colour.
+const uint8_t *gx_attr_ids();
+const float *gx_depth();
 
 void gx_debug_proj(float out[16]);
 

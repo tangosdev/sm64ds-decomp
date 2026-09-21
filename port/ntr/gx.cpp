@@ -2234,6 +2234,11 @@ void gx_set_gpu_opaque(GxGpuOpaqueFn fn) {
 }
 int gx_gpu_opaque_registered() { return g_gpu_opaque != nullptr; }
 
+/* AND THE POINTER ITSELF, so a caller that wants to draw the SAME list both
+   ways can put it back after taking it out. The A/B inside gx_render does
+   that without help because it is inside; a test outside cannot. */
+GxGpuOpaqueFn gx_gpu_opaque() { return g_gpu_opaque; }
+
 /* ---- THE TWO PICTURE-SMOOTHING SETTINGS' LATCHES (run hd2) ---------------
    Both are called once at boot from walk_window, beside ntr::configure_aspect,
    and both clamp here as well as at the settings accessor: a caller that
@@ -3133,6 +3138,25 @@ const uint8_t *gx_coverage()
 {
     raster_buffers();
     return &g_cover[0][0];
+}
+
+/* THE OTHER TWO PLANES THE OPAQUE PASS FILLS, on the same contract as the
+   coverage mask above: SCREEN_W stride, SCREEN_H rows, valid immediately
+   after gx_render and cleared at the head of the next one. They exist for
+   tests/smoke_gpu_raster.cpp, which asks the graphics-card pass questions a
+   picture cannot answer -- did the nearer triangle win, was the depth left
+   alone, did the polygon id arrive -- and every one of those is a value in
+   one of these two planes rather than a colour. Read-only. */
+const uint8_t *gx_attr_ids()
+{
+    raster_buffers();
+    return &g_attrid[0][0];
+}
+
+const float *gx_depth()
+{
+    raster_buffers();
+    return &g_depth[0][0];
 }
 
 void gx_configure_anti_aliasing(int mode) {

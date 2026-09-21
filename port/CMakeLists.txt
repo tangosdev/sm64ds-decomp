@@ -1633,6 +1633,27 @@ foreach(sym IN LISTS GATE4A_SYMS)
     list(APPEND GATE4A_GEN "${sym_out}")
 endforeach()
 
+# THE GRAPHICS-CARD OPAQUE PASS'S OWN RULES (run hd2, lane GPU2). Small on
+# purpose: it links the renderer, the shared device and the settings reader
+# and nothing else, drives the geometry ports by hand and grades RELATIONS
+# BETWEEN PIXELS rather than a picture. It asks for WARP, the software
+# Direct3D device Windows ships, so the answers are the API's and not one
+# vendor's; the in-process A/B covers real hardware on real scenes.
+if(WIN32)
+    add_executable(smoke_gpu_raster
+        tests/smoke_gpu_raster.cpp
+        hal/gpu_raster.cpp
+        hal/gpu_device.cpp
+        hal/host_settings.cpp
+        hal/os_arena.cpp)
+    target_include_directories(smoke_gpu_raster PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+    target_link_libraries(smoke_gpu_raster PRIVATE ntr)
+    target_compile_definitions(smoke_gpu_raster PRIVATE SM64DS_PLATFORM_PC
+        ${PORT_REPO_ROOT_DEF})
+endif()
+
 add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
 target_include_directories(smoke_gx PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
