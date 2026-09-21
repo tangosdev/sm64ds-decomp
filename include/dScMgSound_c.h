@@ -48,7 +48,7 @@ extern "C" int func_ov006_020c3288(char *t); /* decl_common.h's own signature */
  *     timer = 0;
  *     frame++;
  *
- * and func_ov006_0211bd18 / func_ov006_0211bdb4 likewise both read `visible`,
+ * and func_ov006_02119aa8 / func_ov006_021199c0 likewise both read `visible`,
  * then draw at (x, y). The two differ only in their frame limit and table, so
  * they are two instances rather than a two-element array -- nothing indexes
  * between them. */

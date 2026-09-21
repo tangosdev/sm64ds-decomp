@@ -1,10 +1,12 @@
 # Sound component storage repair for PR #2881
 
 This candidate preserves the original PR head `1a953cca4b1e04cbc349745294c03325f88688d3`
-and composes it with main `2749832c6a462cdf22dd5cc9df3ade8bf0e24152`.
-The pre-repair composition is `9a711b25af7bfa0d78a2bd49ed39b80ca1e861a7`.
-Only the Sound header, production TU and this handoff change relative to that
-composition. No source move, manifest edit, symbol rename or credit change occurs.
+and composes it with main `a7b2c0d02c8943730cc1fa5e93ced2af011844a9`,
+including the landed Memory2 shared-header change. The initial storage repair
+was `e3816fa24d4e8923e87977925ab5d7c33318000c`, measured against pre-repair
+composition `9a711b25af7bfa0d78a2bd49ed39b80ca1e861a7` on main
+`2749832c6a462cdf22dd5cc9df3ade8bf0e24152`. Only the Sound header, production
+TU and this handoff differ from the current main base. No source move, manifest edit, symbol rename or credit change occurs.
 
 ## Source correction
 
@@ -21,6 +23,12 @@ its scene address remains 0x4f38, and the flag remains at scene offset 0x50e0.
 The class still has size 0x562c. The type and field names are reconstructed.
 The header and TU no longer claim that the first scene access proves a boundary,
 or that later scene fields lie within the shortened mTable.
+
+**SOUND2881-02 is fixed.** Independent review found two nonexistent sprite
+draw-function names in the header comment. The references now identify the
+actual visible/x/y draw bodies, `func_ov006_02119aa8` for SpriteA and
+`func_ov006_021199c0` for SpriteB. This corrects the evidence citation without
+changing the sprite layout or code.
 
 The existing sprite and scalar readability improvements remain intact.
 **SOUND-RECON01 remains partial**, tracked by issue #2492 for the next Sound
@@ -55,3 +63,15 @@ Private logs and control objects are in the ignored producer build/sound-repair
 folder. They contain local toolchain output and are not published as source.
 Independent review of this exact candidate and final PR checks are separate
 acceptance gates; producer evidence alone is not formal Source review.
+
+## Current-main composition recheck
+
+Main's shared `dScMgSingle3DBase_c.h` now declares the existing SysTracker
+constructor, and `func_ov004_020b1e34.c` records its existing three additional
+scalar arguments. The Sound object remains entirely identical to the original
+control after composition. Fresh header-expanded strict checks still verify all
+82 functions with zero blind words or differences, and the complete ROM comparison
+still reproduces all 11,208 functions and all 106 modules on this base.
+The final comment-reference correction also preserves that complete object.
+The previous rejected review and both finding IDs remain in queue history;
+independent acceptance must name this revised candidate and current tested base.
