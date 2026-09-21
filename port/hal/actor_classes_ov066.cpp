@@ -630,30 +630,154 @@ static void __fastcall pmfb7_ov066_02116c6c(void *self, void *dead_edx)
     ((void (*)(void *))(void *)func_ov066_02116c6c)(self);
 }
 
+/* ---- RUN link100 LANE PMFCELLS1: THE NINETEEN ENTER RECORDS NEED IT TOO ----
+ *
+ * The paragraph above rules the enter half correct because "they are reached by
+ * the class's state-change helper, which MSVC compiles as a one-call forwarder
+ * ending in `jmp`, so the caller's own frame is reused". That is true of the
+ * helper AS A SEPARATE FRAME and false of the frame the enter path actually
+ * runs in: /O2 inlines the helper into the class's own state bodies, and the
+ * inlined sequence is a REAL CALL inside the caller's live frame with NOTHING
+ * pushed. Read off this build's own image at twenty sites, not reasoned about:
+ *
+ *   _func_ov066_021188b0 +0x37
+ *     mov  dword ptr [eax+0x48c], <cell>     ; the state pointer
+ *     mov  edx, dword ptr [<cell>]           ; the enter code word
+ *     test edx,edx
+ *     je   +0x44
+ *     mov  ecx, dword ptr [<cell>+4]         ; the record's delta = 0
+ *     lea  ecx, [ecx+eax]                    ; this + delta
+ *     call edx                               ; A REAL CALL
+ *
+ * and the same five moves again in _func_ov066_02118e04 +0x45,
+ * _func_ov066_02119398 +0x5a, _func_ov066_02118cdc +0x54,
+ * _func_ov066_02118954 +0x28, _func_ov066_021189c0 +0x3a and fourteen more.
+ * A raw cdecl enter body therefore read whatever the caller last spilled as
+ * its receiver -- the Amp's defect in hal/actor_classes_ov070.cpp, one overlay
+ * over, and the same remedy: a __fastcall face per record, right whether the
+ * transfer is a call or a tail jump, because MSVC's pointer-to-member sequence
+ * puts `this + delta` in ECX either way. */
+
+static void __fastcall pmfb7e_ov066_0211944c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_0211944c)(self);
+}
+static void __fastcall pmfb7e_ov066_02119348(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02119348)(self);
+}
+static void __fastcall pmfb7e_ov066_0211901c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_0211901c)(self);
+}
+static void __fastcall pmfb7e_ov066_02118de0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118de0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118cb8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118cb8)(self);
+}
+static void __fastcall pmfb7e_ov066_02118be0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118be0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118b08(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118b08)(self);
+}
+static void __fastcall pmfb7e_ov066_02118a30(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118a30)(self);
+}
+static void __fastcall pmfb7e_ov066_021189a0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021189a0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118934(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118934)(self);
+}
+static void __fastcall pmfb7e_ov066_021187c8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021187c8)(self);
+}
+static void __fastcall pmfb7e_ov066_02118658(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118658)(self);
+}
+static void __fastcall pmfb7e_ov066_021185e4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021185e4)(self);
+}
+static void __fastcall pmfb7e_ov066_021184c0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021184c0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118168(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118168)(self);
+}
+static void __fastcall pmfb7e_ov066_02117bd0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02117bd0)(self);
+}
+static void __fastcall pmfb7e_ov066_021175bc(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021175bc)(self);
+}
+static void __fastcall pmfb7e_ov066_02117190(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02117190)(self);
+}
+static void __fastcall pmfb7e_ov066_02116d14(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02116d14)(self);
+}
+
 static const struct {
     PortEyerokCell *cell;
     unsigned enter_rom, tick_rom;
     PortEyerokFn enter_host, tick_host;
 } g_eyerok_cells[19] = {
-    { &data_ov066_0211b09c, 0x0211944c, 0x02119398, func_ov066_0211944c, (PortEyerokFn)(void *)pmfb7_ov066_02119398 },
-    { &data_ov066_0211b0ac, 0x02119348, 0x0211903c, func_ov066_02119348, (PortEyerokFn)(void *)pmfb7_ov066_0211903c },
-    { &data_ov066_0211b0cc, 0x0211901c, 0x02118e04, func_ov066_0211901c, (PortEyerokFn)(void *)pmfb7_ov066_02118e04 },
-    { &data_ov066_0211b0dc, 0x02118de0, 0x02118cdc, func_ov066_02118de0, (PortEyerokFn)(void *)pmfb7_ov066_02118cdc },
-    { &data_ov066_0211afcc, 0x02118cb8, 0x02118c00, func_ov066_02118cb8, (PortEyerokFn)(void *)pmfb7_ov066_02118c00 },
-    { &data_ov066_0211afdc, 0x02118be0, 0x02118b28, func_ov066_02118be0, (PortEyerokFn)(void *)pmfb7_ov066_02118b28 },
-    { &data_ov066_0211affc, 0x02118b08, 0x02118a50, func_ov066_02118b08, (PortEyerokFn)(void *)pmfb7_ov066_02118a50 },
-    { &data_ov066_0211b00c, 0x02118a30, 0x021189c0, func_ov066_02118a30, (PortEyerokFn)(void *)pmfb7_ov066_021189c0 },
-    { &data_ov066_0211b02c, 0x021189a0, 0x02118954, func_ov066_021189a0, (PortEyerokFn)(void *)pmfb7_ov066_02118954 },
-    { &data_ov066_0211b03c, 0x02118934, 0x021188b0, func_ov066_02118934, (PortEyerokFn)(void *)pmfb7_ov066_021188b0 },
-    { &data_ov066_0211b05c, 0x021187c8, 0x02118678, func_ov066_021187c8, (PortEyerokFn)(void *)pmfb7_ov066_02118678 },
-    { &data_ov066_0211b06c, 0x02118658, 0x02118604, func_ov066_02118658, (PortEyerokFn)(void *)pmfb7_ov066_02118604 },
-    { &data_ov066_0211b08c, 0x021185e4, 0x021184e0, func_ov066_021185e4, (PortEyerokFn)(void *)pmfb7_ov066_021184e0 },
-    { &data_ov066_0211b0bc, 0x021184c0, 0x02118188, func_ov066_021184c0, (PortEyerokFn)(void *)pmfb7_ov066_02118188 },
-    { &data_ov066_0211b0ec, 0x02118168, 0x02117bf0, func_ov066_02118168, (PortEyerokFn)(void *)pmfb7_ov066_02117bf0 },
-    { &data_ov066_0211afec, 0x02117bd0, 0x021175e8, func_ov066_02117bd0, (PortEyerokFn)(void *)pmfb7_ov066_021175e8 },
-    { &data_ov066_0211b01c, 0x021175bc, 0x021171b0, func_ov066_021175bc, (PortEyerokFn)(void *)pmfb7_ov066_021171b0 },
-    { &data_ov066_0211b04c, 0x02117190, 0x02116db0, func_ov066_02117190, (PortEyerokFn)(void *)pmfb7_ov066_02116db0 },
-    { &data_ov066_0211b07c, 0x02116d14, 0x02116c6c, func_ov066_02116d14, (PortEyerokFn)(void *)pmfb7_ov066_02116c6c },
+    { &data_ov066_0211b09c, 0x0211944c, 0x02119398, (PortEyerokFn)(void *)pmfb7e_ov066_0211944c, (PortEyerokFn)(void *)pmfb7_ov066_02119398 },
+    { &data_ov066_0211b0ac, 0x02119348, 0x0211903c, (PortEyerokFn)(void *)pmfb7e_ov066_02119348, (PortEyerokFn)(void *)pmfb7_ov066_0211903c },
+    { &data_ov066_0211b0cc, 0x0211901c, 0x02118e04, (PortEyerokFn)(void *)pmfb7e_ov066_0211901c, (PortEyerokFn)(void *)pmfb7_ov066_02118e04 },
+    { &data_ov066_0211b0dc, 0x02118de0, 0x02118cdc, (PortEyerokFn)(void *)pmfb7e_ov066_02118de0, (PortEyerokFn)(void *)pmfb7_ov066_02118cdc },
+    { &data_ov066_0211afcc, 0x02118cb8, 0x02118c00, (PortEyerokFn)(void *)pmfb7e_ov066_02118cb8, (PortEyerokFn)(void *)pmfb7_ov066_02118c00 },
+    { &data_ov066_0211afdc, 0x02118be0, 0x02118b28, (PortEyerokFn)(void *)pmfb7e_ov066_02118be0, (PortEyerokFn)(void *)pmfb7_ov066_02118b28 },
+    { &data_ov066_0211affc, 0x02118b08, 0x02118a50, (PortEyerokFn)(void *)pmfb7e_ov066_02118b08, (PortEyerokFn)(void *)pmfb7_ov066_02118a50 },
+    { &data_ov066_0211b00c, 0x02118a30, 0x021189c0, (PortEyerokFn)(void *)pmfb7e_ov066_02118a30, (PortEyerokFn)(void *)pmfb7_ov066_021189c0 },
+    { &data_ov066_0211b02c, 0x021189a0, 0x02118954, (PortEyerokFn)(void *)pmfb7e_ov066_021189a0, (PortEyerokFn)(void *)pmfb7_ov066_02118954 },
+    { &data_ov066_0211b03c, 0x02118934, 0x021188b0, (PortEyerokFn)(void *)pmfb7e_ov066_02118934, (PortEyerokFn)(void *)pmfb7_ov066_021188b0 },
+    { &data_ov066_0211b05c, 0x021187c8, 0x02118678, (PortEyerokFn)(void *)pmfb7e_ov066_021187c8, (PortEyerokFn)(void *)pmfb7_ov066_02118678 },
+    { &data_ov066_0211b06c, 0x02118658, 0x02118604, (PortEyerokFn)(void *)pmfb7e_ov066_02118658, (PortEyerokFn)(void *)pmfb7_ov066_02118604 },
+    { &data_ov066_0211b08c, 0x021185e4, 0x021184e0, (PortEyerokFn)(void *)pmfb7e_ov066_021185e4, (PortEyerokFn)(void *)pmfb7_ov066_021184e0 },
+    { &data_ov066_0211b0bc, 0x021184c0, 0x02118188, (PortEyerokFn)(void *)pmfb7e_ov066_021184c0, (PortEyerokFn)(void *)pmfb7_ov066_02118188 },
+    { &data_ov066_0211b0ec, 0x02118168, 0x02117bf0, (PortEyerokFn)(void *)pmfb7e_ov066_02118168, (PortEyerokFn)(void *)pmfb7_ov066_02117bf0 },
+    { &data_ov066_0211afec, 0x02117bd0, 0x021175e8, (PortEyerokFn)(void *)pmfb7e_ov066_02117bd0, (PortEyerokFn)(void *)pmfb7_ov066_021175e8 },
+    { &data_ov066_0211b01c, 0x021175bc, 0x021171b0, (PortEyerokFn)(void *)pmfb7e_ov066_021175bc, (PortEyerokFn)(void *)pmfb7_ov066_021171b0 },
+    { &data_ov066_0211b04c, 0x02117190, 0x02116db0, (PortEyerokFn)(void *)pmfb7e_ov066_02117190, (PortEyerokFn)(void *)pmfb7_ov066_02116db0 },
+    { &data_ov066_0211b07c, 0x02116d14, 0x02116c6c, (PortEyerokFn)(void *)pmfb7e_ov066_02116d14, (PortEyerokFn)(void *)pmfb7_ov066_02116c6c },
 };
 
 extern "C" void port_eyerok_states_seat(void)

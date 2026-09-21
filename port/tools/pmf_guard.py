@@ -43,6 +43,14 @@ dispatcher that does push the receiver named beside it.  A thunk on one of
 those would break what works, so they are recorded here rather than left for
 the next lane to rediscover.
 
+THE LEDGER IS NOT THE WHOLE CHECK ANY MORE.  A table nobody added to it was
+not checked at all, which is how the Amp's six cells sat raw in a /vmg /vmm
+dispatcher's records through five folds while the headline below read OK.  The
+second half of this file (THE DERIVED CENSUS) asks the image which records are
+dispatched with the receiver in ECX instead of asking a list, and checks every
+seat table that reaches one.  It needs no maintenance when a new class is
+seated.
+
 usage: pmf_guard.py [--root <tree>] [--exe <exe>] [--map <map>] [--selftest]
                     [--list]
 """
@@ -558,9 +566,310 @@ def selftest():
         return 1
     if verdict_selftest():
         return 1
-    print("pmf_guard --selftest OK: %d prologues and %d verdicts, every one as "
-          "the campaign's own evidence says" % (len(SELFTESTS), len(VERDICTS)))
+    if dispatch_selftest(md):
+        return 1
+    print("pmf_guard --selftest OK: %d prologues, %d verdicts and %d dispatch "
+          "shapes, every one as the campaign's own evidence says" % (
+              len(SELFTESTS), len(VERDICTS), len(DISPATCHES)))
     return 0
+
+
+# ---- THE DERIVED CENSUS (run link100 lane PMFCELLS1) ----------------------
+#
+# The ledger above is a hand-written list, and a seat table nobody thought to
+# add to it is not checked at all.  That is not hypothetical: the Amp's six
+# state cells (hal/actor_classes_ov070.cpp) held plain cdecl bodies in a
+# /vmg /vmm dispatcher's records through five folds while this file walked
+# fourteen tables, none of them that one, and the headline read OK every time.
+#
+# So the check below does not ask which tables to walk.  It asks the IMAGE
+# which records are dispatched with the receiver in ECX, and then whether the
+# port seats a stack-receiver body into any of them:
+#
+#   1. one pass over .text finds every MSVC pointer-to-member dispatch whose
+#      record sits at a fixed address --
+#          mov  <r>, [REC]        (test <r>,<r> / je)
+#          mov  ecx, [REC+4]
+#          add/lea ecx, <this>
+#          call/jmp <r>           with NOTHING pushed
+#      -- and, in the same pass, every static-initialiser copy
+#          mov <r>, [SRC] ... mov [LIVE], <r>
+#      so a live cell can be traced back to the source record a seat writes;
+#   2. a data symbol holding a pointer to one of those records is a seat table;
+#   3. a face in such a table whose prologue reads its receiver off the stack
+#      is the defect, and the guard refuses.
+#
+# ONCE A TABLE HAS ONE ECX-DISPATCHED RECORD, EVERY CELL IN IT IS CHECKED.  A
+# seat writes one array and the class dispatches all of it the same way, and
+# the campaign's own rule -- the note over the FlyGuy block in
+# hal/actor_classes_ov070.cpp -- is that the face goes on every row rather than
+# on the row that happened to fault, because the thunk is right whether the
+# transfer is a call or a tail jump.  Escalating to the table is also what lets
+# the check see the cells whose dispatch computes the record in a register
+# (`lea eax,[eax*16+table]; call [eax]`), which no fixed-address scan can
+# attribute on its own.
+#
+# The exceptions are the ledger's own: a CDECL row, or an ECX row's fourth
+# field, excuses a table here too, plus the list below for what neither covers.
+# A row here is a KNOWN stack-receiver face that some other branch already
+# fixes, kept out of the refusal so this branch still builds while the guard
+# keeps refusing anything NEW.  It is a baseline, not an adjudication: the
+# reason has to name where the real fix lives, and when a baseline row stops
+# firing the guard says the baseline can be tightened.  Same shape as
+# alternatename_guard's and inferred_stub_guard's baselines.
+DERIVED_BASELINE = [
+    (r"^\?rows@\?1\?\?ov70_seat_state_pmfs@@", r"^__ZN7daBrq_c",
+     "the Amp's six state cells. Diagnosed and fixed on port/l7-fix-mrblizz2 "
+     "(six __fastcall thunks in hal/actor_classes_ov070.cpp); this branch is "
+     "based before that commit, so its six rows are still the raw bodies and "
+     "the fold carries the fix. Remove this row once the fold has it"),
+]
+
+DERIVED_OK = [
+    (r"^_vs_data_patch$", r".*",
+     "ov075's patch table is GENERATED and carries the ROM's own words.  The "
+     "three of them that are pointer-to-member records are overwritten at boot "
+     "with vs_pmf_grid_init / vs_pmf_grid_render / vs_pmf_entry_walk in "
+     "hal/scene_vs_menu.cpp, so the word this scan reads is the first writer's "
+     "and not the one that is live"),
+]
+
+DATASKIP = re.compile(r"^\?\?_C@|^__ZTV|^\?\?_7|^\?\?_R|\$initializer\$")
+ABSMEM = re.compile(r"^(e[a-z][a-z]), dword ptr \[(0x[0-9a-f]+)\]$")
+ABSSTORE = re.compile(r"^dword ptr \[(0x[0-9a-f]+)\], (e[a-z][a-z])$")
+ABSCALL = re.compile(r"^dword ptr \[(0x[0-9a-f]+)\]$")
+WRITES_FIRST = ("mov", "lea", "pop", "xor", "movzx", "movsx", "add", "sub",
+                "and", "or", "shl", "shr", "sar", "imul", "inc", "dec",
+                "neg", "not", "adc", "sbb", "setne", "sete")
+
+
+def derived_ok(table, body):
+    for tp, bp, why in DERIVED_OK:
+        if re.match(tp, table) and re.match(bp, body):
+            return why
+    return None
+
+
+def derived_baseline(table, body):
+    for n, (tp, bp, why) in enumerate(DERIVED_BASELINE):
+        if re.match(tp, table) and re.match(bp, body):
+            return n, why
+    return None, None
+
+
+def dispatch_scan(md, blob, rva, ecx_sites, copies):
+    """One function's worth of instructions, folded into the two answers.
+
+    ecx_sites[record] gains the address of every transfer whose target came out
+    of [record] while ecx carried [record+4] and nothing had been pushed;
+    copies[dest] gains the source of every `mov <r>,[SRC] ... mov [DEST],<r>`,
+    which is how a static initialiser fills a live cell from a seat's own
+    source record."""
+    held, ecxrec = {}, set()
+    for i in md.disasm(blob, rva):
+        ops = i.op_str
+        m = ABSMEM.match(ops)
+        if i.mnemonic == "mov" and m:
+            reg, addr = m.group(1), int(m.group(2), 16)
+            if reg == "ecx":
+                ecxrec.add(addr - 4)
+            else:
+                held[reg] = addr
+            continue
+        m = ABSSTORE.match(ops)
+        if i.mnemonic == "mov" and m and m.group(2) in held:
+            copies[int(m.group(1), 16)] = held[m.group(2)]
+            continue
+        if i.mnemonic in ("call", "jmp"):
+            tgt = ops.strip()
+            rec = held.get(tgt)
+            if rec is None:
+                mm = ABSCALL.match(tgt)
+                rec = int(mm.group(1), 16) if mm else None
+            if rec is not None and rec in ecxrec:
+                ecx_sites.setdefault(rec, []).append(i.address)
+        if i.mnemonic in ("push", "call"):
+            # a push between the ecx write and the transfer means the receiver
+            # went on the stack after all; a call ends the window either way
+            held, ecxrec = {}, set()
+            continue
+        # ONLY an instruction that WRITES its first operand kills the register.
+        # The ROM's own null guard is `test <r>,<r> / je`, and counting test as
+        # a write let the Amp's and Eyerok's dispatches walk straight past this
+        # check while Goomboss's, which has no null guard, was caught: the
+        # fixture below is that regression.
+        if i.mnemonic in WRITES_FIRST:
+            held.pop(ops.split(",")[0].strip(), None)
+
+
+def text_pass(img):
+    """One walk of .text: (ECX-dispatched records, live record -> source).
+
+    Decoding restarts at every symbol the map names, so the instruction stream
+    is the real one rather than a resynchronisation out of mid-operand."""
+    lo, hi = img.text
+    blob = img.data[img.off(lo):img.off(lo) + (hi - lo)]
+    starts = sorted(set(r for r, n, o in img.syms if lo <= r < hi))
+    ecx_sites, copies = {}, {}
+    for k, s in enumerate(starts):
+        e = starts[k + 1] if k + 1 < len(starts) else hi
+        if e - s > 0x4000:
+            e = s + 0x4000
+        dispatch_scan(img.md, blob[s - lo:e - lo], s, ecx_sites, copies)
+    return ecx_sites, copies
+
+
+# ---- the dispatch fixtures ------------------------------------------------
+# Four real shapes, as bytes, so the scan above is proved without an image.
+# The record is 0x900000 and up; the fixtures are what the classes in this
+# file's comments actually emit.
+EYEROK_CALL = bytes(bytearray([
+    0x8B, 0x15, 0x00, 0x00, 0x90, 0x00,   # mov edx, dword ptr [0x900000]
+    0x85, 0xD2,                           # test edx, edx     the ROM null guard
+    0x74, 0x08,                           # je  +8
+    0x8B, 0x0D, 0x04, 0x00, 0x90, 0x00,   # mov ecx, dword ptr [0x900004]
+    0x03, 0xC8,                           # add ecx, eax      this + delta
+    0xFF, 0xD2,                           # call edx          nothing pushed
+]))
+GOOMBOSS_TAILJUMP = bytes(bytearray([
+    0x8B, 0x0D, 0x04, 0x01, 0x90, 0x00,   # mov ecx, dword ptr [0x900104]
+    0x03, 0xCE,                           # add ecx, esi
+    0xFF, 0x25, 0x00, 0x01, 0x90, 0x00,   # jmp dword ptr [0x900100]
+]))
+PUSHED_RECEIVER = bytes(bytearray([
+    0x8B, 0x05, 0x00, 0x02, 0x90, 0x00,   # mov eax, dword ptr [0x900200]
+    0x8B, 0x0D, 0x04, 0x02, 0x90, 0x00,   # mov ecx, dword ptr [0x900204]
+    0x03, 0xCE,                           # add ecx, esi
+    0x56,                                 # push esi          THE RECEIVER
+    0xFF, 0xD0,                           # call eax
+]))
+SINIT_COPY = bytes(bytearray([
+    0x8B, 0x05, 0x00, 0x03, 0x90, 0x00,   # mov eax, dword ptr [0x900300]
+    0x89, 0x05, 0x00, 0x03, 0x91, 0x00,   # mov dword ptr [0x910300], eax
+]))
+
+DISPATCHES = [
+    ("a call through the record with the ROM's null guard", EYEROK_CALL,
+     [0x900000], {}),
+    ("a tail jump through the record", GOOMBOSS_TAILJUMP, [0x900100], {}),
+    ("a dispatcher that pushes the receiver", PUSHED_RECEIVER, [], {}),
+    ("a static initialiser filling a live cell", SINIT_COPY, [],
+     {0x910300: 0x900300}),
+]
+
+
+def dispatch_selftest(md):
+    bad = 0
+    for what, blob, want_recs, want_copies in DISPATCHES:
+        sites, copies = {}, {}
+        dispatch_scan(md, blob, 0x401000, sites, copies)
+        got = sorted(sites)
+        ok = got == sorted(want_recs) and copies == want_copies
+        print("  %s %-52s want %-18s got %s" % (
+            "ok " if ok else "FAIL", what,
+            [hex(x) for x in want_recs] or "no record",
+            [hex(x) for x in got] or "no record"))
+        if not ok:
+            bad += 1
+    if bad:
+        print("pmf_guard --selftest: %d of %d dispatch shapes are WRONG, so "
+              "the derived census cannot see the records it exists to find"
+              % (bad, len(DISPATCHES)))
+    return bad
+
+
+def data_extents(img):
+    ds = [(r, n, o) for r, n, o in img.syms
+          if not (img.text[0] <= r < img.text[1])]
+    ds.sort()
+    out = []
+    for k, (rva, name, obj) in enumerate(ds):
+        end = rva + 0x800
+        for j in range(k + 1, len(ds)):
+            if ds[j][0] > rva:
+                end = min(end, ds[j][0])
+                break
+        out.append((rva, end, name, obj))
+    return out
+
+
+def seat_tables(img, extents):
+    """{pointer value: [(table, obj)]} for every data symbol that also holds at
+    least one code word -- the shape every seat table in port/ has."""
+    out = {}
+    for rva, end, name, obj in extents:
+        if DATASKIP.search(name):
+            continue
+        o = img.off(rva)
+        if o is None:
+            continue
+        blob = img.data[o:o + (end - rva)]
+        words = [struct.unpack_from("<I", blob, x)[0]
+                 for x in range(0, len(blob) - 3, 4)]
+        if not any(w >= img.base and img.text[0] <= w - img.base < img.text[1]
+                   for w in words):
+            continue
+        for w in words:
+            if w >= img.base and not (img.text[0] <= w - img.base < img.text[1]):
+                out.setdefault(w, []).append((name, obj))
+    return out
+
+
+def derived_refusals(img):
+    """Stack-receiver faces in the tables the image says are ECX-dispatched."""
+    ecx_sites, copies = text_pass(img)
+    extents = data_extents(img)
+    seats = seat_tables(img, extents)
+    flagged = {}
+    for rec, sites in ecx_sites.items():
+        chain, cur = [rec], rec
+        for _ in range(4):
+            nxt = copies.get(cur)
+            if nxt is None or nxt in chain:
+                break
+            chain.append(nxt)
+            cur = nxt
+        for a in chain:
+            for name, obj in seats.get(a, []):
+                t = flagged.setdefault(name, {"obj": obj, "recs": set(),
+                                              "sites": []})
+                t["recs"].add(rec)
+                for at in sites[:2]:
+                    if len(t["sites"]) < 4:
+                        t["sites"].append(at)
+    bad, excused, known, checked = [], [], [], 0
+    fired = set()
+    for rva, end, name, obj in extents:
+        t = flagged.get(name)
+        if t is None:
+            continue
+        for at, target in cells_of(img, rva, end):
+            checked += 1
+            if receiver_of(img, target) != "STACK":
+                continue
+            body = img.name_at(target)
+            why = derived_ok(name, body[0])
+            if not why:
+                ok = cdecl_ok_for(name)
+                if ok and re.match(ok, body[0]):
+                    why = "the ledger's own cell-by-cell __cdecl exception"
+            if not why:
+                for kind, pat, _w, _o in ledger():
+                    if kind == "CDECL" and re.match(pat, name):
+                        why = "an adjudicated __cdecl table in the ledger"
+                        break
+            row = (name, obj, img.base + at, body, t, why)
+            if why:
+                excused.append(row)
+                continue
+            n, bwhy = derived_baseline(name, body[0])
+            if n is not None:
+                fired.add(n)
+                known.append((name, obj, img.base + at, body, t, bwhy))
+                continue
+            bad.append(row)
+    stale = [i for i in range(len(DERIVED_BASELINE)) if i not in fired]
+    return bad, excused, checked, flagged, known, stale
 
 
 # ---- main -----------------------------------------------------------------
@@ -637,6 +946,49 @@ def main(argv):
               len(adjudicated) + len(excused),
               len(set(r[1] for r in adjudicated)) +
               len(set(r[1] for r in excused)), len(excused)))
+
+    # ---- the derived half: the tables nobody put in the ledger ------------
+    dbad, dexcused, dchecked, flagged, dknown, dstale = derived_refusals(img)
+    for name, obj, at, body, t, why in dknown:
+        print("pmf_guard: baseline-known -- %s holds %s+0x%x, which reads its "
+              "receiver off the stack: %s" % (name[:44], body[0], body[2], why))
+    for i in dstale:
+        print("pmf_guard: note -- baseline row %d (%s) no longer fires, so the "
+              "baseline can be tightened by deleting it"
+              % (i, DERIVED_BASELINE[i][0]))
+    if a.list:
+        for name in sorted(flagged):
+            t = flagged[name]
+            print("DERIV  %-52s %d record(s) dispatched with the receiver in "
+                  "ECX [%s]" % (name[:52], len(t["recs"]), t["obj"]))
+    if dbad:
+        print("")
+        print("pmf_guard REFUSES: %d cell(s) in %d seat table(s) hold a body "
+              "that reads its receiver off the caller's stack, and the image "
+              "says the record that cell is written into is dispatched with "
+              "the receiver in ECX and nothing pushed." % (
+                  len(dbad), len(set(r[0] for r in dbad))))
+        for name, obj, at, body, t, why in dbad:
+            print("")
+            print("  %s  [%s]" % (name, obj))
+            print("    cell at %08x holds %s+0x%x [%s]" % (
+                at, body[0], body[2], body[1]))
+            print("    its prologue reads [ebp+8]/[esp+4] and never reads ecx")
+            for site in t["sites"][:2]:
+                nm = img.name_at(site)
+                print("    the dispatch is at %08x, in %s+0x%x" % (
+                    img.base + site, nm[0], nm[2]))
+        print("")
+        print("Fix: seat a __fastcall thunk that names the body, the shape "
+              "this file's ledger comments describe. If the cell really is "
+              "reached only by a flat C dispatcher that pushes the receiver, "
+              "add it to DERIVED_OK WITH the dispatcher named and the reading "
+              "written out.")
+        return 1
+    print("pmf_guard OK (derived): %d cell(s) across %d seat table(s) whose "
+          "records the image shows dispatched with the receiver in ECX all "
+          "take it in ECX too; %d excused by name, %d baseline-known." % (
+              dchecked, len(flagged), len(dexcused), len(dknown)))
     return 0
 
 

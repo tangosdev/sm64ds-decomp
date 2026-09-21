@@ -371,12 +371,39 @@ typedef int (*PortBubbaFn)(void *);
    -- the tick half at offset 8 of the cell, receiver in ecx, ZERO stack
    arguments, nothing to clean. A zero-arg __fastcall face takes ecx as its
    first argument and cleans the same nothing.
-   THE FIVE ENTER WORDS ARE NOT TOUCHED. Their dispatcher,
-   src/game/actors/d_a_bakubaku.cpp, is already in the link and emits `jmp edx`, a
-   TAIL JUMP: the caller's frame survives the transfer, so the cdecl body reads
-   the caller's own first stack word, which is `c`. */
+   THE FIVE ENTER WORDS NEED THE SAME FACE, and the paragraph that used to
+   stand here -- "their dispatcher emits `jmp edx`, a TAIL JUMP: the caller's
+   frame survives the transfer, so the cdecl body reads the caller's own first
+   stack word" -- was true of the dispatcher AS A SEPARATE FRAME and false of
+   the frame the enter path actually runs in. /O2 inlines that dispatcher into
+   its callers in the same translation unit, and the inlined sequence is a
+   REAL CALL with nothing pushed. Read off this build's own image at six sites,
+   not reasoned about:
+
+     ?InitResources@daBakubaku_c@@UAEHXZ +0x133
+       mov  dword ptr [edi+0x3b0], <cell>       ; the state pointer
+       mov  eax, dword ptr [<cell>]             ; the enter code word
+       test eax,eax
+       je   +0x11
+       mov  ecx, dword ptr [<cell>+4]           ; the record's delta = 0
+       add  ecx, edi                            ; this + delta
+       call eax                                 ; A REAL CALL
+
+   and the same five moves again in func_ov032_02111620 +0x20f,
+   func_ov032_02111830, func_ov032_02111d7c, func_ov032_02111e24 and
+   func_ov032_02111f9c. Nothing is pushed at any of them, so a raw cdecl enter
+   body read whatever the caller last spilled as its `c`. Same defect and same
+   remedy as the Amp's rows in hal/actor_classes_ov070.cpp: one __fastcall face
+   per word, right whether the transfer is a call or a tail jump, because
+   MSVC's pointer-to-member sequence puts `this + delta` in ECX either way. */
 #define BUBBA_TICK_FACE(sym)                                              \
     static int __fastcall bb_tick_##sym(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        return ((PortBubbaFn)sym)(self);                                  \
+    }
+#define BUBBA_ENTER_FACE(sym)                                             \
+    static int __fastcall bb_enter_##sym(void *self, void *dead_edx)      \
     {                                                                     \
         (void)dead_edx;                                                   \
         return ((PortBubbaFn)sym)(self);                                  \
@@ -388,21 +415,27 @@ BUBBA_TICK_FACE(func_ov032_02111b9c)
 BUBBA_TICK_FACE(func_ov032_02111830)
 BUBBA_TICK_FACE(func_ov032_02111620)
 
+BUBBA_ENTER_FACE(func_ov032_02111f9c)
+BUBBA_ENTER_FACE(func_ov032_02111dd8)
+BUBBA_ENTER_FACE(func_ov032_02111d58)
+BUBBA_ENTER_FACE(func_ov032_02111b50)
+BUBBA_ENTER_FACE(func_ov032_02111814)
+
 static const struct {
     PortBubbaCell *cell;
     unsigned enter_rom, tick_rom;
     PortBubbaFn enter_host, tick_host;
 } g_bubba_cells[5] = {
     { &data_ov032_02113a8c, 0x02111f9c, 0x02111e24,
-      (PortBubbaFn)func_ov032_02111f9c, (PortBubbaFn)bb_tick_func_ov032_02111e24 },
+      (PortBubbaFn)bb_enter_func_ov032_02111f9c, (PortBubbaFn)bb_tick_func_ov032_02111e24 },
     { &data_ov032_02113a9c, 0x02111dd8, 0x02111d7c,
-      (PortBubbaFn)func_ov032_02111dd8, (PortBubbaFn)bb_tick_func_ov032_02111d7c },
+      (PortBubbaFn)bb_enter_func_ov032_02111dd8, (PortBubbaFn)bb_tick_func_ov032_02111d7c },
     { &data_ov032_02113aac, 0x02111d58, 0x02111b9c,
-      (PortBubbaFn)func_ov032_02111d58, (PortBubbaFn)bb_tick_func_ov032_02111b9c },
+      (PortBubbaFn)bb_enter_func_ov032_02111d58, (PortBubbaFn)bb_tick_func_ov032_02111b9c },
     { &data_ov032_02113abc, 0x02111b50, 0x02111830,
-      (PortBubbaFn)func_ov032_02111b50, (PortBubbaFn)bb_tick_func_ov032_02111830 },
+      (PortBubbaFn)bb_enter_func_ov032_02111b50, (PortBubbaFn)bb_tick_func_ov032_02111830 },
     { &data_ov032_02113a7c, 0x02111814, 0x02111620,
-      (PortBubbaFn)func_ov032_02111814, (PortBubbaFn)bb_tick_func_ov032_02111620 },
+      (PortBubbaFn)bb_enter_func_ov032_02111814, (PortBubbaFn)bb_tick_func_ov032_02111620 },
 };
 
 extern "C" void port_bubba_states_seat(void)
