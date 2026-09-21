@@ -26,7 +26,7 @@ extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* state);
 extern int _ZNK6Player14GetBodyModelIDEjb(char* self, u32 a, int b);
 extern int func_ov002_020becf4(char* self, u32 a, int b);
-extern void _ZN9ModelBase12ApplyOpacityEj(void* self, u32 a, int b);
+extern void _ZN9ModelBase12ApplyOpacityEjj(void* self, unsigned int opacity, unsigned int unused);
 extern void _ZN5Model6RenderEPK7Vector3(void* self, void* pos);
 extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* self, void* mc);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
@@ -60,7 +60,7 @@ int Player::Render()
         int i;
         bodyMdl = (char*)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(((char*)this), mBodyModelId, 1)];
         if (mIsBalloon == 0) {
-            _ZN9ModelBase12ApplyOpacityEj(bodyMdl, mOpacity, 0);
+            _ZN9ModelBase12ApplyOpacityEjj(bodyMdl, mOpacity, 0);
             {
                 int t2 = (data_0209f2d8 == 1);
                 if (t2 != false) {
@@ -83,7 +83,7 @@ int Player::Render()
             }
             func_ov002_020e3e00(bodyMdl, ((char*)this) + 0x80, mOpacity);
             if (unk_700 != 0) {
-                _ZN9ModelBase12ApplyOpacityEj(((char*)this) + 0x174, mOpacity, 0);
+                _ZN9ModelBase12ApplyOpacityEjj(((char*)this) + 0x174, mOpacity, 0);
                 if (mBodyModelId == 3) {
                     Matrix4x3_FromTranslation(&data_020a0e68, -0x1b33, -0x666, 0);
                     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, 0x4000);
@@ -94,14 +94,14 @@ int Player::Render()
                 }
             }
         } else {
-            _ZN9ModelBase12ApplyOpacityEj(((char*)this) + 0xf0, mOpacity, 0);
+            _ZN9ModelBase12ApplyOpacityEjj(((char*)this) + 0xf0, mOpacity, 0);
             ((VObj*)((char*)&mModelAnim3))->m14((char*)&mScaleX);
         }
         i = func_ov002_020becf4(((char*)this), mBodyModelId, 1);
         {
             char* mdl4 = (char*)unk_154[i];
             if (mdl4 != 0 && i != 9 && i != 8) {
-                _ZN9ModelBase12ApplyOpacityEj(mdl4, mOpacity, 0);
+                _ZN9ModelBase12ApplyOpacityEjj(mdl4, mOpacity, 0);
                 {
                     int t3 = (data_0209f2d8 == 1);
                     if (t3 != false) {

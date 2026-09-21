@@ -1,5 +1,7 @@
-extern void Sound_PlayIfNotActive(int, int, int, int);
+// Return the active bank-2 sound handle to the timed-switch callers.
+extern int Sound_PlayIfNotActive(int, int, int, int);
 
-void func_02012310(int a, int b, int c) {
-    Sound_PlayIfNotActive(a, 2, b, c);
+int func_02012310(int handle, int sound, int arg)
+{
+    return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }

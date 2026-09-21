@@ -87,7 +87,6 @@ extern void *data_020a0eac;
 extern void Matrix4x3_FromRotationY(void *, int);
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int data_ov010_02112d64[];
-extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *, unsigned int o, int x);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 extern void func_ov010_02111e84(void*);
@@ -134,12 +133,7 @@ int PeachPainting::InitResources()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13PeachPainting8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-/* ModelBase is the real class (include/ModelBase.h), reached through
-   PeachPainting.h -> Model.h. Its ApplyOpacity is declared there with one
-   argument; the ROM's takes two, so the call keeps the mangled spelling:
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+/* ApplyOpacity uses the shared ModelBase interface through mModel. */
 int PeachPainting::Behavior()
 {
     int d = ((dActor_c *)((char *)this))->DistToCPlayer();
@@ -152,7 +146,7 @@ int PeachPainting::Behavior()
         int o = (int)(((long long)q * 0xff + 0x800) >> 12);
         mOpacity = (unsigned char)(o >> 3);
     }
-    _ZN9ModelBase12ApplyOpacityEj((ModelBase *)((char *)&mModel), mOpacity, 1);
+    mModel.ApplyOpacity(mOpacity, 1);
     return 1;
 }
 

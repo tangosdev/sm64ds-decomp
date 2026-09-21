@@ -163,12 +163,12 @@ ov002	0x020b9b70	func_ov002_020b9b70	_ZN11PowerFlower8BehaviorEv	vtable slot 6 (
 ov002	0x020b9c00	func_ov002_020b9c00	_ZN11PowerFlower13InitResourcesEv	vtable slot 0 (was _ZN16daObjPushblock_c13InitResourcesEv)
 ov002	0x020b9e0c	func_ov002_020b9e0c	PowerFlower_Spawn	spawnfunc
 ov002	0x020b9e0c	PowerFlower_Spawn	daObjPowerUpItem_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x020b9e64	func_ov002_020b9e64	_ZN10StarSwitchD1Ev	vtable slot 16
-ov002	0x020b9ea8	func_ov002_020b9ea8	_ZN10StarSwitchD0Ev	vtable slot 17
-ov002	0x020ba568	func_ov002_020ba568	_ZN10StarSwitch16CleanupResourcesEv	vtable slot 3
-ov002	0x020ba5f4	func_ov002_020ba5f4	_ZN10StarSwitch6RenderEv	vtable slot 9
-ov002	0x020ba624	func_ov002_020ba624	_ZN10StarSwitch8BehaviorEv	vtable slot 6
-ov002	0x020ba83c	func_ov002_020ba83c	_ZN10StarSwitch13InitResourcesEv	vtable slot 0
+ov002	0x020b9e64	func_ov002_020b9e64	_ZN13daObjSwitch_cD1Ev	vtable slot 16
+ov002	0x020b9ea8	func_ov002_020b9ea8	_ZN13daObjSwitch_cD0Ev	vtable slot 17
+ov002	0x020ba568	func_ov002_020ba568	_ZN13daObjSwitch_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020ba5f4	func_ov002_020ba5f4	_ZN13daObjSwitch_c6RenderEv	vtable slot 9
+ov002	0x020ba624	func_ov002_020ba624	_ZN13daObjSwitch_c8BehaviorEv	vtable slot 6
+ov002	0x020ba83c	func_ov002_020ba83c	_ZN13daObjSwitch_c13InitResourcesEv	vtable slot 0
 ov002	0x020baaac	func_ov002_020baaac	StarSwitch_Spawn	spawnfunc
 ov002	0x020baaac	StarSwitch_Spawn	daObjSwitch_c_classInit_STAR_SWITCH	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020baadc	func_ov002_020baadc	ExclamationSwitch_Spawn	spawnfunc
@@ -400,7 +400,7 @@ ov002	0x02109900	data_ov002_02109900	ExclamationSwitch_SpawnInfo	spawninfo
 ov002	0x02109900	ExclamationSwitch_SpawnInfo	g_profile_HANSWITCH	reconstructed profile global; literal ROM ID HANSWITCH+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x0210991c	data_ov002_0210991c	StarSwitch_SpawnInfo	spawninfo
 ov002	0x0210991c	StarSwitch_SpawnInfo	g_profile_STAR_SWITCH	reconstructed profile global; literal ROM ID STAR_SWITCH+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x02109940	data_ov002_02109940	_ZTV10StarSwitch	vtable alloc=0x354
+ov002	0x02109940	data_ov002_02109940	_ZTV13daObjSwitch_c	vtable alloc=0x354
 ov002	0x02109ad4	data_ov002_02109ad4	SignPost_SpawnInfo	spawninfo
 ov002	0x02109ad4	SignPost_SpawnInfo	g_profile_TATEFUDA	reconstructed profile global; literal ROM ID TATEFUDA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02109af8	data_ov002_02109af8	_ZTV8SignPost	vtable alloc=?
@@ -3721,3 +3721,4 @@ ov062	0x02119420	_ZN5Koopa13InitResourcesEv	_ZN8daNknk_c13InitResourcesEv	Retail
 ov062	0x02119608	_ZN5Koopa16OnAimedAtWithEggEv	_ZN8daNknk_c16OnAimedAtWithEggEv	Retail RTTI spells 8daNknk_c at0x0211da5c; typeinfo0x0211da68 and vtable addresspoint0x0211dab4 identify dEnemyBase_c-derived class. Only class component changes; address,size and inherited project member name/signature remain unchanged. Member names and OnTurnIntoEgg reference spelling are reconstructed, not preserved original source names.
 ov062	0x02119628	_ZN5Koopa13OnTurnIntoEggER6Player	_ZN8daNknk_c13OnTurnIntoEggER6Player	Retail RTTI spells 8daNknk_c at0x0211da5c; typeinfo0x0211da68 and vtable addresspoint0x0211dab4 identify dEnemyBase_c-derived class. Only class component changes; address,size and inherited project member name/signature remain unchanged. Member names and OnTurnIntoEgg reference spelling are reconstructed, not preserved original source names.
 ov062	0x021196a8	_ZN5Koopa13OnYoshiTryEatEv	_ZN8daNknk_c13OnYoshiTryEatEv	Retail RTTI spells 8daNknk_c at0x0211da5c; typeinfo0x0211da68 and vtable addresspoint0x0211dab4 identify dEnemyBase_c-derived class. Only class component changes; address,size and inherited project member name/signature remain unchanged. Member names and OnTurnIntoEgg reference spelling are reconstructed, not preserved original source names.
+arm9	0x02016a9c	_ZN9ModelBase12ApplyOpacityEj	_ZN9ModelBase12ApplyOpacityEjj	reconstructed two-scalar ModelBase::ApplyOpacity interface; all25retailcalls set the second word, unused by this body; u32 type/name are reconstruction choices, not recovered source; exact code proof in notes/experiments/applyopacity-api-0920.md

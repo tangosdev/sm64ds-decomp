@@ -582,7 +582,7 @@ void func_ov004_020b1e44(int arg) {
 /* -------------------------------------------------------------------------- */
 extern "C" {
 /* func_ov004_020b1e34 @ 0x20b1e34 (ov004) -- veneer: ldr r1,[r0,#0xb4]; b func_ov004_020b0e84. */
-void func_ov004_020b1e34(void* a) {
+void func_ov004_020b1e34(void* a, int unused1, int unused2, int unused3) {
     func_ov004_020b0e84((struct Obj *)a, (int)*(u32*)((char*)a + 0xb4));
 }
 

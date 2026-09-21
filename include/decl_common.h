@@ -432,7 +432,7 @@ extern int _ZTV10PyramidTop[];
 extern int _ZTV10Scuttlebug[];
 extern int _ZTV10SlidingIce[];
 extern int _ZTV10StarMarker[];
-extern int _ZTV10StarSwitch[];
+extern int _ZTV13daObjSwitch_c[];
 extern int _ZTV10dBgActor_c[];
 extern int _ZTV10dScTitle_c[];
 extern int _ZTV10daHolhei_c[];

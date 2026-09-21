@@ -1,0 +1,799 @@
+{
+  "schema_version": 1,
+  "task": "pr2873-source-repair-0920",
+  "stage": "compose",
+  "producer_session": "codex-integrator-0920",
+  "formal_acceptance": false,
+  "source_input": "2f526b3468a1f888c18df276b544e40961330e6f",
+  "tested_base": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+  "original_author_input": "9d889e90b7a71db67a9af73221844979c97011a8",
+  "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
+  "source": "src/actors/daObjKurumajiku_c.cpp",
+  "completion": "partial",
+  "scope": "Four licensed functions /468 bytes; both destructors remain separately enrolled. Canonical metadata is not newly licensed data.",
+  "ledger_reconciliation": {
+    "mode": "apply",
+    "worktree": "C:\\tmp\\sm64ds-axleintegrate0920",
+    "branch": "integrate/pr2873-current-main-0920",
+    "head_before": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+    "actual_main_supplied_by_root": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+    "axle_offer": "2f526b3468a1f888c18df276b544e40961330e6f",
+    "main_was_not_inferred_fetched_or_forced": true,
+    "source_controls": {
+      "src/actors/daObjKurumajiku_c.cpp": {
+        "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
+        "sha256_lf": "5596a27d666cc516f3f7b66fc48800f981ed6d684db435f3b67809aeb7c7417c"
+      },
+      "src/_ZN17daObjKurumajiku_cD1Ev.cpp": {
+        "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
+        "sha256_lf": "34607fdaa22234ebd67ba9a4af5b61b19c06c8f5711407a0865a1b7e933e24ee"
+      },
+      "config/tu_manifest.d/ov002/daObjKurumajiku_c.json": {
+        "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
+        "sha256_lf": "b6c4a80155daaf3f8e9979094d5eae046b36ab3605a69ea6d267af76ac432469"
+      },
+      "notes/agents/handoffs/pr2873-source-repair-0920.md": {
+        "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
+        "sha256_lf": "65c0028811c886672aeada3fbac5f9d8e94c8d83f86877578d73f6d09ffc0309"
+      },
+      "notes/experiments/pr2873-source-repair-0920.json": {
+        "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
+        "sha256_lf": "d322623a89f29a0bf00fe800b0c574f978c99638587c1c455611a23727dba72a"
+      },
+      "src/game/actors/d_a_nknk.cpp": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "5b50a74fbd826ef3afcfe277d5e283e30ec1a35f7d9a6d383b44a6020eb5474d"
+      },
+      "include/Koopa.h": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "4bdcbebd5fede57f4a945b172f90d9a2dcad9fedb8d70a348cacc8569d8bd4d8"
+      },
+      "config/tu_manifest.d/ov062/Koopa+KoopaSmall.json": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "e67756451f44b1e7de2c7d0894996609a4908ef97ceed3562b683c77304c0ea9"
+      },
+      "config/arm9/overlays/ov062/delinks.txt": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "8e7c5a2e77f7363fb2198ea8676036b435291c256017ebc09546225083eaf9ce"
+      },
+      "src/game/actors/d_a_obj_km1_kurumajiku.cpp": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "376ba73fc0df4353d502a6fa624315485ac14ef886d0d5f5db63c3f4b20c5c6c"
+      },
+      "src/game/actors/d_a_obj_km3_kurumajiku.cpp": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "053147b5b37011bd8fb893b59d6b92436994868167390cc78b5b8e1f92a3d3ee"
+      },
+      "include/decl_common.h": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "6ab945dc4a055ffd93c16fec1e53b1082e33879199e385ee515133c9fceb0794"
+      },
+      "include/daObjKurumajiku_c.h": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "75b741d08be1529fca1347685da44ff6bad598c5cdffa69b49d9010849d92555"
+      },
+      "src/_ZN17daObjKurumajiku_cD0Ev.cpp": {
+        "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+        "sha256_lf": "755024d41a522e95afb9050c2b9d0654a43c335c6e24a69d268029b9839b7943"
+      }
+    },
+    "files": {
+      "config/decl-agreement-baseline.json": {
+        "input_state": [
+          "expected-merged-offer"
+        ],
+        "operations": {
+          "path_moves": 4,
+          "existing_fingerprints_rekeyed": 7,
+          "matrix_fingerprints_removed": 1,
+          "false_cleanup_fingerprints_pruned_from_offer": 2
+        },
+        "verified_conflict": null,
+        "before_sha256": "6a4498ea791aa8d0c522fb10e408c2d5579b6a890706a7a92286f2b7e1be0865",
+        "after_sha256": "d28ab75ef646e171445eb335d68afec268984a055f64c6b6d84aae56d4eb056a",
+        "base_sha256_lf": "44c87dd2fb23e81cfdc9739ed0dad2c2f43fe8a071e4d8e25436052e3e724043",
+        "after_sha256_lf": "4eb9f80490d1efe0e7f952a02a2d52fbebec69fd05fcef0adbf07a8bed268911",
+        "diff_against_main": "--- main/config/decl-agreement-baseline.json\n+++ candidate/config/decl-agreement-baseline.json\n@@ -770,7 +770,7 @@\n    \"src/_ZN12Flamethrower8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#3 int *\"],\n    \"src/_ZN12WorkElevator8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN13SnowmanBreath15IsPlayerInRangeEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n    \"src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n@@ -1544,7 +1544,7 @@\n    \"src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN12Flamethrower8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#2 int *\", \"param:#3 int *\"],\n    \"src/_ZN14KnockDownPlank13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n@@ -8244,7 +8244,7 @@\n    \"src/_ZN15RotatingFirebar8BehaviorEv.cpp\": [\"return:int []\"],\n    \"src/_ZN15TtcRotatingCube13InitResourcesEv.cpp\": [\"return:int []\"],\n    \"src/_ZN16daKing_Donketu_c8BehaviorEv.cpp\": [\"return:Mat4x3\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:char []\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:char []\"],\n    \"src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp\": [\"return:char []\"],\n    \"src/_ZN3Key8BehaviorEv.cpp\": [\"return:char\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"return:char\"],\n@@ -8979,7 +8979,7 @@\n    \"src/game/actors/d_a_obj_hatena_switch.cpp\": [\"return:SharedFilePtr\"]\n   },\n   \"data_ov002_0210ddd0\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:Vector3 []\"]\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:Vector3 []\"]\n   },\n   \"data_ov002_0210de00\": {\n    \"src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp\": [\"return:char\"]\n@@ -17063,7 +17063,8 @@\n    \"include/decl_common.h\": [\"kind:data\"]\n   },\n   \"func_ov002_020b6a80\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 daObjKurumajiku_c *\"]\n+  },\n+  \"func_ov002_020b6ac8\": {\n   },\n   \"func_ov002_020b6c54\": {\n    \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\", \"param:#2 ResourceDescriptor *\"],\n",
+        "diff_against_worktree": "--- before/config/decl-agreement-baseline.json\n+++ after/config/decl-agreement-baseline.json\n@@ -17065,8 +17065,6 @@\n   \"func_ov002_020b6a80\": {\n   },\n   \"func_ov002_020b6ac8\": {\n-   \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\"],\n-   \"src/game/actors/d_a_obj_km3_kurumajiku.cpp\": [\"param:#1 daObjKm3_Kurumajiku_c *\"]\n   },\n   \"func_ov002_020b6c54\": {\n    \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\", \"param:#2 ResourceDescriptor *\"],\n"
+      },
+      "config/converted-baseline.json": {
+        "input_state": [
+          "expected-merged-offer",
+          "already-reconciled"
+        ],
+        "operations": {
+          "count_before": 2973,
+          "count_after": 2973,
+          "one_for_one_rekey": [
+            "src/_ZN17daObjKurumajiku_c6RenderEv.cpp",
+            "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv"
+          ]
+        },
+        "verified_conflict": null,
+        "before_sha256": "3f3bf9175a54620113641dbaccf0ceb51666b70cd163d57f5d1a1da042a24d83",
+        "after_sha256": "3f3bf9175a54620113641dbaccf0ceb51666b70cd163d57f5d1a1da042a24d83",
+        "base_sha256_lf": "f7b05c0c4fb917ce322cf5c056f1b4f468de7f3f309344512939165eb0aac79d",
+        "after_sha256_lf": "df0aa13d1d3831a16e0656f0c6e01b2aad559a42a06d4b2cb0b1b48fb88ac2e9",
+        "diff_against_main": "--- main/config/converted-baseline.json\n+++ candidate/config/converted-baseline.json\n@@ -784,7 +784,7 @@\n     \"src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp\",\n     \"src/_ZN17daObjFloatBoard_cD0Ev.cpp\",\n     \"src/_ZN17daObjFloatBoard_cD1Ev.cpp\",\n-    \"src/_ZN17daObjKurumajiku_c6RenderEv.cpp\",\n+    \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv\",\n     \"src/_ZN17daObjKurumajiku_cD0Ev.cpp\",\n     \"src/_ZN17daObjKurumajiku_cD1Ev.cpp\",\n     \"src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp\",\n",
+        "diff_against_worktree": ""
+      },
+      "attribution.json": {
+        "input_state": [
+          "verified-attribution-merge-conflict"
+        ],
+        "operations": {
+          "added_overrides": {
+            "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6a80": "tangosdev",
+            "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6ac8": "tangosdev",
+            "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv": "tangosdev",
+            "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c8BehaviorEv": "andrewboudreau"
+          },
+          "unrelated_main_keys_preserved": true
+        },
+        "verified_conflict": {
+          "index_stages": {
+            "1": "1c295608514f52d6cde968d7858aeeb0b9d52e01",
+            "2": "81e2782ec693bf8c05c070390f1f11f80977fb2c",
+            "3": "03ada0e078ad9dd3af5343b65a2eacc7cb68a15f"
+          },
+          "common_base_commit": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
+          "main_blob": "81e2782ec693bf8c05c070390f1f11f80977fb2c",
+          "offer_blob": "03ada0e078ad9dd3af5343b65a2eacc7cb68a15f",
+          "mechanical_conflict_style": "merge",
+          "offer_added_only_four_expected_overrides": true,
+          "resolution": "exact supplied main text plus four original axle overrides",
+          "root_must_stage_resolution": true
+        },
+        "before_sha256": "ebccabaef72615d00e22a96733b0dc3e563112414393aefb74d37b74c9f333fa",
+        "after_sha256": "50c237ec16759a496818470645ec58f0816387512eca0e53e9ee86ee801ce5b7",
+        "base_sha256_lf": "89dcbec7cebe0c89ead749951e709ec1dbe01c8ade42ea050d4c0f659feba5a3",
+        "after_sha256_lf": "8ce33a852f77d00dc471d176b1ff43c3677a96409b311a959608bd6c2e795b1c",
+        "diff_against_main": "--- main/attribution.json\n+++ candidate/attribution.json\n@@ -4215,6 +4215,10 @@\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_c13OnTurnIntoEggER6Player\": \"ruspecial\",\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_c13OnYoshiTryEatEv\": \"andrewboudreau\",\n     \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO_S\": \"tangosdev\",\n-    \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO\": \"tangosdev\"\n+    \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO\": \"tangosdev\",\n+    \"src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6a80\": \"tangosdev\",\n+    \"src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6ac8\": \"tangosdev\",\n+    \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv\": \"tangosdev\",\n+    \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c8BehaviorEv\": \"andrewboudreau\"\n   }\n }\n",
+        "diff_against_worktree": "--- before/attribution.json\n+++ after/attribution.json\n@@ -4177,7 +4177,6 @@\n     \"src/actors/daRNk_c.cpp#_ZN7daRNk_c16CleanupResourcesEv\": \"tangosdev\",\n     \"src/actors/daRNk_c.cpp#_ZN7daRNk_c13InitResourcesEv\": \"tangosdev\",\n     \"src/actors/daRNk_c.cpp#daRNk_c_classInit\": \"tangosdev\",\n-<<<<<<< HEAD\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_cD1Ev\": \"tangosdev\",\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_cD0Ev\": \"tangosdev\",\n     \"src/game/actors/d_a_nknk.cpp#func_ov062_02117570\": \"tangosdev\",\n@@ -4216,12 +4215,10 @@\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_c13OnTurnIntoEggER6Player\": \"ruspecial\",\n     \"src/game/actors/d_a_nknk.cpp#_ZN8daNknk_c13OnYoshiTryEatEv\": \"andrewboudreau\",\n     \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO_S\": \"tangosdev\",\n-    \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO\": \"tangosdev\"\n-=======\n+    \"src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO\": \"tangosdev\",\n     \"src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6a80\": \"tangosdev\",\n     \"src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6ac8\": \"tangosdev\",\n     \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv\": \"tangosdev\",\n     \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c8BehaviorEv\": \"andrewboudreau\"\n->>>>>>> 2f526b3468a1f888c18df276b544e40961330e6f\n   }\n }\n"
+      },
+      "notes/data/tu-promotion-queue.tsv": {
+        "input_state": [
+          "expected-merged-offer"
+        ],
+        "operations": {
+          "before": "daObjKurumajiku_c\t6\t168\tov002\tyes\tno\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
+          "after": "daObjKurumajiku_c\t3\t171\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
+          "source_counts": {
+            "src/_ZN17daObjKurumajiku_cD0Ev.cpp": 29,
+            "src/_ZN17daObjKurumajiku_cD1Ev.cpp": 33,
+            "src/actors/daObjKurumajiku_c.cpp": 109
+          },
+          "total_lines": 171
+        },
+        "verified_conflict": null,
+        "before_sha256": "3ec1179a5e499bd41c244c6b1447a0951aa52533a04417a9b560501c535ad9e5",
+        "after_sha256": "e8a1a9f3cd29d9a535e8e36e7985884267652374afd5a4b06344c66d1325e4b7",
+        "base_sha256_lf": "78ef01e97f380d3d3057162f7f598a57479d6a37ae70b51056cbe42b75dfdf2c",
+        "after_sha256_lf": "369726ceda04924ad879ecfe9c326602456ef1f804462f06b53c9047929d69c0",
+        "diff_against_main": "--- main/notes/data/tu-promotion-queue.tsv\n+++ candidate/notes/data/tu-promotion-queue.tsv\n@@ -60,7 +60,7 @@\n daObjBk_Dossunbar_c\t1\t340\tov015\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaObjBkBillboard_c\ttext-only\n daObjDorifu_c\t6\t254\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjGuragura_c\t6\t181\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n-daObjKurumajiku_c\t6\t168\tov002\tyes\tno\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n+daObjKurumajiku_c\t3\t171\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjFallBlock_c\t3\t566\tov098\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaObjYajirusi_c\ttext-only\n daObjUkiyuka_c\t5\t140\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjKaitendai_c\t3\t253\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n",
+        "diff_against_worktree": "--- before/notes/data/tu-promotion-queue.tsv\n+++ after/notes/data/tu-promotion-queue.tsv\n@@ -60,7 +60,7 @@\n daObjBk_Dossunbar_c\t1\t340\tov015\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaObjBkBillboard_c\ttext-only\n daObjDorifu_c\t6\t254\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjGuragura_c\t6\t181\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n-daObjKurumajiku_c\t6\t168\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n+daObjKurumajiku_c\t3\t171\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjFallBlock_c\t3\t566\tov098\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaObjYajirusi_c\ttext-only\n daObjUkiyuka_c\t5\t140\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n daObjKaitendai_c\t3\t253\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only\n"
+      }
+    },
+    "written": [
+      "config/decl-agreement-baseline.json",
+      "attribution.json",
+      "notes/data/tu-promotion-queue.tsv"
+    ],
+    "formal_acceptance": false,
+    "remaining": "Root reviews/stages/commits; independent exact-head/base review and all source/byte gates remain required.",
+    "post_write_readback": "all four files exact"
+  },
+  "findings": [
+    {
+      "id": "KJ2873-01",
+      "kind": "provenance",
+      "location": "src/actors/daObjKurumajiku_c.cpp:24,132-135",
+      "summary": "The helper writes the model matrix, but the source calls it a collision matrix and invents a field name/offset.",
+      "disposition": "fixed",
+      "reason": "Named model matrix and translation fields distinguish the real model transform from collision storage; the offered source and entire object are preserved.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-01",
+        "kind": "provenance",
+        "original_finding": {
+          "id": "KJ2873-01",
+          "kind": "provenance",
+          "status": "open",
+          "location": "src/actors/daObjKurumajiku_c.cpp:24,132-135",
+          "summary": "The helper writes the model matrix, but the source calls it a collision matrix and invents a field name/offset.",
+          "evidence": "include/dBgActor_c.h:28-32 puts mModel at0xd4 and mClsnMat at0x2ec. include/Model.h:44-46 puts Model::mat4x3 at+0x1c, hence actor+0xf0 is mModel.mat4x3 and actor+0x114 is that matrix's translation row. The promoted helper writes exactly those offsets. src/actors/dBgActor_c.cpp independently implements model translation at1/8 scale, then a separate UpdateClsnPosAndRot copies to mClsnMat and uses full actor position. There is no dBgActor_c::mClsnMtx at0xf0.",
+          "required_action": "Correct the source description to model transform/translation. A field-based source rewrite can use this actual layout after byte measurement; do not rename a collision member to fit the comment."
+        },
+        "status": "fixed_in_source",
+        "independent_assessment": "The helper now names mModel.mat4x3 and its translation elements. Model at actor+0xd4 plus matrix+0x1c gives 0xf0; translation starts at0x114. The separate mClsnMat at0x2ec remains distinct. Direct relocated bytes match."
+      }
+    },
+    {
+      "id": "KJ2873-02",
+      "kind": "provenance",
+      "location": "src/actors/daObjKurumajiku_c.cpp:56-58",
+      "summary": "The retained IsClsnInRange bridge is justified with an inaccurate by-value Fix12 claim.",
+      "disposition": "fixed",
+      "reason": "The bridge accurately describes the existing scalar IsClsnInRange definition; the unsupported by-value claim is removed.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-02",
+        "kind": "provenance",
+        "original_finding": {
+          "id": "KJ2873-02",
+          "kind": "provenance",
+          "status": "open",
+          "location": "src/actors/daObjKurumajiku_c.cpp:56-58",
+          "summary": "The retained IsClsnInRange bridge is justified with an inaccurate by-value Fix12 claim.",
+          "evidence": "The actual definition src/actors/dBgActor_c.cpp:113 is int(dBgActor_c*, int radius, int yOffset), matching this TU's scalar bridge. include/dBgActor_c.h:62-65 explicitly distinguishes the proven by-value UpdateKillByMegaChar case from IsClsnInRange symbols whose bodies refuse that by-value claim. A mangled spelling alone does not prove the original parameter representation.",
+          "required_action": "Describe the actual scalar bridge and scoped unresolved interface accurately; keep the currently truthful scalar call contract unless a genuine method is measured and coordinated."
+        },
+        "status": "fixed_in_source",
+        "independent_assessment": "The scalar int(dBgActor_c*,int,int) bridge agrees with actual src/actors/dBgActor_c.cpp:113. Header explicitly withholds the disputed by-value method. The false original rationale is removed; no fabricated C++ method or type was added."
+      }
+    },
+    {
+      "id": "KJ2873-03",
+      "kind": "correctness",
+      "location": "src/actors/daObjKurumajiku_c.cpp:121; config/decl-agreement-baseline.json func_ov002_020b6ac8; both promoted descendant sources",
+      "summary": "Promotion changes the helper's first-parameter definition from void* to base-class*, while both external C declarations remain distinct derived-class* contracts; new baseline rows bank that disagreement.",
+      "disposition": "fixed",
+      "reason": "The inherited opaque Cleanup boundary is restored and caller bytes preserved. Composition removes exactly the two new derived-receiver banks. Canonical cross-TU typed agreement is not claimed.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-03",
+        "kind": "correctness",
+        "original_finding": {
+          "id": "KJ2873-03",
+          "kind": "correctness",
+          "status": "open_contract_reconciliation",
+          "location": "src/actors/daObjKurumajiku_c.cpp:121; config/decl-agreement-baseline.json func_ov002_020b6ac8; both promoted descendant sources",
+          "summary": "Promotion changes the helper's first-parameter definition from void* to base-class*, while both external C declarations remain distinct derived-class* contracts; new baseline rows bank that disagreement.",
+          "evidence": "Deleted src/func_ov002_020b6ac8.cpp defines int(void*,void*). The new definition is int(daObjKurumajiku_c*,void*). The ov043 and ov047 promoted descendants declare int(daObjKm1_Kurumajiku_c*,ResourceDescriptor*) and int(daObjKm3_Kurumajiku_c*,ResourceDescriptor*) respectively. The diff adds both new param:#1 declaration fingerprints. Their resource descriptors both visibly contain two SharedFilePtr pointers plus CLPS, although the new source says only callers know the shape.",
+          "required_action": "Establish one truthful compatible declaration boundary and verify all affected callers; do not treat baseline additions as source acceptance. Existing pointer views do not by themselves prove a runtime ABI failure, so no miscompile is asserted here. Any descendant/shared-header edits need their own exact resource authorization; the ov043 source remains reserved by an older task."
+        },
+        "status": "source_regression_fixed_integration_pending",
+        "independent_assessment": "Restoring int(void*,void*) returns to the actual pre-PR boundary, with genuine daObjKurumajiku_c and three-pointer local descriptor views inside. Both unchanged descendant callers and unchanged setup caller independently VERIFIED. This is ABI-preserving restoration, not canonical C++ prototype unification. Exactly two introduced derived-receiver baseline rows remain at this offer and must be removed by root before acceptance."
+      }
+    },
+    {
+      "id": "KJ2873-04",
+      "kind": "reconstruction",
+      "location": "src/actors/daObjKurumajiku_c.cpp:74-103,121-144; manifest notes154",
+      "summary": "The promoted helpers still use raw layout access where real fields already exist, and the typed helper was changed back to char* solely to follow a placeholder declaration.",
+      "disposition": "compiler_constraint",
+      "reason": "Named model/collider/resource fields and compound angle update match; exact committed direct/bool/masked alternatives change Behavior size. The retained int comparison is a bounded measured constraint.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-04",
+        "kind": "reconstruction",
+        "original_finding": {
+          "id": "KJ2873-04",
+          "kind": "reconstruction",
+          "status": "actionable_measurement_needed",
+          "location": "src/actors/daObjKurumajiku_c.cpp:74-103,121-144; manifest notes154",
+          "summary": "The promoted helpers still use raw layout access where real fields already exist, and the typed helper was changed back to char* solely to follow a placeholder declaration.",
+          "evidence": "mMeshCollider is already a real member at0x124; mModel.mat4x3 and actor angles/position already exist. Cleanup uses repeated casts to self+0x124 and raw descriptor loads. Matrix helper uses char*/offsets; Behavior adds a char* cast for it. The manifest cites decl_common's legacy spelling and a byte-free cast, but provides no compiler evidence that ordinary field access cannot match. Behavior also retains a pointer to mAngleZ and an int temporary for the flag test.",
+          "required_action": "Measure small ordinary C++ alternatives: named mesh/model members, real actor fields, direct angle update/flag test, and a truthful shared descriptor/view. Retain only measured necessary forms with bounded evidence; use a partial reconstruction issue if work remains. This preflight has not compiled alternatives and does not promise byte identity."
+        },
+        "status": "compiler_constraint_supported",
+        "independent_assessment": "Named model/collider/descriptor accesses and mAngleZ +=0x100 match. Independent pinned probes reproduce all three simplified flag forms at0x110 versus0x11c retail and noncompound angle at0x118. Retained int comparison is bounded measured reconstruction, not a universal compiler wall. Existing public char*/opaque boundaries and vector/scratch views are disclosed; no additional requested correction remains unmeasured within the four-function scope."
+      }
+    },
+    {
+      "id": "KJ2873-05",
+      "kind": "provenance",
+      "location": "notes/data/tu-promotion-queue.tsv daObjKurumajiku_c row",
+      "summary": "The touched promotion row still reports six source files and168 lines after consolidation.",
+      "disposition": "fixed",
+      "reason": "The authoritative axle row records the three actual enrolled source owners and167 lines after assigning the resource layout to its class owner; all unrelated rows remain exact.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-05",
+        "kind": "provenance",
+        "original_finding": {
+          "id": "KJ2873-05",
+          "kind": "provenance",
+          "status": "open_bookkeeping",
+          "location": "notes/data/tu-promotion-queue.tsv daObjKurumajiku_c row",
+          "summary": "The touched promotion row still reports six source files and168 lines after consolidation.",
+          "evidence": "The original six-function run is now owned by three source files: D0 legacy29 lines, D1 legacy33 lines, promoted TU145 lines =207. queue_audit.py defines shard_count as distinct src files covering the run and total_lines as the sum of those files. --check-promoted explicitly checks only the yes/no column, so its green result does not validate6/168.",
+          "required_action": "Reconcile only this generated row using the authoritative current run measurement; expected exact inspected source count3 and line count207 before any further repair changes."
+        },
+        "status": "integration_pending",
+        "independent_assessment": "Independent delinks/source recount confirms exactly D0,D1,TU:29+33+109=171 lines. Offered queue remains6/168. Root must change only this row to3/171/yes and preserve unrelated rows."
+      }
+    },
+    {
+      "id": "KJ2873-06",
+      "kind": "provenance",
+      "location": "PR body; src/actors/daObjKurumajiku_c.cpp:29-37; manifest boundary_evidence and destructor grid",
+      "summary": "The destructor exclusion is explicit and can be a valid partial promotion, but universal wording exceeds the recorded bounded grid and the final production proof is not yet independently established.",
+      "disposition": "fixed",
+      "reason": "Destructor claims are bounded, the four-function license is explicit, full emitted metadata/output and retained destructors are proved, and the actual current-main production gates are recorded below.",
+      "preparatory_record_preserved": {
+        "id": "KJ2873-06",
+        "kind": "provenance",
+        "original_finding": {
+          "id": "KJ2873-06",
+          "kind": "provenance",
+          "status": "bounded_claim_and_proof_needed",
+          "location": "PR body; src/actors/daObjKurumajiku_c.cpp:29-37; manifest boundary_evidence and destructor grid",
+          "summary": "The destructor exclusion is explicit and can be a valid partial promotion, but universal wording exceeds the recorded bounded grid and the final production proof is not yet independently established.",
+          "evidence": "The manifest lists14 forms and says every visible-body source form emits D1,D0. No separate committed experiment with exact variants/object results accompanies this PR; listed experiments are producer claims in the manifest. The four declared functions total0x1d4 bytes. The complete object also needs exact proof for the excluded D0/D1 duplicates, Vector3 duplicate, 11 metadata objects including vtable preamble and all string tails, and surviving relocation safety. The manifest's tubuild verify record establishes only the producer's text check; full ROM/private validation is pending.",
+          "required_action": "Limit prose to the tested forms, preserve reproducible bounded measurements, independently verify the full object/policies and exact two retained destructor controls plus production enrollment. Do not demand an unmeasured destructor rewrite, and do not treat similarity to landed daObjKuruma_c as proof."
+        },
+        "status": "source_proof_fixed_final_composition_pending",
+        "independent_assessment": "Current inline form independently emits D1 thenD0; both bodies match retained retail homes. Four licensed functions have correct output/order; three discarded duplicate bodies and all11 complete emitted metadata objects are independently exact. Historical14-form claims are attributed, not treated as universal proof. Final actual-main production proof, exact accounting and formal independent queue review remain pending."
+      }
+    },
+    {
+      "id": "KJ2873-07",
+      "kind": "reconstruction",
+      "location": "include/daObjKurumajiku_c.h; src/actors/daObjKurumajiku_c.cpp",
+      "summary": "A new local resource-layout duplicate raised the shadow-declaration count.",
+      "disposition": "fixed",
+      "reason": "The common axle class now owns the evidenced Resources type supplied by both descendants. Its three pointer fields agree with both caller records and the shared setup helper. All five complete consumer objects are unchanged, actor layout and the opaque external contract are preserved, and the local duplicate is removed without a baseline override."
+    }
+  ],
+  "prior_source_review": {
+    "artifact": "notes/experiments/pr2873-source-repair-0920.json",
+    "commit": "2f526b3468a1f888c18df276b544e40961330e6f",
+    "note": "Producer and independent preparatory proof are preserved; final current-base review remains a separate queue stage."
+  },
+  "scope_refinement": "The producer handoff requested a follow-up issue for general interface/destructor continuation. Final bounded review closes the six requested findings within the explicit four-function scope: the inherited opaque boundary is restored, not newly canonicalized, and the excluded destructors were never promised as part of this promotion. No known requested correction is silently deferred. Partial completion describes the class/TU boundary; it alone does not require an issue. Any new substantive remaining finding still requires measured constraint evidence or actual issue-backed deferral.",
+  "gates": {
+    "rom": {
+      "stage": "rom",
+      "base": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+      "head_before": "1d83580117d3ba9bb2a67c86a23f783e74c8f030",
+      "gates": [
+        {
+          "name": "rombuild",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/rombuild.py",
+            "-j16",
+            "--report-json",
+            "build/axle-production/rom.json",
+            "--data-json",
+            "build/axle-production/data.json"
+          ],
+          "exit_code": 0,
+          "seconds": 145.2,
+          "log": "build/axle-production/rombuild.log"
+        },
+        {
+          "name": "prepush-linkcheck",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_linkcheck.py",
+            "--range",
+            "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a..HEAD",
+            "--json",
+            "build/axle-production/prepush-linkcheck.json"
+          ],
+          "exit_code": 0,
+          "seconds": 12.36,
+          "log": "build/axle-production/prepush-linkcheck.log"
+        },
+        {
+          "name": "romdata",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/romdata_check.py",
+            "--files",
+            "src/actors/daObjKurumajiku_c.cpp",
+            "--json",
+            "build/axle-production/axle-data.json"
+          ],
+          "exit_code": 0,
+          "seconds": 0.34,
+          "log": "build/axle-production/romdata.log"
+        }
+      ]
+    },
+    "static": {
+      "stage": "static",
+      "base": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+      "head_before": "1d83580117d3ba9bb2a67c86a23f783e74c8f030",
+      "gates": [
+        {
+          "name": "coverage",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/source_coverage.py",
+            "--check",
+            "--base",
+            "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a"
+          ],
+          "exit_code": 0,
+          "seconds": 0.41,
+          "log": "build/axle-production/coverage.log"
+        },
+        {
+          "name": "layout",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/layout_check.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.36,
+          "log": "build/axle-production/layout.log"
+        },
+        {
+          "name": "conflicts",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_tubuild_conflicts.py",
+            "--list"
+          ],
+          "exit_code": 0,
+          "seconds": 0.19,
+          "log": "build/axle-production/conflicts.log"
+        },
+        {
+          "name": "references",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_dead_references.py"
+          ],
+          "exit_code": 0,
+          "seconds": 6.16,
+          "log": "build/axle-production/references.log"
+        },
+        {
+          "name": "port",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/port_refcheck.py"
+          ],
+          "exit_code": 0,
+          "seconds": 0.97,
+          "log": "build/axle-production/port.log"
+        },
+        {
+          "name": "declarations",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_decl_agreement.py",
+            "--changed",
+            "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a"
+          ],
+          "exit_code": 0,
+          "seconds": 7.66,
+          "log": "build/axle-production/declarations.log"
+        },
+        {
+          "name": "attribution",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/prepush_attribution.py",
+            "--base",
+            "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
+            "--head",
+            "HEAD"
+          ],
+          "exit_code": 0,
+          "seconds": 65.97,
+          "log": "build/axle-production/attribution.log"
+        },
+        {
+          "name": "converted",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/tiers_ratchet.py",
+            "--check"
+          ],
+          "exit_code": 0,
+          "seconds": 3.84,
+          "log": "build/axle-production/converted.log"
+        },
+        {
+          "name": "queue",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/queue_audit.py",
+            "--check-promoted"
+          ],
+          "exit_code": 0,
+          "seconds": 0.09,
+          "log": "build/axle-production/queue.log"
+        },
+        {
+          "name": "offsets",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_header_offsets.py",
+            "--changed",
+            "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a"
+          ],
+          "exit_code": 0,
+          "seconds": 0.39,
+          "log": "build/axle-production/offsets.log"
+        },
+        {
+          "name": "rename-ledger",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_rename_ledger.py",
+            "--repo",
+            "."
+          ],
+          "exit_code": 0,
+          "seconds": 0.06,
+          "log": "build/axle-production/rename-ledger.log"
+        },
+        {
+          "name": "profile-campaign",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/check_profile_campaign.py",
+            "--repo",
+            "."
+          ],
+          "exit_code": 0,
+          "seconds": 0.11,
+          "log": "build/axle-production/profile-campaign.log"
+        },
+        {
+          "name": "langmode",
+          "command": [
+            "python",
+            "-X",
+            "utf8",
+            "tools/langmode_audit.py",
+            "--check",
+            "build/axle-production/main-langmode.json"
+          ],
+          "exit_code": 0,
+          "seconds": 6.2,
+          "log": "build/axle-production/langmode.log"
+        }
+      ]
+    }
+  },
+  "resource_owner_repair": {
+    "input_commit": "0756de0bbc057ae2cb1d129f71e3da841d208ded",
+    "compiler": "2004/b56",
+    "owner": "daObjKurumajiku_c::Resources",
+    "reason": "The common axle owns the proven resource layout. Both descendant descriptor definitions and the shared setup helper agree on the three pointer fields. No actor layout, vtable, external call signature or descendant source changes.",
+    "local_shadow_ratchet_failure": {
+      "control": 1570,
+      "local_duplicate": 1571,
+      "baseline_override": false
+    },
+    "consumers": [
+      {
+        "path": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "before_sha256": "a708e68d7859c592cc5cfbc96de15c29767c4deb3e9309ea6de21d454b7d33a5",
+        "after_sha256": "a708e68d7859c592cc5cfbc96de15c29767c4deb3e9309ea6de21d454b7d33a5",
+        "bytes": 1184,
+        "whole_object_identical": true
+      },
+      {
+        "path": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "before_sha256": "853a7d9253e4395b8ed5fa24e284312dc64b4516aea9de1856533aca422ec0dc",
+        "after_sha256": "853a7d9253e4395b8ed5fa24e284312dc64b4516aea9de1856533aca422ec0dc",
+        "bytes": 1040,
+        "whole_object_identical": true
+      },
+      {
+        "path": "src/actors/daObjKurumajiku_c.cpp",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "before_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+        "after_sha256": "ce7faa3de8a2239dc07728b4b1c30b3ac4cc0bfb9780719a2b816bba2302d99a",
+        "bytes": 6608,
+        "whole_object_identical": true
+      },
+      {
+        "path": "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "before_sha256": "b51cd38bae6e4b81900782493e5b850020bfa24ef778d1bf901b5d48f564b2c0",
+        "after_sha256": "b51cd38bae6e4b81900782493e5b850020bfa24ef778d1bf901b5d48f564b2c0",
+        "bytes": 7032,
+        "whole_object_identical": true
+      },
+      {
+        "path": "src/game/actors/d_a_obj_km3_kurumajiku.cpp",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "before_sha256": "1eda735c814def8c6f54bea45d1e0ebd99889f5e47183650aeb4299abe5b64a2",
+        "after_sha256": "1eda735c814def8c6f54bea45d1e0ebd99889f5e47183650aeb4299abe5b64a2",
+        "bytes": 7304,
+        "whole_object_identical": true
+      }
+    ],
+    "patch_from_input": "diff --git a/include/daObjKurumajiku_c.h b/include/daObjKurumajiku_c.h\nindex 14580347a..958095be9 100644\n--- a/include/daObjKurumajiku_c.h\n+++ b/include/daObjKurumajiku_c.h\n@@ -44,6 +44,14 @@\n #ifdef __cplusplus\n \n struct daObjKurumajiku_c : dBgActor_c {\n+    /* Resource records passed to the shared axle helpers by both descendants.\n+       The model and collision handles precede the collision surface table. */\n+    struct Resources {\n+        SharedFilePtr *model;\n+        SharedFilePtr *collision;\n+        CLPS_Block *clps;\n+    };\n+\n     /* Field NAME is a placeholder; the offset and the width are observed. */\n     u32 mMountedActorIds[4];        /* 0x320 */\n \ndiff --git a/src/actors/daObjKurumajiku_c.cpp b/src/actors/daObjKurumajiku_c.cpp\nindex 6d33cc41d..d65511e91 100644\n--- a/src/actors/daObjKurumajiku_c.cpp\n+++ b/src/actors/daObjKurumajiku_c.cpp\n@@ -11,13 +11,8 @@\n #include \"SharedFilePtr.h\"\n #include \"dBgW.h\"\n \n-/* Local view of the three-word descriptors supplied by ov043 and ov047. */\n-struct AxleResources {\n-    SharedFilePtr *model;\n-    SharedFilePtr *collision;\n-    CLPS_Block *clps;\n-};\n-typedef char AxleResources_size_must_be_0x0c[sizeof(AxleResources) == 0x0c ? 1 : -1];\n+typedef char AxleResources_size_must_be_0x0c[\n+    sizeof(daObjKurumajiku_c::Resources) == 0x0c ? 1 : -1];\n \n extern \"C\" {\n extern Vector3 data_ov002_0210ddd0[4];\n@@ -86,7 +81,8 @@ s32 daObjKurumajiku_c::Render()\n extern \"C\" int func_ov002_020b6ac8(void *actor, void *descriptor)\n {\n     daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);\n-    AxleResources *resources = static_cast<AxleResources *>(descriptor);\n+    daObjKurumajiku_c::Resources *resources =\n+        static_cast<daObjKurumajiku_c::Resources *>(descriptor);\n     if (self->mMeshCollider.IsEnabled())\n         self->mMeshCollider.Disable();\n     resources->model->Release();"
+  },
+  "queue_after_resource_owner_repair": {
+    "before": "daObjKurumajiku_c\t3\t171\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
+    "after": "daObjKurumajiku_c\t3\t167\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
+    "measurement": {
+      "module": "ov002",
+      "start": "0x20b69e4",
+      "end": "0x20b6c54",
+      "absorbed": [],
+      "run_functions": 6,
+      "src_files": 3,
+      "total_lines": 167,
+      "unmatched": 0,
+      "no_legacy_source": 0,
+      "sourceless": [],
+      "not_in_delinks": 0,
+      "orphans": [],
+      "pragma_files": 0,
+      "all_promoted": true
+    },
+    "all_other_rows_unchanged": true,
+    "source_lines": 105,
+    "total_lines": 167
+  },
+  "ledger_reconciliation_scope": "The ledger reconciliation and its source-control hashes were recorded at d29, before the resource ownership repair. Its171-line row is preserved as historical evidence. The subsequent exact source/header change and167-line row are recorded separately; attribution, declaration and converted maps are unchanged by that repair.",
+  "production": {
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11208,
+      "compiledBytes": 2151584,
+      "sourceFunctions": 11208,
+      "sourceBytes": 2151584,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 96.13405608665892,
+      "reproducingFunctions": 11208,
+      "reproducingBytes": 2151584,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 26,
+      "sourceBssClaims": 3,
+      "sourceBssBytes": 172,
+      "reproducingDataClaims": 26,
+      "reproducingDataClaimBytes": 4984,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "rom_artifact": {
+      "path": "C:\\tmp\\sm64ds-axleintegrate0920\\build\\sm64ds.nds",
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "rom_data": {
+      "symbols": 1324,
+      "verified": 758,
+      "partial": 265,
+      "differs": 3,
+      "unnamed": 298,
+      "verifiedBytes": 45576,
+      "partialBytes": 6840,
+      "differingSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "addr": 34137860,
+          "bytes": 16
+        },
+        {
+          "module": "ov002",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "addr": 34650812,
+          "bytes": 24
+        },
+        {
+          "module": "ov002",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "addr": 34650876,
+          "bytes": 24
+        }
+      ],
+      "verifiedRecords": 3045,
+      "partialRecords": 2298,
+      "differsRecords": 8,
+      "unnamedRecords": 831,
+      "totalRecords": 6182,
+      "differing": [
+        {
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN8daDemo_c10anmModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c10anmModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c13simpleModel_cE",
+          "module": "ov002",
+          "addr": 34650876,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        },
+        {
+          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+          "symbol": "_ZTIN8daDemo_c10anmModel_cE",
+          "module": "ov002",
+          "addr": 34650812,
+          "differingBytes": 8
+        }
+      ]
+    }
+  },
+  "manifest_prose_update": {
+    "path": "config/tu_manifest.d/ov002/daObjKurumajiku_c.json",
+    "only_notes_changed": true,
+    "replacements": {
+      "The local AxleResources spelling is an inferred view.": "The common axle owns the reconstructed daObjKurumajiku_c::Resources layout, corroborated by both descendant records and the shared setup helper.",
+      "No header change or forced-emission workaround is proposed.": "No destructor-definition change or forced-emission workaround is proposed."
+    }
+  }
+}

@@ -224,22 +224,22 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target,
 void daChair_c::State0()
 {
     char *c = (char *)this;
-    *(int *)(c + 0x378) = 1;
-    *(short *)(c + 0x300 + 0xa0) = 1;
-    *(short *)(c + 0x300 + 0xa2) = 0;
-    *(short *)(c + 0x300 + 0x98) = 0;
-    *(short *)(c + 0x300 + 0x9a) = 0;
-    *(short *)(c + 0x300 + 0x9c) = 0;
+    mState = 1;
+    mActionTimer = 1;
+    mTargetAngle = 0;
+    mStateValue0 = 0;
+    mStateValue1 = 0;
+    mStateValue2 = 0;
     /* 0xf9 is PIANO (249). This chair arms itself off the Mad Piano. */
     void *found = dActor_c::FindWithActorID(0xf9, 0);
-    *(int *)(c + 0x37c) = 0;
+    mTargetID = 0;
     if (!found)
         return;
     Fix12i d = Vec3_Dist((Vector3 *)(c + 0x5c),
                          (Vector3 *)((char *)found + 0x5c));
     if (d < 0x12c000) {
-        *(int *)(c + 0x37c) = *(int *)((char *)found + 4);
-        *(short *)(c + 0x300 + 0xa0) = 0;
+        mTargetID = *(int *)((char *)found + 4);
+        mActionTimer = 0;
     }
 }
 
@@ -258,7 +258,7 @@ void daChair_c::State1()
     int *av;
     unsigned short *p39e;
 
-    a = dActor_c::FindWithID(*(unsigned int *)(r4 + 0x37c));
+    a = dActor_c::FindWithID(mTargetID);
     if (a != 0) {
         av = (int *)(int)LAUNDER((char *)a + 0x5c);
         sp[0] = *av;
@@ -271,38 +271,38 @@ void daChair_c::State1()
         if (d & 0x4000) {
             *(char **)(r4 + 0x3a4) = r4 + 0x90;
             if (d > 0)
-                *(short *)(r4 + 0x3a2) = 0x4000;
+                mTargetAngle = 0x4000;
             else
-                *(short *)(r4 + 0x3a2) = (short)-0x4000;
+                mTargetAngle = (short)-0x4000;
         } else {
             *(char **)(r4 + 0x3a4) = r4 + 0x8c;
             if (d < 0)
-                *(short *)(r4 + 0x3a2) = 0x5800;
+                mTargetAngle = 0x5800;
             else
-                *(short *)(r4 + 0x3a2) = (short)-0x4000;
+                mTargetAngle = (short)-0x4000;
         }
-        if (*(short *)(r4 + 0x3a2) < 0)
-            *(short *)(r4 + 0x398) = (short)0xfa24;
+        if (mTargetAngle < 0)
+            mStateValue0 = (short)0xfa24;
         else
-            *(short *)(r4 + 0x398) = 0x5dc;
-        *(int *)(r4 + 0x378) = 3;
+            mStateValue0 = 0x5dc;
+        mState = 3;
         return;
     }
 
-    if (*(unsigned short *)(r4 + 0x3a0) != 0) {
+    if (mActionTimer != 0) {
         p = ClosestPlayer();
         if (p != 0) {
             if (Vec3_Dist((const Vector3 *)(r4 + 0x5c),
                           (const Vector3 *)((char *)p + 0x5c)) < 0x1f4000)
-                *(unsigned short *)(r4 + 0x3a0) = 0;
+                mActionTimer = 0;
         }
-        *(unsigned short *)(r4 + 0x39e) = 0;
+        mStateTimer = 0;
         return;
     }
 
     p39e = (unsigned short *)(int)LAUNDER(r4 + 0x39e);
     *p39e = (unsigned short)(*p39e + 1);
-    if (*(unsigned short *)(r4 + 0x39e) & 8) {
+    if (mStateTimer & 8) {
         if (*(short *)(r4 + 0x8c) >= 0) {
             r3 = -4;
         } else {
@@ -324,14 +324,14 @@ void daChair_c::State1()
         *(short *)(r4 + 0x8c) = *(short *)(r4 + 0x90);
     }
 
-    if (*(unsigned short *)(r4 + 0x39e) < 0x1e)
+    if (mStateTimer < 0x1e)
         return;
-    *(int *)(r4 + 0x378) = 2;
-    *(short *)(r4 + 0x398) = 0;
-    *(short *)(r4 + 0x39a) = 0;
-    *(short *)(r4 + 0x39c) = 0xc8;
-    *(short *)(r4 + 0x3a0) = 0x28;
-    *(short *)(r4 + 0x39e) = 0;
+    mState = 2;
+    mStateValue0 = 0;
+    mStateValue1 = 0;
+    mStateValue2 = 0xc8;
+    mActionTimer = 0x28;
+    mStateTimer = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -438,7 +438,7 @@ void daChair_c::State3()
     char *c = (char *)this;
     int *p3a4 = *(int **)(c + 0x3a4);
     ApproachStateValue((short *)p3a4, (short *)(c + 0x398),
-                       *(short *)(c + 0x3a2), 0xfa0, 0x14, 2);
+                       mTargetAngle, 0xfa0, 0x14, 2);
     {
         int a = AngleDiff(*(short *)*(int **)(c + 0x3a4), 0);
         int *ip = *(int **)(c + 0x3a4);

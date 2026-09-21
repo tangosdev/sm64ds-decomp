@@ -1,64 +1,50 @@
 {
   "id": "ov002/daObjKurumajiku_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjKurumajiku_c.cpp",
+  "source": "src/actors/daObjKurumajiku_c.cpp",
   "promoted_source": "src/actors/daObjKurumajiku_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20b69e4..0x20b6c54, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "Licensed four-function text run: ov002 0x020b6a80..0x020b6c54 (468 bytes). The retail D0/D1 pair at 0x020b69e4/0x020b6a3c remains in its enrolled individual sources. The current unchanged inline-header form emits duplicate D1 then D0, opposite retail order. This is a measured property of that form, not a claim about every possible C++ definition; see notes/experiments/pr2873-source-repair-0920.json.",
     "class label(s): daObjKurumajiku_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020b69e4",
+      "start": "0x020b6a80",
       "end": "0x020b6c54"
     }
   ],
   "functions": [
     {
-      "symbol": "_ZN17daObjKurumajiku_cD0Ev",
-      "address": "0x020b69e4",
-      "size": "0x00000058",
-      "legacy_source": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN17daObjKurumajiku_cD1Ev",
-      "address": "0x020b6a3c",
-      "size": "0x00000044",
-      "legacy_source": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
-      "ordinal": 1
-    },
-    {
       "symbol": "func_ov002_020b6a80",
       "address": "0x020b6a80",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6a80.c",
-      "ordinal": 2
+      "ordinal": 0
     },
     {
       "symbol": "func_ov002_020b6ac8",
       "address": "0x020b6ac8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6ac8.cpp",
-      "ordinal": 3
+      "ordinal": 1
     },
     {
       "symbol": "_ZN17daObjKurumajiku_c6RenderEv",
       "address": "0x020b6b10",
       "size": "0x00000028",
       "legacy_source": "src/_ZN17daObjKurumajiku_c6RenderEv.cpp",
-      "ordinal": 4
+      "ordinal": 2
     },
     {
       "symbol": "_ZN17daObjKurumajiku_c8BehaviorEv",
       "address": "0x020b6b38",
       "size": "0x0000011c",
       "legacy_source": "src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp",
-      "ordinal": 5
+      "ordinal": 3
     }
   ],
   "data": [],
@@ -69,108 +55,126 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Behavior builds Vector3 temporaries by value (`Vector3 mid; Vector3 res;`), so mwccarm re-emits Vector3's trivial vague-linkage D1 beside the licensed text. config/arm9/symbols.txt records one cartridge copy at arm9:0x020072c0, kind:function(arm,size=0x4), already owned by an enrolled source; text-only isolation discards this duplicate."
+      "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020b6a3c",
+      "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov002",
+      "canonical_address": "0x020b69e4",
+      "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
     },
     {
       "symbol": "_ZTV17daObjKurumajiku_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x02109320",
-      "reason": "Behavior is this class's key function, so the TU naturally emits the complete class vtable storage; verify reports size=0x88, i.e. the two-word ABI preamble plus the 32 dispatch slots include/daObjKurumajiku_c.h describes. romdata_check resolves the emitted relocations and proves 128 bytes equal to the cartridge at the configured public address point ov002:0x02109320, eight bytes past the emitted storage start. That measurement covers the two null words at slots 0 and 3 that make the class abstract. Text-only isolation discards the copy. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 136-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap. Storage starts at ov002:0x02109318, eight bytes before the public 0x02109320 address point. The verified extent includes both preamble words and all 32 slots; slots 0 and 3 are null, slots 16/17 resolve to retained D1/D0."
     },
     {
       "symbol": "_ZTI17daObjKurumajiku_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x021092f8",
-      "reason": "Single-inheritance RTTI record emitted with the key function. romdata_check proves 12 bytes equal to the cartridge at ov002:0x021092f8. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 12-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTS17daObjKurumajiku_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x02109304",
-      "reason": "Type-name string emitted with the key function. romdata_check proves 20 bytes equal to the cartridge at ov002:0x02109304. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 20-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTI10dBgActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x021089ec",
-      "reason": "Inherited vague-linkage RTTI for the direct base. romdata_check proves 12 bytes equal to the cartridge at its canonical ov002 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 12-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTS10dBgActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x02108a04",
-      "reason": "Inherited vague-linkage type-name string. romdata_check scores it PARTIAL: the emitted bytes agree with the cartridge but stop short of the configured symbol extent, the known vague-linkage type-name tail effect. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 13-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap. The emitted name is 13 bytes through NUL; its configured 16-byte extent has 3 additional zero bytes supplied by the gap, not this emitted object. The standard word-based report remains PARTIAL."
     },
     {
       "symbol": "_ZTI8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e390",
-      "reason": "Inherited vague-linkage RTTI. romdata_check proves 12 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 12-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTS8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
-      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 10-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap. The emitted name is 10 bytes through NUL; its configured 12-byte extent has 2 additional zero bytes supplied by the gap, not this emitted object. The standard word-based report remains PARTIAL."
     },
     {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78",
-      "reason": "Inherited vague-linkage RTTI. romdata_check proves 12 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 12-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e54",
-      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 9-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap. The emitted name is 9 bytes through NUL; its configured 12-byte extent has 3 additional zero bytes supplied by the gap, not this emitted object. The standard word-based report remains PARTIAL."
     },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70",
-      "reason": "Inherited vague-linkage RTTI. romdata_check proves 8 bytes equal to the cartridge at its canonical arm9 home. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 8-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap."
     },
     {
       "symbol": "_ZTS7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
-      "reason": "Inherited vague-linkage type-name string, scored PARTIAL by romdata_check: emitted bytes agree, coverage stops short of the configured extent. Nothing DIFFERS. tools/romdata_check.py on the key-function legacy source measured this TU's 11 emitted data symbols as 7 VERIFIED / 4 PARTIAL / 0 DIFFERS."
+      "reason": "The complete 9-byte emitted object matches its canonical retail storage byte-for-byte after every relocation is resolved, with zero blind words. See notes/experiments/pr2873-source-repair-0920.json. The text-only production object discards this copy; its retail home remains supplied by the existing data gap. The emitted name is 9 bytes through NUL; its configured 12-byte extent has 3 additional zero bytes supplied by the gap, not this emitted object. The standard word-based report remains PARTIAL."
     }
   ],
   "notes": [
-    "Merged from the six legacy one-function sources into the daBar_c shape: reverse-ROM source order, `// @symbol` on each of the four hand-written members, destructors left to the header's inline definition. The two `daObjKurumajiku_c_Emit*Destructor` forcing functions the legacy shards carried are NOT reproduced -- with the key function (Behavior) present in the TU the compiler emits D1 and D0 out of line on its own, and both still byte-match.",
-    "func_ov002_020b6a80's legacy .c source typed its parameter `char *`, which collided with the `daObjKurumajiku_c *` declaration Behavior's caller needs (mwccarm: `illegal function overloading`). Reconciled to the more complete observation -- the typed pointer -- with the cast kept at the top of the body, so the emitted bytes are unchanged.",
-    "DESTRUCTOR ORDER BLOCKER -- this TU is text-verified but NOT promotable as sliced. tools/tubuild.py linkcheck refuses it at the pre-link licensing audit: `licensed .text functions are not emitted in ROM address order`. The cartridge has D0 (0x020b69e4, 0x58) BELOW D1 (0x020b6a3c, 0x44); every source form in which the destructor body is visible emits D1 before D0. Measured with tools/tu_order_check.py: (a) destructor inline in-class -- D1,D0; (b) inline definition moved out of the class body but still in the header -- D1,D0; (c) destructor declared after Render, and last of all -- D1,D0; (d) eight arrangements of explicit `delete p` / `p->~daObjKurumajiku_c()` odr-uses, at the top and bottom of the TU -- D1,D0 in all eight, so the odr-use lever is inert while the vtable is emitted here.",
-    "The one form that reaches cartridge order is an out-of-line destructor definition in this TU (emits D2,D0,D1; the D2 is 0x44 and homeless). It is REFUTED by the descendants: with no body visible in the header, tools/tu_order_check.py puts ov043/daObjKm1_Kurumajiku_c and ov047/daObjKm3_Kurumajiku_c -- both already promoted and matching on main -- at D1 emitted 0x24 against ROM 0x50 and D0 emitted 0x38 against ROM 0x64. Moving the definition out of the class body but keeping it inline in the header restores both descendants, but leaves this TU at D1,D0. So the header's inline destructor is load-bearing for the descendants and incompatible with this slice's own order.",
-    "A form that does pass tu_order_check (`all match in ROM order`) is `#pragma defer_codegen off` plus an ascending-order rewrite plus two forcing functions whose `delete` and explicit destructor call odr-use D0 then D1 in that order. It is NOT taken here: notes/tu-promotion-conventions.md records that a genuine promotion contains no forcing object, and the pragma is file-global. Recorded as a measurement, not a recommendation.",
-    "Boundary note for whoever picks this up: tu_map scores this cut `medium`, and the structurally identical sibling daObjKuruma_c sits immediately below (0x020b686c..0x020b6958, same D1/helper/Render/Behavior shape) with a single unattributed function, func_ov002_020b6958 (0x8c), between them. Re-slicing was not attempted. No _ZN17daObjKurumajiku_cD2Ev exists anywhere in the cartridge's symbol tables, and the D2 this class would emit is 0x44, so func_ov002_020b6958 is not a hidden D2.",
-    "tubuild create warning, still true: src/func_ov002_020b6ac8.cpp did not split (its definition sits inside an `extern \"C\"` block), so that member was rewritten by hand rather than carried verbatim."
+    "Partial promotion: two compiler-spelled methods (Render, Behavior) and two linker-named C helpers. All four functions use named actor/model/collider fields. No source enrollment or licensed range changed during the review repair.",
+    "func_ov002_020b6a80 retains the char* entry required by the existing shared declaration and setup caller, then recovers the base type locally. Its matrix is mModel.mat4x3, not the collision matrix; translation is world position divided by eight. The inherited scalar IsClsnInRange bridge matches its actual definition, not an asserted by-value Fix12 ABI.",
+    "Cleanup restores the pre-PR opaque void*/void* C boundary. Both current callers pass an unadjusted empty derived object and a descriptor containing SharedFilePtr* model/collision followed by CLPS_Block*. The common axle owns the reconstructed daObjKurumajiku_c::Resources layout, corroborated by both descendant records and the shared setup helper. Named collider and descriptor accesses pass strict bytes. Distinct caller-side pointer spellings remain interface reconstruction debt; void* is not full declaration agreement.",
+    "Fourteen bounded review variants are recorded as exact source patches in notes/experiments/pr2873-source-repair-0920.json. Named model/collider/descriptor accesses and mAngleZ += 0x100 match. A comparison widened to int is retained: direct, bool and masked-integer tests emit a 0x110-byte Behavior instead of retail 0x11c. Noncompound angle assignment also fails. The angle increment precedes the suppression test.",
+    "Historical producer report: the original PR listed a fourteen-form destructor grid (inline/header/order variants, implicit destructor and odr-use arrangements) but did not commit exact variant artifacts. That report is not a reproduced universal barrier. This review measures the unchanged inline-header form only: duplicate D1 then D0; both bodies and relocations match their retained retail homes. No destructor-definition change or forced-emission workaround is proposed.",
+    "The manifest remains text-only. All eleven complete emitted metadata objects, including the 0x88-byte vtable storage/preamble, are compared byte-for-byte after relocation in the repair evidence. Four inherited names emit 9/9/10/13 bytes including NUL; configured extents are 12/12/12/16 and the remaining 3/3/2/3 retail bytes are zero gap padding not emitted by these objects. The ordinary romdata report remains 7 VERIFIED / 4 PARTIAL / 0 DIFFERS.",
+    "Integration still owns removal of exactly the two newly banked Cleanup receiver fingerprints and regeneration of this actor's promotion queue accounting. Source-stage evidence does not accept reserved ledger contents. Original four per-symbol credits and the sole Render converted identity are retained."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "round": "Review repair: complete TU compiled once, four strict functions, all duplicate bodies and full emitted metadata separately checked; see committed experiment.",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjKurumajiku_c/daObjKurumajiku_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 6,
-    "functions_declared": 6,
+    "functions_matched": 4,
+    "functions_declared": 4,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN17daObjKurumajiku_cD1Ev",
+        "_ZN17daObjKurumajiku_cD0Ev"
       ],
       "deadstripped": [
+        "_ZN17daObjKurumajiku_cD0Ev",
+        "_ZN17daObjKurumajiku_cD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -191,6 +195,10 @@
         19,
         20,
         21,
+        22,
+        23,
+        24,
+        25,
         33
       ],
       "data": [
@@ -224,41 +232,8 @@
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
       "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
-    },
-    "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "object-audit-refused",
-      "scratch": "build/tu/ov002-daObjKurumajiku_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true
-      },
-      "tuRange": null,
-      "tuRanges": null,
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 6
-        },
-        "emittedTextOrderIsRomAscending": false,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
-      "symbolCheckNewVsBaseline": null,
-      "symbolCheckErrors": null,
-      "symbolCheckBaselineErrors": null,
-      "moduleSetSha256": null,
-      "rom": null,
-      "linkerOutput": null
-    },
-    "promotion_blocked_by": "destructor variant emission order; see notes[] -- text-verified only"
+    }
   }
 }

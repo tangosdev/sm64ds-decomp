@@ -24,8 +24,6 @@
  * - dActor_c::SetRanges stays mangled (header omits it; 6az).
  * - ModelAnim::SetAnim / DropShadowRadHeight / ReflectAngle stay mangled:
  *   Fix12<int> by value has no implicit int conversion (6az).
- * - ModelBase::ApplyOpacity stays mangled: the header takes one u32, the
- *   ROM call site passes two zeros.
  * - dBgCh_Actr::GetFloorResult / GetWallResult stay mangled (not declared).
  * - PMF stand-in (CapStateSelf / Holder / C) -- a PMF on the real
  *   dEnemyBase_c makes mwccarm ICE rather than a diagnostic.
@@ -144,7 +142,6 @@ void  _Z14ApproachLinearRiii(int *x, int target, int step);
 short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 int   _ZN4cstd4fdivEii(int a, int b);
 
-void  _ZN9ModelBase12ApplyOpacityEj(void *self, int a, int b);
 
 int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
@@ -388,7 +385,7 @@ extern "C" void func_ov002_020b7f7c(char *c)
     }
 
     if ((unsigned int)(self->mType - 6) <= 1)
-        _ZN9ModelBase12ApplyOpacityEj(&self->mModelAnim, 0, 0);
+        self->mModelAnim.ApplyOpacity(0, 0);
 
     Vec3_Asr(v, &self->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);

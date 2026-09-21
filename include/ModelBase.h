@@ -141,7 +141,10 @@ struct ModelBase {
        flows straight out. Callers corroborate: KoopaShell::InitResources tests
        the result and bails on 0. */
     int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
-    void ApplyOpacity(u32 a);
+    /* Retail callers pass two scalar words. The second is unused here;
+       its unsigned type/name are reconstructed, not recovered source spelling.
+       See notes/experiments/applyopacity-api-0920.md. */
+    void ApplyOpacity(u32 opacity, u32);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
