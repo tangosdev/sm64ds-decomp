@@ -742,6 +742,12 @@ int draw_frame(const ntr::GxGpuFrame *f)
 
     /* ---- clear, submit ---------------------------------------------------- */
 
+    /* The card's own clock over the opaque pass: the clears, every draw and
+       the copy out of the targets, which is all of the work the Map below
+       then waits for. A timestamp pair costs an End() at each end and is
+       collected a picture or two later (hal/gpu_device.h). */
+    port_gpu_timer_span_begin(PORT_GPU_SPAN_OPAQUE);
+
     /* THE CLEAR COLOUR IS THE FRAMEBUFFER'S OWN, read at the top of the frame
        rather than assumed, and the alpha is meaningless here because coverage
        travels in the ID target. It only matters at all on a filtered arm,
@@ -827,6 +833,7 @@ int draw_frame(const ntr::GxGpuFrame *f)
     g_ctx->CopyResource(g_col_stage, g_col);
     g_ctx->CopyResource(g_id_stage, g_id);
     if (f->want_depth) g_ctx->CopyResource(g_dep_stage, g_dep);
+    port_gpu_timer_span_end(PORT_GPU_SPAN_OPAQUE);
 
     D3D11_MAPPED_SUBRESOURCE mc, mi, md;
     memset(&mc, 0, sizeof mc);
@@ -938,11 +945,17 @@ extern "C" int port_gpu_raster_active(void)
     return (g_on && !g_down) ? 1 : 0;
 }
 
+extern "C" double port_gpu_raster_readback_ms(void)
+{
+    return g_ms_read;
+}
+
 #else   /* not Windows: the port ships on Windows and there is no card here */
 
 #include "hal/gpu_raster.h"
 
 void port_gpu_raster_configure(void) {}
 int port_gpu_raster_active(void) { return 0; }
+double port_gpu_raster_readback_ms(void) { return 0.0; }
 
 #endif

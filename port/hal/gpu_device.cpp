@@ -115,8 +115,135 @@ bool make_device(D3D_DRIVER_TYPE type)
     return true;
 }
 
+/* ---- THE CARD'S OWN CLOCK ------------------------------------------------
+   See the banner over port_gpu_timer_span_begin in hal/gpu_device.h for why
+   the card is asked rather than timed from here. The shape is a ring of four
+   pictures; a picture holds one disjoint query and a begin/end timestamp pair
+   per span. Nothing in it ever blocks: a picture whose answers are not ready
+   is looked at again next time round. */
+enum { kTimerSlots = 4 };
+
+struct TimerSlot {
+    ID3D11Query *disjoint;
+    ID3D11Query *ts[PORT_GPU_SPAN_COUNT * 2];
+    unsigned begun;     /* bit per span whose begin stamp was issued */
+    unsigned done;      /* bit per span whose end stamp was issued too */
+    int open;           /* the disjoint has been Begun and not yet Ended */
+    int pending;        /* Ended; the answers have not come back yet */
+};
+
+TimerSlot g_tslot[kTimerSlots];
+int       g_timer_ready;        /* the query objects exist */
+int       g_timer_off = -1;     /* SM64DS_GPU_TIMER=0, read once */
+int       g_timer_cur = -1;     /* the open picture, or -1 */
+int       g_timer_next;         /* round-robin cursor */
+double    g_timer_card_ms;
+double    g_timer_span_ms[PORT_GPU_SPAN_COUNT];
+unsigned long long g_timer_pics;
+unsigned long long g_timer_missed;   /* ring full, or a disjoint clock */
+
+void timer_release()
+{
+    for (int i = 0; i < kTimerSlots; ++i) {
+        if (g_tslot[i].disjoint) { g_tslot[i].disjoint->Release(); g_tslot[i].disjoint = 0; }
+        for (int k = 0; k < PORT_GPU_SPAN_COUNT * 2; ++k)
+            if (g_tslot[i].ts[k]) { g_tslot[i].ts[k]->Release(); g_tslot[i].ts[k] = 0; }
+        g_tslot[i].begun = g_tslot[i].done = 0;
+        g_tslot[i].open = g_tslot[i].pending = 0;
+    }
+    g_timer_ready = 0;
+    g_timer_cur = -1;
+}
+
+bool timer_start()
+{
+    if (g_timer_ready) return true;
+    if (g_timer_off < 0) {
+        const char *e = getenv("SM64DS_GPU_TIMER");
+        g_timer_off = (e && *e && atoi(e) == 0) ? 1 : 0;
+    }
+    if (g_timer_off) return false;
+    if (!g_dev || !g_ctx) return false;
+
+    D3D11_QUERY_DESC qd;
+    memset(&qd, 0, sizeof qd);
+    for (int i = 0; i < kTimerSlots; ++i) {
+        qd.Query = D3D11_QUERY_TIMESTAMP_DISJOINT;
+        if (FAILED(g_dev->CreateQuery(&qd, &g_tslot[i].disjoint)) ||
+            !g_tslot[i].disjoint) {
+            timer_release();
+            g_timer_off = 1;      /* asked once, refused: stop asking */
+            return false;
+        }
+        qd.Query = D3D11_QUERY_TIMESTAMP;
+        for (int k = 0; k < PORT_GPU_SPAN_COUNT * 2; ++k) {
+            if (FAILED(g_dev->CreateQuery(&qd, &g_tslot[i].ts[k])) ||
+                !g_tslot[i].ts[k]) {
+                timer_release();
+                g_timer_off = 1;
+                return false;
+            }
+        }
+    }
+    g_timer_ready = 1;
+    return true;
+}
+
+/* Take the answers for every picture that has them. GetData with
+   DONOTFLUSH never waits and never pushes the card: a picture that is not
+   ready simply stays pending. */
+void timer_harvest()
+{
+    for (int k = 0; k < kTimerSlots; ++k) {
+        TimerSlot &s = g_tslot[k];
+        if (!s.pending) continue;
+        D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj;
+        memset(&dj, 0, sizeof dj);
+        if (g_ctx->GetData(s.disjoint, &dj, sizeof dj,
+                           D3D11_ASYNC_GETDATA_DONOTFLUSH) != S_OK)
+            continue;
+        s.pending = 0;
+        if (dj.Disjoint || !dj.Frequency) { ++g_timer_missed; continue; }
+        double card = 0.0;
+        int got = 0;
+        for (int sp = 0; sp < PORT_GPU_SPAN_COUNT; ++sp) {
+            if (!(s.done & (1u << sp))) continue;
+            UINT64 a = 0, b = 0;
+            if (g_ctx->GetData(s.ts[sp * 2], &a, sizeof a,
+                               D3D11_ASYNC_GETDATA_DONOTFLUSH) != S_OK)
+                continue;
+            if (g_ctx->GetData(s.ts[sp * 2 + 1], &b, sizeof b,
+                               D3D11_ASYNC_GETDATA_DONOTFLUSH) != S_OK)
+                continue;
+            if (b <= a) continue;
+            const double ms = (double)(b - a) * 1000.0 / (double)dj.Frequency;
+            g_timer_span_ms[sp] += ms;
+            card += ms;
+            ++got;
+        }
+        if (got) { g_timer_card_ms += card; ++g_timer_pics; }
+    }
+}
+
+bool timer_open_picture()
+{
+    for (int i = 0; i < kTimerSlots; ++i) {
+        const int k = (g_timer_next + i) % kTimerSlots;
+        if (g_tslot[k].open || g_tslot[k].pending) continue;
+        g_tslot[k].begun = g_tslot[k].done = 0;
+        g_ctx->Begin(g_tslot[k].disjoint);
+        g_tslot[k].open = 1;
+        g_timer_cur = k;
+        g_timer_next = (k + 1) % kTimerSlots;
+        return true;
+    }
+    ++g_timer_missed;       /* every slot is still waiting: skip this picture */
+    return false;
+}
+
 void release_device()
 {
+    timer_release();
     if (g_ctx) { g_ctx->ClearState(); g_ctx->Flush(); g_ctx->Release(); g_ctx = 0; }
     if (g_dev) { g_dev->Release(); g_dev = 0; }
 }
@@ -187,6 +314,51 @@ extern "C" unsigned port_gpu_device_feature_level(void) { return (unsigned)g_lev
 extern "C" double port_gpu_device_create_ms(void) { return g_create_ms; }
 extern "C" int port_gpu_device_failed(void) { return g_failed; }
 
+extern "C" void port_gpu_timer_span_begin(int span)
+{
+    if (span < 0 || span >= PORT_GPU_SPAN_COUNT) return;
+    if (!timer_start()) return;
+    if (g_timer_cur < 0 && !timer_open_picture()) return;
+    TimerSlot &s = g_tslot[g_timer_cur];
+    if (s.begun & (1u << span)) return;   /* twice in one picture: keep the first */
+    g_ctx->End(s.ts[span * 2]);
+    s.begun |= (1u << span);
+}
+
+extern "C" void port_gpu_timer_span_end(int span)
+{
+    if (span < 0 || span >= PORT_GPU_SPAN_COUNT) return;
+    if (!g_timer_ready || g_timer_cur < 0) return;
+    TimerSlot &s = g_tslot[g_timer_cur];
+    if (!(s.begun & (1u << span)) || (s.done & (1u << span))) return;
+    g_ctx->End(s.ts[span * 2 + 1]);
+    s.done |= (1u << span);
+}
+
+extern "C" void port_gpu_timer_frame_end(void)
+{
+    if (!g_timer_ready || !g_ctx) return;
+    if (g_timer_cur >= 0) {
+        TimerSlot &s = g_tslot[g_timer_cur];
+        g_ctx->End(s.disjoint);
+        s.open = 0;
+        s.pending = 1;
+        g_timer_cur = -1;
+    }
+    timer_harvest();
+}
+
+extern "C" int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
+                                     double *present_ms,
+                                     unsigned long long *pictures)
+{
+    if (card_ms) *card_ms = g_timer_card_ms;
+    if (opaque_ms) *opaque_ms = g_timer_span_ms[PORT_GPU_SPAN_OPAQUE];
+    if (present_ms) *present_ms = g_timer_span_ms[PORT_GPU_SPAN_PRESENT];
+    if (pictures) *pictures = g_timer_pics;
+    return g_timer_ready;
+}
+
 extern "C" void port_gpu_device_address_rows(const char *when, int enabled)
 {
     if (!enabled) return;
@@ -249,6 +421,18 @@ int port_gpu_device_is_warp(void) { return 0; }
 unsigned port_gpu_device_feature_level(void) { return 0; }
 double port_gpu_device_create_ms(void) { return 0.0; }
 int port_gpu_device_failed(void) { return 1; }
+void port_gpu_timer_span_begin(int) {}
+void port_gpu_timer_span_end(int) {}
+void port_gpu_timer_frame_end(void) {}
+int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
+                          double *present_ms, unsigned long long *pictures)
+{
+    if (card_ms) *card_ms = 0.0;
+    if (opaque_ms) *opaque_ms = 0.0;
+    if (present_ms) *present_ms = 0.0;
+    if (pictures) *pictures = 0;
+    return 0;
+}
 void port_gpu_device_address_rows(const char *, int) {}
 
 #endif

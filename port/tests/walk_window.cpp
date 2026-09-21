@@ -102,6 +102,10 @@
 //                           its camera probes drive the DS rotate bits.
 //      SM64DS_ANALOG_CAMERA=1  put a selftest in the analog camera
 //      SM64DS_OVERLAY=1     boot with the F3 stats overlay already on
+//      SM64DS_OVERLAY_TRACE=1  print the overlay's graphics-card sample to the
+//                           log every window, and its min / max / mean every
+//                           ten, so the "gpu" line can be checked for
+//                           steadiness without reading it off a picture
 //      SM64DS_HOST_KEY=<vk-hex>@<f0>[-<f1>],...  script a host KEY (SM64DS_HOST_PAD's
 //                           grammar), the one thing no scripted row could press before
 //      SM64DS_MENU=1        boot with the F5 debug menu open
@@ -420,6 +424,7 @@ static bool winapi_load(void)
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
 #include "hal/gpu_present.h"      /* run hd2 lane GPU1: the optional D3D11 present */
 #include "hal/gpu_raster.h"       /* run hd2 lane GPU2: the optional D3D11 renderer */
+#include "hal/gpu_device.h"       /* the shared device, and the card's own clock */
 
 /* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
    harness computes them to where hal/comms_conductor.cpp publishes them into
@@ -2916,9 +2921,8 @@ static void ovl_rate_sample(void)
 
 /* The process's own CPU, over the same kind of window, as a share of ONE
    logical processor's worth of time times the machine's processor count --
-   i.e. the number Task Manager shows. There is deliberately no GPU line:
-   this port rasterises on the CPU, and the millisecond lines below are
-   where that work is already reported. */
+   i.e. the number Task Manager shows. The card's own share is the sample
+   below this one, and it exists only when a setting put the card to work. */
 static double g_cpu_pct;
 static void ovl_cpu_sample(void)
 {
@@ -2946,12 +2950,81 @@ static void ovl_cpu_sample(void)
     t0 = now; k0 = kt; u0 = ut;
 }
 
+/* ---- AND WHAT THE GRAPHICS CARD SPENT --------------------------------
+   Tango, playing 0.4.0 with the card renderer on: "on the debug i see cpu %
+   but not gpu %."
+
+   The number that answers him is PER GAME TICK, not per picture. The game
+   takes one fixed step per tick and never catches up, so the only question a
+   millisecond figure can usefully answer is "does the work fit in the tick's
+   budget", 33.3 ms in a course and 16.7 ms in the 60-tick minigames -- and at
+   FrameRate 144 the card draws several pictures inside one tick, so a
+   per-picture figure would read as comfortable while the tick was over
+   budget. So this sums the card's own busy time across the window and divides
+   it by the TICKS in that window, the same half-second window the two rates
+   and the cpu share already use.
+
+   The card's time comes from the card (hal/gpu_device.cpp's timestamp
+   queries). The readback is the CPU's wait for it, from the renderer's own
+   accumulator, kept separate because it is the cost the next stage removes
+   rather than card work.
+
+   Both totals are read whether the overlay is on or off -- two function calls
+   a frame -- so pressing F3 shows a number at once instead of a dash. */
+static double g_gpu_ms_tick;     /* card busy ms per game tick */
+static double g_gpu_pct;         /* the same as a share of the tick's budget */
+static double g_gpu_read_ms;     /* the readback wait per game tick */
+static int    g_gpu_measured;    /* the card answered at least one picture */
+static int    g_ovl_trace;       /* SM64DS_OVERLAY_TRACE */
+
+static void ovl_gpu_sample(void)
+{
+    static LARGE_INTEGER qpf, t0;
+    static double c0, r0;
+    static int f0;
+    static double lo = 1e30, hi, sum;
+    static int nsam;
+    double card = 0.0;
+    unsigned long long pics = 0;
+    LARGE_INTEGER now;
+    if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
+    const int live = port_gpu_timer_totals(&card, 0, 0, &pics);
+    const double read = port_gpu_raster_readback_ms();
+    QueryPerformanceCounter(&now);
+    if (!t0.QuadPart) { t0 = now; c0 = card; r0 = read; f0 = port_rom_frame(); return; }
+    const double dt = (now.QuadPart - t0.QuadPart) / (double)qpf.QuadPart;
+    if (dt < 0.5) return;
+    const int ticks = port_rom_frame() - f0;
+    if (ticks > 0) {
+        g_gpu_ms_tick = (card - c0) / ticks;
+        g_gpu_read_ms = (read - r0) / ticks;
+        const double budget = PORT_VBLANK_MS * port_frame_divider();
+        g_gpu_pct = budget > 0.0 ? g_gpu_ms_tick / budget * 100.0 : 0.0;
+        g_gpu_measured = (live && pics) ? 1 : 0;
+        if (g_ovl_trace && g_gpu_measured) {
+            if (g_gpu_ms_tick < lo) lo = g_gpu_ms_tick;
+            if (g_gpu_ms_tick > hi) hi = g_gpu_ms_tick;
+            sum += g_gpu_ms_tick;
+            ++nsam;
+            fprintf(stderr, "[overlay] gpu %6.3fms %3.0f%% readback %6.3fms "
+                    "ticks %3d pictures %llu\n", g_gpu_ms_tick, g_gpu_pct,
+                    g_gpu_read_ms, ticks, (unsigned long long)pics);
+            if ((nsam % 10) == 0)
+                fprintf(stderr, "[overlay] gpu over %d sample(s): min %6.3f "
+                        "max %6.3f mean %6.3f ms per tick\n", nsam, lo, hi,
+                        sum / nsam);
+        }
+    }
+    t0 = now; c0 = card; r0 = read; f0 = port_rom_frame();
+}
+
 extern "C" int port_host_frame_pump(unsigned spin)
 {
     (void)spin;
     ++g_frame_pump_turns;
     ovl_rate_sample();
     ovl_cpu_sample();
+    ovl_gpu_sample();
     frame_stat();
     /* RUNG E1: see frame_pace. One VBlank per turn while the ROM's sleep is
        what ends the frame, one whole game frame per call while this loop is. */
@@ -3150,6 +3223,18 @@ struct OvlStats {
     int    set_rate;         /* the FrameRate setting, 0 = native */
     int    clock_on;         /* the presentation clock presented this window */
     double cpu_pct;
+    /* THE GRAPHICS CARD. gpu_use is 0 when no setting put the card to work,
+       1 when it is working and 2 when the device in use is WARP, the software
+       device Windows ships -- which is worth saying on the line, because a
+       WARP number is not a card number. gpu_read is shown only when the card
+       RENDERER is on; with only the present backend on there is no readback
+       to report. */
+    int    gpu_use;
+    int    gpu_raster;
+    int    gpu_measured;     /* the card has answered at least one picture */
+    double gpu_ms;           /* card busy ms per game tick */
+    double gpu_pct;          /* the same as a share of the tick's budget */
+    double gpu_read_ms;      /* the readback wait per game tick */
     int tris;                /* polygons gx accepted this frame */
     int actors;              /* live entries on the behaviour list */
     char *player;            /* the Player actor */
@@ -3206,6 +3291,28 @@ static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
     snprintf(ln[n], sizeof ln[0], "ram %6u KB   cpu %3.0f%%", s.mem_kb, s.cpu_pct);
     col[n++] = WHITE;
 
+    /* THE GRAPHICS CARD, directly under the cpu share because that is the
+       comparison being asked for. The line stays when the card is not in use
+       and says so: a line that disappears is indistinguishable from an
+       overlay that broke, and the answer "nothing, the processor is drawing
+       this" is itself the answer to the question. */
+    if (!s.gpu_use) {
+        snprintf(ln[n], sizeof ln[0], "gpu off");
+        col[n++] = WHITE;
+    } else if (!s.gpu_measured) {
+        snprintf(ln[n], sizeof ln[0], "gpu %s  --", s.gpu_use == 2 ? "warp" : "on");
+        col[n++] = WHITE;
+    } else {
+        const char *what = s.gpu_use == 2 ? "warp " : "";
+        if (s.gpu_raster)
+            snprintf(ln[n], sizeof ln[0], "gpu %s%5.2fms %3.0f%%  readback %5.2fms",
+                     what, s.gpu_ms, s.gpu_pct, s.gpu_read_ms);
+        else
+            snprintf(ln[n], sizeof ln[0], "gpu %s%5.2fms %3.0f%%  present only",
+                     what, s.gpu_ms, s.gpu_pct);
+        col[n++] = s.gpu_pct < 70.0 ? GREEN : (s.gpu_pct < 100.0 ? AMBER : RED);
+    }
+
     /* KING OF THE STAR live points, only during a king match (returns 0 and
        draws nothing otherwise). Holder is tagged with '*'. */
     {
@@ -3261,6 +3368,18 @@ static void ovl_fill_common(OvlStats &os)
     os.clock_on = g_rate_clock_on;
     os.set_rate = port_frame_rate_target();
     os.cpu_pct = g_cpu_pct;
+    {
+        const int raster = port_gpu_raster_active();
+        const int present = port_gpu_present_enabled();
+        os.gpu_raster = raster;
+        os.gpu_use = (raster || present)
+                         ? (port_gpu_device_is_warp() ? 2 : 1)
+                         : 0;
+        os.gpu_measured = g_gpu_measured;
+        os.gpu_ms = g_gpu_ms_tick;
+        os.gpu_pct = g_gpu_pct;
+        os.gpu_read_ms = g_gpu_read_ms;
+    }
     {
         const int d = port_frame_divider();
         os.tick_target = d > 0 ? 60 / d : 30;
@@ -6650,6 +6769,14 @@ static const BITMAPINFO *g_present_stack_bi;
    panel twice, stacked, so the stacked fit is 2:3. */
 static void present(void)
 {
+    /* THE PICTURE BOUNDARY the card's clock is measured over. Closing the
+       previous picture's measurement here rather than at the foot of this
+       function covers every way out of it -- a minimised window, a missing
+       device context, an early return from the fit -- with one statement, and
+       the opaque pass that ran before this call is inside the picture it
+       belongs to. It does nothing at all unless a setting put the card to
+       work (hal/gpu_device.h). */
+    port_gpu_timer_frame_end();
     ++g_present_n;
     if (!g_present_hwnd || !g_present_hdc || !g_present_bi || !g_present_fb)
         return;
@@ -10681,6 +10808,7 @@ int main(void)
     int decel_stopped = 0;
     /* the F3 overlay: off unless SM64DS_OVERLAY=1 says otherwise */
     g_overlay_on = getenv("SM64DS_OVERLAY") != 0;
+    g_ovl_trace = getenv("SM64DS_OVERLAY_TRACE") != 0;
     /* SM64DS_MENU=1 opens the menu at boot. Its KEYS are off under a selftest
        (an automated run must not have a menu opening under it), but the panel
        itself draws, which is how a shot of it gets captured without a person. */
