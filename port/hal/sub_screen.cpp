@@ -89,6 +89,14 @@
 #include "hal/screen_gap.h"
 #include "hal/host_settings.h"   /* the improved map's two keys */
 
+/* The PNG reader, vendored public-domain and already the one this port uses
+   for the replacement texture pack (ntr/hdtex.cpp, which is where the
+   IMPLEMENTATION is compiled -- every ntr library variant carries it, and
+   every target that links this file links one of them). Declarations only
+   here. The relative include is the spelling hdtex.cpp uses, because
+   port/CMakeLists.txt belongs to another lane. */
+#include "../third_party/stb/stb_image.h"
+
 namespace OAM {
 void Reset();
 }
@@ -501,6 +509,226 @@ const unsigned char kGlyphMAP[3][7] = {
     { 0x1E, 0x11, 0x11, 0x1E, 0x10, 0x10, 0x10 },   /* P */
 };
 
+/* ---- THE ARTIST'S PANEL, WHEN THE PLAYER HAS THE PICTURES ------------------
+ *
+ * WHAT THIS IS. Someone drew the owner a panel to go round the map -- a
+ * bordered plate with a MAP plaque on its top edge -- and sent him two PNGs.
+ * When those two files are sitting in a folder beside the game data, THEY are
+ * the panel: read at boot, drawn as they are. When they are not, the panel
+ * composed from the player's own game data a few hundred lines above is drawn
+ * instead, silently but for one line on stderr.
+ *
+ * THE PICTURES ARE NOT PART OF THIS PROGRAM, and that is the whole shape of
+ * this code. They are not in the repository, not in the build, not embedded in
+ * the executable and not copied into any tree: lane MINIMAP1 measured them to
+ * be made from the cartridge's own art (every colour on the DS's own BGR555
+ * ladder, an exact 32x32 repeat, and the panel's fifteen wallpaper colours
+ * sitting in one 16-entry DS palette inside the ROM, in palette order). So
+ * what this file does is read a FOLDER. Whether a folder with those two files
+ * in it travels with a download is a packaging decision, and it is the
+ * owner's, made outside this code.
+ *
+ * WHICH FOLDER: host_setting_minimap_dir() -- "<asset root>/minimap", the same
+ * root textures_hd uses, with SM64DS_MINIMAP_DIR to point somewhere else.
+ *
+ * WHAT IS READ OUT OF THEM, AND IT IS MEASURED RATHER THAN ASSUMED. The panel
+ * carries an inner outlined rectangle -- a dark line inset from its border --
+ * and the map has to sit exactly inside it. Rather than trust a pixel count,
+ * art_scan_inner below finds that rectangle by scanning the picture: the rows
+ * and columns that are more than half dark are the frame's own lines, and the
+ * interior is what they enclose. The same scan reports the transparent notch
+ * at the top (where the plaque drops in) and the brightest and darkest colours
+ * the artwork uses, which is where the resize handle takes its colours from.
+ * Nothing about the artwork is hardcoded except the sanity bounds a scan has
+ * to pass before it is believed.
+ *
+ * A picture that will not load, will not scan, or scans to something absurd is
+ * simply not used. There is no half-way state. */
+struct ArtImage {
+    int w, h;
+    unsigned *px;              /* ARGB8888, top row first */
+};
+
+ArtImage g_art_base, g_art_tab;
+int g_art_state;               /* 0 not tried, 1 both here, -1 not available */
+/* the inner outlined rectangle's INTERIOR, in base-image pixels, inclusive */
+int g_art_ix0, g_art_iy0, g_art_ix1, g_art_iy1;
+int g_art_notch;               /* fully transparent rows at the top */
+unsigned g_art_bright, g_art_dark;   /* the artwork's own two extremes */
+
+int art_load_one(const char *dir, const char *name, ArtImage *im)
+{
+    char path[1200];
+    std::snprintf(path, sizeof path, "%s/%s", dir, name);
+    int w = 0, h = 0, comp = 0;
+    unsigned char *p = stbi_load(path, &w, &h, &comp, 4);
+    if (!p) return 0;
+    if (w < 8 || h < 8 || w > 4096 || h > 4096) { stbi_image_free(p); return 0; }
+    unsigned *px = (unsigned *)std::malloc((size_t)w * (size_t)h * 4u);
+    if (!px) { stbi_image_free(p); return 0; }
+    for (int i = 0; i < w * h; ++i)
+        px[i] = ((unsigned)p[i * 4 + 3] << 24) | ((unsigned)p[i * 4] << 16)
+              | ((unsigned)p[i * 4 + 1] << 8) | (unsigned)p[i * 4 + 2];
+    stbi_image_free(p);
+    im->w = w;
+    im->h = h;
+    im->px = px;
+    return 1;
+}
+
+void art_free(ArtImage *im)
+{
+    std::free(im->px);
+    im->px = 0;
+    im->w = im->h = 0;
+}
+
+inline unsigned art_lum(unsigned c)
+{
+    return (((c >> 16) & 0xFF) * 77 + ((c >> 8) & 0xFF) * 151
+            + (c & 0xFF) * 28) >> 8;
+}
+
+/* THE INNER OUTLINED RECTANGLE, FOUND BY MEASUREMENT.
+ *
+ * The frame is a dark line on a light plate, so "dark" is defined against the
+ * picture's own middle rather than against a constant: the median luminance of
+ * its opaque pixels, halved. A row of the frame is then a row where more than
+ * half the picture's width is dark, and a column likewise -- which no row of
+ * wallpaper can be, and which a line of any thickness is. The first and last
+ * such rows and columns are the four lines; walking in from each gives its
+ * THICKNESS, and what the four thicknesses enclose is the interior.
+ *
+ * Then it has to pass: an interior at least 16 x 12, and all four frame lines
+ * at least one pixel IN from the picture's own edge -- a dark line lying on
+ * the outermost row is a picture with a dark border, not a panel with a map
+ * well. That last test is the whole sanity check, and it is a test about
+ * POSITION rather than about proportion on purpose: the artwork this was
+ * written for is 255 x 205 with a 240 x 180 well, which is 94% of its width,
+ * so any "the interior must be at most so many tenths of the picture" rule
+ * large enough to be safe would have refused the very picture it exists to
+ * accept. A picture that fails is refused whole, because a panel drawn round
+ * a rectangle that is not the artist's is worse than the one this program can
+ * compose for itself. */
+int art_scan_inner(const ArtImage *im)
+{
+    long hist[256];
+    for (int i = 0; i < 256; ++i) hist[i] = 0;
+    long opaque = 0;
+    for (int i = 0; i < im->w * im->h; ++i)
+        if (im->px[i] >> 24) { ++hist[art_lum(im->px[i]) & 0xFF]; ++opaque; }
+    if (opaque < 64) return 0;
+    long half = opaque / 2, run = 0;
+    unsigned med = 0;
+    for (int i = 0; i < 256; ++i) {
+        run += hist[i];
+        if (run >= half) { med = (unsigned)i; break; }
+    }
+    const unsigned thr = med > 1 ? med / 2 : 1;
+
+    /* the two profiles, and the extremes of the palette while the pixels are
+       already in hand */
+    unsigned lo = 0xFFFFFFFFu, hi = 0;
+    g_art_bright = 0xFFFFFFFFu;
+    g_art_dark = 0xFF000000u;
+    int *rowd = (int *)std::calloc((size_t)im->h, sizeof(int));
+    int *cold = (int *)std::calloc((size_t)im->w, sizeof(int));
+    if (!rowd || !cold) { std::free(rowd); std::free(cold); return 0; }
+    for (int y = 0; y < im->h; ++y)
+        for (int x = 0; x < im->w; ++x) {
+            const unsigned c = im->px[y * im->w + x];
+            if (!(c >> 24)) continue;
+            const unsigned l = art_lum(c);
+            if (l < lo) { lo = l; g_art_dark = c | 0xFF000000u; }
+            if (l >= hi) { hi = l; g_art_bright = c | 0xFF000000u; }
+            if (l < thr) { ++rowd[y]; ++cold[x]; }
+        }
+
+    int t = -1, b = -1, l = -1, r = -1;
+    for (int y = 0; y < im->h; ++y) if (rowd[y] * 2 > im->w) { if (t < 0) t = y; b = y; }
+    for (int x = 0; x < im->w; ++x) if (cold[x] * 2 > im->h) { if (l < 0) l = x; r = x; }
+    int ok = 0;
+    if (t >= 0 && b > t && l >= 0 && r > l) {
+        int t1 = t, b0 = b, l1 = l, r0 = r;
+        while (t1 + 1 < im->h && rowd[t1 + 1] * 2 > im->w) ++t1;
+        while (b0 - 1 >= 0 && rowd[b0 - 1] * 2 > im->w) --b0;
+        while (l1 + 1 < im->w && cold[l1 + 1] * 2 > im->h) ++l1;
+        while (r0 - 1 >= 0 && cold[r0 - 1] * 2 > im->h) --r0;
+        const int ix0 = l1 + 1, ix1 = r0 - 1, iy0 = t1 + 1, iy1 = b0 - 1;
+        const int iw = ix1 - ix0 + 1, ih = iy1 - iy0 + 1;
+        if (t1 < b0 && l1 < r0 && iw >= 16 && ih >= 12 &&
+            ix0 >= 2 && iy0 >= 2 && ix1 <= im->w - 3 && iy1 <= im->h - 3) {
+            g_art_ix0 = ix0; g_art_ix1 = ix1;
+            g_art_iy0 = iy0; g_art_iy1 = iy1;
+            ok = 1;
+        }
+    }
+    /* the notch: the fully transparent rows at the top, which is where the
+       plaque drops in and by how much it stands proud of the plate */
+    g_art_notch = 0;
+    for (int y = 0; y < im->h; ++y) {
+        int any = 0;
+        for (int x = 0; x < im->w && !any; ++x) any = im->px[y * im->w + x] >> 24;
+        if (any) break;
+        ++g_art_notch;
+    }
+    std::free(rowd);
+    std::free(cold);
+    return ok;
+}
+
+/* Asked once. Both files or neither: a plate with no plaque, or a plaque with
+   no plate, is not the design anyone drew. */
+int art_build(void)
+{
+    const char *dir = host_setting_minimap_dir();
+    int ok = art_load_one(dir, "SM64DSMapBase.png", &g_art_base)
+          && art_load_one(dir, "SM64DSMapText.png", &g_art_tab)
+          && art_scan_inner(&g_art_base)
+          && g_art_tab.w <= g_art_base.w;
+    if (!ok) {
+        art_free(&g_art_base);
+        art_free(&g_art_tab);
+        std::fprintf(stderr, "[minimap] no panel artwork in %s -- the panel is "
+                     "composed from the game's own data instead\n", dir);
+    } else {
+        const int iw = g_art_ix1 - g_art_ix0 + 1, ih = g_art_iy1 - g_art_iy0 + 1;
+        std::fprintf(stderr, "[minimap] panel artwork from %s: plate %dx%d, "
+                     "plaque %dx%d, inner rectangle %d,%d %dx%d (%s 4:3), "
+                     "notch %d rows\n", dir, g_art_base.w, g_art_base.h,
+                     g_art_tab.w, g_art_tab.h, g_art_ix0, g_art_iy0, iw, ih,
+                     iw * 3 == ih * 4 ? "exactly" : "not", g_art_notch);
+    }
+    return ok;
+}
+
+inline int art_on(void)
+{
+    if (!g_art_state) g_art_state = art_build() ? 1 : -1;
+    return g_art_state == 1;
+}
+
+/* One picture, nearest-neighbour, into a destination rectangle, honouring the
+   source's alpha as a stencil (0 or 255 is all this artwork has, and anything
+   between reads as present -- the plate is a stencil, not a blend). */
+void art_blit(const ArtImage *im, unsigned *dst, int w, int h,
+              int dx, int dy, int dw, int dh)
+{
+    if (dw < 1 || dh < 1) return;
+    for (int y = 0; y < dh; ++y) {
+        const int py = dy + y;
+        if (py < 0 || py >= h) continue;
+        const unsigned *srow = im->px + (size_t)(y * im->h / dh) * im->w;
+        unsigned *drow = dst + (size_t)py * ntr::SCREEN_W;
+        for (int x = 0; x < dw; ++x) {
+            const int px_ = dx + x;
+            if (px_ < 0 || px_ >= w) continue;
+            const unsigned c = srow[x * im->w / dw];
+            if (c >> 24) drow[px_] = c | 0xFF000000u;
+        }
+    }
+}
+
 void px_put(unsigned *dst, int dw, int dh, int x, int y, unsigned c)
 {
     if (x < 0 || y < 0 || x >= dw || y >= dh) return;
@@ -519,7 +747,9 @@ void px_fill(unsigned *dst, int dw, int dh, int x0, int y0, int w, int h,
    framebuffer, just before the map itself is composed over the middle of it. */
 void hal_sub_panel_decor(unsigned *dst, int w, int h)
 {
-    if (!g_motif_state) g_motif_state = wall_build() ? 1 : -1;
+    /* the archive read only matters when this program has to compose the
+       panel itself, so a player with the artwork never pays for it */
+    if (!art_on() && !g_motif_state) g_motif_state = wall_build() ? 1 : -1;
 
     /* The artist's margins, carried onto whatever size the map is drawn at.
        Seven DS pixels proud on the left and top, eight on the right and
@@ -539,6 +769,36 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
 
     const int x0 = g_x0 - ml, y0 = g_y0 - mt;
     const int pw = g_pan_w + ml + mr, ph = g_pan_h + mt + mb;
+
+    /* ---- THE ARTIST'S PLATE AND PLAQUE, WHEN THE PLAYER HAS THEM ----------
+     *
+     * The two pictures ARE the panel: drawn into the rectangle the runtime
+     * panel would have occupied, so the map, the attention arrows and the
+     * stylus all go on reading the same numbers they did. Below this branch
+     * is the panel this program composes for itself, and it is what a player
+     * with no artwork folder still gets.
+     *
+     * WHERE THE PLAQUE GOES, MEASURED OFF THE ARTIST'S OWN MOCK-UP rather
+     * than chosen: in it the plate picture's top row and the plaque's top row
+     * are the SAME row, and the plaque is centred across the plate's width
+     * ((plate 255 - plaque 109) / 2 = 73, and 73 is where it sits). The plate
+     * picture carries transparent rows at the top for exactly that -- the
+     * notch the plaque drops into -- so the plate is blitted whole, notch and
+     * all, and its transparent rows draw nothing. */
+    if (art_on()) {
+        const int bw = g_art_base.w, bh = g_art_base.h;
+        const int psrc = bh - g_art_notch;       /* the plate's opaque rows */
+        if (psrc > 0) {
+            const int fullh = bh * ph / psrc;    /* the whole picture, in fb px */
+            const int fully = y0 - g_art_notch * ph / psrc;
+            art_blit(&g_art_base, dst, w, h, x0, fully, pw, fullh);
+            const int ttw = g_art_tab.w * pw / bw;
+            const int tth = g_art_tab.h * fullh / bh;
+            art_blit(&g_art_tab, dst, w, h, x0 + (pw - ttw) / 2, fully,
+                     ttw, tth);
+            return;
+        }
+    }
 
     const unsigned flat = (g_motif_state == 1) ? g_motif[0][0] : 0xFF4A3B18u;
     const unsigned dark = (g_motif_state == 1) ? g_panel_dark : 0xFF201408u;

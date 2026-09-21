@@ -741,6 +741,14 @@ int host_setting_improved_minimap(void);
 int host_setting_minimap_scale(void);      /* 0..5 -> 1, 1.25, 1.5, 2, 3, 4 */
 void host_setting_minimap_scale_ratio(int *num, int *den);
 
+/* WHERE THE PANEL ARTWORK WOULD BE READ FROM: "<asset root>/minimap", the
+   folder textures_hd's neighbour, or SM64DS_MINIMAP_DIR outright. Never null,
+   and it names a folder that very often is not there -- with no folder the
+   panel is composed at run time from the player's own game data instead. The
+   pictures are not part of this program and nothing here embeds or ships
+   them; the code reads a folder. */
+const char *host_setting_minimap_dir(void);
+
 #ifdef __cplusplus
 }
 #endif

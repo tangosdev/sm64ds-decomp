@@ -2516,6 +2516,45 @@ extern "C" const char *host_setting_hd_textures_dir(void)
     return dir;
 }
 
+/* WHERE THE IMPROVED MAP'S PANEL ARTWORK WOULD BE READ FROM, whether or not
+   anything is there. Exactly the shape host_setting_hd_textures_dir has above,
+   and for the same reason: an asset folder beside the game data, named here so
+   a log line can say where the game looked.
+
+     SM64DS_MINIMAP_DIR    the folder outright, used as given. A test points
+                           this at a read-only folder somewhere else.
+     SM64DS_ASSET_ROOT     "<root>/minimap". In a player's kit the launcher
+                           sets the asset root to the bundle directory, so
+                           this is a folder sitting beside the exe, exactly
+                           where textures_hd sits.
+     neither               "minimap", relative to the working directory.
+
+   THE PICTURES ARE NOT PART OF THIS PROGRAM. Nothing here ships, embeds or
+   copies them: the code reads a folder, and whether a folder with those two
+   files in it travels with a download is a packaging decision made outside
+   the code. With no folder the panel is composed at run time from the
+   player's own game data, which is what hal/sub_screen.cpp did before this
+   and still does. Built once, never null. */
+extern "C" const char *host_setting_minimap_dir(void)
+{
+    static int built = 0;
+    static char dir[1024];
+    if (!built) {
+        built = 1;
+        const char *over = getenv("SM64DS_MINIMAP_DIR");
+        if (over && *over) {
+            snprintf(dir, sizeof dir, "%s", over);
+        } else {
+            const char *root = getenv("SM64DS_ASSET_ROOT");
+            if (root && *root && strlen(root) + 12 < sizeof dir)
+                snprintf(dir, sizeof dir, "%s/minimap", root);
+            else
+                snprintf(dir, sizeof dir, "minimap");
+        }
+    }
+    return dir;
+}
+
 /* SmoothModels: the subdivision level, 0 for the ROM's own geometry.
    SM64DS_SMOOTH_MODELS overrides; junk reads as 0. */
 extern "C" int host_setting_smooth_models(void)
