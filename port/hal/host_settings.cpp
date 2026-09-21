@@ -1201,6 +1201,10 @@ int g_smooth_models = 0;
    before and draws the identical picture. */
 int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
 double g_minimap_scale = 1.0; /* the multiplier, 1 or more */
+/* A HAND HAS MOVED THE SIZE THIS RUN. Set by the drag's own write and by
+   nothing else; read in host_setting_minimap_scale_value, where the block
+   above that function says what it is for. */
+int g_minimap_scale_dragged;
 
 /* THE MAP'S DRAWN WIDTH for a multiplier, on the grid above. Absent, zero,
    negative and unparseable all read as 1, the Aspect rule: a number that is a
@@ -2431,6 +2435,25 @@ extern "C" int host_setting_improved_minimap(void)
     return g_improved_minimap;
 }
 
+/* THE PIN IS A STARTING SIZE, NOT A LOCK ON THE PLAYER'S HAND.
+ *
+ * SM64DS_MINIMAP_SCALE still outranks the file and still holds for a whole run
+ * that never touches the map, which is every scripted run there is: a sweep, a
+ * capture, a proof and a gate all ask for a size and none of them has a mouse.
+ * That is the reason the override exists and it does not change.
+ *
+ * What changes is what happens after a HAND has moved it. This getter used to
+ * answer the pin ahead of g_minimap_scale unconditionally, and the drag's only
+ * write is to g_minimap_scale -- so with the pin set the grab worked, the hold
+ * worked, the release worked, and every one of them moved a number that
+ * nothing read. The owner's own preview shortcut exports the pin, so on his
+ * screen the yellow square took the press, printed that it had, printed a size
+ * on release and never once resized the map. Both scripted drags that proved
+ * this feature passed the size in settings.json instead, where the pin is not
+ * in play, which is the whole of why they were green.
+ *
+ * So: the pin answers until a drag happens, and the drag answers afterwards.
+ * One value, one hand, for the rest of the run. */
 extern "C" double host_setting_minimap_scale_value(void)
 {
     static int env_read = 0;
@@ -2444,7 +2467,7 @@ extern "C" double host_setting_minimap_scale_value(void)
             env = (end != e) ? minimap_scale_sanitise(v, 0) : 1.0;
         }
     }
-    if (env > 0.0) return env;
+    if (env > 0.0 && !g_minimap_scale_dragged) return env;
     load_once();
     return g_minimap_scale;
 }
@@ -2471,22 +2494,36 @@ extern "C" void host_setting_minimap_scale_ratio(int *num, int *den)
  * size survives a restart and the launcher's picker opens on it. It goes
  * through save_keys like the debug menu's run and camera rows, which reloads
  * the document and carries every key this program did not write across
- * untouched. The environment override still wins over both for the rest of
- * the run, deliberately: a proof run that pinned a size keeps it.
+ * untouched. SM64DS_MINIMAP_SCALE keeps a run that never drags pinned exactly
+ * where it asked to be -- which is every scripted run -- and stands aside for
+ * a hand that has actually moved the map; the block above the getter is the
+ * argument for that.
+ *
+ * BOTH WRITES GO THROUGH ONE FUNCTION, and that is not tidiness: the defect
+ * this closes was a size written in one place and read from another, so a
+ * second writer that forgot to say a hand had moved it would put the map
+ * straight back to where the owner found it.
  *
  * %.6g is enough to print any number on the grid exactly (the grid is
  * thirty-seconds, and 4096/128 = 32 is the ceiling), so a value written here
  * reads back as the same value. */
-extern "C" void host_setting_minimap_scale_set_live(double s)
+namespace {
+void minimap_scale_move_live(double s)
 {
     load_once();
     g_minimap_scale = minimap_scale_sanitise(s, 0);
+    g_minimap_scale_dragged = 1;
+}
+}
+
+extern "C" void host_setting_minimap_scale_set_live(double s)
+{
+    minimap_scale_move_live(s);
 }
 
 extern "C" int host_setting_save_minimap_scale(double s)
 {
-    load_once();
-    g_minimap_scale = minimap_scale_sanitise(s, 0);
+    minimap_scale_move_live(s);
     char v[32];
     snprintf(v, sizeof v, "%.6g", g_minimap_scale);
     const char *const keys[1] = { "MinimapScale" };

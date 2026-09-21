@@ -1834,6 +1834,11 @@ void poll_touch(void)
        the second of those is a bug worth chasing. `clamped` is the third
        answer the latch adds: off the surface, and published anyway. */
     int live_cx = 0, live_cy = 0, live_seen = 0, live_on = 0, live_clamped = 0;
+    /* and the fourth: the resize handle took the press. Without it the
+       recorder below reports a grab as a press that landed on the top screen,
+       which is the one line a player's log would show for a square they had
+       just successfully grabbed. */
+    int live_handle = 0;
     /* THE GESTURE'S OWN STATE, and a host static on purpose rather than
        anything in .dsstate: a save-state load must not restore a half-finished
        drag onto a hand that is not holding the button any more. Same argument
@@ -1932,6 +1937,7 @@ void poll_touch(void)
             if (!hal_sub_screen_stacked() && handle_press(bx, by, on_picture)) {
                 on_surface = 0;
                 drag_own = 0;
+                live_handle = 1;
             }
             /* the arming edge, and the only one there is */
             if (on_surface) drag_own = 1;
@@ -2307,8 +2313,10 @@ void poll_touch(void)
             std::fprintf(stderr, "[touch] f%d press client(%d,%d) is NOT on "
                          "the stylus surface: %s -- no touch published\n",
                          f, live_cx, live_cy,
-                         on_top ? "it is on the TOP screen"
-                                : "it is in a letterbox bar");
+                         live_handle
+                             ? "the map's corner handle took it"
+                             : (on_top ? "it is on the TOP screen"
+                                       : "it is in a letterbox bar"));
             std::fflush(stderr);
         }
         down_was = down;
