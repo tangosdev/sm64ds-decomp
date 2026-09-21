@@ -1,6 +1,6 @@
 struct Vector3;
 
-extern int _Z14ApproachLinearRsss(short *a, short b, short c);
+extern void _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
 extern void _ZN8dActor_c8PoofDustEv(void *);
