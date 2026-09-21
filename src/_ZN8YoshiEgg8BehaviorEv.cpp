@@ -9,7 +9,6 @@ extern "C" {
 extern int data_020a0e68;
 extern void MulVec3Mat4x3(void *in, void *mtx, void *out);
 extern void Vec3_Add(void *out, void *a, void *b);
-extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
 extern void func_ov002_020edca4(void *c);
 }
 
@@ -46,9 +45,9 @@ int YoshiEgg::Behavior()
             mPosY = vout.y;
             mPosZ = vout.z;
         }
-        _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, mPlayer->mOpacity, 0);
+        mModelAnim.ApplyOpacity(mPlayer->mOpacity, 0);
     } else {
-        _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, 0x1f, 0);
+        mModelAnim.ApplyOpacity(0x1f, 0);
     }
     func_ov002_020ed998(this);
     func_ov002_020ed7f8(this);

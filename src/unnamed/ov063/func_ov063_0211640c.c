@@ -7,7 +7,7 @@
 #pragma opt_propagation off
 extern void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void _ZN9ModelBase12ApplyOpacityEj(void *self, u32 a, int z);
+extern void _ZN9ModelBase12ApplyOpacityEjj(void *self, unsigned int opacity, unsigned int unused);
 extern void func_020167a4(void *p);
 extern void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *p);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
@@ -40,7 +40,7 @@ void func_ov063_0211640c(char *c)
         Vec3_Asr(&t1, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         *(struct Matrix4x3 *)(c + 0x39c) = data_020a0e68;
-        _ZN9ModelBase12ApplyOpacityEj(c + 0x380, (u8)((int)*(u8 *)(c + 0x5c8) >> 3), 1);
+        _ZN9ModelBase12ApplyOpacityEjj(c + 0x380, (u8)((int)*(u8 *)(c + 0x5c8) >> 3), 1);
         func_020167a4(c + 0x380);
         {
             char *m = *(char **)(c + 0x390);
@@ -54,7 +54,7 @@ void func_ov063_0211640c(char *c)
         Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, ang);
         *(struct Matrix4x3 *)(c + 0x39c) = data_020a0e68;
-        _ZN9ModelBase12ApplyOpacityEj(c + 0x380, (u8)((int)*(u8 *)(c + 0x5c8) >> 3), 1);
+        _ZN9ModelBase12ApplyOpacityEjj(c + 0x380, (u8)((int)*(u8 *)(c + 0x5c8) >> 3), 1);
     }
 
     if (*(u8 *)(c + 0x5c8) >= 0x10) {

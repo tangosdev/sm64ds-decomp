@@ -8,6 +8,7 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN9ModelBase12ApplyOpacityEjj.cpp": "ruspecial",
     "src/START_INTRO_MINIMAP_ZOOM.c": "tangosdev",
     "src/_ZN10LavaBridge13InitResourcesEv.c": "tangosdev",
     "src/_ZN10LavaBridge13InitResourcesEv.cpp": "tangosdev",

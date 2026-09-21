@@ -177,12 +177,12 @@ int   _ZN8SaveData16HasPlayerLostCapEv(void);
 short Vec3_HorzAngle(const void *a, const void *b);
 int   Vec3_Dist(const void *a, const void *b);
 void  _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
-int   _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
+void  _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
 void  _ZN8dActor_c13SpawnSoundObjEj(void *self, unsigned int id);
-int   _ZN5dCc_c5ClearEv(void *self);
+void  _ZN5dCc_c5ClearEv(void *self);
 void  _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 int   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, void *a, void *out, int flag);
-void  func_0201267c(int a, void *b);
+void func_0201267c(unsigned int id, const Vector3 *pos);
 
 }
 
@@ -291,14 +291,14 @@ done:
 extern "C" {
 void func_ov030_02111890(char *c)
 {
-    extern int func_0201267c(int a, void *b);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int data_ov030_02115d18[];
     int b = (int)(*(int *)(c + 0x134) == data_ov030_02115d18[1]);
     if (b == 0)
         return;
     int v = (short)((unsigned int)*(int *)(c + 0x12c) << 4 >> 16);
     if (v == 0xa || v == 0xc)
-        func_0201267c(0xea, c + 0x74);
+        func_0201267c(0xea, (const ::Vector3 *)(c + 0x74));
 }
 }
 
@@ -312,7 +312,7 @@ void func_ov030_02111908(char* c)
     extern int data_ov030_02115cf0[];
     extern int data_ov030_02115cd0[];
     extern int data_ov030_02115cf8[];
-    extern void func_0201267c(int a, char* b);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
 
     enum Bool { FALSE, TRUE };
     int r3 = (short)(((unsigned)(*(int*)(c + 0x12c) << 4)) >> 16);
@@ -324,20 +324,20 @@ void func_ov030_02111908(char* c)
         if (r3 != 7) {
             if (r3 != 0x28) return;
         }
-        func_0201267c(0xeb, c + 0x74);
+        func_0201267c(0xeb, (const ::Vector3 *)(c + 0x74));
         return;
     }
     b = (enum Bool)(v == data_ov030_02115cd0[1]);
     if (b) {
         if (r3 != 1) return;
-        func_0201267c(0xf1, c + 0x74);
-        func_0201267c(0xe8, c + 0x74);
+        func_0201267c(0xf1, (const ::Vector3 *)(c + 0x74));
+        func_0201267c(0xe8, (const ::Vector3 *)(c + 0x74));
         return;
     }
     b = (enum Bool)(v == data_ov030_02115cf8[1]);
     if (b) {
         if (r3 != 8) return;
-        func_0201267c(0xe9, c + 0x74);
+        func_0201267c(0xe9, (const ::Vector3 *)(c + 0x74));
     }
 }
 }
@@ -827,7 +827,7 @@ int daMky_c::EnterState9()
 {
     char *p = (char *)this;
     *(int *)(p + 0x98) = 0;
-    *(int *)(p + 0x3b4) = 9;
+    mState = 9;
     return 1;
 }
 
@@ -850,12 +850,12 @@ int func_ov030_02112578(void *arg0)
     void func_ov030_02111908(void *c);
     int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
     void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
-    void func_0201267c(int a, void *b);
+    void func_0201267c(unsigned int id, const Vector3 *pos);
     int _ZN6Player12GetTalkStateEv(void);
     void _ZN6Player18HasFinishedTalkingEv(void *player);
     int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
     int _ZN9Animation8FinishedEv(void *thiz);
-    void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
+    bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
     u8 DecIfAbove0_Byte(u8 *p);
     void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
     void _ZN9Animation7AdvanceEv(void *thiz);
@@ -904,7 +904,7 @@ int func_ov030_02112578(void *arg0)
         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r6, arg0, 0xbd, sp, 1, 0) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115cf8[1], 0, 0x1000, 0);
             _ZN9Animation8SetFlagsEi(c + 0x124, 0);
-            func_0201267c(0xd1, c + 0x74);
+            func_0201267c(0xd1, (const ::Vector3 *)(c + 0x74));
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
@@ -922,7 +922,7 @@ int func_ov030_02112578(void *arg0)
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
             *(s32 *)(c + 0x98) = 0xf000;
             *(s32 *)(c + 0xa8) = 0x2f000;
-            func_0201267c(0xf1, c + 0x74);
+            func_0201267c(0xf1, (const ::Vector3 *)(c + 0x74));
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
@@ -1003,10 +1003,10 @@ int daMky_c::EnterState8() {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, data_ov030_02115d18.b, 0, 0x1000, 0);
     *(int *)(c + 0x130) = 0x1000;
     _ZN7PathPtr6FromIDEj(c+0x398, *(int*)(c+8) & 0xff);
-    *(int *)(c + 0x3a0) = 1;
-    *(char *)(c + 0x3c7) = 0;
+    mPathNode = 1;
+    unk_3c7 = 0;
     *(int *)(c + 0x98) = 0x6000;
-    *(int *)(c + 0x3b4) = 8;
+    mState = 8;
     return 1;
 }
 
@@ -1176,9 +1176,9 @@ int func_ov030_02112da0(char *a) {
     extern void func_ov030_021141a8(void *a, int m);
     extern int Vec3_Dist(void *a, void *b);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
-    extern void func_0201267c(int, void *);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void *p);
-    extern void _ZN6Player9DropActorEv(void *p);
+    extern int _ZN6Player9DropActorEv(void *p);
     extern u8 DecIfAbove0_Byte(u8 *p);
     extern u8 data_0209d684;
     int b = (int)((*(u32 *)(a + 0xb0) & 0x40000) != 0);
@@ -1224,7 +1224,7 @@ int func_ov030_02112da0(char *a) {
             if (Vec3_Dist(a + 0x380, a + 0x5c) < 0x514000 &&
                 *(int *)(a + 0x60) > *(int *)(a + 0x384) - 0x12c000) {
                 if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(char **)(a + 0x3a8), a, 0xc1, 0, 0, 0) != 0) {
-                    func_0201267c(0xd1, a + 0x74);
+                    func_0201267c(0xd1, (const ::Vector3 *)(a + 0x74));
                     (*(u8 *)((int)a + 0x3c7))++;
                 }
             }
@@ -1272,17 +1272,17 @@ int daMky_c::EnterState6()
     char *c = (char *)this;
     *(int *)(c + 0xb0) &= ~0x80000;
     if (Vec3_Dist(c + 0x380, c + 0x5c) < 0x514000 &&
-        *(int *)(c + 0x60) > *(int *)(c + 0x384) - 0x12c000) {
-        *(unsigned char *)(c + 0x3c7) = 0;
+        *(int *)(c + 0x60) > mPerchPosY - 0x12c000) {
+        unk_3c7 = 0;
         _ZN8dActor_c13SpawnSoundObjEj(c, 1);
     } else {
-        *(unsigned char *)(c + 0x3c7) = 3;
+        unk_3c7 = 3;
     }
     *(int *)(c + 0x98) = 0;
-    *(unsigned char *)(c + 0x3c6) = 0x3c;
+    mActionTimer = 0x3c;
     _ZN5dCc_c5ClearEv(c + 0x160);
-    *(int *)(c + 0x3b8) = *(int *)(c + 0x3b4);
-    *(int *)(c + 0x3b4) = 6;
+    mPrevState = mState;
+    mState = 6;
     return 1;
 }
 
@@ -1301,9 +1301,9 @@ int func_ov030_02113094(char* self)
     extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
     extern void func_ov030_021141a8(char* self, int a);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
-    extern void func_0201267c(u32 id, char* p);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(char* p);
-    extern void _ZN6Player9DropActorEv(char* p);
+    extern int _ZN6Player9DropActorEv(char* p);
     extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
     extern void _ZN7fBase_c18MarkForDestructionEv(char* self);
     {
@@ -1338,7 +1338,7 @@ int func_ov030_02113094(char* self)
     case 1: {
         int msg = (*(u8*)(self + 0x3c8) != 0) ? 0xc2 : 0xc3;
         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(char**)(self + 0x3a8), self, (s16)msg, 0, 0, 0) != 0) {
-            func_0201267c(0xd1, self + 0x74);
+            func_0201267c(0xd1, (const ::Vector3 *)(self + 0x74));
             (*(u8*)(((int)self + 0x3c7)))++;
         }
         {
@@ -1389,13 +1389,13 @@ int daMky_c::EnterState5() {
     int* p = (int*)((int)c + 0xb0);
     int tmp = *p;
     *p = tmp & ~0x80000;
-    *(unsigned char*)(c + 0x3c7) = 0;
+    unk_3c7 = 0;
     void* arg1 = (void*)(c + 0x160);
     *(int*)(c + 0x98) = 0;
     _ZN5dCc_c5ClearEv(arg1);
     _ZN10dBgCh_Actr15ClearGroundFlagEv((void*)(c + 0x194));
-    *(int*)(c + 0x3b8) = *(int*)(c + 0x3b4);
-    *(int*)(c + 0x3b4) = 5;
+    mPrevState = mState;
+    mState = 5;
     return 1;
 }
 
@@ -1415,9 +1415,9 @@ int func_ov030_02113324(void* thiz)
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);
     extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
-    extern int func_0201267c(int a, void* b);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void* self);
-    extern void _ZN6Player9DropActorEv(void* self);
+    extern int _ZN6Player9DropActorEv(void* self);
     extern void _ZN9Animation7AdvanceEv(void* self);
     extern void _ZN5dCc_c5ClearEv(void* self);
     extern unsigned char DecIfAbove0_Byte(unsigned char* p);
@@ -1491,7 +1491,7 @@ skip_raycast:
                 msgPos.y = *(int*)(c + 0x60) + 0x64000;
 
                 if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
-                    func_0201267c(0xd1, c + 0x74);
+                    func_0201267c(0xd1, (const ::Vector3 *)(c + 0x74));
                     {
                         unsigned char *p = (unsigned char*)(c + 0x3c7);
                         (*p)++;
@@ -1537,14 +1537,14 @@ int daMky_c::EnterState4(){
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, (void *)data_ov030_02115ce0[1], 0, 0x1000, 0);
     *(int*)(c+0x130) = 0x1000;
     if (Vec3_Dist(c+0x380, c+0x5c) < 0x514000
-        && *(int*)(c+0x60) > *(int*)(c+0x384) - 0x12c000) {
-        *(unsigned char*)(c+0x3c7) = 0;
+        && *(int*)(c+0x60) > mPerchPosY - 0x12c000) {
+        unk_3c7 = 0;
         _ZN8dActor_c13SpawnSoundObjEj(c, 1);
     } else {
-        *(unsigned char*)(c+0x3c7) = 2;
+        unk_3c7 = 2;
     }
-    *(unsigned char*)(c+0x3c6) = 0x3c;
-    *(int*)(c+0x3b4) = 4;
+    mActionTimer = 0x3c;
+    mState = 4;
     return 1;
 }
 
@@ -1567,7 +1567,7 @@ int func_ov030_021136b0(char *c)
     extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 param1, const Vector3 *pos,
         const void *rot, int areaID, int deathTableID);
-    extern void func_02012790(int arg);
+    extern unsigned int func_02012790(unsigned int arg);
     extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
     extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
@@ -1575,9 +1575,9 @@ int func_ov030_021136b0(char *c)
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
         void *self, void *actor, unsigned int msgId, const Vector3 *pos,
         unsigned int d, unsigned int e);
-    extern void func_0201267c(int a, void *b);
+    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int _ZN6Player12GetTalkStateEv(void *self);
-    extern void _ZN6Player9DropActorEv(void *self);
+    extern int _ZN6Player9DropActorEv(void *self);
     extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
     extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
     extern void func_ov030_021141a8(char *c, int v);
@@ -1660,7 +1660,7 @@ int func_ov030_021136b0(char *c)
             msgPos.y = *(int *)(c + 0x60) + 0x64000;
             if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     *(void **)(c + 0x3a8), c, msgArg, &msgPos, 0, 2) != 0) {
-                func_0201267c(0xd1, c + 0x74);
+                func_0201267c(0xd1, (const ::Vector3 *)(c + 0x74));
                 {
                     u8 *st = (u8 *)(c + 0x3c7);
                     (*st)++;
@@ -1775,21 +1775,21 @@ int daMky_c::EnterState3()
     extern char data_ov030_02115ce0[];
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, *(void **)(data_ov030_02115ce0 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x130) = 0x1000;
-    if (*(unsigned char*)(c + 0x3c8) == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
-        *(unsigned char*)(c + 0x3c7) = 5;
+    if (mHasSpawnedCap == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
+        unk_3c7 = 5;
     } else {
         char* p = *(char**)(c + 0x3a8);
         if (*(unsigned char*)(p + 0x6f9) != 0 ||
             *(unsigned char*)(p + 0x6fb) != 0 ||
             *(unsigned char*)(p + 0x6ff) != 0) {
-            *(unsigned char*)(c + 0x3c7) = 4;
+            unk_3c7 = 4;
         } else {
-            *(unsigned char*)(c + 0x3c7) = 0;
+            unk_3c7 = 0;
             unsigned char* f = (unsigned char*)((unsigned long long)((int)(c) + 0x3c8));
             *f ^= 1;
         }
     }
-    *(int*)(c + 0x3b4) = 3;
+    mState = 3;
     return 1;
 }
 
@@ -1865,8 +1865,8 @@ int daMky_c::EnterState2() {
     _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)c + 0x194);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)c + 0xd4,
         ((void **)&data_ov030_02115d08)[1], 0x40000000, 0x1000, 0);
-    func_0201267c(0xd1, (char *)c + 0x74);
-    func_0201267c(0xf1, (char *)c + 0x74);
+    func_0201267c(0xd1, (const ::Vector3 *)((char *)c + 0x74));
+    func_0201267c(0xf1, (const ::Vector3 *)((char *)c + 0x74));
     *(int *)((char *)c + 0x3b4) = 2;
     return 1;
 }
@@ -1987,9 +1987,8 @@ int func_ov030_02113d20(void *c) {
 /* The number 1 is read from the ROM too: this body writes the immediate 1 to the state word at +0x3b4, and it is the only one of the 44 that writes 1.  "EnterState" is coined; see the block above. */
 // @symbol _ZN7daMky_c11EnterState1Ev
 int daMky_c::EnterState1(){
-    char* c = (char*)this;
-  *(char*)(c+0x3c7)=0;
-  *(int*)(c+0x3b4)=1;
+  unk_3c7=0;
+  mState=1;
   return 1;
 }
 

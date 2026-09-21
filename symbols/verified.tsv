@@ -323,7 +323,7 @@
 0x02016a24	_ZN5Model12ShowMaterialEii	function
 0x02016a58	_ZN5Model12HideMaterialEii	function
 0x02016a8c	_ZN5Model14SetPolygonModeEi	function
-0x02016a9c	_ZN9ModelBase12ApplyOpacityEj	function
+0x02016a9c	_ZN9ModelBase12ApplyOpacityEjj	function
 0x02016abc	_ZN5Model12SetPolygonIDEi	function
 0x02016b78	_ZN5Model6RenderEPK7Vector3	function
 0x02016bb8	_ZN5Model9Virtual10ER9Matrix4x3	function
