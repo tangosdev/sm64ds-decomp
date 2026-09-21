@@ -65,6 +65,17 @@ struct GxTriangle {
     // multiply is by exactly 1.0f and the raster is bit-for-bit the
     // arithmetic it did before this field existed.
     uint8_t tex_scale;
+    // WHICH TEXTURE THIS IS, as a number that is never handed out twice
+    // (run hd2, lane GPU2). The optional graphics-card renderer keeps its own
+    // copy of every texture it has drawn with, and it cannot key that copy on
+    // `tex` above: the decode cache frees its buffers and the allocator hands
+    // the same address back for different pixels, so a pointer key serves a
+    // stale picture. This id is handed out at bind time, counts up and is
+    // never reused; gx_invalidate_textures bumps gx_texture_generation() so a
+    // backend throws its whole cache away at a scene change. 0 means
+    // untextured. It costs one map lookup per bind and only when a backend is
+    // registered, so an ordinary run does not pay for it.
+    uint32_t tex_id;
     uint8_t cull;          // POLYGON_ATTR bits 6-7: 1 back, 2 front, 3 both
     uint8_t alpha;         // POLYGON_ATTR bits 16-20 (0..31; 31 = opaque)
     // TEXIMAGE_PARAM bits 16-19 as bit0 repeat S, bit1 repeat T, bit2 flip S,
@@ -184,6 +195,52 @@ void gx_enable_lights(uint32_t mask);           // bits 0..3
 // Polygons emitted since the last gx_reset / SWAP_BUFFERS.
 const GxTriangle *gx_polygons(size_t &count);
 
+// Bumped every time gx_invalidate_textures throws the decode cache away, so a
+// backend holding copies of those textures knows to drop them.
+uint32_t gx_texture_generation();
+
+// ---- THE OPTIONAL GRAPHICS-CARD BACKEND FOR THE OPAQUE PASS (run hd2) -----
+//
+// gx_render draws a frame in two passes over the same buffers: an OPAQUE pass
+// (colour, depth with a LESS test, a per-pixel polygon ID, the coverage mask)
+// and then a TRANSLUCENT pass that READS what the opaque pass left. The opaque
+// pass is nearly all of the fill, so it is the one worth moving to a card.
+//
+// A backend is a single function that is handed everything the opaque pass
+// needs and fills the CPU buffers below exactly as the software pass would
+// have. It returns 1 when it drew the frame and 0 when it did not, and 0 is
+// never an error here: gx_render simply runs its own opaque pass instead, on
+// buffers nothing has touched. Nothing is registered unless a setting asked
+// for it, and with none registered this whole mechanism is one null test per
+// frame.
+//
+// hal/gpu_raster.cpp is the Direct3D 11 one. The software pass stays the
+// default and the only byte-exact reference.
+struct GxGpuFrame {
+    const GxTriangle *tris;
+    size_t count;
+    // Every buffer below is row-major with the SAME stride, which is the
+    // framebuffer's allocation width; a row y starts at base + y * stride.
+    uint32_t *fb;          // the framebuffer, 0xAARRGGBB
+    float *depth;          // screen-linear z, cleared to 1e30
+    uint8_t *cover;        // the 3D coverage mask, cleared to 0
+    uint8_t *attrid;       // the per-pixel polygon ID
+    int stride;
+    int cw, ch;            // the active picture inside the allocation
+    int px0, py0, pw, ph;  // the present rectangle, which is the scissor
+    int want_attrid;       // the frame has a shadow volume, so the ID is read
+    int want_depth;        // a second pass will read the depth back
+    int tex_filter;        // 0 nearest, 1 bilinear, 2 trilinear
+    uint32_t tex_generation;
+    uint32_t clear_argb;   // what the framebuffer held when gx_render started
+};
+typedef int (*GxGpuOpaqueFn)(const GxGpuFrame *);
+void gx_set_gpu_opaque(GxGpuOpaqueFn fn);
+int gx_gpu_opaque_registered();
+// The registered backend, so a caller can take it out and put it back and
+// draw one list both ways.
+GxGpuOpaqueFn gx_gpu_opaque();
+
 // Rasterise them into fb with a depth buffer. Does not clear fb -- the 3D layer
 // composites over whatever the 2D engine already drew.
 void gx_render(Framebuffer &fb);
@@ -210,6 +267,14 @@ void gx_render(Framebuffer &fb);
 // is looking at the previous frame's coverage; both live callers sit directly
 // after the gx_render that filled it.
 const uint8_t *gx_coverage();
+
+// The polygon-ID plane and the depth plane the same pass fills, on the same
+// contract as the coverage mask above: SCREEN_W stride, SCREEN_H rows, valid
+// only immediately after gx_render. Read-only, and for the same reason the
+// mask is public: a caller that has to ask "which surface won this pixel" or
+// "was the depth written" is asking about a value, not about a colour.
+const uint8_t *gx_attr_ids();
+const float *gx_depth();
 
 void gx_debug_proj(float out[16]);
 

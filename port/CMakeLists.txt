@@ -1633,6 +1633,27 @@ foreach(sym IN LISTS GATE4A_SYMS)
     list(APPEND GATE4A_GEN "${sym_out}")
 endforeach()
 
+# THE GRAPHICS-CARD OPAQUE PASS'S OWN RULES (run hd2, lane GPU2). Small on
+# purpose: it links the renderer, the shared device and the settings reader
+# and nothing else, drives the geometry ports by hand and grades RELATIONS
+# BETWEEN PIXELS rather than a picture. It asks for WARP, the software
+# Direct3D device Windows ships, so the answers are the API's and not one
+# vendor's; the in-process A/B covers real hardware on real scenes.
+if(WIN32)
+    add_executable(smoke_gpu_raster
+        tests/smoke_gpu_raster.cpp
+        hal/gpu_raster.cpp
+        hal/gpu_device.cpp
+        hal/host_settings.cpp
+        hal/os_arena.cpp)
+    target_include_directories(smoke_gpu_raster PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+    target_link_libraries(smoke_gpu_raster PRIVATE ntr)
+    target_compile_definitions(smoke_gpu_raster PRIVATE SM64DS_PLATFORM_PC
+        ${PORT_REPO_ROOT_DEF})
+endif()
+
 add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
 target_include_directories(smoke_gx PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -17389,6 +17410,21 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
     # targets that compile tests/walk_window.cpp, which is its caller.
     hal/gpu_present.cpp
+    # run hd2 lane GPU2: the ONE Direct3D 11 device this process makes. It
+    # exists because a second optional setting is about to want a device and
+    # two devices would be two copies of every texture on the card and two
+    # claims on a 32-bit process's address space, which the stage-0 probe
+    # measured as the tightest resource here. Nothing asks it for a device
+    # unless a setting that needs one is on, so with every key absent it loads
+    # nothing and allocates nothing. Same LoadLibrary rule as the file above:
+    # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
+    hal/gpu_device.cpp
+    # run hd2 lane GPU2: the optional renderer that draws the opaque 3D pass
+    # on that device. Off by default and inert when off: with Renderer absent
+    # or 0 it registers no backend, asks for no device and allocates nothing.
+    # Its shaders are compiled offline into hal/gpu_raster_shaders.h, same as
+    # the present path's, so d3dcompiler never loads here either.
+    hal/gpu_raster.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
@@ -17803,6 +17839,21 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
     # targets that compile tests/walk_window.cpp, which is its caller.
     hal/gpu_present.cpp
+    # run hd2 lane GPU2: the ONE Direct3D 11 device this process makes. It
+    # exists because a second optional setting is about to want a device and
+    # two devices would be two copies of every texture on the card and two
+    # claims on a 32-bit process's address space, which the stage-0 probe
+    # measured as the tightest resource here. Nothing asks it for a device
+    # unless a setting that needs one is on, so with every key absent it loads
+    # nothing and allocates nothing. Same LoadLibrary rule as the file above:
+    # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
+    hal/gpu_device.cpp
+    # run hd2 lane GPU2: the optional renderer that draws the opaque 3D pass
+    # on that device. Off by default and inert when off: with Renderer absent
+    # or 0 it registers no backend, asks for no device and allocates nothing.
+    # Its shaders are compiled offline into hal/gpu_raster_shaders.h, same as
+    # the present path's, so d3dcompiler never loads here either.
+    hal/gpu_raster.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.

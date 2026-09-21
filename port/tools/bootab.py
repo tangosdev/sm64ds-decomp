@@ -3,7 +3,8 @@ usage: python bootab.py <walk_window.exe> <outdir> [frames] [budget_s]
        [levels=2,4,5 | scenes=4,5 | levels=all | scenes=all] [idle=1] [aspect=<ratio>]
        [smooth=<0..3>] [texfilter=<0..2>] [aa=<0..1>] [scale=<0..4>]
        [present=<0|1>] [presentfilter=<0..2>] [vsync=<0|1>]
-       [presentdev=warp|hw] [presentoff=<0|1>] [workers=<n>]
+       [presentdev=warp|hw] [presentoff=<0|1>] [renderer=<0|1>]
+       [rendererdev=warp|hw] [workers=<n>]
 workers=<n> (run link100, lane SWEEPPAR1) runs up to n rows at a time instead of one
 after another. Default 1 is this tool's whole history, byte for byte: nobody who does
 not name workers= (or export SM64DS_SWEEP_WORKERS, an equivalent default) sees any
@@ -54,6 +55,13 @@ panel artwork at a folder. Same shape and same reason as smooth= above, with one
 extra: the option's getter is pinned off under SM64DS_WINDOW_SELFTEST so a stray
 settings.json can never move a recorded baseline, which makes the environment the
 only channel a sweep has to it.
+renderer=<0|1> is the same shape again for SM64DS_RENDERER (the "Renderer"
+setting, run hd2 lane GPU2): which rasteriser draws the 3D picture. It needs no
+window at all -- the card draws into offscreen targets and the picture is read
+straight back into the software buffers -- so a headless sweep reaches it as it
+reaches every other key here. rendererdev=warp|hw pins the device
+(SM64DS_RENDERER_DEVICE), which is how a sweep runs on WARP, the software device
+Windows ships, on a box with no usable card. Both are inert unless named.
 aspect=<ratio> sets SM64DS_ASPECT to that ratio on EVERY row, level and scene alike,
 so one sweep boots the whole table at one presentation width. It is the only way to
 reach the wide path from here: the environment scrub above drops an inherited
@@ -181,6 +189,14 @@ for a in sys.argv[5:]:
 MINIMAPDIR = ""
 for a in sys.argv[5:]:
     if a.startswith("minimapdir="): MINIMAPDIR = a[11:]
+# run hd2, lane GPU2: the optional renderer and the one knob a headless proof
+# needs to pin the device it draws on. Same shape as every argument above.
+RENDERER = ""
+for a in sys.argv[5:]:
+    if a.startswith("renderer="): RENDERER = a[9:]
+RENDERERDEV = ""
+for a in sys.argv[5:]:
+    if a.startswith("rendererdev="): RENDERERDEV = a[12:]
 WARPIN = any(a == "warpin=1" for a in sys.argv[5:])
 REENTRY = any(a == "reentry=1" for a in sys.argv[5:])
 PRESS = "200:A"
@@ -222,7 +238,7 @@ WORKERS = max(1, min(WORKERS, MAX_SWEEP_WORKERS))
 # the row filter is positional but the flags are not, so a run that passes only a
 # flag must not have that flag read as a filter (it would then match no prefix and
 # sweep everything by accident)
-if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "workers=", "minimap=", "minimapdir=")): FILTER = ""
+if FILTER in ("idle=1", "warpin=1", "reentry=1") or FILTER.startswith(("aspect=", "press=", "exit=", "entrance=", "smooth=", "texfilter=", "aa=", "scale=", "present=", "presentfilter=", "vsync=", "presentdev=", "presentoff=", "renderer=", "rendererdev=", "workers=", "minimap=", "minimapdir=")): FILTER = ""
 if FILTER.startswith("levels="):
     sel = FILTER[7:]; SCENES = ()
     if sel != "all": LEVELS = tuple(i for i in LEVELS if str(i) in sel.split(","))
@@ -550,6 +566,11 @@ def run(kind, ident, label, ent=None, wdir=None):
         env["SM64DS_IMPROVED_MINIMAP"] = "1"
         env["SM64DS_MINIMAP_SCALE"] = MINIMAP
     if MINIMAPDIR: env["SM64DS_MINIMAP_DIR"] = MINIMAPDIR
+    # renderer=N and rendererdev= (run hd2, lane GPU2), the same shape and the
+    # same reason once more: which rasteriser draws the 3D picture. Unnamed,
+    # a sweep is byte for byte the one this tool ran before they existed.
+    if RENDERER: env["SM64DS_RENDERER"] = RENDERER
+    if RENDERERDEV: env["SM64DS_RENDERER_DEVICE"] = RENDERERDEV
     exe_path = os.path.join(wdir, os.path.basename(EXE))
     t0 = time.time()
     rc, out = _run_proc([exe_path], wdir, env, BUDGET)

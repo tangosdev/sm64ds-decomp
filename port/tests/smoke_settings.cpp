@@ -315,6 +315,10 @@ static int child(const char *which)
         check_eq(host_setting_present_backend(), 0, "PresentBackend default 0");
         check_eq(host_setting_present_filter(), 0, "PresentFilter default 0");
         check_eq(host_setting_vsync(), 0, "VSync default 0");
+        /* run hd2 lane GPU2: the software rasteriser is what the port shipped
+           with and is the only path with a byte-exact reference, so no file at
+           all must read as off and never as "the card, probably" */
+        check_eq(host_setting_renderer(), 0, "Renderer default 0");
     } else if (!strcmp(which, "quality")) {
         check_eq(host_setting_render_scale(), 3, "RenderScale 3");
         check_eq(host_setting_hd_textures(), 1, "HdTextures 1 is on");
@@ -334,6 +338,10 @@ static int child(const char *which)
            one, the rule the quality case carries CameraMode for */
         check_eq(host_setting_render_scale(), 3, "RenderScale beside them");
         check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        /* AND THE RENDERER IS STILL OFF. The two settings are independent and
+           a file that only asked for the card to PRESENT must not be read as
+           one that asked it to DRAW. */
+        check_eq(host_setting_renderer(), 0, "Renderer absent beside them is 0");
     } else if (!strcmp(which, "present_bool")) {
         /* the launcher serialises a C# bool, so true means on for both
            toggles, and the middle value of the filter is read from a file
@@ -353,6 +361,24 @@ static int child(const char *which)
         check_eq(host_setting_present_backend(), 0, "PresentBackend junk is 0");
         check_eq(host_setting_present_filter(), 0, "PresentFilter -4 is 0");
         check_eq(host_setting_vsync(), 0, "VSync junk is off");
+    } else if (!strcmp(which, "renderer")) {
+        /* run hd2 lane GPU2: the key on its own, read from a file, with the
+           present keys absent, because the two are independent settings */
+        check_eq(host_setting_renderer(), 1, "Renderer 1");
+        check_eq(host_setting_present_backend(), 0, "PresentBackend absent is 0");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "renderer_bool")) {
+        /* the launcher serialises a C# bool, the RunMode rule every toggle in
+           this file follows */
+        check_eq(host_setting_renderer(), 1, "Renderer true is on");
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter beside it");
+    } else if (!strcmp(which, "renderer_clamp")) {
+        /* out of range is a setting that draws, not an error; junk and
+           negative are the default, which is the software rasteriser */
+        check_eq(host_setting_renderer(), 1, "Renderer 7 clamps to 1");
+    } else if (!strcmp(which, "renderer_junk")) {
+        check_eq(host_setting_renderer(), 0, "Renderer junk is 0");
+        check_eq(host_setting_render_scale(), 4, "RenderScale beside the junk");
     } else if (!strcmp(which, "quality_filter")) {
         /* run hd2: the other filter value on its own, so both 1 and 2 are
            read from a file somewhere rather than only through a clamp */
@@ -573,6 +599,18 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "present_junk",
         "{ \"PresentBackend\": \"card\", \"PresentFilter\": -4,\n"
         "  \"VSync\": \"yes please\" }");
+    /* run hd2 lane GPU2's renderer key: on its own, the launcher's boolean
+       spelling, the clamp and the junk. The default is covered by
+       quality_defaults, which runs with no file at all, and the "present"
+       case above checks that asking the card to PRESENT does not read as
+       asking it to DRAW. */
+    bad |= run_case(exe, dir, "renderer",
+        "{ \"Renderer\": 1, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "renderer_bool",
+        "{ \"Renderer\": true, \"TextureFilter\": 2 }");
+    bad |= run_case(exe, dir, "renderer_clamp", "{ \"Renderer\": 7 }");
+    bad |= run_case(exe, dir, "renderer_junk",
+        "{ \"Renderer\": \"the card\", \"RenderScale\": 4 }");
     bad |= run_case(exe, dir, "padtranslate", 0);
     _rmdir(dir);
     if (bad) {
@@ -581,6 +619,6 @@ int main(int argc, char **argv)
     }
     /* the count is the run_case calls above, counted rather than remembered:
        it was one out of date before run hd1 added five cases to it */
-    printf("smoke_settings: ok, 24 cases\n");
+    printf("smoke_settings: ok, 28 cases\n");
     return 0;
 }

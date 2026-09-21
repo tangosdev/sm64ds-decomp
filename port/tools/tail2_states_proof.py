@@ -117,6 +117,16 @@ def main():
               "SM64DS_MINIMAP_DIR"):
         if os.environ.get(k):
             e[k] = os.environ[k]
+    # Run hd2, lane GPU2: which rasteriser draws the 3D picture, and the knob
+    # that pins the device it draws on. Same reason again: the renderer is
+    # picture only, so the opening must take the same distinct positions with
+    # the card drawing as with it absent, and there is no way to ask that
+    # question without passing the keys. With the variables unset these lines
+    # do nothing.
+    for _k in ("SM64DS_RENDERER", "SM64DS_RENDERER_DEVICE",
+               "SM64DS_RENDERER_AB", "SM64DS_RENDERER_PERF"):
+        if os.environ.get(_k):
+            e[_k] = os.environ[_k]
     log = out / "run.log"
     with log.open("wb") as f:
         # The quiet spawner every other launcher in port/tools uses (battery.py's

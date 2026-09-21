@@ -842,6 +842,34 @@ int host_setting_save_minimap_scale(double s);
    them; the code reads a folder. */
 const char *host_setting_minimap_dir(void);
 
+/* ---- THE RENDERER KEY (run hd2, lane GPU2) -------------------------------
+   Renderer: WHICH RASTERISER DRAWS THE 3D PICTURE. 0 is the default and is
+   the software one the port has always had, which is also the only path with
+   a byte-exact reference behind it. 1 is Direct3D 11: the SOLID part of the
+   3D picture -- the opaque pass, which is nearly all of the work -- is drawn
+   on the graphics card into offscreen colour, depth and polygon-id targets
+   and read straight back into the same buffers the software pass would have
+   filled, so the see-through polygons, the drop shadows, the edge smoothing,
+   the 2D layers, the touch screen and the display capture all carry on
+   unchanged over it. Absent, unparseable, 0 itself and negative read as 0 and
+   anything above 1 is clamped to 1, the Aspect rule. SM64DS_RENDERER
+   overrides.
+
+   IT IS INDEPENDENT OF PresentBackend. Either can be on without the other;
+   with both on the process makes exactly ONE Direct3D device and both share
+   it (hal/gpu_device.h).
+
+   IT IS NOT PIXEL FOR PIXEL THE SOFTWARE PICTURE and cannot be: two
+   rasterisers with different fill rules settle a shared edge differently.
+   What is measured instead is how far apart the two are, frame by frame, on
+   the same triangle list (ntr/gx.cpp, SM64DS_RENDERER_AB).
+
+   IT NEVER FAILS: if the card, the driver or a readback will not have it, the
+   run says so in one plain line and draws that frame and every later one in
+   software. Read once and latched, like the blocks above; the launcher's row
+   promises a restart. */
+int host_setting_renderer(void);
+
 #ifdef __cplusplus
 }
 #endif

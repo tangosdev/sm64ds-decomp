@@ -419,6 +419,7 @@ static bool winapi_load(void)
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
 #include "hal/gpu_present.h"      /* run hd2 lane GPU1: the optional D3D11 present */
+#include "hal/gpu_raster.h"       /* run hd2 lane GPU2: the optional D3D11 renderer */
 
 /* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
    harness computes them to where hal/comms_conductor.cpp publishes them into
@@ -9240,6 +9241,14 @@ int main(void)
         fprintf(stderr, "[render] AntiAliasing %d: the edges of the 3D picture "
                 "are smoothed after it is drawn, before anything 2D goes over "
                 "it\n", ntr::gx_anti_aliasing());
+    /* AND RUN hd2 LANE GPU2's RENDERER, last of the picture settings and in
+       the same place for the same reason: it decides which rasteriser draws
+       the opaque pass, which library is loaded and which buffers live on a
+       graphics card, so it is settled before the first frame. With the key
+       absent this call reads one setting, finds 0 and returns having done
+       nothing: no backend registered, no device asked for, nothing allocated,
+       and ntr::gx_render draws exactly as it always has. */
+    port_gpu_raster_configure();
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address

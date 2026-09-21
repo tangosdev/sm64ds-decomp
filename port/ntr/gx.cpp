@@ -116,6 +116,10 @@ struct State {
        gx_reset puts it back to 1 at the head of every frame, so only a bind
        that knowingly replaced the image can leave it anything else. */
     uint8_t tex_scale = 1;
+    /* The bound texture's identity for an optional graphics-card backend; see
+       GxTriangle::tex_id in ntr/gx.h. 0 is untextured and is also what every
+       run with no backend registered carries, because nothing hands one out. */
+    uint32_t tex_id = 0;
     int prim = -1;                 // BEGIN_VTXS type, -1 when not inside a primitive
     uint32_t poly_attr = 0x80;     // POLYGON_ATTR latch; bit6 back, bit7 front
     int16_t vx = 0, vy = 0, vz = 0;
@@ -684,6 +688,9 @@ void push_screen_tri(const GxVertex &a, const GxVertex &b, const GxVertex &c) {
     /* the bound texture's host-pixels-per-texel travels with the triangle
        exactly as its dimensions do; 1 unless a pack replaced the image */
     t.tex_scale = g.tex_scale ? g.tex_scale : 1;
+    /* and its identity, for a backend that keeps its own copy; 0 on every run
+       with no backend registered, because nothing handed one out */
+    t.tex_id = g.tex_id;
     t.cull = static_cast<uint8_t>((g.poly_attr >> 6) & 3);
     t.alpha = static_cast<uint8_t>((g.poly_attr >> 16) & 31);
     t.mode = static_cast<uint8_t>((g.poly_attr >> 4) & 3);
@@ -1752,6 +1759,33 @@ void gx_set_light(int index, float dx, float dy, float dz, uint32_t bgr555) {
 
 void gx_enable_lights(uint32_t mask) { g.light_mask = mask & 0xF; }
 
+/* ---- WHICH TEXTURE IS THIS, AS A NUMBER (run hd2, lane GPU2) -------------
+   An optional graphics-card backend holds its own copy of every texture it
+   has drawn with, and the obvious key -- the decoded buffer's address -- is
+   the wrong one: the VRAM decode cache frees its buffers at a scene change
+   and the allocator hands the same address back for different pixels, so a
+   pointer key serves a stale picture. So a bind hands out a number instead.
+   It counts up, it is never reused, and gx_invalidate_textures both clears
+   this registry and bumps the generation, which is a backend's signal to drop
+   everything it held.
+
+   THE REGISTRY IS ONLY CONSULTED WHEN A BACKEND EXISTS. g_gpu_opaque is null
+   on every ordinary run, so gx_bind_texture below does exactly what it did
+   before this existed: no lookup, no insert, no allocation. The dimensions
+   ride along because a caller outside the VRAM cache (a harness, a smoke) can
+   rebind the same buffer at a different size, and that is a different
+   picture. */
+namespace {
+uint32_t g_tex_next_id = 1;
+uint32_t g_tex_generation = 1;
+struct TexIdent { int w, h; uint32_t id; };
+std::map<const uint32_t *, TexIdent> g_tex_ids;
+
+/* The registered backend for the opaque pass, or null. See GxGpuFrame in
+   ntr/gx.h for what it is handed and what returning 0 means. */
+GxGpuOpaqueFn g_gpu_opaque = nullptr;
+}  // namespace
+
 void gx_bind_texture(const uint32_t *rgba, int width, int height) {
     g.tex_rgba = rgba;
     g.tw = width;
@@ -1766,6 +1800,22 @@ void gx_bind_texture(const uint32_t *rgba, int width, int height) {
     // call. Clearing it here rather than leaving it is what stops a replaced
     // texture's scale riding along into the next unreplaced bind.
     g.tex_scale = 1;
+    /* THE BIND IS WHERE A TEXTURE GETS ITS NUMBER, and only when something is
+       going to ask for it. With no backend registered -- every ordinary run --
+       this is one test against a null pointer and the id stays 0. */
+    if (g_gpu_opaque) {
+        if (!rgba || width <= 0 || height <= 0) {
+            g.tex_id = 0;
+        } else {
+            TexIdent &e = g_tex_ids[rgba];
+            if (!e.id || e.w != width || e.h != height) {
+                e.w = width;
+                e.h = height;
+                e.id = g_tex_next_id++;
+            }
+            g.tex_id = e.id;
+        }
+    }
 }
 
 // --- VRAM-sourced texturing: the game path ----------------------------------
@@ -2159,7 +2209,35 @@ void gx_invalidate_textures() {
        reason. */
     g_tex_by_px.clear();
     g_vram_tex_cache.clear();
+    /* AND SO DOES THE ID REGISTRY, for a stronger version of the same reason:
+       the buffers it names are about to be freed and the allocator will hand
+       those addresses out again. The generation bump is what tells a graphics
+       card backend that every texture it is holding is now a picture of
+       something else. The counter itself is NOT reset, so an id that named one
+       texture never names another. */
+    g_tex_ids.clear();
+    ++g_tex_generation;
 }
+
+uint32_t gx_texture_generation() { return g_tex_generation; }
+
+/* THE A/B'S EXIT SUMMARY IS ARMED HERE, at boot, rather than on the first
+   frame the opaque pass draws. A scene that never reaches gx_render would
+   otherwise print nothing at all and read as a missing row; armed here it
+   prints "no 3D frames" instead, which is a result. Defined further down in
+   this file's own unnamed namespace. */
+namespace { int ab_mode(); }
+
+void gx_set_gpu_opaque(GxGpuOpaqueFn fn) {
+    g_gpu_opaque = fn;
+    ab_mode();
+}
+int gx_gpu_opaque_registered() { return g_gpu_opaque != nullptr; }
+
+/* AND THE POINTER ITSELF, so a caller that wants to draw the SAME list both
+   ways can put it back after taking it out. The A/B inside gx_render does
+   that without help because it is inside; a test outside cannot. */
+GxGpuOpaqueFn gx_gpu_opaque() { return g_gpu_opaque; }
 
 /* ---- THE TWO PICTURE-SMOOTHING SETTINGS' LATCHES (run hd2) ---------------
    Both are called once at boot from walk_window, beside ntr::configure_aspect,
@@ -3062,6 +3140,25 @@ const uint8_t *gx_coverage()
     return &g_cover[0][0];
 }
 
+/* THE OTHER TWO PLANES THE OPAQUE PASS FILLS, on the same contract as the
+   coverage mask above: SCREEN_W stride, SCREEN_H rows, valid immediately
+   after gx_render and cleared at the head of the next one. They exist for
+   tests/smoke_gpu_raster.cpp, which asks the graphics-card pass questions a
+   picture cannot answer -- did the nearer triangle win, was the depth left
+   alone, did the polygon id arrive -- and every one of those is a value in
+   one of these two planes rather than a colour. Read-only. */
+const uint8_t *gx_attr_ids()
+{
+    raster_buffers();
+    return &g_attrid[0][0];
+}
+
+const float *gx_depth()
+{
+    raster_buffers();
+    return &g_depth[0][0];
+}
+
 void gx_configure_anti_aliasing(int mode) {
     g_aa_mode = mode < 0 ? 0 : (mode > 1 ? 1 : mode);
 }
@@ -3334,6 +3431,307 @@ static void aa_report(void) {
     std::fflush(stderr);
 }
 
+/* ---- THE IN-PROCESS A/B, THE GRAPHICS-CARD RENDERER'S MAIN INSTRUMENT -----
+   (run hd2, lane GPU2; SM64DS_RENDERER_AB=1)
+
+   The card can never be byte-identical to this file: two rasterisers with
+   different fill rules settle a shared edge differently and their floats do
+   not travel the same path. So the proof is not a hash, it is a MEASUREMENT of
+   how far apart the two pictures are, taken on the SAME TRIANGLE LIST, in the
+   same process, on the same frame, before the translucent pass has run over
+   either of them.
+
+   On a checked frame the software opaque pass draws first, its four buffers
+   are copied aside, the buffers are put back exactly as the clears left them,
+   the card draws the same list, and the two are compared. The card's result is
+   the one the rest of the frame then runs on, because the arm being measured
+   is the game running on the card.
+
+   WHAT IS COMPARED, and why each one is the number it is:
+     coverage  intersection over union. A whole-pixel disagreement about
+               whether anything is there at all is the worst kind, and this is
+               the one number that catches a missing or extra triangle.
+     colour    mean absolute channel error over pixels BOTH cover, plus the
+               share of pixels past a tolerance that are NOT within one pixel
+               of a coverage or polygon-ID edge. Edge pixels are expected to
+               differ -- that is the fill rule -- and counting them would
+               measure the fill rule rather than the renderer.
+     depth     maximum and mean absolute error where both cover.
+     polygon   the share of interior pixels whose ID disagrees.
+   Every threshold is an environment variable so a run can say what it was
+   graded against; the defaults are written down beside them.
+
+   SM64DS_RENDERER_AB_EVERY (default 30) is how often a frame is checked, and
+   SM64DS_RENDERER_AB_SHOT_FRAME with SM64DS_RENDERER_AB_SHOT_DIR writes the
+   two pictures and a difference picture for one named frame, for somebody to
+   look at. Nothing here judges a picture. */
+namespace {
+
+/* ---- THE THRESHOLDS, AND WHERE EACH NUMBER CAME FROM ---------------------
+   Every one of these was set AFTER an honest run rather than guessed before
+   it, and each leaves room for a scene this lane did not measure. The numbers
+   below are the WORST value over the full table of 32 rows -- the card and
+   WARP, render scale 0 and 4, levels 1, 6, 8, 12 and 29 and scenes 372, 384
+   and 390, 600 frames each, TextureFilter 0, every tenth frame compared:
+     coverage IoU        0.999944 at worst   (floor 0.995)
+     colour mean         0.0315 of a 0..255 channel   (ceiling 0.5)
+     outlier share       0.000861 of interior pixels at a tolerance of 2
+                         (ceiling 0.002)
+     depth, flat pixels  9.090e-05   (ceiling 1e-4; see the depth block below)
+     depth, step pixels  0.999 of the step under the pixel   (ceiling 2.0)
+     polygon id wrong    0           (ceiling 0.001)
+   A gate that only just passes the scene it was tuned on is not a gate, so
+   every ceiling above leaves between two and ninety times of room. The one
+   that does not is the flat depth ceiling, and it cannot: a flat pixel is by
+   definition one whose neighbourhood spans no more than that same 1e-4, so a
+   fold sitting just under the boundary can produce an error just under the
+   ceiling and nothing above it. Only a genuinely wrong depth can pass it. */
+int g_ab_mode = -1;      /* -1 not read yet */
+int g_ab_every = 30;
+int g_ab_tol = 2;
+double g_ab_iou_floor = 0.995;          /* measured 0.99868 at worst */
+double g_ab_mean_ceiling = 0.5;         /* measured 0.0136, 36x of room */
+double g_ab_outlier_ceiling = 0.002;    /* measured 0.00040, 5x of room */
+double g_ab_depth_ceiling = 1e-4;       /* FLAT pixels; see below */
+
+/* ---- THE DEPTH GATE IS TWO QUESTIONS, BECAUSE ONE NUMBER CANNOT ASK BOTH --
+   (run hd2, lane GPU2R, measured rather than assumed)
+
+   A DEPTH DISCONTINUITY IS AN EDGE THE POLYGON-ID TEST CANNOT SEE. Two
+   triangles of the SAME polygon id that fold over one another -- a hill's
+   silhouette against the rest of the same mesh, a wall meeting the floor it
+   belongs to -- put two surfaces on one pixel under one id, so the 3x3
+   id-and-coverage test above calls that pixel interior. The two rasterisers'
+   fill rules are then free to give the pixel to different surfaces, and the
+   depths they report differ by the gap between those surfaces. That gap says
+   nothing about how accurately either one interpolates.
+
+   MEASURED, five levels, 600 frames each, the card, TextureFilter 0, with the
+   split switched off: between 1 and 470 interior pixels per level out of
+   about 1.95 million came in over 1e-4, and EVERY ONE of them sat in a 3x3
+   neighbourhood whose own depth span was over 1e-4 in BOTH buffers. At each
+   level's worst pixel the disagreement was just under the local span:
+     level  1  error 2.008e-3  span 2.043e-3   (0.98 of the step)
+     level  6  error 2.588e-3  span 2.639e-3   (0.98)
+     level  8  error 4.039e-3  span 4.091e-3   (0.99)
+     level 12  error 2.297e-4  span 2.671e-4   (0.86)
+     level 29  error 1.609e-4  span 1.652e-4   (0.97)
+   The polygon ids agreed at all five. So the disagreement is never bigger
+   than the step under the pixel: it is always "which of these two surfaces
+   owns this pixel", never a wrong depth.
+
+   SIMPLY EXCLUDING THOSE PIXELS WAS REJECTED. Marking every pixel whose
+   neighbourhood spans more than 1e-4 as an edge and dropping it excludes 51%
+   of level 1 and 44% of level 6 -- half the picture ungraded, which is not a
+   gate. So the pixels are SPLIT instead, and each half is asked the question
+   it can answer:
+
+     FLAT pixels (3x3 span at or under kFlat in both buffers: one surface, no
+       fold) are asked the original question, how accurately the card
+       interpolates depth, against the original 1e-4 ceiling.
+     STEP pixels (3x3 span over kFlat) are asked whether the disagreement is
+       explained by the step under them: |error| must not exceed the local
+       span times the ratio below. A pixel that disagrees by MORE than the
+       step it sits on is a real mismatch and fails.
+
+   Nothing is loosened: the 1e-4 ceiling still applies to every pixel it can
+   be asked of, and the pixels it could not be asked of gained a test rather
+   than an exemption. Both counts are printed beside the verdict. */
+double g_ab_depth_flat = 1e-4;   /* SM64DS_RENDERER_AB_DEPTH_FLAT */
+double g_ab_depth_ratio = 2.0;   /* SM64DS_RENDERER_AB_DEPTH_RATIO */
+double g_ab_id_ceiling = 0.001;         /* measured 0 */
+int g_ab_shot_frame = -1;
+const char *g_ab_shot_dir = nullptr;
+
+/* the run's totals */
+unsigned long long g_ab_frames, g_ab_both, g_ab_union, g_ab_inter;
+unsigned long long g_ab_outliers, g_ab_interior, g_ab_id_bad;
+unsigned long long g_ab_cov_card, g_ab_cov_soft;
+/* HOW MANY INTERIOR PIXELS ARE OVER THE DEPTH CEILING AT ALL, and how far
+   their own neighbourhood's depth spans, because a maximum cannot say whether
+   it is three pixels or a million and a ceiling cannot be judged without
+   that. The three spans are measured over BOTH arms' 3x3 neighbourhoods. */
+unsigned long long g_ab_dep_over, g_ab_dep_over_span4;
+unsigned long long g_ab_dep_over_span3, g_ab_dep_over_span2;
+unsigned long long g_ab_dep_flat_n, g_ab_dep_step_n, g_ab_dep_step_bad;
+double g_ab_dep_flat_max, g_ab_dep_ratio_max;
+int g_ab_rw_x = -1, g_ab_rw_y = -1, g_ab_rw_frame = -1;
+double g_ab_rw_err, g_ab_rw_span;
+double g_ab_colsum, g_ab_depsum, g_ab_depmax, g_ab_depmax_in;
+double g_ab_worst_iou = 2.0;
+int g_ab_worst_frame = -1;
+double g_ab_worst_outshare;
+
+/* THE WORST INTERIOR DEPTH PIXEL OF THE RUN, kept whole rather than as one
+   number. A maximum on its own cannot say whether a depth disagreement is a
+   silhouette inside one object that the polygon-ID edge test cannot see or a
+   real interior mismatch; the pixel's position, both depths and both polygon
+   IDs can, and that is the question lane GPU2R had to answer about this
+   number rather than move it. */
+int g_ab_dw_x = -1, g_ab_dw_y = -1, g_ab_dw_frame = -1;
+double g_ab_dw_card, g_ab_dw_soft;
+int g_ab_dw_id_card, g_ab_dw_id_soft;
+double g_ab_dw_span_card, g_ab_dw_span_soft;
+
+/* B, the software arm's copy of the four buffers, and the framebuffer as it
+   was before either arm drew. Heap, allocated once, only in this mode. */
+std::vector<uint32_t> g_ab_save, g_ab_fb;
+std::vector<float> g_ab_dep;
+std::vector<uint8_t> g_ab_cov, g_ab_id;
+
+double env_d(const char *n, double dflt) {
+    const char *e = getenv(n);
+    if (!e || !*e) return dflt;
+    char *end = 0;
+    const double v = strtod(e, &end);
+    return end != e ? v : dflt;
+}
+int env_i(const char *n, int dflt) {
+    const char *e = getenv(n);
+    if (!e || !*e) return dflt;
+    char *end = 0;
+    const long v = strtol(e, &end, 10);
+    return end != e ? (int)v : dflt;
+}
+
+void ab_summary() {
+    if (!g_ab_frames) {
+        /* A ROW WITH NO 3D FRAMES IS A MEASUREMENT, NOT A MISSING ONE. A
+           scene that never reaches the opaque pass -- a 2D one, or a run that
+           ended before anything was drawn -- has nothing to compare, and
+           saying so is the answer. The verdict is its own word so that no
+           table can read it as a pass or as a crash. */
+        std::fprintf(stderr, "[renderer-ab] summary over 0 frame(s): the "
+                     "opaque pass never ran on the card, so there was nothing "
+                     "to compare VERDICT=NOFRAMES\n");
+        std::fflush(stderr);
+        return;
+    }
+    const double iou = g_ab_union ? (double)g_ab_inter / (double)g_ab_union : 1.0;
+    const double mean = g_ab_both ? g_ab_colsum / (double)(g_ab_both * 3) : 0.0;
+    const double outshare =
+        g_ab_interior ? (double)g_ab_outliers / (double)g_ab_interior : 0.0;
+    const double depmean = g_ab_both ? g_ab_depsum / (double)g_ab_both : 0.0;
+    const double idshare =
+        g_ab_interior ? (double)g_ab_id_bad / (double)g_ab_interior : 0.0;
+    const bool pass = iou >= g_ab_iou_floor && mean <= g_ab_mean_ceiling &&
+                      outshare <= g_ab_outlier_ceiling &&
+                      g_ab_dep_flat_max <= g_ab_depth_ceiling &&
+                      g_ab_dep_step_bad == 0 &&
+                      idshare <= g_ab_id_ceiling;
+    std::fprintf(stderr,
+                 "[renderer-ab] summary over %llu frame(s): coverage IoU %.6f "
+                 "(floor %.6f) card covered %llu software covered %llu, "
+                 "colour mean %.4f (ceiling %.4f), outliers "
+                 "%llu of %llu interior = %.6f (ceiling %.6f), edge-excluded "
+                 "%llu of %llu both-covered, depth flat "
+                 "max %.3e (ceiling %.3e) over %llu flat pixel(s), depth step "
+                 "worst %.3f of its own span (ceiling %.3f) over %llu step "
+                 "pixel(s), %llu of them bad, depth interior "
+                 "max %.3e all-covered max %.3e mean %.3e, "
+                 "polygon-id wrong %llu = %.6f (ceiling %.6f), worst frame %d "
+                 "at IoU %.6f outliers %.6f VERDICT=%s\n",
+                 g_ab_frames, iou, g_ab_iou_floor, g_ab_cov_card,
+                 g_ab_cov_soft, mean, g_ab_mean_ceiling,
+                 g_ab_outliers, g_ab_interior, outshare, g_ab_outlier_ceiling,
+                 g_ab_both - g_ab_interior, g_ab_both,
+                 g_ab_dep_flat_max, g_ab_depth_ceiling, g_ab_dep_flat_n,
+                 g_ab_dep_ratio_max, g_ab_depth_ratio, g_ab_dep_step_n,
+                 g_ab_dep_step_bad,
+                 g_ab_depmax_in, g_ab_depmax, depmean,
+                 g_ab_id_bad, idshare, g_ab_id_ceiling, g_ab_worst_frame,
+                 g_ab_worst_iou, g_ab_worst_outshare, pass ? "PASS" : "FAIL");
+    /* THE WORST INTERIOR DEPTH PIXEL, WHOLE, beside the number it produced. */
+    if (g_ab_dw_x >= 0)
+        std::fprintf(stderr,
+                     "[renderer-ab] worst interior depth pixel: frame %d at "
+                     "(%d,%d) card %.9f software %.9f difference %.3e "
+                     "polygon id card %d software %d, 3x3 depth span card "
+                     "%.3e software %.3e\n",
+                     g_ab_dw_frame, g_ab_dw_x, g_ab_dw_y, g_ab_dw_card,
+                     g_ab_dw_soft, g_ab_dw_card - g_ab_dw_soft,
+                     g_ab_dw_id_card, g_ab_dw_id_soft, g_ab_dw_span_card,
+                     g_ab_dw_span_soft);
+    std::fprintf(stderr,
+                 "[renderer-ab] interior pixels over the depth ceiling: %llu "
+                 "of %llu; of those, 3x3 depth span over 1e-4: %llu, over "
+                 "1e-3: %llu, over 1e-2: %llu\n",
+                 g_ab_dep_over, g_ab_interior, g_ab_dep_over_span4,
+                 g_ab_dep_over_span3, g_ab_dep_over_span2);
+    if (g_ab_rw_x >= 0)
+        std::fprintf(stderr,
+                     "[renderer-ab] worst step pixel: frame %d at (%d,%d) "
+                     "error %.3e on a local span of %.3e = %.3f of it\n",
+                     g_ab_rw_frame, g_ab_rw_x, g_ab_rw_y, g_ab_rw_err,
+                     g_ab_rw_span, g_ab_dep_ratio_max);
+    std::fflush(stderr);
+}
+
+int ab_mode() {
+    if (g_ab_mode >= 0) return g_ab_mode;
+    g_ab_mode = env_i("SM64DS_RENDERER_AB", 0) ? 1 : 0;
+    if (g_ab_mode) {
+        g_ab_every = env_i("SM64DS_RENDERER_AB_EVERY", 30);
+        if (g_ab_every < 1) g_ab_every = 1;
+        /* THE TOLERANCE IS TWO because a channel is computed as
+           round(colour * texel / 255) on both sides out of interpolants that
+           do not travel the same path: one step of rounding on each side of
+           the multiply is one count, and two is that with room to spare. */
+        g_ab_tol = env_i("SM64DS_RENDERER_AB_TOL", 2);
+        g_ab_iou_floor = env_d("SM64DS_RENDERER_AB_IOU", g_ab_iou_floor);
+        g_ab_mean_ceiling = env_d("SM64DS_RENDERER_AB_MEAN", g_ab_mean_ceiling);
+        g_ab_outlier_ceiling =
+            env_d("SM64DS_RENDERER_AB_OUTLIERS", g_ab_outlier_ceiling);
+        g_ab_depth_ceiling = env_d("SM64DS_RENDERER_AB_DEPTH", g_ab_depth_ceiling);
+        g_ab_depth_flat = env_d("SM64DS_RENDERER_AB_DEPTH_FLAT", g_ab_depth_flat);
+        g_ab_depth_ratio =
+            env_d("SM64DS_RENDERER_AB_DEPTH_RATIO", g_ab_depth_ratio);
+        g_ab_id_ceiling = env_d("SM64DS_RENDERER_AB_ID", g_ab_id_ceiling);
+        g_ab_shot_frame = env_i("SM64DS_RENDERER_AB_SHOT_FRAME", -1);
+        g_ab_shot_dir = getenv("SM64DS_RENDERER_AB_SHOT_DIR");
+        std::atexit(ab_summary);
+    }
+    return g_ab_mode;
+}
+
+/* A 24-bit bottom-up bitmap, the plainest thing every viewer opens. The
+   pictures are made of cartridge data, so they are written where the run was
+   told to write them and never into the source tree. */
+void ab_bmp(const char *path, const uint32_t *px, int stride, int x0, int y0,
+            int w, int h) {
+    std::FILE *f = std::fopen(path, "wb");
+    if (!f) return;
+    const int row = (w * 3 + 3) & ~3;
+    const unsigned size = 54u + (unsigned)row * (unsigned)h;
+    unsigned char hd[54];
+    std::memset(hd, 0, sizeof hd);
+    hd[0] = 'B'; hd[1] = 'M';
+    hd[2] = (unsigned char)size; hd[3] = (unsigned char)(size >> 8);
+    hd[4] = (unsigned char)(size >> 16); hd[5] = (unsigned char)(size >> 24);
+    hd[10] = 54;
+    hd[14] = 40;
+    hd[18] = (unsigned char)w; hd[19] = (unsigned char)(w >> 8);
+    hd[20] = (unsigned char)(w >> 16); hd[21] = (unsigned char)(w >> 24);
+    hd[22] = (unsigned char)h; hd[23] = (unsigned char)(h >> 8);
+    hd[24] = (unsigned char)(h >> 16); hd[25] = (unsigned char)(h >> 24);
+    hd[26] = 1;
+    hd[28] = 24;
+    std::fwrite(hd, 1, sizeof hd, f);
+    std::vector<unsigned char> line((size_t)row, 0);
+    for (int y = h - 1; y >= 0; --y) {
+        const uint32_t *src = px + (size_t)(y0 + y) * stride + x0;
+        for (int x = 0; x < w; ++x) {
+            line[(size_t)x * 3 + 0] = (unsigned char)(src[x] & 0xFF);
+            line[(size_t)x * 3 + 1] = (unsigned char)((src[x] >> 8) & 0xFF);
+            line[(size_t)x * 3 + 2] = (unsigned char)((src[x] >> 16) & 0xFF);
+        }
+        std::fwrite(&line[0], 1, (size_t)row, f);
+    }
+    std::fclose(f);
+}
+
+}  // namespace
+
 void gx_render(Framebuffer &fb) {
     /* LAST FRAME'S PRE-SMOOTHING COPY STOPS BEING THIS FRAME'S HERE, before
        anything is drawn. A capture that somehow ran against a frame this
@@ -3441,8 +3839,15 @@ void gx_render(Framebuffer &fb) {
     /* The same active-rectangle clear as the depth and coverage buffers
        above, and these two are already conditional on the frame submitting a
        shadow or a translucent polygon at all. */
-    if (have_shadow) {
+    /* THE POLYGON-ID BUFFER IS ALSO WHAT THE A/B COMPARES, so it is cleared
+       and filled on a frame the A/B is checking even when no shadow volume
+       asked for it. With the A/B off -- every run that is not measuring the
+       graphics-card renderer -- want_id is have_shadow and nothing about this
+       block or the write in the band below has changed. */
+    const bool want_id = have_shadow || (g_gpu_opaque && ab_mode());
+    if (have_shadow)
         for (int y = 0; y < ch; ++y) std::memset(stencil[y], 0, (size_t)cw);
+    if (want_id) {
         /* 0 is the clear plane's polygon ID (CLEAR_COLOR bits 24-29 reset
            value); pixels no opaque polygon reaches keep it. */
         for (int y = 0; y < ch; ++y) std::memset(attrid[y], 0, (size_t)cw);
@@ -3529,6 +3934,12 @@ void gx_render(Framebuffer &fb) {
        over the already-blended surface. Rows are disjoint across threads,
        so each thread runs both passes over its own rows and never sees
        another thread's pixels. */
+    /* WHICH OF THE TWO PASSES THIS BAND RUNS. 0 and 1 is both of them, which
+       is every run that draws its own opaque pass and is the same loop as
+       before these two variables existed. A frame the graphics-card renderer
+       drew sets the low bound to 1, so the band runs the translucent and
+       shadow pass alone over the buffers the card filled. */
+    int pass_lo = 0, pass_hi = 1;
     auto band_impl = [&](int tid, int nt, auto ftag) {
     /* THE SAMPLER'S MODE IS A COMPILE-TIME CONSTANT IN HERE, which is the
        whole point of the shape (run hd2). The body below is instantiated once
@@ -3538,7 +3949,7 @@ void gx_render(Framebuffer &fb) {
        instruction stream it was before filtering existed. */
     constexpr int FILTER = decltype(ftag)::value;
     bool prev_mask = false;
-    for (int pass = 0; pass < 2; ++pass)
+    for (int pass = pass_lo; pass <= pass_hi; ++pass)
     for (const GxTriangle &t : g.tris) {
         if (static_cast<int>(t.translucent) != pass) continue;
         if (only && t.dbg_tex != only) continue;
@@ -3820,7 +4231,7 @@ void gx_render(Framebuffer &fb) {
                        recognise its own caster; one predictable branch on
                        shadow-free frames, and the colour above is untouched
                        either way */
-                    if (have_shadow) irow[x] = t.polyid;
+                    if (want_id) irow[x] = t.polyid;
                     /* an opaque write replaces the pixel, so the translucent
                        half of its attribute word goes with it (melonDS stores
                        polyattr & 0x3F008000 on the opaque path, bit 22 clear).
@@ -3875,13 +4286,322 @@ void gx_render(Framebuffer &fb) {
     /* Small scenes (the smokes, a single model) are not worth waking anyone
        up for; the handover costs more than the fill. */
     const int nt = (g.tris.size() < 256) ? 1 : raster_threads();
-    if (nt <= 1) {
-        band(0, 1);
-    } else {
-        typedef decltype(band) B;
-        pool(nt).run([](void *p, int tid, int n) { (*static_cast<B *>(p))(tid, n); },
-                     &band);
+    /* the band's own type, named out here rather than inside the lambda below:
+       decltype of a captured name inside a lambda body is a reference type and
+       there is no pointer to a reference */
+    typedef decltype(band) B;
+    auto run_passes = [&](int lo, int hi) {
+        pass_lo = lo;
+        pass_hi = hi;
+        if (nt <= 1) {
+            band(0, 1);
+        } else {
+            pool(nt).run([](void *p, int tid, int n) { (*static_cast<B *>(p))(tid, n); },
+                         &band);
+        }
+    };
+
+    /* ---- THE SEAM: THE OPAQUE PASS, MAYBE ON A GRAPHICS CARD (run hd2) ----
+       With nothing registered -- every run with the "Renderer" key absent --
+       this is one test against a null pointer and the line below runs both
+       passes exactly as it always has. */
+    /* THE THREE PARTS OF A FRAME'S RASTER TIME (run hd2, lane GPU2R), taken
+        only when SM64DS_FRAME_MS is on. The whole point of moving the opaque
+        pass to the card is a number, and one raster total cannot say whether
+        what is left is the card, the translucent pass this file still runs,
+        or the edge-smoothing pass after it. Three clock reads a frame. */
+    std::chrono::steady_clock::time_point t_seam0, t_seam1, t_pass1, t_aa1;
+    if (tm) t_seam0 = std::chrono::steady_clock::now();
+
+    int gpu_drew = 0;
+    if (g_gpu_opaque) {
+        GxGpuFrame f;
+        std::memset(&f, 0, sizeof f);
+        f.tris = g.tris.data();
+        f.count = g.tris.size();
+        f.fb = &fb.px[0][0];
+        f.depth = &g_depth[0][0];
+        f.cover = &g_cover[0][0];
+        f.attrid = &g_attrid[0][0];
+        f.stride = SCREEN_W;
+        f.cw = cw;
+        f.ch = ch;
+        f.px0 = present_x();
+        f.py0 = present_y();
+        f.pw = present_w();
+        f.ph = present_h();
+        f.want_attrid = want_id ? 1 : 0;
+        /* THE DEPTH ONLY HAS TO COME BACK IF SOMETHING IS GOING TO READ IT,
+           and at 4x that readback is three megabytes a frame. The translucent
+           and shadow pass is the only reader, so a frame with neither skips
+           it. The A/B reads it too, and says so. */
+        f.want_depth = (have_translucent || have_shadow || ab_mode()) ? 1 : 0;
+        f.tex_filter = filt;
+        f.tex_generation = g_tex_generation;
+        /* The colour a pixel this pass does not reach keeps. Taken from the
+           picture rather than assumed: the caller clears the framebuffer
+           before calling, and what it clears to is its business. */
+        f.clear_argb = (cw > 0 && ch > 0) ? fb.px[f.py0][f.px0] : 0xFF000000u;
+
+        if (!ab_mode()) {
+            gpu_drew = g_gpu_opaque(&f) ? 1 : 0;
+        } else {
+            /* THE A/B: the same list drawn both ways, compared before the
+               translucent pass, the card's answer kept. See the block above
+               gx_render for what each number means. */
+            const int x0 = f.px0, y0 = f.py0, w = f.pw, h = f.ph;
+            const size_t n = (size_t)SCREEN_W * (size_t)SCREEN_H;
+            if (g_ab_save.size() != n) {
+                g_ab_save.assign(n, 0);
+                g_ab_fb.assign(n, 0);
+                g_ab_dep.assign(n, 0.0f);
+                g_ab_cov.assign(n, 0);
+                g_ab_id.assign(n, 0);
+            }
+            for (int y = y0; y < y0 + h; ++y)
+                std::memcpy(&g_ab_save[(size_t)y * SCREEN_W + x0],
+                            &fb.px[y][x0], (size_t)w * sizeof(uint32_t));
+
+            run_passes(0, 0);                       /* arm B: this file */
+            for (int y = y0; y < y0 + h; ++y) {
+                const size_t o = (size_t)y * SCREEN_W + x0;
+                std::memcpy(&g_ab_fb[o], &fb.px[y][x0], (size_t)w * sizeof(uint32_t));
+                std::memcpy(&g_ab_dep[o], &g_depth[y][x0], (size_t)w * sizeof(float));
+                std::memcpy(&g_ab_cov[o], &g_cover[y][x0], (size_t)w);
+                std::memcpy(&g_ab_id[o], &g_attrid[y][x0], (size_t)w);
+            }
+            /* put the buffers back exactly as the clears left them */
+            for (int y = y0; y < y0 + h; ++y) {
+                std::memcpy(&fb.px[y][x0], &g_ab_save[(size_t)y * SCREEN_W + x0],
+                            (size_t)w * sizeof(uint32_t));
+                for (int x = x0; x < x0 + w; ++x) g_depth[y][x] = 1e30f;
+                std::memset(&g_cover[y][x0], 0, (size_t)w);
+                std::memset(&g_attrid[y][x0], 0, (size_t)w);
+                if (have_translucent) std::memset(&g_tlattr[y][x0], 0, (size_t)w);
+            }
+
+            gpu_drew = g_gpu_opaque(&f) ? 1 : 0;    /* arm A: the card */
+
+            static int abf;
+            const int frame = abf++;
+            if (gpu_drew && (frame % g_ab_every) == 0) {
+                unsigned long long inter = 0, uni = 0, both = 0, interior = 0;
+                unsigned long long out = 0, idbad = 0;
+                unsigned long long cov_a = 0, cov_b = 0;
+                double colsum = 0.0, depsum = 0.0, depmax = 0.0;
+                double depmax_in = 0.0;
+                for (int y = y0; y < y0 + h; ++y) {
+                    for (int x = x0; x < x0 + w; ++x) {
+                        const size_t o = (size_t)y * SCREEN_W + x;
+                        const int ca = g_cover[y][x], cb = g_ab_cov[o];
+                        /* EACH ARM'S OWN PIXEL COUNT, because an IoU near
+                           zero does not say WHICH side drew nothing and that
+                           is the first thing anybody reading the row wants. */
+                        if (ca) ++cov_a;
+                        if (cb) ++cov_b;
+                        if (ca || cb) ++uni;
+                        if (!(ca && cb)) continue;
+                        ++inter;
+                        ++both;
+                        const uint32_t pa = fb.px[y][x], pb = g_ab_fb[o];
+                        int worst = 0;
+                        for (int s = 0; s <= 16; s += 8) {
+                            const int d = (int)((pa >> s) & 0xFF) -
+                                          (int)((pb >> s) & 0xFF);
+                            const int ad = d < 0 ? -d : d;
+                            colsum += ad;
+                            if (ad > worst) worst = ad;
+                        }
+                        const double dd = (double)g_depth[y][x] - (double)g_ab_dep[o];
+                        const double ad = dd < 0 ? -dd : dd;
+                        depsum += ad;
+                        if (ad > depmax) depmax = ad;
+                        /* AN EDGE PIXEL IS ONE WHOSE NEIGHBOURHOOD IS NOT ALL
+                           THE SAME SURFACE, in either arm. Those are where the
+                           two fill rules legitimately disagree, so they are
+                           counted out of the colour and polygon-id verdicts
+                           rather than counted against the card. */
+                        bool edge = false;
+                        for (int dy = -1; dy <= 1 && !edge; ++dy)
+                            for (int dx = -1; dx <= 1; ++dx) {
+                                const int nx = x + dx, ny = y + dy;
+                                if (nx < x0 || ny < y0 || nx >= x0 + w ||
+                                    ny >= y0 + h)
+                                    continue;
+                                const size_t no = (size_t)ny * SCREEN_W + nx;
+                                if (g_cover[ny][nx] != g_cover[y][x] ||
+                                    g_ab_cov[no] != cb ||
+                                    g_attrid[ny][nx] != g_attrid[y][x] ||
+                                    g_ab_id[no] != g_ab_id[o]) {
+                                    edge = true;
+                                    break;
+                                }
+                            }
+                        if (edge) continue;
+                        /* THE DEPTH SPAN OF THIS PIXEL'S 3x3 NEIGHBOURHOOD,
+                           in each arm, over the neighbours that arm covered.
+                           Measured for every interior pixel because the
+                           question it answers -- is this a fold inside one
+                           polygon id -- is asked of the pixels that fail, and
+                           they are not known until they have failed. */
+                        double sa_lo = 1e30, sa_hi = -1e30;
+                        double sb_lo = 1e30, sb_hi = -1e30;
+                        for (int dy = -1; dy <= 1; ++dy)
+                            for (int dx = -1; dx <= 1; ++dx) {
+                                const int nx = x + dx, ny = y + dy;
+                                if (nx < x0 || ny < y0 || nx >= x0 + w ||
+                                    ny >= y0 + h)
+                                    continue;
+                                const size_t no = (size_t)ny * SCREEN_W + nx;
+                                if (g_cover[ny][nx]) {
+                                    const double v = (double)g_depth[ny][nx];
+                                    if (v < sa_lo) sa_lo = v;
+                                    if (v > sa_hi) sa_hi = v;
+                                }
+                                if (g_ab_cov[no]) {
+                                    const double v = (double)g_ab_dep[no];
+                                    if (v < sb_lo) sb_lo = v;
+                                    if (v > sb_hi) sb_hi = v;
+                                }
+                            }
+                        const double span_a = sa_hi > sa_lo ? sa_hi - sa_lo : 0.0;
+                        const double span_b = sb_hi > sb_lo ? sb_hi - sb_lo : 0.0;
+                        const double span = span_a > span_b ? span_a : span_b;
+                        if (ad > g_ab_depth_ceiling) {
+                            ++g_ab_dep_over;
+                            if (span > 1e-4) ++g_ab_dep_over_span4;
+                            if (span > 1e-3) ++g_ab_dep_over_span3;
+                            if (span > 1e-2) ++g_ab_dep_over_span2;
+                        }
+                        /* THE SPLIT, the block above ab_summary's thresholds */
+                        if (span <= g_ab_depth_flat) {
+                            ++g_ab_dep_flat_n;
+                            if (ad > g_ab_dep_flat_max) g_ab_dep_flat_max = ad;
+                        } else {
+                            ++g_ab_dep_step_n;
+                            const double ratio = ad / span;
+                            if (ratio > g_ab_depth_ratio) ++g_ab_dep_step_bad;
+                            if (ratio > g_ab_dep_ratio_max) {
+                                g_ab_dep_ratio_max = ratio;
+                                g_ab_rw_x = x;
+                                g_ab_rw_y = y;
+                                g_ab_rw_frame = frame;
+                                g_ab_rw_err = ad;
+                                g_ab_rw_span = span;
+                            }
+                        }
+                        ++interior;
+                        if (worst > g_ab_tol) ++out;
+                        if (ad > depmax_in) {
+                            depmax_in = ad;
+                            /* and if it beats every frame before it, the
+                               whole pixel is kept: the run's worst interior
+                               depth disagreement, with both depths and both
+                               polygon ids, is what says whether it is a
+                               silhouette the id test cannot see or a real
+                               mismatch. g_ab_depmax_in is still the previous
+                               frames' maximum here, which is what makes the
+                               last pixel kept the run's worst one. */
+                            if (ad > g_ab_depmax_in) {
+                                g_ab_dw_x = x;
+                                g_ab_dw_y = y;
+                                g_ab_dw_frame = frame;
+                                g_ab_dw_card = (double)g_depth[y][x];
+                                g_ab_dw_soft = (double)g_ab_dep[o];
+                                g_ab_dw_id_card = (int)g_attrid[y][x];
+                                g_ab_dw_id_soft = (int)g_ab_id[o];
+                                g_ab_dw_span_card = span_a;
+                                g_ab_dw_span_soft = span_b;
+                            }
+                        }
+                        if (g_attrid[y][x] != g_ab_id[o]) ++idbad;
+                    }
+                }
+                const double iou = uni ? (double)inter / (double)uni : 1.0;
+                const double mean = both ? colsum / (double)(both * 3) : 0.0;
+                const double oshare =
+                    interior ? (double)out / (double)interior : 0.0;
+                std::fprintf(stderr,
+                             "[renderer-ab] frame %d cover IoU %.6f card %llu "
+                             "software %llu both %llu "
+                             "interior %llu colour mean %.4f outliers %llu "
+                             "(%.6f) depth interior max %.3e all max %.3e "
+                             "mean %.3e id wrong %llu\n",
+                             frame, iou, cov_a, cov_b, both, interior, mean,
+                             out, oshare, depmax_in, depmax,
+                             both ? depsum / (double)both : 0.0, idbad);
+                std::fflush(stderr);
+                ++g_ab_frames;
+                g_ab_cov_card += cov_a;
+                g_ab_cov_soft += cov_b;
+                g_ab_inter += inter;
+                g_ab_union += uni;
+                g_ab_both += both;
+                g_ab_interior += interior;
+                g_ab_outliers += out;
+                g_ab_id_bad += idbad;
+                g_ab_colsum += colsum;
+                g_ab_depsum += depsum;
+                if (depmax > g_ab_depmax) g_ab_depmax = depmax;
+                if (depmax_in > g_ab_depmax_in) g_ab_depmax_in = depmax_in;
+                if (iou < g_ab_worst_iou) {
+                    g_ab_worst_iou = iou;
+                    g_ab_worst_frame = frame;
+                    g_ab_worst_outshare = oshare;
+                }
+            }
+            if (gpu_drew && g_ab_shot_dir && frame == g_ab_shot_frame) {
+                char p[512];
+                /* the difference picture, so a look at it is a look at where
+                   and not at how much: white where the two agree, red where a
+                   channel is past the tolerance, blue where only one covered */
+                for (int y = y0; y < y0 + h; ++y)
+                    for (int x = x0; x < x0 + w; ++x) {
+                        const size_t o = (size_t)y * SCREEN_W + x;
+                        const int ca = g_cover[y][x], cb = g_ab_cov[o];
+                        uint32_t c = 0xFFFFFFFFu;
+                        if (ca != cb) c = 0xFF0000FFu;
+                        else if (ca) {
+                            int worst = 0;
+                            for (int s = 0; s <= 16; s += 8) {
+                                const int d = (int)((fb.px[y][x] >> s) & 0xFF) -
+                                              (int)((g_ab_fb[o] >> s) & 0xFF);
+                                const int adv = d < 0 ? -d : d;
+                                if (adv > worst) worst = adv;
+                            }
+                            if (worst > g_ab_tol) c = 0xFFFF0000u;
+                        }
+                        g_ab_save[o] = c;
+                    }
+                std::snprintf(p, sizeof p, "%s/ab_f%d_card.bmp", g_ab_shot_dir, frame);
+                ab_bmp(p, &fb.px[0][0], SCREEN_W, x0, y0, w, h);
+                std::snprintf(p, sizeof p, "%s/ab_f%d_software.bmp", g_ab_shot_dir, frame);
+                ab_bmp(p, &g_ab_fb[0], SCREEN_W, x0, y0, w, h);
+                std::snprintf(p, sizeof p, "%s/ab_f%d_difference.bmp", g_ab_shot_dir, frame);
+                ab_bmp(p, &g_ab_save[0], SCREEN_W, x0, y0, w, h);
+                std::fprintf(stderr, "[renderer-ab] frame %d written out as "
+                             "three bitmaps\n", frame);
+            }
+            if (!gpu_drew) {
+                /* the card refused this frame after the software arm had
+                   already been thrown away, so draw it again here */
+                for (int y = y0; y < y0 + h; ++y) {
+                    std::memcpy(&fb.px[y][x0], &g_ab_save[(size_t)y * SCREEN_W + x0],
+                                (size_t)w * sizeof(uint32_t));
+                    for (int x = x0; x < x0 + w; ++x) g_depth[y][x] = 1e30f;
+                    std::memset(&g_cover[y][x0], 0, (size_t)w);
+                    std::memset(&g_attrid[y][x0], 0, (size_t)w);
+                    if (have_translucent) std::memset(&g_tlattr[y][x0], 0, (size_t)w);
+                }
+            }
+        }
     }
+
+    if (tm) t_seam1 = std::chrono::steady_clock::now();
+
+    run_passes(gpu_drew ? 1 : 0, 1);
+
+    if (tm) t_pass1 = std::chrono::steady_clock::now();
 
     /* EDGE SMOOTHING, LAST, AND STILL INSIDE gx_render (run hd2). Here rather
        than at present time because here is the only moment the framebuffer
@@ -3895,23 +4615,38 @@ void gx_render(Framebuffer &fb) {
     aa_pass(fb, cw, ch, nt);
     aa_report();
 
+    if (tm) t_aa1 = std::chrono::steady_clock::now();
+
     if (tm) {
         using clk = std::chrono::steady_clock;
         using ms = std::chrono::duration<double, std::milli>;
         const clk::time_point t_exit = clk::now();
         static clk::time_point prev;
         static double acc_raster, acc_frame;
+        static double acc_seam, acc_pass, acc_aa;
         static long long acc_tris;
         static int n;
         acc_raster += ms(t_exit - t_enter).count();
+        acc_seam += ms(t_seam1 - t_seam0).count();
+        acc_pass += ms(t_pass1 - t_seam1).count();
+        acc_aa += ms(t_aa1 - t_pass1).count();
         if (prev.time_since_epoch().count()) acc_frame += ms(t_exit - prev).count();
         prev = t_exit;
         acc_tris += static_cast<long long>(g.tris.size());
         if (++n >= 30) {
+            /* The three new numbers are APPENDED, so anything that already
+                reads this line by its prefix reads it unchanged. With the card
+                off "opaque" is zero and "rest" is the whole software raster;
+                with the card on "opaque" is the card's pass including the
+                readback and "rest" is the translucent and shadow pass this
+                file still runs over the card's buffers. */
             fprintf(stderr, "[perf] frame %6.2fms raster %6.2fms tris %6lld "
-                    "decodes %.1f\n", acc_frame / n, acc_raster / n,
-                    acc_tris / n, (double)g_tex_decodes / n);
+                    "decodes %.1f opaque %6.2fms rest %6.2fms aa %6.2fms\n",
+                    acc_frame / n, acc_raster / n,
+                    acc_tris / n, (double)g_tex_decodes / n,
+                    acc_seam / n, acc_pass / n, acc_aa / n);
             acc_raster = acc_frame = 0; acc_tris = 0; n = 0; g_tex_decodes = 0;
+            acc_seam = acc_pass = acc_aa = 0;
         }
     }
 }
