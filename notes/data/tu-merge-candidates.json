@@ -11621,7 +11621,7 @@
     "src/_ZN5Model12ShowMaterialEii.cpp",
     "src/_ZN5Model12HideMaterialEii.cpp",
     "src/_ZN5Model14SetPolygonModeEi.cpp",
-    "src/_ZN9ModelBase12ApplyOpacityEj.cpp",
+    "src/_ZN9ModelBase12ApplyOpacityEjj.cpp",
     "src/func_02016aac.c",
     "src/_ZN5Model12SetPolygonIDEi.cpp",
     "src/func_02016acc.c",

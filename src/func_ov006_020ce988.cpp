@@ -8,7 +8,7 @@ void Matrix4x3_FromQuaternion(const void* q, struct Matrix4x3* mF);
 void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 void MulMat4x3Mat4x3(struct Matrix4x3* a, struct Matrix4x3* b, struct Matrix4x3* out);
 void _ZN18TextureTransformer6UpdateER15ModelComponents(void* t, void* mc);
-void _ZN9ModelBase12ApplyOpacityEj(void* mb, unsigned int op, int z);
+void _ZN9ModelBase12ApplyOpacityEjj(void* mb, unsigned int opacity, unsigned int unused);
 }
 extern struct Matrix4x3 data_020a0e68;
 
@@ -21,7 +21,7 @@ extern "C" void func_ov006_020ce988(char* c){
     MulMat4x3Mat4x3(&tmp, &data_020a0e68, &data_020a0e68);
     *(struct Matrix4x3*)(*(char**)(c+0x190) + 0x1c) = data_020a0e68;
     _ZN18TextureTransformer6UpdateER15ModelComponents(c+0x194, *(char**)(c+0x190) + 8);
-    _ZN9ModelBase12ApplyOpacityEj(*(void**)(c+0x190), *(unsigned char*)(c+0x9c), 0);
+    _ZN9ModelBase12ApplyOpacityEjj(*(void**)(c+0x190), *(unsigned char*)(c+0x9c), 0);
     {
         void* o = *(void**)(c+0x190);
         VtO* vt = *(VtO**)o;

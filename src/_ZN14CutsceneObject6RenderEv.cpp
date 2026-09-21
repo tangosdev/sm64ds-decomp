@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "CutsceneObject.h"
 extern "C" {
-void _ZN9ModelBase12ApplyOpacityEj(void* m, unsigned int op, int z);
+void _ZN9ModelBase12ApplyOpacityEjj(void* m, unsigned int opacity, unsigned int unused);
 void func_ov002_020f65b8(void* o);
 }
 struct M48 { int w[12]; };
@@ -42,14 +42,14 @@ int CutsceneObject::Render()
     void* a = *(void**)((char*)&mModel);
     if (a != 0){
       a = (void*)((int)a);
-      _ZN9ModelBase12ApplyOpacityEj(a, op, 0);
+      _ZN9ModelBase12ApplyOpacityEjj(a, op, 0);
       ((ModelBase*)*(void**)((char*)&mModel))->m((int)((char*)&mScaleX));
     } else {
       void* b = *(void**)((char*)&mModelAnim);
       if (b != 0){
         b = (void*)((int)b);
         func_ov002_020f65b8(b);
-        _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&mModelAnim), mOpacity, 0);
+        _ZN9ModelBase12ApplyOpacityEjj(*(void**)((char*)&mModelAnim), mOpacity, 0);
         ((ModelBase*)*(void**)((char*)&mModelAnim))->m((int)((char*)&mScaleX));
       }
     }

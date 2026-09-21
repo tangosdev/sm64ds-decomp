@@ -1538,7 +1538,7 @@
     "src/_ZN9ModelAnimD0Ev.cpp",
     "src/_ZN9ModelAnimD1Ev.cpp",
     "src/_ZN9ModelAnimD2Ev.cpp",
-    "src/_ZN9ModelBase12ApplyOpacityEj.cpp",
+    "src/_ZN9ModelBase12ApplyOpacityEjj.cpp",
     "src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp",
     "src/_ZN9ModelBaseC2Ev.cpp",
     "src/_ZN9ModelBaseD1Ev.cpp",

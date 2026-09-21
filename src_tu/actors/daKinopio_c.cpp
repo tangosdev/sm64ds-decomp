@@ -162,7 +162,6 @@ void _ZN7fBase_c18MarkForDestructionEv(char *thiz);
 /* model / collision / shadow */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void *thiz, BCA_File *file, int a, int speed, u32 flags);
-void _ZN9ModelBase12ApplyOpacityEj(void *thiz, u32 opacity, int b);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, BMD_File *f, int a, int b);
 BMD_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *p);
@@ -615,7 +614,7 @@ int daKinopio_c::Behavior()
 
     mModelAnim.speed = 0x1000;
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(mOpacity >> 3), 1);
+    mModelAnim.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
 
     ((dCc_c *)&mCollider)->Clear();
     ((dCc_c *)&mCollider)->Update();
