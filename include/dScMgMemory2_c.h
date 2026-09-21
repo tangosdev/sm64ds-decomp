@@ -37,7 +37,10 @@
 
 extern "C" int func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
 
+extern "C" int func_ov006_020c1d80(char *sharedState);
+
 struct dMgMemory2SharedState_c {
+    dMgMemory2SharedState_c() { func_ov006_020c1d80((char *)this); }
     ~dMgMemory2SharedState_c() { func_ov006_020c1c64((char *)this); }
     u8 pad_000[0x1e6];
     s16 ready;

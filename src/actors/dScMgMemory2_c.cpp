@@ -5,9 +5,8 @@
  *
  * This promoted TU owns 52 text functions, including both destructor variants.
  * Source order and local optimization pragmas preserve their measured emission.
- * Some loops retain their offset views after bounded ordinary-member probes;
- * the literal scene factory also remains a reconstruction boundary. See
- * notes/experiments/pr2875-source-repair-0920.json for the actual alternatives.
+ * Some loops retain their offset views after bounded ordinary-member probes.
+ * See notes/experiments/pr2875-source-repair-0920.json for those alternatives.
  */
 
 #include "dScMgMemory2_c.h"
@@ -150,12 +149,6 @@ void func_ov004_020b04d0(int v);
 void func_ov004_020b682c(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN11dScMgBase_cC2Ev(void *scene);
-void _ZN8Particle10SysTrackerC1Ev(void *tracker);
-int func_ov006_020c1d80(char *sharedState);
-extern void *_ZTV19dScMgSingle3DBase_c[];
-extern void *_ZTV14dScMgMemory2_c[];
 }
 
 #pragma defer_codegen off
@@ -1530,19 +1523,9 @@ s32 dScMgMemory2_c::InitResources()
 /* ROM ordinal 51 -- dScMgMemory2_c_classInit, 0x020f75d4, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol dScMgMemory2_c_classInit
-/* Actor-table factory. The profile, allocation size, RTTI and vptr transition
- * identify dScMgMemory2_c. This literal construction spelling preserves the
- * observed sequence. A direct new expression compiles but changes this body
- * from 96 to 64 bytes; the bounded experiment is recorded with this repair. */
+/* Ordinary construction initializes the inherited particle tracker and
+ * shared minigame state in the cartridge's observed order. */
 extern "C" void *dScMgMemory2_c_classInit()
 {
-    char *scene = (char *)_ZN7fBase_cnwEj(sizeof(dScMgMemory2_c));
-    if (scene) {
-        _ZN11dScMgBase_cC2Ev(scene);
-        *(void **)scene = _ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(scene + 0x471c);
-        *(void **)scene = _ZTV14dScMgMemory2_c + 2;
-        func_ov006_020c1d80(scene + 0x4f38);
-    }
-    return scene;
+    return new dScMgMemory2_c;
 }

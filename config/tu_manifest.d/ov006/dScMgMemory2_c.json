@@ -386,7 +386,7 @@
   "data": [],
   "bss": [],
   "notes": [
-    "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. Address-only behavior is attached to class members. Main, result, round and card tables use typed member pointers; player-table ownership follows the initializer evidence below. The 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views and the literal factory remain; this is not a claim that the entire class is fully reconstructed.",
+    "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. Address-only behavior is attached to class members. Main, result, round and card tables use typed member pointers; player-table ownership follows the initializer evidence below. The 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views remain; this is not a claim that the entire class is fully reconstructed.",
     "PMF ownership evidence: __sinit_ov006_021314e4 builds main StateSetup/StatePlay/StateJudge/StateResult/StateExit, result ResultWait/ResultReward/ResultTurnCards/ResultFinish, card CardMove/CardIdle/CardSelect/CardFlipUp/CardWait/CardFlipDown/CardFlyAway, and player PlayerDrop/PlayerMove/PlayerWait tables. Its ten-entry round table independently fixes RoundStart through RoundReveal order.",
     "COINED NAMES: the 43 handler/helper ROM symbols were address-only, so no recovered spelling exists to confirm or contradict the descriptive names in functions[]. The ROM proves dScMgMemory2_c ownership and the PMF tables prove state-group identities; exact original source spellings are disclosed as unknown here and in symbols/actor_renames.tsv.",
     "BOUNDED FACTORY PROBE: dScMgMemory2_c_classInit retains the literal scene construction sequence. Under the pinned2004/b56 options a direct new dScMgMemory2_c expression compiles, but changes this function from96 to64 bytes and fails strict relocation-aware verification. This supersedes the unsupported claim that semantic construction is unavailable; it does not establish an absolute compiler wall. Exact source and results are retained in notes/experiments/pr2875-source-repair-0920.json.",
@@ -643,6 +643,16 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213d4d4",
       "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZN23dMgMemory2SharedState_cD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-emitted lifecycle body from ordinary scene construction; no configured ROM home and no surviving relocation references it."
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-emitted lifecycle body from ordinary scene construction; no configured ROM home and no surviving relocation references it."
     }
   ]
 }
