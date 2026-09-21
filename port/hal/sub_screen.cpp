@@ -112,6 +112,14 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy);
 /* the layout mode, defined at the bottom of this file */
 int hal_sub_screen_stacked(void);
 void hal_touch_client_probe(void);
+/* THE THREE ATTENTION ARROWS, re-anchored above the panel (engine A's raster,
+   hal/message_compositor.cpp, which owns the sprites; this file owns where the
+   panel is). Called with the panel rect this frame's compose just drew, so the
+   arrows follow the size, the aspect and the render scale for free. Inert
+   unless hal_minimap_arrow_reanchor_on below says so, and nothing to draw is
+   the ordinary case: the ROM raises the cue only on a map event. */
+void port_bounce_arrows_present(unsigned int *dst, int dst_w, int dst_h,
+                                int px0, int py0, int pw, int ph);
 /* the two engines' brightness blends (hal/fader_wipes.cpp). The SUB one is what
    the sub framebuffer is composed with; the main one is still read by the inset
    path, where the panel is inside engine A's framebuffer when walk_window's own
@@ -1890,6 +1898,28 @@ extern "C" void port_frame_oam_upload(void)
     ntr::ppu_seam_oam_mark_uploaded();
 }
 
+/* ---- IS THE ATTENTION CUE RE-ANCHORED THIS FRAME? -------------------------
+ *
+ * Asked by engine A's raster (hal/message_compositor.cpp) once per frame,
+ * before it decides whether to hold the three bouncing arrows back out of the
+ * top screen's own buffer.
+ *
+ * The cue is the ROM's "look at the bottom screen": Stage::RenderBouncingArrows
+ * puts three arrows along the bottom edge of the TOP screen and plays a sound,
+ * because on a DS the thing to look at is the other panel. On this port the
+ * bottom screen is a corner inset over the same picture, so the arrows point at
+ * empty floor. With the improved map on they are moved to sit just above the
+ * inset instead -- which is the whole request.
+ *
+ * SAME GATE AS THE REST OF THE OPTION: the improved map on, and the corner
+ * inset layout, which is a course. Menus and minigames take the stacked
+ * layout, where the bottom screen is a real second panel and the ROM's own
+ * placement is already right. */
+int hal_minimap_arrow_reanchor_on(void)
+{
+    return improved_map_on() && !hal_sub_screen_stacked();
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
@@ -2075,8 +2105,17 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        the framebuffer this function is handed comes out of a stacked frame
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
-    if (!hal_sub_screen_stacked())
+    if (!hal_sub_screen_stacked()) {
         ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, g_pan_num, g_pan_den);
+        /* AFTER THE PANEL, DELIBERATELY. The arrows sit just above the panel's
+           top edge, so at every size but the largest they do not touch it; at
+           the largest size on a 4:3 picture the panel IS the picture and the
+           band has nowhere above to go, and drawing them here means the player
+           still sees the cue instead of losing it under the map. Engine A's
+           raster ran earlier in the frame (port_message_composite_engine_a),
+           which is why the sprites are handed over rather than drawn there. */
+        port_bounce_arrows_present(dst, w, h, g_x0, g_y0, g_pan_w, g_pan_h);
+    }
     g_ready = true;
 
     /* SM64DS_SUB_DUMP=N: the bottom screen alone, at 256x192, on frame N. */

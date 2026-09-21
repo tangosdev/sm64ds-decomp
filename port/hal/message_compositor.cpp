@@ -152,6 +152,21 @@ int hal_gapless_obj_raster_shift_ds(void);
 /* the top screen's OAM source while the gapless mod is engaged; see the note
    over oam_a below and the definition in hal/screen_gap.cpp */
 unsigned hal_gapless_oam_src_a(void);
+extern "C" {
+/* THE IMPROVED MAP'S ATTENTION-ARROW RE-ANCHOR, asked once a frame. The banner
+   is over the definition in hal/sub_screen.cpp, which owns both the option and
+   the panel's rectangle; this file owns the sprites. Short-circuits on the
+   option, so a run with the map option off never even asks about the layout.
+   C linkage because that file's whole tail is one extern "C" block. */
+int hal_minimap_arrow_reanchor_on(void);
+
+/* Stage::RenderBouncingArrows' own sprite template, ov001 0x020abd88, mounted
+   by name (port/ov001_syms.txt) and bound to the matched body's func_020abd88
+   spelling in hal/sub_actors.cpp. The arrows are identified out of this table
+   at run time rather than by a literal, the way the map's camera buttons are:
+   a graphic that moved would take its tile number with it. */
+extern const unsigned short _ZN3OAM14BOUNCING_ARROWE[];
+}
 
 namespace {
 
@@ -1217,6 +1232,103 @@ void enga_strip_probe(uint32_t dispcnt)
 // the same arithmetic and NO live caller; the note was right about the
 // arithmetic and pointed at the copy that cannot reach a screen. Both are
 // fixed, in ntr/ppu_sub.cpp's shape.
+/* ---- THE THREE ATTENTION ARROWS, HELD BACK AND PUT SOMEWHERE ELSE ----------
+ *
+ * WHAT THE CUE IS. Stage::RenderBouncingArrows (src/, ROM 0x02023be0) draws
+ * three arrows along the bottom edge of the TOP screen, bouncing between two
+ * rows, with a sound: the DS telling the player to look at the other screen.
+ * It is raised by the ROM's own condition word (HUD::Render calls it only when
+ * data_0209f284 is set) on a map event. This port has no other screen -- the
+ * bottom screen is a corner inset over the same picture -- so the arrows point
+ * at bare floor a long way from the map.
+ *
+ * WHAT HAPPENS INSTEAD. With the improved map on, the arrow texels are kept
+ * OUT of the top screen's own buffer here and handed to hal/sub_screen.cpp,
+ * which draws them just above the map panel after it has composed it: one
+ * above the panel's top-left corner, one above its middle, one above its
+ * top-right corner. Nothing in src/ changes, no call is skipped, the ROM still
+ * computes and submits three sprites, and the sound is not touched at all.
+ *
+ * THE TRANSLATION IS CONSTANT, WHICH IS WHAT KEEPS THE BOUNCE. The arrows
+ * bounce by alternating their row, so a placement that PINNED them to a fixed
+ * row would hold them still. Vertically they are therefore moved by one offset
+ * for the whole band -- the DS screen's bottom edge is mapped to just above the
+ * panel's top edge -- and each arrow carries whatever row the ROM gave it. The
+ * ROM rests them against the bottom edge, so at rest they sit on the panel and
+ * bounce up off it, which is the motion the cartridge draws.
+ *
+ * THEY KEEP THEIR OWN SIZE. The panel's scale factor moves them; it does not
+ * shrink them. A DS sprite drawn at the map's own scale would be a quarter of
+ * its size at 1x and its two-pixel bounce would be sub-pixel, and nothing in
+ * the request asks for smaller arrows -- only for arrows in the right place. */
+uint32_t g_arrow_px[192][256];
+int g_arrow_n;                           /* texels captured this frame */
+int g_arrow_x0, g_arrow_x1, g_arrow_y0, g_arrow_y1;   /* their bounding box */
+
+/* The template's tile numbers, read out of the cartridge's own OamAttr records
+   the way hal/sub_screen.cpp reads the camera buttons': an OamAttr is four
+   halfwords and attr3 == 0xffff ends the list (include/OamAttr.h). Tile 0 is
+   the ROM's "nothing here" and is never added. Sixteen is a guard against a
+   list that never terminates, not a length. */
+unsigned short g_arrow_tiles[16];
+int g_arrow_tiles_n = -1;
+
+void arrow_tiles_init(void)
+{
+    g_arrow_tiles_n = 0;
+    const unsigned short *t = _ZN3OAM14BOUNCING_ARROWE;
+    for (int i = 0; i < 16; ++i) {
+        const unsigned short a2 = t[i * 4 + 2];
+        const unsigned short a3 = t[i * 4 + 3];
+        const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+        if (tile && g_arrow_tiles_n <
+                (int)(sizeof g_arrow_tiles / sizeof g_arrow_tiles[0])) {
+            int seen = 0;
+            for (int k = 0; k < g_arrow_tiles_n; ++k)
+                if (g_arrow_tiles[k] == tile) { seen = 1; break; }
+            if (!seen) g_arrow_tiles[g_arrow_tiles_n++] = tile;
+        }
+        if (a3 == 0xffff) break;
+    }
+    if (std::getenv("SM64DS_MINIMAP_TRACE")) {
+        std::fprintf(stderr, "[mmtrace] bouncing-arrow tiles (%d):",
+                     g_arrow_tiles_n);
+        for (int k = 0; k < g_arrow_tiles_n; ++k)
+            std::fprintf(stderr, " %u", (unsigned)g_arrow_tiles[k]);
+        std::fprintf(stderr, "\n");
+    }
+}
+
+/* A TILE NUMBER AND A BAND, both, for the same reason the camera-button veto
+   wants both: engine A's OBJ VRAM is shared by every top-screen sprite and a
+   tile number alone could collide with an unrelated graphic. The cue's own band
+   is the bottom of the top screen -- RenderBouncingArrows passes y 0xae / 0xb0,
+   174 and 176 of 192 -- so an entry whose box is centred above the screen's
+   bottom third is not this cue whatever tile it carries. */
+inline bool arrow_entry(unsigned short a2, int y, int bh)
+{
+    if (g_arrow_tiles_n < 0) arrow_tiles_init();
+    if (y + bh / 2 < 128) return false;
+    const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+    for (int k = 0; k < g_arrow_tiles_n; ++k)
+        if (g_arrow_tiles[k] == tile) return true;
+    return false;
+}
+
+void arrow_capture(int px, int py, uint32_t color)
+{
+    if (!g_arrow_n) {
+        g_arrow_x0 = g_arrow_y0 = 1 << 30;
+        g_arrow_x1 = g_arrow_y1 = -1;
+    }
+    if (!g_arrow_px[py][px]) ++g_arrow_n;
+    g_arrow_px[py][px] = color | 0xFF000000u;
+    if (px < g_arrow_x0) g_arrow_x0 = px;
+    if (px > g_arrow_x1) g_arrow_x1 = px;
+    if (py < g_arrow_y0) g_arrow_y0 = py;
+    if (py > g_arrow_y1) g_arrow_y1 = py;
+}
+
 void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 ntr::Framebuffer &fb) {
     static const int kSizes[3][4][2] = {
@@ -1264,6 +1376,17 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     const bool objprio_off = objprio_off_env();
     /* and for the OBJ-vs-BG one, plus the DS pixel the transcript follows */
     const bool objbg_off = objbg_off_env();
+    /* THE ATTENTION ARROWS, asked once for the walk. Last frame's capture is
+       dropped HERE rather than after it was drawn, so the layer is exactly
+       what this frame submitted whether or not the panel got as far as
+       drawing it. Only the rectangle that was written is touched. */
+    if (g_arrow_n) {
+        for (int ay = g_arrow_y0; ay <= g_arrow_y1; ++ay)
+            std::memset(&g_arrow_px[ay][g_arrow_x0], 0,
+                        (size_t)(g_arrow_x1 - g_arrow_x0 + 1) * sizeof(uint32_t));
+        g_arrow_n = 0;
+    }
+    const bool arrows_moved = hal_minimap_arrow_reanchor_on() != 0;
     int probe_x, probe_y;
     objbg_probe_pixel(probe_x, probe_y);
     ++g_obj_frame;
@@ -1337,6 +1460,12 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         const bool vflip = !affine && (a1 & 0x2000);
         const uint32_t tile = a2 & 0x3FF;
         const uint32_t pal = (a2 >> 12) & 0xF;
+        /* Is this one of the three bouncing arrows, and is this a run that
+           moves them? If so its texels go to the capture layer instead of to
+           g_a, so the whole cue leaves the top screen's own buffer in one
+           piece -- it neither draws where the ROM put it nor takes part in the
+           priority resolution of the sprites that stay. */
+        const bool arrow = arrows_moved && arrow_entry(a2, y, bh);
         /* attribute 2 bits 10-11, this sprite's own priority. Read here rather
            than at the store because the OBJ-vs-OBJ test below needs it before
            a texel is written. */
@@ -1425,6 +1554,11 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                     if (!index) continue;
                     color = bgr555(rd16(obj_pltt + (pal * 16u + index) * 2u));
                 }
+                /* THE CUE IS TAKEN OUT HERE, before any of the resolution
+                   below, because it is not being drawn on this screen at all.
+                   Taking it out after the priority tests would let it lose to
+                   a sprite it is about to be moved away from. */
+                if (arrow) { arrow_capture(px, py, color); continue; }
                 /* OBJ-vs-OBJ IS RESOLVED BY PRIORITY, NOT BY OAM INDEX, and
                    this test is what makes that true on engine A. GBATEK's OAM
                    notes: attribute 2 bits 10-11 order a sprite against the
@@ -1586,6 +1720,140 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
 }
 
 }  // namespace
+
+/* ---- AND WHERE THE CUE GOES: JUST ABOVE THE MAP ---------------------------
+ *
+ * Called by hal/sub_screen.cpp with the rectangle the map panel was just drawn
+ * into, so the arrows follow MinimapScale, the aspect and the render scale
+ * without knowing about any of them. Nothing captured means nothing drawn,
+ * which is every frame but the ones the ROM raises the cue on.
+ *
+ * THE ARROWS ARE SPREAD ALONG THE PANEL'S TOP EDGE IN THE ORDER THE ROM
+ * SUBMITTED THEM: the leftmost over the top-left corner, the rightmost over the
+ * top-right corner, the rest evenly between -- which for the three-arrow form
+ * the request is about is exactly "one above the top left, middle, and top
+ * right corner". The two-arrow form the same function can draw (it puts them at
+ * the screen's far edges instead) lands on the two corners by the same
+ * arithmetic, so neither form needs a special case.
+ *
+ * GROUPS ARE FOUND BY THEIR COLUMNS. The capture layer holds nothing but this
+ * cue, so a run of columns with any texel in it is one arrow and a gap ends it.
+ * That reads the arrows the ROM actually submitted rather than assuming three,
+ * and it costs one pass over 256 flags.
+ *
+ * VERTICALLY THE WHOLE BAND MOVES BY ONE OFFSET (see the banner in the
+ * namespace above), and the offset is LATCHED for as long as the cue runs. The
+ * arrows bounce by alternating their row, so measuring the band's bottom edge
+ * every frame and pinning THAT to the panel would hold them perfectly still --
+ * the offset has to be constant for the motion to survive. So the first frame
+ * of a cue decides it: that frame's bottom row is put one DS row above the
+ * panel's top edge, and every later frame of the same cue keeps the same
+ * offset, so the arrows bounce off the map exactly as they bounce off the
+ * bottom of the screen on a DS. The latch drops the moment the cue stops, so
+ * the next one measures itself afresh and nothing carries between scenes.
+ *
+ * If the band would run off the top of the picture -- the biggest map on a 4:3
+ * window is the whole window, so there is no "above" left -- it is pushed back
+ * down until it fits, and the player sees the cue over the map instead of not
+ * at all. */
+extern "C" void port_bounce_arrows_present(unsigned int *dst, int dst_w,
+                                           int dst_h, int px0, int py0,
+                                           int pw, int ph)
+{
+    (void)ph;
+    /* The latch this cue's vertical offset is measured into, and the frame
+       that drops it: a frame with nothing captured is a frame with no cue. */
+    static int rest_held, rest_y1;
+    if (!g_arrow_n || !dst || dst_w < 1 || dst_h < 1) { rest_held = 0; return; }
+    /* THE LOWEST ROW THIS CUE HAS BOUNCED TO, which is its resting row. The
+       cue alternates between two rows a few frames apart, so the first frame
+       is as likely to be the raised one as the rest; taking the lowest seen
+       settles the band within the cue's first bounce and then never moves
+       again, which is what makes the arrows rest ON the panel rather than two
+       rows inside it. It is a maximum over ONE cue only -- the latch is
+       dropped above the moment a frame captures nothing. */
+    if (!rest_held || g_arrow_y1 > rest_y1) { rest_y1 = g_arrow_y1; rest_held = 1; }
+
+    /* The top screen's own uniform host scale: one DS row is this many host
+       rows, and in the widescreen arm of the blit above it is this many host
+       columns too (uni == sy). At 4:3 sx == sy, so this is that scale as well.
+       The arrows are drawn at it, which is the size they have on screen now. */
+    int s = dst_h / 192;
+    if (s < 1) s = 1;
+
+    /* Which columns this cue occupies, and therefore how many arrows it is. */
+    int gx0[8], gx1[8], n = 0;
+    {
+        int run = -1;
+        for (int x = g_arrow_x0; x <= g_arrow_x1 + 1; ++x) {
+            bool used = false;
+            if (x <= g_arrow_x1)
+                for (int y = g_arrow_y0; y <= g_arrow_y1 && !used; ++y)
+                    if (g_arrow_px[y][x]) used = true;
+            if (used) {
+                if (run < 0) run = x;
+            } else if (run >= 0) {
+                if (n < (int)(sizeof gx0 / sizeof gx0[0])) {
+                    gx0[n] = run;
+                    gx1[n] = x - 1;
+                    ++n;
+                }
+                run = -1;
+            }
+        }
+    }
+    if (n < 1) return;
+
+    /* The band's vertical offset, and the clamp that keeps it on the picture.
+       `base` is where the latched resting row lands: one DS row above the
+       panel's top edge. Every other row is carried relative to it. */
+    int base = py0 - s;
+    int top = base + (g_arrow_y0 - rest_y1) * s;
+    if (top < 0) { base -= top; top = 0; }
+
+    const int stride = ntr::SCREEN_W;
+    const int trace = std::getenv("SM64DS_MINIMAP_TRACE") ? 1 : 0;
+    for (int k = 0; k < n; ++k) {
+        const int gcx = (gx0[k] + gx1[k] + 1) / 2;
+        int tcx = (n == 1) ? px0 + pw / 2
+                           : px0 + (int)((long)pw * k / (n - 1));
+        /* AND THE SAME CLAMP SIDEWAYS, for the same reason as the vertical
+           one. The panel sits eight pixels in from the right edge, so an arrow
+           centred on its top-right corner has half of itself off the picture.
+           Sliding it back in keeps a whole arrow over the corner instead of
+           half of one, which is what the cue is for. It only ever moves the
+           outer two, and only when the panel is near an edge. */
+        {
+            const int half_l = (gcx - gx0[k]) * s;
+            const int half_r = (gx1[k] - gcx + 1) * s;
+            if (tcx - half_l < 0) tcx = half_l;
+            if (tcx + half_r > dst_w) tcx = dst_w - half_r;
+        }
+        if (trace)
+            std::fprintf(stderr, "[mmtrace] arrow %d/%d ds x %d..%d centre %d "
+                         "-> host centre %d, rows %d..%d, scale %d\n",
+                         k + 1, n, gx0[k], gx1[k], gcx, tcx,
+                         base + (g_arrow_y0 - rest_y1) * s,
+                         base + (g_arrow_y1 - rest_y1) * s + s - 1, s);
+        for (int y = g_arrow_y0; y <= g_arrow_y1; ++y) {
+            const int hy0 = base + (y - rest_y1) * s;
+            for (int x = gx0[k]; x <= gx1[k]; ++x) {
+                const uint32_t c = g_arrow_px[y][x];
+                if (!c) continue;
+                const int hx0 = tcx + (x - gcx) * s;
+                for (int dy = 0; dy < s; ++dy) {
+                    const int hy = hy0 + dy;
+                    if (hy < 0 || hy >= dst_h) continue;
+                    for (int dx = 0; dx < s; ++dx) {
+                        const int hx = hx0 + dx;
+                        if (hx < 0 || hx >= dst_w) continue;
+                        dst[hy * stride + hx] = c;
+                    }
+                }
+            }
+        }
+    }
+}
 
 /* func_02019144's FIRST beat, hal/scene_boot.cpp. 1 = run that function's
    tail, 0 = the current graphics block did the display sync itself. */

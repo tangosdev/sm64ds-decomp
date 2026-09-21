@@ -853,6 +853,25 @@ static int port_adv_hud_render_stars_lives_on_top(HUD *self)
             _ZN3HUD17RenderSilverStarsEv((void *)self);
             _ZN3HUD15RenderTimeTimerEv((void *)self);
         }
+        /* SM64DS_BOUNCE_ARROWS=1 RAISES THE ROM'S OWN CUE, and raises nothing
+           else. data_0209f284 is the word HUD::Render reads to decide whether
+           the "look at the other screen" arrows are drawn this frame; the game
+           sets it on a map event (a warp pipe, a sign, a boss gate: Player.cpp
+           and func_ov001_020aa6e4 among others) and clears it a few seconds
+           later. On a headless run nothing raises it, so the cue cannot be
+           MEASURED -- and the improved map moves those arrows, so it has to
+           be. Setting the game's own word is the cheapest honest way to put the
+           cue on screen: from here on it is the ROM's code that decides the
+           form, the position, the bounce and the sound, exactly as it does in
+           play. Unset, this is not compiled out but it does nothing at all. */
+        {
+            static int force = -1;
+            if (force < 0) {
+                const char *e = std::getenv("SM64DS_BOUNCE_ARROWS");
+                force = (e && *e && *e != '0') ? 1 : 0;
+            }
+            if (force) data_0209f284 = 1;
+        }
         if (data_0209f284 != 0)
             _ZN5Stage20RenderBouncingArrowsEv();
     } else {
