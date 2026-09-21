@@ -82,9 +82,12 @@ struct dScMgLuigi_c : dScMgBase_c {
     void StatePlace();                /* 0x020f31dc  PMF, Behavior state 1 */
     void StateSetup();                /* 0x020f3260  PMF, Behavior state 0 */
 
-    u8  pad_4660[0x198];
+    u8  pad_4660[0x194];
+    u8  mIrisActive;         /* 0x47f4 -- first iris is active */
+    u8  mIrisState;          /* 0x47f5 -- first iris PMF state */
+    u8  pad_47f6[2];
     /* The 120 moving pictures (0x78 slots). Four Fix12 arrays back to back --
-       0x47f8 + 4 * 0x1e0 lands exactly on unk_4f78 -- then a u16 phase per slot
+       0x47f8 + 4 * 0x1e0 lands exactly on mState -- then a u16 phase per slot
        and, from 0x5275, byte arrays of the same count 0x78 apart. All observed
        from the per-slot helpers (dScMgLuigi_c::MovePictureSway is the one typed here;
        dScMgLuigi_c::WrapPicture wraps mPosX/mPosY to the 0x110 x 0xd0 screen). */
@@ -92,7 +95,7 @@ struct dScMgLuigi_c : dScMgBase_c {
     Fix12i mPosY[120];       /* 0x49d8 -- 20.12 screen y, wraps at 0xd0 */
     Fix12i mVelX[120];       /* 0x4bb8 -- per-frame x step */
     Fix12i mVelY[120];       /* 0x4d98 -- per-frame y step */
-    s32 unk_4f78;            /* 0x4f78 */
+    s32 mState;              /* 0x4f78 -- 0 setup, 1 place, 2 play, 3 catch */
     u16 mMovePhase[120];     /* 0x4f7c -- 0 slowing, 1 speeding up rightward,
                                 2 speeding up leftward */
     u8  pad_506c[0xf0];

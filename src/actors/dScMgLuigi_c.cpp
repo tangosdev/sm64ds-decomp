@@ -270,8 +270,8 @@ void dScMgLuigi_c::IrisHold(int idx) {
 void dScMgLuigi_c::UpdateIris()
 {
     extern LuigiSlotHandler data_ov006_021421ec[];
-    if (*(u8 *)((char *)this + 0x47f4) == 0) return;
-    int j = *(u8 *)((char *)this + 0x47f5);
+    if (mIrisActive == 0) return;
+    int j = mIrisState;
     (this->*data_ov006_021421ec[j])(0);
 }
 
@@ -743,7 +743,7 @@ void dScMgLuigi_c::DrawTimer() {
     char *self = (char *)this;
     extern int *data_ov006_0213ce70[];
     int idx;
-    if (unk_4f78 < 2)
+    if (mState < 2)
         return;
     idx = GetGameLanguage();
     DrawOamSprite(*(int *)((char *)data_ov006_0213ce70[idx] + 0xc), 0x80, 0x10, 0);
@@ -791,7 +791,7 @@ void dScMgLuigi_c::DrawPictures() {
     char *c = (char *)this;
     extern void *data_ov006_0213abc8[];
     int i;
-    if (unk_4f78 == 0)
+    if (mState == 0)
         return;
     for (i=0;i<0x78;i++) {
         if (*(unsigned char *)(c+i+0x53dd) == 1) {
@@ -1296,10 +1296,8 @@ void dScMgLuigi_c::WrapPicture(int i) {
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c11StopPictureEi
 void dScMgLuigi_c::StopPicture(int idx) {
-    unsigned *base = (unsigned *)this;
-    unsigned *p = base + idx;
-    *(unsigned *)((unsigned char *)p + 0x4bb8) = 0;
-    *(unsigned *)((unsigned char *)p + 0x4d98) = 0;
+    mVelX[idx] = 0;
+    mVelY[idx] = 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1344,7 +1342,7 @@ void dScMgLuigi_c::BeginCatch(int p1)
     *(short *)(o + 0x5166) = (short)(((int *)(o + 0x47f8))[unk_5456 - 1] >> 0xc);
     *(short *)(o + 0x5168) = (short)(((int *)(o + 0x49d8))[unk_5456 - 1] >> 0xc);
     *(short *)(o + 0x5164) = 0x60;
-    unk_4f78 = 3;
+    mState = 3;
     *(short *)(o + 0x516a) = 0xc8;
     v = *(int *)(o + 0xbc);
     while (v >= 5) v -= 5;
@@ -2036,7 +2034,7 @@ void dScMgLuigi_c::StateCatch()
 // @symbol _ZN12dScMgLuigi_c9StatePlayEv
 void dScMgLuigi_c::StatePlay() {
     TickTimer();
-    if (unk_4f78 == 3) return;
+    if (mState == 3) return;
     UpdatePictures();
     CheckTouch();
     UpdatePenalties();
@@ -2055,7 +2053,7 @@ void dScMgLuigi_c::StatePlace() {
         return;
     if (unk_5455 == 0)
         return;
-    unk_4f78 = 2;
+    mState = 2;
     *(unsigned char *)(self + 0x5458) = 0;
     *(short *)(self + 0x516c) = 0xa;
     *(short *)(self + 0x516e) = 0;
@@ -2070,7 +2068,7 @@ void dScMgLuigi_c::StateSetup()
     char *o = (char *)this;
     *(short *)(o + 0x5164) = 0;
     ResetCurtains();
-    unk_4f78 = 1;
+    mState = 1;
     ChooseTarget();
 }
 
@@ -2109,10 +2107,6 @@ extern void Deallocate(void *);
 extern void func_ov004_020b04d0(int);
 extern int data_ov004_020bc888;
 extern int data_ov004_020bc864;
-/* ordinal 57 -- dScMgLuigi_c_classInit */
-extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN11dScMgBase_cC2Ev(void *);
-extern int data_ov006_0213cf10[];
 }
 
 /* ------------------------------------------------------------------ */
@@ -2155,7 +2149,7 @@ void dScMgLuigi_c::OnYoshiTryEat(int arg1)
     ResetBoard();
     ChooseBoard();
 
-    unk_4f78 = 0;
+    mState = 0;
     data_0209d45c |= 4;
     data_0209d454 &= ~4;
 
@@ -2184,10 +2178,10 @@ s32 dScMgLuigi_c::Render()
 /* ------------------------------------------------------------------ */
 // @symbol _ZN12dScMgLuigi_c8BehaviorEv
 /* Slot 6 of _ZTV12dScMgLuigi_c: one dispatch through the per-state table at
-   data_ov006_02142234, indexed by unk_4f78. */
+   data_ov006_02142234, indexed by mState. */
 s32 dScMgLuigi_c::Behavior()
 {
-    int j = unk_4f78;
+    int j = mState;
     (this->*data_ov006_02142234[j])();
     return 1;
 }
@@ -2289,7 +2283,7 @@ s32 dScMgLuigi_c::InitResources()
     unk_5174 = 0xff;
     ChooseBoard();
 
-    unk_4f78 = 0;
+    mState = 0;
     Ov004_Deallocate(arc);
     func_ov004_020b04d0(0x30);
     unk_5172 = 0xa;
@@ -2305,8 +2299,8 @@ s32 dScMgLuigi_c::InitResources()
 /* ------------------------------------------------------------------ */
 // @symbol dScMgLuigi_c_classInit
 extern "C" {
-/* The MG_LUIGI factory: allocates 0x545c, runs dScMgBase_c's constructor and
- * installs this class's vtable, data_ov006_0213cf10.
+/* The MG_LUIGI factory uses ordinary new. The compiler allocates 0x545c,
+ * runs the base constructor and installs the native class vtable.
  *
  * Reconstructed source-style name: SM64DS proves dScMgLuigi_c through RTTI,
  * allocation size, vtable identity, and the MG_LUIGI registry profile;
@@ -2314,12 +2308,7 @@ extern "C" {
  * preserved. Historical alias: MgWanted_Spawn. */
 int *dScMgLuigi_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(21596);
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        p[0] = (int)data_ov006_0213cf10;
-    }
-    return p;
+    return (int *)new dScMgLuigi_c;
 }
 }
 
