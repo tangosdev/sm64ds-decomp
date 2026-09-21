@@ -17374,6 +17374,15 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
     # targets that compile tests/walk_window.cpp, which is its caller.
     hal/gpu_present.cpp
+    # run hd2 lane GPU2: the ONE Direct3D 11 device this process makes. It
+    # exists because a second optional setting is about to want a device and
+    # two devices would be two copies of every texture on the card and two
+    # claims on a 32-bit process's address space, which the stage-0 probe
+    # measured as the tightest resource here. Nothing asks it for a device
+    # unless a setting that needs one is on, so with every key absent it loads
+    # nothing and allocates nothing. Same LoadLibrary rule as the file above:
+    # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
+    hal/gpu_device.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
@@ -17788,6 +17797,15 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # hal/gpu_present_shaders.h, so d3dcompiler never loads either. On both
     # targets that compile tests/walk_window.cpp, which is its caller.
     hal/gpu_present.cpp
+    # run hd2 lane GPU2: the ONE Direct3D 11 device this process makes. It
+    # exists because a second optional setting is about to want a device and
+    # two devices would be two copies of every texture on the card and two
+    # claims on a 32-bit process's address space, which the stage-0 probe
+    # measured as the tightest resource here. Nothing asks it for a device
+    # unless a setting that needs one is on, so with every key absent it loads
+    # nothing and allocates nothing. Same LoadLibrary rule as the file above:
+    # no d3d11, dxgi or dxguid lib is linked and the import table does not move.
+    hal/gpu_device.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.

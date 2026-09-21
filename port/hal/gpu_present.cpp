@@ -93,18 +93,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "hal/gpu_device.h"
 #include "hal/gpu_present.h"
 #include "hal/gpu_present_shaders.h"
 #include "hal/host_settings.h"
-#include "ntr/mmio.h"
-
-/* hal/os_arena.cpp, declared locally the way hal/lk6_savestate.cpp and
-   hal/gpu_probe.cpp declare it: the arena has no header of its own.
-   port_arena_base RUNS the lazy reservation of 0x30000000, which is why it is
-   called before the device is created -- cheap insurance against a driver
-   taking that address first. */
-extern "C" void *port_arena_base(void);
-extern "C" int port_arena_is_fixed(void);
 
 /* THE FIT, hal/sub_screen.cpp's, declared here the way tests/walk_window.cpp
    and hal/sub_screen.cpp declare it: a bare declaration, because it has no
@@ -170,12 +162,6 @@ enum { VSYNC_WINDOW = 120 };
 
 /* ---- entry points resolved at run time ----------------------------------- */
 
-typedef HRESULT (WINAPI *D3D11CreateDevice_t)(IDXGIAdapter *, D3D_DRIVER_TYPE,
-                                              HMODULE, UINT,
-                                              const D3D_FEATURE_LEVEL *, UINT,
-                                              UINT, ID3D11Device **,
-                                              D3D_FEATURE_LEVEL *,
-                                              ID3D11DeviceContext **);
 typedef BOOL (WINAPI *EnumDisplaySettingsA_t)(LPCSTR, DWORD, DEVMODEA *);
 typedef ATOM (WINAPI *RegisterClassA_t)(const WNDCLASSA *);
 typedef HWND (WINAPI *CreateWindowExA_t)(DWORD, LPCSTR, LPCSTR, DWORD, int, int,
@@ -185,13 +171,18 @@ typedef BOOL (WINAPI *DestroyWindow_t)(HWND);
 typedef LRESULT (WINAPI *DefWindowProcA_t)(HWND, UINT, WPARAM, LPARAM);
 typedef DWORD (WINAPI *GetModuleFileNameA_t)(HMODULE, LPSTR, DWORD);
 
-HMODULE g_d3d11, g_user32;
-D3D11CreateDevice_t p_create;
+HMODULE g_user32;
 
-/* ---- the device and everything hanging off it ---------------------------- */
-
+/* ---- the device and everything hanging off it ----------------------------
+   THE DEVICE ITSELF IS NOT THIS FILE'S ANY MORE. hal/gpu_device.cpp makes the
+   one device this process has, because the optional renderer ("Renderer",
+   hal/gpu_raster.cpp) wants the same one and two devices would be two copies
+   of everything on a card and two claims on a 32-bit process's address space.
+   The two pointers below are that device, borrowed for the life of the run;
+   this file creates none of it and releases none of it. */
 ID3D11Device           *g_dev;
 ID3D11DeviceContext    *g_ctx;
+int                     g_tried_device;
 ID3D11VertexShader     *g_vs;
 ID3D11PixelShader      *g_ps;
 ID3D11Buffer           *g_cb;
@@ -254,80 +245,14 @@ void fall_back(const char *why, HRESULT hr)
                         "changes.\n", why);
 }
 
-/* ---- the address rows, the stage-0 probe's measurement kept as a gate ----- */
-
-struct Fixed { uintptr_t base; SIZE_T size; const char *name; };
-const Fixed kFixed[] = {
-    { ntr::MAIN_BASE,   ntr::MAIN_SIZE,   "main memory" },
-    { ntr::IO_BASE,     ntr::IO_SIZE,     "hardware registers" },
-    { ntr::PLTT_BASE,   ntr::PLTT_SIZE,   "palette memory" },
-    { ntr::VRAM_BASE,   ntr::VRAM_SIZE,   "video memory" },
-    { ntr::OAM_BASE,    ntr::OAM_SIZE,    "sprite memory" },
-    { ntr::SHARED_BASE, ntr::SHARED_SIZE, "shared system block" },
-};
-enum { kFixedCount = sizeof kFixed / sizeof kFixed[0] };
-const uintptr_t kArenaBase = 0x30000000u;    /* hal/os_arena.cpp's own */
-const uintptr_t kUserEnd = 0x80000000u;      /* 2 GB: this process has no more */
-
-/* The allocation base is not compared for equality: VirtualAlloc rounds a
-   reservation down to the 64K granularity, so the shared system block, asked
-   for at 0x027ff000, correctly reports a base of 0x027f0000 and is held all the
-   same. What matters is that the page the game uses is committed and writable
-   inside an allocation starting at or below it. */
-bool held(const MEMORY_BASIC_INFORMATION &m, uintptr_t base)
-{
-    return m.State == MEM_COMMIT && m.Protect == PAGE_READWRITE &&
-           m.AllocationBase != 0 && (uintptr_t)m.AllocationBase <= base;
-}
+/* ---- the address rows, the stage-0 probe's measurement kept as a gate -----
+   The rows themselves moved to hal/gpu_device.cpp with the device, because the
+   renderer wants exactly the same audit at exactly the same moments and one
+   copy of it is one answer. Same lines, same order, same label. */
 
 void address_rows(const char *when)
 {
-    if (!g_addrcheck) return;
-    int lost = 0;
-    for (int i = 0; i < kFixedCount; ++i) {
-        MEMORY_BASIC_INFORMATION m;
-        memset(&m, 0, sizeof m);
-        VirtualQuery((void *)kFixed[i].base, &m, sizeof m);
-        const int ok = held(m, kFixed[i].base);
-        if (!ok) ++lost;
-        fprintf(stderr, "[present] %s range %-20s want=%08x..%08x allocbase=%08x "
-                "region=%08x %s\n", when, kFixed[i].name,
-                (unsigned)kFixed[i].base,
-                (unsigned)(kFixed[i].base + kFixed[i].size),
-                (unsigned)(uintptr_t)m.AllocationBase, (unsigned)m.RegionSize,
-                ok ? "ours" : "NOT OURS");
-    }
-    MEMORY_BASIC_INFORMATION a;
-    memset(&a, 0, sizeof a);
-    VirtualQuery((void *)kArenaBase, &a, sizeof a);
-    fprintf(stderr, "[present] %s arena          want=%08x allocbase=%08x %s\n",
-            when, (unsigned)kArenaBase, (unsigned)(uintptr_t)a.AllocationBase,
-            a.State == MEM_FREE ? "not claimed in this run (still free)"
-                                : (held(a, kArenaBase) ? "at 0x30000000"
-                                                       : "HELD BY SOMETHING ELSE"));
-    /* the free address space, which is what a driver eats into */
-    ULONGLONG total = 0, largest = 0;
-    uintptr_t at = 0, largest_at = 0;
-    while (at < kUserEnd) {
-        MEMORY_BASIC_INFORMATION m;
-        if (VirtualQuery((void *)at, &m, sizeof m) != sizeof m) break;
-        if (!m.RegionSize) break;
-        if (m.State == MEM_FREE) {
-            ULONGLONG sz = m.RegionSize;
-            if (at + sz > kUserEnd) sz = kUserEnd - at;
-            total += sz;
-            if (sz > largest) { largest = sz; largest_at = at; }
-        }
-        const uintptr_t next = at + (uintptr_t)m.RegionSize;
-        if (next <= at) break;
-        at = next;
-    }
-    fprintf(stderr, "[present] %s address space below %08x: free total=%u MB, "
-            "largest free block=%u MB at %08x, ranges lost=%d, "
-            "port_arena_is_fixed()=%d\n",
-            when, (unsigned)kUserEnd, (unsigned)(total / (1024 * 1024)),
-            (unsigned)(largest / (1024 * 1024)), (unsigned)largest_at, lost,
-            port_arena_is_fixed());
+    port_gpu_device_address_rows(when, g_addrcheck);
 }
 
 /* ---- the one-time read of the environment and the file ------------------- */
@@ -384,48 +309,9 @@ void read_settings()
     g_refresh_ms = 1000.0 / (double)(g_refresh_hz > 0 ? g_refresh_hz : 60);
 }
 
-/* ---- the device ---------------------------------------------------------- */
-
-void name_adapter()
-{
-    IDXGIDevice *dxdev = 0;
-    if (FAILED(g_dev->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxdev)) ||
-        !dxdev)
-        return;
-    IDXGIAdapter *ad = 0;
-    if (SUCCEEDED(dxdev->GetAdapter(&ad)) && ad) {
-        DXGI_ADAPTER_DESC d;
-        memset(&d, 0, sizeof d);
-        if (SUCCEEDED(ad->GetDesc(&d))) {
-            unsigned i = 0;
-            for (; i + 1 < sizeof g_adapter && d.Description[i]; ++i)
-                g_adapter[i] = (char)(d.Description[i] < 128 ? d.Description[i]
-                                                             : '?');
-            g_adapter[i] = 0;
-        }
-        ad->Release();
-    }
-    dxdev->Release();
-}
-
-bool make_device(D3D_DRIVER_TYPE type)
-{
-    static const D3D_FEATURE_LEVEL levels[] = {
-        D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
-    };
-    D3D_FEATURE_LEVEL got = (D3D_FEATURE_LEVEL)0;
-    const HRESULT hr = p_create(0, type, 0, 0, levels,
-                                (UINT)(sizeof levels / sizeof levels[0]),
-                                D3D11_SDK_VERSION, &g_dev, &got, &g_ctx);
-    if (FAILED(hr) || !g_dev) {
-        g_dev = 0;
-        g_ctx = 0;
-        return false;
-    }
-    g_level = got;
-    g_is_warp = (type == D3D_DRIVER_TYPE_WARP);
-    return true;
-}
+/* ---- the device ----------------------------------------------------------
+   Made by hal/gpu_device.cpp, which also names the adapter and keeps the
+   feature level and the creation cost. This file only borrows it. */
 
 bool make_pipeline()
 {
@@ -1111,8 +997,11 @@ void release_all()
     if (g_cb) { g_cb->Release(); g_cb = 0; }
     if (g_ps) { g_ps->Release(); g_ps = 0; }
     if (g_vs) { g_vs->Release(); g_vs = 0; }
-    if (g_ctx) { g_ctx->ClearState(); g_ctx->Flush(); g_ctx->Release(); g_ctx = 0; }
-    if (g_dev) { g_dev->Release(); g_dev = 0; }
+    /* The device and its context are hal/gpu_device.cpp's and are released
+       there, after this handler runs: atexit unwinds in reverse order of
+       registration and the device registers first, inside the acquire below. */
+    g_ctx = 0;
+    g_dev = 0;
 }
 
 void at_exit()
@@ -1144,38 +1033,36 @@ bool start()
     read_settings();
     if (!g_backend || g_down) return false;
     if (g_dev) return true;
-    if (g_d3d11) return false;          /* tried once and failed */
+    if (g_tried_device) return false;   /* tried once and failed */
+    g_tried_device = 1;
 
-    /* THE ARENA FIRST. hal/os_arena.cpp claims 0x30000000 lazily, and whatever
-       holds that address when the game first carves the arena wins; a lost race
-       silently turns disk save states off. The stage-0 probe measured that this
-       machine's driver does not take it either way, so this is insurance rather
-       than a fix, and it is one call. */
-    (void)port_arena_base();
+    /* THE ARENA AND THE LOADING ARE hal/gpu_device.cpp's, in that order: it
+       reserves 0x30000000 before it creates anything, which is the insurance
+       the stage-0 probe asked for, and it LoadLibrary's d3d11.dll rather than
+       linking it, which is what keeps this exe's import table where it was. */
     address_rows("before");
 
-    g_d3d11 = LoadLibraryA("d3d11.dll");
-    if (!g_d3d11) { fall_back("Direct3D 11 is not on this machine", 0); return false; }
-    p_create = (D3D11CreateDevice_t)GetProcAddress(g_d3d11, "D3D11CreateDevice");
-    if (!p_create) { fall_back("d3d11.dll has no D3D11CreateDevice", 0); return false; }
-
-    const long long t0 = qpc();
-    bool ok = false;
-    if (g_want_warp == 1) {
-        ok = make_device(D3D_DRIVER_TYPE_WARP);
-    } else {
-        ok = make_device(D3D_DRIVER_TYPE_HARDWARE);
-        if (!ok && g_want_warp < 0) ok = make_device(D3D_DRIVER_TYPE_WARP);
+    if (!port_gpu_device_acquire(g_want_warp)) {
+        fall_back("no Direct3D device would start", 0);
+        return false;
     }
-    if (!ok) { fall_back("no Direct3D device would start", 0); return false; }
-    const double dt = ms_between(t0, qpc());
-    name_adapter();
+    g_dev = (ID3D11Device *)port_gpu_device();
+    g_ctx = (ID3D11DeviceContext *)port_gpu_device_context();
+    if (!g_dev || !g_ctx) { fall_back("no Direct3D device would start", 0); return false; }
+    g_level = (D3D_FEATURE_LEVEL)port_gpu_device_feature_level();
+    g_is_warp = port_gpu_device_is_warp();
+    {
+        const char *n = port_gpu_device_adapter();
+        unsigned i = 0;
+        for (; i + 1 < sizeof g_adapter && n[i]; ++i) g_adapter[i] = n[i];
+        g_adapter[i] = 0;
+    }
     fprintf(stderr, "[present] Direct3D 11 on \"%s\"%s, feature level %u_%u, "
             "ready in %.1f ms. Display %d Hz. Filter %s. VSync %s.\n",
             g_adapter[0] ? g_adapter : "(unnamed)",
             g_is_warp ? " (WARP, the software device Windows ships)" : "",
             (unsigned)((g_level >> 12) & 0xf), (unsigned)((g_level >> 8) & 0xf),
-            dt, g_refresh_hz,
+            port_gpu_device_create_ms(), g_refresh_hz,
             g_filter >= 2 ? "sharp" : (g_filter == 1 ? "smooth" : "nearest"),
             g_vsync_key ? "on" : "off");
     if (!make_pipeline()) { release_all(); return false; }
