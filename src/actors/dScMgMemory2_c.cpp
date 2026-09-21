@@ -137,7 +137,7 @@ void func_ov006_020c0aa8(char *);
 void func_ov004_020b1bc8(char *, int, int, int);
 void func_ov006_020c1804(char *);
 extern "C" void func_ov004_020b65e4(void);
-extern "C" int func_ov006_020c19d0(void *p);
+extern "C" void func_ov006_020c19d0(char *p);
 void func_ov006_0210a534(void);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
@@ -153,7 +153,7 @@ extern u8 data_0209d454;
 void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN11dScMgBase_cC2Ev(void *scene);
 void _ZN8Particle10SysTrackerC1Ev(void *tracker);
-void func_ov006_020c1d80(void *sharedState);
+int func_ov006_020c1d80(char *sharedState);
 extern void *_ZTV19dScMgSingle3DBase_c[];
 extern void *_ZTV14dScMgMemory2_c[];
 }
@@ -1384,7 +1384,6 @@ void dScMgMemory2_c::SetupDifficulty() {
 // @symbol _ZN14dScMgMemory2_c15OnGroundPoundedEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnGroundPounded()
 {
 
@@ -1396,7 +1395,6 @@ void dScMgMemory2_c::OnGroundPounded()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMemory2_c13OnTurnIntoEggEi
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 {
     char *c = (char *)this;
@@ -1415,7 +1413,6 @@ int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 // @symbol _ZN14dScMgMemory2_c13OnYoshiTryEatEi
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 /* recovered: renamed to Class_Method, RTTI class fields named */
-// tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
 void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
 {
 
@@ -1427,7 +1424,7 @@ void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
     v = 0;
     if (o != 0) v = *(int *)(o + 0xa8);
     if (v >= 5) v = 5;
-    ((void (*)(void *))func_ov004_020b66d4)(o);
+    func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;
     mMaxMisses = (unsigned char)v;
 }
