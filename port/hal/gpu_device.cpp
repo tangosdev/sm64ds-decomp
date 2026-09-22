@@ -350,12 +350,14 @@ extern "C" void port_gpu_timer_frame_end(void)
 
 extern "C" int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
                                      double *present_ms,
-                                     unsigned long long *pictures)
+                                     unsigned long long *pictures,
+                                     unsigned long long *dropped)
 {
     if (card_ms) *card_ms = g_timer_card_ms;
     if (opaque_ms) *opaque_ms = g_timer_span_ms[PORT_GPU_SPAN_OPAQUE];
     if (present_ms) *present_ms = g_timer_span_ms[PORT_GPU_SPAN_PRESENT];
     if (pictures) *pictures = g_timer_pics;
+    if (dropped) *dropped = g_timer_missed;
     return g_timer_ready;
 }
 
@@ -425,12 +427,14 @@ void port_gpu_timer_span_begin(int) {}
 void port_gpu_timer_span_end(int) {}
 void port_gpu_timer_frame_end(void) {}
 int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
-                          double *present_ms, unsigned long long *pictures)
+                          double *present_ms, unsigned long long *pictures,
+                          unsigned long long *dropped)
 {
     if (card_ms) *card_ms = 0.0;
     if (opaque_ms) *opaque_ms = 0.0;
     if (present_ms) *present_ms = 0.0;
     if (pictures) *pictures = 0;
+    if (dropped) *dropped = 0;
     return 0;
 }
 void port_gpu_device_address_rows(const char *, int) {}

@@ -2975,6 +2975,8 @@ static double g_gpu_ms_tick;     /* card busy ms per game tick */
 static double g_gpu_pct;         /* the same as a share of the tick's budget */
 static double g_gpu_read_ms;     /* the readback wait per game tick */
 static int    g_gpu_measured;    /* the card answered at least one picture */
+static unsigned long long g_gpu_dropped;   /* pictures dropped THIS WINDOW */
+static double g_gpu_drop_pct;    /* dropped / (dropped + measured) this window */
 static int    g_ovl_trace;       /* SM64DS_OVERLAY_TRACE */
 
 static void ovl_gpu_sample(void)
@@ -2982,16 +2984,21 @@ static void ovl_gpu_sample(void)
     static LARGE_INTEGER qpf, t0;
     static double c0, r0;
     static int f0;
+    static unsigned long long p0, m0;
     static double lo = 1e30, hi, sum;
     static int nsam;
     double card = 0.0;
-    unsigned long long pics = 0;
+    unsigned long long pics = 0, missed = 0;
     LARGE_INTEGER now;
     if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
-    const int live = port_gpu_timer_totals(&card, 0, 0, &pics);
+    const int live = port_gpu_timer_totals(&card, 0, 0, &pics, &missed);
     const double read = port_gpu_raster_readback_ms();
     QueryPerformanceCounter(&now);
-    if (!t0.QuadPart) { t0 = now; c0 = card; r0 = read; f0 = port_rom_frame(); return; }
+    if (!t0.QuadPart) {
+        t0 = now; c0 = card; r0 = read; f0 = port_rom_frame();
+        p0 = pics; m0 = missed;
+        return;
+    }
     const double dt = (now.QuadPart - t0.QuadPart) / (double)qpf.QuadPart;
     if (dt < 0.5) return;
     const int ticks = port_rom_frame() - f0;
@@ -3001,21 +3008,35 @@ static void ovl_gpu_sample(void)
         const double budget = PORT_VBLANK_MS * port_frame_divider();
         g_gpu_pct = budget > 0.0 ? g_gpu_ms_tick / budget * 100.0 : 0.0;
         g_gpu_measured = (live && pics) ? 1 : 0;
+        /* how many pictures this window's own drops are, out of this
+           window's own attempts (measured + dropped) -- a raw cumulative
+           share would never move once an early burst of drops set it, so
+           the overlay line's threshold needs the WINDOW's share, not the
+           run's. */
+        const unsigned long long dpics = pics - p0, dmissed = missed - m0;
+        g_gpu_dropped = dmissed;
+        g_gpu_drop_pct = (dpics + dmissed) > 0
+                             ? (double)dmissed / (double)(dpics + dmissed) * 100.0
+                             : 0.0;
         if (g_ovl_trace && g_gpu_measured) {
             if (g_gpu_ms_tick < lo) lo = g_gpu_ms_tick;
             if (g_gpu_ms_tick > hi) hi = g_gpu_ms_tick;
             sum += g_gpu_ms_tick;
             ++nsam;
             fprintf(stderr, "[overlay] gpu %6.3fms %3.0f%% readback %6.3fms "
-                    "ticks %3d pictures %llu\n", g_gpu_ms_tick, g_gpu_pct,
-                    g_gpu_read_ms, ticks, (unsigned long long)pics);
+                    "ticks %3d pictures %llu dropped %llu\n", g_gpu_ms_tick,
+                    g_gpu_pct, g_gpu_read_ms, ticks, (unsigned long long)pics,
+                    (unsigned long long)missed);
             if ((nsam % 10) == 0)
                 fprintf(stderr, "[overlay] gpu over %d sample(s): min %6.3f "
-                        "max %6.3f mean %6.3f ms per tick\n", nsam, lo, hi,
-                        sum / nsam);
+                        "max %6.3f mean %6.3f ms per tick, dropped %llu of "
+                        "%llu pictures\n", nsam, lo, hi, sum / nsam,
+                        (unsigned long long)missed,
+                        (unsigned long long)(missed + pics));
         }
     }
     t0 = now; c0 = card; r0 = read; f0 = port_rom_frame();
+    p0 = pics; m0 = missed;
 }
 
 extern "C" int port_host_frame_pump(unsigned spin)
@@ -3235,6 +3256,8 @@ struct OvlStats {
     double gpu_ms;           /* card busy ms per game tick */
     double gpu_pct;          /* the same as a share of the tick's budget */
     double gpu_read_ms;      /* the readback wait per game tick */
+    unsigned long long gpu_dropped;  /* pictures dropped this window */
+    double gpu_drop_pct;     /* dropped share of this window's attempts */
     int tris;                /* polygons gx accepted this frame */
     int actors;              /* live entries on the behaviour list */
     char *player;            /* the Player actor */
@@ -3304,12 +3327,22 @@ static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
         col[n++] = WHITE;
     } else {
         const char *what = s.gpu_use == 2 ? "warp " : "";
+        char base[80];
         if (s.gpu_raster)
-            snprintf(ln[n], sizeof ln[0], "gpu %s%5.2fms %3.0f%%  readback %5.2fms",
+            snprintf(base, sizeof base, "gpu %s%5.2fms %3.0f%%  readback %5.2fms",
                      what, s.gpu_ms, s.gpu_pct, s.gpu_read_ms);
         else
-            snprintf(ln[n], sizeof ln[0], "gpu %s%5.2fms %3.0f%%  present only",
+            snprintf(base, sizeof base, "gpu %s%5.2fms %3.0f%%  present only",
                      what, s.gpu_ms, s.gpu_pct);
+        /* Nothing about the line changes for an occasional drop -- the ring
+           recovers on its own. Only once a window's drop share passes 5%
+           does the line say so: a silently bad reading is worse than a
+           slightly longer one. */
+        if (s.gpu_drop_pct > 5.0)
+            snprintf(ln[n], sizeof ln[0], "%s  (%llu dropped)", base,
+                     (unsigned long long)s.gpu_dropped);
+        else
+            snprintf(ln[n], sizeof ln[0], "%s", base);
         col[n++] = s.gpu_pct < 70.0 ? GREEN : (s.gpu_pct < 100.0 ? AMBER : RED);
     }
 
@@ -3379,6 +3412,8 @@ static void ovl_fill_common(OvlStats &os)
         os.gpu_ms = g_gpu_ms_tick;
         os.gpu_pct = g_gpu_pct;
         os.gpu_read_ms = g_gpu_read_ms;
+        os.gpu_dropped = g_gpu_dropped;
+        os.gpu_drop_pct = g_gpu_drop_pct;
     }
     {
         const int d = port_frame_divider();

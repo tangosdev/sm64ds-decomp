@@ -101,11 +101,16 @@ void port_gpu_timer_span_end(int span);
 void port_gpu_timer_frame_end(void);
 
 /* The running totals: the card's own busy milliseconds since the process
-   started, the same split by span, and how many pictures carried a completed
-   measurement. Returns 1 when the timer is live, 0 when it is off or there is
-   no device. Every pointer is optional. */
+   started, the same split by span, how many pictures carried a completed
+   measurement, and how many pictures were DROPPED (the disjoint-clock query
+   came back bad, or every ring slot was still waiting when a new picture
+   wanted one): a dropped picture contributes nothing to card_ms, so it would
+   silently under-report the card's cost if nobody counted it. Returns 1 when
+   the timer is live, 0 when it is off or there is no device. Every pointer is
+   optional. */
 int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
-                          double *present_ms, unsigned long long *pictures);
+                          double *present_ms, unsigned long long *pictures,
+                          unsigned long long *dropped);
 
 /* THE SIX DS RANGES, THE SAVE-STATE ARENA AND THE FREE ADDRESS SPACE, printed
  * as one block. This is the stage-0 probe's measurement kept as a gate: a
