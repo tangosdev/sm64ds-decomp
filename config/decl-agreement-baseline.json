@@ -7002,11 +7002,6 @@
         "param:#2 void *",
         "param:#5 void *"
       ],
-      "src/_ZN7daBbl_c13InitResourcesEv.cpp": [
-        "param:#1 char *",
-        "param:#2 char *",
-        "param:#5 void *"
-      ],
       "src/_ZN8Fireball13InitResourcesEv.cpp": [
         "param:#2 void *",
         "param:#5 void *"
@@ -13504,9 +13499,6 @@
       "src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp": [
         "return:void"
       ],
-      "src/_ZN7daBbl_c8BehaviorEv.cpp": [
-        "return:void"
-      ],
       "src/_ZN8Fireball8BehaviorEv.cpp": [
         "return:void"
       ],
@@ -14888,10 +14880,6 @@
       "src/_ZN6Bullet13InitResourcesEv.cpp": [
         "param:#1 char *"
       ],
-      "src/_ZN7daBbl_c13InitResourcesEv.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
-      ],
       "src/_ZN8IceBlock13InitResourcesEv.cpp": [
         "param:#1 char *",
         "param:#2 char *"
@@ -15916,9 +15904,6 @@
         "return:char *"
       ],
       "src/_ZN5Unagi8BehaviorEv.cpp": [
-        "return:void *"
-      ],
-      "src/_ZN7daBbl_c8BehaviorEv.cpp": [
         "return:void *"
       ],
       "src/_ZN8Fireball8BehaviorEv.cpp": [
@@ -46949,10 +46934,6 @@
     "func_ov064_021187ec": {
       "include/decl_common.h": [
         "param:#1 char *"
-      ],
-      "src/_ZN7daBbl_c13InitResourcesEv.cpp": [
-        "param:#1 char *",
-        "return:void"
       ]
     },
     "func_ov064_0211929c": {
