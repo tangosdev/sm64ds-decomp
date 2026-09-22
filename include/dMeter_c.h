@@ -30,10 +30,12 @@ struct dMeter_c : dBase_c {
        seconds, not ticks. Unsigned: the ROM reads it with ldrh and the <= 5
        test is unsigned. */
     u16 mVsTimer;                     /* 0x060 */
-    /* InitResources zeroes 0x062 and seeds 0x064 with 0xb4, and nothing in this
-       translation unit reads either back, so neither has a name it could earn
-       here. They stay padding and the two stores stay offset writes. */
-    u8  pad_062[0x4];
+    /* Written once by InitResources -- 0x062 cleared, 0x064 seeded with 0xb4 --
+       and never read back anywhere in this translation unit, so neither has
+       earned a name. They keep the placeholder spelling the shards used, at
+       their measured widths, because InitResources writes them by name. */
+    s16 unk62;                        /* 0x062 */
+    s16 unk64;                        /* 0x064 */
     /* Y for the VS timer's digits. Passed straight through as OAM::Render's y
        at every one of the seven call sites, while their x values are literals
        -- so the row is animated and the columns are fixed. */
@@ -54,7 +56,10 @@ struct dMeter_c : dBase_c {
        from a fixed origin. It is a field rather than a constant because the
        three render paths share it and the cursor is consumed by value. */
     s16 mStarCountX;                  /* 0x070 */
-    u8  pad_072[0x1];
+    /* Cleared beside mHealthMeterState on the eight-health branch of
+       InitResources and never read back here, so it keeps the placeholder
+       spelling too. */
+    u8  unk72;                        /* 0x072 */
     u8  mHealthMeterState;            /* 0x073 */
     /* The three decimal digits CalculateDigits splits a count into, most
        significant first. SIGNED because -1 is the sentinel it writes for a

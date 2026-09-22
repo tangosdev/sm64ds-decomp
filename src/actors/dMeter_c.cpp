@@ -301,8 +301,8 @@ int dMeter_c::InitResources()
     }
 
     int var_r2 = 0;
-    (*(s16 *)((char *)this + 0x62)) = 0;
-    (*(s16 *)((char *)this + 0x64)) = 0xB4;
+    unk62 = 0;
+    unk64 = 0xB4;
     mVsTimerY = 0xA;
     if (data_0209f2d8 == 1) var_r2 = 1;
     if (var_r2 != 0) {
@@ -321,7 +321,7 @@ int dMeter_c::InitResources()
     }
     if (data_ov002_0211117c[0] == 8) {
         mHealthMeterY = -0x18;
-        (*(u8 *)((char *)this + 0x72)) = 0;
+        unk72 = 0;
         mHealthMeterState = 0;
     } else {
         mHealthMeterY = 0x18;
