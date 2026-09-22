@@ -1,9 +1,9 @@
 {
   "id": "ov085/daC_Jugem_c",
   "module": "ov085",
-  "source": "src_tu/actors/daC_Jugem_c.cpp",
+  "source": "src/game/actors/d_a_c_jugem.cpp",
   "promoted_source": "src/game/actors/d_a_c_jugem.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x212d528..0x212ed54, 32 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212edac to take in daC_Jugem_c_classInit at 0x212ed54, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN11daC_Jugem_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x2e8 and installs this class's vtable), and 0x212edac is the next class's destructor. The sibling TU ov085/daMip_c took in its own classInit on the same grounds and is promoted.",

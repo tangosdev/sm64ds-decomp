@@ -1,9 +1,9 @@
 {
   "id": "ov085/daKinopio_c",
   "module": "ov085",
-  "source": "src_tu/actors/daKinopio_c.cpp",
+  "source": "src/game/actors/d_a_kinopio.cpp",
   "promoted_source": "src/game/actors/d_a_kinopio.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2129020..0x2129cd0, 14 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x2129d18 to take in daKinopio_c_classInit at 0x2129cd0, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN11daKinopio_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x210 and installs this class's vtable), and 0x2129d18 is the next class's destructor. The sibling TUs ov085/daMip_c and ov085/daC_Jugem_c took in their own classInit on the same grounds. 0x2129020 is also the overlay's own .text start, so nothing precedes this TU in ov085.",

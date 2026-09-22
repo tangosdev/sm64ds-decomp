@@ -11,7 +11,7 @@
  * CodeWarrior emits each definition where it stands, which is also what puts the
  * destructor pair out in the cartridge's own order: ov085 has D1 at 0x02129020
  * BELOW D0 at 0x02129060 and no D2 at all. The two sibling TUs in this same
- * overlay, src/actors/daMip_c.cpp and src_tu/actors/daC_Jugem_c.cpp, have the
+ * overlay, src/actors/daMip_c.cpp and src/game/actors/d_a_c_jugem.cpp, have the
  * identical destructor shape and are built the same way.
  *
  * The destructor is declared inline in include/daKinopio_c.h and stays that way.

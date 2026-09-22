@@ -11,7 +11,7 @@
  * so CodeWarrior emits each definition where it stands. That is also what
  * puts the destructor pair out in the cartridge's own order: ov085 has D1 at
  * 0x02129d18 BELOW D0 at 0x02129d60 and no D2 at all. The sibling TUs in this
- * same overlay -- src/actors/daMip_c.cpp, src_tu/actors/daC_Jugem_c.cpp and
+ * same overlay -- src/actors/daMip_c.cpp, src/game/actors/d_a_c_jugem.cpp and
  * src/actors/daObjKanban_c.cpp -- have the identical destructor shape and
  * are built the same way.
  *

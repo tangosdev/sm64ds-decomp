@@ -521,7 +521,7 @@ individually with `match.py` before the link confirmed them:
 | `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
 | `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
-| [func_ov085_0212e778](../src/func_ov085_0212e778.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
+| [func_ov085_0212e778](../src/game/actors/d_a_c_jugem.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
 | [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
 | [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
 | [func_ov002_020f23d0](../src/func_ov002_020f23d0.c) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |

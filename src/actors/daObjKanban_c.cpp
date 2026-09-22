@@ -14,7 +14,7 @@
  * 0x0212edac BELOW D0 at 0x0212edf8 and no D2 at all, and an out-of-line
  * destructor under DEFERRED codegen comes out D2, D0, D1. The two sibling TUs
  * earlier in this same overlay, src/actors/daMip_c.cpp and
- * src_tu/actors/daC_Jugem_c.cpp, have the identical destructor shape and are
+ * src/game/actors/d_a_c_jugem.cpp, have the identical destructor shape and are
  * built the same way.
  *
  * Assembled from these legacy one-function sources (ROM address order):

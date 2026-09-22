@@ -81,7 +81,8 @@ retaining its independent byte proof in this combined candidate.
 ## Earlier backport description and proof
 
 Backport the star-ID argument correction from shadow PR #2829 into
-`src/_ZN11daKinopio_c12St_Talk_MainEv.cpp`. Both the declaration and call now say
+`daKinopio_c::St_Talk_Main`, then in its own file and now in
+`src/game/actors/d_a_kinopio.cpp`. Both the declaration and call now say
 that `IsStarCollectedInCurLevel` receives `int starID`, agreeing with its actual
 production definition in `src/IsStarCollectedInCurLevel.c` and the existing
 `daKinopio_c::InitResources` caller.

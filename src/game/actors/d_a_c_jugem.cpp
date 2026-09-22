@@ -168,7 +168,6 @@ extern Vector3        data_ov085_0213084c;
 extern char           data_ov085_0213074c[]; /* SharedFilePtr; loaded file at +4 */
 extern char           data_ov085_02130744[];
 extern char           data_ov085_0213073c[];
-extern void          *_ZTV11daC_Jugem_c;
 
 }
 
