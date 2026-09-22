@@ -1,13 +1,13 @@
 {
-  "id": "ov072/SnowmanHead",
+  "id": "ov072/daBgSnmHed_c",
   "module": "ov072",
-  "source": "src_tu/actors/SnowmanHead.cpp",
-  "promoted_source": "src/actors/SnowmanHead.cpp",
+  "source": "src_tu/actors/daBgSnmHed_c.cpp",
+  "promoted_source": "src/actors/daBgSnmHed_c.cpp",
   "status": "text-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x211ff34..0x21207d4, 19 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): SnowmanHead",
+    "class label(s): daBgSnmHed_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
   "sections": [
@@ -19,136 +19,136 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN11SnowmanHeadD1Ev",
+      "symbol": "_ZN12daBgSnmHed_cD1Ev",
       "address": "0x0211ff34",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN11SnowmanHeadD1Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_cD1Ev.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN11SnowmanHeadD0Ev",
+      "symbol": "_ZN12daBgSnmHed_cD0Ev",
       "address": "0x0211ff7c",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN11SnowmanHeadD0Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_cD0Ev.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN11SnowmanHead11UpdateModelEv",
+      "symbol": "_ZN12daBgSnmHed_c11UpdateModelEv",
       "address": "0x0211ffd8",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN11SnowmanHead11UpdateModelEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c11UpdateModelEv.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN11SnowmanHead6State3Ev",
+      "symbol": "_ZN12daBgSnmHed_c6State3Ev",
       "address": "0x0212001c",
       "size": "0x00000164",
-      "legacy_source": "src/_ZN11SnowmanHead6State3Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c6State3Ev.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN11SnowmanHead10InitState3Ev",
+      "symbol": "_ZN12daBgSnmHed_c10InitState3Ev",
       "address": "0x02120180",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN11SnowmanHead10InitState3Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c10InitState3Ev.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11SnowmanHead6State2Ev",
+      "symbol": "_ZN12daBgSnmHed_c6State2Ev",
       "address": "0x021201d4",
       "size": "0x00000134",
-      "legacy_source": "src/_ZN11SnowmanHead6State2Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c6State2Ev.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN11SnowmanHead10InitState2Ev",
+      "symbol": "_ZN12daBgSnmHed_c10InitState2Ev",
       "address": "0x02120308",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN11SnowmanHead10InitState2Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c10InitState2Ev.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11SnowmanHead6State1Ev",
+      "symbol": "_ZN12daBgSnmHed_c6State1Ev",
       "address": "0x02120358",
       "size": "0x000000d8",
-      "legacy_source": "src/_ZN11SnowmanHead6State1Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c6State1Ev.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11SnowmanHead10InitState1Ev",
+      "symbol": "_ZN12daBgSnmHed_c10InitState1Ev",
       "address": "0x02120430",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN11SnowmanHead10InitState1Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c10InitState1Ev.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11SnowmanHead6State0Ev",
+      "symbol": "_ZN12daBgSnmHed_c6State0Ev",
       "address": "0x02120450",
       "size": "0x000000c4",
-      "legacy_source": "src/_ZN11SnowmanHead6State0Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c6State0Ev.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11SnowmanHead10InitState0Ev",
+      "symbol": "_ZN12daBgSnmHed_c10InitState0Ev",
       "address": "0x02120514",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN11SnowmanHead10InitState0Ev.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c10InitState0Ev.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11SnowmanHead17CallStateBehaviorEv",
+      "symbol": "_ZN12daBgSnmHed_c17CallStateBehaviorEv",
       "address": "0x02120560",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN11SnowmanHead17CallStateBehaviorEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c17CallStateBehaviorEv.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11SnowmanHead13CallStateInitEv",
+      "symbol": "_ZN12daBgSnmHed_c13CallStateInitEv",
       "address": "0x0212059c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN11SnowmanHead13CallStateInitEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c13CallStateInitEv.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11SnowmanHead8SetStateEi",
+      "symbol": "_ZN12daBgSnmHed_c8SetStateEi",
       "address": "0x021205d4",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN11SnowmanHead8SetStateEi.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c8SetStateEi.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN11SnowmanHead16CleanupResourcesEv",
+      "symbol": "_ZN12daBgSnmHed_c16CleanupResourcesEv",
       "address": "0x021205f0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN11SnowmanHead16CleanupResourcesEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c16CleanupResourcesEv.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN11SnowmanHead16OnPendingDestroyEv",
+      "symbol": "_ZN12daBgSnmHed_c16OnPendingDestroyEv",
       "address": "0x02120634",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN11SnowmanHead16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c16OnPendingDestroyEv.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN11SnowmanHead6RenderEv",
+      "symbol": "_ZN12daBgSnmHed_c6RenderEv",
       "address": "0x02120638",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN11SnowmanHead6RenderEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c6RenderEv.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN11SnowmanHead8BehaviorEv",
+      "symbol": "_ZN12daBgSnmHed_c8BehaviorEv",
       "address": "0x0212066c",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN11SnowmanHead8BehaviorEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c8BehaviorEv.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN11SnowmanHead13InitResourcesEv",
+      "symbol": "_ZN12daBgSnmHed_c13InitResourcesEv",
       "address": "0x0212069c",
       "size": "0x00000138",
-      "legacy_source": "src/_ZN11SnowmanHead13InitResourcesEv.cpp",
+      "legacy_source": "src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp",
       "ordinal": 18
     }
   ],
@@ -156,10 +156,10 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "RTTI/vtable licensing: this TU is the key-function TU for the class. Its object emits _ZTV11SnowmanHead (0x84) plus the ancestor RTTI chain (_ZTI/_ZTS for SnowmanHead, dActor_c, dBase_c, fBase_c) into .data. The manifest sections list is .text ONLY, so a later promotion will fail isolate with 'unlicensed content in text-only multi-symbol object' until a .data range is licensed here. Text-verification is unaffected.",
-    "ROM homes, from config/arm9/overlays/ov072/symbols.txt: _ZTV11SnowmanHead at 0x021228bc, aliased at the same address by _ZTV12daBgSnmHed_c; the class's ROM RTTI name is daBgSnmHed_c (_ZTI at 0x0212287c, _ZTS at 0x02122888). All sit in the ov072 .data range 0x02122720..0x02122b20, outside this TU's .text span. g_profile_BIG_SNOWMAN_HEAD at 0x02122898 is interleaved between the RTTI records and the vtable, so a .data license here is not one contiguous interval.",
-    "Vtable length discrepancy, unresolved: the compiled object emits _ZTV11SnowmanHead at 0x84 bytes (33 words), but in ROM the gap from 0x021228bc to the next named symbol (_ZTI11daBgSnwmn_c at 0x02122938) is 0x7c -- 8 bytes / 2 slots shorter. Measured only by symbol adjacency in symbols.txt, not by disassembly. It does not affect text verification (19/19 MATCH) but should be settled before anyone licenses a .data range for this TU.",
-    "Class naming: the ROM's own RTTI spells this class daBgSnmHed_c; the tree's class is SnowmanHead. Left as found -- renaming is out of scope for this fold.",
+    "RTTI/vtable licensing: this TU is the key-function TU for the class. Its object emits _ZTV12daBgSnmHed_c (0x84) plus the ancestor RTTI chain (_ZTI/_ZTS for daBgSnmHed_c, dActor_c, dBase_c, fBase_c) into .data. The manifest sections list is .text ONLY, so a later promotion will fail isolate with 'unlicensed content in text-only multi-symbol object' until a .data range is licensed here. Text-verification is unaffected.",
+    "ROM homes, from config/arm9/overlays/ov072/symbols.txt: _ZTV12daBgSnmHed_c at 0x021228bc, aliased at the same address by _ZTV12daBgSnmHed_c; the class's ROM RTTI name is daBgSnmHed_c (_ZTI at 0x0212287c, _ZTS at 0x02122888). All sit in the ov072 .data range 0x02122720..0x02122b20, outside this TU's .text span. g_profile_BIG_SNOWMAN_HEAD at 0x02122898 is interleaved between the RTTI records and the vtable, so a .data license here is not one contiguous interval.",
+    "Vtable length discrepancy, unresolved: the compiled object emits _ZTV12daBgSnmHed_c at 0x84 bytes (33 words), but in ROM the gap from 0x021228bc to the next named symbol (_ZTI11daBgSnwmn_c at 0x02122938) is 0x7c -- 8 bytes / 2 slots shorter. Measured only by symbol adjacency in symbols.txt, not by disassembly. It does not affect text verification (19/19 MATCH) but should be settled before anyone licenses a .data range for this TU.",
+    "Class naming: the ROM's own RTTI spells this class daBgSnmHed_c; the tree's class is daBgSnmHed_c. Left as found -- renaming is out of scope for this fold.",
     "Declarations reconciled by hand: (1) decl_common.h was dropped from this TU -- it declares data_ov072_02122bc4 and data_ov072_02121ffc as plain void*, contradicting the evidenced SharedFilePtr and SharedFilePtr*[] spellings the CleanupResources source carries. InitResources was written against the void* view, so its subscript was rewritten from (and-ref arr)[i] to arr[i], which is the same address arithmetic under the stronger type. (2) ApproachLinear(short&, short, short) was declared three times, twice returning void and once int; kept one int-returning declaration at its first occurrence, since State1 uses the return value. (3) The shadow struct SnowmanHeadVec3 was defined three times; kept the first.",
     "Pragmas: none in the legacy sources; nothing to carry or re-add."
   ],
@@ -167,14 +167,14 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov072-SnowmanHead/SnowmanHead.o (gitignored)",
+    "object": "build/tu/ov072-daBgSnmHed_c/daBgSnmHed_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 19,
     "functions_declared": 19,
     "compilerOnlyOutput": {
       "requested": [],
       "unhandled": [
-        "_ZN11SnowmanHeadD2Ev",
+        "_ZN12daBgSnmHed_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "data": []
