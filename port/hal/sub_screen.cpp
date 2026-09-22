@@ -128,6 +128,18 @@ void hal_touch_client_probe(void);
    the ordinary case: the ROM raises the cue only on a map event. */
 void port_bounce_arrows_present(unsigned int *dst, int dst_w, int dst_h,
                                 int px0, int py0, int pw, int ph);
+/* THE LEVEL-CLEAR GLYPH OVERLAY (hal/message_compositor.cpp, which owns engine
+   A's layers; this file owns the compose that reads it). While the composed
+   level-clear picture is up, that unit sends the pixels of the layers carrying
+   the menu's own lettering into these two framebuffer-shaped buffers instead
+   of into the picture, so what the picture holds is the game's own frame with
+   the lettering lifted off it -- no row moved and no region copied -- and this
+   file draws the lifted pixels where the owner asked for them. `live` is that
+   unit's answer for THIS frame; the buffers are indexed at a stride of
+   ntr::SCREEN_W, the same as dst. See the banner over swap_present. */
+int hal_lc_overlay_live(void);
+const unsigned int *hal_lc_overlay_colour(void);
+const unsigned char *hal_lc_overlay_mask(void);
 /* the two engines' brightness blends (hal/fader_wipes.cpp). The SUB one is what
    the sub framebuffer is composed with; the main one is still read by the inset
    path, where the panel is inside engine A's framebuffer when walk_window's own
@@ -283,7 +295,7 @@ int g_size_force;
    the rest. Zero in every frame that is not a level-clear save menu, and
    zero for the whole of every run with the option off. See the banner over
    swap_geom_for. */
-int g_swap;                      /* the compose's answer for this frame */
+int g_swap;                      /* composed this frame? the compose's answer */
 int g_menu_up;                   /* the ROM pair's answer for this frame */
 
 /* SM64DS_MINIMAP_TRACE=1: every rectangle the geometry above and the panel's
@@ -1193,10 +1205,10 @@ int handle_rect(int *hx, int *hy, int *hs, int h)
 {
     (void)h;
     if (!improved_map_on() || hal_sub_screen_stacked()) return 0;
-    /* AND NOT WHILE THE SCREENS ARE SWAPPED: the corner is the top screen's
-       for those frames and the map is not on the picture at all, so there is
-       no map corner to grab. One test, and it covers the draw and the press
-       both, because both come through here. */
+    /* AND NOT WHILE THE PICTURE IS COMPOSED: the map is not on the picture
+       at all for those frames, so there is no map corner to grab. One test,
+       and it covers the draw and the press both, because both come through
+       here. */
     if (g_swap) return 0;
     if (host_setting_mouse_capture()) return 0;
     PanelGeom g;
@@ -1406,19 +1418,54 @@ void inset_map_selftest(int w, int h)
 }
 
 
-/* ---- THE LEVEL-CLEAR SAVE MENU, AND THE SCREEN SWAP -----------------------
+/* ---- THE LEVEL-CLEAR SAVE MENU, COMPOSED ONTO THE TOP SCREEN --------------
  *
- * WHAT IT IS, in the owner's own words: "Could we just have it appear on the
- * top screen?" -- said about the save menu that comes up after a Power Star,
- * which on the DS is in the player's hand on the touch screen and on this
- * port is a 128x96 corner panel he has to aim a mouse at.
+ * WHAT IT IS, in the owner's own words, on being shown the first version of
+ * this (the two screens trading places): "I wanted those to show up on the
+ * top screen. move the course 2 all that text up to the top of the screen,
+ * put the coins total very bottom, remove touch to select and slot the
+ * buttons in where the space gets freed up in the middle. All of this on the
+ * top screen."
  *
- * SO THE TWO SCREENS TRADE PLACES WHILE IT IS UP. The bottom screen -- the
- * three buttons -- becomes the BIG picture at the size the top screen is
- * normally drawn at, and the top screen -- the course-clear text and the coin
- * tally -- drops into the corner. The frame the menu is answered they trade
- * back. The ROM draws exactly what it drew before: this is the host's
- * presentation and the host's stylus inverse, and nothing else.
+ * SO THE BIG PICTURE IS COMPOSED OUT OF BOTH SCREENS while the menu is up,
+ * rather than swapped with one of them. Three things are drawn and there is
+ * no fourth:
+ *
+ *   1. the TOP screen's course-clear text block at the TOP of the picture,
+ *   2. the BOTTOM screen's three button plates in the MIDDLE, as large as the
+ *      space between (1) and (3) allows with their proportions kept,
+ *   3. the TOP screen's coin total at the VERY BOTTOM.
+ *
+ * AND THE PICTURE UNDER ALL THREE IS THE TOP SCREEN'S OWN FRAME, UNMOVED.
+ * That sentence is the correction of 09-21 and it is the whole of this block's
+ * third cut. The first two cuts moved RECTANGLES OF THE FINISHED PICTURE: the
+ * text band copied picture rows 68..231 up to rows 0..163 and the coin band
+ * copied rows 244..287 down to 340..383, and each of those carried the 3D
+ * scene behind the glyphs along with them. The picture's own top 68 rows were
+ * therefore never drawn and its rows 164..231 and 244..287 were drawn twice,
+ * which is what the owner saw: "why is the background picture like stretched?
+ * The screen height shouldnt change, just slot it in."
+ *
+ * So no row of the picture moves any more. hal/message_compositor.cpp lifts
+ * the LAYERS that carry the menu's lettering out of the frame as it composites
+ * engine A -- the glyphs alone, not the scene behind them -- and this file
+ * draws those lifted pixels at the top and at the bottom over the picture's
+ * own rows. The two bands below are now destinations for an overlay and no
+ * longer copies of anything. The banner over LcOverlay in that file carries
+ * the per-layer census that says which layers those are (BG3 the course text,
+ * the sprites the coin total, BG2 the "TOUCH TO SELECT" band, which is hidden
+ * because the owner asked for it gone).
+ *
+ * Everything else of both screens -- the course scenery, the bottom screen's
+ * map, and the backdrop the plates sit on -- is not drawn at all, and the
+ * middle of the picture is the game's own, so what the player sees is three
+ * buttons floating over it. The lives counter in the top-left corner is the
+ * top screen's own and STAYS WHERE IT IS: it is not re-slotted anywhere, the
+ * picture's own top rows are in the picture now, and it does not touch the
+ * lettering (the counter is x 12..95, the text x 96..393). The frame the menu
+ * is answered the picture goes back to the ordinary one.
+ * The ROM draws exactly what it drew before: THIS IS COMPOSITING OF THE TWO
+ * FRAMES THE GAME ALREADY PRODUCED, and nothing else changes.
  *
  * THE TRIGGER IS THE ROM'S OWN STATE AND NEVER A TIMER, and it is a PAIR:
  *
@@ -1442,33 +1489,69 @@ void inset_map_selftest(int w, int h)
  * way hal_sub_panel_geometry is the one place that decides where the map
  * panel is. The compose draws these rectangles and poll_touch's inverse reads
  * these same rectangles; neither recomputes the other's arithmetic. That is
- * the rule this file already lives by and the swap gets no exception.
+ * the rule this file already lives by and the compose gets no exception.
  *
- * WHERE THE CORNER INSET GOES, AND IT IS MEASURED. The menu's three touch
- * boxes are at DS rows 0x28, 0x50 and 0x78, each 0x20 tall, and each plate is
- * the full 256 pixels wide (lane STARMENU1 measured the bands; a pixel census
- * of the banked bottom-screen capture agrees: rows 40..71, 80..111 and
- * 120..151 are 93.7 per cent non-backdrop, the rest of the screen 43 to 49).
- * So no corner of the bottom screen is free of a button, and an inset the
- * size of the map panel would cover part of one whichever corner it took. The
- * band BELOW the last plate -- DS rows 152..191, forty of them -- is free, so
- * the inset is sized to that band and put flush in the corner the bottom
- * screen normally sits in. It covers no button at any picture size, and its
- * width follows the TOP screen's own aspect so nothing is squashed.
+ * WHICH ROWS OF THE TOP SCREEN, AND THEY ARE MEASURED. A pixel census of the
+ * top screen taken while the menu is up (the star row, the stacked layout so
+ * the picture is the top screen alone at 512x384, frame 900):
  *
- * WHAT FILLS THE PICTURE BESIDE THE MENU on a wide aspect: backdrop, the same
- * pillarbox the stacked layout draws round the bottom screen at 16:9. The
- * bottom screen is a fixed 256x192 raster and cannot gain a wider field of
- * view the way the 3D top screen can.
+ *   the message glyphs are drawn in exactly one colour, (144,144,144), and in
+ *   columns 110..400 they fall in four bands -- picture rows 72..93 the
+ *   "COURSE N" line, 104..125 the course's name, 168..189 the star's name (or
+ *   the silver-star line), 200..221 "CLEAR!". The blank line slot between
+ *   them at 126..167 is the cartridge's own layout and is kept, because this
+ *   is a composite of what the game drew and not a re-typesetting of it. Five
+ *   line slots of 16 DS rows from DS row 36 -- so the block is DS rows
+ *   36..115, and kTextRow0/kTextRow1 take one row of margin either side.
+ *
+ *   the coin total is drawn in orange, picture rows 251..283 (the coin sprite
+ *   and the "x N" beside it): DS rows 125..141, and kCoinRow0/kCoinRow1 take
+ *   the margin the same way.
+ *
+ *   AND "TOUCH TO SELECT" IS ON THE TOP SCREEN, not on the bottom one: it is
+ *   an orange band low on the picture, and the per-layer census of 09-21 puts
+ *   it exactly at picture rows 336..367, x 54..457, on engine A's BG2 and
+ *   nothing else. With the picture no longer cropped it would be back in view,
+ *   so the compose now HIDES that layer outright while it is up. That is the
+ *   whole of "remove touch to select".
+ *
+ *   The same census re-measured the other two, and these are the numbers this
+ *   block's row constants answer to: the course text is engine A's BG3, every
+ *   one of its 5971 pixels the colour (144,144,144), picture rows 72..221,
+ *   x 96..393; the coin total is a sprite, picture rows 256..287, x 196..271.
+ *   Both lie inside the bands below, which is what makes the lift lossless.
+ *
+ * THE TWO BANDS ARE WHERE THE LIFTED GLYPHS GO, row for row, at the size the
+ * top screen was already drawn at -- the same number of picture rows out as
+ * in, the full picture width, no resampling of any kind. So the text is the
+ * size the player is used to seeing it, at every render scale and every
+ * aspect, because it is literally the same pixels moved up or down the
+ * picture. What they are drawn OVER is the picture's own rows, untouched.
+ *
+ * THE PLATES TAKE WHAT IS LEFT. DS rows 0x28..0x97 of the bottom screen --
+ * the three touch boxes at 0x28, 0x50 and 0x78, each 0x20 tall, and the two
+ * eight-row gaps the cartridge leaves between them -- scaled by the largest
+ * fraction that fits the band between the two text bands with 256:112 kept,
+ * and centred in it. Nearest neighbour, because the plates are pixel art.
+ * MEASURED AGAINST THE ALTERNATIVE rather than assumed: at the default
+ * 512x384 picture the band is 176 rows, so the largest INTEGER multiple that
+ * fits is 1 (a 256x112 rectangle, 32 per cent of the band) against the fitted
+ * 11/7 (402x176, 90 per cent of it, and the full height). The integer fit
+ * wastes two thirds of the space the owner asked the buttons to be slotted
+ * into, so the fitted fraction is what is drawn.
  */
 struct SwapGeom {
-    int bx, by, bw, bh;          /* the big picture: the bottom screen */
-    int bnum, bden;              /* its size as a fraction of a DS screen */
-    int tx, ty, tw, th;          /* the corner inset: the top screen */
+    /* the three plates: the only part of the bottom screen that is drawn, and
+       the only part of the picture a stylus reaches */
+    int px, py, pw, ph;
+    int pnum, pden;              /* their size as a fraction of DS pixels */
+    /* the two bands of the top screen's LETTERING. A band is a straight row
+       move, so its height is the same number on both sides and only its
+       origin changes; what travels is the lifted glyph pixels alone. */
+    int ty_src, ty_dst, t_h;     /* the course-clear text block, at the top */
+    int cy_src, cy_dst, c_h;     /* the coin total, at the very bottom */
 };
 SwapGeom g_sw;
-unsigned *g_swap_snap;           /* the top screen, kept while it is overdrawn */
-int g_swap_snap_n;
 
 /* The option, asked once per process and latched, like the improved map's. */
 int save_menu_on_top(void)
@@ -1484,21 +1567,135 @@ int save_menu_is_up(void)
     return data_0209f20c != 0 && data_0209f2d4 >= 1 && data_0209f2d4 <= 3;
 }
 
-/* The DS row one past the third plate: 0x78 + 0x20. The three offsets are
-   LC_Update's own, out of case 3's touch tests. */
+/* The bottom screen's plate span: the first plate's top row, and the row one
+   past the third plate. The three offsets are LC_Update's own, out of case
+   3's touch tests. */
+const int kMenuFirstRow = 0x28;
 const int kMenuLastRow = 0x78 + 0x20;
+const int kMenuRows = kMenuLastRow - kMenuFirstRow;
+
+/* AND THE PLATES INSIDE THAT SPAN, because the span is not all plate. The
+   three touch boxes are 0x20 rows on a 0x28 pitch, so six rows of every
+   forty belong to neither box -- and a census of the bottom screen's own
+   raster while the menu is up says what is in them: THE LEVEL MAP. Engine B
+   draws the course map behind the menu, and rows 0x4a..0x4f carry 169 to 172
+   pixels of it each at x 45..216, rows 0x72..0x77 the same at x 41..213.
+   They are not backdrop and no colour key can reach them.
+
+   A PLATE IS TWO ROWS TALLER THAN ITS TOUCH BOX. Under each box's last body
+   row the cartridge draws a solid black edge and a rounded shadow row under
+   that -- a full-width run at 0x48 and a 238-wide one at 0x49, and the same
+   pair at 0x70/0x71 and at 0x98/0x99 -- matching the rounded top edge at
+   0x28. Both rows are plate and both are drawn, so a plate is 0x22 rows from
+   its box's first row. The third plate's pair falls past kMenuLastRow and
+   stays clipped away, which is what the span has always done with it. */
+const int kPlatePitch = 0x28;
+const int kPlateRows = 0x22;
+
+/* Is this bottom-screen row one of the three plates' own rows? */
+int menu_plate_row(int sy)
+{
+    const int o = sy - kMenuFirstRow;
+    return o >= 0 && o < kMenuRows && o % kPlatePitch < kPlateRows;
+}
+
+/* THE COLOUR THE PLATES SIT ON, read off the machine rather than guessed.
+   The PPU's backdrop is entry 0 of the engine's own BG palette -- engine B's
+   is at 0x05000400 -- and it is the colour ppu_scanout_sub starts every
+   pixel of the bottom screen from, so a pixel that is still it is a pixel
+   engine B drew nothing on. Two things happen to it before it reaches the
+   raster and both happen here: BGR555 is widened to eight bits a channel the
+   way ntr's own bgr555 does it, and engine B's MASTER_BRIGHT (0x0400106C,
+   mode in bits 14-15, factor in bits 0-4) is applied the way
+   ppu_scanout_sub applies it to every pixel it writes -- without that a
+   fading bottom screen would carry a backdrop this key no longer matched.
+   Measured on the level-clear menu: palette entry 0x0FAB and the brightness
+   unit off, so the raster's backdrop is (90,239,24), which the ROM's own -7
+   on the finished picture then darkens to the (51,135,14) a capture shows.
+   That pair is the fallback value if this read ever has to be replaced by a
+   constant. */
+unsigned menu_backdrop_px(void)
+{
+    const unsigned c = *(volatile unsigned short *)0x05000400u;
+    const unsigned r5 = c & 0x1Fu, g5 = (c >> 5) & 0x1Fu,
+                   b5 = (c >> 10) & 0x1Fu;
+    int r = (int)(r5 << 3 | r5 >> 2), g = (int)(g5 << 3 | g5 >> 2),
+        b = (int)(b5 << 3 | b5 >> 2);
+    const unsigned mb = *(volatile unsigned short *)0x0400106Cu;
+    const unsigned mode = (mb >> 14) & 3u;
+    int f = (int)(mb & 0x1Fu);
+    if (f > 16) f = 16;
+    if (f && mode == 1) {
+        r += (255 - r) * f / 16;
+        g += (255 - g) * f / 16;
+        b += (255 - b) * f / 16;
+    } else if (f && mode == 2) {
+        r -= r * f / 16;
+        g -= g * f / 16;
+        b -= b * f / 16;
+    }
+    return ((unsigned)r << 16) | ((unsigned)g << 8) | (unsigned)b;
+}
+
+/* The top screen's two bands, in DS rows. Both measured; see the banner. */
+const int kTextRow0 = 0x22;      /* 34: one row above the COURSE N line */
+const int kTextRow1 = 0x74;      /* 116: one row below CLEAR! */
+const int kCoinRow0 = 0x7a;      /* 122 */
+const int kCoinRow1 = 0x90;      /* 144 */
 
 void swap_geom_for(int w, int h, SwapGeom *o)
 {
     SwapGeom g;
-    /* THE BIG PICTURE. The bottom screen at the scale the top screen is drawn
-       at, which is the picture's height over one DS screen's -- 2 at the
-       ordinary tier, 4 at RenderScale 4 -- reduced so the compose is handed
-       small numbers. Centred, and never wider than the picture: a picture
-       narrower than 4:3 (which no aspect this port offers produces, the
-       widening is all Hor+) sizes from the width instead. */
-    int num = h, den = ntr::SUB_H;
-    if (ntr::SUB_W * num / den > w) { num = w; den = ntr::SUB_W; }
+    std::memset(&g, 0, sizeof g);
+    if (w < 8 || h < 8) { *o = g; return; }
+    /* THE TWO BANDS FIRST, because what is left over is the plates'.
+       A DS ROW OF THE TOP SCREEN IS (h / SUB_H) PICTURE ROWS, FLOORED, and
+       the floor is the correction of 09-21 rather than a rounding taste. That
+       integer is the scale engine A's own compositor draws its 2D at
+       (hal/message_compositor.cpp: sy = active_h / 192), so it is where the
+       lettering this band carries actually IS. The old form multiplied first
+       -- kTextRow0 * h / SUB_H -- which agrees at every picture whose height
+       is a whole multiple of 192 (the 512x384 default, RenderScale 4, 16:9)
+       and disagrees at the two that are not: at 21:9 the picture is 1024x440,
+       the 2D is drawn at 2x, and the old text band began at picture row 77
+       while the first glyph row is 72, so the top five rows of "COURSE N"
+       fell outside it; at 32:9 the coin band began at row 183 and the coin
+       total is drawn at 256..287, so it missed the coins entirely. Flooring
+       first puts every band on the rows the glyphs are on, at every shape. */
+    int vs = h / ntr::SUB_H;
+    if (vs < 1) vs = 1;
+    g.t_h = (kTextRow1 - kTextRow0) * vs;
+    g.c_h = (kCoinRow1 - kCoinRow0) * vs;
+    if (g.t_h < 1) g.t_h = 1;
+    if (g.c_h < 1) g.c_h = 1;
+    /* a picture too short to hold both bands and a plate between them gives
+       each band a third of it rather than drawing them over each other */
+    if (g.t_h + g.c_h > h - 4) {
+        g.t_h = h / 3;
+        g.c_h = h / 3;
+    }
+    g.ty_src = kTextRow0 * vs;
+    if (g.ty_src + g.t_h > h) g.ty_src = h - g.t_h;
+    if (g.ty_src < 0) g.ty_src = 0;
+    g.ty_dst = 0;
+    g.cy_src = kCoinRow0 * vs;
+    if (g.cy_src + g.c_h > h) g.cy_src = h - g.c_h;
+    if (g.cy_src < 0) g.cy_src = 0;
+    g.cy_dst = h - g.c_h;
+    /* THE MIDDLE, AND THE PLATES IN IT. The largest fraction that fits with
+       256:112 kept: the width binds or the height does, and whichever binds
+       is the fraction, reduced so the compose and the inverse are handed
+       small numbers. */
+    const int my0 = g.t_h, mh = g.cy_dst - my0;
+    if (mh < 4) { *o = g; return; }
+    int num, den;
+    if ((long long)w * kMenuRows <= (long long)mh * ntr::SUB_W) {
+        num = w;
+        den = ntr::SUB_W;
+    } else {
+        num = mh;
+        den = kMenuRows;
+    }
     if (num < 1) num = 1;
     if (den < 1) den = 1;
     {
@@ -1506,35 +1703,25 @@ void swap_geom_for(int w, int h, SwapGeom *o)
         while (b) { const int t = a % b; a = b; b = t; }
         if (a > 1) { num /= a; den /= a; }
     }
-    g.bnum = num;
-    g.bden = den;
-    g.bw = ntr::SUB_W * num / den;
-    g.bh = ntr::SUB_H * num / den;
-    g.bx = (w - g.bw) / 2;
-    g.by = (h - g.bh) / 2;
-    if (g.bx < 0) g.bx = 0;
-    if (g.by < 0) g.by = 0;
-    /* THE CORNER INSET, sized to the free band under the last plate and put
-       one pixel in from the corner so its frame has somewhere to be. */
-    const int band = (ntr::SUB_H - kMenuLastRow) * g.bh / ntr::SUB_H;
-    g.th = band - 2;
-    if (g.th < 8) g.th = 8;
-    if (g.th > h - 2) g.th = h - 2;
-    g.tw = h > 0 ? (int)(((long long)g.th * w + h / 2) / h) : g.th;
-    if (g.tw < 8) g.tw = 8;
-    if (g.tw > w - 2) g.tw = w - 2;
-    g.tx = w - 1 - g.tw;
-    g.ty = h - 1 - g.th;
-    if (g.tx < 1) g.tx = 1;
-    if (g.ty < 1) g.ty = 1;
+    g.pnum = num;
+    g.pden = den;
+    g.pw = ntr::SUB_W * num / den;
+    g.ph = kMenuRows * num / den;
+    if (g.pw > w) g.pw = w;
+    if (g.ph > mh) g.ph = mh;
+    g.px = (w - g.pw) / 2;
+    g.py = my0 + (mh - g.ph) / 2;
+    if (g.px < 0) g.px = 0;
+    if (g.py < my0) g.py = my0;
     *o = g;
 }
 
-/* SM64DS_SWAP_TRACE=1: every change of the ROM's two words and of the swap's
-   own answer, with the rectangles this frame settled on. It exists so that a
-   capture can be measured against the numbers the program actually drew, and
-   so that the frame the swap begins can be joined to the frame the plates
-   turn on, rather than to a restatement of this arithmetic somewhere else. */
+/* SM64DS_SWAP_TRACE=1: every change of the ROM's two words and of the
+   compose's own answer, with the rectangles this frame settled on. It exists
+   so that a capture can be measured against the numbers the program actually
+   drew, and so that the frame the compose begins can be joined to the frame
+   the plates turn on, rather than to a restatement of this arithmetic
+   somewhere else. The env name is the one the tools already pass through. */
 void swap_trace(int w, int h, int frame)
 {
     static int on = -1;
@@ -1546,100 +1733,137 @@ void swap_trace(int w, int h, int frame)
     last[0] = now[0];
     last[1] = now[1];
     last[2] = now[2];
-    std::fprintf(stderr, "[swap] f%d f20c=%d f2d4=%d swap=%d picture %dx%d "
-                 "big %d,%d %dx%d (%d/%d) top %d,%d %dx%d\n", frame, now[0],
-                 now[1], now[2], w, h, g_sw.bx, g_sw.by, g_sw.bw, g_sw.bh,
-                 g_sw.bnum, g_sw.bden, g_sw.tx, g_sw.ty, g_sw.tw, g_sw.th);
+    std::fprintf(stderr, "[compose] f%d f20c=%d f2d4=%d composed=%d picture "
+                 "%dx%d text 0,%d %dx%d from row %d  plates %d,%d %dx%d "
+                 "(%d/%d)  coins 0,%d %dx%d from row %d\n", frame, now[0],
+                 now[1], now[2], w, h, g_sw.ty_dst, w, g_sw.t_h,
+                 g_sw.ty_src, g_sw.px, g_sw.py, g_sw.pw, g_sw.ph, g_sw.pnum,
+                 g_sw.pden, g_sw.cy_dst, w, g_sw.c_h, g_sw.cy_src);
     std::fflush(stderr);
 }
 
 /* engine B's own raster target, defined with the rest of the raster state
-   further down this file and named here because the swapped present is above
+   further down this file and named here because the composed present is above
    it. Same object, same internal linkage. */
 extern ntr::SubFramebuffer g_sub;
 
-/* THE SWAPPED PRESENT. Three steps and no fourth: keep the top screen, paint
-   the bottom screen over the whole picture, put the kept top screen in the
-   corner. */
+/* One band of the LIFTED LETTERING, moved up or down the picture. Both the
+   overlay and the framebuffer are indexed at a stride of SCREEN_W -- the
+   overlay is written by hal/message_compositor.cpp's own blit, at the host
+   pixels that blit would have written -- so a band is a row offset and
+   nothing else, and only the pixels the overlay marks opaque are drawn. What
+   is not marked is left alone, which is how the game's own picture comes
+   through between the glyphs. */
+void swap_glyph_band(unsigned *dst, int w, int h, int src_y, int dst_y,
+                     int rows)
+{
+    if (rows < 1 || src_y < 0 || dst_y < 0) return;
+    if (src_y + rows > h || dst_y + rows > h) return;
+    if (!hal_lc_overlay_live()) return;
+    const unsigned *col = hal_lc_overlay_colour();
+    const unsigned char *msk = hal_lc_overlay_mask();
+    if (!col || !msk) return;
+    for (int y = 0; y < rows; ++y) {
+        const size_t s = (size_t)(src_y + y) * ntr::SCREEN_W;
+        const size_t d = (size_t)(dst_y + y) * ntr::SCREEN_W;
+        for (int x = 0; x < w; ++x)
+            if (msk[s + x]) dst[d + x] = col[s + x];
+    }
+}
+
+/* THE COMPOSED PRESENT. The picture is already the game's own frame with the
+   menu's lettering lifted out of it, so nothing here moves a row of it: the
+   two bands below put the lifted glyphs at the top and at the bottom, and the
+   three plates go over the middle. */
 void swap_present(unsigned *dst, int w, int h)
 {
-    const int n = w * h;
-    if (n <= 0 || g_sw.bnum <= 0) return;
-    if (g_swap_snap_n < n) {
-        unsigned *p = (unsigned *)std::realloc(g_swap_snap,
-                                               (size_t)n * sizeof *p);
-        if (!p) return;              /* no room to keep it, so nothing moves */
-        g_swap_snap = p;
-        g_swap_snap_n = n;
-    }
-    /* THE STRIDE IS SCREEN_W, NOT w. Every drawing helper in this file reads
-       the framebuffer that way: on a wide render target the buffer's pitch is
-       the tier's maximum and w is the narrower live picture inside it. The
-       snapshot is packed at w, which is its own buffer's business. */
-    for (int y = 0; y < h; ++y)
-        std::memcpy(g_swap_snap + (size_t)y * w,
-                    dst + (size_t)y * ntr::SCREEN_W,
-                    (size_t)w * sizeof *dst);
-    px_fill(dst, w, h, 0, 0, w, h, 0xFF000000u);
-    ntr::ppu_compose_sub(g_sub, dst, w, h, g_sw.bx, g_sw.by, g_sw.bnum,
-                         g_sw.bden);
-    /* the kept top screen, box-averaged into the corner so its text survives
-       as shading rather than falling between samples -- the same rule
-       ppu_compose_sub follows when it reduces the bottom screen */
-    for (int y = 0; y < g_sw.th; ++y) {
-        const int sy0 = (int)(((long long)y * h) / g_sw.th);
-        int sy1 = (int)(((long long)(y + 1) * h) / g_sw.th);
-        if (sy1 <= sy0) sy1 = sy0 + 1;
-        if (sy1 > h) sy1 = h;
-        for (int x = 0; x < g_sw.tw; ++x) {
-            const int sx0 = (int)(((long long)x * w) / g_sw.tw);
-            int sx1 = (int)(((long long)(x + 1) * w) / g_sw.tw);
-            if (sx1 <= sx0) sx1 = sx0 + 1;
-            if (sx1 > w) sx1 = w;
-            unsigned rr = 0, gg = 0, bb = 0, k = 0;
-            for (int sy = sy0; sy < sy1; ++sy) {
-                const unsigned *row = g_swap_snap + (size_t)sy * w;
-                for (int sx = sx0; sx < sx1; ++sx) {
-                    const unsigned c = row[sx];
-                    rr += (c >> 16) & 0xFFu;
-                    gg += (c >> 8) & 0xFFu;
-                    bb += c & 0xFFu;
-                    ++k;
-                }
-            }
-            if (!k) k = 1;
-            px_put(dst, w, h, g_sw.tx + x, g_sw.ty + y,
-                   0xFF000000u | ((rr / k) << 16) | ((gg / k) << 8) | (bb / k));
+    if (w <= 0 || h <= 0 || g_sw.pnum <= 0) return;
+    /* WHAT IS UNDER ALL THREE IS THE GAME'S OWN PICTURE, EVERY ROW OF IT
+       WHERE THE GAME PUT IT. The owner's two rulings are one ruling: "I want
+       just the buttons not the whole background" and "the screen height
+       shouldnt change, just slot it in". So nothing here blacks, clears,
+       copies or scrolls the picture, and the only pixels written are plate
+       and lifted glyph. */
+    swap_glyph_band(dst, w, h, g_sw.ty_src, g_sw.ty_dst, g_sw.t_h);
+    swap_glyph_band(dst, w, h, g_sw.cy_src, g_sw.cy_dst, g_sw.c_h);
+    /* THE THREE PLATES, nearest neighbour out of engine B's own raster, and
+       only the plates. TWO TESTS, both on the SOURCE pixel, before the ROM's
+       own fade reaches the finished picture, and neither of them moves a
+       rectangle: a source row between two plates is not drawn at all (it is
+       the course map, see the banner over kPlateRows), and a source pixel
+       still carrying the backdrop is not drawn either (the eight columns of
+       margin either side of every plate, and the rounded corners). What
+       lands on the picture is the plate, its outline and its lettering. */
+    const unsigned key = menu_backdrop_px();
+    for (int y = 0; y < g_sw.ph; ++y) {
+        int sy = kMenuFirstRow + (int)(((long long)y * g_sw.pden) / g_sw.pnum);
+        if (sy >= kMenuLastRow) sy = kMenuLastRow - 1;
+        if (!menu_plate_row(sy)) continue;
+        const unsigned *srow = g_sub.px[sy];
+        for (int x = 0; x < g_sw.pw; ++x) {
+            int sx = (int)(((long long)x * g_sw.pden) / g_sw.pnum);
+            if (sx >= ntr::SUB_W) sx = ntr::SUB_W - 1;
+            const unsigned c = srow[sx] & 0x00FFFFFFu;
+            if (c == key) continue;
+            px_put(dst, w, h, g_sw.px + x, g_sw.py + y, 0xFF000000u | c);
         }
     }
-    /* the one-pixel frame the corner panel has always been drawn with */
-    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty - 1, g_sw.tw + 2, 1, 0xFF000000u);
-    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty + g_sw.th, g_sw.tw + 2, 1,
-            0xFF000000u);
-    px_fill(dst, w, h, g_sw.tx - 1, g_sw.ty, 1, g_sw.th, 0xFF000000u);
-    px_fill(dst, w, h, g_sw.tx + g_sw.tw, g_sw.ty, 1, g_sw.th, 0xFF000000u);
+}
+
+/* THE INVERSE, and it is the one arithmetic. A client point that has already
+   been put into framebuffer pixels comes in; the DS pixel the ROM will see
+   goes out, read off the very rectangle the compose just drew. A point off
+   the plates is refused (inside = 0) rather than mapped, because nothing else
+   on the composed picture is a touch surface: not the course text, not the
+   coin row, and not the game's own picture either side of the plates. */
+void swap_inverse(int bx, int by, int *dsx, int *dsy, int *inside)
+{
+    const SwapGeom &g = g_sw;
+    int qx = bx, qy = by, on = 1;
+    if (g.pnum < 1 || g.pw < 1 || g.ph < 1) {
+        *dsx = -1;
+        *dsy = -1;
+        *inside = 0;
+        return;
+    }
+    if (qx < g.px) { qx = g.px; on = 0; }
+    if (qx >= g.px + g.pw) { qx = g.px + g.pw - 1; on = 0; }
+    if (qy < g.py) { qy = g.py; on = 0; }
+    if (qy >= g.py + g.ph) { qy = g.py + g.ph - 1; on = 0; }
+    int x = fdiv((qx - g.px) * g.pden, g.pnum);
+    int y = kMenuFirstRow + fdiv((qy - g.py) * g.pden, g.pnum);
+    if (x < 0) x = 0;
+    if (x >= ntr::SUB_W) x = ntr::SUB_W - 1;
+    if (y < kMenuFirstRow) y = kMenuFirstRow;
+    if (y >= kMenuLastRow) y = kMenuLastRow - 1;
+    *dsx = x;
+    *dsy = y;
+    *inside = on;
 }
 
 
-/* ---- THE SWAPPED ARM OF SM64DS_LAYOUT_SELFTEST ----------------------------
+/* ---- THE COMPOSED ARM OF SM64DS_LAYOUT_SELFTEST ---------------------------
  *
  * The third arm of the same selftest. The stacked arm asserts the stacked
  * layout and the inset arm asserts the map panel; this one asserts the
- * picture the screens are swapped in, over the shapes the option can be asked
- * for: both framebuffer tiers and the five aspects the launcher offers. It
- * runs the SAME function the compose and the stylus inverse run -- nothing
- * here restates that arithmetic -- and it needs no game state, because the
+ * composed picture, over the shapes the option can be asked for: both
+ * framebuffer tiers and the five aspects the launcher offers. It runs the
+ * SAME two functions the compose and the stylus inverse run -- nothing here
+ * restates that arithmetic -- and it needs no game state, because the
  * rectangles depend only on the picture.
  *
- *   S1 the four corners of the big picture, run back through the exact
- *      expression poll_touch's swapped arm uses, land within ONE DS pixel of
- *      DS (0,0), (255,0), (0,191) and (255,191).
+ *   S1 the four corners of the PLATE rectangle, run back through
+ *      swap_inverse, land within ONE DS pixel of DS (0,0x28), (255,0x28),
+ *      (0,0x97) and (255,0x97) and read INSIDE.
  *   S2 one pixel outside each of its four edges reads OUTSIDE.
- *   S3 the big picture is 4:3 exactly and fits inside the picture.
- *   S4 the corner inset is inside the picture and overlaps NONE of the
- *      menu's three plates (DS rows 0x28, 0x50 and 0x78, each 0x20 tall,
- *      full width), which is the whole reason it is sized off the free band
- *      below the last one.
+ *   S3 the plate rectangle keeps 256:112 within a pixel, fits in the band
+ *      between the two text bands, and the three bands neither overlap each
+ *      other nor leave the picture.
+ *   S4 THE THREE BUTTON RECTS: each of the menu's own touch boxes (DS rows
+ *      0x28, 0x50 and 0x78, each 0x20 tall) lands as a whole rectangle inside
+ *      the plate rectangle, and the centre of each maps back into that same
+ *      DS box -- which is the click a player makes, asserted through the
+ *      inverse rather than described.
  */
 void swap_layout_selftest(void)
 {
@@ -1647,51 +1871,63 @@ void swap_layout_selftest(void)
     if (!env || !*env) return;
     static const double asp[5] = { 0.0, 1.7777778, 2.3333333, 3.5555556, 4.0 };
     static const int hs[2] = { 384, 768 };
+    const SwapGeom saved = g_sw;
     int passed = 0, total = 0;
     for (int hi = 0; hi < 2; ++hi) {
         for (int ai = 0; ai < 5; ++ai) {
             const int h = hs[hi];
             int w = asp[ai] > 0.0 ? (int)(h * asp[ai] + 0.5) : h * 4 / 3;
             w &= ~1;
-            SwapGeom g;
-            swap_geom_for(w, h, &g);
+            swap_geom_for(w, h, &g_sw);
+            const SwapGeom g = g_sw;
             char fails[8];
-            int nf = 0, dx, dy, ok = 1;
-            const int x1 = g.bx + g.bw - 1, y1 = g.by + g.bh - 1;
-#define SINV(px, py) (dx = fdiv(((px) - g.bx) * g.bden, g.bnum), \
-                      dy = fdiv(((py) - g.by) * g.bden, g.bnum))
-            SINV(g.bx, g.by);
-            if (dx > 1 || dy > 1 || dx < 0 || dy < 0) ok = 0;
-            SINV(x1, g.by);
-            if (dx < ntr::SUB_W - 2 || dx > ntr::SUB_W - 1 || dy > 1) ok = 0;
-            SINV(g.bx, y1);
-            if (dy < ntr::SUB_H - 2 || dy > ntr::SUB_H - 1 || dx > 1) ok = 0;
-            SINV(x1, y1);
-            if (dx < ntr::SUB_W - 2 || dy < ntr::SUB_H - 2) ok = 0;
+            int nf = 0, dx, dy, in, ok = 1;
+            const int x1 = g.px + g.pw - 1, y1 = g.py + g.ph - 1;
+            swap_inverse(g.px, g.py, &dx, &dy, &in);
+            if (!in || dx > 1 || dy > kMenuFirstRow + 1) ok = 0;
+            swap_inverse(x1, g.py, &dx, &dy, &in);
+            if (!in || dx < ntr::SUB_W - 2 || dy > kMenuFirstRow + 1) ok = 0;
+            swap_inverse(g.px, y1, &dx, &dy, &in);
+            if (!in || dx > 1 || dy < kMenuLastRow - 2) ok = 0;
+            swap_inverse(x1, y1, &dx, &dy, &in);
+            if (!in || dx < ntr::SUB_W - 2 || dy < kMenuLastRow - 2) ok = 0;
             if (!ok) fails[nf++] = '1';
             ok = 1;
-            SINV(g.bx - 1, g.by);
-            if (dx >= 0) ok = 0;
-            SINV(g.bx, g.by - 1);
-            if (dy >= 0) ok = 0;
-            SINV(x1 + 1, g.by);
-            if (dx < ntr::SUB_W) ok = 0;
-            SINV(g.bx, y1 + 1);
-            if (dy < ntr::SUB_H) ok = 0;
-#undef SINV
+            swap_inverse(g.px - 1, g.py, &dx, &dy, &in);
+            if (in) ok = 0;
+            swap_inverse(g.px, g.py - 1, &dx, &dy, &in);
+            if (in) ok = 0;
+            swap_inverse(x1 + 1, g.py, &dx, &dy, &in);
+            if (in) ok = 0;
+            swap_inverse(g.px, y1 + 1, &dx, &dy, &in);
+            if (in) ok = 0;
             if (!ok) fails[nf++] = '2';
-            if (g.bw * 3 != g.bh * 4 || g.bx < 0 || g.by < 0 ||
-                g.bx + g.bw > w || g.by + g.bh > h)
-                fails[nf++] = '3';
-            ok = g.tx >= 0 && g.ty >= 0 && g.tx + g.tw <= w &&
-                 g.ty + g.th <= h;
+            ok = 1;
+            if (g.pw < 1 || g.ph < 1) ok = 0;
+            else {
+                const long long l = (long long)g.pw * kMenuRows;
+                const long long r = (long long)g.ph * ntr::SUB_W;
+                const long long tol = (long long)ntr::SUB_W + kMenuRows;
+                if (l - r > tol || r - l > tol) ok = 0;
+            }
+            if (g.px < 0 || g.py < g.t_h || g.px + g.pw > w ||
+                g.py + g.ph > g.cy_dst)
+                ok = 0;
+            if (g.t_h < 1 || g.c_h < 1 || g.ty_dst != 0 ||
+                g.cy_dst + g.c_h != h || g.ty_src + g.t_h > h ||
+                g.cy_src + g.c_h > h)
+                ok = 0;
+            if (!ok) fails[nf++] = '3';
+            ok = 1;
             for (int b = 0; b < 3; ++b) {
-                const int r0 = g.by + (0x28 + b * 0x28) * g.bh / ntr::SUB_H;
-                const int r1 = g.by + (0x28 + b * 0x28 + 0x20) * g.bh /
-                                      ntr::SUB_H - 1;
-                const int c0 = g.bx, c1 = g.bx + g.bw - 1;
-                if (g.ty <= r1 && g.ty + g.th - 1 >= r0 &&
-                    g.tx <= c1 && g.tx + g.tw - 1 >= c0)
+                const int d0 = kMenuFirstRow + b * 0x28;
+                const int d1 = d0 + 0x20 - 1;
+                const int r0 = g.py + (d0 - kMenuFirstRow) * g.pnum / g.pden;
+                const int r1 = g.py + (d1 + 1 - kMenuFirstRow) * g.pnum /
+                                      g.pden - 1;
+                if (r0 < g.py || r1 > g.py + g.ph - 1 || r1 < r0) ok = 0;
+                swap_inverse(g.px + g.pw / 2, (r0 + r1) / 2, &dx, &dy, &in);
+                if (!in || dy < d0 || dy > d1 || dx < 0 || dx >= ntr::SUB_W)
                     ok = 0;
             }
             if (!ok) fails[nf++] = '4';
@@ -1699,31 +1935,35 @@ void swap_layout_selftest(void)
             ++total;
             if (!nf) {
                 ++passed;
-                std::fprintf(stderr, "[swapst] picture %dx%d: big %d,%d %dx%d "
-                             "(%d/%d) top %d,%d %dx%d S1..S4 PASS\n", w, h,
-                             g.bx, g.by, g.bw, g.bh, g.bnum, g.bden, g.tx,
-                             g.ty, g.tw, g.th);
+                std::fprintf(stderr, "[composest] picture %dx%d: text 0,0 "
+                             "%dx%d from row %d  plates %d,%d %dx%d (%d/%d)  "
+                             "coins 0,%d %dx%d from row %d  S1..S4 PASS\n",
+                             w, h, w, g.t_h, g.ty_src, g.px, g.py, g.pw, g.ph,
+                             g.pnum, g.pden, g.cy_dst, w, g.c_h, g.cy_src);
             } else {
-                std::fprintf(stderr, "[swapst] picture %dx%d: big %d,%d %dx%d "
-                             "(%d/%d) top %d,%d %dx%d FAIL S%s\n", w, h,
-                             g.bx, g.by, g.bw, g.bh, g.bnum, g.bden, g.tx,
-                             g.ty, g.tw, g.th, fails);
+                std::fprintf(stderr, "[composest] picture %dx%d: text 0,0 "
+                             "%dx%d from row %d  plates %d,%d %dx%d (%d/%d)  "
+                             "coins 0,%d %dx%d from row %d  FAIL S%s\n",
+                             w, h, w, g.t_h, g.ty_src, g.px, g.py, g.pw, g.ph,
+                             g.pnum, g.pden, g.cy_dst, w, g.c_h, g.cy_src,
+                             fails);
             }
         }
     }
-    std::fprintf(stderr, "SWAPPED LAYOUT SELFTEST: %s %d/%d\n",
+    g_sw = saved;
+    std::fprintf(stderr, "COMPOSED LAYOUT SELFTEST: %s %d/%d\n",
                  passed == total ? "PASS" : "FAIL", passed, total);
     std::fflush(stderr);
 }
 
-/* Is the picture swapped RIGHT NOW, for a reader that is not the compose?
+/* Is the picture COMPOSED right now, for a reader that is not the compose?
    The rectangles are recomputed every frame whatever the answer, so a reader
    asking this on the same frame the plates come on gets the rectangles that
    frame's compose is using. */
 int swap_now(void)
 {
     return save_menu_on_top() && save_menu_is_up() &&
-           !hal_sub_screen_stacked() && g_sw.bnum > 0;
+           !hal_sub_screen_stacked() && g_sw.pnum > 0;
 }
 
 /* The square itself, drawn in the pass above the map so nothing covers it. */
@@ -2380,24 +2620,25 @@ void poll_touch(void)
                    over the 3D view; not harmless with the artist's frame
                    drawn on exactly those pixels. */
                 if (g_swap) {
-                    /* THE SCREENS ARE SWAPPED: the BIG picture is the bottom
-                       screen, so the inverse reads the big rectangle the
-                       compose just drew -- the same numbers, the same floor
-                       divide, one arithmetic. */
-                    fx = fdiv((bx - g_sw.bx) * g_sw.bden, g_sw.bnum);
-                    fy = fdiv((by - g_sw.by) * g_sw.bden, g_sw.bnum);
-                    /* AND THE CORNER IS THE TOP SCREEN, which no stylus has
-                       ever reached. A click there answers nothing, exactly
-                       as a click on the top screen does in the ordinary
-                       picture: what is drawn is what is clicked. The old
-                       inset positions are inside this rectangle, so the
-                       three button points a player learned on the small
-                       panel do nothing while the menu is big -- which is the
-                       honest answer, because the buttons are not there any
-                       more. */
-                    if (bx >= g_sw.tx - 1 && bx < g_sw.tx + g_sw.tw + 1 &&
-                        by >= g_sw.ty - 1 && by < g_sw.ty + g_sw.th + 1)
-                        on_picture = 0;
+                    /* THE PICTURE IS COMPOSED: the only touch surface on it
+                       is the block of three plates in the middle, so the
+                       inverse reads the very rectangle the compose just drew
+                       -- the same numbers, the same floor divide, one
+                       arithmetic -- and every other pixel of the picture
+                       answers nothing.
+                       WHAT ANSWERS NOTHING, said plainly, because all three
+                       are things a player may have learned to click: the
+                       course text at the top and the coin row at the bottom
+                       are the TOP screen and no stylus has ever reached it;
+                       the picture either side of the plates is the game's
+                       own and not a screen at all; and the corner panel's
+                       old three button points --
+                       and the old full-picture swapped ones -- are not on the
+                       plates any more, which is the honest answer, because
+                       the buttons are not there any more. */
+                    int in = 0;
+                    swap_inverse(bx, by, &fx, &fy, &in);
+                    if (!in) on_picture = 0;
                 } else {
                     fx = fdiv((bx - g_x0) * g_pan_den, g_pan_num);
                     fy = fdiv((by - g_y0) * g_pan_den, g_pan_num);
@@ -2820,8 +3061,12 @@ void poll_touch(void)
                          f, live_cx, live_cy,
                          live_handle
                              ? "the map's corner handle took it"
-                             : (on_top ? "it is on the TOP screen"
-                                       : "it is in a letterbox bar"));
+                             : (g_swap
+                                    ? "the composed level-clear picture takes "
+                                      "a click on the three buttons and "
+                                      "nowhere else"
+                                    : (on_top ? "it is on the TOP screen"
+                                              : "it is in a letterbox bar")));
             std::fflush(stderr);
         }
         down_was = down;
@@ -3609,6 +3854,30 @@ extern "C" int hal_save_menu_up(void)
     return save_menu_is_up() ? 1 : 0;
 }
 
+/* THE COMPOSE'S TWO SOURCE BANDS, for hal/message_compositor.cpp, asked once
+   at the head of engine A's composite. It is the ONE question that file asks
+   this one, and it is the whole of the gate: off, it answers 0 and that file
+   allocates nothing, clears nothing and changes no pixel.
+   The rows are HOST rows of the picture, out of the very rectangles this
+   frame's compose will draw into, so the pixels engine A lifts out are the
+   pixels the compose puts back, and the two cannot drift apart.
+   ASKED BEFORE hal_sub_screen_present HAS RUN THIS FRAME, which is why the
+   rectangles read here are last frame's. They depend only on the picture's
+   size, which does not change inside a frame, and swap_geom_for runs every
+   frame whatever the answer -- so the numbers are right from the first
+   composed frame. swap_now's own g_sw.pnum > 0 term is what keeps this quiet
+   before the first frame's geometry exists. */
+extern "C" int hal_lc_compose_rows(int *text_r0, int *text_r1,
+                                   int *coin_r0, int *coin_r1)
+{
+    if (!swap_now()) return 0;
+    *text_r0 = g_sw.ty_src;
+    *text_r1 = g_sw.ty_src + g_sw.t_h;
+    *coin_r0 = g_sw.cy_src;
+    *coin_r1 = g_sw.cy_src + g_sw.c_h;
+    return 1;
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
@@ -3632,7 +3901,7 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         }
     }
     hal_sub_panel_geometry(w, h);
-    /* THE SWAP'S OWN ANSWER AND ITS RECTANGLES, once a frame, beside the
+    /* THE COMPOSE'S OWN ANSWER AND ITS RECTANGLES, once a frame, beside the
        panel's and by the same rule: one place decides, everybody else reads.
        They are computed whatever the answer is, so poll_touch's inverse has
        this frame's numbers on the very frame the plates come on. */
@@ -3827,10 +4096,11 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        byte-for-byte identical to a panel-off frame, which is what keeps every
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
     if (!hal_sub_screen_stacked() && g_swap) {
-        /* THE SCREENS ARE THE OTHER WAY ROUND THIS FRAME. Nothing of the map
-           panel is drawn: the corner belongs to the top screen now, and the
-           plate, the banner, the handle and the attention arrows would every
-           one of them land on it. */
+        /* THE PICTURE IS COMPOSED OUT OF BOTH SCREENS THIS FRAME. Nothing of
+           the map panel is drawn: the picture is two bands of the top screen,
+           the three plates, and the game's own picture under them, and the
+           plate, the banner, the handle and the attention arrows are none of
+           those. */
         swap_present(dst, w, h);
     } else if (!hal_sub_screen_stacked()) {
         /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
