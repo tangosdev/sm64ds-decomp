@@ -166,6 +166,8 @@ void port_intro_arm_for_entry(void);     /* hal/level_boot.cpp: the intro seam -
                                             pick"; the seam itself decides */
 void CleanCommonModelDataArr(void);
 void port_model_vram_reset(void);   /* hal/model_host.cpp */
+void port_fader_wipes_reset(void);  /* hal/fader_wipes.cpp: the seven wipes
+                                       Stage::InitResources builds fresh */
 void sd_sound_level_reap(void);     /* hal/sdat/consumer.cpp: the ROM's
                                        Scene::BeforeCleanupResources reap */
 int  port_course_loop_live(void);
@@ -1765,6 +1767,16 @@ extern "C" int port_level_change_apply(void)
        boot with. Without it the second boot exhausts the arena and
        Model::GetVramOffset reaches the game's Crash(). */
     port_model_vram_reset();
+
+    /* and the seven fader wipes, for the same reason and in the same place:
+       Stage::InitResources BUILDS that pool at every level boot, so on the
+       cartridge a level always opens with seven fresh FaderWipes. The port's
+       are static objects that outlive the Stage, and a wipe that carries the
+       last transition's interpolator makes dScene_c::SetFaders read the
+       outgoing fader as mid-fade instead of at the start -- which left the
+       screen fully black from the second star of a session onwards. The banner
+       over port_fader_wipes_reset in hal/fader_wipes.cpp has the measurement. */
+    port_fader_wipes_reset();
 
     const unsigned free_torn = port_level_heap_free();
     port_level_reset_host();
