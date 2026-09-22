@@ -1966,6 +1966,11 @@ static int  stage9_rendered(void)
 extern "C" void *_ZTV7dCcAc_c[];
 extern "C" void *data_0209ee74;   /* the particle SysTracker (hal/auto_bss) */
 extern "C" void *data_0209f5bc;   /* the installed fader (hal/fader_wipes) */
+/* the SAME pointer, written by the same line of dScene_c::SetFaders, and the
+   one func_02018efc dispatches AdvanceFade through every frame. Read beside
+   0x0209f5bc by SM64DS_FADE_WATCH so a run can say whether the two have come
+   apart rather than assume they have not. */
+extern "C" void *data_0209d4ac;
 extern "C" void *data_0209f324;   /* WIPES, the seven-wipe array */
 extern "C" signed char data_02092110;    /* the staged next level */
 extern "C" unsigned char data_0209f268;  /* the staged next entrance */
@@ -15717,6 +15722,85 @@ int main(void)
                         row[x] = 0xFF000000u | ((uint32_t)r << 16) |
                                  ((uint32_t)g << 8) | (uint32_t)b;
                     }
+                }
+            }
+        }
+
+        /* SM64DS_FADE_WATCH=<from>[-<to>] (ROM frames): one line per frame of
+           the picture a player would be looking at, beside every register that
+           decides whether it is black. Written for the "the screen goes black
+           after a second star" report, where the question is not whether the
+           picture is dark but WHICH unit darkened it: engine A's colour
+           special effects (BLDCNT mode 2/3 with BLDY), the master brightness,
+           or the display control. It reads and writes nothing, and it sits
+           here -- after the fade composite, before the host overlays -- so the
+           luminance is the game's own picture and not the F3 text over it.
+           Inert with the variable unset. */
+        {
+            static int fw_read, fw_lo = -1, fw_hi = -1;
+            if (!fw_read) {
+                fw_read = 1;
+                const char *e = getenv("SM64DS_FADE_WATCH");
+                if (e) {
+                    fw_lo = atoi(e);
+                    const char *dash = strchr(e, '-');
+                    fw_hi = dash ? atoi(dash + 1) : 0x7fffffff;
+                }
+            }
+            if (fw_lo >= 0) {
+                const int rf = port_rom_frame_checked(frame, "fade-watch");
+                if (rf >= fw_lo && rf <= fw_hi) {
+                    unsigned long long sum = 0;
+                    unsigned dark = 0, n = 0;
+                    for (int y = 0; y < ntr::active_h; ++y) {
+                        const uint32_t *row = fb.px[y];
+                        for (int x = 0; x < ntr::active_w; ++x) {
+                            const uint32_t p = row[x];
+                            const unsigned l = (((p >> 16) & 0xff) * 77 +
+                                                ((p >> 8) & 0xff) * 151 +
+                                                (p & 0xff) * 28) >> 8;
+                            sum += l;
+                            if (l < 8) ++dark;
+                            ++n;
+                        }
+                    }
+                    const unsigned bca = *(volatile unsigned short *)0x4000050;
+                    const unsigned bya = *(volatile unsigned short *)0x4000054;
+                    const unsigned bcb = *(volatile unsigned short *)0x4001050;
+                    const unsigned byb = *(volatile unsigned short *)0x4001054;
+                    const unsigned mba = *(volatile unsigned short *)0x400006c;
+                    const unsigned mbb = *(volatile unsigned short *)0x400106c;
+                    const unsigned dca = *(volatile unsigned *)0x4000000;
+                    const unsigned dcb = *(volatile unsigned *)0x4001000;
+                    int evy = 0, tw = 0;
+                    const int blend = port_fader_blend_state(&evy, &tw);
+                    /* the installed fader's own interpolator, which is what
+                       says whether a cover is a fade in motion or a fade that
+                       stopped: FaderBrightness is vtable / currInterp / speed
+                       at +0 / +4 / +8 (include/FaderBrightness.h) */
+                    const int *fb5 = (const int *)data_0209f5bc;
+                    const int *fd4 = (const int *)data_0209d4ac;
+                    fprintf(stderr,
+                            "[fadew] f%-5d luma %7.3f dark %6.4f | A BLDCNT "
+                            "%04x BLDY %04x mode %u evy %u | B BLDCNT %04x "
+                            "BLDY %04x mode %u evy %u | MBRIGHT A %04x B %04x "
+                            "| DISPCNT A %08x B %08x | fader %p vt %08x interp "
+                            "%d speed %d | d4ac %p vt %08x interp %d speed %d "
+                            "| anim %08x | f20c %d menu %d | blend %d evy %d "
+                            "white %d\n",
+                            rf, n ? (double)sum / n : 0.0,
+                            n ? (double)dark / n : 0.0,
+                            bca, bya, (bca >> 6) & 3u, bya & 0x1fu,
+                            bcb, byb, (bcb >> 6) & 3u, byb & 0x1fu,
+                            mba, mbb, dca, dcb, data_0209f5bc,
+                            fb5 ? (unsigned)fb5[0] : 0u,
+                            fb5 ? fb5[1] : 0, fb5 ? fb5[2] : 0,
+                            (void *)fd4, fd4 ? (unsigned)fd4[0] : 0u,
+                            fd4 ? fd4[1] : 0, fd4 ? fd4[2] : 0,
+                            (unsigned)data_0209d4b0[0],
+                            (int)data_0209f20c[0], hal_save_menu_up(),
+                            blend, evy, tw);
+                    fflush(stderr);
                 }
             }
         }
