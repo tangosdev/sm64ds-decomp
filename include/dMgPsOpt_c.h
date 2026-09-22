@@ -23,9 +23,10 @@ struct dMgPsOpt_c {
     };
 
     TouchIcon_c mIcons[8];   /* 0x000..0x120 */
-    s32 mSelectedIcon;       /* 0x120 */
+    s32 mIconCount;          /* 0x120: number of icons to update/render */
     u8 mActive;              /* 0x124 */
-    u8 pad_125[0x3];         /* 0x125 */
+    u8 mCloseDelay;          /* 0x125: decremented after close is requested */
+    u8 pad_126[0x2];         /* 0x126 */
 
     dMgPsOpt_c();
     ~dMgPsOpt_c();

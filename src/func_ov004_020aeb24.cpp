@@ -11,8 +11,8 @@ struct Obj {
 };
 
 extern "C" {
-extern void func_02012790(int a);
-extern int func_ov004_020b8f78(char* p);
+extern unsigned int func_02012790(unsigned int soundID);
+extern unsigned char func_ov004_020b8f78(char* p);
 extern int _Z15ApproachLinear2Rsss(short* v, short a, short b);
 extern void func_0203b958(short* o, short* a, short* b);
 extern int _Z14ApproachLinearRiii(int* v, int a, int b);

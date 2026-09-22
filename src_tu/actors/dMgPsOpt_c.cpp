@@ -50,13 +50,13 @@
  *   func_ov004_020b8dc0  sets a TouchIcon_c's style (+0x1c) and palette (+0x20)
  *                        and hands it to the shared touch-area setup. Every one
  *                        of its eight callers is inside dMgPsOpt_c::dMgPsOpt_c.
- *   func_ov004_020b8ee0  walks mIcons for mSelectedIcon entries at stride 0x24.
+ *   func_ov004_020b8ee0  walks mIcons for mIconCount entries at stride 0x24.
  *   func_ov004_020b8f18  gated on mActive, calls slot 1 (Render) on each icon.
  *   func_ov004_020b8f78  the options update: it touches mIcons[0..7] at exactly
  *                        0x00,0x24,0x48,0x6c,0x90,0xb4,0xd8,0xfc, reads and
- *                        writes mSelectedIcon/mActive, and dispatches slot 0.
- *   func_ov004_020b91fc  clears mSelectedIcon and mActive (close).
- *   func_ov004_020b9220  seeds four icons and sets mSelectedIcon=8, mActive=1.
+ *                        writes mIconCount/mActive, and dispatches slot 0.
+ *   func_ov004_020b91fc  clears mIconCount and mActive (close).
+ *   func_ov004_020b9220  seeds four icons and sets mIconCount=8, mActive=1.
  *
  * Referrer census over every relocs.txt under config/ for all eleven addresses: every
  * reference from outside the span comes from dScMgBase_c -- its C2/D0/D1/D2,
@@ -173,8 +173,8 @@ dMgPsOpt_c::dMgPsOpt_c()
         data_ov004_020bfe88[GetGameLanguage() * 2] + 0x18, 0x68);
     func_ov004_020b8dc0((char *)&mIcons[5], 6, 0, 0x80, 0xa8);
 
-    mSelectedIcon = 8;
-    mSelectedIcon = 0;
+    mIconCount = 8;
+    mIconCount = 0;
     mActive = 0;
 }
 
