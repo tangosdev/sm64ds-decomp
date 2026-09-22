@@ -3424,6 +3424,18 @@ extern "C" int data_0208ee44;
    performs on ov080, which the port's empty LoadOverlay face does not. */
 extern "C" void port_painting_texcache_overlay_load(int id);
 
+/* The actor death table and the two per-level words the sublevel clear owns
+   (Stage::InitResources:188-196). Read here by the watch and the seed below;
+   the clear itself is at the ROM's own reading point, in hal/level_change.cpp's
+   port_level_latch, because it reads data_0209f2f8 and data_02092110 before
+   that latch advances them. */
+extern "C" {
+extern int   data_0209f4f8[];     /* 3 level parts x 16 words, 512 slots each */
+extern int   data_0209f34c;
+extern short data_0209f358[];     /* the coin counter GiveCoins increments */
+signed char GetLevelPart(int idx);
+}
+
 /* src/func_ov001_020ab2e4.c: the cap system's own per-level reset,
    Stage::InitResources:313. Called from port_stage_boot_body below. */
 extern "C" void func_ov001_020ab2e4(void);
@@ -3734,6 +3746,60 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
             std::fflush(stderr);
         }
         stars_seeded = true;
+    }
+    /* SM64DS_DEATH_SEED=<n> and SM64DS_DEATH_WATCH=1 -- the actor DEATH TABLE,
+       data_0209f4f8, read here because nothing else in the harness can see it.
+
+       The table is three level parts of sixteen words, 512 bits each, indexed
+       GetLevelPart(data_0209f2f8) (src/DeathTable_GetBit.c). A bit is the
+       spawn-order slot of an object that died this session: dActor_c::
+       TrackInDeathTable sets it (120 call sites in src/, every Bob-omb,
+       Goomba, 1-Up, Boo and coin among them) and dActor_c::
+       BeforeInitResources reads it -- an actor whose bit is up marks itself
+       for destruction instead of initialising
+       (src/_ZN8dActor_c19BeforeInitResourcesEv.cpp:34-38). LoadStandardObjects
+       hands each placed object the running counter data_ov002_0211118c as its
+       slot, so slot N of one level and slot N of the next are different
+       objects in the same sixteen words.
+
+       WHY A SEED HAS TO EXIST FOR THIS TO BE PROVABLE AT ALL, and it is the
+       same argument SM64DS_EVENT_SEED makes above for the save block: a
+       headless selftest holds the stick forward and kills nothing, so it sets
+       no bit and can never reach the state a played session reaches. The seed
+       is the only channel a scripted run has to it. It ORs bits in ONCE, on
+       the first stage boot, and never clears one. INERT UNLESS SET.
+
+       The watch line is the census the table owes: how many slots each part
+       is holding at the moment a level boots, which is the number that has to
+       be zero on a course change. */
+    {
+        static bool death_seeded = false;
+        const char *ds = std::getenv("SM64DS_DEATH_SEED");
+        if (ds && !death_seeded) {
+            const int n = std::atoi(ds);
+            for (int part = 0; part < 3; ++part)
+                for (int b = 0; b < n && b < 512; ++b)
+                    ((unsigned *)data_0209f4f8)[part * 16 + (b >> 5)] |=
+                        1u << (b & 0x1f);
+            std::fprintf(stderr, "[death-seed] %d slot(s) marked dead in each "
+                         "of the three level parts\n", n);
+            std::fflush(stderr);
+        }
+        death_seeded = true;
+        if (std::getenv("SM64DS_DEATH_WATCH")) {
+            int held[3] = { 0, 0, 0 };
+            for (int part = 0; part < 3; ++part)
+                for (int w = 0; w < 16; ++w) {
+                    unsigned v = ((unsigned *)data_0209f4f8)[part * 16 + w];
+                    for (; v; v &= v - 1) ++held[part];
+                }
+            std::fprintf(stderr, "[deathtab] boot of level %d (part %d): slots "
+                         "held %d/%d/%d, data_0209f34c %d, coins %d\n",
+                         (int)data_0209f2f8, (int)GetLevelPart((int)data_0209f2f8),
+                         held[0], held[1], held[2], (int)data_0209f34c,
+                         (int)data_0209f358[0]);
+            std::fflush(stderr);
+        }
     }
     /* Stage::InitResources:313 is `func_ov001_020ab2e4();` -- the cap system's
        own per-level reset. It empties the three per-character cap registries

@@ -1044,6 +1044,106 @@ static unsigned port_level_heap_free(void)
 extern "C" unsigned port_level_heap_free_bytes(void)
 { return port_level_heap_free(); }
 
+/* ---- Stage::InitResources:177-196: THE SUBLEVEL CLEAR ---------------------
+
+   THE ROM CLEARS FOUR THINGS WHEN A LEVEL CHANGE LEAVES THE COURSE IT WAS IN,
+   and until now the port cleared none of them. port/stage_lifecycle_map.txt
+   listed them under "WHAT THE ROM'S InitResources DOES THAT THE PORT DOES NOT
+   DO AT ALL": "the three sublevel clear loops (data_0209f4f8, data_0209f30c,
+   data_0209f310, data_0209f358)", and at its own row for those symbols, "none.
+   The per-player star/coin clear loops are not run at all."
+
+   data_0209f4f8 IS THE ACTOR DEATH TABLE, and it is the one that shows. Three
+   level parts of sixteen words, 512 slots each, indexed by
+   GetLevelPart(data_0209f2f8) (src/DeathTable_GetBit.c). A slot is the
+   SPAWN-ORDER INDEX of a placed object: LoadStandardObjects hands each object
+   the running counter data_ov002_0211118c as its deathTableID
+   (src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp), so slot 7
+   is the eighth object the walk placed, whatever level the walk was for.
+   dActor_c::TrackInDeathTable raises the slot when the object dies -- 120 call
+   sites in src/, every Bob-omb, Goomba, 1-Up, Boo and coin among them -- and
+   dActor_c::BeforeInitResources reads it back: an actor whose slot is up marks
+   itself for destruction instead of initialising
+   (src/_ZN8dActor_c19BeforeInitResourcesEv.cpp:34-38).
+
+   So with the clear missing, everything a player killed or collected in one
+   course stayed marked for the whole session, and the marks landed on the
+   SPAWN-ORDER SLOTS of every level entered afterwards -- and the castle
+   grounds, Bob-omb Battlefield and Whomp's Fortress all read part 0, so they
+   share one set of 512 slots. Measured on this tree with 32 slots marked, the
+   settled census fell from 51 actors to 39 on the castle grounds, 184 to 156
+   on Bob-omb Battlefield and 156 to 142 on Whomp's Fortress, and the count of
+   slots held stayed at 32 through twelve level changes.
+
+   THE OTHER THREE are the per-player coin and star counters the same statement
+   group clears: data_0209f358 (the coin counter GiveCoins increments),
+   data_0209f30c and data_0209f310 (the VS star arrays). They are in one ROM
+   `if`, so they are transcribed with it rather than split; a half of a
+   statement group is not the cartridge.
+
+   THE CONDITION IS THE ROM'S, byte for byte: VS mode, or an entry reason of 2,
+   or a pending level in the Bowser/key set (the (level + 0xDC) & 0xFF <= 0xD
+   and (1 << that) & 0x2A15 test -- levels 36, 38, 40, 45, 47, 49), or a
+   pending level whose course is 0x1D (the castle), or simply a DIFFERENT
+   course from the one being left. Two sublevels of one course (Cool Cool
+   Mountain and its slide) therefore keep their marks, which is the cartridge's
+   own behaviour and the reason the test is there at all.
+
+   WHY IT SITS HERE AND NOT IN port_stage_boot_body, where the port's other
+   InitResources lines land: it reads data_0209f2f8 (the level being LEFT) and
+   data_02092110 (the level being ENTERED), and the four lines below are what
+   consume both. Run after them, `to != from` would be false on every change
+   and the clear would never fire. This is InitResources' own order -- :188
+   before :227.
+
+   The ROM runs the block inside InitResources' `if (this+0x9c4 == 0)` arm,
+   which is the arm the port's hand-rolled boot corresponds to. The direct
+   SM64DS_LEVEL boot does not come through here and does not need to: nothing
+   has run yet in that process and the table is at its bss zero. */
+extern "C" {
+extern int   data_0209f4f8[];        /* 3 level parts x 16 words, 512 slots */
+extern int   data_0209f34c;
+extern unsigned char data_0209f30c[];
+extern signed char   data_0209f310[];
+extern short data_0209f358[];        /* the coin counter GiveCoins increments */
+extern unsigned char data_0209f21c;  /* the player count */
+extern unsigned char data_0209f2d8;  /* game mode: 1 = VS */
+int SublevelToLevel(int i);
+}
+
+static void port_level_sublevel_clear(void)
+{
+    const int to   = SublevelToLevel((int)data_02092110);
+    const int from = SublevelToLevel((int)data_0209f2f8);
+    const unsigned bits = ((unsigned)(unsigned char)data_02092110 + 0xDC) & 0xFF;
+    const int boss = (bits <= 0xD && ((1u << bits) & 0x2A15u)) ? 1 : 0;
+    const int vs   = (data_0209f2d8 == 1) ? 1 : 0;
+
+    if (!(vs || data_0209f26c == 2 || boss || to == 0x1D || to != from))
+        return;
+
+    data_0209f34c = 0;
+    for (int part = 0; part < 3; ++part)
+        for (int w = 0; w < 0x10; ++w)
+            data_0209f4f8[part * 0x10 + w] = 0;
+
+    const int count = (int)data_0209f21c;
+    if (count > 0) {
+        const unsigned char why = data_0209f26c;
+        for (int i = 0; i < count; ++i) {
+            if (vs || (boss == 0 && why != 1))
+                data_0209f358[i] = 0;
+            data_0209f30c[i] = 0;
+            data_0209f310[i] = 0;
+        }
+    }
+    if (std::getenv("SM64DS_DEATH_WATCH"))
+        std::fprintf(stderr, "  [deathtab] sublevel clear: course %d -> %d, "
+                     "reason %d -- the death table and the per-player counters "
+                     "are back to zero\n", from, to,
+                     (int)data_0209f26c);
+}
+
 /* Runs the four lines Stage::InitResources runs, in its order:
        prev      = data_0209f2f8
        current   = pending
@@ -1163,6 +1263,8 @@ static void port_level_course_clear(void)
 static void port_level_latch(void)
 {
     port_level_course_clear();
+    /* :188-196 first, because the two words below are its inputs. */
+    port_level_sublevel_clear();
 
     if (data_0209f26c == 1) {
         data_02092124[0] = (unsigned char)data_0209f2f8;
