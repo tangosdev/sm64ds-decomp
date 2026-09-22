@@ -994,7 +994,7 @@
       "src/_ZN7dScMB_c8BehaviorEv.cpp": [
         "param:#2 int"
       ],
-      "src/_ZN8dMeter_c13InitResourcesEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "param:#2 int"
       ],
       "src/actors/dScGameOver_c.cpp": [
@@ -1644,7 +1644,7 @@
         "param:#1 unsigned short",
         "return:void *"
       ],
-      "src/_ZN8dMeter_c13InitResourcesEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:void *"
       ],
       "src/actors/dScMgCup_c.cpp": [
@@ -2887,9 +2887,6 @@
     "NumStars": {
       "src/_ZN8MugenBgm8BehaviorEv.cpp": [
         "return:unsigned int"
-      ],
-      "src/_ZN8dMeter_c8BehaviorEv.cpp": [
-        "return:int"
       ],
       "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp": [
         "return:int"
@@ -10490,8 +10487,8 @@
       ]
     },
     "_ZN3OAM10LIFE_ICONSE": {
-      "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": [
-        "return:OamAttr * []"
+      "src/actors/dScStarSel_c.cpp": [
+        "return:void * []"
       ]
     },
     "_ZN3OAM11GetObjWidthEii": {
@@ -10589,7 +10586,7 @@
       "src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp": [
         "return:void"
       ],
-      "src/_ZN8dMeter_c13RenderVsTimerEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:void"
       ],
       "src/actors/dScMgCup_c.cpp": [
@@ -10645,16 +10642,7 @@
       "src/_ZN6dMap_c6RenderEv.cpp": [
         "param:#1 int"
       ],
-      "src/_ZN8dMeter_c13RenderVsTimerEv.cpp": [
-        "param:#1 int"
-      ],
-      "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": [
-        "param:#1 int"
-      ],
-      "src/_ZN8dMeter_c15RenderStarCountEv.cpp": [
-        "param:#1 int"
-      ],
-      "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "param:#1 int"
       ],
       "src/actors/dScStarSel_c.cpp": [
@@ -10686,12 +10674,6 @@
     },
     "_ZN3OAM7NUMBERSE": {
       "src/_ZN5Stage12RenderNumberEhiibi.cpp": [
-        "return:OamAttr * []"
-      ],
-      "src/_ZN8dMeter_c15RenderCoinCountEv.cpp": [
-        "return:OamAttr * []"
-      ],
-      "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": [
         "return:OamAttr * []"
       ]
     },
@@ -21075,7 +21057,7 @@
       "src/_ZN8SignPost8BehaviorEv.cpp": [
         "return:unsigned int"
       ],
-      "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:unsigned int"
       ],
       "src/func_020345b0.c": [
@@ -21300,9 +21282,6 @@
       ],
       "src/_ZN8SaveData22NumGlowingRabbitsFoundEv.cpp": [
         "return:unsigned char []"
-      ],
-      "src/_ZN8dMeter_c13InitResourcesEv.cpp": [
-        "return:CAA0"
       ],
       "src/_ZN9dScDSMT_c8BehaviorEv.cpp": [
         "return:char"
@@ -22022,15 +22001,6 @@
       ]
     },
     "data_0209f250": {
-      "src/_ZN8dMeter_c14RenderRedCoinsEv.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/_ZN8dMeter_c17RenderHealthMeterEv.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/_ZN8dMeter_c17RenderSilverStarsEv.cpp": [
-        "return:unsigned char []"
-      ],
       "src/func_0200d10c.c": [
         "return:int"
       ],
@@ -22227,7 +22197,7 @@
       "src/SetPlayerGlobals.c": [
         "return:unsigned char"
       ],
-      "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:signed char"
       ]
     },
@@ -22357,11 +22327,11 @@
       "src/_ZN8MugenBgm8BehaviorEv.cpp": [
         "return:char *"
       ],
-      "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": [
-        "return:S154 *"
-      ],
       "src/actors/Goomboss.cpp": [
         "return:char *"
+      ],
+      "src/actors/dMeter_c.cpp": [
+        "return:S154 *"
       ],
       "src/actors/daObjHatenaBlock_c.cpp": [
         "return:char []"
@@ -22531,9 +22501,6 @@
     "data_0209f358": {
       "src/_ZN5Stage9LC_UpdateEv.cpp": [
         "return:short"
-      ],
-      "src/_ZN8dMeter_c15RenderCoinCountEv.cpp": [
-        "return:unsigned short []"
       ]
     },
     "data_0209f394": {
@@ -22579,11 +22546,8 @@
       "src/_ZN8MugenBgm8BehaviorEv.cpp": [
         "return:char * []"
       ],
-      "src/_ZN8dMeter_c15RenderLifeCountEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:HUDInfo * []"
-      ],
-      "src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp": [
-        "return:char * []"
       ],
       "src/actors/daJango_c.cpp": [
         "return:void *"
@@ -22686,7 +22650,7 @@
       "src/_ZN6Player14St_Crouch_InitEv.cpp": [
         "return:unsigned char []"
       ],
-      "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:Rec18 []"
       ],
       "src/func_ov002_020bd3a0.c": [
@@ -22823,7 +22787,7 @@
       ]
     },
     "data_0209f4ae": {
-      "src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp": [
+      "src/actors/dMeter_c.cpp": [
         "return:Rec18 []"
       ],
       "src/func_ov002_020d4748.cpp": [
@@ -22860,9 +22824,6 @@
       "src/_ZN6dMap_c8BehaviorEv.cpp": [
         "return:VtblOwner *"
       ],
-      "src/_ZN8dMeter_c8BehaviorEv.cpp": [
-        "return:VObj *"
-      ],
       "src/_ZN8dScene_c14BeforeBehaviorEv.cpp": [
         "return:FaderObject *"
       ],
@@ -22871,6 +22832,9 @@
       ],
       "src/_ZN9BootScene8BehaviorEv.cpp": [
         "return:unsigned char []"
+      ],
+      "src/actors/dMeter_c.cpp": [
+        "return:VObj *"
       ],
       "src/actors/dScGameOver_c.cpp": [
         "return:SceneGate *"
@@ -26247,24 +26211,14 @@
         "return:unsigned char []"
       ]
     },
-    "data_ov002_02111178": {
-      "src/_ZN8dMeter_c13InitResourcesEv.cpp": [
-        "return:signed char"
-      ]
-    },
     "data_ov002_0211117c": {
-      "src/_ZN8dMeter_c17RenderHealthMeterEv.cpp": [
-        "return:unsigned char []"
-      ]
-    },
-    "data_ov002_02111184": {
-      "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp": [
+      "src/_ZN6Player16St_BurnLava_MainEv.cpp": [
         "return:unsigned char"
       ]
     },
-    "data_ov002_02111188": {
-      "src/_ZN8dMeter_c13InitResourcesEv.cpp": [
-        "return:short"
+    "data_ov002_02111184": {
+      "src/actors/dMeter_c.cpp": [
+        "return:unsigned char"
       ]
     },
     "data_ov003_020b1704": {
@@ -33601,17 +33555,13 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/_ZN8dMeter_c13UpdateVsTimerEv.cpp": [
-        "param:#1 int",
-        "return:void"
-      ],
-      "src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp": [
-        "param:#1 int",
-        "return:void"
-      ],
       "src/_ZN9BootScene8BehaviorEv.cpp": [
         "param:#1 int",
         "return:void"
+      ],
+      "src/actors/dMeter_c.cpp": [
+        "return:void",
+        "param:#1 int"
       ],
       "src/actors/dScGameOver_c.cpp": [
         "param:#1 int",
