@@ -87,9 +87,12 @@ u16 DecIfAbove0_Short(u16 *timer);
 
 /* The six-argument particle spawner: it takes the handle it last returned,
  * rolls it forward and hands back the new one. Kept at its C ABI spelling
- * because its real declaration passes three Fix12<int> by value. */
+ * because its real declaration passes three Fix12<int> by value; the trailing
+ * two parameters are spelt as its definition spells them. */
+struct Vec3;
 int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 handle, u32 effectID, int x, int y, int z, int rot, int callback);
+    u32 handle, u32 effectID, int x, int y, int z, const Vec3 *rot,
+    void *callback);
 
 /* True while the player is further than `dist` away. Fix12<int> by value
  * again. */
@@ -104,10 +107,10 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 /* The mesh collider's initialiser. include/dBgCh_Actr.h declares it with the
  * scalar Fix12i spelling for readers, but the definition the cartridge links
  * carries Fix12<int> in its own name, so the call site has to spell the ABI
- * seam. */
+ * seam -- and that definition takes every argument past the receiver as a
+ * plain word, which is why the owner is handed over as one. */
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, dActor_c *actor, int radius, int height,
-    Vector3_16 *a, Vector3_16 *b);
+    dBgCh_Actr *self, int actor, int radius, int height, int rotA, int rotB);
 
 /* This TU's own state hooks -- see the deslop note above. Declared here
  * because the state tables reach them by pointer-to-member, and because
@@ -118,9 +121,11 @@ int func_ov064_02118760(daBbl_c *self);
 int func_ov064_021187d0(daBbl_c *self);
 int func_ov064_021187ec(daBbl_c *self, daBbl_c::State *state);
 
-/* The two state tables, this overlay's .bss. */
-extern daBbl_c::State data_ov064_0211c7b8;
-extern daBbl_c::State data_ov064_0211c7c8;
+/* The two state tables, this overlay's .bss. include/decl_common.h declares
+ * both as raw byte arrays for the whole tree, so they keep that spelling here
+ * and the class's own view of them is applied where they are handed over. */
+extern char data_ov064_0211c7b8[];
+extern char data_ov064_0211c7c8[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -186,12 +191,12 @@ int daBbl_c::InitResources()
     }
     mStateTimer = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+        &mWithMeshClsn, (int)this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     if (mJumps != 0) {
-        func_ov064_021187ec(this, &data_ov064_0211c7c8);
+        func_ov064_021187ec(this, (daBbl_c::State *)data_ov064_0211c7c8);
     } else {
-        func_ov064_021187ec(this, &data_ov064_0211c7b8);
+        func_ov064_021187ec(this, (daBbl_c::State *)data_ov064_0211c7b8);
     }
     return 1;
 }
