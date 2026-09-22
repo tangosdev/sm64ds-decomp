@@ -6774,7 +6774,7 @@
         "return:bool"
       ],
       "src/game/actors/daObjPathLift_c.cpp": [
-        "param:#1 dBgW_KcMbg *"
+        "return:void"
       ]
     },
     "_ZN10dBgActor_c14KillByMegaCharER6Player": {
