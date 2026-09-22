@@ -22,43 +22,23 @@
  * four of the data symbols this TU reads collide with it (02141a44,
  * 02141a40, 02140428, 0214042c). No header under include/ pulls it in.
  *
- * deslop leftovers:
- * - ModelAnim::SetAnim 6az: carries Fix12<int> by value; the member form
- *   size-DIFFs (pinned in
- *   notes/experiments/jump3d-2711-setanim-member-form.md). Same wall keeps
- *   the mangled spelling in
- *   src/func_ov006_020c6e4c.cpp. Particle::System::NewSimple has no header
- *   decl at all.
- * - Sound::PlayBank2_2D / Sound_PlayBank1Panned / func_02012718: no header
- *   decl (Panned is owned by dScMgD3DBase_c.cpp with an (int,char*,void*)
- *   spelling; this TU's (int,int,int) passes the same words).
- * - ApproachLinear / ApproachLinear2 / UpdateAngle / Vec3_Sub / AddVec3 /
- *   NormalizeVec3IfNonZero / RandomIntInternal / Matrix4x3_*: no header decl.
- * - func_ov006_020bfec0 (world-to-screen projection), func_ov006_020e6e3c
- *   (thunk: func_02012718(a, b + 0x80000)), func_ov006_020c8c78 (2D spark
- *   spawner into a 3-slot table): no header decl.
- * - func_020179b4 (Model::LoadFile + ModelBase::SetFile, releasing on
- *   failure), func_02016a14/604 (material slots), func_02053200: no header.
- * - data_ov006_* handles/constants: this TU's names for unowned data.
- * - The eight func_ov006_* members keep their labels: each is called by a
- *   plain `bl` from a still-unpromoted `.c` shard below the run (12 sites in
- *   seven shards). A C shard can declare the mangled symbol, so this is a
- *   migration dependency on those shards and their TU configuration, not an
- *   inability to name the member. Deferred with partial scope: the eight
- *   members, the seven shards and the twelve call sites are enumerated in
- *   tangosdev/sm64ds-decomp issue #2722, which owns that migration and its
- *   next owner. This PR reserves none of it. The labels are inferred, not
- *   original spellings.
- * - Four measured load-bearing spellings, each commented at its site and
- *   each with its pinned experiment named there: the int* Mtx zeroing
- *   (7734), flag reuse (StateHold), the volatile v[2] store (StateMove),
- *   the int t temp (87d0). EnterHit's earlier Pair/select spelling was
- *   measured inert and replaced by the plain pointer-to-member assignment
- *   every other record already used
- *   (notes/experiments/jump3d-2711-enterhit-pmf-assign.md).
- * - One retained substitution: the plain Jump3DVec scratch in EnterHold and
- *   the Jump3DVec members it matches. Partial scope, pinned at its site and
- *   in include/dMgJump3DMario_c.h.
+ * Remaining partial scope:
+ * - ModelAnim::SetAnim retains a scalar-speed ABI bridge. The native
+ *   Fix12<int> experiment enlarged EnterDamp from 0x88 to 0x94 bytes; see
+ *   notes/experiments/jump3d-2711-setanim-member-form.md.
+ * - Particle::System::NewSimple and the vector, projection, material and
+ *   minigame helpers still use local ABI declarations. Their shared type
+ *   recovery is separate work; data_ov006_* names remain address-derived.
+ * - Eight func_ov006_* entry points still bridge twelve calls from seven
+ *   unpromoted C shards. Issue #2722 tracks that migration and the unresolved
+ *   wider TU boundary; this follow-up does not convert those entry points.
+ * - The int* matrix zeroing, StateHold flag reuse, StateMove volatile store,
+ *   and loader comparison temporary retain the measured source forms cited
+ *   at their sites. These experiments constrain those substitutions, not
+ *   every possible spelling.
+ * - Jump3DVec scratch and members remain plain aggregates: the Vector3
+ *   experiment added an unlicensed destructor despite matching function
+ *   bytes. See EnterHold and include/dMgJump3DMario_c.h.
  */
 
 #pragma defer_codegen off
@@ -68,6 +48,7 @@
 #include "SharedFilePtr.h"
 #include "OAM.h"
 #include "fBase_c.h"
+#include "Sound.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -77,25 +58,24 @@ static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
  * their own 4 x s32 definition; this is that definition. */
 struct Mtx { int a, b, c, d; };
 
-/* ---------------------------------------------------------------------------
- * ONE file-scope `extern "C"` region: everything the C++-named members reach.
- * A member may not carry a block-scope linkage specification, so these have
- * to be file-scope. Data lives here too, one agreed spelling per symbol.
- * ------------------------------------------------------------------------- */
+/* Native helper declarations match their production definitions. */
+int ApproachLinear(int &value, int target, int step);
+int ApproachLinear2(short &value, short target, short step);
+void UpdateAngle(short &angle, short target, int divisor, short maxStep);
+
+/* C-linkage ABI bridges and data shared with the remaining source shards. */
 extern "C" {
 
 /* This TU's own member, forward-declared: its callers sit above it in ROM
  * order (StateFallOut, func_ov006_020c8084, StateRiseOut). */
 void func_ov006_020c8658(void *c);
 
-/* SetAnim's real signature carries Fix12<int> by value (see ModelAnim.h), so
- * the member form homes the argument and size-DIFFs; the scalar spelling. */
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int b, unsigned int d);
-void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _Z14ApproachLinearRiii(int &v, int target, int step);
-int  _Z15ApproachLinear2Rsss(short *v, short target, short step);
-void _Z11UpdateAngleRssis(short *a, int b, int c, int d);
+/* Retain scalar speed for the measured Fix12<int> member-call constraint.
+ * The local bridge follows the C definition's u16 start frame; ModelAnim.h
+ * still declares the native interface's start frame as u32. All calls here
+ * pass zero. See notes/experiments/jump3d-2711-setanim-member-form.md. */
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *self, BCA_File *file, int flags, int speed, u16 startFrame);
+void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Jump3DVec *out, Jump3DVec *a, Jump3DVec *b);
 void AddVec3(Jump3DVec *a, Jump3DVec *b, Jump3DVec *c);
@@ -103,6 +83,8 @@ int  NormalizeVec3IfNonZero(Jump3DVec *v);
 int  RandomIntInternal(int *seed);
 void func_02012718(int a, int b);
 int  func_02053200(int x);
+/* Both material wrappers forward r1 to the per-material update. Their
+ * one-argument C definitions omit that forwarded value; preserve it here. */
 void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 int  func_020179b4(SharedFilePtr *f, ModelBase *m, int extra);
@@ -235,38 +217,35 @@ extern "C" {
 void func_ov006_020c7734(char *c)
 {
     dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
-    short v[2];
-    int r1res;
-    int r2res;
-    int g;
-    int t;
-    Mtx m;
+    short screenPos[2];
+    int scaleX;
+    int scaleY;
+    int shadowPhase;
+    int shadowSin;
+    Mtx shadowMatrix;
 
     if (o->mVisible == 0)
         return;
 
     if (data_ov006_02140400 != 0) {
-        func_ov006_020bfec0(data_ov006_02141a44, &o->mPos, v);
+        func_ov006_020bfec0(data_ov006_02141a44, &o->mPos, screenPos);
 
-        g = data_ov006_02140404;
-        t = data_02082214[(g >> 4) * 2];
-        v[1] = v[1] - (((t << 2) + 0x30000) >> 12);
-        r1res = func_02053200((t >> 2) + 0x1000);
+        shadowPhase = data_ov006_02140404;
+        shadowSin = data_02082214[(shadowPhase >> 4) * 2];
+        screenPos[1] = screenPos[1] - (((shadowSin << 2) + 0x30000) >> 12);
+        scaleX = func_02053200((shadowSin >> 2) + 0x1000);
 
-        g = data_ov006_02140404;
-        r2res = -func_02053200((data_02082214[(g >> 4) * 2 + 1] >> 2) + 0x1000);
+        shadowPhase = data_ov006_02140404;
+        scaleY = -func_02053200((data_02082214[(shadowPhase >> 4) * 2 + 1] >> 2) + 0x1000);
 
-        /* Zeroed THROUGH `int *`, not through m.a..m.d.  MEASURED: writing the
-           named members instead costs 11 words, reproduced exactly by
-           notes/experiments/jump3d-2711-mtx-intptr-zeroing.md.  Why, is a
-           reading and not a measurement -- the extra words look like a spill
-           of a struct mwccarm had kept in registers, for the Matrix2x2
-           argument below -- so trust the 11 and not the explanation. */
-        int *mp = (int *)&m;
-        mp[0] = 0; mp[1] = 0; mp[2] = 0; mp[3] = 0;
-        m.d = r2res;
-        m.a = r1res;
-        OAM::Render(false, data_ov006_02134d1c, v[0], v[1], -1, -1, (Matrix2x2 *)&m);
+        /* Retain int* zeroing: the named-member experiment changed eleven
+           words at the same 0x12c size, rather than adding eleven words.
+           See notes/experiments/jump3d-2711-mtx-intptr-zeroing.md. */
+        int *matrixWords = (int *)&shadowMatrix;
+        matrixWords[0] = 0; matrixWords[1] = 0; matrixWords[2] = 0; matrixWords[3] = 0;
+        shadowMatrix.d = scaleY;
+        shadowMatrix.a = scaleX;
+        OAM::Render(false, data_ov006_02134d1c, screenPos[0], screenPos[1], -1, -1, (Matrix2x2 *)&shadowMatrix);
     }
 
     o->mModelAnim.Render(&data_ov006_0212ddd0);
@@ -281,7 +260,7 @@ void func_ov006_020c7860(char *c)
 {
     dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
 
-    _Z14ApproachLinearRiii(o->mVel.y, data_ov006_0213b010, data_ov006_0213b018);
+    ApproachLinear(o->mVel.y, data_ov006_0213b010, data_ov006_0213b018);
     AddVec3(&o->mPos, &o->mVel, &o->mPos);
     (o->*o->mState)();
     func_ov006_020bfec0(data_ov006_02141a40, &o->mPos, &o->mScreenX);
@@ -297,8 +276,8 @@ void dMgJump3DMario_c::StateDamp()
 {
     mTimer -= 1;
     if (mTimer == 0) {
-        _Z14ApproachLinearRiii(data_ov006_02140428, 0, 1);
-        _ZN5Sound12PlayBank2_2DEj(0x130);
+        ApproachLinear(data_ov006_02140428, 0, 1);
+        Sound::PlayBank2_2D(0x130);
         func_ov006_020c8c78(mScreenX, 0xc0);
         EnterRespawn();
         return;
@@ -318,9 +297,9 @@ void dMgJump3DMario_c::StateDamp()
 void dMgJump3DMario_c::EnterDamp()
 {
     if (data_ov006_02140428 > 1)
-        _ZN5Sound12PlayBank2_2DEj(0x1ca);
+        Sound::PlayBank2_2D(0x1ca);
     else
-        _ZN5Sound12PlayBank2_2DEj(0x1c9);
+        Sound::PlayBank2_2D(0x1c9);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
     mTimer = 0x28;
     mState = data_ov006_0213b030;
@@ -340,41 +319,40 @@ void dMgJump3DMario_c::StateHold()
         }
     }
     if (flag != 0) {
-        /* Reusing `flag` as the scratch is load-bearing, not leftover: reading
-           the table straight into `b` and leaving `flag` alone costs 5 words,
-           reproduced exactly by
+        /* Retain flag reuse: reading touchY directly changed five words
+           at the same 0x174 size in
            notes/experiments/jump3d-2711-statehold-flag-reuse.md. */
         flag = data_020a0deb[idx][0];
-        int b = flag;
-        int x = mScreenY - 0x20;
-        int dz = mScreenX - data_020a0dea[idx][0];
-        if (dz < 0) {
-            dz = -dz;
+        int touchY = flag;
+        int hitCenterY = mScreenY - 0x20;
+        int distanceX = mScreenX - data_020a0dea[idx][0];
+        if (distanceX < 0) {
+            distanceX = -distanceX;
         }
-        if (dz < 0x18) {
-            int dx = x - b;
-            if (dx < 0) {
-                dx = -dx;
+        if (distanceX < 0x18) {
+            int distanceY = hitCenterY - touchY;
+            if (distanceY < 0) {
+                distanceY = -distanceY;
             }
-            if (dx < 0x26) {
-                _Z15ApproachLinear2Rsss(&mTimer, 0, 8);
+            if (distanceY < 0x26) {
+                ApproachLinear2(mTimer, 0, 8);
             }
         }
     }
     {
-        int v = mPos.x;
-        if (v < -kWallX) {
-            v = -kWallX;
-        } else if (v > kWallX) {
-            v = kWallX;
+        int clampedX = mPos.x;
+        if (clampedX < -kWallX) {
+            clampedX = -kWallX;
+        } else if (clampedX > kWallX) {
+            clampedX = kWallX;
         }
-        mPos.x = v;
+        mPos.x = clampedX;
     }
     if (mCommand == 1) {
         mCommand = 0;
         mVel.y = data_ov006_0213b008;
         EnterHit();
-    } else if (_Z15ApproachLinear2Rsss(&mTimer, 0, 1)) {
+    } else if (ApproachLinear2(mTimer, 0, 1)) {
         mCommand = 0;
         if (mVel.y > 0) {
             EnterBounce();
@@ -404,13 +382,13 @@ void dMgJump3DMario_c::EnterHold()
        config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses that symbol,
        and packaging refuses the emission. Retained substitution, accepted as
        partial scope alongside issue #2722. */
-    Jump3DVec v;
+    Jump3DVec direction;
 
-    Vec3_Sub(&v, &mPos, &mAnchor);
-    if (NormalizeVec3IfNonZero(&v) != 0) {
-        mVel.x = v.x;
-        mVel.y = v.y;
-        mVel.z = v.z;
+    Vec3_Sub(&direction, &mPos, &mAnchor);
+    if (NormalizeVec3IfNonZero(&direction) != 0) {
+        mVel.x = direction.x;
+        mVel.y = direction.y;
+        mVel.z = direction.z;
     } else {
         mVel.x = -mVel.x;
         mVel.y = -mVel.y;
@@ -427,9 +405,9 @@ void dMgJump3DMario_c::EnterHold()
 // @symbol _ZN16dMgJump3DMario_c9StateMoveEv
 void dMgJump3DMario_c::StateMove()
 {
-    u16 st = mCommand;
+    u16 command = mCommand;
 
-    if (st == 1) {
+    if (command == 1) {
         mCommand = 0;
         mVel.y = data_ov006_0213b008;
         if (mAnimIdx != 0)
@@ -439,7 +417,7 @@ void dMgJump3DMario_c::StateMove()
         EnterHit();
         return;
     }
-    if (st == 2) {
+    if (command == 2) {
         mCommand = 0;
         EnterHold();
         return;
@@ -452,36 +430,30 @@ void dMgJump3DMario_c::StateMove()
             flag = 1;
 
         if (flag != 0) {
-            s16 y = mScreenY;
-            int ax = (int)data_020a0dea[idx][0];
-            int az = (int)data_020a0deb[idx][0];
-            int dx = (int)mScreenX - ax;
-            int ym = (int)y - 0x20;
-            int t = dx < 0 ? -dx : dx;
+            s16 screenY = mScreenY;
+            int touchX = (int)data_020a0dea[idx][0];
+            int touchY = (int)data_020a0deb[idx][0];
+            int deltaX = (int)mScreenX - touchX;
+            int hitCenterY = (int)screenY - 0x20;
+            int distance = deltaX < 0 ? -deltaX : deltaX;
 
-            if (t < 0x18) {
-                t = ym - az;
-                if (t < 0) t = -t;
-                if (t < 0x26 && (int)y < kScreenYMax) {
-                    int v[3];
-                    int *p = &data_ov006_0213b00c;
-                    int t0 = (ax - 0x80) << 12;
-                    int t1 = (-az) << 12;
-                    v[0] = t0;
-                    v[1] = t1;
-                    /* The volatile round-trip is load-bearing.  MEASURED and
-                       pinned in
-                       notes/experiments/jump3d-2711-statemove-volatile-store.md:
-                       writing a plain `v[2] = 0;` rewrites the whole 0x3c4-byte
-                       member, size 0x3c4 against 0x3a8.  That candidate differs
-                       in size, so the run prints no per-word lines: the stack
-                       demotion of v[] and the NewSimple() argument load order
-                       below are a reading of the shape, and the relocation
-                       count an earlier version of this comment gave is NOT
-                       measured by the pin. */
-                    *(volatile int *)&v[2] = 0;
-                    mVel.y = *p;
-                    mVel.x = data_ov006_0213b01c * dx;
+            if (distance < 0x18) {
+                distance = hitCenterY - touchY;
+                if (distance < 0) distance = -distance;
+                if (distance < 0x26 && (int)screenY < kScreenYMax) {
+                    int particlePos[3];
+                    int *bounceSpeed = &data_ov006_0213b00c;
+                    int particleX = (touchX - 0x80) << 12;
+                    int particleY = (-touchY) << 12;
+                    particlePos[0] = particleX;
+                    particlePos[1] = particleY;
+                    /* Retain the volatile store: a plain particlePos[2] = 0 shrank
+                       StateMove from 0x3c4 to 0x3a8 bytes. The experiment
+                       did not measure individual relocation differences.
+                       See notes/experiments/jump3d-2711-statemove-volatile-store.md. */
+                    *(volatile int *)&particlePos[2] = 0;
+                    mVel.y = *bounceSpeed;
+                    mVel.x = data_ov006_0213b01c * deltaX;
                     if (mAnimIdx != 0)
                         mAnimIdx = 0;
                     else
@@ -489,8 +461,8 @@ void dMgJump3DMario_c::StateMove()
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *data_ov006_0213b098[mAnimIdx], 0x40000000, kAnimSpeed, 0);
                     mModelAnim.Animation::currFrame = 0;
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xed, mPos.x << 3, mPos.y << 3, mPos.z << 3);
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xee, v[0] << 3, v[1] << 3, v[2] << 3);
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xef, v[0] << 3, v[1] << 3, v[2] << 3);
+                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xee, particlePos[0] << 3, particlePos[1] << 3, particlePos[2] << 3);
+                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xef, particlePos[0] << 3, particlePos[1] << 3, particlePos[2] << 3);
                     Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
                     func_02012718(0x1c6, mScreenX << 12);
                     EnterBounce();
@@ -526,10 +498,10 @@ void dMgJump3DMario_c::StateMove()
     }
 
     if (mVel.x > 0) {
-        _Z11UpdateAngleRssis(&mAngleY, 0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, 0x2800, 2, 0x1000);
         return;
     }
-    _Z11UpdateAngleRssis(&mAngleY, -0x2800, 2, 0x1000);
+    UpdateAngle(mAngleY, -0x2800, 2, 0x1000);
 }
 
 
@@ -565,7 +537,7 @@ void func_ov006_020c8084(char *c)
     } else {
         o->mVel.x = 0;
         o->mVel.y = 0x2000;
-        _ZN5Sound12PlayBank2_2DEj(0x1c9);
+        Sound::PlayBank2_2D(0x1c9);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&o->mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
         o->mModelAnim.Animation::currFrame = 0;
         o->mState = data_ov006_0213b090;
@@ -603,7 +575,7 @@ void func_ov006_020c81e0(char *c)
     o->mVel.y = data_ov006_0213b00c;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&o->mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
     o->mModelAnim.Animation::currFrame = 0;
-    _ZN5Sound12PlayBank2_2DEj(0x10f);
+    Sound::PlayBank2_2D(0x10f);
     func_02012718(0x1b5, o->mScreenX << 12);
     o->mState = data_ov006_0213b080;
 }
@@ -674,9 +646,9 @@ void dMgJump3DMario_c::StateBounce()
     }
 
     if (mVel.x > 0)
-        _Z11UpdateAngleRssis(&mAngleY, 0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, 0x2800, 2, 0x1000);
     else
-        _Z11UpdateAngleRssis(&mAngleY, -0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, -0x2800, 2, 0x1000);
 }
 
 
@@ -692,7 +664,7 @@ void dMgJump3DMario_c::EnterBounce()
 // @symbol _ZN16dMgJump3DMario_c11StateWindUpEv
 void dMgJump3DMario_c::StateWindUp()
 {
-    if (_Z15ApproachLinear2Rsss(&mTimer, 0, 1) == 0) {
+    if (ApproachLinear2(mTimer, 0, 1) == 0) {
         mPos.y = 0;
         return;
     }
@@ -744,18 +716,18 @@ void func_ov006_020c8658(void *c)
 // @symbol _ZN16dMgJump3DMario_c12StateRespawnEv
 void dMgJump3DMario_c::StateRespawn()
 {
-    unsigned int r;
-    int r5;
+    unsigned int randomSample;
+    int horizontalSpeedScale;
 
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)r - 0x800) * 0xc0;
+        randomSample = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        mPos.x = ((int)randomSample - 0x800) * 0xc0;
         mVel.y = 0;
-        r5 = data_ov006_0213b01c;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
-        mVel.x = (int)(((s64)(((int)r - 0x800) << 1) * r5 + 0x800) >> 12);
+        horizontalSpeedScale = data_ov006_0213b01c;
+        randomSample = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        mVel.x = (int)(((s64)(((int)randomSample - 0x800) << 1) * horizontalSpeedScale + 0x800) >> 12);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140424, 0x40000000, kAnimSpeed, 0);
         EnterMove();
         return;
@@ -784,10 +756,10 @@ int func_ov006_020c87d0(char *c)
 {
     dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
 
-    /* `t` is load-bearing, not a leftover: folding the comparison into the
-       `if` below rewrites the whole 0x16c-byte function, size 0x16c against
-       0x160.  Pinned in notes/experiments/jump3d-2711-87d0-int-temp.md. */
-    int t;
+    /* Keep the separate int comparison result: folding it into the if
+       shrank the loader from 0x16c to 0x160 bytes in
+       notes/experiments/jump3d-2711-87d0-int-temp.md. */
+    int applyMaterialOverrides;
 
     if (func_020179b4(&data_ov006_02140450, &o->mModelAnim, 1) == 0)
         return 0;
@@ -803,8 +775,8 @@ int func_ov006_020c87d0(char *c)
     if (data_ov006_02141a40 != 0)
         func_ov006_020bfec0(data_ov006_02141a40, &o->mPos, &o->mScreenX);
 
-    t = data_0209f5c0->actorID == 0x175;
-    if (t != 0) {
+    applyMaterialOverrides = data_0209f5c0->actorID == 0x175;
+    if (applyMaterialOverrides != 0) {
         func_02016a14(&o->mModelAnim, 0x7fff);
         func_02016a04(&o->mModelAnim, 0x210);
     }
