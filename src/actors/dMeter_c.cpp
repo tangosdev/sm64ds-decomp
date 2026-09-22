@@ -1237,30 +1237,38 @@ void dMeter_c::RenderTimeTimer()
 /* ROM ordinal 1 -- _ZN8dMeter_cD0Ev, 0x020fb928, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8dMeter_cD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
+/* No body here, and none is possible: D0 is the deleting destructor and the
+ * compiler writes all of it. The inline `~dMeter_c() {}` in include/dMeter_c.h
+ * is the whole source, and mwccarm emits D1 and D0 from it in that order, which
+ * is cartridge order, and emits no D2 at all.
  *
- * D0 is the DELETING destructor: destroy through this class and its bases --
- * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~dMeter_c()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
- *
- * The deallocation is an inline operator delete, which is why nothing below
- * mentions a heap.
- *
- * (No separate definition: the single ~dMeter_c() below emits the D0 and D1
- * variants together. A second spelled-out body here is a redefinition.)
+ * What the cartridge's 0x44 bytes do: the same two vptr stores and the same
+ * fBase_c chain call as D1 below, then `ldr r1, =GAME_HEAP_PTR; ldr r1, [r1]`
+ * and `bl _ZN6Memory10DeallocateEPvP4Heap` (arm9 0x0203c1e8) before returning
+ * the object in r0. So the deallocation is fBase_c's operator delete inlined
+ * here, and it does name a heap -- the global game heap, loaded from
+ * arm9 0x020a0eac.
  */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN8dMeter_cD1Ev, 0x020fb8f8, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8dMeter_cD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
+/* No body here either, for the same reason. The cartridge's 0x30 bytes are two
+ * vtable stores and one call, and every one of the three follows from
+ * `struct dMeter_c : dBase_c`:
  *
- * Two vtable stores and three destructor calls, every one a consequence of
- * `struct dMeter_c : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
- * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
- * member with a destructor of its own.
+ *     str r2, [r4]     ; _ZTV8dMeter_c   0x0210c2c8
+ *     str r1, [r4]     ; _ZTV7dBase_c    0x0208e4b8  -- dBase_c's dtor, INLINED
+ *     bl  0x02043d48   ; _ZN7fBase_cD2Ev
+ *
+ * The second store is there because include/dBase_c.h defines that class's
+ * destructor in its class body, so it inlines into every derived destructor.
+ * There is no third store and no second call: dMeter_c adds no member with a
+ * destructor of its own.
+ *
+ * An earlier revision of this comment described a dBgActor_c base with Model
+ * and dBgW_KcMbg members. That was inherited from a sibling class and is wrong
+ * for dMeter_c; _ZTI8dMeter_c's base word names dBase_c and the bytes above
+ * show the single chain call.
  */
